@@ -207,10 +207,19 @@ glm::vec2 Unit::CalculateUnitCenter()
 void Unit::UpdateUnitRange()
 {
 	unitRange.center = state.center;
-	unitRange.angleLength = (float)M_PI_4;
+	unitRange.angleLength = (float)M_PI_2;
 	unitRange.angleStart = state.direction - 0.5f * unitRange.angleLength;
 	unitRange.minimumRange = stats.minimumRange;
 	unitRange.maximumRange = stats.maximumRange;
+
+	unitRange.actualRanges.clear();
+	int n = 16;
+	for (int i = 0; i <= n; ++i)
+	{
+		//float a = unitRange.angleStart + i * unitRange.angleLength / n;
+		//float r = unitRange.maximumRange + 10.0f * glm::sin(20.0f * a);
+		unitRange.actualRanges.push_back(unitRange.maximumRange);
+	}
 }
 
 

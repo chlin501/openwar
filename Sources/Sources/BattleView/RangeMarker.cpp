@@ -32,56 +32,55 @@ void RangeMarker::Render(GradientTriangleStripRenderer* renderer)
 
 void RangeMarker::RenderMissileRange(GradientTriangleStripRenderer* renderer, const UnitRange& unitRange)
 {
-	glm::vec2 position = unitRange.center;
-	float direction = unitRange.angleStart + unitRange.angleLength / 2;
-	float minimumRange = unitRange.minimumRange;
-	float maximumRange = unitRange.maximumRange;
-
+	glm::vec2 center = unitRange.center;
 	const float thickness = 8;
-	const float two_pi = 2 * (float)M_PI;
+
 	glm::vec4 c0 = glm::vec4(255, 64, 64, 0) / 255.0f;
 	glm::vec4 c1 = glm::vec4(255, 64, 64, 24) / 255.0f;
 
-	float d = direction - two_pi / 8;
-	glm::vec2 p2 = maximumRange * vector2_from_angle(d - 0.03f);
-	glm::vec2 p3 = minimumRange * vector2_from_angle(d);
-	glm::vec2 p4 = maximumRange * vector2_from_angle(d);
-	glm::vec2 p5 = (maximumRange - thickness) * vector2_from_angle(d);
+	float d = unitRange.angleStart;
+	float range = unitRange.actualRanges.front();
+	glm::vec2 p2 = range * vector2_from_angle(d - 0.03f);
+	glm::vec2 p3 = unitRange.minimumRange * vector2_from_angle(d);
+	glm::vec2 p4 = range * vector2_from_angle(d);
+	glm::vec2 p5 = (range - thickness) * vector2_from_angle(d);
 	glm::vec2 p1 = p3 + (p2 - p4);
 
 	for (int i = 0; i <= 8; ++i)
 	{
 		float t = i / 8.0f;
-		renderer->AddVertex(GetPosition(position + glm::mix(p3, p5, t)), c0);
-		renderer->AddVertex(GetPosition(position + glm::mix(p1, p2, t)), c1);
+		renderer->AddVertex(GetPosition(center + glm::mix(p3, p5, t)), c0);
+		renderer->AddVertex(GetPosition(center + glm::mix(p1, p2, t)), c1);
 	}
 
-	renderer->AddVertex(GetPosition(position + p4), c1);
-	renderer->AddVertex(GetPosition(position + p4), c1);
-	renderer->AddVertex(GetPosition(position + p5), c0);
+	renderer->AddVertex(GetPosition(center + p4), c1);
+	renderer->AddVertex(GetPosition(center + p4), c1);
+	renderer->AddVertex(GetPosition(center + p5), c0);
 
-	int n = 10;
-	for (int i = 0; i <= n; ++i)
+	int n = unitRange.actualRanges.size();
+	float angleDelta = unitRange.angleLength / (n - 1);
+	for (int i = 0; i < n; ++i)
 	{
-		float k = (i - (float)n / 2) / n;
-		d = direction + k * two_pi / 4;
-		renderer->AddVertex(GetPosition(position + (maximumRange - thickness) * vector2_from_angle(d)), c0);
-		renderer->AddVertex(GetPosition(position + maximumRange * vector2_from_angle(d)), c1);
+		range = unitRange.actualRanges[i];
+ 		d = unitRange.angleStart + i * angleDelta;
+		renderer->AddVertex(GetPosition(center + (range - thickness) * vector2_from_angle(d)), c0);
+		renderer->AddVertex(GetPosition(center + range * vector2_from_angle(d)), c1);
 	}
 
-	d = direction + two_pi / 8;
-	p2 = maximumRange * vector2_from_angle(d + 0.03f);
-	p3 = minimumRange * vector2_from_angle(d);
-	p4 = maximumRange * vector2_from_angle(d);
-	p5 = (maximumRange - thickness) * vector2_from_angle(d);
+	d = unitRange.angleStart + unitRange.angleLength;
+	range = unitRange.actualRanges.back();
+	p2 = range * vector2_from_angle(d + 0.03f);
+	p3 = unitRange.minimumRange * vector2_from_angle(d);
+	p4 = range * vector2_from_angle(d);
+	p5 = (range - thickness) * vector2_from_angle(d);
 	p1 = p3 + (p2 - p4);
 
-	renderer->AddVertex(GetPosition(position + p4), c1);
+	renderer->AddVertex(GetPosition(center + p4), c1);
 	for (int i = 0; i <= 8; ++i)
 	{
 		float t = i / 8.0f;
-		renderer->AddVertex(GetPosition(position + glm::mix(p2, p1, t)), c1);
-		renderer->AddVertex(GetPosition(position + glm::mix(p5, p3, t)), c0);
+		renderer->AddVertex(GetPosition(center + glm::mix(p2, p1, t)), c1);
+		renderer->AddVertex(GetPosition(center + glm::mix(p5, p3, t)), c0);
 	}
 }
 

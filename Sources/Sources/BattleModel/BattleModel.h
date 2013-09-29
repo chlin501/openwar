@@ -205,8 +205,9 @@ struct UnitRange
 	float angleLength;
 	float minimumRange;
 	float maximumRange;
+	std::vector<float> actualRanges;
 
-	UnitRange() : center(), angleStart(0), angleLength(0), minimumRange(0), maximumRange(0) { }
+	UnitRange() : center(), angleStart(0), angleLength(0), minimumRange(0), maximumRange(0), actualRanges() { }
 };
 
 
