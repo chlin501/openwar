@@ -23,15 +23,20 @@ void RangeMarker::Render(GradientTriangleStripRenderer* renderer)
 	{
 		RenderMissileTarget(renderer, _unit->command.missileTarget->state.center);
 	}
-	else if (_unit->stats.maximumRange > 0 && _unit->state.unitMode != UnitModeMoving && !_unit->state.IsRouting())
+	else if (_unit->unitRange.maximumRange > 0 && _unit->state.unitMode != UnitModeMoving && !_unit->state.IsRouting())
 	{
-		RenderMissileRange(renderer, _unit->state.center, _unit->state.direction, 20, _unit->stats.maximumRange);
+		RenderMissileRange(renderer, _unit->unitRange);
 	}
 }
 
 
-void RangeMarker::RenderMissileRange(GradientTriangleStripRenderer* renderer, glm::vec2 position, float direction, float minimumRange, float maximumRange)
+void RangeMarker::RenderMissileRange(GradientTriangleStripRenderer* renderer, const UnitRange& unitRange)
 {
+	glm::vec2 position = unitRange.center;
+	float direction = unitRange.angleStart + unitRange.angleLength / 2;
+	float minimumRange = unitRange.minimumRange;
+	float maximumRange = unitRange.maximumRange;
+
 	const float thickness = 8;
 	const float two_pi = 2 * (float)M_PI;
 	glm::vec4 c0 = glm::vec4(255, 64, 64, 0) / 255.0f;

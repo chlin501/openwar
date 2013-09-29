@@ -168,6 +168,8 @@ void BattleSimulator::AssignNextState()
 		{
 			fighter->state = fighter->nextState;
 		}
+
+		unit->UpdateUnitRange();
 	}
 }
 

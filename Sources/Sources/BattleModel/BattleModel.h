@@ -198,6 +198,18 @@ struct UnitStats
 };
 
 
+struct UnitRange
+{
+	glm::vec2 center;
+	float angleStart;
+	float angleLength;
+	float minimumRange;
+	float maximumRange;
+
+	UnitRange() : center(), angleStart(0), angleLength(0), minimumRange(0), maximumRange(0) { }
+};
+
+
 struct UnitState
 {
 	// dynamic attributes
@@ -300,6 +312,7 @@ struct Unit
 
 	// intermediate attributes
 	UnitState nextState; // updated by ComputeNextState()
+	UnitRange unitRange;
 
 	// control attributes
 	UnitCommand command; // updated by TouchGesture()
@@ -310,6 +323,7 @@ struct Unit
 	void SetUnitUpdate(UnitUpdate unitUpdate, BattleModel* battleModel);
 
 	glm::vec2 CalculateUnitCenter();
+	void UpdateUnitRange();
 
 	float GetSpeed();
 

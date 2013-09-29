@@ -21,7 +21,7 @@ public:
 	void Render(GradientTriangleStripRenderer* renderer);
 
 private:
-	void RenderMissileRange(GradientTriangleStripRenderer* renderer, glm::vec2 position, float direction, float minimumRange, float maximumRange);
+	void RenderMissileRange(GradientTriangleStripRenderer* renderer, const UnitRange& unitRange);
 	void RenderMissileTarget(GradientTriangleStripRenderer* renderer, glm::vec2 target);
 
 	glm::vec3 GetPosition(glm::vec2 p) const;

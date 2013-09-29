@@ -204,6 +204,16 @@ glm::vec2 Unit::CalculateUnitCenter()
 }
 
 
+void Unit::UpdateUnitRange()
+{
+	unitRange.center = state.center;
+	unitRange.angleLength = (float)M_PI_4;
+	unitRange.angleStart = state.direction - 0.5f * unitRange.angleLength;
+	unitRange.minimumRange = stats.minimumRange;
+	unitRange.maximumRange = stats.maximumRange;
+}
+
+
 float Unit::GetSpeed()
 {
 	if (state.IsRouting())
@@ -349,12 +359,14 @@ UnitStats BattleModel::GetDefaultUnitStats(UnitPlatform unitPlatform, UnitWeapon
 	switch (unitWeapon)
 	{
 		case UnitWeaponBow:
+			result.minimumRange = 20;
 			result.maximumRange = 150;
 			result.runningSpeed += 2; // increased speed
 			result.strikingDuration = 3.0f;
 			break;
 
 		case UnitWeaponArq:
+			result.minimumRange = 20;
 			result.maximumRange = 110;
 			result.walkingSpeed = 5;
 			result.runningSpeed = 9;
