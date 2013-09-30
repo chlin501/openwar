@@ -130,6 +130,7 @@ struct FighterState
 {
 	// dynamic attributes
 	glm::vec2 position;
+	float position_z;
 	ReadyState readyState;
 	float readyingTimer;
 	float strikingTimer;

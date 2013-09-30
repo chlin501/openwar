@@ -248,6 +248,9 @@ void BattleSimulator::ResolveMeleeCombat()
 				if (isMissile)
 					killProbability *= 0.15;
 
+				float heightDiff = fighter->state.position_z - meleeTarget->state.position_z;
+				killProbability *= 1.0f + 0.4f * bounds1d(-1.5f, 1.5f).clamp(heightDiff);
+
 				float speed = glm::length(fighter->state.velocity);
 				killProbability *= (0.9f + speed / 10.0f);
 
@@ -598,6 +601,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 
 	result.readyState = original.readyState;
 	result.position = NextFighterPosition(fighter);
+	result.position_z = _battleModel->terrainSurface->GetHeight(result.position);
 	result.velocity = NextFighterVelocity(fighter);
 
 
