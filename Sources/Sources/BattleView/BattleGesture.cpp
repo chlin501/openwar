@@ -297,7 +297,7 @@ void BattleGesture::TouchEnded(Touch* touch)
 				unit->command.waypoint = *destination;
 			}*/
 
-			Unit* orientationUnit = _trackingMarker->GetMissileTarget();
+			Unit* missileTarget = _trackingMarker->GetMissileTarget();
 			glm::vec2* orientation = _trackingMarker->GetOrientationX();
 
 			if (unit->command.holdFire)
@@ -306,11 +306,11 @@ void BattleGesture::TouchEnded(Touch* touch)
 				unit->command.missileTargetLocked = false;
 				unit->state.loadingTimer = 0;
 			}
-			else if (orientationUnit != nullptr)
+			else if (missileTarget != nullptr)
 			{
-				unit->command.missileTarget = orientationUnit;
+				unit->command.missileTarget = missileTarget;
 				unit->command.missileTargetLocked = true;
-				unit->command.facing = angle(orientationUnit->state.center - unit->command.GetDestination());
+				unit->command.facing = angle(missileTarget->state.center - unit->command.GetDestination());
 				unit->state.loadingTimer = 0;
 			}
 			else if (orientation)
@@ -452,21 +452,21 @@ void BattleGesture::UpdateTrackingMarker()
 			markerPosition += differenceToCenter * (distanceToCenter - contentRadius) / distanceToCenter;
 		}
 
-		float waterEdgeFactor = -1;
+		float movementLimit = -1;
 		float delta = 2 / fmaxf(1, glm::length(currentDestination - markerPosition));
-		for (float k = 0; k < 1; k += delta)
+		for (float k = 0; k <= 1; k += delta)
 		{
 			if (_battleView->GetBattleModel()->terrainSurface->IsImpassable(glm::mix(currentDestination, markerPosition, k)))
 			{
-				waterEdgeFactor = k;
+				movementLimit = k;
 				break;
 			}
 		}
 
-		if (waterEdgeFactor >= 0)
+		if (movementLimit >= 0)
 		{
 			glm::vec2 diff = markerPosition - currentDestination;
-			markerPosition = currentDestination + diff * waterEdgeFactor;
+			markerPosition = currentDestination + diff * movementLimit;
 			markerPosition -= glm::normalize(diff) * 10.0f;
 		}
 

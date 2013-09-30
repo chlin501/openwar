@@ -200,11 +200,10 @@ bool UnitRange::IsWithinRange(glm::vec2 p) const
 	if (minimumRange > 0 && maximumRange > 0)
 	{
 		glm::vec2 diff = p - center;
-		float angle = normalize_angle(glm::atan(diff.y, diff.x));
-		float angleMin = normalize_angle(angleStart);
-		float angleMax = angleMin + angleLength;
+		float angle = glm::atan(diff.y, diff.x);
+		float angleDelta = 0.5 * angleLength;
 
-		if (angle < angleMin || angle > angleMax)
+		if (glm::abs(diff_radians(angle, angleStart + angleDelta)) > angleDelta)
 			return false;
 
 		float distance = glm::length(diff);
@@ -214,7 +213,7 @@ bool UnitRange::IsWithinRange(glm::vec2 p) const
 		if (!actualRanges.empty())
 		{
 			float n = actualRanges.size() - 1;
-			float k = n * (angle - angleMin) / angleLength;
+			float k = n * normalize_angle(angle - angleStart) / angleLength;
 			float i = glm::floor(k);
 
 			float a0 = actualRanges[(int)i];
