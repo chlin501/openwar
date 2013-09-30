@@ -207,7 +207,9 @@ struct UnitRange
 	float maximumRange;
 	std::vector<float> actualRanges;
 
-	UnitRange() : center(), angleStart(0), angleLength(0), minimumRange(0), maximumRange(0), actualRanges() { }
+	UnitRange();
+
+	bool IsWithinRange(glm::vec2 p) const;
 };
 
 
@@ -324,7 +326,6 @@ struct Unit
 	void SetUnitUpdate(UnitUpdate unitUpdate, BattleModel* battleModel);
 
 	glm::vec2 CalculateUnitCenter();
-	void UpdateUnitRange();
 
 	float GetSpeed();
 

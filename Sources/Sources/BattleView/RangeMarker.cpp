@@ -38,13 +38,18 @@ void RangeMarker::RenderMissileRange(GradientTriangleStripRenderer* renderer, co
 	glm::vec4 c0 = glm::vec4(255, 64, 64, 0) / 255.0f;
 	glm::vec4 c1 = glm::vec4(255, 64, 64, 24) / 255.0f;
 
-	float d = unitRange.angleStart;
+	float angleMinOuter = unitRange.angleStart;
+	float angleMinInner = angleMinOuter + 0.03f;
+	float angleMaxOuter = unitRange.angleStart + unitRange.angleLength;
+	float angleMaxInner = angleMaxOuter - 0.03f;
+
 	float range = unitRange.actualRanges.front();
-	glm::vec2 p2 = range * vector2_from_angle(d - 0.03f);
-	glm::vec2 p3 = unitRange.minimumRange * vector2_from_angle(d);
-	glm::vec2 p4 = range * vector2_from_angle(d);
-	glm::vec2 p5 = (range - thickness) * vector2_from_angle(d);
-	glm::vec2 p1 = p3 + (p2 - p4);
+	glm::vec2 p2 = range * vector2_from_angle(angleMinOuter);
+	glm::vec2 p4 = range * vector2_from_angle(angleMinInner);
+	glm::vec2 p5 = (range - thickness) * vector2_from_angle(angleMinInner);
+	glm::vec2 p1 = unitRange.minimumRange * vector2_from_angle(angleMinOuter);
+	glm::vec2 p3 = p1 + (p4 - p2);
+
 
 	for (int i = 0; i <= 8; ++i)
 	{
@@ -57,23 +62,22 @@ void RangeMarker::RenderMissileRange(GradientTriangleStripRenderer* renderer, co
 	renderer->AddVertex(GetPosition(center + p4), c1);
 	renderer->AddVertex(GetPosition(center + p5), c0);
 
-	int n = unitRange.actualRanges.size();
-	float angleDelta = unitRange.angleLength / (n - 1);
+	int n = (int)unitRange.actualRanges.size();
+	float angleDelta = (angleMaxInner - angleMinInner) / (n - 1);
 	for (int i = 0; i < n; ++i)
 	{
 		range = unitRange.actualRanges[i];
- 		d = unitRange.angleStart + i * angleDelta;
-		renderer->AddVertex(GetPosition(center + (range - thickness) * vector2_from_angle(d)), c0);
-		renderer->AddVertex(GetPosition(center + range * vector2_from_angle(d)), c1);
+		float angle = angleMinInner + i * angleDelta;
+		renderer->AddVertex(GetPosition(center + (range - thickness) * vector2_from_angle(angle)), c0);
+		renderer->AddVertex(GetPosition(center + range * vector2_from_angle(angle)), c1);
 	}
 
-	d = unitRange.angleStart + unitRange.angleLength;
 	range = unitRange.actualRanges.back();
-	p2 = range * vector2_from_angle(d + 0.03f);
-	p3 = unitRange.minimumRange * vector2_from_angle(d);
-	p4 = range * vector2_from_angle(d);
-	p5 = (range - thickness) * vector2_from_angle(d);
-	p1 = p3 + (p2 - p4);
+	p2 = range * vector2_from_angle(angleMaxOuter);
+	p4 = range * vector2_from_angle(angleMaxInner);
+	p5 = (range - thickness) * vector2_from_angle(angleMaxInner);
+	p1 = unitRange.minimumRange * vector2_from_angle(angleMaxOuter);
+	p3 = p1 + (p4 - p2);
 
 	renderer->AddVertex(GetPosition(center + p4), c1);
 	for (int i = 0; i <= 8; ++i)

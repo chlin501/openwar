@@ -42,11 +42,23 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 	recentShootings.clear();
 	recentCasualties.clear();
 
+	bool didStep = false;
+
 	_secondsSinceLastTimeStep += secondsSinceLastTime;
 	while (_secondsSinceLastTimeStep >= _battleModel->timeStep)
 	{
 		SimulateOneTimeStep();
 		_secondsSinceLastTimeStep -= _battleModel->timeStep;
+		didStep = true;
+	}
+
+	if (!didStep)
+	{
+		for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+		{
+			Unit* unit = (*i).second;
+			UpdateUnitRange(unit);
+		}
 	}
 
 	if (listener != 0)
@@ -169,7 +181,49 @@ void BattleSimulator::AssignNextState()
 			fighter->state = fighter->nextState;
 		}
 
-		unit->UpdateUnitRange();
+		UpdateUnitRange(unit);
+	}
+}
+
+
+void BattleSimulator::UpdateUnitRange(Unit* unit)
+{
+	UnitRange& unitRange = unit->unitRange;
+
+	unitRange.center = unit->state.center;
+	unitRange.angleLength = (float)M_PI_2;
+	unitRange.angleStart = unit->state.direction - 0.5f * unitRange.angleLength;
+
+	unitRange.minimumRange = unit->stats.minimumRange;
+	unitRange.maximumRange = unit->stats.maximumRange;
+
+	unitRange.actualRanges.clear();
+
+	if (unitRange.minimumRange > 0 && unitRange.maximumRange > 0)
+	{
+		float centerHeight = _battleModel->terrainSurface->GetHeight(unitRange.center) + 1.9f;
+
+		int n = 24;
+		for (int i = 0; i <= n; ++i)
+		{
+			float angle = unitRange.angleStart + i * unitRange.angleLength / n;
+			glm::vec2 direction = vector2_from_angle(angle);
+			float delta = (unitRange.maximumRange - unitRange.minimumRange) / 16;
+			float maxRange = 0;
+			float maxAngle = -100;
+			for (float range = unitRange.minimumRange + delta; range <= unitRange.maximumRange; range += delta)
+			{
+				float height = _battleModel->terrainSurface->GetHeight(unitRange.center + range * direction) + 0.5f;
+				float verticalAngle = glm::atan(height - centerHeight, range);
+				if (verticalAngle > maxAngle)
+				{
+					maxAngle = verticalAngle;
+					maxRange = range;
+				}
+			}
+
+			unitRange.actualRanges.push_back(glm::max(maxRange, unitRange.minimumRange));
+		}
 	}
 }
 
@@ -493,15 +547,7 @@ Unit* BattleSimulator::ClosestEnemyWithinLineOfFire(Unit* unit)
 
 bool BattleSimulator::IsWithinLineOfFire(Unit* unit, glm::vec2 position)
 {
-	float distance = glm::length(unit->state.center - position);
-	if (distance < 15 || distance > unit->stats.maximumRange)
-		return false;
-
-	float a = diff_radians(unit->state.direction, angle(position - unit->state.center));
-	if (fabsf(a) > M_PI_4)
-		return false;
-
-	return true;
+	return unit->unitRange.IsWithinRange(position);
 }
 
 

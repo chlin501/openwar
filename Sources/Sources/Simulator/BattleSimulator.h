@@ -51,6 +51,7 @@ private:
 
 	void ComputeNextState();
 	void AssignNextState();
+	void UpdateUnitRange(Unit* unit);
 
 	void ResolveMeleeCombat();
 	void ResolveMissileCombat();

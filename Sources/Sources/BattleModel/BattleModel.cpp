@@ -171,6 +171,65 @@ spacing(glm::vec2(10, 10))
 }
 
 
+UnitRange::UnitRange() :
+center(),
+angleStart(0),
+angleLength(0),
+minimumRange(0),
+maximumRange(0),
+actualRanges()
+{
+
+}
+
+
+
+static float normalize_angle(float a)
+{
+	static float two_pi = 2 * M_PI;
+	while (a < 0)
+		a += two_pi;
+	while (a > two_pi)
+		a -= two_pi;
+	return a;
+}
+
+
+bool UnitRange::IsWithinRange(glm::vec2 p) const
+{
+	if (minimumRange > 0 && maximumRange > 0)
+	{
+		glm::vec2 diff = p - center;
+		float angle = normalize_angle(glm::atan(diff.y, diff.x));
+		float angleMin = normalize_angle(angleStart);
+		float angleMax = angleMin + angleLength;
+
+		if (angle < angleMin || angle > angleMax)
+			return false;
+
+		float distance = glm::length(diff);
+		if (distance < minimumRange)
+			return false;
+
+		if (!actualRanges.empty())
+		{
+			float n = actualRanges.size() - 1;
+			float k = n * (angle - angleMin) / angleLength;
+			float i = glm::floor(k);
+
+			float a0 = actualRanges[(int)i];
+			float a1 = actualRanges[(int)i + 1];
+			float actualRange = glm::mix(a0, a1, k - i);
+
+			return distance <= actualRange;
+		}
+	}
+
+	return false;
+}
+
+
+
 Unit::Unit() :
 player(Player1),
 stats(),
@@ -201,25 +260,6 @@ glm::vec2 Unit::CalculateUnitCenter()
 	}
 
 	return p / (float)count;
-}
-
-
-void Unit::UpdateUnitRange()
-{
-	unitRange.center = state.center;
-	unitRange.angleLength = (float)M_PI_2;
-	unitRange.angleStart = state.direction - 0.5f * unitRange.angleLength;
-	unitRange.minimumRange = stats.minimumRange;
-	unitRange.maximumRange = stats.maximumRange;
-
-	unitRange.actualRanges.clear();
-	int n = 16;
-	for (int i = 0; i <= n; ++i)
-	{
-		//float a = unitRange.angleStart + i * unitRange.angleLength / n;
-		//float r = unitRange.maximumRange + 10.0f * glm::sin(20.0f * a);
-		unitRange.actualRanges.push_back(unitRange.maximumRange);
-	}
 }
 
 

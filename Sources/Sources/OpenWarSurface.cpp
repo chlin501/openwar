@@ -181,6 +181,11 @@ void OpenWarSurface::Update(double secondsSinceLastUpdate)
 		_battleScript->Tick(secondsSinceLastUpdate);
 		UpdateSoundPlayer();
 	}
+	else
+	{
+		_battleScript->Tick(0);
+	}
+
 	if (_battleView != nullptr)
 	{
 		_battleView->Update(secondsSinceLastUpdate);
