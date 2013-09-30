@@ -434,9 +434,6 @@ void BattleGesture::UpdateTrackingMarker()
 
 	if (!isModifierMode)
 	{
-		if (enemyUnit && !_trackingMarker->GetMeleeTarget())
-			SoundPlayer::singleton->Play(SoundBufferCommandMod);
-
 		std::vector<glm::vec2>& path = _trackingMarker->_path;
 
 		glm::vec2 currentDestination = path.size() != 0 ? *(path.end() - 1) : unit->state.center;
@@ -453,8 +450,8 @@ void BattleGesture::UpdateTrackingMarker()
 		}
 
 		float movementLimit = -1;
-		float delta = 2 / fmaxf(1, glm::length(currentDestination - markerPosition));
-		for (float k = 0; k <= 1; k += delta)
+		float delta = 1.0f / fmaxf(1, glm::length(currentDestination - markerPosition));
+		for (float k = delta; k < 1; k += delta)
 		{
 			if (_battleView->GetBattleModel()->terrainSurface->IsImpassable(glm::mix(currentDestination, markerPosition, k)))
 			{
@@ -468,8 +465,12 @@ void BattleGesture::UpdateTrackingMarker()
 			glm::vec2 diff = markerPosition - currentDestination;
 			markerPosition = currentDestination + diff * movementLimit;
 			markerPosition -= glm::normalize(diff) * 10.0f;
+
+			enemyUnit = nullptr;
 		}
 
+		if (enemyUnit && !_trackingMarker->GetMeleeTarget())
+			SoundPlayer::singleton->Play(SoundBufferCommandMod);
 
 		_trackingMarker->SetMeleeTarget(enemyUnit);
 		_trackingMarker->SetDestination(&markerPosition);

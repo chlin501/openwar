@@ -385,7 +385,7 @@ void BattleSimulator::RemoveCasualties()
 		int n = unit->fightersCount;
 		for (int j = 0; j < n; ++j)
 		{
-			if (unit->fighters[j].terrainWater && unit->state.IsRouting())
+			if (unit->fighters[j].terrainImpassable && unit->state.IsRouting())
 				unit->fighters[j].casualty = true;
 
 			if (unit->fighters[j].casualty)
@@ -796,6 +796,7 @@ glm::vec2 BattleSimulator::NextFighterVelocity(Fighter* fighter)
 {
 	Unit* unit = fighter->unit;
 	float speed = unit->GetSpeed();
+	glm::vec2 destination = fighter->state.destination;
 
 	switch (fighter->state.readyState)
 	{
@@ -811,11 +812,12 @@ glm::vec2 BattleSimulator::NextFighterVelocity(Fighter* fighter)
 			break;
 	}
 
-	if (glm::length(fighter->state.position - fighter->terrainPosition) > 5)
+	if (glm::length(fighter->state.position - fighter->terrainPosition) > 4)
 	{
-		fighter->terrainPosition = fighter->state.position;
 		fighter->terrainForest = _battleModel->terrainSurface->IsForest(fighter->state.position);
-		fighter->terrainWater = _battleModel->terrainWater->IsWater(fighter->state.position);
+		fighter->terrainImpassable = _battleModel->terrainSurface->IsImpassable(fighter->state.position);
+		if (!fighter->terrainImpassable)
+			fighter->terrainPosition = fighter->state.position;
 	}
 
 	if (fighter->terrainForest)
@@ -826,7 +828,10 @@ glm::vec2 BattleSimulator::NextFighterVelocity(Fighter* fighter)
 			speed *= 0.9;
 	}
 
-	glm::vec2 diff = fighter->state.destination - fighter->state.position;
+	if (fighter->terrainImpassable)
+		destination = fighter->terrainPosition;
+
+	glm::vec2 diff = destination - fighter->state.position;
 	float diff_len = glm::dot(diff, diff);
 	if (diff_len < 0.01)
 		return diff;

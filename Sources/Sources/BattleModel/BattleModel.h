@@ -164,7 +164,7 @@ struct Fighter
 
 	// optimization attributes
 	bool terrainForest;
-	bool terrainWater;
+	bool terrainImpassable;
 	glm::vec2 terrainPosition;
 
 	// intermediate attributes

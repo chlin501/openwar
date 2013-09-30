@@ -60,7 +60,7 @@ state(),
 nextState(),
 casualty(false),
 terrainForest(false),
-terrainWater(false),
+terrainImpassable(false),
 terrainPosition()
 {
 }
