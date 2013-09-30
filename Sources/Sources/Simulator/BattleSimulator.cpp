@@ -321,6 +321,8 @@ void BattleSimulator::TriggerShooting(Unit* unit)
 
 void BattleSimulator::ResolveProjectileCasualties()
 {
+	static int random = 0;
+
 	for (std::vector<Shooting>::iterator s = _battleModel->shootings.begin(); s != _battleModel->shootings.end(); ++s)
 	{
 		Shooting& shooting = *s;
@@ -334,10 +336,14 @@ void BattleSimulator::ResolveProjectileCasualties()
 			if (shooting.timeToImpact <= 0)
 			{
 				glm::vec2 hitpoint = projectile.position2;
-				for (quadtree<Fighter*>::iterator j(_fighterQuadTree.find(hitpoint.x, hitpoint.y, 0.5f)); *j; ++j)
+				for (quadtree<Fighter*>::iterator j(_fighterQuadTree.find(hitpoint.x, hitpoint.y, 0.45f)); *j; ++j)
 				{
 					Fighter* fighter = **j;
-					fighter->casualty = true;
+					bool blocked = false;
+					if (fighter->terrainForest)
+						blocked = (random++ & 7) <= 5;
+					if (!blocked)
+						fighter->casualty = true;
 				}
 				shooting.projectiles.erase(i);
 			}
@@ -345,6 +351,7 @@ void BattleSimulator::ResolveProjectileCasualties()
 			{
 				++i;
 			}
+			++random;
 		}
 	}
 }
