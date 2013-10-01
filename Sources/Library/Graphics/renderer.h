@@ -157,7 +157,7 @@ public:
 
 	void render(vertexbuffer<vertex_type>& shape, const uniforms_type& uniforms)
 	{
-		if (shape._vertices.empty())
+		if (shape.count() == 0)
 			return;
 
 		glUseProgram(_program);
@@ -209,6 +209,7 @@ struct renderers
 	renderer<color_vertex3, gradient_uniforms>* _gradient_renderer3;
 	renderer<texture_vertex, ground_uniforms>* _ground_renderer;
 	renderer<plain_vertex, color_uniforms>* _plain_renderer;
+	renderer<plain_vertex3, color_uniforms>* _plain_renderer3;
 	renderer<texture_vertex, texture_uniforms>* _texture_renderer;
 	renderer<texture_vertex3, texture_uniforms>* _texture_renderer3;
 	renderer<texture_vertex, texture_uniforms>* _opaque_texture_renderer;

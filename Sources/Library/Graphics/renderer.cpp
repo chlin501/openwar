@@ -638,6 +638,40 @@ renderers::renderers()
 
 
 
+	_plain_renderer3 = new renderer<plain_vertex3, color_uniforms>((
+		VERTEX_ATTRIBUTE(plain_vertex3, _position),
+		SHADER_UNIFORM(color_uniforms, _transform),
+		SHADER_UNIFORM(gradient_uniforms, _point_size),
+		SHADER_UNIFORM(color_uniforms, _color),
+		VERTEX_SHADER
+		({
+			attribute vec3 position;
+			uniform mat4 transform;
+			uniform float point_size;
+
+			void main()
+			{
+				vec4 p = transform * vec4(position.x, position.y, position.z, 1);
+
+				gl_Position = p;
+				gl_PointSize = point_size;
+			}
+		}),
+		FRAGMENT_SHADER
+		({
+			uniform vec4 color;
+
+			void main()
+			{
+				gl_FragColor = color;
+			}
+		}))
+	);
+	_plain_renderer3->_blend_sfactor = GL_SRC_ALPHA;
+	_plain_renderer3->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+
+
+
 	_texture_renderer = new renderer<texture_vertex, texture_uniforms>((
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_vertex, _texcoord),

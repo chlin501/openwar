@@ -15,11 +15,10 @@ struct terrain_renderers;
 
 struct terrain_vertex
 {
-	GLushort _x, _y;
 	glm::vec3 _position;
 	glm::vec3 _normal;
 
-	terrain_vertex(GLushort x, GLushort y, glm::vec3 p, glm::vec3 n) : _x(x), _y(y), _position(p), _normal(n) {}
+	terrain_vertex(glm::vec3 p, glm::vec3 n) : _position(p), _normal(n) {}
 };
 
 

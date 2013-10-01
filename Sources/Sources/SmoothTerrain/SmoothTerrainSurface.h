@@ -30,11 +30,14 @@ class SmoothTerrainSurface : public TerrainSurface
 	vertexbuffer<terrain_vertex> _vboInside;
 	vertexbuffer<terrain_vertex> _vboBorder;
 	vertexbuffer<skirt_vertex> _vboSkirt;
-	vertexbuffer<color_vertex3> _vboLines;
+	vertexbuffer<plain_vertex3> _vboLines;
 
-	int _size;
+	int _stride;
+	int _gridmax;
 	float* _heights;
 	glm::vec3* _normals;
+
+	bool _showLines;
 
 public:
 	SmoothTerrainSurface(bounds2f bounds, image* groundmap);
@@ -94,7 +97,7 @@ public:
 	void BuildTriangles();
 	void PushTriangle(const terrain_vertex& v0, const terrain_vertex& v1, const terrain_vertex& v2);
 
-	glm::ivec2 MapWorldToImage(glm::vec2 position) const;
+	glm::ivec2 ToGroundmapCoordinate(glm::vec2 position) const;
 };
 
 

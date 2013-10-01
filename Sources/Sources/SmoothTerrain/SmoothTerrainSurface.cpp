@@ -17,18 +17,24 @@ _colorbuffer(nullptr),
 _depth(nullptr),
 _colormap(nullptr),
 _splatmap(nullptr),
-_size(255),
+_stride(0),
+_gridmax(0),
 _heights(nullptr),
-_normals(nullptr)
+_normals(nullptr),
+_showLines(false)
 {
+#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
 	if (groundmap->size() != glm::ivec2(256, 256))
 		NSLog(@"SmoothTerrainSurface: ILLEGAL SIZE ############# %d x %d", groundmap->size().x, groundmap->size().y);
+#endif
 
 	_renderers = new terrain_renderers();
 	_colormap = terrain_renderers::create_colormap();
 
-	_heights = new float [_size * _size];
-	_normals = new glm::vec3[_size * _size];
+	_stride = 256;
+	_gridmax = 254;
+	_heights = new float [_stride * _stride];
+	_normals = new glm::vec3[_stride * _stride];
 
 	UpdateHeights();
 	UpdateNormals();
@@ -67,7 +73,7 @@ float SmoothTerrainSurface::GetHeight(glm::vec2 position) const
 const float* SmoothTerrainSurface::Intersect(ray r)
 {
 	glm::vec3 offset = glm::vec3(_bounds.min, 0);
-	glm::vec3 scale = glm::vec3(glm::vec2(_size - 1, _size - 1) / _bounds.size(), 1);
+	glm::vec3 scale = glm::vec3(glm::vec2(_stride, _stride) / _bounds.size(), 1);
 
 	ray r2 = ray(scale * (r.origin - offset), glm::normalize(scale * r.direction));
 	const float* d = InternalIntersect(r2);
@@ -82,14 +88,14 @@ const float* SmoothTerrainSurface::Intersect(ray r)
 
 bool SmoothTerrainSurface::IsForest(glm::vec2 position) const
 {
-	glm::ivec2 coord = MapWorldToImage(position);
+	glm::ivec2 coord = ToGroundmapCoordinate(position);
 	return GetForestValue(coord.x, coord.y) >= 0.5;
 }
 
 
 bool SmoothTerrainSurface::IsImpassable(glm::vec2 position) const
 {
-	glm::ivec2 coord = MapWorldToImage(position);
+	glm::ivec2 coord = ToGroundmapCoordinate(position);
 	return GetImpassableValue(coord.x, coord.y) >= 0.5;
 }
 
@@ -139,13 +145,13 @@ void SmoothTerrainSurface::Render(const glm::mat4x4& transform, const glm::vec3&
 	_renderers->render_terrain_inside(_vboInside, uniforms);
 	_renderers->render_terrain_border(_vboBorder, uniforms);
 
-	bool showLines = this == nullptr;
-	if (showLines)
+	if (_showLines)
 	{
 		glDisable(GL_DEPTH_TEST);
-		gradient_uniforms g;
+		color_uniforms g;
 		g._transform = uniforms._transform;
-		renderers::singleton->_gradient_renderer3->render(_vboLines, g);
+		g._color = glm::vec4(0, 0, 0, 0.06f);
+		renderers::singleton->_plain_renderer3->render(_vboLines, g);
 		glEnable(GL_DEPTH_TEST);
 	}
 
@@ -180,7 +186,7 @@ void SmoothTerrainSurface::Render(const glm::mat4x4& transform, const glm::vec3&
 void SmoothTerrainSurface::Extract(glm::vec2 position, image* brush)
 {
 	glm::ivec2 size = brush->size();
-	glm::ivec2 origin = MapWorldToImage(position) - size / 2;
+	glm::ivec2 origin = ToGroundmapCoordinate(position) - size / 2;
 
 	for (int x = 0; x < size.x; ++x)
 		for (int y = 0; y < size.y; ++y)
@@ -192,7 +198,7 @@ bounds2f SmoothTerrainSurface::Paint(TerrainFeature feature, glm::vec2 position,
 {
 	glm::vec2 scale = _bounds.size() / glm::vec2(_groundmap->size());
 	glm::ivec2 size = brush->size();
-	glm::ivec2 center = MapWorldToImage(position);
+	glm::ivec2 center = ToGroundmapCoordinate(position);
 	glm::ivec2 origin = center - size / 2;
 	float radius = size.x / 2.0f;
 
@@ -234,7 +240,7 @@ bounds2f SmoothTerrainSurface::Paint(TerrainFeature feature, glm::vec2 position,
 	glm::vec2 scale = _bounds.size() / glm::vec2(_groundmap->size());
 	float abs_pressure = glm::abs(pressure);
 
-	glm::ivec2 center = MapWorldToImage(position);
+	glm::ivec2 center = ToGroundmapCoordinate(position);
 
 	float value = pressure > 0 ? 1 : 0;
 	float delta = pressure > 0 ? 0.015f : -0.015f;
@@ -271,7 +277,7 @@ bounds2f SmoothTerrainSurface::Paint(TerrainFeature feature, glm::vec2 position,
 }
 
 
-glm::ivec2 SmoothTerrainSurface::MapWorldToImage(glm::vec2 position) const
+glm::ivec2 SmoothTerrainSurface::ToGroundmapCoordinate(glm::vec2 position) const
 {
 	glm::vec2 p = (position - _bounds.min) / _bounds.size();
 	glm::ivec2 s = _groundmap->size();
@@ -339,34 +345,34 @@ void SmoothTerrainSurface::EnableRenderEdges()
 
 void SmoothTerrainSurface::UpdateHeights()
 {
-	int n = _size - 1;
+	int n = _gridmax;
 
 	for (int x = 0; x <= n; x += 2)
 		for (int y = 0; y <= n; y += 2)
 		{
-			int i = x + y * _size;
+			int i = x + y * _stride;
 			_heights[i] = CalculateHeight(x, y);
 		}
 
 	for (int x = 1; x < n; x += 2)
 		for (int y = 1; y < n; y += 2)
 		{
-			int i = x + y * _size;
+			int i = x + y * _stride;
 			_heights[i] = CalculateHeight(x, y);
 		}
 
 	for (int y = 0; y <= n; y += 2)
 		for (int x = 1; x < n; x += 2)
 		{
-			int i = x + y * _size;
+			int i = x + y * _stride;
 			_heights[i] = 0.5f * (_heights[i - 1] + _heights[i + 1]);
 		}
 
 	for (int y = 1; y < n; y += 2)
 		for (int x = 0; x <= n; x += 2)
 		{
-			int i = x + y * _size;
-			_heights[i] = 0.5f * (_heights[i - _size] + _heights[i + _size]);
+			int i = x + y * _stride;
+			_heights[i] = 0.5f * (_heights[i - _stride] + _heights[i + _stride]);
 		}
 }
 
@@ -395,20 +401,17 @@ float SmoothTerrainSurface::CalculateHeight(int x, int y) const
 
 void SmoothTerrainSurface::UpdateNormals()
 {
-	glm::vec2 size = _bounds.size();
-
-	int n = _size - 1;
-	float k = n;
-	glm::vec2 delta = 2.0f * size / k;
-	int index = 0;
+	int n = _gridmax;
+	glm::vec2 delta = 2.0f * _bounds.size() / (float)_gridmax;
 	for (int y = 0; y <= n; ++y)
 	{
 		for (int x = 0; x <= n; ++x)
 		{
+			int index = x + y * _stride;
 			int index_xn = x != 0 ? index - 1 : index;
 			int index_xp = x != n ? index + 1 : index;
-			int index_yn = y != 0 ? index - _size : index;
-			int index_yp = y != n ? index + _size : index;
+			int index_yn = y != 0 ? index - _stride : index;
+			int index_yp = y != n ? index + _stride : index;
 
 			float delta_hx = _heights[index_xp] - _heights[index_xn];
 			float delta_hy = _heights[index_yp] - _heights[index_yn];
@@ -416,7 +419,7 @@ void SmoothTerrainSurface::UpdateNormals()
 			glm::vec3 v1 = glm::vec3(delta.x, 0, delta_hx);
 			glm::vec3 v2 = glm::vec3(0, delta.y, delta_hy);
 
-			_normals[index++] = glm::normalize(glm::cross(v1, v2));
+			_normals[index] = glm::normalize(glm::cross(v1, v2));
 		}
 	}
 }
@@ -432,7 +435,7 @@ float SmoothTerrainSurface::GetHeight(int x, int y) const
 {
 	if (x < 0) x = 0; else if (x > 254) x = 254;
 	if (y < 0) y = 0; else if (y > 254) y = 254;
-	return _heights[x + y * _size];
+	return _heights[x + y * _stride];
 }
 
 
@@ -440,16 +443,15 @@ glm::vec3 SmoothTerrainSurface::GetNormal(int x, int y) const
 {
 	if (x < 0) x = 0; else if (x > 254) x = 254;
 	if (y < 0) y = 0; else if (y > 254) y = 254;
-	return _normals[x + y * _size];
+	return _normals[x + y * _stride];
 }
 
 
 float SmoothTerrainSurface::InterpolateHeight(glm::vec2 position) const
 {
-	glm::vec2 p = (position - _bounds.min) / _bounds.size();
-	float n = _size - 1;
-	float x = p.x * n;
-	float y = p.y * n;
+	glm::ivec2 i = ToGroundmapCoordinate(position);
+	float x = i.x;
+	float y = i.y;
 
 	// find triangle midpoint coordinates (x1, y1)
 
@@ -508,7 +510,7 @@ const float* SmoothTerrainSurface::InternalIntersect(ray r)
 	static float result;
 
 	bounds1f height = bounds1f(-2.5f, 250);
-	bounds2f bounds(0, 0, _size - 1, _size - 1);
+	bounds2f bounds(0, 0, _gridmax, _gridmax);
 	bounds2f quad(-0.01f, -0.01f, 1.01f, 1.01f);
 
 	const float* d = ::intersect(r, bounds3f(bounds, height));
@@ -517,7 +519,7 @@ const float* SmoothTerrainSurface::InternalIntersect(ray r)
 
 	glm::vec3 p = r.point(*d);
 
-	bounds2f bounds_2(0, 0, _size - 2, _size - 2);
+	bounds2f bounds_2(0, 0, _gridmax - 1, _gridmax - 1);
 
 	int x = (int)bounds_2.x().clamp(p.x);
 	int y = (int)bounds_2.y().clamp(p.y);
@@ -752,8 +754,9 @@ void SmoothTerrainSurface::UpdateChanges(bounds2f bounds)
 		glm::vec2 p = vertex._position.xy();
 		if (bounds.contains(p))
 		{
-			vertex._position.z = GetHeight(vertex._x, vertex._y);
-			vertex._normal = GetNormal(vertex._x, vertex._y);
+			glm::ivec2 i = ToGroundmapCoordinate(p);
+			vertex._position.z = GetHeight(i.x, i.y);
+			vertex._normal = GetNormal(i.x, i.y);
 		}
 	}
 	_vboInside.update(GL_STATIC_DRAW);
@@ -764,22 +767,26 @@ void SmoothTerrainSurface::UpdateChanges(bounds2f bounds)
 		glm::vec2 p = vertex._position.xy();
 		if (bounds.contains(p))
 		{
-			vertex._position.z = GetHeight(vertex._x, vertex._y);
-			vertex._normal = GetNormal(vertex._x, vertex._y);
+			glm::ivec2 i = ToGroundmapCoordinate(p);
+			vertex._position.z = GetHeight(i.x, i.y);
+			vertex._normal = GetNormal(i.x, i.y);
 		}
 	}
 	_vboBorder.update(GL_STATIC_DRAW);
 
 // lines
-	for (color_vertex3& vertex : _vboLines._vertices)
+	if (_showLines)
 	{
-		glm::vec2 p = vertex._position.xy();
-		if (bounds.contains(p))
+		for (plain_vertex3& vertex : _vboLines._vertices)
 		{
-			vertex._position.z = InterpolateHeight(p);
+			glm::vec2 p = vertex._position.xy();
+			if (bounds.contains(p))
+			{
+				vertex._position.z = InterpolateHeight(p);
+			}
 		}
+		_vboLines.update(GL_STATIC_DRAW);
 	}
-	_vboLines.update(GL_STATIC_DRAW);
 
 // skirt
 	for (size_t i = 0; i < _vboSkirt._vertices.size(); i += 2)
@@ -798,60 +805,63 @@ void SmoothTerrainSurface::UpdateChanges(bounds2f bounds)
 
 void SmoothTerrainSurface::InitializeLines()
 {
-	glm::vec2 corner = _bounds.min;
-	glm::vec2 size = _bounds.size();
+	if (_showLines)
+	{
+		glm::vec2 corner = _bounds.min;
+		glm::vec2 size = _bounds.size();
 
-	glm::vec4 black(0, 0, 0, 0.06f);
-
-	_vboLines._mode = GL_LINES;
-	_vboLines._vertices.clear();
-	int n = _size - 1;
-	float k = n;
-	for (int x = 0; x <= n; x += 2)
-		for (int y = 0; y <= n; y += 2)
+		_vboLines._mode = GL_LINES;
+		_vboLines._vertices.clear();
+		int n = _gridmax;
+		float k = _groundmap->size().x;
+		for (int x = 0; x <= n; x += 2)
 		{
-			float x0 = corner.x + size.x * (x / k);
-			float y0 = corner.y + size.y * (y / k);
-			float h00 = GetHeight(x, y);
-
-			float x2, h20;
-			if (x != n)
+			for (int y = 0; y <= n; y += 2)
 			{
-				x2 = corner.x + size.x * ((x + 2) / k);
-				h20 = GetHeight(x + 2, y);
-				_vboLines._vertices.push_back(color_vertex3(glm::vec3(x0, y0, h00), black));
-				_vboLines._vertices.push_back(color_vertex3(glm::vec3(x2, y0, h20), black));
-			}
-			float y2, h02;
-			if (y != n)
-			{
-				y2 = corner.y + size.y * ((y + 2) / k);
-				h02 = GetHeight(x, y + 2);
-				_vboLines._vertices.push_back(color_vertex3(glm::vec3(x0, y0, h00), black));
-				_vboLines._vertices.push_back(color_vertex3(glm::vec3(x0, y2, h02), black));
-			}
+				float x0 = corner.x + size.x * (x / k);
+				float y0 = corner.y + size.y * (y / k);
+				float h00 = GetHeight(x, y);
 
-			if (x != n && y != n)
-			{
-				float x1 = corner.x + size.x * ((x + 1) / k);
-				float y1 = corner.y + size.y * ((y + 1) / k);
-				float h11 = GetHeight(x + 1, y + 1);
-				float h22 = GetHeight(x + 2, y + 2);
+				float x2, h20;
+				if (x != n)
+				{
+					x2 = corner.x + size.x * ((x + 2) / k);
+					h20 = GetHeight(x + 2, y);
+					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x0, y0, h00)));
+					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x2, y0, h20)));
+				}
+				float y2, h02;
+				if (y != n)
+				{
+					y2 = corner.y + size.y * ((y + 2) / k);
+					h02 = GetHeight(x, y + 2);
+					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x0, y0, h00)));
+					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x0, y2, h02)));
+				}
 
-				_vboLines._vertices.push_back(color_vertex3(glm::vec3(x0, y0, h00), black));
-				_vboLines._vertices.push_back(color_vertex3(glm::vec3(x1, y1, h11), black));
+				if (x != n && y != n)
+				{
+					float x1 = corner.x + size.x * ((x + 1) / k);
+					float y1 = corner.y + size.y * ((y + 1) / k);
+					float h11 = GetHeight(x + 1, y + 1);
+					float h22 = GetHeight(x + 2, y + 2);
 
-				_vboLines._vertices.push_back(color_vertex3(glm::vec3(x2, y0, h20), black));
-				_vboLines._vertices.push_back(color_vertex3(glm::vec3(x1, y1, h11), black));
+					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x0, y0, h00)));
+					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x1, y1, h11)));
 
-				_vboLines._vertices.push_back(color_vertex3(glm::vec3(x0, y2, h02), black));
-				_vboLines._vertices.push_back(color_vertex3(glm::vec3(x1, y1, h11), black));
+					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x2, y0, h20)));
+					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x1, y1, h11)));
 
-				_vboLines._vertices.push_back(color_vertex3(glm::vec3(x2, y2, h22), black));
-				_vboLines._vertices.push_back(color_vertex3(glm::vec3(x1, y1, h11), black));
+					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x0, y2, h02)));
+					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x1, y1, h11)));
+
+					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x2, y2, h22)));
+					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x1, y1, h11)));
+				}
 			}
 		}
-	_vboLines.update(GL_STATIC_DRAW);
+		_vboLines.update(GL_STATIC_DRAW);
+	}
 }
 
 
@@ -881,8 +891,8 @@ void SmoothTerrainSurface::BuildTriangles()
 	_vboBorder._mode = GL_TRIANGLES;
 	_vboBorder._vertices.clear();
 
-	int n = _size - 1;
-	float k = n;
+	int n = _gridmax;
+	float k = _groundmap->size().x;
 
 	for (int x = 0; x < n; x += 2)
 		for (int y = 0; y < n; y += 2)
@@ -906,11 +916,11 @@ void SmoothTerrainSurface::BuildTriangles()
 			glm::vec3 n11 = GetNormal(x + 1, y + 1);
 			glm::vec3 n22 = GetNormal(x + 2, y + 2);
 
-			terrain_vertex v00 = terrain_vertex(x + 0, y + 0, glm::vec3(x0, y0, h00), n00);
-			terrain_vertex v02 = terrain_vertex(x + 0, y + 2, glm::vec3(x0, y2, h02), n02);
-			terrain_vertex v20 = terrain_vertex(x + 2, y + 0, glm::vec3(x2, y0, h20), n20);
-			terrain_vertex v11 = terrain_vertex(x + 1, y + 1, glm::vec3(x1, y1, h11), n11);
-			terrain_vertex v22 = terrain_vertex(x + 2, y + 2, glm::vec3(x2, y2, h22), n22);
+			terrain_vertex v00 = terrain_vertex(glm::vec3(x0, y0, h00), n00);
+			terrain_vertex v02 = terrain_vertex(glm::vec3(x0, y2, h02), n02);
+			terrain_vertex v20 = terrain_vertex(glm::vec3(x2, y0, h20), n20);
+			terrain_vertex v11 = terrain_vertex(glm::vec3(x1, y1, h11), n11);
+			terrain_vertex v22 = terrain_vertex(glm::vec3(x2, y2, h22), n22);
 
 			PushTriangle(v00, v20, v11);
 			PushTriangle(v20, v22, v11);
@@ -920,6 +930,12 @@ void SmoothTerrainSurface::BuildTriangles()
 
 	_vboInside.update(GL_STATIC_DRAW);
 	_vboBorder.update(GL_STATIC_DRAW);
+
+	_vboInside._vertices.clear();
+	_vboInside._vertices.shrink_to_fit();
+
+	_vboBorder._vertices.clear();
+	_vboBorder._vertices.shrink_to_fit();
 }
 
 
