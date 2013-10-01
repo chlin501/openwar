@@ -72,7 +72,7 @@ _player(PlayerNone)
 	_billboardTexture = new BillboardTexture();
 
 	image img(resource("Textures/Billboards.png"));
-	img.premultiply_alpha();
+	//img.premultiply_alpha(); // TODO: how to handle this ???
 	_billboardTexture->AddSheet(img);
 
 	_billboardModel = new BillboardModel();
