@@ -187,7 +187,10 @@ void BattleScript::Tick(double secondsSinceLastUpdate)
 		}
 	}
 
-	_battleSimulator->AdvanceTime((float)secondsSinceLastUpdate);
+	if (_battleSimulator != nullptr)
+	{
+		_battleSimulator->AdvanceTime((float)secondsSinceLastUpdate);
+	}
 }
 
 

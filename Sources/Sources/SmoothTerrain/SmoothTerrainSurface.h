@@ -71,8 +71,8 @@ public:
 	float CalculateHeight(int x, int y) const;
 	void UpdateNormals();
 
-	float GetHeight(int x, int y) const { return _heights[x + y * _size]; }
-	glm::vec3 GetNormal(int x, int y) const { return _normals[x + y * _size]; }
+	float GetHeight(int x, int y) const;
+	glm::vec3 GetNormal(int x, int y) const;
 
 	float InterpolateHeight(glm::vec2 position) const;
 

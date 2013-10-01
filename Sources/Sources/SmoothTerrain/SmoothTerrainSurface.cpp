@@ -46,6 +46,9 @@ _normals(nullptr)
 
 SmoothTerrainSurface::~SmoothTerrainSurface()
 {
+	delete _heights;
+	delete _normals;
+
 	delete _colormap;
 	delete _splatmap;
 	delete _framebuffer;
@@ -384,7 +387,7 @@ float SmoothTerrainSurface::CalculateHeight(int x, int y) const
 	height = glm::mix(height, -2.5f, water);
 
 	float fords = color.r;
-	height = glm::mix(height, -0.5f, fords);
+	height = glm::mix(height, -0.5f, water * fords);
 
 	return height;
 }
@@ -422,6 +425,22 @@ void SmoothTerrainSurface::UpdateNormals()
 static float nearest_odd(float value)
 {
 	return 1.0f + 2.0f * (int)glm::round(0.5f * (value - 1.0f));
+}
+
+
+float SmoothTerrainSurface::GetHeight(int x, int y) const
+{
+	if (x < 0) x = 0; else if (x > 254) x = 254;
+	if (y < 0) y = 0; else if (y > 254) y = 254;
+	return _heights[x + y * _size];
+}
+
+
+glm::vec3 SmoothTerrainSurface::GetNormal(int x, int y) const
+{
+	if (x < 0) x = 0; else if (x > 254) x = 254;
+	if (y < 0) y = 0; else if (y > 254) y = 254;
+	return _normals[x + y * _size];
 }
 
 
@@ -705,13 +724,17 @@ float SmoothTerrainSurface::GetForestValue(int x, int y) const
 
 float SmoothTerrainSurface::GetImpassableValue(int x, int y) const
 {
-	glm::vec4 c = _groundmap->get_pixel(x, y);
-	if (c.b >= 0.5f && c.r < 0.5f)
-		return 1.0f;
+    if (0 <= x && x < 255 && 0 <= y && y < 255)
+    {
+        glm::vec4 c = _groundmap->get_pixel(x, y);
+        if (c.b >= 0.5f && c.r < 0.5f)
+            return 1.0f;
 
-	glm::vec3 n = GetNormal(x, y);
+        glm::vec3 n = GetNormal(x, y);
 
-	return bounds1f(0, 1).clamp(0.5f + 8.0f * (0.83f - n.z));
+        return bounds1f(0, 1).clamp(0.5f + 8.0f * (0.83f - n.z));
+    }
+    return 0;
 }
 
 

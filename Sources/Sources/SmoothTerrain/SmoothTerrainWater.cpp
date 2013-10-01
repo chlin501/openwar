@@ -114,7 +114,7 @@ bool SmoothTerrainWater::ContainsWater(bounds2f bounds) const
 		for (int y = ymin; y <= ymax; ++y)
 		{
 			glm::vec4 c = _groundmap->get_pixel(x, y);
-			if (c.b >= 0.5 || c.r >= 0.5)
+			if (c.b >= 0.5)
 				return true;
 		}
 
