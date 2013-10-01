@@ -32,10 +32,10 @@ class SmoothTerrainSurface : public TerrainSurface
 	vertexbuffer<skirt_vertex> _vboSkirt;
 	vertexbuffer<plain_vertex3> _vboLines;
 
-	int _stride;
-	int _gridmax;
-	float* _heights;
-	glm::vec3* _normals;
+	int _cacheStride;
+	int _cacheMaxIndex;
+	float* _cacheHeights;
+	glm::vec3* _cacheNormals;
 
 	bool _showLines;
 	bool _editMode;

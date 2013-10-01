@@ -17,10 +17,10 @@ _colorbuffer(nullptr),
 _depth(nullptr),
 _colormap(nullptr),
 _splatmap(nullptr),
-_stride(0),
-_gridmax(0),
-_heights(nullptr),
-_normals(nullptr),
+_cacheStride(0),
+_cacheMaxIndex(0),
+_cacheHeights(nullptr),
+_cacheNormals(nullptr),
 _showLines(false),
 _editMode(false)
 {
@@ -32,10 +32,10 @@ _editMode(false)
 	_renderers = new terrain_renderers();
 	_colormap = terrain_renderers::create_colormap();
 
-	_stride = 256;
-	_gridmax = 254;
-	_heights = new float [_stride * _stride];
-	_normals = new glm::vec3[_stride * _stride];
+	_cacheStride = 256;
+	_cacheMaxIndex = 254;
+	_cacheHeights = new float [_cacheStride * _cacheStride];
+	_cacheNormals = new glm::vec3[_cacheStride * _cacheStride];
 
 	UpdateHeights();
 	UpdateNormals();
@@ -53,8 +53,8 @@ _editMode(false)
 
 SmoothTerrainSurface::~SmoothTerrainSurface()
 {
-	delete _heights;
-	delete _normals;
+	delete _cacheHeights;
+	delete _cacheNormals;
 
 	delete _colormap;
 	delete _splatmap;
@@ -74,7 +74,7 @@ float SmoothTerrainSurface::GetHeight(glm::vec2 position) const
 const float* SmoothTerrainSurface::Intersect(ray r)
 {
 	glm::vec3 offset = glm::vec3(_bounds.min, 0);
-	glm::vec3 scale = glm::vec3(glm::vec2(_stride, _stride) / _bounds.size(), 1);
+	glm::vec3 scale = glm::vec3(glm::vec2(_cacheStride, _cacheStride) / _bounds.size(), 1);
 
 	ray r2 = ray(scale * (r.origin - offset), glm::normalize(scale * r.direction));
 	const float* d = InternalIntersect(r2);
@@ -244,7 +244,7 @@ bounds2f SmoothTerrainSurface::Paint(TerrainFeature feature, glm::vec2 position,
 	glm::ivec2 center = ToGroundmapCoordinate(position);
 
 	float value = pressure > 0 ? 1 : 0;
-	float delta = pressure > 0 ? 0.015f : -0.015f;
+	float delta = pressure > 0 ? -0.015f : 0.015f;
 
 	for (int x = -10; x <= 10; ++x)
 		for (int y = -10; y <= 10; ++y)
@@ -346,49 +346,52 @@ void SmoothTerrainSurface::EnableRenderEdges()
 
 void SmoothTerrainSurface::UpdateHeights()
 {
-	int n = _gridmax;
+	int n = _cacheMaxIndex;
 
 	for (int x = 0; x <= n; x += 2)
 		for (int y = 0; y <= n; y += 2)
 		{
-			int i = x + y * _stride;
-			_heights[i] = CalculateHeight(x, y);
+			int i = x + y * _cacheStride;
+			_cacheHeights[i] = CalculateHeight(x, y);
 		}
 
 	for (int x = 1; x < n; x += 2)
 		for (int y = 1; y < n; y += 2)
 		{
-			int i = x + y * _stride;
-			_heights[i] = CalculateHeight(x, y);
+			int i = x + y * _cacheStride;
+			_cacheHeights[i] = CalculateHeight(x, y);
 		}
 
 	for (int y = 0; y <= n; y += 2)
 		for (int x = 1; x < n; x += 2)
 		{
-			int i = x + y * _stride;
-			_heights[i] = 0.5f * (_heights[i - 1] + _heights[i + 1]);
+			int i = x + y * _cacheStride;
+			_cacheHeights[i] = 0.5f * (_cacheHeights[i - 1] + _cacheHeights[i + 1]);
 		}
 
 	for (int y = 1; y < n; y += 2)
 		for (int x = 0; x <= n; x += 2)
 		{
-			int i = x + y * _stride;
-			_heights[i] = 0.5f * (_heights[i - _stride] + _heights[i + _stride]);
+			int i = x + y * _cacheStride;
+			_cacheHeights[i] = 0.5f * (_cacheHeights[i - _cacheStride] + _cacheHeights[i + _cacheStride]);
 		}
 }
 
 
 float SmoothTerrainSurface::CalculateHeight(int x, int y) const
 {
+	if (x < 1) x = 1; else if (x > _cacheMaxIndex - 1) x = _cacheMaxIndex - 1;
+	if (y < 1) y = 1; else if (y > _cacheMaxIndex - 1) y = _cacheMaxIndex - 1;
+
 	glm::vec4 color = _groundmap->get_pixel(x, y);
 	glm::vec4 color_xn = _groundmap->get_pixel(x - 1, y);
 	glm::vec4 color_xp = _groundmap->get_pixel(x + 1, y);
 	glm::vec4 color_yn = _groundmap->get_pixel(x, y - 1);
 	glm::vec4 color_yp = _groundmap->get_pixel(x, y + 1);
 
-	float alpha = 0.5 * color.a + 0.125 * (color_xn.a + color_xp.a + color_yn.a + color_yp.a);
+	float alpha = 0.5f * color.a + 0.125f * (color_xn.a + color_xp.a + color_yn.a + color_yp.a);
 
-	float height = 0.5f + 124.5f * alpha;
+	float height = 0.5f + 124.5f * (1.0f - alpha);
 
 	float water = color.b;
 	height = glm::mix(height, -2.5f, water);
@@ -402,25 +405,25 @@ float SmoothTerrainSurface::CalculateHeight(int x, int y) const
 
 void SmoothTerrainSurface::UpdateNormals()
 {
-	int n = _gridmax;
-	glm::vec2 delta = 2.0f * _bounds.size() / (float)_gridmax;
+	int n = _cacheMaxIndex;
+	glm::vec2 delta = 2.0f * _bounds.size() / (float)_cacheMaxIndex;
 	for (int y = 0; y <= n; ++y)
 	{
 		for (int x = 0; x <= n; ++x)
 		{
-			int index = x + y * _stride;
+			int index = x + y * _cacheStride;
 			int index_xn = x != 0 ? index - 1 : index;
 			int index_xp = x != n ? index + 1 : index;
-			int index_yn = y != 0 ? index - _stride : index;
-			int index_yp = y != n ? index + _stride : index;
+			int index_yn = y != 0 ? index - _cacheStride : index;
+			int index_yp = y != n ? index + _cacheStride : index;
 
-			float delta_hx = _heights[index_xp] - _heights[index_xn];
-			float delta_hy = _heights[index_yp] - _heights[index_yn];
+			float delta_hx = _cacheHeights[index_xp] - _cacheHeights[index_xn];
+			float delta_hy = _cacheHeights[index_yp] - _cacheHeights[index_yn];
 
 			glm::vec3 v1 = glm::vec3(delta.x, 0, delta_hx);
 			glm::vec3 v2 = glm::vec3(0, delta.y, delta_hy);
 
-			_normals[index] = glm::normalize(glm::cross(v1, v2));
+			_cacheNormals[index] = glm::normalize(glm::cross(v1, v2));
 		}
 	}
 }
@@ -434,17 +437,17 @@ static float nearest_odd(float value)
 
 float SmoothTerrainSurface::GetHeight(int x, int y) const
 {
-	if (x < 0) x = 0; else if (x > 254) x = 254;
-	if (y < 0) y = 0; else if (y > 254) y = 254;
-	return _heights[x + y * _stride];
+	if (x < 0) x = 0; else if (x > _cacheMaxIndex) x = _cacheMaxIndex;
+	if (y < 0) y = 0; else if (y > _cacheMaxIndex) y = _cacheMaxIndex;
+	return _cacheHeights[x + y * _cacheStride];
 }
 
 
 glm::vec3 SmoothTerrainSurface::GetNormal(int x, int y) const
 {
-	if (x < 0) x = 0; else if (x > 254) x = 254;
-	if (y < 0) y = 0; else if (y > 254) y = 254;
-	return _normals[x + y * _stride];
+	if (x < 0) x = 0; else if (x > _cacheMaxIndex) x = _cacheMaxIndex;
+	if (y < 0) y = 0; else if (y > _cacheMaxIndex) y = _cacheMaxIndex;
+	return _cacheNormals[x + y * _cacheStride];
 }
 
 
@@ -511,7 +514,7 @@ const float* SmoothTerrainSurface::InternalIntersect(ray r)
 	static float result;
 
 	bounds1f height = bounds1f(-2.5f, 250);
-	bounds2f bounds(0, 0, _gridmax, _gridmax);
+	bounds2f bounds(0, 0, _cacheMaxIndex, _cacheMaxIndex);
 	bounds2f quad(-0.01f, -0.01f, 1.01f, 1.01f);
 
 	const float* d = ::intersect(r, bounds3f(bounds, height));
@@ -520,7 +523,7 @@ const float* SmoothTerrainSurface::InternalIntersect(ray r)
 
 	glm::vec3 p = r.point(*d);
 
-	bounds2f bounds_2(0, 0, _gridmax - 1, _gridmax - 1);
+	bounds2f bounds_2(0, 0, _cacheMaxIndex - 1, _cacheMaxIndex - 1);
 
 	int x = (int)bounds_2.x().clamp(p.x);
 	int y = (int)bounds_2.y().clamp(p.y);
@@ -821,7 +824,7 @@ void SmoothTerrainSurface::InitializeLines()
 
 		_vboLines._mode = GL_LINES;
 		_vboLines._vertices.clear();
-		int n = _gridmax;
+		int n = _cacheMaxIndex;
 		float k = _groundmap->size().x;
 		for (int x = 0; x <= n; x += 2)
 		{
@@ -900,7 +903,7 @@ void SmoothTerrainSurface::BuildTriangles()
 	_vboBorder._mode = GL_TRIANGLES;
 	_vboBorder._vertices.clear();
 
-	int n = _gridmax;
+	int n = _cacheMaxIndex;
 	float k = _groundmap->size().x;
 
 	for (int x = 0; x < n; x += 2)
