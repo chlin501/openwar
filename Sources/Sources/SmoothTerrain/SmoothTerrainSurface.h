@@ -38,6 +38,7 @@ class SmoothTerrainSurface : public TerrainSurface
 	glm::vec3* _normals;
 
 	bool _showLines;
+	bool _editMode;
 
 public:
 	SmoothTerrainSurface(bounds2f bounds, image* groundmap);

@@ -21,7 +21,8 @@ _stride(0),
 _gridmax(0),
 _heights(nullptr),
 _normals(nullptr),
-_showLines(false)
+_showLines(false),
+_editMode(false)
 {
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
 	if (groundmap->size() != glm::ivec2(256, 256))
@@ -748,33 +749,41 @@ void SmoothTerrainSurface::UpdateChanges(bounds2f bounds)
 	InitializeSkirt();
 	UpdateSplatmap();
 
-// inside
-	for (terrain_vertex& vertex : _vboInside._vertices)
+	if (_vboInside._vertices.empty())
 	{
-		glm::vec2 p = vertex._position.xy();
-		if (bounds.contains(p))
-		{
-			glm::ivec2 i = ToGroundmapCoordinate(p);
-			vertex._position.z = GetHeight(i.x, i.y);
-			vertex._normal = GetNormal(i.x, i.y);
-		}
+		_editMode = true;
+		BuildTriangles();
 	}
-	_vboInside.update(GL_STATIC_DRAW);
-
-// border
-	for (terrain_vertex& vertex : _vboBorder._vertices)
+	else
 	{
-		glm::vec2 p = vertex._position.xy();
-		if (bounds.contains(p))
+		// inside
+		for (terrain_vertex& vertex : _vboInside._vertices)
 		{
-			glm::ivec2 i = ToGroundmapCoordinate(p);
-			vertex._position.z = GetHeight(i.x, i.y);
-			vertex._normal = GetNormal(i.x, i.y);
+			glm::vec2 p = vertex._position.xy();
+			if (bounds.contains(p))
+			{
+				glm::ivec2 i = ToGroundmapCoordinate(p);
+				vertex._position.z = GetHeight(i.x, i.y);
+				vertex._normal = GetNormal(i.x, i.y);
+			}
 		}
-	}
-	_vboBorder.update(GL_STATIC_DRAW);
+		_vboInside.update(GL_STATIC_DRAW);
 
-// lines
+		// border
+		for (terrain_vertex& vertex : _vboBorder._vertices)
+		{
+			glm::vec2 p = vertex._position.xy();
+			if (bounds.contains(p))
+			{
+				glm::ivec2 i = ToGroundmapCoordinate(p);
+				vertex._position.z = GetHeight(i.x, i.y);
+				vertex._normal = GetNormal(i.x, i.y);
+			}
+		}
+		_vboBorder.update(GL_STATIC_DRAW);
+	}
+
+	// lines
 	if (_showLines)
 	{
 		for (plain_vertex3& vertex : _vboLines._vertices)
@@ -788,7 +797,7 @@ void SmoothTerrainSurface::UpdateChanges(bounds2f bounds)
 		_vboLines.update(GL_STATIC_DRAW);
 	}
 
-// skirt
+	// skirt
 	for (size_t i = 0; i < _vboSkirt._vertices.size(); i += 2)
 	{
 		glm::vec2 p = _vboSkirt._vertices[i]._position.xy();
@@ -931,11 +940,16 @@ void SmoothTerrainSurface::BuildTriangles()
 	_vboInside.update(GL_STATIC_DRAW);
 	_vboBorder.update(GL_STATIC_DRAW);
 
-	_vboInside._vertices.clear();
-	_vboInside._vertices.shrink_to_fit();
+	if (!_editMode)
+	{
+		// be nice and free allocated memory
 
-	_vboBorder._vertices.clear();
-	_vboBorder._vertices.shrink_to_fit();
+		_vboInside._vertices.clear();
+		_vboInside._vertices.shrink_to_fit();
+
+		_vboBorder._vertices.clear();
+		_vboBorder._vertices.shrink_to_fit();
+	}
 }
 
 
