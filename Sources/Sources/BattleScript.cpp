@@ -260,11 +260,11 @@ int BattleScript::openwar_terrain_init(lua_State* L)
 	if (s != nullptr && std::strcmp(s, "smooth") == 0)
 	{
 		const char* p = n < 2 ? nullptr : lua_tostring(L, 2);
-		const double size = n < 3 ? 1024 : lua_tonumber(L, 3);
+		float size = n < 3 ? 1024 : (float)lua_tonumber(L, 3);
 
 #ifdef OPENWAR_USE_SDL
 
-		image* map = new image(resource("Maps/DefaultMap.tiff"));
+		image* map = new image(resource(p));
 		bounds2f bounds(0, 0, size, size);
 
 #else

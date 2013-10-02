@@ -40,16 +40,17 @@ projectiles()
 
 
 FighterState::FighterState() :
-readyState(ReadyStateUnready),
-destination(),
 position(),
-velocity(),
-direction(0),
-opponent(nullptr),
-meleeTarget(nullptr),
+position_z(0),
+readyState(ReadyStateUnready),
 readyingTimer(0),
 strikingTimer(0),
-stunnedTimer(0)
+stunnedTimer(0),
+opponent(nullptr),
+destination(),
+velocity(),
+direction(0),
+meleeTarget(nullptr)
 {
 }
 
@@ -57,11 +58,11 @@ stunnedTimer(0)
 Fighter::Fighter() :
 unit(nullptr),
 state(),
-nextState(),
-casualty(false),
 terrainForest(false),
 terrainImpassable(false),
-terrainPosition()
+terrainPosition(),
+nextState(),
+casualty(false)
 {
 }
 
@@ -90,15 +91,16 @@ void Fighter::SetFighterUpdate(const UnitUpdate& unitUpdate, const FighterUpdate
 
 
 UnitState::UnitState() :
-unitMode(UnitModeInitializing),
-center(),
-direction(0),
 loadingTimer(0),
 loadingDuration(0),
 shootingCounter(0),
-recentCasualties(0),
 morale(1),
-influence(0)
+unitMode(UnitModeInitializing),
+center(),
+direction(0),
+influence(0),
+recentCasualties(0),
+waypoint()
 {
 }
 
@@ -186,7 +188,7 @@ actualRanges()
 
 static float normalize_angle(float a)
 {
-	static float two_pi = 2 * M_PI;
+	static float two_pi = 2.0f * (float)M_PI;
 	while (a < 0)
 		a += two_pi;
 	while (a > two_pi)
@@ -201,7 +203,7 @@ bool UnitRange::IsWithinRange(glm::vec2 p) const
 	{
 		glm::vec2 diff = p - center;
 		float angle = glm::atan(diff.y, diff.x);
-		float angleDelta = 0.5 * angleLength;
+		float angleDelta = 0.5f * angleLength;
 
 		if (glm::abs(diff_radians(angle, angleStart + angleDelta)) > angleDelta)
 			return false;
@@ -230,16 +232,18 @@ bool UnitRange::IsWithinRange(glm::vec2 p) const
 
 
 Unit::Unit() :
+unitId(0),
 player(Player1),
 stats(),
-state(),
-nextState(),
-formation(),
-command(),
 fighters(nullptr),
+state(),
 fightersCount(0),
+shootingCounter(0),
+formation(),
 timeUntilSwapFighters(0),
-shootingCounter(0)
+nextState(),
+unitRange(),
+command()
 {
 }
 

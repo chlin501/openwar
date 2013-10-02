@@ -110,7 +110,15 @@ const char* resource::path() const
 #else
 
     static std::string s;
-	s = _resources_path + _name + _type;
+    
+    if (_name.empty() || _name[0] == '/')
+        s.clear();
+    else
+        s.assign(_resources_path);
+
+	s.append(_name);
+    s.append(_type);
+    
     return s.c_str();
 
 #endif

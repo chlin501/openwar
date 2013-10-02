@@ -27,9 +27,11 @@ _weaponQuadTree(
 	battleModel->terrainSurface->GetBounds().max.x,
 	battleModel->terrainSurface->GetBounds().max.y),
 _secondsSinceLastTimeStep(0),
-listener(0),
 currentPlayer(PlayerNone),
-practice(false)
+practice(false),
+listener(nullptr),
+recentShootings(),
+recentCasualties()
 {
 }
 

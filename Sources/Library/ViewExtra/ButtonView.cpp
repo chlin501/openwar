@@ -22,8 +22,8 @@ const ButtonAlignment ButtonAlignment::BottomRight(ButtonAlignment::Vertical::Bo
 
 ButtonItem::ButtonItem(ButtonArea* buttonArea, const char* text) :
 _buttonArea(buttonArea),
-_buttonIcon(nullptr),
 _buttonText(text),
+_buttonIcon(nullptr),
 _hasAction(false),
 _action([](){}),
 _keyboardShortcut('\0'),
@@ -37,8 +37,8 @@ _disabled(false)
 
 ButtonItem::ButtonItem(ButtonArea* buttonArea, ButtonIcon* icon) :
 _buttonArea(buttonArea),
-_buttonIcon(icon),
 _buttonText(),
+_buttonIcon(icon),
 _hasAction(false),
 _action([](){}),
 _keyboardShortcut('\0'),

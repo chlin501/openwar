@@ -124,7 +124,6 @@ _format(GL_RGBA)
 {
 #ifdef OPENWAR_USE_SDL
 
-	const char* s = r.path();
 	_surface = IMG_Load(r.path());
 
 	Uint32 format = _surface->format->format;

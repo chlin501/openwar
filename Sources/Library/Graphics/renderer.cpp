@@ -170,9 +170,6 @@ void renderer_shader_uniform::set_value(const void* uniforms)
 
 
 
-#pragma mark -
-
-
 static const GLchar* decode_name(const GLchar* name)
 {
 	return *name == '_' ? name + 1 : name;

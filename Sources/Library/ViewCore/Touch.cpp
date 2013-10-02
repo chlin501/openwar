@@ -12,11 +12,11 @@ _surface(surface),
 _gesture(nullptr),
 _tapCount(tapCount),
 _hasMoved(false),
-_timestart(timestamp),
-_timestamp(timestamp),
 _position(position),
 _previous(position),
 _original(position),
+_timestart(timestamp),
+_timestamp(timestamp),
 _currentButtons(buttons),
 _previousButtons()
 {

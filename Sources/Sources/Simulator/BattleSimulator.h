@@ -27,8 +27,8 @@ public:
 class BattleSimulator
 {
 	BattleModel* _battleModel;
-	quadtree<Fighter*> _weaponQuadTree;
 	quadtree<Fighter*> _fighterQuadTree;
+	quadtree<Fighter*> _weaponQuadTree;
 	float _secondsSinceLastTimeStep;
 
 public:

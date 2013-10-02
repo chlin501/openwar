@@ -72,7 +72,9 @@ _player(PlayerNone)
 	_billboardTexture = new BillboardTexture();
 
 	image img(resource("Textures/Billboards.png"));
-	//img.premultiply_alpha(); // TODO: how to handle this ???
+#ifndef OPENWAR_USE_NSBUNDLE_RESOURCES
+	img.premultiply_alpha(); // TODO: how to handle this ???
+#endif
 	_billboardTexture->AddSheet(img);
 
 	_billboardModel = new BillboardModel();
