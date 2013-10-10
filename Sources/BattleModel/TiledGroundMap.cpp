@@ -6,8 +6,8 @@
 
 TiledGroundMap::TiledGroundMap(bounds2f bounds, glm::ivec2 size) :
 _bounds(bounds),
-_heightMap(nullptr),
 _size(size),
+_heightMap(nullptr),
 _tiles(nullptr),
 _patch(nullptr)
 {

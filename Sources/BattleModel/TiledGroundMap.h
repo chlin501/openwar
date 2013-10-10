@@ -23,8 +23,8 @@ private:
 	bounds2f _bounds;
 	glm::ivec2 _size;
 	HeightMap* _heightMap;
-	bspline_patch* _patch;
 	Tile* _tiles;
+	bspline_patch* _patch;
 
 public:
 	TiledGroundMap(bounds2f bounds, glm::ivec2 size);

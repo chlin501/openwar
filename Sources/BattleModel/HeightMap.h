@@ -34,7 +34,7 @@ public:
 	float InterpolateHeight(glm::vec2 position) const;
 	glm::vec3 GetPosition(glm::vec2 p, float h) { return glm::vec3(p, InterpolateHeight(p) + h); }
 
-	virtual const float* Intersect(ray r);
+	const float* Intersect(ray r);
 
 private:
 	const float* InternalIntersect(ray r);

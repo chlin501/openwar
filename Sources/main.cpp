@@ -18,7 +18,7 @@
 
 #include "Sources/OpenWarSurface.h"
 #include "Library/ViewCore/Window.h"
-#include "Sources/BattleScript.h"
+#include "BattleModel/BattleScript.h"
 #include "Sources/TerrainForest/BillboardTerrainForest.h"
 
 
@@ -65,8 +65,8 @@ static BattleScript* CreateBattleScript()
     
 	battleScript->Execute((const char*)script.data(), script.size());
     
-	if (battleScript->GetBattleModel()->terrainForest == nullptr)
-		battleScript->GetBattleModel()->terrainForest = new BillboardTerrainForest();
+	//if (battleScript->GetBattleModel()->terrainForest == nullptr)
+	//	battleScript->GetBattleModel()->terrainForest = new BillboardTerrainForest();
     
 	return battleScript;
 }
