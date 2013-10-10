@@ -2,12 +2,10 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
+#include "../Library/Algebra/geometry.h"
 #include "BattleSimulator.h"
-#include "../SmoothTerrain/SmoothTerrainWater.h"
-#include "../SmoothTerrain/SmoothGroundMap.h"
-#include "HeightMap.h"
 #include "GroundMap.h"
-#include "../../Library/Algebra/geometry.h"
+#include "HeightMap.h"
 
 
 

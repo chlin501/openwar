@@ -1,9 +1,13 @@
+// Copyright (C) 2013 Felix Ungman
+//
+// This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
+
 #ifndef SmoothHeightMap_H
 #define SmoothHeightMap_H
 
 #include <functional>
 #include <glm/glm.hpp>
-#include "../../Library/Algebra/geometry.h"
+#include "../Library/Algebra/geometry.h"
 
 
 class HeightMap

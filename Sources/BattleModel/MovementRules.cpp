@@ -3,9 +3,9 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include <algorithm>
-#include "MovementRules.h"
+#include "../Library/Algebra/geometry.h"
 #include "BattleModel.h"
-#include "../../Library/Algebra/geometry.h"
+#include "MovementRules.h"
 
 
 Formation::Formation() :

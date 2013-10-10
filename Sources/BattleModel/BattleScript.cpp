@@ -4,16 +4,14 @@
 
 #include <cstring>
 #include <glm/gtc/constants.hpp>
-
-#include "BattleScript.h"
-#include "BattleModel.h"
-#include "Simulator/BattleSimulator.h"
-#include "TerrainForest/BillboardTerrainForest.h"
-#include "SmoothTerrain/SmoothTerrainSurface.h"
-#include "TerrainSurface/TiledTerrainSurface.h"
-#include "SmoothTerrain/SmoothTerrainWater.h"
-#include "TerrainSky/SmoothTerrainSky.h"
 #include "../Library/Renderers/GradientRenderer.h"
+#include "../Sources/SmoothTerrain/SmoothTerrainSurface.h"
+#include "../Sources/SmoothTerrain/SmoothTerrainWater.h"
+#include "../Sources/TerrainSky/SmoothTerrainSky.h"
+#include "../Sources/TiledTerrain/TiledTerrainSurface.h"
+#include "BattleModel.h"
+#include "BattleScript.h"
+#include "BattleSimulator.h"
 
 
 static BattleScript* _battlescript = nullptr;
@@ -277,11 +275,12 @@ int BattleScript::openwar_terrain_init(lua_State* L)
 
 #endif
 
-		_battlescript->_battleModel->groundMap = new SmoothGroundMap(bounds, map);
-		_battlescript->_battleModel->heightMap = _battlescript->_battleModel->groundMap->GetHeightMap();
+		SmoothGroundMap* smoothGroundMap = new SmoothGroundMap(bounds, map);
+		_battlescript->_battleModel->groundMap = smoothGroundMap;
+		_battlescript->_battleModel->heightMap = smoothGroundMap->GetHeightMap();
 
-		_battlescript->terrainSurface = new SmoothTerrainSurface(_battlescript->_battleModel->groundMap);
-		_battlescript->terrainWater = new SmoothTerrainWater(_battlescript->_battleModel->groundMap);
+		_battlescript->terrainSurface = new SmoothTerrainSurface(smoothGroundMap);
+		_battlescript->terrainWater = new SmoothTerrainWater(smoothGroundMap);
 		_battlescript->terrainSky = new SmoothTerrainSky();
 	}
 	else if (s != nullptr && std::strcmp(s, "tiled") == 0)

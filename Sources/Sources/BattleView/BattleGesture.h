@@ -5,11 +5,10 @@
 #ifndef BATTLEGESTURE_H
 #define BATTLEGESTURE_H
 
+#include "../../BattleModel/BattleModel.h"
 #include "../../Library/Algebra/bounds.h"
-
 #include "../../Library/ViewCore/Gesture.h"
 #include "../../Library/ViewCore/Touch.h"
-#include "BattleModel.h"
 #include "BattleView.h"
 
 class UnitTrackingMarker;

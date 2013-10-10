@@ -6,13 +6,14 @@
 #define BattleScript_H
 
 #include "BattleModel.h"
-
 #include "lua.hpp"
 
 class BattleModel;
 class BattleSimulator;
 class GradientLineRenderer;
 class TiledTerrainSurfaceRenderer;
+class SmoothTerrainWater;
+class SmoothTerrainSky;
 
 
 class BattleScript

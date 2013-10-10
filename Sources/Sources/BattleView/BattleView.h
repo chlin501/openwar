@@ -5,15 +5,13 @@
 #ifndef BATTLEVIEW_H
 #define BATTLEVIEW_H
 
+#include "../../BattleModel/BattleModel.h"
+#include "../../BattleModel/BattleSimulator.h"
 #include "../../Library/Graphics/vertexbuffer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
-
-#include "BattleModel.h"
-#include "../Simulator/BattleSimulator.h"
 #include "../SmoothTerrain/SmoothTerrainSurface.h"
-#include "../TerrainSurface/TiledTerrainSurfaceRenderer.h"
+#include "../TiledTerrain/TiledTerrainSurfaceRenderer.h"
 #include "../TerrainView/TerrainView.h"
-
 
 
 class CasualtyMarker;
@@ -29,6 +27,9 @@ class ShootingCounter;
 class TextureTriangleRenderer;
 class UnitTrackingMarker;
 class UnitCounter;
+class SmoothTerrainWater;
+class SmoothTerrainSky;
+class SmokeCounter;
 
 
 class BattleView : public TerrainView, public SimulationListener

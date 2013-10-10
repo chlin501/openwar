@@ -9,11 +9,11 @@
 #include "../Library/ViewExtra/ButtonView.h"
 #include "../Library/ViewExtra/ButtonGesture.h"
 #include "TerrainView/EditorGesture.h"
-#include "Simulator/BattleSimulator.h"
+#include "../BattleModel/BattleSimulator.h"
 #include "../Library/Audio/SoundPlayer.h"
 #include "TerrainView/TerrainGesture.h"
-#include "TerrainSurface/TiledTerrainSurface.h"
-#include "BattleModel/UnitCounter.h"
+#include "TiledTerrain/TiledTerrainSurface.h"
+#include "BattleView/UnitCounter.h"
 #include "../Library/Renderers/GradientRenderer.h"
 
 
