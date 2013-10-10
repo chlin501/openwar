@@ -3,11 +3,11 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "SmoothTerrainWater.h"
+#include "SmoothGroundMap.h"
 
 
-SmoothTerrainWater::SmoothTerrainWater(bounds2f bounds, image* groundmap) :
-_groundmap(groundmap),
-_bounds(bounds)
+SmoothTerrainWater::SmoothTerrainWater(SmoothGroundMap* smoothGroundMap) :
+_smoothGroundMap(smoothGroundMap)
 {
 	_water_inside_renderer = new renderer<plain_vertex, ground_texture_uniforms>((
 		VERTEX_ATTRIBUTE(plain_vertex, _position),
@@ -88,41 +88,6 @@ SmoothTerrainWater::~SmoothTerrainWater()
 }
 
 
-bool SmoothTerrainWater::IsWater(glm::vec2 position) const
-{
-	glm::ivec2 mapsize = _groundmap->size();
-	glm::vec2 p = (position - _bounds.min) / _bounds.size();
-	int x = (int)(mapsize.x * glm::floor(p.x));
-	int y = (int)(mapsize.y * glm::floor(p.y));
-	glm::vec4 c = _groundmap->get_pixel(x, y);
-	return c.b >= 0.5;
-}
-
-
-
-bool SmoothTerrainWater::ContainsWater(bounds2f bounds) const
-{
-	glm::ivec2 mapsize = _groundmap->size();
-	glm::vec2 min = glm::vec2(mapsize.x - 1, mapsize.y - 1) * (bounds.min - _bounds.min) / _bounds.size();
-	glm::vec2 max = glm::vec2(mapsize.x - 1, mapsize.y - 1) * (bounds.max - _bounds.min) / _bounds.size();
-	int xmin = (int)floorf(min.x);
-	int ymin = (int)floorf(min.y);
-	int xmax = (int)ceilf(max.x);
-	int ymax = (int)ceilf(max.y);
-
-	for (int x = xmin; x <= xmax; ++x)
-		for (int y = ymin; y <= ymax; ++y)
-		{
-			glm::vec4 c = _groundmap->get_pixel(x, y);
-			if (c.b >= 0.5)
-				return true;
-		}
-
-	return false;
-}
-
-
-
 static int inside_circle(bounds2f bounds, glm::vec2 p)
 {
 	return glm::distance(p, bounds.center()) <= bounds.width() / 2 ? 1 : 0;
@@ -156,6 +121,8 @@ static vertexbuffer<plain_vertex>* choose_shape(int count, vertexbuffer<plain_ve
 
 void SmoothTerrainWater::Update()
 {
+	bounds2f bounds = _smoothGroundMap->GetBounds();
+
 	_shape_water_inside._mode = GL_TRIANGLES;
 	_shape_water_border._mode = GL_TRIANGLES;
 
@@ -163,19 +130,19 @@ void SmoothTerrainWater::Update()
 	_shape_water_border._vertices.clear();
 
 	int n = 64;
-	glm::vec2 s = _bounds.size() / (float)n;
+	glm::vec2 s = bounds.size() / (float)n;
 	for (int x = 0; x < n; ++x)
 		for (int y = 0; y < n; ++y)
 		{
-			glm::vec2 p = _bounds.min + s * glm::vec2(x, y);
-			if (ContainsWater(bounds2f(p, p + s)))
+			glm::vec2 p = bounds.min + s * glm::vec2(x, y);
+			if (_smoothGroundMap->ContainsWater(bounds2f(p, p + s)))
 			{
 				plain_vertex v11 = plain_vertex(p);
 				plain_vertex v12 = plain_vertex(p + glm::vec2(0, s.y));
 				plain_vertex v21 = plain_vertex(p + glm::vec2(s.x, 0));
 				plain_vertex v22 = plain_vertex(p + s);
 
-				vertexbuffer<plain_vertex>* s = choose_shape(inside_circle(_bounds, v11, v22, v12), &_shape_water_inside, &_shape_water_border);
+				vertexbuffer<plain_vertex>* s = choose_shape(inside_circle(bounds, v11, v22, v12), &_shape_water_inside, &_shape_water_border);
 				if (s != nullptr)
 				{
 					s->_vertices.push_back(v11);
@@ -183,7 +150,7 @@ void SmoothTerrainWater::Update()
 					s->_vertices.push_back(v12);
 				}
 
-				s = choose_shape(inside_circle(_bounds, v22, v11, v21), &_shape_water_inside, &_shape_water_border);
+				s = choose_shape(inside_circle(bounds, v22, v11, v21), &_shape_water_inside, &_shape_water_border);
 				if (s != nullptr)
 				{
 					s->_vertices.push_back(v22);
@@ -200,9 +167,11 @@ void SmoothTerrainWater::Update()
 
 void SmoothTerrainWater::Render(const glm::mat4x4& transform)
 {
+	bounds2f bounds = _smoothGroundMap->GetBounds();
+
 	ground_texture_uniforms uniforms;
 	uniforms._transform = transform;
-	uniforms._map_bounds = glm::vec4(_bounds.min, _bounds.size());
+	uniforms._map_bounds = glm::vec4(bounds.min, bounds.size());
 	uniforms._texture = nullptr;
 
 	_water_inside_renderer->render(_shape_water_inside, uniforms);

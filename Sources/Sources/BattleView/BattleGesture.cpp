@@ -7,7 +7,7 @@
 #endif
 
 #include "BattleGesture.h"
-#include "../BattleModel/BattleModel.h"
+#include "BattleModel.h"
 #include "BattleView.h"
 #include "../../Library/Audio/SoundPlayer.h"
 #include "../BattleModel/UnitCounter.h"
@@ -453,7 +453,7 @@ void BattleGesture::UpdateTrackingMarker()
 		float delta = 1.0f / fmaxf(1, glm::length(currentDestination - markerPosition));
 		for (float k = delta; k < 1; k += delta)
 		{
-			if (_battleView->GetBattleModel()->terrainSurface->IsImpassable(glm::mix(currentDestination, markerPosition, k)))
+			if (_battleView->GetBattleModel()->groundMap->IsImpassable(glm::mix(currentDestination, markerPosition, k)))
 			{
 				movementLimit = k;
 				break;

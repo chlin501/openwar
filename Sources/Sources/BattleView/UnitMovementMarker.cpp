@@ -5,7 +5,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include "UnitMovementMarker.h"
-#include "../BattleModel/BattleModel.h"
+#include "BattleModel.h"
 #include "../../Library/Renderers/ColorBillboardRenderer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
 #include "../../Library/Renderers/TextureRenderer.h"
@@ -39,7 +39,7 @@ void UnitMovementMarker::RenderMovementMarker(TextureBillboardRenderer* renderer
 	{
 		if (_unit->command.meleeTarget == nullptr)
 		{
-			glm::vec3 position = _battleModel->terrainSurface->GetPosition(finalDestination, 0.5);
+			glm::vec3 position = _battleModel->groundMap->GetHeightMap()->GetPosition(finalDestination, 0.5);
 			glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
 			glm::vec2 texcoord = texsize * glm::vec2(_unit->player != _battleModel->bluePlayer ? 4 : 3, 0);
 
@@ -102,7 +102,7 @@ void UnitMovementMarker::RenderMovementFighters(ColorBillboardRenderer* renderer
 			glm::vec2 offsetRight = formation.towardRight * (float)Unit::GetFighterFile(fighter);
 			glm::vec2 offsetBack = formation.towardBack * (float)Unit::GetFighterRank(fighter);
 
-			renderer->AddBillboard(_battleModel->terrainSurface->GetPosition(frontLeft + offsetRight + offsetBack, 0.5), color, 3.0);
+			renderer->AddBillboard(_battleModel->groundMap->GetHeightMap()->GetPosition(frontLeft + offsetRight + offsetBack, 0.5), color, 3.0);
 		}
 	}
 }
@@ -118,8 +118,8 @@ void UnitMovementMarker::RenderMovementPath(GradientTriangleRenderer* renderer)
 		else if (_unit->command.running)
 			mode = 1;
 
-		TerrainSurface* terrainSurface = _battleModel->terrainSurface;
-		PathRenderer pathRenderer([terrainSurface](glm::vec2 p) { return terrainSurface->GetPosition(p, 1); });
+		HeightMap* heightMap = _battleModel->groundMap->GetHeightMap();
+		PathRenderer pathRenderer([heightMap](glm::vec2 p) { return heightMap->GetPosition(p, 1); });
 		pathRenderer.Path(renderer, _unit->command.path, mode);
 	}
 }

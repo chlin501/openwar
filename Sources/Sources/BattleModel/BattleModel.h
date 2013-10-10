@@ -8,16 +8,20 @@
 #include <map>
 
 #include "../Simulator/MovementRules.h"
-#include "../TerrainModel/TerrainModel.h"
 
 
 class BattleModel;
 class CasualtyMarker;
+class RangeMarker;
+class ShootingCounter;
+class SmokeCounter;
+class SmoothGroundMap;
+class HeightMap;
+class SmoothTerrainWater;
+class SmoothTerrainSky;
+class GroundMap;
 class UnitMovementMarker;
 class UnitCounter;
-class RangeMarker;
-class SmokeCounter;
-class ShootingCounter;
 class UnitTrackingMarker;
 
 struct Fighter;
@@ -336,9 +340,15 @@ struct Unit
 };
 
 
-class BattleModel : public TerrainModel
+class SmoothTerrainSurface;
+
+class BattleModel
 {
 public:
+	SmoothGroundMap* groundMap;
+	HeightMap* heightMap;
+
+
 	int lastUnitId;
 	Player bluePlayer;
 	Player winner;

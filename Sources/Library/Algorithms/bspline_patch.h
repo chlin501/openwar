@@ -8,14 +8,14 @@
 #include "../Algebra/geometry.h"
 
 
-class heightmap
+class bspline_patch
 {
 	glm::ivec2 _size;
 	float* _values;
 
 public:
-	heightmap(glm::ivec2 size);
-	~heightmap();
+	bspline_patch(glm::ivec2 size);
+	~bspline_patch();
 
 	glm::ivec2 size() const { return _size; }
 

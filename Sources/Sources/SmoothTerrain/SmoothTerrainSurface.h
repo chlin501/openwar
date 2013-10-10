@@ -6,17 +6,18 @@
 #define SmoothTerrainSurface_H
 
 #include "../../Library/Algebra/bounds.h"
-#include "../TerrainModel/TerrainSurface.h"
+#include "GroundMap.h"
 #include "SmoothTerrainSurfaceRenderer.h"
+#include "SmoothGroundMap.h"
+#include "HeightMap.h"
 
 class image;
 
 
-class SmoothTerrainSurface : public TerrainSurface
-{
-	bounds2f _bounds;
-	image* _groundmap;
 
+class SmoothTerrainSurface
+{
+	SmoothGroundMap* _smoothGroundMap;
 	int _framebuffer_width;
 	int _framebuffer_height;
 	framebuffer* _framebuffer;
@@ -32,62 +33,22 @@ class SmoothTerrainSurface : public TerrainSurface
 	vertexbuffer<skirt_vertex> _vboSkirt;
 	vertexbuffer<plain_vertex3> _vboLines;
 
-	int _cacheStride;
-	int _cacheMaxIndex;
-	float* _cacheHeights;
-	glm::vec3* _cacheNormals;
-
 	bool _showLines;
 	bool _editMode;
 
 public:
-	SmoothTerrainSurface(bounds2f bounds, image* groundmap);
+	SmoothTerrainSurface(SmoothGroundMap* smoothGroundMap);
 	virtual ~SmoothTerrainSurface();
 
-	//
-	// TerrainSurface
-	//
-
-	virtual bounds2f GetBounds() const { return _bounds; }
-	virtual float GetHeight(glm::vec2 position) const;
-	virtual const float* Intersect(ray r);
-
-	virtual bool IsForest(glm::vec2 position) const;
-	virtual bool IsImpassable(glm::vec2 position) const;
-
+	SmoothGroundMap* GetSmoothGroundMap() const { return _smoothGroundMap; }
 
 	void Render(const glm::mat4x4& transform, const glm::vec3& lightNormal);
 
-
-	//
-	// SmoothTerrainSurface
-	//
-
-	image* GetGroundMap() const { return _groundmap; }
-
-	void Extract(glm::vec2 position, image* brush);
-	bounds2f Paint(TerrainFeature feature, glm::vec2 position, image* brush, float pressure);
-	bounds2f Paint(TerrainFeature feature, glm::vec2 position, float radius, float pressure);
-
 	void EnableRenderEdges();
-
-	void UpdateHeights();
-	float CalculateHeight(int x, int y) const;
-	void UpdateNormals();
-
-	float GetHeight(int x, int y) const;
-	glm::vec3 GetNormal(int x, int y) const;
-
-	float InterpolateHeight(glm::vec2 position) const;
-
-	const float* InternalIntersect(ray r);
 
 	void UpdateChanges(bounds2f bounds);
 	void UpdateDepthTextureSize();
 	void UpdateSplatmap();
-
-	float GetForestValue(int x, int y) const;
-	float GetImpassableValue(int x, int y) const;
 
 	void InitializeShadow();
 	void InitializeSkirt();
@@ -97,8 +58,6 @@ public:
 
 	void BuildTriangles();
 	void PushTriangle(const terrain_vertex& v0, const terrain_vertex& v1, const terrain_vertex& v2);
-
-	glm::ivec2 ToGroundmapCoordinate(glm::vec2 position) const;
 };
 
 

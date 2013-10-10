@@ -37,7 +37,7 @@ static affine2 billboard_texcoords(int x, int y, bool flip)
 
 
 
-BattleView::BattleView(Surface* screen, BattleModel* battleModel, renderers* r) : TerrainView(screen, battleModel->terrainSurface),
+BattleView::BattleView(Surface* screen, BattleModel* battleModel, renderers* r) : TerrainView(screen, battleModel->groundMap->GetHeightMap()),
 _renderers(r),
 _battleModel(battleModel),
 _lightNormal(),
@@ -60,6 +60,8 @@ _textureUnitMarkers(nullptr),
 _textureTouchMarker(nullptr),
 _textureFacing(nullptr),
 _smoothTerrainSurface(nullptr),
+_smoothTerrainWater(nullptr),
+_smoothTerrainSky(nullptr),
 _terrainSurfaceRendererTiled(nullptr),
 _player(PlayerNone)
 {
@@ -67,7 +69,7 @@ _player(PlayerNone)
 	_textureTouchMarker = new texture(resource("Textures/TouchMarker.png"));
 	_textureFacing = new texture(resource("Textures/Facing.png"));
 
-	SetContentBounds(_terrainSurface->GetBounds());
+	SetContentBounds(battleModel->groundMap->GetBounds());
 
 	_billboardTexture = new BillboardTexture();
 
@@ -212,7 +214,7 @@ void BattleView::OnCasualty(Casualty const & casualty)
 
 void BattleView::AddCasualty(const Casualty& casualty)
 {
-	glm::vec3 position = glm::vec3(casualty.position, _battleModel->terrainSurface->GetHeight(casualty.position));
+	glm::vec3 position = glm::vec3(casualty.position, _battleModel->heightMap->InterpolateHeight(casualty.position));
 	_casualtyMarker->AddCasualty(position, casualty.player, casualty.platform);
 }
 
@@ -233,7 +235,7 @@ void BattleView::Initialize()
 
 void BattleView::InitializeTerrainTrees()
 {
-	UpdateTerrainTrees(_terrainSurface->GetBounds());
+	UpdateTerrainTrees(_battleModel->groundMap->GetBounds());
 }
 
 
@@ -280,7 +282,7 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 
 		int treeType = 0;
 		random_iterator random(*_randoms);
-		bounds2f mapbounds = _terrainSurface->GetBounds();
+		bounds2f mapbounds = _battleModel->groundMap->GetBounds();
 		glm::vec2 center = mapbounds.center();
 		float radius = mapbounds.width() / 2;
 
@@ -295,7 +297,7 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 				glm::vec2 position = glm::vec2(x + dx, y + dy);
 				if (bounds.contains(position) && glm::distance(position, center) < radius)
 				{
-					if (_terrainSurface->GetHeight(position) > 0 && _terrainSurface->IsForest(position))
+					if (_battleModel->groundMap->GetHeightMap()->InterpolateHeight(position) > 0 && _battleModel->groundMap->IsForest(position))
 					{
 						const float adjust = 0.5 - 2.0 / 64.0; // place texture 2 texels below ground
 						_billboardModel->staticBillboards.push_back(Billboard(GetPosition(position, adjust * 5), 0, 5, _billboardModel->_billboardTreeShapes[shape]));
@@ -359,10 +361,10 @@ void BattleView::Render()
 	// Terrain Sky
 
 	glDisable(GL_DEPTH_TEST);
-	if (_battleModel->terrainSky != nullptr)
+	if (_smoothTerrainSky != nullptr)
 	{
-		_battleModel->terrainSky->RenderBackgroundLinen(_renderers, GetViewportBounds(), GetFlip());
-		_battleModel->terrainSky->Render(_renderers, GetCameraDirection().z, GetFlip());
+		_smoothTerrainSky->RenderBackgroundLinen(_renderers, GetViewportBounds(), GetFlip());
+		_smoothTerrainSky->Render(_renderers, GetCameraDirection().z, GetFlip());
 	}
 
 
@@ -381,8 +383,8 @@ void BattleView::Render()
 	// Terrain Water
 
 	glDisable(GL_CULL_FACE);
-	if (_battleModel->terrainWater != nullptr)
-		_battleModel->terrainWater->Render(GetTransform());
+	if (_smoothTerrainWater != nullptr)
+		_smoothTerrainWater->Render(GetTransform());
 
 
 	// Fighter Weapons

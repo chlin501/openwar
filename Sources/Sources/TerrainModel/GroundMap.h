@@ -5,26 +5,27 @@
 #ifndef TerrainSurface_H
 #define TerrainSurface_H
 
-#include "../../Library/Algebra/geometry.h"
+#include "../../Library/Algebra/bounds.h"
 
 
 enum class TerrainFeature { Hills, Water, Trees, Fords };
 
+class HeightMap;
 
-class TerrainSurface
+
+class GroundMap
 {
 public:
-	TerrainSurface();
-	virtual ~TerrainSurface();
+	GroundMap();
+	virtual ~GroundMap();
 
 	virtual bounds2f GetBounds() const = 0;
-	virtual float GetHeight(glm::vec2 position) const = 0;
-	virtual const float* Intersect(ray r) = 0;
+	virtual HeightMap* GetHeightMap() const = 0;
 
 	virtual bool IsForest(glm::vec2 position) const = 0;
 	virtual bool IsImpassable(glm::vec2 position) const = 0;
-
-	glm::vec3 GetPosition(glm::vec2 p, float h) { return glm::vec3(p, GetHeight(p) + h); }
+	virtual bool IsWater(glm::vec2 position) const = 0;
+	virtual bool ContainsWater(bounds2f bounds) const = 0;
 };
 
 

@@ -303,6 +303,8 @@ Fighter* Unit::GetFighter(Unit* unit, int rank, int file)
 
 
 BattleModel::BattleModel() :
+groundMap(nullptr),
+heightMap(nullptr),
 lastUnitId(0),
 bluePlayer(Player1),
 winner(PlayerNone),
@@ -518,8 +520,8 @@ void BattleModel::AddShootingCounter(const Shooting& shooting)
 
 	for (const Projectile& projectile : shooting.projectiles)
 	{
-		glm::vec3 p1 = glm::vec3(projectile.position1, terrainSurface->GetHeight(projectile.position1));
-		glm::vec3 p2 = glm::vec3(projectile.position2, terrainSurface->GetHeight(projectile.position2));
+		glm::vec3 p1 = glm::vec3(projectile.position1, heightMap->InterpolateHeight(projectile.position1));
+		glm::vec3 p2 = glm::vec3(projectile.position2, heightMap->InterpolateHeight(projectile.position2));
 		shootingCounter->AddProjectile(p1, p2, projectile.delay, shooting.timeToImpact);
 	}
 }
@@ -548,8 +550,8 @@ void BattleModel::AddSmokeMarker(const Shooting& shooting)
 
 	for (const Projectile& projectile : shooting.projectiles)
 	{
-		glm::vec3 p1 = glm::vec3(projectile.position1, terrainSurface->GetHeight(projectile.position1));
-		glm::vec3 p2 = glm::vec3(projectile.position2, terrainSurface->GetHeight(projectile.position2));
+		glm::vec3 p1 = glm::vec3(projectile.position1, heightMap->InterpolateHeight(projectile.position1));
+		glm::vec3 p2 = glm::vec3(projectile.position2, heightMap->InterpolateHeight(projectile.position2));
 		marker->AddParticle(p1, p2, projectile.delay);
 	}
 }

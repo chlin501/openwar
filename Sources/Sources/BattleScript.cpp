@@ -6,7 +6,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include "BattleScript.h"
-#include "BattleModel/BattleModel.h"
+#include "BattleModel.h"
 #include "Simulator/BattleSimulator.h"
 #include "TerrainForest/BillboardTerrainForest.h"
 #include "SmoothTerrain/SmoothTerrainSurface.h"
@@ -31,10 +31,12 @@ static void print_log(const char* operation, const char* message)
 BattleScript::BattleScript() :
 _battleModel(nullptr),
 _battleSimulator(nullptr),
-_state(nullptr)
+_state(nullptr),
+terrainSurface(nullptr),
+terrainWater(nullptr),
+terrainSky(nullptr)
 {
 	_battleModel = new BattleModel();
-	_battleModel->terrainForest = new BillboardTerrainForest();
 
 	_battlescript = this;
 
@@ -87,11 +89,12 @@ BattleScript::~BattleScript()
 
 	delete _battleSimulator;
 
-	delete _battleModel->terrainSurface;
-	delete _battleModel->terrainForest;
-	delete _battleModel->terrainWater;
-	delete _battleModel->terrainSky;
+	delete _battleModel->groundMap;
 	delete _battleModel;
+
+	delete terrainSurface;
+	delete terrainWater;
+	delete terrainSky;
 }
 
 
@@ -251,8 +254,8 @@ void BattleScript::SetUnitMovement(int unitId, bool running, std::vector<glm::ve
 
 int BattleScript::openwar_terrain_init(lua_State* L)
 {
-	delete _battlescript->_battleModel->terrainSurface;
-	_battlescript->_battleModel->terrainSurface = nullptr;
+	delete _battlescript->terrainSurface;
+	_battlescript->terrainSurface = nullptr;
 
 	int n = lua_gettop(L);
 	const char* s = n < 1 ? nullptr : lua_tostring(L, 1);
@@ -276,17 +279,21 @@ int BattleScript::openwar_terrain_init(lua_State* L)
 
 #endif
 
-		_battlescript->_battleModel->terrainSurface = new SmoothTerrainSurface(bounds, map);
-		_battlescript->_battleModel->terrainWater = new SmoothTerrainWater(bounds, map);
-		_battlescript->_battleModel->terrainSky = new SmoothTerrainSky();
+		_battlescript->_battleModel->groundMap = new SmoothGroundMap(bounds, map);
+		_battlescript->_battleModel->heightMap = _battlescript->_battleModel->groundMap->GetHeightMap();
+
+		_battlescript->terrainSurface = new SmoothTerrainSurface(_battlescript->_battleModel->groundMap);
+		_battlescript->terrainWater = new SmoothTerrainWater(_battlescript->_battleModel->groundMap);
+		_battlescript->terrainSky = new SmoothTerrainSky();
 	}
 	else if (s != nullptr && std::strcmp(s, "tiled") == 0)
 	{
-
+		/*
 		int x = n < 2 ? 0 : (int)lua_tonumber(L, 2);
 		int y = n < 3 ? 0 : (int)lua_tonumber(L, 3);
 
 		_battlescript->_battleModel->terrainSurface = new TiledTerrainSurface(bounds2f(0, 0, 1024, 1024), glm::ivec2(x, y));
+		*/
 	}
 
 	return 0;
@@ -310,8 +317,8 @@ int BattleScript::openwar_render_hint_line(lua_State* L)
 	float x2 = n < 3 ? 0 : (float)lua_tonumber(L, 3);
 	float y2 = n < 4 ? 0 : (float)lua_tonumber(L, 4);
 
-	float z1 = _battlescript->_battleModel->terrainSurface->GetHeight(glm::vec2(x1, y1));
-	float z2 = _battlescript->_battleModel->terrainSurface->GetHeight(glm::vec2(x2, y2));
+	float z1 = _battlescript->_battleModel->heightMap->InterpolateHeight(glm::vec2(x1, y1));
+	float z2 = _battlescript->_battleModel->heightMap->InterpolateHeight(glm::vec2(x2, y2));
 
 	glm::vec4 c(0, 0, 0, 0.5f);
 
@@ -341,8 +348,8 @@ int BattleScript::openwar_render_hint_circle(lua_State* L)
 		float x2 = x + r * glm::cos(a2);
 		float y2 = y + r * glm::sin(a2);
 
-		float z1 = _battlescript->_battleModel->terrainSurface->GetHeight(glm::vec2(x1, y1));
-		float z2 = _battlescript->_battleModel->terrainSurface->GetHeight(glm::vec2(x2, y2));
+		float z1 = _battlescript->_battleModel->heightMap->InterpolateHeight(glm::vec2(x1, y1));
+		float z2 = _battlescript->_battleModel->heightMap->InterpolateHeight(glm::vec2(x2, y2));
 
 		_battlescript->_renderer->AddLine(glm::vec3(x1, y1, z1), glm::vec3(x2, y2, z2), c, c);
 	}
@@ -429,7 +436,7 @@ int BattleScript::battle_get_unit_status(lua_State* L)
 
 int BattleScript::battle_set_terrain_tile(lua_State* L)
 {
-	TiledTerrainSurface* terrainSurfaceModel = dynamic_cast<TiledTerrainSurface*>(_battlescript->_battleModel->terrainSurface);
+	TiledTerrainSurface* terrainSurfaceModel = dynamic_cast<TiledTerrainSurface*>(_battlescript->terrainSurface);
 
 	int n = lua_gettop(L);
 	int x = n < 1 ? 0 : (int)lua_tonumber(L, 1);
@@ -446,7 +453,7 @@ int BattleScript::battle_set_terrain_tile(lua_State* L)
 
 int BattleScript::battle_set_terrain_height(lua_State* L)
 {
-	TiledTerrainSurface* terrainSurfaceModel = dynamic_cast<TiledTerrainSurface*>(_battlescript->_battleModel->terrainSurface);
+	TiledTerrainSurface* terrainSurfaceModel = dynamic_cast<TiledTerrainSurface*>(_battlescript->terrainSurface);
 
 	int n = lua_gettop(L);
 	int x = n < 1 ? 0 : (int)lua_tonumber(L, 1);
@@ -461,11 +468,13 @@ int BattleScript::battle_set_terrain_height(lua_State* L)
 
 int BattleScript::battle_add_terrain_tree(lua_State* L)
 {
+	/*
 	int n = lua_gettop(L);
 	float x = n < 1 ? 0 : (float)lua_tonumber(L, 1);
 	float y = n < 2 ? 0 : (float)lua_tonumber(L, 2);
 
 	_battlescript->_battleModel->terrainForest->AddTree(glm::vec2(x, y));
+	*/
 
 	return 0;
 }

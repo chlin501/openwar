@@ -13,7 +13,7 @@ _heightmap(nullptr),
 _nextTextureNumber(1)
 {
 	_tiles = new Tile[size.x * size.y];
-	_heightmap = new heightmap(glm::ivec2(size.x + 1, size.y + 1));
+	_heightmap = new bspline_patch(glm::ivec2(size.x + 1, size.y + 1));
 }
 
 
@@ -24,7 +24,7 @@ TiledTerrainSurface::~TiledTerrainSurface()
 }
 
 
-float TiledTerrainSurface::GetHeight(glm::vec2 position) const
+float TiledTerrainSurface::InterpolateHeight(glm::vec2 position) const
 {
 	glm::ivec2 size = _heightmap->size();
 	glm::vec2 c = glm::vec2(size.x - 1, size.y - 1) * (position - _bounds.p11()) / _bounds.size();

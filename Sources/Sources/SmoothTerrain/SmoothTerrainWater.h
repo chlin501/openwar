@@ -5,12 +5,13 @@
 #ifndef SmoothTerrainWater_H
 #define SmoothTerrainWater_H
 
-#include "../TerrainModel/TerrainWater.h"
 #include "../../Library/Graphics/renderer.h"
 #include "../../Library/Algebra/image.h"
 
+class SmoothGroundMap;
 
-class SmoothTerrainWater : public TerrainWater
+
+class SmoothTerrainWater
 {
 	struct ground_texture_uniforms
 	{
@@ -19,21 +20,17 @@ class SmoothTerrainWater : public TerrainWater
 		const texture* _texture;
 	};
 
+	SmoothGroundMap* _smoothGroundMap;
+
 	renderer<plain_vertex, ground_texture_uniforms>* _water_inside_renderer;
 	renderer<plain_vertex, ground_texture_uniforms>* _water_border_renderer;
 
 	vertexbuffer<plain_vertex> _shape_water_inside;
 	vertexbuffer<plain_vertex> _shape_water_border;
 
-	image* _groundmap;
-	bounds2f _bounds;
-
 public:
-	SmoothTerrainWater(bounds2f bounds, image* groundmap);
+	SmoothTerrainWater(SmoothGroundMap* smoothGroundMap);
 	virtual ~SmoothTerrainWater();
-
-	virtual bool IsWater(glm::vec2 position) const;
-	virtual bool ContainsWater(bounds2f bounds) const;
 
 	void Update();
 	void Render(const glm::mat4x4& transform);

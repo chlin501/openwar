@@ -7,7 +7,8 @@
 
 #include "../../Library/ViewCore/View.h"
 #include "../../Library/Algebra/geometry.h"
-#include "../TerrainModel/TerrainSurface.h"
+#include "GroundMap.h"
+#include "HeightMap.h"
 
 class PlainLineRenderer;
 
@@ -22,10 +23,10 @@ class TerrainView : public View
 	glm::vec2 _mouseHintPosition;
 
 protected:
-	TerrainSurface* _terrainSurface;
+	HeightMap* _heightMap;
 
 public:
-	TerrainView(Surface* screen, TerrainSurface* terrainSurfaceModel);
+	TerrainView(Surface* screen, HeightMap* heightMap);
 	virtual ~TerrainView();
 
 	void ShowMouseHint(glm::vec2 position);
@@ -66,7 +67,7 @@ public:
 	glm::vec3 ScreenToContent(glm::vec2 value) const;
 	glm::vec2 ContentToScreen(glm::vec3 value) const;
 
-	glm::vec3 GetPosition(glm::vec2 p, float h = 1) { return _terrainSurface->GetPosition(p, h); };
+	glm::vec3 GetPosition(glm::vec2 p, float h = 1) { return _heightMap->GetPosition(p, h); };
 
 };
 

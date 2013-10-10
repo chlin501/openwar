@@ -3,7 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "EditorModel.h"
-#include "../BattleModel/BattleModel.h"
+#include "BattleModel.h"
 #include "../BattleView/BattleView.h"
 #include "../SmoothTerrain/SmoothTerrainWater.h"
 
@@ -90,17 +90,17 @@ void EditorModel::ToolEnded(glm::vec2 position)
 void EditorModel::Paint(TerrainFeature feature, glm::vec2 position, bool value)
 {
 	float radius = feature == TerrainFeature::Hills ? 48 : 16;
-	bounds2f bounds = _smoothTerrainSurface->Paint(feature, position, radius, value ? 0.4f : -0.4f);
+	bounds2f bounds = _smoothTerrainSurface->GetSmoothGroundMap()->Paint(feature, position, radius, value ? 0.4f : -0.4f);
 
 	_smoothTerrainSurface->UpdateChanges(bounds);
 	_battleView->UpdateTerrainTrees(bounds);
-	_battleView->GetBattleModel()->terrainWater->Update();
+	_battleView->_smoothTerrainWater->Update();
 }
 
 
 void EditorModel::SmearReset(TerrainFeature feature, glm::vec2 position)
 {
-	_smoothTerrainSurface->Extract(position, _brush);
+	_smoothTerrainSurface->GetSmoothGroundMap()->Extract(position, _brush);
 	_brushPosition = position;
 	_brushDistance = 0;
 }
@@ -112,7 +112,7 @@ void EditorModel::SmearPaint(TerrainFeature feature, glm::vec2 position)
 	_brushPosition = position;
 	while (_brushDistance > 2.0f)
 	{
-		_smoothTerrainSurface->Extract(position, _mixer);
+		_smoothTerrainSurface->GetSmoothGroundMap()->Extract(position, _mixer);
 
 		glm::ivec2 size = _brush->size();
 		for (int x = 0; x < size.x; ++x)
@@ -127,9 +127,9 @@ void EditorModel::SmearPaint(TerrainFeature feature, glm::vec2 position)
 		_brushDistance -= 2.0f;
 	}
 
-	bounds2f bounds = _smoothTerrainSurface->Paint(feature, position, _brush, 0.5f);
+	bounds2f bounds = _smoothTerrainSurface->GetSmoothGroundMap()->Paint(feature, position, _brush, 0.5f);
 
 	_smoothTerrainSurface->UpdateChanges(bounds);
 	_battleView->UpdateTerrainTrees(bounds);
-	_battleView->GetBattleModel()->terrainWater->Update();
+	_battleView->_smoothTerrainWater->Update();
 }

@@ -2,11 +2,11 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "heightmap.h"
+#include "bspline_patch.h"
 #include "bspline.h"
 
 
-heightmap::heightmap(glm::ivec2 size) :
+bspline_patch::bspline_patch(glm::ivec2 size) :
 _size(size),
 _values(nullptr)
 {
@@ -14,13 +14,13 @@ _values(nullptr)
 }
 
 
-heightmap::~heightmap()
+bspline_patch::~bspline_patch()
 {
 	delete [] _values;
 }
 
 
-float heightmap::get_height(int x, int y) const
+float bspline_patch::get_height(int x, int y) const
 {
 	if (0 <= x && x < _size.x && 0 <= y && y < _size.y)
 		return _values[x + _size.x * y];
@@ -28,14 +28,14 @@ float heightmap::get_height(int x, int y) const
 }
 
 
-void heightmap::set_height(int x, int y, float value)
+void bspline_patch::set_height(int x, int y, float value)
 {
 	if (0 <= x && x < _size.x && 0 <= y && y < _size.y)
 		_values[x + _size.x * y] = value;
 }
 
 
-float heightmap::interpolate(glm::vec2 position) const
+float bspline_patch::interpolate(glm::vec2 position) const
 {
 	int x = (int)glm::floor(position.x);
 	int y = (int)glm::floor(position.y);
@@ -63,7 +63,7 @@ static bool almost_zero(float value)
 }
 
 
-const float* heightmap::intersect(ray r) const
+const float* bspline_patch::intersect(ray r) const
 {
 	static float result;
 

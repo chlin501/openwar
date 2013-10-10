@@ -7,14 +7,14 @@
 
 #include <map>
 
-#include "../TerrainModel/TerrainSurface.h"
+#include "GroundMap.h"
 #include "../../Library/Algebra/bounds.h"
-#include "../../Library/Algorithms/heightmap.h"
+#include "bspline_patch.h"
 #include "../../Library/Graphics/texture.h"
 #include "../../Library/Algebra/image.h"
 
 
-class TiledTerrainSurface : public TerrainSurface
+class TiledTerrainSurface
 {
 public:
 	struct Tile
@@ -30,7 +30,7 @@ private:
 	bounds2f _bounds;
 	glm::ivec2 _size;
 	Tile* _tiles;
-	heightmap* _heightmap;
+	bspline_patch* _heightmap;
 
 	std::map<int, texture*> _textures;
 	std::map<std::string, int> _textureNumber;
@@ -43,7 +43,7 @@ public:
 	virtual bounds2f GetBounds() const { return _bounds; }
 	glm::ivec2 GetSize() const { return _size; }
 
-	virtual float GetHeight(glm::vec2 position) const;
+	virtual float InterpolateHeight(glm::vec2 position) const;
 	virtual const float* Intersect(ray r);
 
 	virtual bool IsWater(glm::vec2 position) const;

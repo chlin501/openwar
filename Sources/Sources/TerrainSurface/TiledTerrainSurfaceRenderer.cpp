@@ -37,10 +37,10 @@ void TiledTerrainSurfaceRenderer::Render(const glm::mat4x4& transform, const glm
 			glm::vec2 p0 = bounds.min + delta * glm::vec2(x, y);
 			glm::vec2 p1 = p0 + delta;
 
-			float h00 = _terrainSurfaceModel->GetHeight(glm::vec2(p0.x, p0.y));
-			float h01 = _terrainSurfaceModel->GetHeight(glm::vec2(p0.x, p1.y));
-			float h10 = _terrainSurfaceModel->GetHeight(glm::vec2(p1.x, p0.y));
-			float h11 = _terrainSurfaceModel->GetHeight(glm::vec2(p1.x, p1.y));
+			float h00 = _terrainSurfaceModel->InterpolateHeight(glm::vec2(p0.x, p0.y));
+			float h01 = _terrainSurfaceModel->InterpolateHeight(glm::vec2(p0.x, p1.y));
+			float h10 = _terrainSurfaceModel->InterpolateHeight(glm::vec2(p1.x, p0.y));
+			float h11 = _terrainSurfaceModel->InterpolateHeight(glm::vec2(p1.x, p1.y));
 
 
 			glm::vec2 t00 = glm::vec2(0, 0);

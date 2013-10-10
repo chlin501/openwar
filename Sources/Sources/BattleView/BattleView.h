@@ -8,7 +8,7 @@
 #include "../../Library/Graphics/vertexbuffer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
 
-#include "../BattleModel/BattleModel.h"
+#include "BattleModel.h"
 #include "../Simulator/BattleSimulator.h"
 #include "../SmoothTerrain/SmoothTerrainSurface.h"
 #include "../TerrainSurface/TiledTerrainSurfaceRenderer.h"
@@ -62,6 +62,8 @@ class BattleView : public TerrainView, public SimulationListener
 
 public:
 	SmoothTerrainSurface* _smoothTerrainSurface;
+	SmoothTerrainWater* _smoothTerrainWater;
+	SmoothTerrainSky* _smoothTerrainSky;
 	TiledTerrainSurfaceRenderer* _terrainSurfaceRendererTiled;
 	Player _player;
 

@@ -2,14 +2,14 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "TerrainWater.h"
+#include "GroundMap.h"
 
 
-TerrainWater::TerrainWater()
+GroundMap::GroundMap()
 {
 }
 
 
-TerrainWater::~TerrainWater()
+GroundMap::~GroundMap()
 {
 }

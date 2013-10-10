@@ -6,8 +6,10 @@
 
 #include "RangeMarker.h"
 #include "../../Library/Renderers/GradientRenderer.h"
-#include "../TerrainModel/TerrainSurface.h"
+#include "GroundMap.h"
 #include "../../Library/Algebra/geometry.h"
+#include "../SmoothTerrain/SmoothGroundMap.h"
+#include "HeightMap.h"
 
 
 RangeMarker::RangeMarker(BattleModel* battleModel, Unit* unit) :
@@ -168,7 +170,7 @@ void RangeMarker::RenderMissileTarget(GradientTriangleStripRenderer* renderer, g
 
 glm::vec3 RangeMarker::GetPosition(glm::vec2 p) const
 {
-	glm::vec3 result = _battleModel->terrainSurface->GetPosition(p, 1);
+	glm::vec3 result = _battleModel->groundMap->GetHeightMap()->GetPosition(p, 1);
 	if (result.z < 0.5f)
 		result.z = 0.5f;
 	return result;

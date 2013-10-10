@@ -5,7 +5,7 @@
 #ifndef BattleScript_H
 #define BattleScript_H
 
-#include "BattleModel/BattleModel.h"
+#include "BattleModel.h"
 
 #include "lua.hpp"
 
@@ -34,6 +34,10 @@ class BattleScript
 	lua_State* _state;
 
 public:
+	SmoothTerrainSurface* terrainSurface;
+	SmoothTerrainWater* terrainWater;
+	SmoothTerrainSky* terrainSky;
+
 	BattleScript();
 	~BattleScript();
 

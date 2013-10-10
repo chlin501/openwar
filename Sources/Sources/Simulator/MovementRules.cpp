@@ -4,7 +4,7 @@
 
 #include <algorithm>
 #include "MovementRules.h"
-#include "../BattleModel/BattleModel.h"
+#include "BattleModel.h"
 #include "../../Library/Algebra/geometry.h"
 
 

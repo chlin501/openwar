@@ -5,7 +5,7 @@
 #ifndef SIMULATIONRULES_H
 #define SIMULATIONRULES_H
 
-#include "../BattleModel/BattleModel.h"
+#include "BattleModel.h"
 #include "../../Library/Algorithms/quadtree.h"
 
 class Fighter;

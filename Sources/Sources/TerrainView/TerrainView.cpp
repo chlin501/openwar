@@ -10,13 +10,15 @@
 #include "TerrainView.h"
 #include "../../Library/Renderers/PlainRenderer.h"
 
+#include "HeightMap.h"
 
 
-TerrainView::TerrainView(Surface* screen, TerrainSurface* terrainSurfaceModel) : View(screen),
+
+TerrainView::TerrainView(Surface* screen, HeightMap* heightMap) : View(screen),
 _cameraTilt((float)M_PI_4),
 _cameraFacing(0),
 _mouseHintVisible(false),
-_terrainSurface(terrainSurfaceModel)
+_heightMap(heightMap)
 {
 }
 
@@ -212,11 +214,11 @@ glm::vec3 TerrainView::GetTerrainPosition2(glm::vec2 screenPosition) const
 
 glm::vec3 TerrainView::GetTerrainPosition3(glm::vec2 screenPosition) const
 {
-	if (_terrainSurface == nullptr)
+	if (_heightMap == nullptr)
 		return glm::vec3();
 
 	ray r = GetCameraRay(screenPosition);
-	const float* d = _terrainSurface->Intersect(r);
+	const float* d = _heightMap->Intersect(r);
 	return r.point(d != nullptr ? *d : 0);
 }
 
@@ -307,7 +309,7 @@ void TerrainView::ClampCameraPosition()
 	glm::vec2 centerScreen = GetViewportBounds().center();
 	glm::vec2 contentCamera = GetTerrainPosition2(centerScreen).xy();
 	glm::vec2 contentCenter = GetContentBounds().center();
-	float contentRadius = _terrainSurface->GetBounds().width() / 2;
+	float contentRadius = _heightMap->GetBounds().width() / 2;
 
 	glm::vec2 offset = contentCamera - contentCenter;
 	float distance = glm::length(offset);

@@ -3,7 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "OpenWarSurface.h"
-#include "BattleModel/BattleModel.h"
+#include "BattleModel.h"
 #include "BattleView/BattleGesture.h"
 #include "BattleScript.h"
 #include "../Library/ViewExtra/ButtonView.h"
@@ -133,14 +133,16 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 	_battleView = new BattleView(this, battleScript->GetBattleModel(), _renderers);
 	_battleView->_player = Player1;
 
-	SmoothTerrainSurface* smoothTerrainSurface = dynamic_cast<SmoothTerrainSurface*>(battleScript->GetBattleModel()->terrainSurface);
+	SmoothTerrainSurface* smoothTerrainSurface = dynamic_cast<SmoothTerrainSurface*>(battleScript->terrainSurface);
 	if (smoothTerrainSurface != nullptr)
 	{
 		_battleView->_smoothTerrainSurface = smoothTerrainSurface;
+		_battleView->_smoothTerrainWater = battleScript->terrainWater;
+		_battleView->_smoothTerrainSky = battleScript->terrainSky;
 		_battleView->_smoothTerrainSurface->EnableRenderEdges();
 	}
 
-	TiledTerrainSurface* terrainSurfaceModelTiled = dynamic_cast<TiledTerrainSurface*>(battleScript->GetBattleModel()->terrainSurface);
+	TiledTerrainSurface* terrainSurfaceModelTiled = dynamic_cast<TiledTerrainSurface*>(battleScript->terrainSurface);
 	if (terrainSurfaceModelTiled != nullptr)
 		_battleView->_terrainSurfaceRendererTiled = new TiledTerrainSurfaceRenderer(terrainSurfaceModelTiled);
 

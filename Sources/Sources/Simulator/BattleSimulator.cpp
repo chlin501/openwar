@@ -4,7 +4,9 @@
 
 #include "BattleSimulator.h"
 #include "../SmoothTerrain/SmoothTerrainWater.h"
-#include "../TerrainModel/TerrainSurface.h"
+#include "../SmoothTerrain/SmoothGroundMap.h"
+#include "HeightMap.h"
+#include "GroundMap.h"
 #include "../../Library/Algebra/geometry.h"
 
 
@@ -17,15 +19,15 @@ SimulationListener::~SimulationListener()
 BattleSimulator::BattleSimulator(BattleModel* battleModel) :
 _battleModel(battleModel),
 _fighterQuadTree(
-	battleModel->terrainSurface->GetBounds().min.x,
-	battleModel->terrainSurface->GetBounds().min.y,
-	battleModel->terrainSurface->GetBounds().max.x,
-	battleModel->terrainSurface->GetBounds().max.y),
+	battleModel->groundMap->GetBounds().min.x,
+	battleModel->groundMap->GetBounds().min.y,
+	battleModel->groundMap->GetBounds().max.x,
+	battleModel->groundMap->GetBounds().max.y),
 _weaponQuadTree(
-	battleModel->terrainSurface->GetBounds().min.x,
-	battleModel->terrainSurface->GetBounds().min.y,
-	battleModel->terrainSurface->GetBounds().max.x,
-	battleModel->terrainSurface->GetBounds().max.y),
+	battleModel->groundMap->GetBounds().min.x,
+	battleModel->groundMap->GetBounds().min.y,
+	battleModel->groundMap->GetBounds().max.x,
+	battleModel->groundMap->GetBounds().max.y),
 _secondsSinceLastTimeStep(0),
 currentPlayer(PlayerNone),
 practice(false),
@@ -203,7 +205,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 
 	if (unitRange.minimumRange > 0 && unitRange.maximumRange > 0)
 	{
-		float centerHeight = _battleModel->terrainSurface->GetHeight(unitRange.center) + 1.9f;
+		float centerHeight = _battleModel->heightMap->InterpolateHeight(unitRange.center) + 1.9f;
 
 		int n = 24;
 		for (int i = 0; i <= n; ++i)
@@ -215,7 +217,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 			float maxAngle = -100;
 			for (float range = unitRange.minimumRange + delta; range <= unitRange.maximumRange; range += delta)
 			{
-				float height = _battleModel->terrainSurface->GetHeight(unitRange.center + range * direction) + 0.5f;
+				float height = _battleModel->heightMap->InterpolateHeight(unitRange.center + range * direction) + 0.5f;
 				float verticalAngle = glm::atan(height - centerHeight, range);
 				if (verticalAngle > maxAngle)
 				{
@@ -374,7 +376,7 @@ void BattleSimulator::RemoveCasualties()
 		}
 	}
 
-	bounds2f bounds = _battleModel->terrainSurface->GetBounds();
+	bounds2f bounds = _battleModel->groundMap->GetBounds();
 	glm::vec2 center = bounds.center();
 	float radius = bounds.width() / 2;
 	float radius_squared = radius * radius;
@@ -603,7 +605,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 
 	result.readyState = original.readyState;
 	result.position = NextFighterPosition(fighter);
-	result.position_z = _battleModel->terrainSurface->GetHeight(result.position);
+	result.position_z = _battleModel->heightMap->InterpolateHeight(result.position);
 	result.velocity = NextFighterVelocity(fighter);
 
 
@@ -816,8 +818,8 @@ glm::vec2 BattleSimulator::NextFighterVelocity(Fighter* fighter)
 
 	if (glm::length(fighter->state.position - fighter->terrainPosition) > 4)
 	{
-		fighter->terrainForest = _battleModel->terrainSurface->IsForest(fighter->state.position);
-		fighter->terrainImpassable = _battleModel->terrainSurface->IsImpassable(fighter->state.position);
+		fighter->terrainForest = _battleModel->groundMap->IsForest(fighter->state.position);
+		fighter->terrainImpassable = _battleModel->groundMap->IsImpassable(fighter->state.position);
 		if (!fighter->terrainImpassable)
 			fighter->terrainPosition = fighter->state.position;
 	}
