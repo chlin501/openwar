@@ -73,8 +73,8 @@ bool SmoothGroundMap::IsWater(glm::vec2 position) const
 bool SmoothGroundMap::ContainsWater(bounds2f bounds) const
 {
 	glm::ivec2 mapsize = _image->size();
-	glm::vec2 min = glm::vec2(mapsize.x - 1, mapsize.y - 1) * (bounds.min - bounds.min) / bounds.size();
-	glm::vec2 max = glm::vec2(mapsize.x - 1, mapsize.y - 1) * (bounds.max - bounds.min) / bounds.size();
+	glm::vec2 min = glm::vec2(mapsize.x - 1, mapsize.y - 1) * (bounds.min - _bounds.min) / _bounds.size();
+	glm::vec2 max = glm::vec2(mapsize.x - 1, mapsize.y - 1) * (bounds.max - _bounds.min) / _bounds.size();
 	int xmin = (int)floorf(min.x);
 	int ymin = (int)floorf(min.y);
 	int xmax = (int)ceilf(max.x);
