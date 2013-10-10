@@ -3,11 +3,11 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "SmoothTerrainWater.h"
-#include "SmoothGroundMap.h"
+#include "GroundMap.h"
 
 
-SmoothTerrainWater::SmoothTerrainWater(SmoothGroundMap* smoothGroundMap) :
-_smoothGroundMap(smoothGroundMap)
+SmoothTerrainWater::SmoothTerrainWater(GroundMap* groundMap) :
+_groundMap(groundMap)
 {
 	_water_inside_renderer = new renderer<plain_vertex, ground_texture_uniforms>((
 		VERTEX_ATTRIBUTE(plain_vertex, _position),
@@ -121,7 +121,7 @@ static vertexbuffer<plain_vertex>* choose_shape(int count, vertexbuffer<plain_ve
 
 void SmoothTerrainWater::Update()
 {
-	bounds2f bounds = _smoothGroundMap->GetBounds();
+	bounds2f bounds = _groundMap->GetBounds();
 
 	_shape_water_inside._mode = GL_TRIANGLES;
 	_shape_water_border._mode = GL_TRIANGLES;
@@ -135,7 +135,7 @@ void SmoothTerrainWater::Update()
 		for (int y = 0; y < n; ++y)
 		{
 			glm::vec2 p = bounds.min + s * glm::vec2(x, y);
-			if (_smoothGroundMap->ContainsWater(bounds2f(p, p + s)))
+			if (_groundMap->ContainsWater(bounds2f(p, p + s)))
 			{
 				plain_vertex v11 = plain_vertex(p);
 				plain_vertex v12 = plain_vertex(p + glm::vec2(0, s.y));
@@ -167,7 +167,7 @@ void SmoothTerrainWater::Update()
 
 void SmoothTerrainWater::Render(const glm::mat4x4& transform)
 {
-	bounds2f bounds = _smoothGroundMap->GetBounds();
+	bounds2f bounds = _groundMap->GetBounds();
 
 	ground_texture_uniforms uniforms;
 	uniforms._transform = transform;

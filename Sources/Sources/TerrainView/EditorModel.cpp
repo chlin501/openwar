@@ -9,7 +9,7 @@
 
 
 
-EditorModel::EditorModel(BattleView* battleView, SmoothTerrainSurface* smoothTerrainSurface) :
+EditorModel::EditorModel(BattleView* battleView, SmoothTerrainRenderer* smoothTerrainSurface) :
 _battleView(battleView),
 _smoothTerrainSurface(smoothTerrainSurface),
 _editorMode(EditorMode::Hand),

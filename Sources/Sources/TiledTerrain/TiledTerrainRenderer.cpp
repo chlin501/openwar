@@ -2,27 +2,48 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "TiledTerrainSurfaceRenderer.h"
-#include "../../Library/Graphics/renderer.h"
-#include "../../Library/Algebra/image.h"
-#include "TiledTerrainSurface.h"
+#include "TiledTerrainRenderer.h"
+#include "vertexbuffer.h"
+#include "uniforms.h"
+#include "renderer.h"
+#include "HeightMap.h"
 
 
-TiledTerrainSurfaceRenderer::TiledTerrainSurfaceRenderer(TiledTerrainSurface* terrainSurfaceModel) :
-_terrainSurfaceModel(terrainSurfaceModel)
+TiledTerrainRenderer::TiledTerrainRenderer(TiledGroundMap* tiledGroundMap) :
+_tiledGroundMap(tiledGroundMap)
+{
+	glm::ivec2 size = _tiledGroundMap->GetSize();
+	for (int x = 0; x < size.x; ++x)
+		for (int y = 0; y < size.y; ++y)
+		{
+			TiledGroundMap::Tile* tile = _tiledGroundMap->GetTile(x, y);
+
+			if (_textures.find(tile->texture) == _textures.end())
+			{
+				::texture* t = new ::texture(image(resource(tile->texture.c_str())));
+
+				glBindTexture(GL_TEXTURE_2D, t->id);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+				_textures[tile->texture] = t;
+			}
+		}
+}
+
+
+TiledTerrainRenderer::~TiledTerrainRenderer()
 {
 }
 
 
-TiledTerrainSurfaceRenderer::~TiledTerrainSurfaceRenderer()
-{
-}
 
 
-void TiledTerrainSurfaceRenderer::Render(const glm::mat4x4& transform, const glm::vec3& lightNormal)
+void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3& lightNormal)
 {
-	bounds2f bounds = _terrainSurfaceModel->GetBounds();
-	glm::ivec2 size = _terrainSurfaceModel->GetSize();
+	//HeightMap* heightMap = _tiledGroundMap->GetHeightMap();
+	bounds2f bounds = _tiledGroundMap->GetBounds();
+	glm::ivec2 size = _tiledGroundMap->GetSize();
 
 	vertexbuffer<texture_vertex3> shape;
 	shape._mode = GL_TRIANGLES;
@@ -32,16 +53,15 @@ void TiledTerrainSurfaceRenderer::Render(const glm::mat4x4& transform, const glm
 	for (int x = 0; x < size.x; ++x)
 		for (int y = 0; y < size.y; ++y)
 		{
-			TiledTerrainSurface::Tile* tile = _terrainSurfaceModel->GetTile(x, y);
+			TiledGroundMap::Tile* tile = _tiledGroundMap->GetTile(x, y);
 
 			glm::vec2 p0 = bounds.min + delta * glm::vec2(x, y);
 			glm::vec2 p1 = p0 + delta;
 
-			float h00 = _terrainSurfaceModel->InterpolateHeight(glm::vec2(p0.x, p0.y));
-			float h01 = _terrainSurfaceModel->InterpolateHeight(glm::vec2(p0.x, p1.y));
-			float h10 = _terrainSurfaceModel->InterpolateHeight(glm::vec2(p1.x, p0.y));
-			float h11 = _terrainSurfaceModel->InterpolateHeight(glm::vec2(p1.x, p1.y));
-
+			float h00 = _tiledGroundMap->GetHeight(x, y); //heightMap->InterpolateHeight(glm::vec2(p0.x, p0.y));
+			float h01 = _tiledGroundMap->GetHeight(x, y + 1); //heightMap->InterpolateHeight(glm::vec2(p0.x, p1.y));
+			float h10 = _tiledGroundMap->GetHeight(x + 1, y); //heightMap->InterpolateHeight(glm::vec2(p1.x, p0.y));
+			float h11 = _tiledGroundMap->GetHeight(x + 1, y + 1); //heightMap->InterpolateHeight(glm::vec2(p1.x, p1.y));
 
 			glm::vec2 t00 = glm::vec2(0, 0);
 			glm::vec2 t01 = glm::vec2(0, 1);
@@ -86,7 +106,7 @@ void TiledTerrainSurfaceRenderer::Render(const glm::mat4x4& transform, const glm
 
 			texture_uniforms uniforms;
 			uniforms._transform = transform;
-			uniforms._texture = tile->_texture;
+			uniforms._texture = _textures[tile->texture];
 
 			renderers::singleton->_texture_renderer3->render(shape, uniforms);
 		}

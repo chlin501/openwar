@@ -2,19 +2,21 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "OpenWarSurface.h"
-#include "BattleModel.h"
-#include "BattleView/BattleGesture.h"
-#include "BattleScript.h"
+#include "../Library/Audio/SoundPlayer.h"
 #include "../Library/ViewExtra/ButtonView.h"
 #include "../Library/ViewExtra/ButtonGesture.h"
-#include "TerrainView/EditorGesture.h"
-#include "../BattleModel/BattleSimulator.h"
-#include "../Library/Audio/SoundPlayer.h"
-#include "TerrainView/TerrainGesture.h"
-#include "TiledTerrain/TiledTerrainSurface.h"
-#include "BattleView/UnitCounter.h"
 #include "../Library/Renderers/GradientRenderer.h"
+#include "../BattleModel/BattleSimulator.h"
+#include "../BattleModel/BattleScript.h"
+#include "../BattleModel/BattleModel.h"
+#include "OpenWarSurface.h"
+#include "BattleView/BattleGesture.h"
+#include "BattleView/UnitCounter.h"
+#include "TerrainView/EditorGesture.h"
+#include "TerrainView/TerrainGesture.h"
+#include "TiledTerrainRenderer.h"
+#include "SmoothTerrain/SmoothTerrainWater.h"
+#include "SmoothTerrain/SmoothTerrainSky.h"
 
 
 
@@ -115,8 +117,8 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 		delete _battleView->_smoothTerrainSurface;
 		_battleView->_smoothTerrainSurface = nullptr;
 
-		delete _battleView->_terrainSurfaceRendererTiled;
-		_battleView->_terrainSurfaceRendererTiled = nullptr;
+		delete _battleView->_tiledTerrainRenderer;
+		_battleView->_tiledTerrainRenderer = nullptr;
 	}
 
 	delete _battleView;
@@ -133,18 +135,22 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 	_battleView = new BattleView(this, battleScript->GetBattleModel(), _renderers);
 	_battleView->_player = Player1;
 
-	SmoothTerrainSurface* smoothTerrainSurface = dynamic_cast<SmoothTerrainSurface*>(battleScript->terrainSurface);
-	if (smoothTerrainSurface != nullptr)
+	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(battleScript->GetBattleModel()->groundMap);
+	if (smoothGroundMap != nullptr)
 	{
-		_battleView->_smoothTerrainSurface = smoothTerrainSurface;
-		_battleView->_smoothTerrainWater = battleScript->terrainWater;
-		_battleView->_smoothTerrainSky = battleScript->terrainSky;
+		_battleView->_smoothTerrainSurface = new SmoothTerrainRenderer(smoothGroundMap);
 		_battleView->_smoothTerrainSurface->EnableRenderEdges();
+		_battleView->_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
+		_battleView->_smoothTerrainSky = new SmoothTerrainSky();
 	}
 
-	TiledTerrainSurface* terrainSurfaceModelTiled = dynamic_cast<TiledTerrainSurface*>(battleScript->terrainSurface);
-	if (terrainSurfaceModelTiled != nullptr)
-		_battleView->_terrainSurfaceRendererTiled = new TiledTerrainSurfaceRenderer(terrainSurfaceModelTiled);
+	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(battleScript->GetBattleModel()->groundMap);
+	if (tiledGroundMap != nullptr)
+	{
+		tiledGroundMap->UpdateHeightMap();
+		_battleView->_tiledTerrainRenderer = new TiledTerrainRenderer(tiledGroundMap);
+		_battleView->_smoothTerrainSky = new SmoothTerrainSky();
+	}
 
 	_battleView->Initialize();
 
@@ -214,12 +220,14 @@ void OpenWarSurface::Render()
 	{
 		_battleView->Render();
 
+		/*
 		if (_battleScript != nullptr)
 		{
 			_scriptHintRenderer->Reset();
 			_battleScript->RenderHints(_scriptHintRenderer);
 			_scriptHintRenderer->Draw(_battleView->GetTransform());
 		}
+		*/
 	}
 
 	if (_battleGesture == nullptr)

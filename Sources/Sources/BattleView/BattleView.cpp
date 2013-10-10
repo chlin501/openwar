@@ -14,7 +14,7 @@
 #include "../../Library/Renderers/TextureRenderer.h"
 #include "../../Library/Renderers/sprite.h"
 #include "../SmoothTerrain/SmoothTerrainWater.h"
-#include "../TerrainSky/SmoothTerrainSky.h"
+#include "../SmoothTerrain/SmoothTerrainSky.h"
 #include "BattleView.h"
 #include "CasualtyMarker.h"
 #include "RangeMarker.h"
@@ -62,7 +62,7 @@ _textureFacing(nullptr),
 _smoothTerrainSurface(nullptr),
 _smoothTerrainWater(nullptr),
 _smoothTerrainSky(nullptr),
-_terrainSurfaceRendererTiled(nullptr),
+_tiledTerrainRenderer(nullptr),
 _player(PlayerNone)
 {
 	_textureUnitMarkers = new texture(resource("Textures/Texture256x256.png"));
@@ -389,8 +389,8 @@ void BattleView::Render()
 	if (_smoothTerrainSurface != nullptr)
 		_smoothTerrainSurface->Render(GetTransform(), _lightNormal);
 
-	if (_terrainSurfaceRendererTiled != nullptr)
-		_terrainSurfaceRendererTiled->Render(GetTransform(), _lightNormal);
+	if (_tiledTerrainRenderer != nullptr)
+		_tiledTerrainRenderer->Render(GetTransform(), _lightNormal);
 
 
 	// Terrain Water

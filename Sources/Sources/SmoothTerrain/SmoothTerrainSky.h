@@ -5,7 +5,7 @@
 #ifndef SmoothTerrainSky_H
 #define SmoothTerrainSky_H
 
-#include "TerrainSky.h"
+#include "../TerrainSky/TerrainSky.h"
 #include "../../Library/Graphics/renderer.h"
 
 

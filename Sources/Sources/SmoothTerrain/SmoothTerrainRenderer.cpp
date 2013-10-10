@@ -3,11 +3,11 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "../../Library/Algebra/image.h"
-#include "SmoothTerrainSurface.h"
+#include "SmoothTerrainRenderer.h"
 
 
 
-SmoothTerrainSurface::SmoothTerrainSurface(SmoothGroundMap* smoothGroundMap) :
+SmoothTerrainRenderer::SmoothTerrainRenderer(SmoothGroundMap* smoothGroundMap) :
 _smoothGroundMap(smoothGroundMap),
 _framebuffer_width(0),
 _framebuffer_height(0),
@@ -19,8 +19,8 @@ _splatmap(nullptr),
 _showLines(false),
 _editMode(false)
 {
-	_renderers = new terrain_renderers();
-	_colormap = terrain_renderers::create_colormap();
+	_renderers = new SmoothTerrainShaders();
+	_colormap = SmoothTerrainShaders::create_colormap();
 
 	_splatmap = new texture();
 	UpdateSplatmap();
@@ -33,7 +33,7 @@ _editMode(false)
 }
 
 
-SmoothTerrainSurface::~SmoothTerrainSurface()
+SmoothTerrainRenderer::~SmoothTerrainRenderer()
 {
 	delete _colormap;
 	delete _splatmap;
@@ -56,7 +56,7 @@ SmoothTerrainSurface::~SmoothTerrainSurface()
 }*/
 
 
-void SmoothTerrainSurface::Render(const glm::mat4x4& transform, const glm::vec3& lightNormal)
+void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3& lightNormal)
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
 	glm::vec4 map_bounds = glm::vec4(bounds.min, bounds.size());
@@ -165,7 +165,7 @@ static NSString* FramebufferStatusString(GLenum status)
 
 
 
-void SmoothTerrainSurface::EnableRenderEdges()
+void SmoothTerrainRenderer::EnableRenderEdges()
 {
 	_depth = new texture();
 	glBindTexture(GL_TEXTURE_2D, _depth->id);
@@ -199,7 +199,7 @@ void SmoothTerrainSurface::EnableRenderEdges()
 
 
 
-void SmoothTerrainSurface::UpdateDepthTextureSize()
+void SmoothTerrainRenderer::UpdateDepthTextureSize()
 {
 	if (_depth != nullptr)
 	{
@@ -222,7 +222,7 @@ void SmoothTerrainSurface::UpdateDepthTextureSize()
 }
 
 
-void SmoothTerrainSurface::InitializeShadow()
+void SmoothTerrainRenderer::InitializeShadow()
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
 	glm::vec2 center = bounds.center();
@@ -255,7 +255,7 @@ void SmoothTerrainSurface::InitializeShadow()
 }
 
 
-void SmoothTerrainSurface::InitializeSkirt()
+void SmoothTerrainRenderer::InitializeSkirt()
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
 	glm::vec2 center = bounds.center();
@@ -283,7 +283,7 @@ void SmoothTerrainSurface::InitializeSkirt()
 }
 
 
-void SmoothTerrainSurface::UpdateSplatmap()
+void SmoothTerrainRenderer::UpdateSplatmap()
 {
 	glm::ivec2 size = _smoothGroundMap->GetImage()->size();
 
@@ -314,7 +314,7 @@ void SmoothTerrainSurface::UpdateSplatmap()
 }
 
 
-void SmoothTerrainSurface::UpdateChanges(bounds2f bounds)
+void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 {
 	InitializeSkirt();
 	UpdateSplatmap();
@@ -382,7 +382,7 @@ void SmoothTerrainSurface::UpdateChanges(bounds2f bounds)
 }
 
 
-void SmoothTerrainSurface::InitializeLines()
+void SmoothTerrainRenderer::InitializeLines()
 {
 	if (_showLines)
 	{
@@ -460,7 +460,7 @@ static int inside_circle(bounds2f bounds, terrain_vertex v1, terrain_vertex v2, 
 }
 
 
-void SmoothTerrainSurface::BuildTriangles()
+void SmoothTerrainRenderer::BuildTriangles()
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
 	glm::vec2 corner = bounds.p11();
@@ -525,7 +525,7 @@ void SmoothTerrainSurface::BuildTriangles()
 }
 
 
-void SmoothTerrainSurface::PushTriangle(const terrain_vertex& v0, const terrain_vertex& v1, const terrain_vertex& v2)
+void SmoothTerrainRenderer::PushTriangle(const terrain_vertex& v0, const terrain_vertex& v1, const terrain_vertex& v2)
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
 	vertexbuffer<terrain_vertex>* s = SelectTerrainVbo(inside_circle(bounds, v0, v1, v2));
@@ -538,7 +538,7 @@ void SmoothTerrainSurface::PushTriangle(const terrain_vertex& v0, const terrain_
 }
 
 
-vertexbuffer<terrain_vertex>* SmoothTerrainSurface::SelectTerrainVbo(int inside)
+vertexbuffer<terrain_vertex>* SmoothTerrainRenderer::SelectTerrainVbo(int inside)
 {
 	switch (inside)
 	{

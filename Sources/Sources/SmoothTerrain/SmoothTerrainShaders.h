@@ -2,16 +2,14 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef SmoothTerrainSurfaceRenderer_H
-#define SmoothTerrainSurfaceRenderer_H
+#ifndef SmoothTerrainShaders_H
+#define SmoothTerrainShaders_H
 
 #include "../../Library/Graphics/framebuffer.h"
 #include "../../Library/Graphics/renderbuffer.h"
 #include "../../Library/Graphics/vertexbuffer.h"
 #include "../../Library/Graphics/renderer.h"
 
-
-struct terrain_renderers;
 
 struct terrain_vertex
 {
@@ -50,7 +48,7 @@ struct sobel_uniforms
 
 
 
-struct terrain_renderers
+struct SmoothTerrainShaders
 {
 	renderer<terrain_vertex, terrain_uniforms>* _terrain_inside;
 	renderer<terrain_vertex, terrain_uniforms>* _terrain_border;
@@ -61,8 +59,8 @@ struct terrain_renderers
 	renderer<texture_vertex, sobel_uniforms>* _sobel_filter;
 	renderer<plain_vertex, terrain_uniforms>* _ground_shadow;
 
-	terrain_renderers();
-	~terrain_renderers();
+	SmoothTerrainShaders();
+	~SmoothTerrainShaders();
 
 	void render_terrain_inside(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms);
 	void render_terrain_border(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms);

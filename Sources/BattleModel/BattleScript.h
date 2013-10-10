@@ -10,10 +10,6 @@
 
 class BattleModel;
 class BattleSimulator;
-class GradientLineRenderer;
-class TiledTerrainSurfaceRenderer;
-class SmoothTerrainWater;
-class SmoothTerrainSky;
 
 
 class BattleScript
@@ -31,14 +27,10 @@ class BattleScript
 
 	BattleModel* _battleModel;
 	BattleSimulator* _battleSimulator;
-	GradientLineRenderer* _renderer;
+	//GradientLineRenderer* _renderer;
 	lua_State* _state;
 
 public:
-	SmoothTerrainSurface* terrainSurface;
-	SmoothTerrainWater* terrainWater;
-	SmoothTerrainSky* terrainSky;
-
 	BattleScript();
 	~BattleScript();
 
@@ -52,7 +44,7 @@ public:
 	BattleSimulator* GetBattleSimulator() const { return _battleSimulator; }
 
 	void Tick(double secondsSinceLastTick);
-	void RenderHints(GradientLineRenderer* renderer);
+	//void RenderHints(GradientLineRenderer* renderer);
 
 private:
 	int NewUnit(Player player, UnitPlatform platform, UnitWeapon weapon, int strength, glm::vec2 position, float bearing);

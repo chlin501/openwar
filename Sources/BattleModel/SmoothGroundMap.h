@@ -2,9 +2,9 @@
 #define SmoothGroundMap_H
 
 #include <glm/glm.hpp>
-#include "../../BattleModel/GroundMap.h"
-#include "../../Library/Algebra/bounds.h"
-#include "../../Library/Algebra/image.h"
+#include "GroundMap.h"
+#include "../Library/Algebra/bounds.h"
+#include "../Library/Algebra/image.h"
 
 class HeightMap;
 

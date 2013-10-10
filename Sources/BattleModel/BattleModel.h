@@ -329,7 +329,7 @@ struct Unit
 };
 
 
-class SmoothTerrainSurface;
+class SmoothTerrainRenderer;
 
 class BattleModel
 {

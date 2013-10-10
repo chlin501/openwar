@@ -8,7 +8,7 @@
 #include "../../Library/Renderers/GradientRenderer.h"
 #include "GroundMap.h"
 #include "../../Library/Algebra/geometry.h"
-#include "../SmoothTerrain/SmoothGroundMap.h"
+#include "../../BattleModel/SmoothGroundMap.h"
 #include "HeightMap.h"
 
 

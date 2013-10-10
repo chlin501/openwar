@@ -2,12 +2,12 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "SmoothTerrainSurfaceRenderer.h"
+#include "SmoothTerrainShaders.h"
 #include "../../Library/Algebra/image.h"
 
 
 
-terrain_renderers::terrain_renderers() :
+SmoothTerrainShaders::SmoothTerrainShaders() :
 _terrain_inside(nullptr),
 _terrain_border(nullptr),
 _terrain_skirt(nullptr),
@@ -20,7 +20,7 @@ _ground_shadow(nullptr)
 }
 
 
-terrain_renderers::~terrain_renderers()
+SmoothTerrainShaders::~SmoothTerrainShaders()
 {
 	delete _terrain_inside;
 	delete _terrain_border;
@@ -33,7 +33,7 @@ terrain_renderers::~terrain_renderers()
 }
 
 
-void terrain_renderers::render_terrain_inside(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_terrain_inside(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
 {
 	if (_terrain_inside == nullptr)
 	{
@@ -107,7 +107,7 @@ void terrain_renderers::render_terrain_inside(vertexbuffer<terrain_vertex>& shap
 
 
 
-void terrain_renderers::render_terrain_border(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_terrain_border(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
 {
 	if (_terrain_border == nullptr)
 	{
@@ -183,7 +183,7 @@ void terrain_renderers::render_terrain_border(vertexbuffer<terrain_vertex>& shap
 
 
 
-void terrain_renderers::render_terrain_skirt(vertexbuffer<skirt_vertex>& shape, const texture_uniforms& uniforms)
+void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shape, const texture_uniforms& uniforms)
 {
 	if (_terrain_skirt == nullptr)
 	{
@@ -233,7 +233,7 @@ void terrain_renderers::render_terrain_skirt(vertexbuffer<skirt_vertex>& shape, 
 
 
 
-void terrain_renderers::render_depth_inside(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_depth_inside(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
 {
 	if (_depth_inside == nullptr)
 	{
@@ -269,7 +269,7 @@ void terrain_renderers::render_depth_inside(vertexbuffer<terrain_vertex>& shape,
 
 
 
-void terrain_renderers::render_depth_border(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_depth_border(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
 {
 	if (_depth_border == nullptr)
 	{
@@ -314,7 +314,7 @@ void terrain_renderers::render_depth_border(vertexbuffer<terrain_vertex>& shape,
 
 
 
-void terrain_renderers::render_depth_skirt(vertexbuffer<skirt_vertex>& shape, const plain_uniforms& uniforms)
+void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape, const plain_uniforms& uniforms)
 {
 	if (_depth_skirt == nullptr)
 	{
@@ -350,7 +350,7 @@ void terrain_renderers::render_depth_skirt(vertexbuffer<skirt_vertex>& shape, co
 }
 
 
-void terrain_renderers::render_sobel_filter(vertexbuffer<texture_vertex>& shape, const sobel_uniforms& uniforms)
+void SmoothTerrainShaders::render_sobel_filter(vertexbuffer<texture_vertex>& shape, const sobel_uniforms& uniforms)
 {
 	if (_sobel_filter == nullptr)
 	{
@@ -437,7 +437,7 @@ void terrain_renderers::render_sobel_filter(vertexbuffer<texture_vertex>& shape,
 }
 
 
-void terrain_renderers::render_ground_shadow(vertexbuffer<plain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_ground_shadow(vertexbuffer<plain_vertex>& shape, const terrain_uniforms& uniforms)
 {
 	if (_ground_shadow == nullptr)
 	{
@@ -568,7 +568,7 @@ static glm::vec3 adjust_brightness(glm::vec3 c, float brightness)
 }
 
 
-texture* terrain_renderers::create_colormap()
+texture* SmoothTerrainShaders::create_colormap()
 {
 	static glm::vec3 r[256];
 

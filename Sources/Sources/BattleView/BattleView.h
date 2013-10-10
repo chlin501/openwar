@@ -9,8 +9,8 @@
 #include "../../BattleModel/BattleSimulator.h"
 #include "../../Library/Graphics/vertexbuffer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
-#include "../SmoothTerrain/SmoothTerrainSurface.h"
-#include "../TiledTerrain/TiledTerrainSurfaceRenderer.h"
+#include "SmoothTerrainRenderer.h"
+#include "../TiledTerrain/TiledTerrainRenderer.h"
 #include "../TerrainView/TerrainView.h"
 
 
@@ -62,10 +62,11 @@ class BattleView : public TerrainView, public SimulationListener
 	texture* _textureFacing;
 
 public:
-	SmoothTerrainSurface* _smoothTerrainSurface;
+	SmoothTerrainRenderer* _smoothTerrainSurface;
 	SmoothTerrainWater* _smoothTerrainWater;
 	SmoothTerrainSky* _smoothTerrainSky;
-	TiledTerrainSurfaceRenderer* _terrainSurfaceRendererTiled;
+
+	TiledTerrainRenderer* _tiledTerrainRenderer;
 	Player _player;
 
 	std::vector<SmokeCounter*> _smokeMarkers;

@@ -5,7 +5,7 @@
 #ifndef EDITORMODEL_H
 #define EDITORMODEL_H
 
-#include "../SmoothTerrain/SmoothTerrainSurface.h"
+#include "SmoothTerrainRenderer.h"
 
 class BattleView;
 
@@ -15,7 +15,7 @@ enum class EditorMode { Hand, Paint, Erase, Smear };
 class EditorModel
 {
 	BattleView* _battleView;
-	SmoothTerrainSurface* _smoothTerrainSurface;
+	SmoothTerrainRenderer* _smoothTerrainSurface;
 	EditorMode _editorMode;
 	TerrainFeature _terrainFeature;
 	image* _brush;
@@ -24,7 +24,7 @@ class EditorModel
 	float _brushDistance;
 
 public:
-	EditorModel(BattleView* battleView, SmoothTerrainSurface* smoothTerrainSurface);
+	EditorModel(BattleView* battleView, SmoothTerrainRenderer* smoothTerrainSurface);
 
 	EditorMode GetEditorMode() const { return _editorMode; }
 	void SetEditorMode(EditorMode value) { _editorMode = value; }

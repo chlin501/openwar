@@ -2,12 +2,12 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef SmoothTerrainSurface_H
-#define SmoothTerrainSurface_H
+#ifndef SmoothTerrainRenderer_H
+#define SmoothTerrainRenderer_H
 
 #include "../../Library/Algebra/bounds.h"
 #include "GroundMap.h"
-#include "SmoothTerrainSurfaceRenderer.h"
+#include "SmoothTerrainShaders.h"
 #include "SmoothGroundMap.h"
 #include "HeightMap.h"
 
@@ -15,7 +15,7 @@ class image;
 
 
 
-class SmoothTerrainSurface
+class SmoothTerrainRenderer
 {
 	SmoothGroundMap* _smoothGroundMap;
 	int _framebuffer_width;
@@ -26,7 +26,7 @@ class SmoothTerrainSurface
 	texture* _colormap;
 	texture* _splatmap;
 
-	terrain_renderers* _renderers;
+	SmoothTerrainShaders* _renderers;
 	vertexbuffer<plain_vertex> _vboShadow;
 	vertexbuffer<terrain_vertex> _vboInside;
 	vertexbuffer<terrain_vertex> _vboBorder;
@@ -37,8 +37,8 @@ class SmoothTerrainSurface
 	bool _editMode;
 
 public:
-	SmoothTerrainSurface(SmoothGroundMap* smoothGroundMap);
-	virtual ~SmoothTerrainSurface();
+	SmoothTerrainRenderer(SmoothGroundMap* smoothGroundMap);
+	virtual ~SmoothTerrainRenderer();
 
 	SmoothGroundMap* GetSmoothGroundMap() const { return _smoothGroundMap; }
 

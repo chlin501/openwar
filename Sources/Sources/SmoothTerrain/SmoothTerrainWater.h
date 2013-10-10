@@ -8,7 +8,7 @@
 #include "../../Library/Graphics/renderer.h"
 #include "../../Library/Algebra/image.h"
 
-class SmoothGroundMap;
+class GroundMap;
 
 
 class SmoothTerrainWater
@@ -20,7 +20,7 @@ class SmoothTerrainWater
 		const texture* _texture;
 	};
 
-	SmoothGroundMap* _smoothGroundMap;
+	GroundMap* _groundMap;
 
 	renderer<plain_vertex, ground_texture_uniforms>* _water_inside_renderer;
 	renderer<plain_vertex, ground_texture_uniforms>* _water_border_renderer;
@@ -29,7 +29,7 @@ class SmoothTerrainWater
 	vertexbuffer<plain_vertex> _shape_water_border;
 
 public:
-	SmoothTerrainWater(SmoothGroundMap* smoothGroundMap);
+	SmoothTerrainWater(GroundMap* groundMap);
 	virtual ~SmoothTerrainWater();
 
 	void Update();
