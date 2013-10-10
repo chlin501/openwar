@@ -165,6 +165,9 @@ _player(PlayerNone)
 	_gradientTriangleStripRenderer = new GradientTriangleStripRenderer();
 	_colorBillboardRenderer = new ColorBillboardRenderer();
 	_textureTriangleRenderer = new TextureTriangleRenderer();
+
+	for (std::pair<int, Unit*> i : _battleModel->units)
+		AddUnitMarker(i.second);
 }
 
 
@@ -197,12 +200,22 @@ BattleView::~BattleView()
 	delete _gradientTriangleStripRenderer;
 	delete _colorBillboardRenderer;
 	delete _textureTriangleRenderer;
+
+
+	for (ShootingCounter* shootingCounter : _shootingCounters)
+		delete shootingCounter;
+
+	for (SmokeCounter* marker : _smokeMarkers)
+		delete marker;
+
+	for (UnitCounter* marker : _unitMarkers)
+		delete marker;
 }
 
 
 void BattleView::OnShooting(Shooting const & shooting)
 {
-	_battleModel->AddShootingAndSmokeCounters(shooting);
+	AddShootingAndSmokeCounters(shooting);
 }
 
 
@@ -391,7 +404,7 @@ void BattleView::Render()
 
 	glDepthMask(false);
 	_plainLineRenderer->Reset();
-	for (UnitCounter* marker : _battleModel->_unitMarkers)
+	for (UnitCounter* marker : _unitMarkers)
 		marker->AppendFighterWeapons(_plainLineRenderer);
 	_plainLineRenderer->Draw(GetTransform(), glm::vec4(0.4, 0.4, 0.4, 0.6));
 
@@ -407,9 +420,9 @@ void BattleView::Render()
 
 	_billboardModel->dynamicBillboards.clear();
 	_casualtyMarker->AppendCasualtyBillboards(_billboardModel);
-	for (UnitCounter* marker : _battleModel->_unitMarkers)
+	for (UnitCounter* marker : _unitMarkers)
 		marker->AppendFighterBillboards(_billboardModel);
-	for (SmokeCounter* marker : _battleModel->_smokeMarkers)
+	for (SmokeCounter* marker : _smokeMarkers)
 		marker->AppendSmokeBillboards(_billboardModel);
 	_textureBillboardRenderer->Render(_billboardModel, GetTransform(), GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetViewportBounds().height(), GetFlip());
 
@@ -433,7 +446,7 @@ void BattleView::Render()
 	glDisable(GL_DEPTH_TEST);
 	_textureTriangleRenderer->Reset();
 
-	for (UnitCounter* marker : _battleModel->_unitMarkers)
+	for (UnitCounter* marker : _unitMarkers)
 		if (marker->GetUnit()->player == _player)
 			marker->AppendFacingMarker(_textureTriangleRenderer, this);
 	for (UnitMovementMarker* marker : _movementMarkers)
@@ -452,7 +465,7 @@ void BattleView::Render()
 	_textureBillboardRenderer1->Reset();
 	_textureBillboardRenderer2->Reset();
 
-	for (UnitCounter* marker : _battleModel->_unitMarkers)
+	for (UnitCounter* marker : _unitMarkers)
 		marker->AppendUnitMarker(_textureBillboardRenderer1, _textureBillboardRenderer2, GetFlip());
 	for (UnitMovementMarker* marker : _movementMarkers)
 		marker->RenderMovementMarker(_textureBillboardRenderer1);
@@ -516,7 +529,7 @@ void BattleView::Render()
 	// Shooting Counters
 
 	_gradientLineRenderer->Reset();
-	for (ShootingCounter* shootingCounter : _battleModel->_shootingCounters)
+	for (ShootingCounter* shootingCounter : _shootingCounters)
 		shootingCounter->Render(_gradientLineRenderer);
 	_gradientLineRenderer->Draw(GetTransform());
 
@@ -550,6 +563,8 @@ template <class T> void AnimateMarkers(std::vector<T*>& markers, float seconds)
 		}
 	}
 }
+
+
 
 
 void BattleView::Update(double secondsSinceLastUpdate)
@@ -721,5 +736,130 @@ bounds1f BattleView::GetUnitIconSizeLimit() const
 		result.min *= 57.0f / 72.0f;
 		result.max *= 57.0f / 72.0f;
 	}
+	return result;
+}
+
+
+/***/
+
+
+
+
+void BattleView::AnimateMarkers(float seconds)
+{
+	::AnimateMarkers(_unitMarkers, seconds);
+	::AnimateMarkers(_shootingCounters, seconds);
+	::AnimateMarkers(_smokeMarkers, seconds);
+}
+
+
+void BattleView::InitializeUnitMarkers()
+{
+	for (std::pair<int, Unit*> item : _battleModel->units)
+	{
+		Unit* unit = item.second;
+		AddUnitMarker(unit);
+	}
+}
+
+
+void BattleView::AddUnitMarker(Unit* unit)
+{
+	UnitCounter* marker = new UnitCounter(_battleModel, unit);
+	marker->Animate(0);
+	_unitMarkers.push_back(marker);
+}
+
+
+void BattleView::AddShootingAndSmokeCounters(const Shooting& shooting)
+{
+	AddShootingCounter(shooting);
+	if (shooting.unitWeapon == UnitWeaponArq)
+		AddSmokeMarker(shooting);
+}
+
+
+void BattleView::AddShootingCounter(const Shooting& shooting)
+{
+	ShootingCounter* shootingCounter = AddShootingCounter(shooting.unitWeapon);
+
+	for (const Projectile& projectile : shooting.projectiles)
+	{
+		glm::vec3 p1 = glm::vec3(projectile.position1, _battleModel->heightMap->InterpolateHeight(projectile.position1));
+		glm::vec3 p2 = glm::vec3(projectile.position2, _battleModel->heightMap->InterpolateHeight(projectile.position2));
+		shootingCounter->AddProjectile(p1, p2, projectile.delay, shooting.timeToImpact);
+	}
+}
+
+
+ShootingCounter* BattleView::AddShootingCounter(UnitWeapon unitWeapon)
+{
+	ShootingCounter* shootingCounter = new ShootingCounter(unitWeapon);
+	_shootingCounters.push_back(shootingCounter);
+	return shootingCounter;
+}
+
+
+void BattleView::RemoveAllShootingMarkers()
+{
+	for (ShootingCounter* shootingCounters : _shootingCounters)
+	{
+		shootingCounters->Animate(100);
+	}
+}
+
+
+void BattleView::AddSmokeMarker(const Shooting& shooting)
+{
+	SmokeCounter* marker = AddSmokeMarker(shooting.unitWeapon);
+
+	for (const Projectile& projectile : shooting.projectiles)
+	{
+		glm::vec3 p1 = glm::vec3(projectile.position1, _battleModel->heightMap->InterpolateHeight(projectile.position1));
+		glm::vec3 p2 = glm::vec3(projectile.position2, _battleModel->heightMap->InterpolateHeight(projectile.position2));
+		marker->AddParticle(p1, p2, projectile.delay);
+	}
+}
+
+
+SmokeCounter* BattleView::AddSmokeMarker(UnitWeapon unitWeapon)
+{
+	SmokeCounter* marker = new SmokeCounter(unitWeapon);
+	_smokeMarkers.push_back(marker);
+	return marker;
+}
+
+
+void BattleView::RemoveAllSmokeMarkers()
+{
+	for (SmokeCounter* marker : _smokeMarkers)
+	{
+		marker->Animate(100);
+	}
+}
+
+
+UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, Player player)
+{
+	UnitCounter* result = 0;
+	float nearest = INFINITY;
+
+	for (UnitCounter* marker : _unitMarkers)
+	{
+		Unit* unit = marker->_unit;
+		if (player != PlayerNone && unit->player != player)
+			continue;
+
+		glm::vec2 p = unit->state.center;
+		float dx = p.x - position.x;
+		float dy = p.y - position.y;
+		float d = dx * dx + dy * dy;
+		if (d < nearest)
+		{
+			result = marker;
+			nearest = d;
+		}
+	}
+
 	return result;
 }

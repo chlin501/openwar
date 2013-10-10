@@ -67,6 +67,10 @@ public:
 	TiledTerrainSurfaceRenderer* _terrainSurfaceRendererTiled;
 	Player _player;
 
+	std::vector<SmokeCounter*> _smokeMarkers;
+	std::vector<ShootingCounter*> _shootingCounters;
+	std::vector<UnitCounter*> _unitMarkers;
+
 	BattleView(Surface* screen, BattleModel* battleModel, renderers* r);
 	~BattleView();
 
@@ -105,6 +109,26 @@ public:
 	bounds2f GetUnitFutureFacingMarkerBounds(Unit* unit);
 
 	bounds1f GetUnitIconSizeLimit() const;
+
+	/***/
+
+	void AnimateMarkers(float seconds);
+
+	void InitializeUnitMarkers();
+
+	void AddUnitMarker(Unit* unit);
+
+	void AddShootingAndSmokeCounters(const Shooting& shooting);
+
+	void AddShootingCounter(const Shooting& shooting);
+	ShootingCounter* AddShootingCounter(UnitWeapon unitWeapon);
+	void RemoveAllShootingMarkers();
+
+	void AddSmokeMarker(const Shooting& shooting);
+	SmokeCounter* AddSmokeMarker(UnitWeapon unitWeapon);
+	void RemoveAllSmokeMarkers();
+
+	UnitCounter* GetNearestUnitCounter(glm::vec2 position, Player player);
 };
 
 

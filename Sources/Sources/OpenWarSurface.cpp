@@ -191,7 +191,7 @@ void OpenWarSurface::Update(double secondsSinceLastUpdate)
 	if (_battleView != nullptr)
 	{
 		_battleView->Update(secondsSinceLastUpdate);
-		_battleView->GetBattleModel()->AnimateMarkers((float)secondsSinceLastUpdate);
+		_battleView->AnimateMarkers((float)secondsSinceLastUpdate);
 	}
 }
 
@@ -258,7 +258,7 @@ void OpenWarSurface::UpdateSoundPlayer()
 		int infantryMarching = 0;
 		int infantryRunning = 0;
 
-		for (UnitCounter* unitMarker : _battleView->GetBattleModel()->_unitMarkers)
+		for (UnitCounter* unitMarker : _battleView->_unitMarkers)
 		{
 			Unit* unit = unitMarker->_unit;
 			if (_battleScript->GetBattleModel()->GetUnit(unit->unitId) != 0 && glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)

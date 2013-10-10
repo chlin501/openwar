@@ -309,8 +309,7 @@ lastUnitId(0),
 bluePlayer(Player1),
 winner(PlayerNone),
 time(0),
-timeStep(1.0f / 15.0f),
-_unitMarkers()
+timeStep(1.0f / 15.0f)
 {
 }
 
@@ -323,15 +322,6 @@ BattleModel::~BattleModel()
 		delete[] unit->fighters;
 		delete unit;
 	}
-
-	for (ShootingCounter* shootingCounter : _shootingCounters)
-		delete shootingCounter;
-
-	for (SmokeCounter* marker : _smokeMarkers)
-		delete marker;
-
-	for (UnitCounter* marker : _unitMarkers)
-		delete marker;
 }
 
 
@@ -454,146 +444,6 @@ UnitStats BattleModel::GetDefaultUnitStats(UnitPlatform unitPlatform, UnitWeapon
 		default:
 			result.trainingLevel = 0.8f;
 			break;
-	}
-
-	return result;
-}
-
-
-
-template <class T> void AnimateMarkers(std::vector<T*>& markers, float seconds)
-{
-	size_t index = 0;
-	while (index < markers.size())
-	{
-		T* marker = markers[index];
-		if (marker->Animate(seconds))
-		{
-			++index;
-		}
-		else
-		{
-			markers.erase(markers.begin() + index);
-			delete marker;
-		}
-	}
-}
-
-
-void BattleModel::AnimateMarkers(float seconds)
-{
-	::AnimateMarkers(_unitMarkers, seconds);
-	::AnimateMarkers(_shootingCounters, seconds);
-	::AnimateMarkers(_smokeMarkers, seconds);
-}
-
-
-void BattleModel::InitializeUnitMarkers()
-{
-	for (std::pair<int, Unit*> item : units)
-	{
-		Unit* unit = item.second;
-		AddUnitMarker(unit);
-	}
-}
-
-
-void BattleModel::AddUnitMarker(Unit* unit)
-{
-	UnitCounter* marker = new UnitCounter(this, unit);
-	marker->Animate(0);
-	_unitMarkers.push_back(marker);
-}
-
-
-void BattleModel::AddShootingAndSmokeCounters(const Shooting& shooting)
-{
-	AddShootingCounter(shooting);
-	if (shooting.unitWeapon == UnitWeaponArq)
-		AddSmokeMarker(shooting);
-}
-
-
-void BattleModel::AddShootingCounter(const Shooting& shooting)
-{
-	ShootingCounter* shootingCounter = AddShootingCounter(shooting.unitWeapon);
-
-	for (const Projectile& projectile : shooting.projectiles)
-	{
-		glm::vec3 p1 = glm::vec3(projectile.position1, heightMap->InterpolateHeight(projectile.position1));
-		glm::vec3 p2 = glm::vec3(projectile.position2, heightMap->InterpolateHeight(projectile.position2));
-		shootingCounter->AddProjectile(p1, p2, projectile.delay, shooting.timeToImpact);
-	}
-}
-
-
-ShootingCounter* BattleModel::AddShootingCounter(UnitWeapon unitWeapon)
-{
-	ShootingCounter* shootingCounter = new ShootingCounter(unitWeapon);
-	_shootingCounters.push_back(shootingCounter);
-	return shootingCounter;
-}
-
-
-void BattleModel::RemoveAllShootingMarkers()
-{
-	for (ShootingCounter* shootingCounters : _shootingCounters)
-	{
-		shootingCounters->Animate(100);
-	}
-}
-
-
-void BattleModel::AddSmokeMarker(const Shooting& shooting)
-{
-	SmokeCounter* marker = AddSmokeMarker(shooting.unitWeapon);
-
-	for (const Projectile& projectile : shooting.projectiles)
-	{
-		glm::vec3 p1 = glm::vec3(projectile.position1, heightMap->InterpolateHeight(projectile.position1));
-		glm::vec3 p2 = glm::vec3(projectile.position2, heightMap->InterpolateHeight(projectile.position2));
-		marker->AddParticle(p1, p2, projectile.delay);
-	}
-}
-
-
-SmokeCounter* BattleModel::AddSmokeMarker(UnitWeapon unitWeapon)
-{
-	SmokeCounter* marker = new SmokeCounter(unitWeapon);
-	_smokeMarkers.push_back(marker);
-	return marker;
-}
-
-
-void BattleModel::RemoveAllSmokeMarkers()
-{
-	for (SmokeCounter* marker : _smokeMarkers)
-	{
-		marker->Animate(100);
-	}
-}
-
-
-UnitCounter* BattleModel::GetNearestUnitCounter(glm::vec2 position, Player player)
-{
-	UnitCounter* result = 0;
-	float nearest = INFINITY;
-
-	for (UnitCounter* marker : _unitMarkers)
-	{
-		Unit* unit = marker->_unit;
-		if (player != PlayerNone && unit->player != player)
-			continue;
-
-		glm::vec2 p = unit->state.center;
-		float dx = p.x - position.x;
-		float dy = p.y - position.y;
-		float d = dx * dx + dy * dy;
-		if (d < nearest)
-		{
-			result = marker;
-			nearest = d;
-		}
 	}
 
 	return result;

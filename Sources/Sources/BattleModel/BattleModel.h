@@ -348,7 +348,6 @@ public:
 	SmoothGroundMap* groundMap;
 	HeightMap* heightMap;
 
-
 	int lastUnitId;
 	Player bluePlayer;
 	Player winner;
@@ -357,10 +356,6 @@ public:
 
 	std::map<int, Unit*> units;
 	std::vector<Shooting> shootings;
-
-	std::vector<UnitCounter*> _unitMarkers;
-	std::vector<ShootingCounter*> _shootingCounters;
-	std::vector<SmokeCounter*> _smokeMarkers;
 
 public:
 	BattleModel();
@@ -377,24 +372,6 @@ public:
 	Unit* AddUnit(Player player, int numberOfFighters, UnitStats stats, glm::vec2 position);
 
 	static UnitStats GetDefaultUnitStats(UnitPlatform unitPlatform, UnitWeapon unitWeapon);
-
-	void AnimateMarkers(float seconds);
-
-	void InitializeUnitMarkers();
-
-	void AddUnitMarker(Unit* unit);
-
-	void AddShootingAndSmokeCounters(const Shooting& shooting);
-
-	void AddShootingCounter(const Shooting& shooting);
-	ShootingCounter* AddShootingCounter(UnitWeapon unitWeapon);
-	void RemoveAllShootingMarkers();
-
-	void AddSmokeMarker(const Shooting& shooting);
-	SmokeCounter* AddSmokeMarker(UnitWeapon unitWeapon);
-	void RemoveAllSmokeMarkers();
-
-	UnitCounter* GetNearestUnitCounter(glm::vec2 position, Player player);
 };
 
 

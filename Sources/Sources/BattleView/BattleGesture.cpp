@@ -58,7 +58,7 @@ void BattleGesture::RenderHints()
 	sprite._color = glm::vec4(0, 0, 0, 0.2f);
 	sprite._viewport = _battleView->GetViewportBounds();
 
-	for (UnitCounter* unitMarker : _battleView->GetBattleModel()->_unitMarkers)
+	for (UnitCounter* unitMarker : _battleView->_unitMarkers)
 	{
 		bounds2f bounds = GetUnitCurrentBounds(unitMarker->_unit);
 
@@ -573,7 +573,7 @@ Unit* BattleGesture::FindFriendlyUnit(glm::vec2 screenPosition, glm::vec2 terrai
 Unit* BattleGesture::FindFriendlyUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	Unit* result = nullptr;
-	UnitCounter* unitMarker = _battleView->GetBattleModel()->GetNearestUnitCounter(terrainPosition, _battleView->_player);
+	UnitCounter* unitMarker = _battleView->GetNearestUnitCounter(terrainPosition, _battleView->_player);
 	if (unitMarker != nullptr)
 	{
 		Unit* unit = unitMarker->_unit;
@@ -636,7 +636,7 @@ Unit* BattleGesture::FindEnemyUnit(glm::vec2 touchPosition, glm::vec2 markerPosi
 	glm::vec2 d = (touchPosition - markerPosition) / 4.0f;
 	for (int i = 0; i < 4; ++i)
 	{
-		UnitCounter* unitMarker = _battleView->GetBattleModel()->GetNearestUnitCounter(p, enemyPlayer);
+		UnitCounter* unitMarker = _battleView->GetNearestUnitCounter(p, enemyPlayer);
 		if (unitMarker && glm::length(unitMarker->_unit->state.center - p) <= SNAP_TO_UNIT_TRESHOLD)
 		{
 			enemyMarker = unitMarker;

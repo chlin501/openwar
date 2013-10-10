@@ -226,8 +226,6 @@ int BattleScript::NewUnit(Player player, UnitPlatform platform, UnitWeapon weapo
 	Unit* unit = _battleModel->AddUnit(player, strength, unitStats, position);
 	unit->command.facing = glm::radians(90 - bearing);
 
-	_battleModel->AddUnitMarker(unit);
-
 	return unit->unitId;
 }
 
