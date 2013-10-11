@@ -123,11 +123,11 @@ public:
 	void AddShootingAndSmokeCounters(const Shooting& shooting);
 
 	void AddShootingCounter(const Shooting& shooting);
-	ShootingCounter* AddShootingCounter(UnitWeapon unitWeapon);
+	ShootingCounter* AddShootingCounter(MissileType missileType);
 	void RemoveAllShootingMarkers();
 
 	void AddSmokeMarker(const Shooting& shooting);
-	SmokeCounter* AddSmokeMarker(UnitWeapon unitWeapon);
+	SmokeCounter* AddSmokeMarker(MissileType missileType);
 	void RemoveAllSmokeMarkers();
 
 	UnitCounter* GetNearestUnitCounter(glm::vec2 position, int team, int playerId);

@@ -8,13 +8,13 @@
 
 
 
-SmokeCounter::SmokeCounter(UnitWeapon unitWeapon) :
-_unitWeapon(unitWeapon),
+SmokeCounter::SmokeCounter(MissileType missileType) :
+_missileType(missileType),
 particles(),
 _soundCookie(0),
 _impacted(false)
 {
-	if (unitWeapon == UnitWeaponArq)
+	if (missileType == MissileType::Arq)
 		SoundPlayer::singleton->PlayMatchlock();
 	else
 		SoundPlayer::singleton->PlayArrows();

@@ -18,11 +18,11 @@ public:
 	{
 		glm::vec3 position;
 		Player player;
-		UnitPlatform platform;
+		SamuraiPlatform platform;
 		float time;
 		int seed;
 
-		Casualty(glm::vec3 position_, Player player_, UnitPlatform platform_) :
+		Casualty(glm::vec3 position_, Player player_, SamuraiPlatform platform_) :
 		position(position_), player(player_), platform(platform_), time(0), seed(std::rand() & 0x7fff) { }
 	};
 
@@ -33,7 +33,7 @@ public:
 	CasualtyMarker(BattleModel* battleModel);
 	~CasualtyMarker();
 
-	void AddCasualty(glm::vec3 position, Player player, UnitPlatform platform);
+	void AddCasualty(glm::vec3 position, Player player, SamuraiPlatform platform);
 	bool Animate(float seconds);
 
 	void RenderCasualtyColorBillboards(ColorBillboardRenderer* renderer);

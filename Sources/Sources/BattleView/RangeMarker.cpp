@@ -25,7 +25,7 @@ void RangeMarker::Render(GradientTriangleStripRenderer* renderer)
 	{
 		RenderMissileTarget(renderer, _unit->command.missileTarget->state.center);
 	}
-	else if (_unit->unitRange.maximumRange > 0 && _unit->state.unitMode != UnitModeMoving && !_unit->state.IsRouting())
+	else if (_unit->unitRange.maximumRange > 0 && _unit->state.unitMode != UnitMode_Moving && !_unit->state.IsRouting())
 	{
 		RenderMissileRange(renderer, _unit->unitRange);
 	}

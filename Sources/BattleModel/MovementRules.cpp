@@ -34,15 +34,7 @@ void Formation::SetDirection(float direction)
 
 static int GetMaxNumberOfRanks(Unit* unit)
 {
-	switch (unit->stats.unitPlatform)
-	{
-		case UnitPlatformGen:
-		case UnitPlatformCav:
-			return 4;
-
-		default:
-			return 4;
-	}
+	return 4;
 }
 
 
@@ -242,7 +234,7 @@ glm::vec2 MovementRules::NextFighterDestination(Fighter* fighter)
 	glm::vec2 destination;
 	if (rank == 0)
 	{
-		if (unit->state.unitMode == UnitModeMoving)
+		if (unit->state.unitMode == UnitMode_Moving)
 		{
 			destination = fighter->state.position;
 			int n = 1;
@@ -265,7 +257,7 @@ glm::vec2 MovementRules::NextFighterDestination(Fighter* fighter)
 			destination /= n;
 			destination -= glm::normalize(unit->formation.towardBack) * unit->GetSpeed();
 		}
-		else if (unit->state.unitMode == UnitModeTurning)
+		else if (unit->state.unitMode == UnitMode_Turning)
 		{
 			glm::vec2 frontLeft = unit->formation.GetFrontLeft(unit->state.center);
 			destination = frontLeft + unit->formation.towardRight * (float)file;

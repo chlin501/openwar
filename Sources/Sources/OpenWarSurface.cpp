@@ -271,7 +271,7 @@ void OpenWarSurface::UpdateSoundPlayer()
 			Unit* unit = unitMarker->_unit;
 			if (_battleScript->GetBattleModel()->GetUnit(unit->unitId) != 0 && glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)
 			{
-				if (unit->stats.unitPlatform == UnitPlatformCav || unit->stats.unitPlatform == UnitPlatformGen)
+				if (unit->stats.platformType == PlatformType::Cavalry)
 				{
 					if (unit->command.running)
 						++horseGallop;

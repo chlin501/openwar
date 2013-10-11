@@ -162,6 +162,8 @@ void BattleScript::Execute(const char* script, size_t length)
 
 void BattleScript::Tick(double secondsSinceLastUpdate)
 {
+	_battlescript = this;
+
 	lua_getglobal(_state, "openwar_battle_tick");
 
 	if (lua_isnil(_state, -1))
@@ -208,9 +210,9 @@ void BattleScript::Tick(double secondsSinceLastUpdate)
 }*/
 
 
-int BattleScript::NewUnit(Player player, UnitPlatform platform, UnitWeapon weapon, int strength, glm::vec2 position, float bearing)
+int BattleScript::NewUnit(Player player, SamuraiPlatform platform, SamuraiWeapon weapon, int strength, glm::vec2 position, float bearing)
 {
-	UnitStats unitStats = BattleModel::GetDefaultUnitStats(platform, weapon);
+	UnitStats unitStats = SamuraiBattleModel::GetDefaultUnitStats(platform, weapon);
 
 	Unit* unit = _battleModel->AddUnit(player, strength, unitStats, position);
 	unit->command.facing = glm::radians(90 - bearing);
@@ -366,8 +368,8 @@ int BattleScript::battle_new_unit(lua_State* L)
 {
 	int n = lua_gettop(L);
 	Player player = n < 1 ? Player(1, 1) : ToPlayer(L, 1);
-	UnitPlatform platform = n < 2 ? UnitPlatformCav : ToUnitPlatform(L, 2);
-	UnitWeapon weapon = n < 3 ? UnitWeaponYari : ToUnitUnitWeapon(L, 3);
+	SamuraiPlatform platform = n < 2 ? SamuraiPlatform_Cav : ToUnitPlatform(L, 2);
+	SamuraiWeapon weapon = n < 3 ? SamuraiWeapon_Yari : ToUnitUnitWeapon(L, 3);
 	int strength = n < 4 ? 40 : (int)lua_tonumber(L, 4);
 	float x = n < 5 ? 512 : (float)lua_tonumber(L, 5);
 	float y = n < 6 ? 512 : (float)lua_tonumber(L, 6);
@@ -480,38 +482,38 @@ Player BattleScript::ToPlayer(lua_State* L, int index)
 }
 
 
-UnitPlatform BattleScript::ToUnitPlatform(lua_State* L, int index)
+SamuraiPlatform BattleScript::ToUnitPlatform(lua_State* L, int index)
 {
 	const char* s = lua_tostring(L, index);
 	if (s != nullptr)
 	{
-		if (std::strcmp(s, "CAV") == 0) return UnitPlatformCav;
-		if (std::strcmp(s, "GEN") == 0) return UnitPlatformGen;
-		if (std::strcmp(s, "ASH") == 0) return UnitPlatformAsh;
-		if (std::strcmp(s, "SAM") == 0) return UnitPlatformSam;
+		if (std::strcmp(s, "CAV") == 0) return SamuraiPlatform_Cav;
+		if (std::strcmp(s, "GEN") == 0) return SamuraiPlatform_Gen;
+		if (std::strcmp(s, "ASH") == 0) return SamuraiPlatform_Ash;
+		if (std::strcmp(s, "SAM") == 0) return SamuraiPlatform_Sam;
 	}
 
 	print_log("ToUnitPlatform, unknown", s);
 
-	return UnitPlatformCav;
+	return SamuraiPlatform_Cav;
 }
 
 
-UnitWeapon BattleScript::ToUnitUnitWeapon(lua_State* L, int index)
+SamuraiWeapon BattleScript::ToUnitUnitWeapon(lua_State* L, int index)
 {
 	const char* s = lua_tostring(L, index);
 	if (s != nullptr)
 	{
-		if (std::strcmp(s, "YARI") == 0) return UnitWeaponYari;
-		if (std::strcmp(s, "KATA") == 0) return UnitWeaponKata;
-		if (std::strcmp(s, "NAGI") == 0) return UnitWeaponNagi;
-		if (std::strcmp(s, "BOW") == 0) return UnitWeaponBow;
-		if (std::strcmp(s, "ARQ") == 0) return UnitWeaponArq;
+		if (std::strcmp(s, "YARI") == 0) return SamuraiWeapon_Yari;
+		if (std::strcmp(s, "KATA") == 0) return SamuraiWeapon_Kata;
+		if (std::strcmp(s, "NAGI") == 0) return SamuraiWeapon_Nagi;
+		if (std::strcmp(s, "BOW") == 0) return SamuraiWeapon_Bow;
+		if (std::strcmp(s, "ARQ") == 0) return SamuraiWeapon_Arq;
 	}
 
 	print_log("ToUnitUnitWeapon, unknown", s);
 
-	return UnitWeaponYari;
+	return SamuraiWeapon_Yari;
 }
 
 

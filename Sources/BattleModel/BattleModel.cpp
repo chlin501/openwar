@@ -29,7 +29,7 @@ delay(0)
 
 
 Shooting::Shooting() :
-unitWeapon(UnitWeaponBow),
+missileType(MissileType::None),
 timeToImpact(0),
 projectiles()
 {
@@ -39,7 +39,7 @@ projectiles()
 FighterState::FighterState() :
 position(),
 position_z(0),
-readyState(ReadyStateUnready),
+readyState(ReadyState_Unready),
 readyingTimer(0),
 strikingTimer(0),
 stunnedTimer(0),
@@ -92,7 +92,7 @@ loadingTimer(0),
 loadingDuration(0),
 shootingCounter(0),
 morale(1),
-unitMode(UnitModeInitializing),
+unitMode(UnitMode_Initializing),
 center(),
 direction(0),
 influence(0),
@@ -153,8 +153,10 @@ void Unit::SetUnitUpdate(UnitUpdate unitUpdate, BattleModel* battleModel)
 
 
 UnitStats::UnitStats() :
-unitPlatform(UnitPlatformCav),
-unitWeapon(UnitWeaponYari),
+platformType(PlatformType::None),
+missileType(MissileType::None),
+samuraiPlaform(SamuraiPlatform_Cav),
+samuraiWeapon(SamuraiWeapon_Yari),
 weaponReach(0),
 trainingLevel(0),
 strikingDuration(0),
@@ -247,7 +249,7 @@ command()
 
 glm::vec2 Unit::CalculateUnitCenter()
 {
-	if (state.unitMode == UnitModeInitializing)
+	if (state.unitMode == UnitMode_Initializing)
 		return state.center;
 
 	glm::vec2 p = glm::vec2();
@@ -357,7 +359,7 @@ Unit* BattleModel::AddUnit(Player player, int numberOfFighters, UnitStats stats,
 	unit->command.facing = player.team == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
 	//unit->command.waypoint = position;
 
-	unit->state.unitMode = UnitModeInitializing;
+	unit->state.unitMode = UnitMode_Initializing;
 	unit->state.center = position;
 	unit->state.direction = unit->command.facing;
 
@@ -374,13 +376,15 @@ Unit* BattleModel::AddUnit(Player player, int numberOfFighters, UnitStats stats,
 }
 
 
-UnitStats BattleModel::GetDefaultUnitStats(UnitPlatform unitPlatform, UnitWeapon unitWeapon)
+UnitStats SamuraiBattleModel::GetDefaultUnitStats(SamuraiPlatform platform, SamuraiWeapon weapon)
 {
 	UnitStats result;
-	result.unitPlatform = unitPlatform;
-	result.unitWeapon = unitWeapon;
 
-	if (unitPlatform == UnitPlatformCav || unitPlatform == UnitPlatformGen)
+	result.platformType = platform == SamuraiPlatform_Cav || platform == SamuraiPlatform_Gen ? PlatformType::Cavalry : PlatformType::Infantry;
+	result.samuraiPlaform = platform;
+	result.samuraiWeapon = weapon;
+
+	if (platform == SamuraiPlatform_Cav || platform == SamuraiPlatform_Gen)
 	{
 		result.fighterSize = glm::vec2(1.1f, 2.3f);
 		result.spacing = glm::vec2(1.1f, 1.7f);
@@ -397,16 +401,18 @@ UnitStats BattleModel::GetDefaultUnitStats(UnitPlatform unitPlatform, UnitWeapon
 
 	result.readyingDuration = 1.0f;
 
-	switch (unitWeapon)
+	switch (weapon)
 	{
-		case UnitWeaponBow:
+		case SamuraiWeapon_Bow:
+			result.missileType = MissileType::Bow;
 			result.minimumRange = 20;
 			result.maximumRange = 150;
 			result.runningSpeed += 2; // increased speed
 			result.strikingDuration = 3.0f;
 			break;
 
-		case UnitWeaponArq:
+		case SamuraiWeapon_Arq:
+			result.missileType = MissileType::Arq;
 			result.minimumRange = 20;
 			result.maximumRange = 110;
 			result.walkingSpeed = 5;
@@ -414,28 +420,28 @@ UnitStats BattleModel::GetDefaultUnitStats(UnitPlatform unitPlatform, UnitWeapon
 			result.strikingDuration = 3.0f;
 			break;
 
-		case UnitWeaponYari:
+		case SamuraiWeapon_Yari:
 			result.weaponReach = 5.0f;
 			result.strikingDuration = 2.0f;
 			break;
 
-		case UnitWeaponNagi:
+		case SamuraiWeapon_Nagi:
 			result.weaponReach = 2.4f;
 			result.strikingDuration = 1.9f;
 			break;
 
-		case UnitWeaponKata:
+		case SamuraiWeapon_Kata:
 			result.weaponReach = 1.0f;
 			result.strikingDuration = 1.8f;
 			break;
 	}
 
-	switch (result.unitPlatform)
+	switch (result.samuraiPlaform)
 	{
-		case UnitPlatformAsh:
+		case SamuraiPlatform_Ash:
 			result.trainingLevel = 0.5f;
 			break;
-		case UnitPlatformGen:
+		case SamuraiPlatform_Gen:
 			result.trainingLevel = 0.9f;
 			break;
 		default:

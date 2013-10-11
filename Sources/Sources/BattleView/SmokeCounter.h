@@ -24,13 +24,13 @@ public:
 		time(0) { }
 	};
 
-	UnitWeapon _unitWeapon;
+	MissileType _missileType;
 	std::vector<Particle> particles;
 	int _soundCookie;
 	bool _impacted;
 
 public:
-	SmokeCounter(UnitWeapon unitWeapon);
+	SmokeCounter(MissileType missileType);
 	~SmokeCounter();
 
 	bool Animate(float seconds);

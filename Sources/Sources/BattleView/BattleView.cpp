@@ -774,14 +774,14 @@ void BattleView::AddUnitMarker(Unit* unit)
 void BattleView::AddShootingAndSmokeCounters(const Shooting& shooting)
 {
 	AddShootingCounter(shooting);
-	if (shooting.unitWeapon == UnitWeaponArq)
+	if (shooting.missileType == MissileType::Arq)
 		AddSmokeMarker(shooting);
 }
 
 
 void BattleView::AddShootingCounter(const Shooting& shooting)
 {
-	ShootingCounter* shootingCounter = AddShootingCounter(shooting.unitWeapon);
+	ShootingCounter* shootingCounter = AddShootingCounter(shooting.missileType);
 
 	for (const Projectile& projectile : shooting.projectiles)
 	{
@@ -792,9 +792,9 @@ void BattleView::AddShootingCounter(const Shooting& shooting)
 }
 
 
-ShootingCounter* BattleView::AddShootingCounter(UnitWeapon unitWeapon)
+ShootingCounter* BattleView::AddShootingCounter(MissileType missileType)
 {
-	ShootingCounter* shootingCounter = new ShootingCounter(unitWeapon);
+	ShootingCounter* shootingCounter = new ShootingCounter(missileType);
 	_shootingCounters.push_back(shootingCounter);
 	return shootingCounter;
 }
@@ -811,7 +811,7 @@ void BattleView::RemoveAllShootingMarkers()
 
 void BattleView::AddSmokeMarker(const Shooting& shooting)
 {
-	SmokeCounter* marker = AddSmokeMarker(shooting.unitWeapon);
+	SmokeCounter* marker = AddSmokeMarker(shooting.missileType);
 
 	for (const Projectile& projectile : shooting.projectiles)
 	{
@@ -822,9 +822,9 @@ void BattleView::AddSmokeMarker(const Shooting& shooting)
 }
 
 
-SmokeCounter* BattleView::AddSmokeMarker(UnitWeapon unitWeapon)
+SmokeCounter* BattleView::AddSmokeMarker(MissileType missileType)
 {
-	SmokeCounter* marker = new SmokeCounter(unitWeapon);
+	SmokeCounter* marker = new SmokeCounter(missileType);
 	_smokeMarkers.push_back(marker);
 	return marker;
 }

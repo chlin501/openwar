@@ -66,7 +66,7 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer1, TextureB
 	glm::vec3 position = _battleModel->groundMap->GetHeightMap()->GetPosition(_unit->state.center, 0);
 	glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
 	glm::vec2 texcoord1 = texsize * glm::vec2(state, 0);
-	glm::vec2 texcoord2 = texsize * glm::vec2((int)_unit->stats.unitWeapon, 1 + (int)_unit->stats.unitPlatform);
+	glm::vec2 texcoord2 = texsize * glm::vec2((int)_unit->stats.samuraiWeapon, 1 + (int)_unit->stats.samuraiPlaform);
 
 	if (flip)
 	{
@@ -82,7 +82,7 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer1, TextureB
 
 void UnitCounter::AppendFacingMarker(TextureTriangleRenderer* renderer, BattleView* battleView)
 {
-	if (_unit->state.unitMode != UnitModeStanding
+	if (_unit->state.unitMode != UnitMode_Standing
 		|| _unit->command.meleeTarget != nullptr
 		|| _unit->state.IsRouting())
 	{
@@ -152,20 +152,20 @@ void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 	{
 		float size = 2.0;
 		int shape = 0;
-		switch (_unit->stats.unitPlatform)
+		switch (_unit->stats.samuraiPlaform)
 		{
-			case UnitPlatformCav:
-			case UnitPlatformGen:
+			case SamuraiPlatform_Cav:
+			case SamuraiPlatform_Gen:
 				shape = _unit->player == _battleModel->bluePlayer ? billboardModel->_billboardShapeFighterCavBlue : billboardModel->_billboardShapeFighterCavRed;
 				size = 3.0;
 				break;
 
-			case UnitPlatformSam:
+			case SamuraiPlatform_Sam:
 				shape = _unit->player == _battleModel->bluePlayer ? billboardModel->_billboardShapeFighterSamBlue : billboardModel->_billboardShapeFighterSamRed;
 				size = 2.0;
 				break;
 
-			case UnitPlatformAsh:
+			case SamuraiPlatform_Ash:
 				shape = _unit->player == _battleModel->bluePlayer ? billboardModel->_billboardShapeFighterAshBlue : billboardModel->_billboardShapeFighterAshRed;
 				size = 2.0;
 				break;

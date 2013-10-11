@@ -26,13 +26,13 @@ public:
 		duration(0) { }
 	};
 
-	UnitWeapon _unitWeapon;
+	MissileType _missileType;
 	std::vector<Projectile> _projectiles;
 	int _soundCookie;
 	bool _impacted;
 
 public:
-	ShootingCounter(UnitWeapon unitWeapon);
+	ShootingCounter(MissileType missileType);
 	~ShootingCounter();
 
 	bool Animate(float seconds);

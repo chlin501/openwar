@@ -21,7 +21,7 @@ CasualtyMarker::~CasualtyMarker()
 }
 
 
-void CasualtyMarker::AddCasualty(glm::vec3 position, Player player, UnitPlatform platform)
+void CasualtyMarker::AddCasualty(glm::vec3 position, Player player, SamuraiPlatform platform)
 {
 	casualties.push_back(Casualty(position, player, platform));
 }
@@ -66,20 +66,20 @@ void CasualtyMarker::AppendCasualtyBillboards(BillboardModel* billboardModel)
 		//int j = 0, i = 0;
 		switch (casualty.platform)
 		{
-			case UnitPlatformAsh:
+			case SamuraiPlatform_Ash:
 				shape = billboardModel->_billboardShapeCasualtyAsh[casualty.seed & 7];
 				height = 2.5f;
 				//i = 3;
 				//j = casualty.seed & 3;
 				break;
-			case UnitPlatformSam:
+			case SamuraiPlatform_Sam:
 				shape = billboardModel->_billboardShapeCasualtySam[casualty.seed & 7];
 				height = 2.5f;
 				//i = 3;
 				//j = 4 + (casualty.seed & 3);
 				break;
-			case UnitPlatformCav:
-			case UnitPlatformGen:
+			case SamuraiPlatform_Cav:
+			case SamuraiPlatform_Gen:
 				shape = billboardModel->_billboardShapeCasualtySam[casualty.seed & 15];
 				height = 3.0f;
 				//i = 4;

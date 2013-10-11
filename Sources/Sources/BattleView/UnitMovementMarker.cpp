@@ -51,7 +51,7 @@ void UnitMovementMarker::RenderMovementMarker(TextureBillboardRenderer* renderer
 
 void UnitMovementMarker::AppendFacingMarker(TextureTriangleRenderer* renderer, BattleView* battleView)
 {
-	if (_unit->state.unitMode != UnitModeMoving)
+	if (_unit->state.unitMode != UnitMode_Moving)
 		return;
 
 	bounds2f b = battleView->GetUnitFutureFacingMarkerBounds(_unit);

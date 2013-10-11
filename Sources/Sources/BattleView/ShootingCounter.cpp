@@ -8,13 +8,13 @@
 
 
 
-ShootingCounter::ShootingCounter(UnitWeapon unitWeapon) :
-_unitWeapon(unitWeapon),
+ShootingCounter::ShootingCounter(MissileType missileType) :
+_missileType(missileType),
 _projectiles(),
 _soundCookie(0),
 _impacted(false)
 {
-	if (unitWeapon == UnitWeaponArq)
+	if (missileType == MissileType::Arq)
 		SoundPlayer::singleton->PlayMatchlock();
 	else
 		SoundPlayer::singleton->PlayArrows();
@@ -90,7 +90,7 @@ void ShootingCounter::Render(GradientLineRenderer* renderer)
 		float t = projectile.time / projectile.duration;
 		if (0 <= t && t <= 1)
 		{
-			if (_unitWeapon == UnitWeaponBow)
+			if (_missileType == MissileType::Bow)
 				RenderArrow(renderer, projectile.position1, projectile.position2, t);
 			else
 				RenderBullet(renderer, projectile.position1, projectile.position2, t);

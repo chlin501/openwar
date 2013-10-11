@@ -134,7 +134,7 @@ void BattleSimulator::RebuildQuadTree()
 	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
-		if (unit->state.unitMode != UnitModeInitializing)
+		if (unit->state.unitMode != UnitMode_Initializing)
 		{
 			for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
 			{
@@ -235,7 +235,7 @@ void BattleSimulator::ResolveMeleeCombat()
 	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
-		bool isMissile = unit->stats.unitWeapon == UnitWeaponArq || unit->stats.unitWeapon == UnitWeaponBow;
+		bool isMissile = unit->stats.samuraiWeapon == SamuraiWeapon_Arq || unit->stats.samuraiWeapon == SamuraiWeapon_Bow;
 		for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
 		{
 			Fighter* meleeTarget = fighter->state.meleeTarget;
@@ -264,7 +264,7 @@ void BattleSimulator::ResolveMeleeCombat()
 				}
 				else
 				{
-					meleeTarget->state.readyState = ReadyStateStunned;
+					meleeTarget->state.readyState = ReadyState_Stunned;
 					meleeTarget->state.stunnedTimer = 0.6f;
 				}
 
@@ -298,14 +298,14 @@ void BattleSimulator::TriggerShooting(Unit* unit)
 		return;
 
 	Shooting shooting;
-	shooting.unitWeapon = unit->stats.unitWeapon;
+	shooting.missileType = unit->stats.missileType;
 
-	bool arq = shooting.unitWeapon == UnitWeaponArq;
+	bool arq = shooting.missileType == MissileType::Arq;
 	float distance = 0;
 
 	for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
 	{
-		if (fighter->state.readyState == ReadyStatePrepared)
+		if (fighter->state.readyState == ReadyState_Prepared)
 		{
 			Projectile projectile;
 			projectile.position1 = fighter->state.position;
@@ -393,7 +393,7 @@ void BattleSimulator::RemoveCasualties()
 			if (unit->fighters[j].casualty)
 			{
 				++unit->state.recentCasualties;
-				recentCasualties.push_back(Casualty(unit->fighters[j].state.position, unit->player, unit->stats.unitPlatform));
+				recentCasualties.push_back(Casualty(unit->fighters[j].state.position, unit->player, unit->stats.samuraiPlaform));
 			}
 			else
 			{
@@ -468,7 +468,7 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 		unit->command.missileTarget = ClosestEnemyWithinLineOfFire(unit);
 	}
 
-	if (unit->state.unitMode != UnitModeStanding || unit->command.missileTarget == nullptr)
+	if (unit->state.unitMode != UnitMode_Standing || unit->command.missileTarget == nullptr)
 	{
 		result.loadingTimer = 0;
 		result.loadingDuration = 0;
@@ -567,17 +567,17 @@ UnitMode BattleSimulator::NextUnitMode(Unit* unit)
 {
 	switch (unit->state.unitMode)
 	{
-		case UnitModeInitializing:
-			return UnitModeStanding;
+		case UnitMode_Initializing:
+			return UnitMode_Standing;
 
-		case UnitModeStanding:
+		case UnitMode_Standing:
 			if (glm::length(unit->state.center - unit->command.GetDestination()) > 8)
-				return UnitModeMoving;
+				return UnitMode_Moving;
 			break;
 
-		case UnitModeMoving:
+		case UnitMode_Moving:
 			if (glm::length(unit->state.center - unit->command.GetDestination()) <= 8)
-				return UnitModeStanding;
+				return UnitMode_Standing;
 			break;
 
 		default:
@@ -609,7 +609,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 
 	// DIRECTION
 
-	if (fighter->unit->state.unitMode == UnitModeMoving)
+	if (fighter->unit->state.unitMode == UnitMode_Moving)
 	{
 		result.direction = angle(original.velocity);
 	}
@@ -629,7 +629,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 	{
 		result.opponent = original.opponent;
 	}
-	else if (fighter->unit->state.unitMode != UnitModeMoving && !fighter->unit->state.IsRouting())
+	else if (fighter->unit->state.unitMode != UnitMode_Moving && !fighter->unit->state.IsRouting())
 	{
 		result.opponent = FindFighterStrikingTarget(fighter);
 	}
@@ -645,9 +645,9 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 	{
 		switch (original.readyState)
 		{
-			case ReadyStateUnready:
-			case ReadyStateReadying:
-			case ReadyStatePrepared:
+			case ReadyState_Unready:
+			case ReadyState_Readying:
+			case ReadyState_Prepared:
 				result.destination = MovementRules::NextFighterDestination(fighter);
 				break;
 
@@ -661,19 +661,19 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 
 	switch (original.readyState)
 	{
-		case ReadyStateUnready:
+		case ReadyState_Unready:
 			if (fighter->unit->command.meleeTarget != nullptr)
 			{
-				result.readyState = ReadyStatePrepared;
+				result.readyState = ReadyState_Prepared;
 			}
-			else if (fighter->unit->state.unitMode == UnitModeStanding)
+			else if (fighter->unit->state.unitMode == UnitMode_Standing)
 			{
-				result.readyState = ReadyStateReadying;
+				result.readyState = ReadyState_Readying;
 				result.readyingTimer = fighter->unit->stats.readyingDuration;
 			}
 			break;
 
-		case ReadyStateReadying:
+		case ReadyState_Readying:
 			if (original.readyingTimer > _battleModel->timeStep)
 			{
 				result.readyingTimer = original.readyingTimer - _battleModel->timeStep;
@@ -681,23 +681,23 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 			else
 			{
 				result.readyingTimer = 0;
-				result.readyState = ReadyStatePrepared;
+				result.readyState = ReadyState_Prepared;
 			}
 			break;
 
-		case ReadyStatePrepared:
-			if (fighter->unit->state.unitMode == UnitModeMoving && fighter->unit->command.meleeTarget == nullptr)
+		case ReadyState_Prepared:
+			if (fighter->unit->state.unitMode == UnitMode_Moving && fighter->unit->command.meleeTarget == nullptr)
 			{
-				result.readyState = ReadyStateUnready;
+				result.readyState = ReadyState_Unready;
 			}
 			else if (result.opponent != nullptr)
 			{
-				result.readyState = ReadyStateStriking;
+				result.readyState = ReadyState_Striking;
 				result.strikingTimer = fighter->unit->stats.strikingDuration;
 			}
 			break;
 
-		case ReadyStateStriking:
+		case ReadyState_Striking:
 			if (original.strikingTimer > _battleModel->timeStep)
 			{
 				result.strikingTimer = original.strikingTimer - _battleModel->timeStep;
@@ -707,12 +707,12 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 			{
 				result.meleeTarget = original.opponent;
 				result.strikingTimer = 0;
-				result.readyState = ReadyStateReadying;
+				result.readyState = ReadyState_Readying;
 				result.readyingTimer = fighter->unit->stats.readyingDuration;
 			}
 			break;
 
-		case ReadyStateStunned:
+		case ReadyState_Stunned:
 			if (original.stunnedTimer > _battleModel->timeStep)
 			{
 				result.stunnedTimer = original.stunnedTimer - _battleModel->timeStep;
@@ -720,7 +720,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 			else
 			{
 				result.stunnedTimer = 0;
-				result.readyState = ReadyStateReadying;
+				result.readyState = ReadyState_Readying;
 				result.readyingTimer = fighter->unit->stats.readyingDuration;
 			}
 			break;
@@ -734,7 +734,7 @@ glm::vec2 BattleSimulator::NextFighterPosition(Fighter* fighter)
 {
 	Unit* unit = fighter->unit;
 
-	if (unit->state.unitMode == UnitModeInitializing)
+	if (unit->state.unitMode == UnitMode_Initializing)
 	{
 		glm::vec2 center = unit->state.center;
 		glm::vec2 frontLeft = unit->formation.GetFrontLeft(center);
@@ -802,11 +802,11 @@ glm::vec2 BattleSimulator::NextFighterVelocity(Fighter* fighter)
 
 	switch (fighter->state.readyState)
 	{
-		case ReadyStateStriking:
+		case ReadyState_Striking:
 			speed = unit->stats.walkingSpeed / 4;
 			break;
 
-		case ReadyStateStunned:
+		case ReadyState_Stunned:
 			speed = unit->stats.walkingSpeed / 4;
 			break;
 
@@ -824,7 +824,7 @@ glm::vec2 BattleSimulator::NextFighterVelocity(Fighter* fighter)
 
 	if (fighter->terrainForest)
 	{
-		if (unit->stats.unitPlatform == UnitPlatformCav || unit->stats.unitPlatform == UnitPlatformGen)
+		if (unit->stats.platformType == PlatformType::Cavalry)
 			speed *= 0.5;
 		else
 			speed *= 0.9;

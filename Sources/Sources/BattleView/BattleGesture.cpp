@@ -152,7 +152,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 
 		if (unit != nullptr && _battleView->GetTrackingMarker(unit) == nullptr)
 		{
-			_allowTargetEnemyUnit = unit->stats.unitWeapon == UnitWeaponBow || unit->stats.unitWeapon == UnitWeaponArq;
+			_allowTargetEnemyUnit = unit->stats.samuraiWeapon == SamuraiWeapon_Bow || unit->stats.samuraiWeapon == SamuraiWeapon_Arq;
 			_trackingMarker = _battleView->AddTrackingMarker(unit);
 
 			float distanceToUnitCenter = glm::distance(GetUnitCurrentBounds(unit).center(), screenPosition);
@@ -505,7 +505,7 @@ void BattleGesture::UpdateTrackingMarker()
 		MovementRules::UpdateMovementPathStart(_trackingMarker->_path, unitCenter);
 
 		bool holdFire = false;
-		if (_trackingMarker->GetUnit()->state.unitMode == UnitModeStanding && _trackingMarker->GetUnit()->stats.maximumRange > 0)
+		if (_trackingMarker->GetUnit()->state.unitMode == UnitMode_Standing && _trackingMarker->GetUnit()->stats.maximumRange > 0)
 		{
 			bounds2f unitCurrentBounds = GetUnitCurrentBounds(_trackingMarker->GetUnit());
 			holdFire = glm::distance(screenMarkerPosition, unitCurrentBounds.center()) <= unitCurrentBounds.x().radius();
@@ -668,8 +668,8 @@ bounds2f BattleGesture::GetUnitModifierBounds(Unit* unit)
 {
 	switch (unit->state.unitMode)
 	{
-		case UnitModeStanding: return _battleView->GetUnitCurrentFacingMarkerBounds(unit).grow(12);
-		case UnitModeMoving: return _battleView->GetUnitFutureFacingMarkerBounds(unit).grow(12);
+		case UnitMode_Standing: return _battleView->GetUnitCurrentFacingMarkerBounds(unit).grow(12);
+		case UnitMode_Moving: return _battleView->GetUnitFutureFacingMarkerBounds(unit).grow(12);
 		default: return bounds2f();
 	}
 }

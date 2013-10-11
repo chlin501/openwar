@@ -32,32 +32,47 @@ struct Player
 };
 
 
-
-enum UnitPlatform
+enum class PlatformType
 {
-	UnitPlatformCav = 0, // Cavalry
-	UnitPlatformGen = 1, // General
-	UnitPlatformAsh = 2, // Ashigaru
-	UnitPlatformSam = 3  // Samurai
+	None,
+	Infantry,
+	Cavalry
 };
 
 
-enum UnitWeapon
+enum class MissileType
 {
-	UnitWeaponYari = 0,
-	UnitWeaponKata = 1,
-	UnitWeaponNagi = 2,
-	UnitWeaponBow = 3,
-	UnitWeaponArq = 4
+	None,
+	Bow,
+	Arq
+};
+
+
+enum SamuraiPlatform
+{
+	SamuraiPlatform_Cav = 0, // Cavalry
+	SamuraiPlatform_Gen = 1, // General
+	SamuraiPlatform_Ash = 2, // Ashigaru
+	SamuraiPlatform_Sam = 3  // Samurai
+};
+
+
+enum SamuraiWeapon
+{
+	SamuraiWeapon_Yari = 0,
+	SamuraiWeapon_Kata = 1,
+	SamuraiWeapon_Nagi = 2,
+	SamuraiWeapon_Bow = 3,
+	SamuraiWeapon_Arq = 4
 };
 
 
 enum UnitMode
 {
-	UnitModeInitializing,
-	UnitModeStanding,
-	UnitModeMoving,
-	UnitModeTurning
+	UnitMode_Initializing,
+	UnitMode_Standing,
+	UnitMode_Moving,
+	UnitMode_Turning
 };
 
 
@@ -73,7 +88,7 @@ struct Projectile
 
 struct Shooting
 {
-	UnitWeapon unitWeapon;
+	MissileType missileType;
 	float timeToImpact;
 	std::vector<Projectile> projectiles;
 
@@ -85,20 +100,20 @@ struct Casualty
 {
 	glm::vec2 position;
 	Player player;
-	UnitPlatform platform;
+	SamuraiPlatform platform;
 
-	Casualty(glm::vec2 position_, Player player_, UnitPlatform platform_) :
+	Casualty(glm::vec2 position_, Player player_, SamuraiPlatform platform_) :
 	position(position_), player(player_), platform(platform_) { }
 };
 
 
 enum ReadyState
 {
-	ReadyStateUnready,
-	ReadyStateReadying,
-	ReadyStatePrepared,
-	ReadyStateStriking,
-	ReadyStateStunned
+	ReadyState_Unready,
+	ReadyState_Readying,
+	ReadyState_Prepared,
+	ReadyState_Striking,
+	ReadyState_Stunned
 };
 
 
@@ -156,8 +171,10 @@ struct Fighter
 
 struct UnitStats
 {
-	UnitPlatform unitPlatform;
-	UnitWeapon unitWeapon;
+	PlatformType platformType;
+	MissileType missileType;
+	SamuraiPlatform samuraiPlaform;
+	SamuraiWeapon samuraiWeapon;
 	float weaponReach;
 	float trainingLevel;
 	float strikingDuration;
@@ -312,7 +329,6 @@ struct Unit
 };
 
 
-class SmoothTerrainRenderer;
 
 class BattleModel
 {
@@ -342,8 +358,13 @@ public:
 	bool IsMelee() const;
 
 	Unit* AddUnit(Player player, int numberOfFighters, UnitStats stats, glm::vec2 position);
+};
 
-	static UnitStats GetDefaultUnitStats(UnitPlatform unitPlatform, UnitWeapon unitWeapon);
+
+struct SamuraiBattleModel
+{
+
+	static UnitStats GetDefaultUnitStats(SamuraiPlatform platform, SamuraiWeapon weapon);
 };
 
 
