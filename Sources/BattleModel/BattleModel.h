@@ -18,36 +18,19 @@ struct Unit;
 struct UnitUpdate;
 
 
-enum PlayMode
+struct Player
 {
-	PlayModeNone,
-	PlayModeUpperLeft,
-	PlayModeUpperRight,
-	PlayModeLowerLeft,
-	PlayModeLowerRight
+	int id;
+	int team;
+
+	Player() : id(0), team(0) { }
+	Player(int i, int t) : id(i), team(t) { }
+	Player(const Player& other) : id(other.id), team(other.team) { }
+	Player& operator=(const Player& other) { id = other.id; team = other.team; return *this; }
+	bool operator==(const Player& other) const { return id == other.id && team == other.team; }
+	bool operator!=(const Player& other) const { return id != other.id || team != other.team; }
 };
 
-
-enum Player
-{
-	PlayerNone = 0,
-	Player1 = 1,
-	Player2 = 2
-};
-
-
-inline Player Opponent(Player player)
-{
-	switch (player)
-	{
-		case Player1:
-			return Player2;
-		case Player2:
-			return Player1;
-		default:
-			return PlayerNone;
-	}
-}
 
 
 enum UnitPlatform
@@ -339,7 +322,7 @@ public:
 
 	int lastUnitId;
 	Player bluePlayer;
-	Player winner;
+	int winnerTeam;
 	float time;
 	float timeStep;
 

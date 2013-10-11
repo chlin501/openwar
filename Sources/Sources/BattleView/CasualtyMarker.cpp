@@ -50,7 +50,7 @@ void CasualtyMarker::RenderCasualtyColorBillboards(ColorBillboardRenderer* rende
 	{
 		if (casualty.time <= 1)
 		{
-			glm::vec4 c = glm::mix(c1, casualty.player == Player1 ? cb : cr, casualty.time);
+			glm::vec4 c = glm::mix(c1, casualty.player.team == 1 ? cb : cr, casualty.time);
 			renderer->AddBillboard(casualty.position, c, 6.0);
 		}
 	}

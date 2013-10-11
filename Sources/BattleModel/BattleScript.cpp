@@ -365,7 +365,7 @@ int BattleScript::battle_get_time(lua_State* L)
 int BattleScript::battle_new_unit(lua_State* L)
 {
 	int n = lua_gettop(L);
-	Player player = n < 1 ? Player1 : ToPlayer(L, 1);
+	Player player = n < 1 ? Player(1, 1) : ToPlayer(L, 1);
 	UnitPlatform platform = n < 2 ? UnitPlatformCav : ToUnitPlatform(L, 2);
 	UnitWeapon weapon = n < 3 ? UnitWeaponYari : ToUnitUnitWeapon(L, 3);
 	int strength = n < 4 ? 40 : (int)lua_tonumber(L, 4);
@@ -476,7 +476,7 @@ int BattleScript::battle_add_terrain_tree(lua_State* L)
 
 Player BattleScript::ToPlayer(lua_State* L, int index)
 {
-	return lua_tonumber(L, index) == 2 ? Player2 : Player1;
+	return lua_tonumber(L, index) == 2 ? Player(2, 2) : Player(1, 1);
 }
 
 

@@ -131,9 +131,9 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 
 	_battleScript = battleScript;
 
-	battleScript->GetBattleModel()->bluePlayer = Player1;
+	battleScript->GetBattleModel()->bluePlayer = Player(1, 1);
 	_battleView = new BattleView(this, battleScript->GetBattleModel(), _renderers);
-	_battleView->_player = Player1;
+	_battleView->_player = Player(1, 1);
 
 	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(battleScript->GetBattleModel()->groundMap);
 	if (smoothGroundMap != nullptr)
@@ -167,7 +167,7 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 	if (battleScript->GetBattleSimulator() != nullptr)
 	{
 		battleScript->GetBattleSimulator()->listener = _battleView;
-		battleScript->GetBattleSimulator()->currentPlayer = Player1;
+		battleScript->GetBattleSimulator()->currentPlayer = Player(1, 1);
 	}
 }
 

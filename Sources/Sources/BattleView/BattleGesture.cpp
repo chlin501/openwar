@@ -573,7 +573,7 @@ Unit* BattleGesture::FindFriendlyUnit(glm::vec2 screenPosition, glm::vec2 terrai
 Unit* BattleGesture::FindFriendlyUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	Unit* result = nullptr;
-	UnitCounter* unitMarker = _battleView->GetNearestUnitCounter(terrainPosition, _battleView->_player);
+	UnitCounter* unitMarker = _battleView->GetNearestUnitCounter(terrainPosition, _battleView->_player.team, _battleView->_player.id);
 	if (unitMarker != nullptr)
 	{
 		Unit* unit = unitMarker->_unit;
@@ -628,7 +628,7 @@ Unit* BattleGesture::FindFriendlyUnitByModifierArea(glm::vec2 screenPosition, gl
 
 Unit* BattleGesture::FindEnemyUnit(glm::vec2 touchPosition, glm::vec2 markerPosition)
 {
-	Player enemyPlayer = _trackingMarker->GetUnit()->player == Player1 ? Player2 : Player1;
+	int enemyTeam = _trackingMarker->GetUnit()->player.team == 1 ? 2 : 1;
 
 	UnitCounter* enemyMarker = nullptr;
 
@@ -636,7 +636,7 @@ Unit* BattleGesture::FindEnemyUnit(glm::vec2 touchPosition, glm::vec2 markerPosi
 	glm::vec2 d = (touchPosition - markerPosition) / 4.0f;
 	for (int i = 0; i < 4; ++i)
 	{
-		UnitCounter* unitMarker = _battleView->GetNearestUnitCounter(p, enemyPlayer);
+		UnitCounter* unitMarker = _battleView->GetNearestUnitCounter(p, enemyTeam, 0);
 		if (unitMarker && glm::length(unitMarker->_unit->state.center - p) <= SNAP_TO_UNIT_TRESHOLD)
 		{
 			enemyMarker = unitMarker;

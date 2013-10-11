@@ -130,7 +130,7 @@ public:
 	SmokeCounter* AddSmokeMarker(UnitWeapon unitWeapon);
 	void RemoveAllSmokeMarkers();
 
-	UnitCounter* GetNearestUnitCounter(glm::vec2 position, Player player);
+	UnitCounter* GetNearestUnitCounter(glm::vec2 position, int team, int playerId);
 };
 
 

@@ -63,7 +63,7 @@ _smoothTerrainSurface(nullptr),
 _smoothTerrainWater(nullptr),
 _smoothTerrainSky(nullptr),
 _tiledTerrainRenderer(nullptr),
-_player(PlayerNone)
+_player()
 {
 	_textureUnitMarkers = new texture(resource("Textures/Texture256x256.png"));
 	_textureTouchMarker = new texture(resource("Textures/TouchMarker.png"));
@@ -601,7 +601,7 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, Pla
 	for (UnitMovementMarker* marker : _movementMarkers)
 	{
 		Unit* unit = marker->GetUnit();
-		if (player != PlayerNone && unit->player != player)
+		if (player != Player() && unit->player != player)
 			continue;
 
 		glm::vec2 p = unit->command.GetDestination();
@@ -839,7 +839,7 @@ void BattleView::RemoveAllSmokeMarkers()
 }
 
 
-UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, Player player)
+UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int team, int playerId)
 {
 	UnitCounter* result = 0;
 	float nearest = INFINITY;
@@ -847,7 +847,9 @@ UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, Player player
 	for (UnitCounter* marker : _unitMarkers)
 	{
 		Unit* unit = marker->_unit;
-		if (player != PlayerNone && unit->player != player)
+		if (team != 0 && unit->player.team != team)
+			continue;
+		if (playerId != 0 && unit->player.id != playerId)
 			continue;
 
 		glm::vec2 p = unit->state.center;

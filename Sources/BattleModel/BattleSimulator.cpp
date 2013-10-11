@@ -27,7 +27,7 @@ _weaponQuadTree(
 	battleModel->groundMap->GetBounds().max.x,
 	battleModel->groundMap->GetBounds().max.y),
 _secondsSinceLastTimeStep(0),
-currentPlayer(PlayerNone),
+currentPlayer(),
 practice(false),
 listener(nullptr),
 recentShootings(),
@@ -72,7 +72,7 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 			listener->OnCasualty(casualty);
 	}
 
-	if (_battleModel->winner == PlayerNone)
+	if (_battleModel->winnerTeam == 0)
 	{
 		int count1 = 0;
 		int count2 = 0;
@@ -82,12 +82,12 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 			Unit* unit = (*i).second;
 			if (!unit->state.IsRouting())
 			{
-				switch (unit->player)
+				switch (unit->player.team)
 				{
-					case Player1:
+					case 1:
 						++count1;
 						break;
-					case Player2:
+					case 2:
 						++count2;
 						break;
 					default:
@@ -97,9 +97,9 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 		}
 
 		if (count1 == 0)
-			_battleModel->winner = Player2;
+			_battleModel->winnerTeam = 2;
 		else if (count2 == 0)
-			_battleModel->winner = Player1;
+			_battleModel->winnerTeam = 1;
 	}
 }
 
@@ -280,7 +280,7 @@ void BattleSimulator::ResolveMissileCombat()
 	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
-		bool controlsUnit = practice || currentPlayer == PlayerNone || unit->player == currentPlayer;
+		bool controlsUnit = practice || currentPlayer == Player() || unit->player == currentPlayer;
 		if (controlsUnit && unit->state.shootingCounter > unit->shootingCounter)
 		{
 			TriggerShooting(unit);
@@ -515,7 +515,7 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 		}
 	}
 
-	if (_battleModel->winner != PlayerNone && unit->player != _battleModel->winner)
+	if (_battleModel->winnerTeam != 0 && unit->player.team != _battleModel->winnerTeam)
 	{
 		result.morale = -1;
 	}
@@ -525,7 +525,7 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 		result.morale = -1;
 	}
 
-	if (practice && unit->player == Player2 && unit->state.IsRouting())
+	if (practice && unit->player.team == 2 && unit->state.IsRouting())
 	{
 		result.morale = -1;
 	}

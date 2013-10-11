@@ -7,6 +7,7 @@
 
 
 
+
 UnitCommand::UnitCommand() :
 path(),
 facing(0),
@@ -229,7 +230,7 @@ bool UnitRange::IsWithinRange(glm::vec2 p) const
 
 Unit::Unit() :
 unitId(0),
-player(Player1),
+player(Player(1, 1)),
 stats(),
 fighters(nullptr),
 state(),
@@ -302,8 +303,8 @@ BattleModel::BattleModel() :
 groundMap(nullptr),
 heightMap(nullptr),
 lastUnitId(0),
-bluePlayer(Player1),
-winner(PlayerNone),
+bluePlayer(Player(1, 1)),
+winnerTeam(0),
 time(0),
 timeStep(1.0f / 15.0f)
 {
@@ -353,7 +354,7 @@ Unit* BattleModel::AddUnit(Player player, int numberOfFighters, UnitStats stats,
 	for (Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
 		i->unit = unit;
 
-	unit->command.facing = player == Player1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
+	unit->command.facing = player.team == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
 	//unit->command.waypoint = position;
 
 	unit->state.unitMode = UnitModeInitializing;
