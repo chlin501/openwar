@@ -7,7 +7,6 @@
 
 
 
-
 UnitCommand::UnitCommand() :
 path(),
 facing(0),
@@ -63,30 +62,6 @@ casualty(false)
 {
 }
 
-
-FighterUpdate Fighter::GetFighterUpdate(const UnitUpdate& unitUpdate)
-{
-	FighterUpdate result;
-
-	result.positionX = (unsigned char)(255.0f * (state.position.x - unitUpdate.minX) / (unitUpdate.maxX - unitUpdate.minX));
-	result.positionY = (unsigned char)(255.0f * (state.position.y - unitUpdate.minY) / (unitUpdate.maxY - unitUpdate.minY));
-
-	return result;
-}
-
-
-void Fighter::SetFighterUpdate(const UnitUpdate& unitUpdate, const FighterUpdate& fighterUpdate)
-{
-	float positionX = unitUpdate.minX + (unitUpdate.maxX - unitUpdate.minX) * (float)fighterUpdate.positionX / 255.0f;
-	float positionY = unitUpdate.minY + (unitUpdate.maxY - unitUpdate.minY) * (float)fighterUpdate.positionY / 255.0f;
-
-	if (positionX == 0)
-		state.position = glm::vec2(positionX, positionY);
-	else
-		state.position = glm::vec2(positionX, positionY);
-}
-
-
 UnitState::UnitState() :
 loadingTimer(0),
 loadingDuration(0),
@@ -101,55 +76,6 @@ waypoint()
 {
 }
 
-
-UnitUpdate::UnitUpdate()
-{
-}
-
-
-UnitUpdate Unit::GetUnitUpdate()
-{
-	UnitUpdate result;
-
-	result.unitId = unitId;
-	result.fightersCount = fightersCount;
-	result.morale = state.morale;
-
-	result.movementDestination = command.path.empty() ? state.center : command.path.back();
-	result.movementDirection = command.facing;
-	result.movementTargetUnitId = command.meleeTarget != nullptr ? command.meleeTarget->unitId : 0;
-	result.movementRunning = command.running;
-
-	result.minX = 20000;
-	result.maxX = -20000;
-	result.minY = 20000;
-	result.maxY = -20000;
-
-	for (int i = 0; i < fightersCount; ++i)
-	{
-		glm::vec2 p = fighters[i].state.position;
-		result.minX = fminf(result.minX, p.x);
-		result.maxX = fmaxf(result.maxX, p.x);
-		result.minY = fminf(result.minY, p.y);
-		result.maxY = fmaxf(result.maxY, p.y);
-	}
-
-	return result;
-}
-
-
-void Unit::SetUnitUpdate(UnitUpdate unitUpdate, BattleModel* battleModel)
-{
-	fightersCount = unitUpdate.fightersCount;
-
-	state.morale = unitUpdate.morale;
-
-	command.path.clear();
-	command.path.push_back(unitUpdate.movementDestination);
-	command.facing = unitUpdate.movementDirection;
-	command.meleeTarget = battleModel->GetUnit(unitUpdate.movementTargetUnitId);
-	command.running = unitUpdate.movementRunning;
-}
 
 
 UnitStats::UnitStats() :

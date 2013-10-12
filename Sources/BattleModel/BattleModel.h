@@ -138,13 +138,6 @@ struct FighterState
 };
 
 
-struct FighterUpdate
-{
-	unsigned char positionX;
-	unsigned char positionY;
-};
-
-
 struct Fighter
 {
 	// static attributes
@@ -164,8 +157,6 @@ struct Fighter
 
 
 	Fighter();
-	FighterUpdate GetFighterUpdate(const UnitUpdate& unitUpdate);
-	void SetFighterUpdate(const UnitUpdate& unitUpdate, const FighterUpdate& fighterUpdate);
 };
 
 
@@ -243,22 +234,6 @@ struct UnitState
 };
 
 
-struct UnitUpdate
-{
-	int unitId;
-	int fightersCount;
-	float morale;
-
-	float minX, maxX, minY, maxY;
-
-	glm::vec2 movementDestination;
-	float movementDirection;
-	int movementTargetUnitId;
-	bool movementRunning;
-
-	UnitUpdate();
-};
-
 
 struct UnitCommand
 {
@@ -316,9 +291,6 @@ struct Unit
 
 	Unit();
 
-	UnitUpdate GetUnitUpdate();
-	void SetUnitUpdate(UnitUpdate unitUpdate, BattleModel* battleModel);
-
 	glm::vec2 CalculateUnitCenter();
 
 	float GetSpeed();
@@ -366,6 +338,9 @@ struct SamuraiBattleModel
 
 	static UnitStats GetDefaultUnitStats(SamuraiPlatform platform, SamuraiWeapon weapon);
 };
+
+
+
 
 
 #endif
