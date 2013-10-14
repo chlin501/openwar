@@ -5,6 +5,7 @@
 #ifndef SIMULATIONRULES_H
 #define SIMULATIONRULES_H
 
+#include <set>
 #include "../Library/Algorithms/quadtree.h"
 #include "BattleModel.h"
 
@@ -13,14 +14,14 @@ class Unit;
 class BattleView;
 
 
-class SimulationListener
+class BattleObserver
 {
 public:
-	virtual ~SimulationListener();
+	virtual ~BattleObserver();
+
+	virtual void OnNewUnit(Unit* unit) = 0;
 	virtual void OnShooting(const Shooting& shooting) = 0;
 	virtual void OnCasualty(const Casualty& casualty) = 0;
-	virtual BattleModel* GetBattleModel() const = 0;
-	virtual BattleView* GetBattleView() = 0;
 };
 
 
@@ -30,17 +31,23 @@ class BattleSimulator
 	quadtree<Fighter*> _fighterQuadTree;
 	quadtree<Fighter*> _weaponQuadTree;
 	float _secondsSinceLastTimeStep;
+	std::set<BattleObserver*> _observers;
 
 public:
 	Player currentPlayer;
 	bool practice;
-	SimulationListener* listener;
 	std::vector<Shooting> recentShootings;
 	std::vector<Casualty> recentCasualties;
 
 	BattleSimulator(BattleModel* battleModel);
 
 	BattleModel* GetBattleModel() const { return _battleModel; }
+
+	void AddObserver(BattleObserver* observer);
+	void RemoveObserver(BattleObserver* observer);
+	const std::set<BattleObserver*>& GetObservers() const;
+
+	Unit* AddUnit(Player player, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
 
 	void AdvanceTime(float secondsSinceLastTime);
 

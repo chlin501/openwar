@@ -210,11 +210,11 @@ void BattleScript::Tick(double secondsSinceLastUpdate)
 }*/
 
 
-int BattleScript::NewUnit(Player player, SamuraiPlatform platform, SamuraiWeapon weapon, int strength, glm::vec2 position, float bearing)
+int BattleScript::NewUnit(Player player, const char* unitClass, int strength, glm::vec2 position, float bearing)
 {
-	UnitStats unitStats = SamuraiBattleModel::GetDefaultUnitStats(platform, weapon);
+	UnitStats unitStats = SamuraiBattleModel::GetDefaultUnitStats(unitClass);
 
-	Unit* unit = _battleModel->AddUnit(player, strength, unitStats, position);
+	Unit* unit = _battleSimulator->AddUnit(player, unitClass, strength, unitStats, position);
 	unit->command.facing = glm::radians(90 - bearing);
 
 	return unit->unitId;
@@ -230,9 +230,6 @@ void BattleScript::SetUnitMovement(int unitId, bool running, std::vector<glm::ve
 		unit->command.facing = heading;
 		unit->command.meleeTarget = _battleModel->GetUnit(chargeId);
 		unit->command.running = running;
-
-		//if (_battleModel->GetMovementMarker(unit) == nullptr)
-		//	_battleModel->AddMovementMarker(unit);
 	}
 }
 
@@ -368,14 +365,16 @@ int BattleScript::battle_new_unit(lua_State* L)
 {
 	int n = lua_gettop(L);
 	Player player = n < 1 ? Player(1, 1) : ToPlayer(L, 1);
-	SamuraiPlatform platform = n < 2 ? SamuraiPlatform_Cav : ToUnitPlatform(L, 2);
-	SamuraiWeapon weapon = n < 3 ? SamuraiWeapon_Yari : ToUnitUnitWeapon(L, 3);
+	const char* platform = n < 2 ? "" : lua_tostring(L, 2);
+	const char* weapon = n < 3 ? "" : lua_tostring(L, 3);
 	int strength = n < 4 ? 40 : (int)lua_tonumber(L, 4);
 	float x = n < 5 ? 512 : (float)lua_tonumber(L, 5);
 	float y = n < 6 ? 512 : (float)lua_tonumber(L, 6);
 	float b = n < 7 ? 0 :  (float)lua_tonumber(L, 7);
 
-	int unitId = _battlescript->NewUnit(player, platform, weapon, strength, glm::vec2(x, y), b);
+	std::string unitClass = std::string(platform) + "-" + weapon;
+
+	int unitId = _battlescript->NewUnit(player, unitClass.c_str(), strength, glm::vec2(x, y), b);
 
 	lua_pushnumber(L, unitId);
 
@@ -479,41 +478,6 @@ int BattleScript::battle_add_terrain_tree(lua_State* L)
 Player BattleScript::ToPlayer(lua_State* L, int index)
 {
 	return lua_tonumber(L, index) == 2 ? Player(2, 2) : Player(1, 1);
-}
-
-
-SamuraiPlatform BattleScript::ToUnitPlatform(lua_State* L, int index)
-{
-	const char* s = lua_tostring(L, index);
-	if (s != nullptr)
-	{
-		if (std::strcmp(s, "CAV") == 0) return SamuraiPlatform_Cav;
-		if (std::strcmp(s, "GEN") == 0) return SamuraiPlatform_Gen;
-		if (std::strcmp(s, "ASH") == 0) return SamuraiPlatform_Ash;
-		if (std::strcmp(s, "SAM") == 0) return SamuraiPlatform_Sam;
-	}
-
-	print_log("ToUnitPlatform, unknown", s);
-
-	return SamuraiPlatform_Cav;
-}
-
-
-SamuraiWeapon BattleScript::ToUnitUnitWeapon(lua_State* L, int index)
-{
-	const char* s = lua_tostring(L, index);
-	if (s != nullptr)
-	{
-		if (std::strcmp(s, "YARI") == 0) return SamuraiWeapon_Yari;
-		if (std::strcmp(s, "KATA") == 0) return SamuraiWeapon_Kata;
-		if (std::strcmp(s, "NAGI") == 0) return SamuraiWeapon_Nagi;
-		if (std::strcmp(s, "BOW") == 0) return SamuraiWeapon_Bow;
-		if (std::strcmp(s, "ARQ") == 0) return SamuraiWeapon_Arq;
-	}
-
-	print_log("ToUnitUnitWeapon, unknown", s);
-
-	return SamuraiWeapon_Yari;
 }
 
 

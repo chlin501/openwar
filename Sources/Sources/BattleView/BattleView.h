@@ -32,7 +32,7 @@ class SmoothTerrainSky;
 class SmokeCounter;
 
 
-class BattleView : public TerrainView, public SimulationListener
+class BattleView : public TerrainView, public BattleObserver
 {
 	renderers* _renderers;
 	BattleModel* _battleModel;
@@ -76,8 +76,9 @@ public:
 	BattleView(Surface* screen, BattleModel* battleModel, renderers* r);
 	~BattleView();
 
-	virtual BattleModel* GetBattleModel() const { return _battleModel; }
-	virtual BattleView* GetBattleView() { return this; }
+	BattleModel* GetBattleModel() const { return _battleModel; }
+
+	virtual void OnNewUnit(Unit* unit);
 	virtual void OnShooting(const Shooting& shooting);
 	virtual void OnCasualty(const Casualty& casualty);
 

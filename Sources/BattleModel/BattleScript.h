@@ -47,7 +47,7 @@ public:
 	//void RenderHints(GradientLineRenderer* renderer);
 
 private:
-	int NewUnit(Player player, SamuraiPlatform platform, SamuraiWeapon weapon, int strength, glm::vec2 position, float bearing);
+	int NewUnit(Player player, const char* unitClass, int strength, glm::vec2 position, float bearing);
 	void SetUnitMovement(int unitId, bool running, std::vector<glm::vec2> path, int chargeId, float heading);
 
 	static int openwar_terrain_init(lua_State* L);
@@ -67,8 +67,6 @@ private:
 	static int battle_add_terrain_tree(lua_State* L);
 
 	static Player ToPlayer(lua_State* L, int index);
-	static SamuraiPlatform ToUnitPlatform(lua_State* L, int index);
-	static SamuraiWeapon ToUnitUnitWeapon(lua_State* L, int index);
 	static void ToPath(std::vector<glm::vec2>& result, lua_State* L, int index);
 };
 

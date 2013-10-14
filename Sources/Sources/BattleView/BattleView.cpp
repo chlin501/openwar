@@ -213,6 +213,11 @@ BattleView::~BattleView()
 }
 
 
+void BattleView::OnNewUnit(Unit* unit)
+{
+}
+
+
 void BattleView::OnShooting(Shooting const & shooting)
 {
 	AddShootingAndSmokeCounters(shooting);

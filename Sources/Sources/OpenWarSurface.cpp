@@ -166,7 +166,7 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 
 	if (battleScript->GetBattleSimulator() != nullptr)
 	{
-		battleScript->GetBattleSimulator()->listener = _battleView;
+		battleScript->GetBattleSimulator()->AddObserver(_battleView);
 		battleScript->GetBattleSimulator()->currentPlayer = Player(1, 1);
 	}
 }

@@ -268,37 +268,36 @@ bool BattleModel::IsMelee() const
 }
 
 
-Unit* BattleModel::AddUnit(Player player, int numberOfFighters, UnitStats stats, glm::vec2 position)
+SamuraiPlatform SamuraiBattleModel::GetSamuraiPlatform(const char* unitClass)
 {
-	Unit* unit = new Unit();
+	if (std::strncmp(unitClass, "CAV", 3) == 0) return SamuraiPlatform_Cav;
+	if (std::strncmp(unitClass, "GEN", 3) == 0) return SamuraiPlatform_Gen;
+	if (std::strncmp(unitClass, "ASH", 3) == 0) return SamuraiPlatform_Ash;
+	if (std::strncmp(unitClass, "SAM", 3) == 0) return SamuraiPlatform_Sam;
+	return SamuraiPlatform_Cav;
+}
 
-	unit->unitId = ++lastUnitId;
-	unit->player = player;
-	unit->stats = stats;
 
-	unit->fightersCount = numberOfFighters;
-	unit->fighters = new Fighter[numberOfFighters];
 
-	for (Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
-		i->unit = unit;
+SamuraiWeapon SamuraiBattleModel::GetSamuraiWeapon(const char* unitClass)
+{
+	if (std::strlen(unitClass) > 4)
+	{
+		if (std::strcmp(unitClass + 4, "YARI") == 0) return SamuraiWeapon_Yari;
+		if (std::strcmp(unitClass + 4, "KATA") == 0) return SamuraiWeapon_Kata;
+		if (std::strcmp(unitClass + 4, "NAGI") == 0) return SamuraiWeapon_Nagi;
+		if (std::strcmp(unitClass + 4, "BOW") == 0) return SamuraiWeapon_Bow;
+		if (std::strcmp(unitClass + 4, "ARQ") == 0) return SamuraiWeapon_Arq;
+	}
+	return SamuraiWeapon_Nagi;
+}
 
-	unit->command.facing = player.team == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
-	//unit->command.waypoint = position;
 
-	unit->state.unitMode = UnitMode_Initializing;
-	unit->state.center = position;
-	unit->state.direction = unit->command.facing;
-
-	unit->command.missileTarget = nullptr;
-
-	unit->formation.rankDistance = stats.fighterSize.y + stats.spacing.y;
-	unit->formation.fileDistance = stats.fighterSize.x + stats.spacing.x;
-	unit->formation.numberOfRanks = (int)fminf(6, unit->fightersCount);
-	unit->formation.numberOfFiles = (int)ceilf((float)unit->fightersCount / unit->formation.numberOfRanks);
-
-	units[unit->unitId] = unit;
-
-	return unit;
+UnitStats SamuraiBattleModel::GetDefaultUnitStats(const char* unitClass)
+{
+	SamuraiPlatform platform = GetSamuraiPlatform(unitClass);
+	SamuraiWeapon weapon = GetSamuraiWeapon(unitClass);
+	return GetDefaultUnitStats(platform, weapon);
 }
 
 

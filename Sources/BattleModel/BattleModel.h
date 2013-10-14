@@ -6,6 +6,7 @@
 #define BATTLEMODEL_H
 
 #include <map>
+#include <string>
 #include "MovementRules.h"
 
 
@@ -272,6 +273,7 @@ struct Unit
 	// static attributes
 	int unitId;
 	Player player;
+	std::string unitClass;
 	UnitStats stats;
 	Fighter* fighters;
 
@@ -328,14 +330,15 @@ public:
 	}
 
 	bool IsMelee() const;
-
-	Unit* AddUnit(Player player, int numberOfFighters, UnitStats stats, glm::vec2 position);
 };
 
 
 struct SamuraiBattleModel
 {
+	static SamuraiPlatform GetSamuraiPlatform(const char* unitClass);
+	static SamuraiWeapon GetSamuraiWeapon(const char* unitClass);
 
+	static UnitStats GetDefaultUnitStats(const char* unitClass);
 	static UnitStats GetDefaultUnitStats(SamuraiPlatform platform, SamuraiWeapon weapon);
 };
 

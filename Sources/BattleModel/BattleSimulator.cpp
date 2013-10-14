@@ -2,6 +2,7 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
+#import <set>
 #include "../Library/Algebra/geometry.h"
 #include "BattleSimulator.h"
 #include "GroundMap.h"
@@ -9,7 +10,7 @@
 
 
 
-SimulationListener::~SimulationListener()
+BattleObserver::~BattleObserver()
 {
 }
 
@@ -29,10 +30,67 @@ _weaponQuadTree(
 _secondsSinceLastTimeStep(0),
 currentPlayer(),
 practice(false),
-listener(nullptr),
 recentShootings(),
 recentCasualties()
 {
+}
+
+
+void BattleSimulator::AddObserver(BattleObserver* observer)
+{
+	_observers.insert(observer);
+
+	for (std::pair<int, Unit*> i : _battleModel->units)
+		observer->OnNewUnit(i.second);
+}
+
+
+void BattleSimulator::RemoveObserver(BattleObserver* observer)
+{
+	_observers.erase(observer);
+}
+
+
+const std::set<BattleObserver*>& BattleSimulator::GetObservers() const
+{
+	return _observers;
+}
+
+
+Unit* BattleSimulator::AddUnit(Player player, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position)
+{
+	Unit* unit = new Unit();
+
+	unit->unitId = ++_battleModel->lastUnitId;
+	unit->player = player;
+	unit->unitClass = unitClass;
+	unit->stats = stats;
+
+	unit->fightersCount = numberOfFighters;
+	unit->fighters = new Fighter[numberOfFighters];
+
+	for (Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
+		i->unit = unit;
+
+	unit->command.facing = player.team == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
+
+	unit->state.unitMode = UnitMode_Initializing;
+	unit->state.center = position;
+	unit->state.direction = unit->command.facing;
+
+	unit->command.missileTarget = nullptr;
+
+	unit->formation.rankDistance = stats.fighterSize.y + stats.spacing.y;
+	unit->formation.fileDistance = stats.fighterSize.x + stats.spacing.x;
+	unit->formation.numberOfRanks = (int)fminf(6, unit->fightersCount);
+	unit->formation.numberOfFiles = (int)ceilf((float)unit->fightersCount / unit->formation.numberOfRanks);
+
+	_battleModel->units[unit->unitId] = unit;
+
+	for (BattleObserver* observer : _observers)
+		observer->OnNewUnit(unit);
+
+	return unit;
 }
 
 
@@ -63,13 +121,13 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 		}
 	}
 
-	if (listener != 0)
+	for (BattleObserver* observer : _observers)
 	{
 		for (const Shooting& shooting : recentShootings)
-			listener->OnShooting(shooting);
+			observer->OnShooting(shooting);
 
 		for (const Casualty casualty : recentCasualties)
-			listener->OnCasualty(casualty);
+			observer->OnCasualty(casualty);
 	}
 
 	if (_battleModel->winnerTeam == 0)
