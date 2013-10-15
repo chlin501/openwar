@@ -1,6 +1,10 @@
+// Copyright (C) 2013 Felix Ungman
+//
+// This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
+
 #include "TiledGroundMap.h"
 #include "HeightMap.h"
-#include "bspline_patch.h"
+#include "../Library/Algorithms/bspline_patch.h"
 
 
 
