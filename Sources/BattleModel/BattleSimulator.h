@@ -97,21 +97,6 @@ struct Shooting
 };
 
 
-struct Casualty
-{
-	glm::vec2 position;
-	int player;
-	int team;
-	SamuraiPlatform platform;
-
-	Casualty(glm::vec2 position_, int player_, int team_, SamuraiPlatform platform_) :
-	position(position_),
-	player(player_),
-	team(team_),
-	platform(platform_) { }
-};
-
-
 enum ReadyState
 {
 	ReadyState_Unready,
@@ -411,7 +396,7 @@ public:
 
 	virtual void OnNewUnit(Unit* unit) = 0;
 	virtual void OnShooting(const Shooting& shooting) = 0;
-	virtual void OnCasualty(const Casualty& casualty) = 0;
+	virtual void OnCasualty(Unit* unit, glm::vec2 position) = 0;
 };
 
 
@@ -425,7 +410,6 @@ class BattleSimulator
 public:
 	bool practice;
 	std::vector<Shooting> recentShootings;
-	std::vector<Casualty> recentCasualties;
 
 	GroundMap* groundMap;
 	HeightMap* heightMap;

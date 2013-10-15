@@ -79,9 +79,9 @@ public:
 
 	virtual void OnNewUnit(Unit* unit);
 	virtual void OnShooting(const Shooting& shooting);
-	virtual void OnCasualty(const Casualty& casualty);
+	virtual void OnCasualty(Unit* unit, glm::vec2 position);
 
-	void AddCasualty(const Casualty& casualty);
+	void AddCasualty(Unit* unit, glm::vec2 position);
 
 	UnitMovementMarker* AddMovementMarker(Unit* unit);
 	UnitMovementMarker* GetMovementMarker(Unit* unit);

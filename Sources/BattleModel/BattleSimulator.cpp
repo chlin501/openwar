@@ -116,11 +116,10 @@ _fighterQuadTree(0, 0, 1024, 1024),
 _weaponQuadTree(0, 0, 1024, 1024),
 _secondsSinceLastTimeStep(0),
 practice(false),
-currentPlayer(0),
 recentShootings(),
-recentCasualties(),
 groundMap(nullptr),
 heightMap(nullptr),
+currentPlayer(0),
 lastUnitId(0),
 blueTeam(1),
 winnerTeam(0),
@@ -341,7 +340,6 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 	//	return;
 
 	recentShootings.clear();
-	recentCasualties.clear();
 
 	bool didStep = false;
 
@@ -366,9 +364,6 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 	{
 		for (const Shooting& shooting : recentShootings)
 			observer->OnShooting(shooting);
-
-		for (const Casualty casualty : recentCasualties)
-			observer->OnCasualty(casualty);
 	}
 
 	if (winnerTeam == 0)
@@ -692,7 +687,9 @@ void BattleSimulator::RemoveCasualties()
 			if (unit->fighters[j].casualty)
 			{
 				++unit->state.recentCasualties;
-				recentCasualties.push_back(Casualty(unit->fighters[j].state.position, unit->player, unit->team, unit->stats.samuraiPlaform));
+
+				for (BattleObserver* observer : _observers)
+					observer->OnCasualty(unit, unit->fighters[j].state.position);
 			}
 			else
 			{

@@ -222,16 +222,17 @@ void BattleView::OnShooting(Shooting const & shooting)
 }
 
 
-void BattleView::OnCasualty(Casualty const & casualty)
+void BattleView::OnCasualty(Unit* unit, glm::vec2 position)
 {
-	AddCasualty(casualty);
+	AddCasualty(unit, position);
 }
 
 
-void BattleView::AddCasualty(const Casualty& casualty)
+void BattleView::AddCasualty(Unit* unit, glm::vec2 position)
 {
-	glm::vec3 position = glm::vec3(casualty.position, _battleSimulator->heightMap->InterpolateHeight(casualty.position));
-	_casualtyMarker->AddCasualty(position, casualty.player, casualty.team, casualty.platform);
+	glm::vec3 p = glm::vec3(position, _battleSimulator->heightMap->InterpolateHeight(position));
+	SamuraiPlatform platform = SamuraiBattleModel::GetSamuraiPlatform(unit->unitClass.c_str());
+	_casualtyMarker->AddCasualty(p, unit->player, unit->team, platform);
 }
 
 
