@@ -160,6 +160,12 @@ void BattleScript::Execute(const char* script, size_t length)
 }
 
 
+void BattleScript::CreateBattleSimulator()
+{
+	_battleSimulator = new BattleSimulator(_battleModel);
+}
+
+
 void BattleScript::Tick(double secondsSinceLastUpdate)
 {
 	_battlescript = this;
@@ -282,8 +288,7 @@ int BattleScript::openwar_terrain_init(lua_State* L)
 
 int BattleScript::openwar_simulator_init(lua_State* L)
 {
-	_battlescript->_battleSimulator = new BattleSimulator(_battlescript->_battleModel);
-
+	_battlescript->CreateBattleSimulator();
 	return 0;
 }
 

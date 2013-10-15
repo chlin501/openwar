@@ -43,6 +43,8 @@ public:
 	BattleModel* GetBattleModel() const { return _battleModel; }
 	BattleSimulator* GetBattleSimulator() const { return _battleSimulator; }
 
+	void CreateBattleSimulator();
+
 	void Tick(double secondsSinceLastTick);
 	//void RenderHints(GradientLineRenderer* renderer);
 

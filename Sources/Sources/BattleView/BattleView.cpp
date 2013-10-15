@@ -165,9 +165,6 @@ _player()
 	_gradientTriangleStripRenderer = new GradientTriangleStripRenderer();
 	_colorBillboardRenderer = new ColorBillboardRenderer();
 	_textureTriangleRenderer = new TextureTriangleRenderer();
-
-	for (std::pair<int, Unit*> i : _battleModel->units)
-		AddUnitMarker(i.second);
 }
 
 
@@ -215,6 +212,7 @@ BattleView::~BattleView()
 
 void BattleView::OnNewUnit(Unit* unit)
 {
+	AddUnitMarker(unit);
 }
 
 
