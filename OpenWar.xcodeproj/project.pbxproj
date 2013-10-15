@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4105FB251806D3890074C855 /* BattleModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4105FB151806D3890074C855 /* BattleModel.cpp */; };
 		4105FB261806D3890074C855 /* BattleScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4105FB171806D3890074C855 /* BattleScript.cpp */; };
 		4105FB271806D3890074C855 /* BattleSimulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4105FB191806D3890074C855 /* BattleSimulator.cpp */; };
 		4105FB281806D3890074C855 /* GroundMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4105FB1B1806D3890074C855 /* GroundMap.cpp */; };
@@ -105,8 +104,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4105FB151806D3890074C855 /* BattleModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleModel.cpp; sourceTree = "<group>"; };
-		4105FB161806D3890074C855 /* BattleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleModel.h; sourceTree = "<group>"; };
 		4105FB171806D3890074C855 /* BattleScript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleScript.cpp; sourceTree = "<group>"; };
 		4105FB181806D3890074C855 /* BattleScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleScript.h; sourceTree = "<group>"; };
 		4105FB191806D3890074C855 /* BattleSimulator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleSimulator.cpp; sourceTree = "<group>"; };
@@ -283,8 +280,6 @@
 		4105FB141806D3890074C855 /* BattleModel */ = {
 			isa = PBXGroup;
 			children = (
-				4105FB151806D3890074C855 /* BattleModel.cpp */,
-				4105FB161806D3890074C855 /* BattleModel.h */,
 				4105FB171806D3890074C855 /* BattleScript.cpp */,
 				4105FB181806D3890074C855 /* BattleScript.h */,
 				4105FB191806D3890074C855 /* BattleSimulator.cpp */,
@@ -721,7 +716,6 @@
 				4105FB271806D3890074C855 /* BattleSimulator.cpp in Sources */,
 				63F554D599B9EA471445C976 /* texture.cpp in Sources */,
 				63F55211E9EC58D197413281 /* vertexbuffer.cpp in Sources */,
-				4105FB251806D3890074C855 /* BattleModel.cpp in Sources */,
 				63F55545CE738AF09240DCA5 /* animation.cpp in Sources */,
 				63F5567BE5C32F9B5F7D3AB7 /* BillboardTexture.cpp in Sources */,
 				63F550FED76DDF652A9C50B9 /* ColorBillboardRenderer.cpp in Sources */,

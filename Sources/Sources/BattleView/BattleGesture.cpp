@@ -6,7 +6,7 @@
 #import <UIKit/UIKit.h>
 #endif
 
-#include "../../BattleModel/BattleModel.h"
+#include "../../BattleModel/BattleSimulator.h"
 #include "../../Library/Audio/SoundPlayer.h"
 #include "../../Library/Renderers/sprite.h"
 #include "../../Library/Renderers/PlainRenderer.h"

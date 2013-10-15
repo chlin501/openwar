@@ -5,7 +5,6 @@
 #ifndef BATTLEVIEW_H
 #define BATTLEVIEW_H
 
-#include "../../BattleModel/BattleModel.h"
 #include "../../BattleModel/BattleSimulator.h"
 #include "../../Library/Graphics/vertexbuffer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"

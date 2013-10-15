@@ -61,7 +61,7 @@ public:
 	OpenWarSurface(glm::vec2 size, float pixelDensity);
 	virtual ~OpenWarSurface();
 
-	void Reset(BattleScript* battleScript);
+	virtual void Reset(BattleScript* battleScript);
 
 	virtual void ScreenSizeChanged();
 	virtual void Update(double secondsSinceLastUpdate);

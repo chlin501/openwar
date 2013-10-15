@@ -7,7 +7,6 @@
 #include "../Library/Renderers/GradientRenderer.h"
 #include "SmoothGroundMap.h"
 #include "TiledGroundMap.h"
-#include "BattleModel.h"
 #include "BattleScript.h"
 #include "BattleSimulator.h"
 #include "HeightMap.h"

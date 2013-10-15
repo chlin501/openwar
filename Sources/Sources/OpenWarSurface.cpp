@@ -8,7 +8,6 @@
 #include "../Library/Renderers/GradientRenderer.h"
 #include "../BattleModel/BattleSimulator.h"
 #include "../BattleModel/BattleScript.h"
-#include "../BattleModel/BattleModel.h"
 #include "OpenWarSurface.h"
 #include "BattleView/BattleGesture.h"
 #include "BattleView/UnitCounter.h"

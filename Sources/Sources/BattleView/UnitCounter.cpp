@@ -5,7 +5,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include "UnitCounter.h"
-#include "BattleModel.h"
+#include "BattleSimulator.h"
 #include "../../Library/Renderers/PlainRenderer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
 #include "../../Library/Renderers/TextureRenderer.h"
