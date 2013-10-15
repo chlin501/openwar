@@ -115,14 +115,14 @@ BattleSimulator::BattleSimulator() :
 _fighterQuadTree(0, 0, 1024, 1024),
 _weaponQuadTree(0, 0, 1024, 1024),
 _secondsSinceLastTimeStep(0),
-currentPlayer(),
 practice(false),
+currentPlayer(0),
 recentShootings(),
 recentCasualties(),
 groundMap(nullptr),
 heightMap(nullptr),
 lastUnitId(0),
-bluePlayer(Player(1, 1)),
+blueTeam(1),
 winnerTeam(0),
 time(0),
 timeStep(1.0f / 15.0f)
@@ -297,12 +297,13 @@ const std::set<BattleObserver*>&BattleSimulator::GetObservers() const
 }
 
 
-Unit* BattleSimulator::AddUnit(Player player, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position)
+Unit* BattleSimulator::AddUnit(int player, int team, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position)
 {
 	Unit* unit = new Unit();
 
 	unit->unitId = ++lastUnitId;
 	unit->player = player;
+	unit->team = team;
 	unit->unitClass = unitClass;
 	unit->stats = stats;
 
@@ -312,7 +313,7 @@ Unit* BattleSimulator::AddUnit(Player player, const char* unitClass, int numberO
 	for (Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
 		i->unit = unit;
 
-	unit->command.facing = player.team == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
+	unit->command.facing = team == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
 
 	unit->state.unitMode = UnitMode_Initializing;
 	unit->state.center = position;
@@ -380,7 +381,7 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 			Unit* unit = (*i).second;
 			if (!unit->state.IsRouting())
 			{
-				switch (unit->player.team)
+				switch (unit->team)
 				{
 					case 1:
 						++count1;
@@ -578,7 +579,7 @@ void BattleSimulator::ResolveMissileCombat()
 	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
-		bool controlsUnit = practice || currentPlayer == Player() || unit->player == currentPlayer;
+		bool controlsUnit = practice || currentPlayer == 0 || unit->player == currentPlayer;
 		if (controlsUnit && unit->state.shootingCounter > unit->shootingCounter)
 		{
 			TriggerShooting(unit);
@@ -691,7 +692,7 @@ void BattleSimulator::RemoveCasualties()
 			if (unit->fighters[j].casualty)
 			{
 				++unit->state.recentCasualties;
-				recentCasualties.push_back(Casualty(unit->fighters[j].state.position, unit->player, unit->stats.samuraiPlaform));
+				recentCasualties.push_back(Casualty(unit->fighters[j].state.position, unit->player, unit->team, unit->stats.samuraiPlaform));
 			}
 			else
 			{
@@ -813,7 +814,7 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 		}
 	}
 
-	if (winnerTeam != 0 && unit->player.team != winnerTeam)
+	if (winnerTeam != 0 && unit->team != winnerTeam)
 	{
 		result.morale = -1;
 	}
@@ -823,7 +824,7 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 		result.morale = -1;
 	}
 
-	if (practice && unit->player.team == 2 && unit->state.IsRouting())
+	if (practice && unit->team == 2 && unit->state.IsRouting())
 	{
 		result.morale = -1;
 	}

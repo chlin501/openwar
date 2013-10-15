@@ -63,7 +63,7 @@ _smoothTerrainSurface(nullptr),
 _smoothTerrainWater(nullptr),
 _smoothTerrainSky(nullptr),
 _tiledTerrainRenderer(nullptr),
-_player()
+_player(0)
 {
 	_textureUnitMarkers = new texture(resource("Textures/Texture256x256.png"));
 	_textureTouchMarker = new texture(resource("Textures/TouchMarker.png"));
@@ -231,7 +231,7 @@ void BattleView::OnCasualty(Casualty const & casualty)
 void BattleView::AddCasualty(const Casualty& casualty)
 {
 	glm::vec3 position = glm::vec3(casualty.position, _battleSimulator->heightMap->InterpolateHeight(casualty.position));
-	_casualtyMarker->AddCasualty(position, casualty.player, casualty.platform);
+	_casualtyMarker->AddCasualty(position, casualty.player, casualty.team, casualty.platform);
 }
 
 
@@ -596,7 +596,7 @@ UnitMovementMarker* BattleView::GetMovementMarker(Unit* unit)
 }
 
 
-UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, Player player)
+UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, int player)
 {
 	UnitMovementMarker* result = 0;
 	float nearest = INFINITY;
@@ -604,7 +604,7 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, Pla
 	for (UnitMovementMarker* marker : _movementMarkers)
 	{
 		Unit* unit = marker->GetUnit();
-		if (player != Player() && unit->player != player)
+		if (player != 0 && unit->player != player)
 			continue;
 
 		glm::vec2 p = unit->command.GetDestination();
@@ -850,9 +850,9 @@ UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int team, int
 	for (UnitCounter* marker : _unitMarkers)
 	{
 		Unit* unit = marker->_unit;
-		if (team != 0 && unit->player.team != team)
+		if (team != 0 && unit->team != team)
 			continue;
-		if (playerId != 0 && unit->player.id != playerId)
+		if (playerId != 0 && unit->player != playerId)
 			continue;
 
 		glm::vec2 p = unit->state.center;

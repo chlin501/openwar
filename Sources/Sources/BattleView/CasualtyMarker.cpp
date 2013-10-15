@@ -21,9 +21,9 @@ CasualtyMarker::~CasualtyMarker()
 }
 
 
-void CasualtyMarker::AddCasualty(glm::vec3 position, Player player, SamuraiPlatform platform)
+void CasualtyMarker::AddCasualty(glm::vec3 position, int player, int team, SamuraiPlatform platform)
 {
-	casualties.push_back(Casualty(position, player, platform));
+	casualties.push_back(Casualty(position, player, team, platform));
 }
 
 
@@ -50,7 +50,7 @@ void CasualtyMarker::RenderCasualtyColorBillboards(ColorBillboardRenderer* rende
 	{
 		if (casualty.time <= 1)
 		{
-			glm::vec4 c = glm::mix(c1, casualty.player.team == 1 ? cb : cr, casualty.time);
+			glm::vec4 c = glm::mix(c1, casualty.team == 1 ? cb : cr, casualty.time);
 			renderer->AddBillboard(casualty.position, c, 6.0);
 		}
 	}

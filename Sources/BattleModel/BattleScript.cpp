@@ -212,11 +212,11 @@ void BattleScript::Tick(double secondsSinceLastUpdate)
 }*/
 
 
-int BattleScript::NewUnit(Player player, const char* unitClass, int strength, glm::vec2 position, float bearing)
+int BattleScript::NewUnit(int player, int team, const char* unitClass, int strength, glm::vec2 position, float bearing)
 {
 	UnitStats unitStats = SamuraiBattleModel::GetDefaultUnitStats(unitClass);
 
-	Unit* unit = _battleSimulator->AddUnit(player, unitClass, strength, unitStats, position);
+	Unit* unit = _battleSimulator->AddUnit(player, team, unitClass, strength, unitStats, position);
 	unit->command.facing = glm::radians(90 - bearing);
 
 	return unit->unitId;
@@ -365,7 +365,7 @@ int BattleScript::battle_get_time(lua_State* L)
 int BattleScript::battle_new_unit(lua_State* L)
 {
 	int n = lua_gettop(L);
-	Player player = n < 1 ? Player(1, 1) : ToPlayer(L, 1);
+	int player = n < 1 ? 0 : (int)lua_tonumber(L, 1);
 	const char* platform = n < 2 ? "" : lua_tostring(L, 2);
 	const char* weapon = n < 3 ? "" : lua_tostring(L, 3);
 	int strength = n < 4 ? 40 : (int)lua_tonumber(L, 4);
@@ -375,7 +375,7 @@ int BattleScript::battle_new_unit(lua_State* L)
 
 	std::string unitClass = std::string(platform) + "-" + weapon;
 
-	int unitId = _battlescript->NewUnit(player, unitClass.c_str(), strength, glm::vec2(x, y), b);
+	int unitId = _battlescript->NewUnit(player, player, unitClass.c_str(), strength, glm::vec2(x, y), b);
 
 	lua_pushnumber(L, unitId);
 
@@ -473,13 +473,6 @@ int BattleScript::battle_add_terrain_tree(lua_State* L)
 
 /***/
 
-
-
-
-Player BattleScript::ToPlayer(lua_State* L, int index)
-{
-	return lua_tonumber(L, index) == 2 ? Player(2, 2) : Player(1, 1);
-}
 
 
 void BattleScript::ToPath(std::vector<glm::vec2>& result, lua_State* L, int index)

@@ -43,7 +43,7 @@ void UnitTrackingMarker::RenderTrackingFighters(ColorBillboardRenderer* renderer
 {
 	if (!_meleeTarget && !_missileTarget)
 	{
-		bool isBlue = _unit->player == _battleSimulator->bluePlayer;
+		bool isBlue = _unit->team == _battleSimulator->blueTeam;
 		glm::vec4 color = isBlue ? glm::vec4(0, 0, 255, 16) / 255.0f : glm::vec4(255, 0, 0, 16) / 255.0f;
 
 		glm::vec2 destination = DestinationXXX();
@@ -73,7 +73,7 @@ void UnitTrackingMarker::RenderTrackingMarker(TextureBillboardRenderer* renderer
 		glm::vec2 destination = DestinationXXX();
 		glm::vec3 position = _battleSimulator->groundMap->GetHeightMap()->GetPosition(destination, 0);
 		glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
-		glm::vec2 texcoord = texsize * glm::vec2(_unit->player != _battleSimulator->bluePlayer ? 4 : 3, 0);
+		glm::vec2 texcoord = texsize * glm::vec2(_unit->team != _battleSimulator->blueTeam ? 4 : 3, 0);
 
 		renderer->AddBillboard(position, 32, affine2(texcoord, texcoord + texsize));
 	}
@@ -103,8 +103,8 @@ void UnitTrackingMarker::AppendFacingMarker(TextureTriangleRenderer* renderer, B
 	float tx1 = 1 * txs;
 	float tx2 = tx1 + txs;
 
-	float ty1 = _unit->player == battleView->GetBattleSimulator()->bluePlayer ? 0.0f : 0.5f;
-	float ty2 = _unit->player == battleView->GetBattleSimulator()->bluePlayer ? 0.5f : 1.0f;
+	float ty1 = _unit->team == battleView->GetBattleSimulator()->blueTeam ? 0.0f : 0.5f;
+	float ty2 = _unit->team == battleView->GetBattleSimulator()->blueTeam ? 0.5f : 1.0f;
 
 	renderer->AddVertex(glm::vec3(p + d1, 0), glm::vec2(tx1, ty1));
 	renderer->AddVertex(glm::vec3(p + d2, 0), glm::vec2(tx1, ty2));

@@ -66,7 +66,7 @@ public:
 	SmoothTerrainSky* _smoothTerrainSky;
 
 	TiledTerrainRenderer* _tiledTerrainRenderer;
-	Player _player;
+	int _player;
 
 	std::vector<SmokeCounter*> _smokeMarkers;
 	std::vector<ShootingCounter*> _shootingCounters;
@@ -85,7 +85,7 @@ public:
 
 	UnitMovementMarker* AddMovementMarker(Unit* unit);
 	UnitMovementMarker* GetMovementMarker(Unit* unit);
-	UnitMovementMarker* GetNearestMovementMarker(glm::vec2 position, Player player);
+	UnitMovementMarker* GetNearestMovementMarker(glm::vec2 position, int player);
 
 	UnitTrackingMarker* AddTrackingMarker(Unit* unit);
 	UnitTrackingMarker* GetTrackingMarker(Unit* unit);

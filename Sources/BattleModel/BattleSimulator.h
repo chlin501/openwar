@@ -23,20 +23,6 @@ struct Unit;
 struct UnitUpdate;
 
 
-struct Player
-{
-	int id;
-	int team;
-
-	Player() : id(0), team(0) { }
-	Player(int i, int t) : id(i), team(t) { }
-	Player(const Player& other) : id(other.id), team(other.team) { }
-	Player& operator=(const Player& other) { id = other.id; team = other.team; return *this; }
-	bool operator==(const Player& other) const { return id == other.id && team == other.team; }
-	bool operator!=(const Player& other) const { return id != other.id || team != other.team; }
-};
-
-
 enum class PlatformType
 {
 	None,
@@ -114,11 +100,15 @@ struct Shooting
 struct Casualty
 {
 	glm::vec2 position;
-	Player player;
+	int player;
+	int team;
 	SamuraiPlatform platform;
 
-	Casualty(glm::vec2 position_, Player player_, SamuraiPlatform platform_) :
-	position(position_), player(player_), platform(platform_) { }
+	Casualty(glm::vec2 position_, int player_, int team_, SamuraiPlatform platform_) :
+	position(position_),
+	player(player_),
+	team(team_),
+	platform(platform_) { }
 };
 
 
@@ -355,7 +345,9 @@ struct Unit
 {
 	// static attributes
 	int unitId;
-	Player player;
+	int player;
+	int team;
+
 	std::string unitClass;
 	UnitStats stats;
 	Fighter* fighters;
@@ -376,7 +368,8 @@ struct Unit
 
 	Unit() :
 	unitId(0),
-	player(Player(1, 1)),
+	player(1),
+	team(1),
 	stats(),
 	fighters(nullptr),
 	state(),
@@ -430,7 +423,6 @@ class BattleSimulator
 	std::set<BattleObserver*> _observers;
 
 public:
-	Player currentPlayer;
 	bool practice;
 	std::vector<Shooting> recentShootings;
 	std::vector<Casualty> recentCasualties;
@@ -438,8 +430,9 @@ public:
 	GroundMap* groundMap;
 	HeightMap* heightMap;
 
+	int currentPlayer;
 	int lastUnitId;
-	Player bluePlayer;
+	int blueTeam;
 	int winnerTeam;
 	float time;
 	float timeStep;
@@ -464,7 +457,7 @@ public:
 
 	bool IsMelee() const;
 
-	Unit* AddUnit(Player player, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
+	Unit* AddUnit(int player, int team, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
 
 	void AdvanceTime(float secondsSinceLastTime);
 

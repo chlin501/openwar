@@ -223,7 +223,7 @@ glm::vec2 MovementRules::NextFighterDestination(Fighter* fighter)
 
 	if (unit->state.IsRouting())
 	{
-		if (unit->player.team == 1)
+		if (unit->team == 1)
 			return glm::vec2(fighter->state.position.x * 3, -2000);
 		else
 			return glm::vec2(fighter->state.position.x * 3, 2000);
