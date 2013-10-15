@@ -5,7 +5,7 @@
 #ifndef EDITORMODEL_H
 #define EDITORMODEL_H
 
-#include "SmoothTerrainRenderer.h"
+#include "../SmoothTerrain/SmoothTerrainRenderer.h"
 
 class BattleView;
 

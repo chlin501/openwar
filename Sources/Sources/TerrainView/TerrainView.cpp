@@ -7,11 +7,9 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "TerrainView.h"
+#include "../../BattleModel/HeightMap.h"
 #include "../../Library/Renderers/PlainRenderer.h"
-
-#include "HeightMap.h"
-
+#include "TerrainView.h"
 
 
 TerrainView::TerrainView(Surface* screen, HeightMap* heightMap) : View(screen),

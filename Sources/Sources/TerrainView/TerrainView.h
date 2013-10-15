@@ -5,10 +5,10 @@
 #ifndef TERRAINVIEW_H
 #define TERRAINVIEW_H
 
+#include "../../BattleModel/GroundMap.h"
+#include "../../BattleModel/HeightMap.h"
 #include "../../Library/ViewCore/View.h"
 #include "../../Library/Algebra/geometry.h"
-#include "GroundMap.h"
-#include "HeightMap.h"
 
 class PlainLineRenderer;
 

@@ -6,16 +6,16 @@
 #include "../Library/ViewExtra/ButtonView.h"
 #include "../Library/ViewExtra/ButtonGesture.h"
 #include "../Library/Renderers/GradientRenderer.h"
-#include "../BattleModel/BattleSimulator.h"
 #include "../BattleModel/BattleScript.h"
-#include "OpenWarSurface.h"
+#include "../BattleModel/BattleSimulator.h"
 #include "BattleView/BattleGesture.h"
 #include "BattleView/UnitCounter.h"
 #include "TerrainView/EditorGesture.h"
 #include "TerrainView/TerrainGesture.h"
-#include "TiledTerrainRenderer.h"
 #include "SmoothTerrain/SmoothTerrainWater.h"
 #include "SmoothTerrain/SmoothTerrainSky.h"
+#include "TiledTerrain/TiledTerrainRenderer.h"
+#include "OpenWarSurface.h"
 
 
 

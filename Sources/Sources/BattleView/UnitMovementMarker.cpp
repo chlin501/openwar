@@ -5,12 +5,12 @@
 #include <glm/gtc/constants.hpp>
 
 #include "UnitMovementMarker.h"
-#include "BattleSimulator.h"
+#include "../../BattleModel/BattleSimulator.h"
 #include "../../Library/Renderers/ColorBillboardRenderer.h"
+#include "../../Library/Renderers/PathRenderer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
 #include "../../Library/Renderers/TextureRenderer.h"
 #include "BattleView.h"
-#include "../../Library/Renderers/PathRenderer.h"
 
 
 

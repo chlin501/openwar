@@ -2,8 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
+#include "../../BattleModel/GroundMap.h"
 #include "SmoothTerrainWater.h"
-#include "GroundMap.h"
 
 
 SmoothTerrainWater::SmoothTerrainWater(GroundMap* groundMap) :

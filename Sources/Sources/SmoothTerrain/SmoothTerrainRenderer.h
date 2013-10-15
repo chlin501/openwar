@@ -5,11 +5,11 @@
 #ifndef SmoothTerrainRenderer_H
 #define SmoothTerrainRenderer_H
 
+#include "../../BattleModel/GroundMap.h"
+#include "../../BattleModel/HeightMap.h"
+#include "../../BattleModel/SmoothGroundMap.h"
 #include "../../Library/Algebra/bounds.h"
-#include "GroundMap.h"
 #include "SmoothTerrainShaders.h"
-#include "SmoothGroundMap.h"
-#include "HeightMap.h"
 
 class image;
 

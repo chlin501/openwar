@@ -6,11 +6,11 @@
 #define TiledTerrainSurface_H
 
 #include <map>
+#include "../../BattleModel/TiledGroundMap.h"
 #include "../../Library/Algebra/bounds.h"
 #include "../../Library/Algebra/image.h"
 #include "../../Library/Algorithms/bspline_patch.h"
 #include "../../Library/Graphics/texture.h"
-#include "TiledGroundMap.h"
 
 
 class TiledTerrainRenderer

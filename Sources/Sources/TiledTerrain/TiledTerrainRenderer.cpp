@@ -2,11 +2,11 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
+#include "../../BattleModel/HeightMap.h"
+#include "../../Library/Graphics/renderer.h"
+#include "../../Library/Graphics/uniforms.h"
+#include "../../Library/Graphics/vertexbuffer.h"
 #include "TiledTerrainRenderer.h"
-#include "vertexbuffer.h"
-#include "uniforms.h"
-#include "renderer.h"
-#include "HeightMap.h"
 
 
 TiledTerrainRenderer::TiledTerrainRenderer(TiledGroundMap* tiledGroundMap) :

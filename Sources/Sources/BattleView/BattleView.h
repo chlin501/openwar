@@ -8,9 +8,9 @@
 #include "../../BattleModel/BattleSimulator.h"
 #include "../../Library/Graphics/vertexbuffer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
-#include "SmoothTerrainRenderer.h"
-#include "../TiledTerrain/TiledTerrainRenderer.h"
 #include "../TerrainView/TerrainView.h"
+#include "../TiledTerrain/TiledTerrainRenderer.h"
+#include "../SmoothTerrain/SmoothTerrainRenderer.h"
 
 
 class CasualtyMarker;

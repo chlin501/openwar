@@ -5,11 +5,11 @@
 #include <glm/gtc/constants.hpp>
 
 #include "RangeMarker.h"
-#include "../../Library/Renderers/GradientRenderer.h"
-#include "GroundMap.h"
-#include "../../Library/Algebra/geometry.h"
+#include "../../BattleModel/GroundMap.h"
+#include "../../BattleModel/HeightMap.h"
 #include "../../BattleModel/SmoothGroundMap.h"
-#include "HeightMap.h"
+#include "../../Library/Algebra/geometry.h"
+#include "../../Library/Renderers/GradientRenderer.h"
 
 
 RangeMarker::RangeMarker(BattleModel* battleModel, Unit* unit) :
