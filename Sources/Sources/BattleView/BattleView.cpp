@@ -37,9 +37,9 @@ static affine2 billboard_texcoords(int x, int y, bool flip)
 
 
 
-BattleView::BattleView(Surface* screen, BattleModel* battleModel, renderers* r) : TerrainView(screen, battleModel->groundMap->GetHeightMap()),
+BattleView::BattleView(Surface* screen, BattleSimulator* battleSimulator, renderers* r) : TerrainView(screen, battleSimulator->groundMap->GetHeightMap()),
 _renderers(r),
-_battleModel(battleModel),
+_battleSimulator(battleSimulator),
 _lightNormal(),
 _billboardTexture(nullptr),
 _billboardModel(nullptr),
@@ -69,7 +69,7 @@ _player()
 	_textureTouchMarker = new texture(resource("Textures/TouchMarker.png"));
 	_textureFacing = new texture(resource("Textures/Facing.png"));
 
-	SetContentBounds(battleModel->groundMap->GetBounds());
+	SetContentBounds(battleSimulator->groundMap->GetBounds());
 
 	_billboardTexture = new BillboardTexture();
 
@@ -156,7 +156,7 @@ _player()
 	_textureBillboardRenderer1 = new TextureBillboardRenderer();
 	_textureBillboardRenderer2 = new TextureBillboardRenderer();
 
-	_casualtyMarker = new CasualtyMarker(_battleModel);
+	_casualtyMarker = new CasualtyMarker(_battleSimulator);
 
 	_plainLineRenderer = new PlainLineRenderer();
 	_plainTriangleRenderer = new PlainTriangleRenderer();
@@ -230,7 +230,7 @@ void BattleView::OnCasualty(Casualty const & casualty)
 
 void BattleView::AddCasualty(const Casualty& casualty)
 {
-	glm::vec3 position = glm::vec3(casualty.position, _battleModel->heightMap->InterpolateHeight(casualty.position));
+	glm::vec3 position = glm::vec3(casualty.position, _battleSimulator->heightMap->InterpolateHeight(casualty.position));
 	_casualtyMarker->AddCasualty(position, casualty.player, casualty.platform);
 }
 
@@ -245,13 +245,13 @@ void BattleView::Initialize()
 {
 	InitializeTerrainTrees();
 
-	InitializeCameraPosition(_battleModel->units);
+	InitializeCameraPosition(_battleSimulator->units);
 }
 
 
 void BattleView::InitializeTerrainTrees()
 {
-	UpdateTerrainTrees(_battleModel->groundMap->GetBounds());
+	UpdateTerrainTrees(_battleSimulator->groundMap->GetBounds());
 }
 
 
@@ -298,7 +298,7 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 
 		int treeType = 0;
 		random_iterator random(*_randoms);
-		bounds2f mapbounds = _battleModel->groundMap->GetBounds();
+		bounds2f mapbounds = _battleSimulator->groundMap->GetBounds();
 		glm::vec2 center = mapbounds.center();
 		float radius = mapbounds.width() / 2;
 
@@ -313,7 +313,7 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 				glm::vec2 position = glm::vec2(x + dx, y + dy);
 				if (bounds.contains(position) && glm::distance(position, center) < radius)
 				{
-					if (_battleModel->groundMap->GetHeightMap()->InterpolateHeight(position) > 0 && _battleModel->groundMap->IsForest(position))
+					if (_battleSimulator->groundMap->GetHeightMap()->InterpolateHeight(position) > 0 && _battleSimulator->groundMap->IsForest(position))
 					{
 						const float adjust = 0.5 - 2.0 / 64.0; // place texture 2 texels below ground
 						_billboardModel->staticBillboards.push_back(Billboard(GetPosition(position, adjust * 5), 0, 5, _billboardModel->_billboardTreeShapes[shape]));
@@ -432,11 +432,11 @@ void BattleView::Render()
 
 	// Range Markers
 
-	for (std::pair<int, Unit*> item : _battleModel->units)
+	for (std::pair<int, Unit*> item : _battleSimulator->units)
 	{
 		if (item.second->player == _player)
 		{
-			RangeMarker marker(_battleModel, item.second);
+			RangeMarker marker(_battleSimulator, item.second);
 			_gradientTriangleStripRenderer->Reset();
 			marker.Render(_gradientTriangleStripRenderer);
 			_gradientTriangleStripRenderer->Draw(GetTransform());
@@ -580,7 +580,7 @@ void BattleView::Update(double secondsSinceLastUpdate)
 
 UnitMovementMarker* BattleView::AddMovementMarker(Unit* unit)
 {
-	UnitMovementMarker* marker = new UnitMovementMarker(_battleModel, unit);
+	UnitMovementMarker* marker = new UnitMovementMarker(_battleSimulator, unit);
 	_movementMarkers.push_back(marker);
 	return marker;
 }
@@ -624,7 +624,7 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, Pla
 
 UnitTrackingMarker* BattleView::AddTrackingMarker(Unit* unit)
 {
-	UnitTrackingMarker* trackingMarker = new UnitTrackingMarker(_battleModel, unit);
+	UnitTrackingMarker* trackingMarker = new UnitTrackingMarker(_battleSimulator, unit);
 	_trackingMarkers.push_back(trackingMarker);
 	return trackingMarker;
 }
@@ -758,7 +758,7 @@ void BattleView::AnimateMarkers(float seconds)
 
 void BattleView::InitializeUnitMarkers()
 {
-	for (std::pair<int, Unit*> item : _battleModel->units)
+	for (std::pair<int, Unit*> item : _battleSimulator->units)
 	{
 		Unit* unit = item.second;
 		AddUnitMarker(unit);
@@ -768,7 +768,7 @@ void BattleView::InitializeUnitMarkers()
 
 void BattleView::AddUnitMarker(Unit* unit)
 {
-	UnitCounter* marker = new UnitCounter(_battleModel, unit);
+	UnitCounter* marker = new UnitCounter(_battleSimulator, unit);
 	marker->Animate(0);
 	_unitMarkers.push_back(marker);
 }
@@ -788,8 +788,8 @@ void BattleView::AddShootingCounter(const Shooting& shooting)
 
 	for (const Projectile& projectile : shooting.projectiles)
 	{
-		glm::vec3 p1 = glm::vec3(projectile.position1, _battleModel->heightMap->InterpolateHeight(projectile.position1));
-		glm::vec3 p2 = glm::vec3(projectile.position2, _battleModel->heightMap->InterpolateHeight(projectile.position2));
+		glm::vec3 p1 = glm::vec3(projectile.position1, _battleSimulator->heightMap->InterpolateHeight(projectile.position1));
+		glm::vec3 p2 = glm::vec3(projectile.position2, _battleSimulator->heightMap->InterpolateHeight(projectile.position2));
 		shootingCounter->AddProjectile(p1, p2, projectile.delay, shooting.timeToImpact);
 	}
 }
@@ -818,8 +818,8 @@ void BattleView::AddSmokeMarker(const Shooting& shooting)
 
 	for (const Projectile& projectile : shooting.projectiles)
 	{
-		glm::vec3 p1 = glm::vec3(projectile.position1, _battleModel->heightMap->InterpolateHeight(projectile.position1));
-		glm::vec3 p2 = glm::vec3(projectile.position2, _battleModel->heightMap->InterpolateHeight(projectile.position2));
+		glm::vec3 p1 = glm::vec3(projectile.position1, _battleSimulator->heightMap->InterpolateHeight(projectile.position1));
+		glm::vec3 p2 = glm::vec3(projectile.position2, _battleSimulator->heightMap->InterpolateHeight(projectile.position2));
 		marker->AddParticle(p1, p2, projectile.delay);
 	}
 }

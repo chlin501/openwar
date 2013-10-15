@@ -5,7 +5,7 @@
 #ifndef SmokeMarker_H
 #define SmokeMarker_H
 
-#include "../../BattleModel/BattleSimulator.h"
+#include "BattleSimulator.h"
 
 class BillboardModel;
 

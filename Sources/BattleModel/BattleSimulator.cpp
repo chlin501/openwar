@@ -111,7 +111,14 @@ Fighter* Unit::GetFighter(Unit* unit, int rank, int file)
 
 
 
-BattleModel::BattleModel() :
+BattleSimulator::BattleSimulator() :
+_fighterQuadTree(0, 0, 1024, 1024),
+_weaponQuadTree(0, 0, 1024, 1024),
+_secondsSinceLastTimeStep(0),
+currentPlayer(),
+practice(false),
+recentShootings(),
+recentCasualties(),
 groundMap(nullptr),
 heightMap(nullptr),
 lastUnitId(0),
@@ -123,7 +130,7 @@ timeStep(1.0f / 15.0f)
 }
 
 
-BattleModel::~BattleModel()
+BattleSimulator::~BattleSimulator()
 {
 	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
@@ -135,7 +142,7 @@ BattleModel::~BattleModel()
 
 
 
-bool BattleModel::IsMelee() const
+bool BattleSimulator::IsMelee() const
 {
 	for (std::map<int, Unit*>::const_iterator i = units.begin(); i != units.end(); ++i)
 	{
@@ -268,32 +275,12 @@ BattleObserver::~BattleObserver()
 }
 
 
-BattleSimulator::BattleSimulator(BattleModel* battleModel) :
-_battleModel(battleModel),
-_fighterQuadTree(
-	battleModel->groundMap->GetBounds().min.x,
-	battleModel->groundMap->GetBounds().min.y,
-	battleModel->groundMap->GetBounds().max.x,
-	battleModel->groundMap->GetBounds().max.y),
-_weaponQuadTree(
-	battleModel->groundMap->GetBounds().min.x,
-	battleModel->groundMap->GetBounds().min.y,
-	battleModel->groundMap->GetBounds().max.x,
-	battleModel->groundMap->GetBounds().max.y),
-_secondsSinceLastTimeStep(0),
-currentPlayer(),
-practice(false),
-recentShootings(),
-recentCasualties()
-{
-}
-
 
 void BattleSimulator::AddObserver(BattleObserver* observer)
 {
 	_observers.insert(observer);
 
-	for (std::pair<int, Unit*> i : _battleModel->units)
+	for (std::pair<int, Unit*> i : units)
 		observer->OnNewUnit(i.second);
 }
 
@@ -304,7 +291,7 @@ void BattleSimulator::RemoveObserver(BattleObserver* observer)
 }
 
 
-const std::set<BattleObserver*>& BattleSimulator::GetObservers() const
+const std::set<BattleObserver*>&BattleSimulator::GetObservers() const
 {
 	return _observers;
 }
@@ -314,7 +301,7 @@ Unit* BattleSimulator::AddUnit(Player player, const char* unitClass, int numberO
 {
 	Unit* unit = new Unit();
 
-	unit->unitId = ++_battleModel->lastUnitId;
+	unit->unitId = ++lastUnitId;
 	unit->player = player;
 	unit->unitClass = unitClass;
 	unit->stats = stats;
@@ -338,7 +325,7 @@ Unit* BattleSimulator::AddUnit(Player player, const char* unitClass, int numberO
 	unit->formation.numberOfRanks = (int)fminf(6, unit->fightersCount);
 	unit->formation.numberOfFiles = (int)ceilf((float)unit->fightersCount / unit->formation.numberOfRanks);
 
-	_battleModel->units[unit->unitId] = unit;
+	units[unit->unitId] = unit;
 
 	for (BattleObserver* observer : _observers)
 		observer->OnNewUnit(unit);
@@ -358,16 +345,16 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 	bool didStep = false;
 
 	_secondsSinceLastTimeStep += secondsSinceLastTime;
-	while (_secondsSinceLastTimeStep >= _battleModel->timeStep)
+	while (_secondsSinceLastTimeStep >= timeStep)
 	{
 		SimulateOneTimeStep();
-		_secondsSinceLastTimeStep -= _battleModel->timeStep;
+		_secondsSinceLastTimeStep -= timeStep;
 		didStep = true;
 	}
 
 	if (!didStep)
 	{
-		for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+		for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 		{
 			Unit* unit = (*i).second;
 			UpdateUnitRange(unit);
@@ -383,12 +370,12 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 			observer->OnCasualty(casualty);
 	}
 
-	if (_battleModel->winnerTeam == 0)
+	if (winnerTeam == 0)
 	{
 		int count1 = 0;
 		int count2 = 0;
 
-		for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+		for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 		{
 			Unit* unit = (*i).second;
 			if (!unit->state.IsRouting())
@@ -408,9 +395,9 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 		}
 
 		if (count1 == 0)
-			_battleModel->winnerTeam = 2;
+			winnerTeam = 2;
 		else if (count2 == 0)
-			_battleModel->winnerTeam = 1;
+			winnerTeam = 1;
 	}
 }
 
@@ -419,10 +406,10 @@ void BattleSimulator::SimulateOneTimeStep()
 {
 	RebuildQuadTree();
 
-	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
-		MovementRules::AdvanceTime(unit, _battleModel->timeStep);
+		MovementRules::AdvanceTime(unit, timeStep);
 	}
 
 	ComputeNextState();
@@ -433,7 +420,7 @@ void BattleSimulator::SimulateOneTimeStep()
 	RemoveCasualties();
 	RemoveDeadUnits();
 
-	_battleModel->time += _battleModel->timeStep;
+	time += timeStep;
 }
 
 
@@ -442,7 +429,7 @@ void BattleSimulator::RebuildQuadTree()
 	_fighterQuadTree.clear();
 	_weaponQuadTree.clear();
 
-	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
 		if (unit->state.unitMode != UnitMode_Initializing)
@@ -465,7 +452,7 @@ void BattleSimulator::RebuildQuadTree()
 
 void BattleSimulator::ComputeNextState()
 {
-	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
 		unit->nextState = NextUnitState(unit);
@@ -478,7 +465,7 @@ void BattleSimulator::ComputeNextState()
 
 void BattleSimulator::AssignNextState()
 {
-	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
 		unit->state = unit->nextState;
@@ -514,7 +501,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 
 	if (unitRange.minimumRange > 0 && unitRange.maximumRange > 0)
 	{
-		float centerHeight = _battleModel->heightMap->InterpolateHeight(unitRange.center) + 1.9f;
+		float centerHeight = heightMap->InterpolateHeight(unitRange.center) + 1.9f;
 
 		int n = 24;
 		for (int i = 0; i <= n; ++i)
@@ -526,7 +513,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 			float maxAngle = -100;
 			for (float range = unitRange.minimumRange + delta; range <= unitRange.maximumRange; range += delta)
 			{
-				float height = _battleModel->heightMap->InterpolateHeight(unitRange.center + range * direction) + 0.5f;
+				float height = heightMap->InterpolateHeight(unitRange.center + range * direction) + 0.5f;
 				float verticalAngle = glm::atan(height - centerHeight, range);
 				if (verticalAngle > maxAngle)
 				{
@@ -543,7 +530,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 
 void BattleSimulator::ResolveMeleeCombat()
 {
-	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
 		bool isMissile = unit->stats.samuraiWeapon == SamuraiWeapon_Arq || unit->stats.samuraiWeapon == SamuraiWeapon_Bow;
@@ -588,7 +575,7 @@ void BattleSimulator::ResolveMeleeCombat()
 
 void BattleSimulator::ResolveMissileCombat()
 {
-	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
 		bool controlsUnit = practice || currentPlayer == Player() || unit->player == currentPlayer;
@@ -630,7 +617,7 @@ void BattleSimulator::TriggerShooting(Unit* unit)
 	float speed = arq ? 750 : 75; // meters per second
 	shooting.timeToImpact = distance / speed;
 
-	_battleModel->shootings.push_back(shooting);
+	shootings.push_back(shooting);
 	recentShootings.push_back(shooting);
 }
 
@@ -639,11 +626,11 @@ void BattleSimulator::ResolveProjectileCasualties()
 {
 	static int random = 0;
 
-	for (std::vector<Shooting>::iterator s = _battleModel->shootings.begin(); s != _battleModel->shootings.end(); ++s)
+	for (std::vector<Shooting>::iterator s = shootings.begin(); s != shootings.end(); ++s)
 	{
 		Shooting& shooting = *s;
 
-		shooting.timeToImpact -= _battleModel->timeStep;
+		shooting.timeToImpact -= timeStep;
 
 		std::vector<Projectile>::iterator i = shooting.projectiles.begin();
 		while (i != shooting.projectiles.end())
@@ -675,7 +662,7 @@ void BattleSimulator::ResolveProjectileCasualties()
 
 void BattleSimulator::RemoveCasualties()
 {
-	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
 		for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
@@ -685,13 +672,13 @@ void BattleSimulator::RemoveCasualties()
 		}
 	}
 
-	bounds2f bounds = _battleModel->groundMap->GetBounds();
+	bounds2f bounds = groundMap->GetBounds();
 	glm::vec2 center = bounds.center();
 	float radius = bounds.width() / 2;
 	float radius_squared = radius * radius;
 
 
-	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
 		int index = 0;
@@ -727,7 +714,7 @@ void BattleSimulator::RemoveCasualties()
 void BattleSimulator::RemoveDeadUnits()
 {
 	std::vector<int> remove;
-	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
 		if (unit->fightersCount == 0)
@@ -739,17 +726,17 @@ void BattleSimulator::RemoveDeadUnits()
 	for (std::vector<int>::iterator i = remove.begin(); i != remove.end(); ++i)
 	{
 		int unitIndex = *i;
-		_battleModel->units.erase(unitIndex);
+		units.erase(unitIndex);
 	}
 
-	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
 		Unit* unit = (*i).second;
 
-		if (unit->command.missileTarget != nullptr && _battleModel->GetUnit(unit->command.missileTarget->unitId) == 0)
+		if (unit->command.missileTarget != nullptr && GetUnit(unit->command.missileTarget->unitId) == 0)
 			unit->command.missileTarget = nullptr;
 
-		if (unit->command.meleeTarget != nullptr && _battleModel->GetUnit(unit->command.meleeTarget->unitId) == 0)
+		if (unit->command.meleeTarget != nullptr && GetUnit(unit->command.meleeTarget->unitId) == 0)
 			unit->command.meleeTarget = nullptr;
 	}
 }
@@ -784,9 +771,9 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 		result.loadingTimer = 0;
 		result.loadingDuration = 0;
 	}
-	else if (unit->state.loadingTimer + _battleModel->timeStep < unit->state.loadingDuration)
+	else if (unit->state.loadingTimer + timeStep < unit->state.loadingDuration)
 	{
-		result.loadingTimer = unit->state.loadingTimer + _battleModel->timeStep;
+		result.loadingTimer = unit->state.loadingTimer + timeStep;
 		result.loadingDuration = unit->state.loadingDuration;
 	}
 	else
@@ -812,7 +799,7 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 		result.morale += (0.1f + unit->stats.trainingLevel) / 2000;
 	}
 
-	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
 		Unit* other = (*i).second;
 		float distance = glm::length(other->state.center - unit->state.center);
@@ -826,7 +813,7 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 		}
 	}
 
-	if (_battleModel->winnerTeam != 0 && unit->player.team != _battleModel->winnerTeam)
+	if (winnerTeam != 0 && unit->player.team != winnerTeam)
 	{
 		result.morale = -1;
 	}
@@ -851,7 +838,7 @@ Unit* BattleSimulator::ClosestEnemyWithinLineOfFire(Unit* unit)
 {
 	Unit* closestEnemy = 0;
 	float closestDistance = 10000;
-	for (std::map<int, Unit*>::iterator i = _battleModel->units.begin(); i != _battleModel->units.end(); ++i)
+	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
 	{
 		Unit* target = (*i).second;
 		if (target->player != unit->player && IsWithinLineOfFire(unit, target->state.center))
@@ -914,7 +901,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 
 	result.readyState = original.readyState;
 	result.position = NextFighterPosition(fighter);
-	result.position_z = _battleModel->heightMap->InterpolateHeight(result.position);
+	result.position_z = heightMap->InterpolateHeight(result.position);
 	result.velocity = NextFighterVelocity(fighter);
 
 
@@ -985,9 +972,9 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 			break;
 
 		case ReadyState_Readying:
-			if (original.readyingTimer > _battleModel->timeStep)
+			if (original.readyingTimer > timeStep)
 			{
-				result.readyingTimer = original.readyingTimer - _battleModel->timeStep;
+				result.readyingTimer = original.readyingTimer - timeStep;
 			}
 			else
 			{
@@ -1009,9 +996,9 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 			break;
 
 		case ReadyState_Striking:
-			if (original.strikingTimer > _battleModel->timeStep)
+			if (original.strikingTimer > timeStep)
 			{
-				result.strikingTimer = original.strikingTimer - _battleModel->timeStep;
+				result.strikingTimer = original.strikingTimer - timeStep;
 				result.opponent = original.opponent;
 			}
 			else
@@ -1024,9 +1011,9 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 			break;
 
 		case ReadyState_Stunned:
-			if (original.stunnedTimer > _battleModel->timeStep)
+			if (original.stunnedTimer > timeStep)
 			{
-				result.stunnedTimer = original.stunnedTimer - _battleModel->timeStep;
+				result.stunnedTimer = original.stunnedTimer - timeStep;
 			}
 			else
 			{
@@ -1055,7 +1042,7 @@ glm::vec2 BattleSimulator::NextFighterPosition(Fighter* fighter)
 	}
 	else
 	{
-		glm::vec2 result = fighter->state.position + fighter->state.velocity * _battleModel->timeStep;
+		glm::vec2 result = fighter->state.position + fighter->state.velocity * timeStep;
 		glm::vec2 adjust;
 		int count = 0;
 
@@ -1127,8 +1114,8 @@ glm::vec2 BattleSimulator::NextFighterVelocity(Fighter* fighter)
 
 	if (glm::length(fighter->state.position - fighter->terrainPosition) > 4)
 	{
-		fighter->terrainForest = _battleModel->groundMap->IsForest(fighter->state.position);
-		fighter->terrainImpassable = _battleModel->groundMap->IsImpassable(fighter->state.position);
+		fighter->terrainForest = groundMap->IsForest(fighter->state.position);
+		fighter->terrainImpassable = groundMap->IsImpassable(fighter->state.position);
 		if (!fighter->terrainImpassable)
 			fighter->terrainPosition = fighter->state.position;
 	}

@@ -130,11 +130,11 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 
 	_battleScript = battleScript;
 
-	battleScript->GetBattleModel()->bluePlayer = Player(1, 1);
-	_battleView = new BattleView(this, battleScript->GetBattleModel(), _renderers);
+	battleScript->GetBattleSimulator()->bluePlayer = Player(1, 1);
+	_battleView = new BattleView(this, battleScript->GetBattleSimulator(), _renderers);
 	_battleView->_player = Player(1, 1);
 
-	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(battleScript->GetBattleModel()->groundMap);
+	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(battleScript->GetBattleSimulator()->groundMap);
 	if (smoothGroundMap != nullptr)
 	{
 		_battleView->_smoothTerrainSurface = new SmoothTerrainRenderer(smoothGroundMap);
@@ -143,7 +143,7 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 		_battleView->_smoothTerrainSky = new SmoothTerrainSky();
 	}
 
-	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(battleScript->GetBattleModel()->groundMap);
+	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(battleScript->GetBattleSimulator()->groundMap);
 	if (tiledGroundMap != nullptr)
 	{
 		tiledGroundMap->UpdateHeightMap();
@@ -268,7 +268,7 @@ void OpenWarSurface::UpdateSoundPlayer()
 		for (UnitCounter* unitMarker : _battleView->_unitMarkers)
 		{
 			Unit* unit = unitMarker->_unit;
-			if (_battleScript->GetBattleModel()->GetUnit(unit->unitId) != 0 && glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)
+			if (_battleScript->GetBattleSimulator()->GetUnit(unit->unitId) != 0 && glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)
 			{
 				if (unit->stats.platformType == PlatformType::Cavalry)
 				{
@@ -296,7 +296,7 @@ void OpenWarSurface::UpdateSoundPlayer()
 		SoundPlayer::singleton->UpdateCavalryWalking(horseTrot != 0);
 		SoundPlayer::singleton->UpdateCavalryRunning(horseGallop != 0);
 
-		SoundPlayer::singleton->UpdateFighting(_battleScript->GetBattleModel()->IsMelee());
+		SoundPlayer::singleton->UpdateFighting(_battleScript->GetBattleSimulator()->IsMelee());
 	}
 }
 

@@ -6,7 +6,7 @@
 #define UnitTrackingMarker_H
 
 #include "UnitMarker.h"
-#include "../../BattleModel/BattleSimulator.h"
+#include "BattleSimulator.h"
 
 class BattleView;
 class ColorBillboardRenderer;
@@ -32,7 +32,7 @@ public:
 	std::vector<glm::vec2> _path;
 
 public:
-	UnitTrackingMarker(BattleModel* battleModel, Unit* unit);
+	UnitTrackingMarker(BattleSimulator* battleSimulator, Unit* unit);
 	~UnitTrackingMarker();
 
 	void SetRunning(bool value) { _running = value; }

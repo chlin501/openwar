@@ -5,15 +5,15 @@
 #include <glm/gtc/constants.hpp>
 
 #include "UnitCounter.h"
-#include "../../BattleModel/BattleSimulator.h"
+#include "BattleSimulator.h"
 #include "../../Library/Renderers/PlainRenderer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
 #include "../../Library/Renderers/TextureRenderer.h"
 #include "../BattleView/BattleView.h"
 
 
-UnitCounter::UnitCounter(BattleModel* battleModel, Unit* unit) :
-_battleModel(battleModel),
+UnitCounter::UnitCounter(BattleSimulator* battleSimulator, Unit* unit) :
+_battleSimulator(battleSimulator),
 _unit(unit),
 _routingTimer(0)
 {
@@ -27,7 +27,7 @@ UnitCounter::~UnitCounter()
 
 bool UnitCounter::Animate(float seconds)
 {
-	if (_battleModel->GetUnit(_unit->unitId) == 0)
+	if (_battleSimulator->GetUnit(_unit->unitId) == 0)
 		return false;
 
 	float routingBlinkTime = _unit->state.GetRoutingBlinkTime();
@@ -60,10 +60,10 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer1, TextureB
 	int state = 0;
 	if (routingIndicator)
 		state = 2;
-	else if (_unit->player != _battleModel->bluePlayer)
+	else if (_unit->player != _battleSimulator->bluePlayer)
 		state = 1;
 
-	glm::vec3 position = _battleModel->groundMap->GetHeightMap()->GetPosition(_unit->state.center, 0);
+	glm::vec3 position = _battleSimulator->groundMap->GetHeightMap()->GetPosition(_unit->state.center, 0);
 	glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
 	glm::vec2 texcoord1 = texsize * glm::vec2(state, 0);
 	glm::vec2 texcoord2 = texsize * glm::vec2((int)_unit->stats.samuraiWeapon, 1 + (int)_unit->stats.samuraiPlaform);
@@ -104,8 +104,8 @@ void UnitCounter::AppendFacingMarker(TextureTriangleRenderer* renderer, BattleVi
 	float tx1 = index * txs;
 	float tx2 = tx1 + txs;
 
-	float ty1 = _unit->player == battleView->GetBattleModel()->bluePlayer ? 0.0f : 0.5f;
-	float ty2 = _unit->player == battleView->GetBattleModel()->bluePlayer ? 0.5f : 1.0f;
+	float ty1 = _unit->player == battleView->GetBattleSimulator()->bluePlayer ? 0.0f : 0.5f;
+	float ty2 = _unit->player == battleView->GetBattleSimulator()->bluePlayer ? 0.5f : 1.0f;
 
 	bounds2f bounds = battleView->GetUnitCurrentFacingMarkerBounds(_unit);
 	glm::vec2 p = bounds.center();
@@ -139,8 +139,8 @@ void UnitCounter::AppendFighterWeapons(PlainLineRenderer* renderer)
 			glm::vec2 p2 = p1 + _unit->stats.weaponReach * vector2_from_angle(fighter->state.direction);
 
 			renderer->AddLine(
-				_battleModel->groundMap->GetHeightMap()->GetPosition(p1, 1),
-				_battleModel->groundMap->GetHeightMap()->GetPosition(p2, 1));
+				_battleSimulator->groundMap->GetHeightMap()->GetPosition(p1, 1),
+				_battleSimulator->groundMap->GetHeightMap()->GetPosition(p2, 1));
 		}
 	}
 }
@@ -156,24 +156,24 @@ void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 		{
 			case SamuraiPlatform_Cav:
 			case SamuraiPlatform_Gen:
-				shape = _unit->player == _battleModel->bluePlayer ? billboardModel->_billboardShapeFighterCavBlue : billboardModel->_billboardShapeFighterCavRed;
+				shape = _unit->player == _battleSimulator->bluePlayer ? billboardModel->_billboardShapeFighterCavBlue : billboardModel->_billboardShapeFighterCavRed;
 				size = 3.0;
 				break;
 
 			case SamuraiPlatform_Sam:
-				shape = _unit->player == _battleModel->bluePlayer ? billboardModel->_billboardShapeFighterSamBlue : billboardModel->_billboardShapeFighterSamRed;
+				shape = _unit->player == _battleSimulator->bluePlayer ? billboardModel->_billboardShapeFighterSamBlue : billboardModel->_billboardShapeFighterSamRed;
 				size = 2.0;
 				break;
 
 			case SamuraiPlatform_Ash:
-				shape = _unit->player == _battleModel->bluePlayer ? billboardModel->_billboardShapeFighterAshBlue : billboardModel->_billboardShapeFighterAshRed;
+				shape = _unit->player == _battleSimulator->bluePlayer ? billboardModel->_billboardShapeFighterAshBlue : billboardModel->_billboardShapeFighterAshRed;
 				size = 2.0;
 				break;
 		}
 
 
 		const float adjust = 0.5 - 2.0 / 64.0; // place texture 2 texels below ground
-		glm::vec3 p = _battleModel->groundMap->GetHeightMap()->GetPosition(fighter->state.position, adjust * size);
+		glm::vec3 p = _battleSimulator->groundMap->GetHeightMap()->GetPosition(fighter->state.position, adjust * size);
 		float facing = glm::degrees(fighter->state.direction);
 		billboardModel->dynamicBillboards.push_back(Billboard(p, facing, size, shape));
 	}

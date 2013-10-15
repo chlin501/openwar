@@ -10,8 +10,8 @@
 
 
 
-CasualtyMarker::CasualtyMarker(BattleModel* battleModel) :
-_battleModel(battleModel)
+CasualtyMarker::CasualtyMarker(BattleSimulator* battleSimulator) :
+_battleSimulator(battleSimulator)
 {
 }
 
@@ -88,7 +88,7 @@ void CasualtyMarker::AppendCasualtyBillboards(BillboardModel* billboardModel)
 		}
 
 		const float adjust = 0.5 - 2.0 / 64.0; // place texture 2 texels below ground
-		glm::vec3 p = _battleModel->groundMap->GetHeightMap()->GetPosition(casualty.position.xy(), adjust * height);
+		glm::vec3 p = _battleSimulator->groundMap->GetHeightMap()->GetPosition(casualty.position.xy(), adjust * height);
 		billboardModel->dynamicBillboards.push_back(Billboard(p, 0, height, shape));
 
 	}

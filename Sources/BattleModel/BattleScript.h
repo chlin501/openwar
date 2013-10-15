@@ -22,7 +22,6 @@ class BattleScript
 		UnitStatus(Unit* unit);
 	};
 
-	BattleModel* _battleModel;
 	BattleSimulator* _battleSimulator;
 	//GradientLineRenderer* _renderer;
 	lua_State* _state;
@@ -37,7 +36,6 @@ public:
 	void AddPackagePath(const char* path);
 	void Execute(const char* script, size_t length);
 
-	BattleModel* GetBattleModel() const { return _battleModel; }
 	BattleSimulator* GetBattleSimulator() const { return _battleSimulator; }
 
 	void CreateBattleSimulator();

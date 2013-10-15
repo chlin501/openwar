@@ -7,7 +7,7 @@
 
 #include "../../Library/Algebra/bounds.h"
 
-class BattleModel;
+class BattleSimulator;
 class BattleView;
 class BillboardModel;
 class PlainLineRenderer;
@@ -19,12 +19,12 @@ class Unit;
 class UnitCounter
 {
 public:
-	BattleModel* _battleModel;
+	BattleSimulator* _battleSimulator;
 	Unit* _unit;
 	float _routingTimer;
 
 public:
-	UnitCounter(BattleModel* battleModel, Unit* unit);
+	UnitCounter(BattleSimulator* battleSimulator, Unit* unit);
 	~UnitCounter();
 
 	Unit* GetUnit() const { return _unit; }

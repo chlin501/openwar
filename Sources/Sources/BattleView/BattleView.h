@@ -5,7 +5,7 @@
 #ifndef BATTLEVIEW_H
 #define BATTLEVIEW_H
 
-#include "../../BattleModel/BattleSimulator.h"
+#include "BattleSimulator.h"
 #include "../../Library/Graphics/vertexbuffer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
 #include "../TerrainView/TerrainView.h"
@@ -34,7 +34,7 @@ class SmokeCounter;
 class BattleView : public TerrainView, public BattleObserver
 {
 	renderers* _renderers;
-	BattleModel* _battleModel;
+	BattleSimulator* _battleSimulator;
 
 	glm::vec3 _lightNormal;
 
@@ -72,10 +72,10 @@ public:
 	std::vector<ShootingCounter*> _shootingCounters;
 	std::vector<UnitCounter*> _unitMarkers;
 
-	BattleView(Surface* screen, BattleModel* battleModel, renderers* r);
+	BattleView(Surface* screen, BattleSimulator* battleSimulator, renderers* r);
 	~BattleView();
 
-	BattleModel* GetBattleModel() const { return _battleModel; }
+	BattleSimulator* GetBattleSimulator() const { return _battleSimulator; }
 
 	virtual void OnNewUnit(Unit* unit);
 	virtual void OnShooting(const Shooting& shooting);

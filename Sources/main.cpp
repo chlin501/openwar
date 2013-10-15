@@ -41,8 +41,8 @@ static BattleScript* CreateBattleScript()
     
 	battleScript->Execute((const char*)script.bytes, script.length);
     
-	if (battleScript->GetBattleModel()->terrainForest == nullptr)
-		battleScript->GetBattleModel()->terrainForest = new BillboardTerrainForest();
+	if (battleScript->GetBattleSimulator()->terrainForest == nullptr)
+		battleScript->GetBattleSimulator()->terrainForest = new BillboardTerrainForest();
     
 	return battleScript;
 }
@@ -65,8 +65,8 @@ static BattleScript* CreateBattleScript()
     
 	battleScript->Execute((const char*)script.data(), script.size());
     
-	//if (battleScript->GetBattleModel()->terrainForest == nullptr)
-	//	battleScript->GetBattleModel()->terrainForest = new BillboardTerrainForest();
+	//if (battleScript->GetBattleSimulator()->terrainForest == nullptr)
+	//	battleScript->GetBattleSimulator()->terrainForest = new BillboardTerrainForest();
     
 	return battleScript;
 }

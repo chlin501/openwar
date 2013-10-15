@@ -6,7 +6,7 @@
 #import <UIKit/UIKit.h>
 #endif
 
-#include "../../BattleModel/BattleSimulator.h"
+#include "BattleSimulator.h"
 #include "../../Library/Audio/SoundPlayer.h"
 #include "../../Library/Renderers/sprite.h"
 #include "../../Library/Renderers/PlainRenderer.h"
@@ -103,7 +103,7 @@ void BattleGesture::RenderHints()
 
 	/*PlainLineRenderer renderer;
 	renderer.Reset();
-	for (UnitCounter* unitMarker : _battleView->GetBattleModel()->_unitMarkers)
+	for (UnitCounter* unitMarker : _battleView->GetBattleSimulator()->_unitMarkers)
 	{
 		glm::vec2 center = !unitMarker->_unit->command.path.empty() ? unitMarker->_unit->command.path.back() : unitMarker->_unit->state.center;
 		float facing = unitMarker->_unit->command.facing;
@@ -453,7 +453,7 @@ void BattleGesture::UpdateTrackingMarker()
 		float delta = 1.0f / fmaxf(1, glm::length(currentDestination - markerPosition));
 		for (float k = delta; k < 1; k += delta)
 		{
-			if (_battleView->GetBattleModel()->groundMap->IsImpassable(glm::mix(currentDestination, markerPosition, k)))
+			if (_battleView->GetBattleSimulator()->groundMap->IsImpassable(glm::mix(currentDestination, markerPosition, k)))
 			{
 				movementLimit = k;
 				break;
@@ -607,7 +607,7 @@ Unit* BattleGesture::FindFriendlyUnitByModifierArea(glm::vec2 screenPosition, gl
 	Unit* result = nullptr;
 	float distance = 10000;
 
-	for (std::pair<int, Unit*> i : _battleView->GetBattleModel()->units)
+	for (std::pair<int, Unit*> i : _battleView->GetBattleSimulator()->units)
 	{
 		Unit* unit = i.second;
 		if (unit->player == _battleView->_player)

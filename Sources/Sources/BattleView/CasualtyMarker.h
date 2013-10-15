@@ -6,7 +6,7 @@
 #define CasualtyMarker_H
 
 #include <cstdlib>
-#include "../../BattleModel/BattleSimulator.h"
+#include "BattleSimulator.h"
 
 class ColorBillboardRenderer;
 class BillboardModel;
@@ -28,10 +28,10 @@ public:
 	};
 
 	std::vector<Casualty> casualties;
-	BattleModel* _battleModel;
+	BattleSimulator* _battleSimulator;
 
 public:
-	CasualtyMarker(BattleModel* battleModel);
+	CasualtyMarker(BattleSimulator* battleSimulator);
 	~CasualtyMarker();
 
 	void AddCasualty(glm::vec3 position, Player player, SamuraiPlatform platform);

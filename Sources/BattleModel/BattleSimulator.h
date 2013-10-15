@@ -14,7 +14,7 @@
 class Fighter;
 class Unit;
 class BattleView;
-class BattleModel;
+class BattleSimulator;
 class HeightMap;
 class GroundMap;
 
@@ -401,35 +401,6 @@ struct Unit
 
 
 
-class BattleModel
-{
-public:
-	GroundMap* groundMap;
-	HeightMap* heightMap;
-
-	int lastUnitId;
-	Player bluePlayer;
-	int winnerTeam;
-	float time;
-	float timeStep;
-
-	std::map<int, Unit*> units;
-	std::vector<Shooting> shootings;
-
-public:
-	BattleModel();
-	virtual ~BattleModel();
-
-	Unit* GetUnit(int unitId) const
-	{
-		std::map<int, Unit*>::const_iterator i = units.find(unitId);
-		return i != units.end() ? (*i).second : 0;
-	}
-
-	bool IsMelee() const;
-};
-
-
 struct SamuraiBattleModel
 {
 	static SamuraiPlatform GetSamuraiPlatform(const char* unitClass);
@@ -438,9 +409,6 @@ struct SamuraiBattleModel
 	static UnitStats GetDefaultUnitStats(const char* unitClass);
 	static UnitStats GetDefaultUnitStats(SamuraiPlatform platform, SamuraiWeapon weapon);
 };
-
-
-
 
 
 class BattleObserver
@@ -456,7 +424,6 @@ public:
 
 class BattleSimulator
 {
-	BattleModel* _battleModel;
 	quadtree<Fighter*> _fighterQuadTree;
 	quadtree<Fighter*> _weaponQuadTree;
 	float _secondsSinceLastTimeStep;
@@ -468,13 +435,34 @@ public:
 	std::vector<Shooting> recentShootings;
 	std::vector<Casualty> recentCasualties;
 
-	BattleSimulator(BattleModel* battleModel);
+	GroundMap* groundMap;
+	HeightMap* heightMap;
 
-	BattleModel* GetBattleModel() const { return _battleModel; }
+	int lastUnitId;
+	Player bluePlayer;
+	int winnerTeam;
+	float time;
+	float timeStep;
+
+	std::map<int, Unit*> units;
+	std::vector<Shooting> shootings;
+
+public:
+	BattleSimulator();
+	~BattleSimulator();
 
 	void AddObserver(BattleObserver* observer);
 	void RemoveObserver(BattleObserver* observer);
 	const std::set<BattleObserver*>& GetObservers() const;
+
+
+	Unit* GetUnit(int unitId) const
+	{
+		std::map<int, Unit*>::const_iterator i = units.find(unitId);
+		return i != units.end() ? (*i).second : 0;
+	}
+
+	bool IsMelee() const;
 
 	Unit* AddUnit(Player player, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
 
@@ -512,6 +500,7 @@ private:
 	bool IsWithinLineOfFire(Unit* unit, glm::vec2 position);
 	Unit* ClosestEnemyWithinLineOfFire(Unit* unit);
 };
+
 
 
 #endif

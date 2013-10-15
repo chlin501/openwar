@@ -5,7 +5,7 @@
 #ifndef ShootingMarker_H
 #define ShootingMarker_H
 
-#include "../../BattleModel/BattleSimulator.h"
+#include "BattleSimulator.h"
 class GradientLineRenderer;
 
 
