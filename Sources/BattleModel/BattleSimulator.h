@@ -39,25 +39,6 @@ enum class MissileType
 };
 
 
-enum SamuraiPlatform
-{
-	SamuraiPlatform_Cav = 0, // Cavalry
-	SamuraiPlatform_Gen = 1, // General
-	SamuraiPlatform_Ash = 2, // Ashigaru
-	SamuraiPlatform_Sam = 3  // Samurai
-};
-
-
-enum SamuraiWeapon
-{
-	SamuraiWeapon_Yari = 0,
-	SamuraiWeapon_Kata = 1,
-	SamuraiWeapon_Nagi = 2,
-	SamuraiWeapon_Bow = 3,
-	SamuraiWeapon_Arq = 4
-};
-
-
 enum UnitMode
 {
 	UnitMode_Initializing,
@@ -176,8 +157,7 @@ struct UnitStats
 {
 	PlatformType platformType;
 	MissileType missileType;
-	SamuraiPlatform samuraiPlaform;
-	SamuraiWeapon samuraiWeapon;
+
 	float weaponReach;
 	float trainingLevel;
 	float strikingDuration;
@@ -194,8 +174,6 @@ struct UnitStats
 	UnitStats() :
 	platformType(PlatformType::None),
 	missileType(MissileType::None),
-	samuraiPlaform(SamuraiPlatform_Cav),
-	samuraiWeapon(SamuraiWeapon_Yari),
 	weaponReach(0),
 	trainingLevel(0),
 	strikingDuration(0),
@@ -377,16 +355,6 @@ struct Unit
 	static Fighter* GetFighter(Unit* unit, int rank, int file);
 };
 
-
-
-struct SamuraiBattleModel
-{
-	static SamuraiPlatform GetSamuraiPlatform(const char* unitClass);
-	static SamuraiWeapon GetSamuraiWeapon(const char* unitClass);
-
-	static UnitStats GetDefaultUnitStats(const char* unitClass);
-	static UnitStats GetDefaultUnitStats(SamuraiPlatform platform, SamuraiWeapon weapon);
-};
 
 
 class BattleObserver

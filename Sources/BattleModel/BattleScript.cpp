@@ -5,11 +5,11 @@
 #include <cstring>
 #include <glm/gtc/constants.hpp>
 #include "../Library/Renderers/GradientRenderer.h"
+#include "BattleScript.h"
+#include "HeightMap.h"
+#include "SamuraiModule.h"
 #include "SmoothGroundMap.h"
 #include "TiledGroundMap.h"
-#include "BattleScript.h"
-#include "BattleSimulator.h"
-#include "HeightMap.h"
 
 
 static BattleScript* _battlescript = nullptr;
@@ -214,7 +214,7 @@ void BattleScript::Tick(double secondsSinceLastUpdate)
 
 int BattleScript::NewUnit(int player, int team, const char* unitClass, int strength, glm::vec2 position, float bearing)
 {
-	UnitStats unitStats = SamuraiBattleModel::GetDefaultUnitStats(unitClass);
+	UnitStats unitStats = SamuraiModule::GetDefaultUnitStats(unitClass);
 
 	Unit* unit = _battleSimulator->AddUnit(player, team, unitClass, strength, unitStats, position);
 	unit->command.facing = glm::radians(90 - bearing);

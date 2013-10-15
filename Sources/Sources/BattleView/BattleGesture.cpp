@@ -152,7 +152,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 
 		if (unit != nullptr && _battleView->GetTrackingMarker(unit) == nullptr)
 		{
-			_allowTargetEnemyUnit = unit->stats.samuraiWeapon == SamuraiWeapon_Bow || unit->stats.samuraiWeapon == SamuraiWeapon_Arq;
+			_allowTargetEnemyUnit = unit->stats.missileType != MissileType::None;
 			_trackingMarker = _battleView->AddTrackingMarker(unit);
 
 			float distanceToUnitCenter = glm::distance(GetUnitCurrentBounds(unit).center(), screenPosition);

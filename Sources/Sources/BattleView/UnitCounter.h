@@ -5,6 +5,8 @@
 #ifndef UnitCounter_H
 #define UnitCounter_H
 
+#include "../../BattleModel/BattleSimulator.h"
+#include "../../BattleModel/SamuraiModule.h"
 #include "../../Library/Algebra/bounds.h"
 
 class BattleSimulator;
@@ -22,6 +24,9 @@ public:
 	BattleSimulator* _battleSimulator;
 	Unit* _unit;
 	float _routingTimer;
+	int _weaponIndex;
+	SamuraiWeapon _samuraiWeapon;
+	SamuraiPlatform _samuraiPlatform;
 
 public:
 	UnitCounter(BattleSimulator* battleSimulator, Unit* unit);

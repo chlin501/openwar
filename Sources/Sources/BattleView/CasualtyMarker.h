@@ -6,7 +6,8 @@
 #define CasualtyMarker_H
 
 #include <cstdlib>
-#include "BattleSimulator.h"
+#include "../../BattleModel/BattleSimulator.h"
+#include "../../BattleModel/SamuraiModule.h"
 
 class ColorBillboardRenderer;
 class BillboardModel;

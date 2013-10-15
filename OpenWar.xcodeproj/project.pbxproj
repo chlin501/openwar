@@ -64,6 +64,7 @@
 		63F558A3314F7A4251DF486E /* sampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55CE5272DE6F5E75AD10C /* sampler.cpp */; };
 		63F558B39EB29DFB791E2951 /* Surface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55D85DD218A9816498CE7 /* Surface.cpp */; };
 		63F558DDB64E7B6125214060 /* string_shape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55E04017B622EEDDC3E60 /* string_shape.cpp */; };
+		63F55932A50F5611BA25ED6F /* SamuraiModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F556B39CE20E4EF1B28141 /* SamuraiModule.cpp */; };
 		63F559482A86E47274136F37 /* UnitMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F5503DE69D968145B61EA6 /* UnitMarker.cpp */; };
 		63F5596C0986FE7D81143BE1 /* RangeMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F552E43A0079DB88A52C9E /* RangeMarker.cpp */; };
 		63F559BF719B416B43EFC1C6 /* TextureBillboardRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55C05BD2ADE30FBA4092E /* TextureBillboardRenderer.cpp */; };
@@ -194,12 +195,14 @@
 		63F55662FF64D23F4AE9F8F2 /* TerrainGesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TerrainGesture.cpp; sourceTree = "<group>"; };
 		63F5567B80EBBFC23C6EF38B /* OpenWarSurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenWarSurface.cpp; sourceTree = "<group>"; };
 		63F5569A4201AD82257B1AEE /* TextureBillboardRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureBillboardRenderer.h; sourceTree = "<group>"; };
+		63F556B39CE20E4EF1B28141 /* SamuraiModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SamuraiModule.cpp; sourceTree = "<group>"; };
 		63F556B85FCFB6ADAE34C47A /* sampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sampler.h; sourceTree = "<group>"; };
 		63F556CDCFB86E30F18A5260 /* ButtonGesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ButtonGesture.cpp; sourceTree = "<group>"; };
 		63F556FFB27EA2AF4BC724B8 /* animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = animation.h; sourceTree = "<group>"; };
 		63F5575A4F049DA365D0685F /* BattleGesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleGesture.cpp; sourceTree = "<group>"; };
 		63F557F9E6796A6318982179 /* GradientRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GradientRenderer.cpp; sourceTree = "<group>"; };
 		63F558098EC65E4AB2495C2C /* UnitTrackingMarker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitTrackingMarker.cpp; sourceTree = "<group>"; };
+		63F5585E94CA07B6133B52A1 /* SamuraiModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SamuraiModule.h; sourceTree = "<group>"; };
 		63F558F731F350A8BBE8E5A1 /* TerrainView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TerrainView.cpp; sourceTree = "<group>"; };
 		63F5591061A03528F689063F /* ButtonGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonGesture.h; sourceTree = "<group>"; };
 		63F55973AF4F6709B2F8689A /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = resource.h; sourceTree = "<group>"; };
@@ -294,6 +297,8 @@
 				4105FB221806D3890074C855 /* SmoothGroundMap.h */,
 				4105FB231806D3890074C855 /* TiledGroundMap.cpp */,
 				4105FB241806D3890074C855 /* TiledGroundMap.h */,
+				63F556B39CE20E4EF1B28141 /* SamuraiModule.cpp */,
+				63F5585E94CA07B6133B52A1 /* SamuraiModule.h */,
 			);
 			path = BattleModel;
 			sourceTree = "<group>";
@@ -761,6 +766,7 @@
 				4105FB3E1806D3A50074C855 /* SmoothTerrainSky.cpp in Sources */,
 				63F55D81972105FD90CA832F /* OpenWarSurface.cpp in Sources */,
 				63F55BC7E8C99A6C96EE1A21 /* main.cpp in Sources */,
+				63F55932A50F5611BA25ED6F /* SamuraiModule.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

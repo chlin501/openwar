@@ -231,7 +231,7 @@ void BattleView::OnCasualty(Unit* unit, glm::vec2 position)
 void BattleView::AddCasualty(Unit* unit, glm::vec2 position)
 {
 	glm::vec3 p = glm::vec3(position, _battleSimulator->heightMap->InterpolateHeight(position));
-	SamuraiPlatform platform = SamuraiBattleModel::GetSamuraiPlatform(unit->unitClass.c_str());
+	SamuraiPlatform platform = SamuraiModule::GetSamuraiPlatform(unit->unitClass.c_str());
 	_casualtyMarker->AddCasualty(p, unit->player, unit->team, platform);
 }
 
