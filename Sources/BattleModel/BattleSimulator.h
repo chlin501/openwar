@@ -11,16 +11,10 @@
 #include "../Library/Algorithms/quadtree.h"
 #include "MovementRules.h"
 
-class Fighter;
-class Unit;
-class BattleView;
-class BattleSimulator;
-class HeightMap;
-class GroundMap;
-
 struct Fighter;
 struct Unit;
-struct UnitUpdate;
+class HeightMap;
+class GroundMap;
 
 
 enum class PlatformType
@@ -410,6 +404,7 @@ public:
 	bool IsMelee() const;
 
 	Unit* AddUnit(int player, int team, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
+	void DeleteUnit(Unit* unit);
 
 	void AdvanceTime(float secondsSinceLastTime);
 

@@ -226,6 +226,23 @@ Unit* BattleSimulator::AddUnit(int player, int team, const char* unitClass, int 
 }
 
 
+void BattleSimulator::DeleteUnit(Unit* unit)
+{
+	units.erase(unit->unitId);
+
+	for (std::pair<int, Unit*> i : units)
+	{
+		if (i.second->command.meleeTarget == unit)
+			i.second->command.meleeTarget = nullptr;
+		if (i.second->command.missileTarget == unit)
+			i.second->command.missileTarget = nullptr;
+	}
+
+	delete[] unit->fighters;
+	delete unit;
+}
+
+
 void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 {
 	//if (this != nullptr)
