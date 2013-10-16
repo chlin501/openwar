@@ -368,6 +368,7 @@ class BattleSimulator
 	quadtree<Fighter*> _weaponQuadTree;
 	float _secondsSinceLastTimeStep;
 	std::set<BattleObserver*> _observers;
+	int _lastUnitId;
 
 public:
 	bool practice;
@@ -377,9 +378,8 @@ public:
 	HeightMap* heightMap;
 
 	int currentPlayer;
-	int lastUnitId;
-	int blueTeam;
 	int winnerTeam;
+
 	float time;
 	float timeStep;
 

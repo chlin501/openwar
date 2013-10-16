@@ -7,8 +7,8 @@
 
 
 
-UnitMarker::UnitMarker(BattleSimulator* battleSimulator, Unit* unit) :
-_battleSimulator(battleSimulator),
+UnitMarker::UnitMarker(BattleView* battleView, Unit* unit) :
+_battleView(battleView),
 _unit(unit)
 {
 }

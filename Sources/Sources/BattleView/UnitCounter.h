@@ -21,7 +21,7 @@ class Unit;
 class UnitCounter
 {
 public:
-	BattleSimulator* _battleSimulator;
+	BattleView* _battleView;
 	Unit* _unit;
 	float _routingTimer;
 	int _weaponIndex;
@@ -29,7 +29,7 @@ public:
 	SamuraiPlatform _samuraiPlatform;
 
 public:
-	UnitCounter(BattleSimulator* battleSimulator, Unit* unit);
+	UnitCounter(BattleView* battleView, Unit* unit);
 	~UnitCounter();
 
 	Unit* GetUnit() const { return _unit; }

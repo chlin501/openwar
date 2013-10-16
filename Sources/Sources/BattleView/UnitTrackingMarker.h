@@ -32,7 +32,7 @@ public:
 	std::vector<glm::vec2> _path;
 
 public:
-	UnitTrackingMarker(BattleSimulator* battleSimulator, Unit* unit);
+	UnitTrackingMarker(BattleView* battleView, Unit* unit);
 	~UnitTrackingMarker();
 
 	void SetRunning(bool value) { _running = value; }

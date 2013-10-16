@@ -5,18 +5,18 @@
 #ifndef UnitMarker_H
 #define UnitMarker_H
 
-class BattleSimulator;
+class BattleView;
 class Unit;
 
 
 class UnitMarker
 {
 protected:
-	BattleSimulator* _battleSimulator;
+	BattleView* _battleView;
 	Unit* _unit;
 
 public:
-	UnitMarker(BattleSimulator* battleSimulator, Unit* unit);
+	UnitMarker(BattleView* battleView, Unit* unit);
 	virtual ~UnitMarker();
 
 	Unit* GetUnit() const { return _unit; }

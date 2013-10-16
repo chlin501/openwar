@@ -63,6 +63,7 @@ _smoothTerrainSurface(nullptr),
 _smoothTerrainWater(nullptr),
 _smoothTerrainSky(nullptr),
 _tiledTerrainRenderer(nullptr),
+blueTeam(1),
 _player(0)
 {
 	_textureUnitMarkers = new texture(resource("Textures/Texture256x256.png"));
@@ -581,7 +582,7 @@ void BattleView::Update(double secondsSinceLastUpdate)
 
 UnitMovementMarker* BattleView::AddMovementMarker(Unit* unit)
 {
-	UnitMovementMarker* marker = new UnitMovementMarker(_battleSimulator, unit);
+	UnitMovementMarker* marker = new UnitMovementMarker(this, unit);
 	_movementMarkers.push_back(marker);
 	return marker;
 }
@@ -625,7 +626,7 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, int
 
 UnitTrackingMarker* BattleView::AddTrackingMarker(Unit* unit)
 {
-	UnitTrackingMarker* trackingMarker = new UnitTrackingMarker(_battleSimulator, unit);
+	UnitTrackingMarker* trackingMarker = new UnitTrackingMarker(this, unit);
 	_trackingMarkers.push_back(trackingMarker);
 	return trackingMarker;
 }
@@ -769,7 +770,7 @@ void BattleView::InitializeUnitMarkers()
 
 void BattleView::AddUnitMarker(Unit* unit)
 {
-	UnitCounter* marker = new UnitCounter(_battleSimulator, unit);
+	UnitCounter* marker = new UnitCounter(this, unit);
 	marker->Animate(0);
 	_unitMarkers.push_back(marker);
 }

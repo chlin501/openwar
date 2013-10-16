@@ -17,7 +17,7 @@ class TextureTriangleRenderer;
 class UnitMovementMarker : public UnitMarker
 {
 public:
-	UnitMovementMarker(BattleSimulator* battleSimulator, Unit* unit);
+	UnitMovementMarker(BattleView* battleView, Unit* unit);
 	~UnitMovementMarker();
 
 	bool Animate(float seconds);

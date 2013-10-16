@@ -64,8 +64,9 @@ public:
 	SmoothTerrainRenderer* _smoothTerrainSurface;
 	SmoothTerrainWater* _smoothTerrainWater;
 	SmoothTerrainSky* _smoothTerrainSky;
-
 	TiledTerrainRenderer* _tiledTerrainRenderer;
+
+	int blueTeam;
 	int _player;
 
 	std::vector<SmokeCounter*> _smokeMarkers;

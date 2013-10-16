@@ -4,17 +4,17 @@
 
 #include <glm/gtc/constants.hpp>
 
-#include "UnitMovementMarker.h"
-#include "BattleSimulator.h"
+#include "../../BattleModel/BattleSimulator.h"
 #include "../../Library/Renderers/ColorBillboardRenderer.h"
 #include "../../Library/Renderers/PathRenderer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
 #include "../../Library/Renderers/TextureRenderer.h"
 #include "BattleView.h"
+#include "UnitMovementMarker.h"
 
 
 
-UnitMovementMarker::UnitMovementMarker(BattleSimulator* battleSimulator, Unit* unit) : UnitMarker(battleSimulator, unit)
+UnitMovementMarker::UnitMovementMarker(BattleView* battleView, Unit* unit) : UnitMarker(battleView, unit)
 {
 }
 
@@ -26,7 +26,7 @@ UnitMovementMarker::~UnitMovementMarker()
 
 bool UnitMovementMarker::Animate(float seconds)
 {
-	return _battleSimulator->GetUnit(_unit->unitId) != nullptr
+	return _battleView->GetBattleSimulator()->GetUnit(_unit->unitId) != nullptr
 		&& !_unit->state.IsRouting()
 		&& MovementRules::Length(_unit->command.path) > 8;
 }
@@ -39,9 +39,9 @@ void UnitMovementMarker::RenderMovementMarker(TextureBillboardRenderer* renderer
 	{
 		if (_unit->command.meleeTarget == nullptr)
 		{
-			glm::vec3 position = _battleSimulator->groundMap->GetHeightMap()->GetPosition(finalDestination, 0.5);
+			glm::vec3 position = _battleView->GetBattleSimulator()->groundMap->GetHeightMap()->GetPosition(finalDestination, 0.5);
 			glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
-			glm::vec2 texcoord = texsize * glm::vec2(_unit->team != _battleSimulator->blueTeam ? 4 : 3, 0);
+			glm::vec2 texcoord = texsize * glm::vec2(_unit->team != _battleView->blueTeam ? 4 : 3, 0);
 
 			renderer->AddBillboard(position, 32, affine2(texcoord, texcoord + texsize));
 		}
@@ -70,8 +70,8 @@ void UnitMovementMarker::AppendFacingMarker(TextureTriangleRenderer* renderer, B
 	float tx1 = 1 * txs;
 	float tx2 = tx1 + txs;
 
-	float ty1 = _unit->team == battleView->GetBattleSimulator()->blueTeam ? 0.0f : 0.5f;
-	float ty2 = _unit->team == battleView->GetBattleSimulator()->blueTeam ? 0.5f : 1.0f;
+	float ty1 = _unit->team == battleView->blueTeam ? 0.0f : 0.5f;
+	float ty2 = _unit->team == battleView->blueTeam ? 0.5f : 1.0f;
 
 	renderer->AddVertex(glm::vec3(p + d1, 0), glm::vec2(tx1, ty1));
 	renderer->AddVertex(glm::vec3(p + d2, 0), glm::vec2(tx1, ty2));
@@ -87,7 +87,7 @@ void UnitMovementMarker::RenderMovementFighters(ColorBillboardRenderer* renderer
 {
 	if (_unit->command.meleeTarget == nullptr)
 	{
-		bool isBlue = _unit->team == _battleSimulator->blueTeam;
+		bool isBlue = _unit->team == _battleView->blueTeam;
 		glm::vec4 color = isBlue ? glm::vec4(0, 0, 255, 32) / 255.0f : glm::vec4(255, 0, 0, 32) / 255.0f;
 
 		glm::vec2 finalDestination = _unit->command.GetDestination();
@@ -102,7 +102,7 @@ void UnitMovementMarker::RenderMovementFighters(ColorBillboardRenderer* renderer
 			glm::vec2 offsetRight = formation.towardRight * (float)Unit::GetFighterFile(fighter);
 			glm::vec2 offsetBack = formation.towardBack * (float)Unit::GetFighterRank(fighter);
 
-			renderer->AddBillboard(_battleSimulator->groundMap->GetHeightMap()->GetPosition(frontLeft + offsetRight + offsetBack, 0.5), color, 3.0);
+			renderer->AddBillboard(_battleView->GetBattleSimulator()->groundMap->GetHeightMap()->GetPosition(frontLeft + offsetRight + offsetBack, 0.5), color, 3.0);
 		}
 	}
 }
@@ -118,7 +118,7 @@ void UnitMovementMarker::RenderMovementPath(GradientTriangleRenderer* renderer)
 		else if (_unit->command.running)
 			mode = 1;
 
-		HeightMap* heightMap = _battleSimulator->groundMap->GetHeightMap();
+		HeightMap* heightMap = _battleView->GetBattleSimulator()->groundMap->GetHeightMap();
 		PathRenderer pathRenderer([heightMap](glm::vec2 p) { return heightMap->GetPosition(p, 1); });
 		pathRenderer.Path(renderer, _unit->command.path, mode);
 	}

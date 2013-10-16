@@ -130,8 +130,7 @@ recentShootings(),
 groundMap(nullptr),
 heightMap(nullptr),
 currentPlayer(0),
-lastUnitId(0),
-blueTeam(1),
+_lastUnitId(0),
 winnerTeam(0),
 time(0),
 timeStep(1.0f / 15.0f)
@@ -192,7 +191,7 @@ Unit* BattleSimulator::AddUnit(int player, int team, const char* unitClass, int 
 {
 	Unit* unit = new Unit();
 
-	unit->unitId = ++lastUnitId;
+	unit->unitId = ++_lastUnitId;
 	unit->player = player;
 	unit->team = team;
 	unit->unitClass = unitClass;
