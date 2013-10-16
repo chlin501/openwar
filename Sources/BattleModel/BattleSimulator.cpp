@@ -125,12 +125,12 @@ BattleSimulator::BattleSimulator() :
 _fighterQuadTree(0, 0, 1024, 1024),
 _weaponQuadTree(0, 0, 1024, 1024),
 _secondsSinceLastTimeStep(0),
+_lastUnitId(0),
 practice(false),
 recentShootings(),
 groundMap(nullptr),
 heightMap(nullptr),
 currentPlayer(0),
-_lastUnitId(0),
 winnerTeam(0),
 time(0),
 timeStep(1.0f / 15.0f)

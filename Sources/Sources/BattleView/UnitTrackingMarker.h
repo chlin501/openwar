@@ -6,7 +6,7 @@
 #define UnitTrackingMarker_H
 
 #include "UnitMarker.h"
-#include "BattleSimulator.h"
+#include "../../BattleModel/BattleSimulator.h"
 
 class BattleView;
 class ColorBillboardRenderer;

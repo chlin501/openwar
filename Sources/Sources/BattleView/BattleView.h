@@ -5,7 +5,7 @@
 #ifndef BATTLEVIEW_H
 #define BATTLEVIEW_H
 
-#include "BattleSimulator.h"
+#include "../../BattleModel/BattleSimulator.h"
 #include "../../Library/Graphics/vertexbuffer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
 #include "../TerrainView/TerrainView.h"

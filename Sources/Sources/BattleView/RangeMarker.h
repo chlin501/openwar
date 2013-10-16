@@ -5,7 +5,7 @@
 #ifndef RangeMarker_H
 #define RangeMarker_H
 
-#include "BattleSimulator.h"
+#include "../../BattleModel/BattleSimulator.h"
 
 class GradientTriangleStripRenderer;
 

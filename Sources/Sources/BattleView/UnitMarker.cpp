@@ -3,7 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "UnitMarker.h"
-#include "BattleSimulator.h"
+#include "../../BattleModel/BattleSimulator.h"
 
 
 
