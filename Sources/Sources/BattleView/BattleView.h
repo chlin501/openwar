@@ -33,8 +33,8 @@ class SmokeCounter;
 
 class BattleView : public TerrainView, public BattleObserver
 {
-	renderers* _renderers;
 	BattleSimulator* _battleSimulator;
+	renderers* _renderers;
 
 	glm::vec3 _lightNormal;
 
@@ -60,30 +60,34 @@ class BattleView : public TerrainView, public BattleObserver
 	texture* _textureTouchMarker;
 	texture* _textureFacing;
 
+	std::vector<SmokeCounter*> _smokeMarkers;
+	std::vector<ShootingCounter*> _shootingCounters;
+	std::vector<UnitCounter*> _unitMarkers;
+
 public:
 	SmoothTerrainRenderer* _smoothTerrainSurface;
 	SmoothTerrainWater* _smoothTerrainWater;
 	SmoothTerrainSky* _smoothTerrainSky;
 	TiledTerrainRenderer* _tiledTerrainRenderer;
 
-	int blueTeam;
+	int _blueTeam;
 	int _player;
 
-	std::vector<SmokeCounter*> _smokeMarkers;
-	std::vector<ShootingCounter*> _shootingCounters;
-	std::vector<UnitCounter*> _unitMarkers;
-
+public:
 	BattleView(Surface* screen, BattleSimulator* battleSimulator, renderers* r);
 	~BattleView();
 
 	BattleSimulator* GetBattleSimulator() const { return _battleSimulator; }
 
+	// BattleObserver
 	virtual void OnAddUnit(Unit* unit);
 	virtual void OnRemoveUnit(Unit* unit);
 	virtual void OnShooting(const Shooting& shooting);
 	virtual void OnCasualty(Unit* unit, glm::vec2 position);
 
 	void AddCasualty(Unit* unit, glm::vec2 position);
+
+	const std::vector<UnitCounter*>& GetUnitCounters() const { return _unitMarkers; }
 
 	UnitMovementMarker* AddMovementMarker(Unit* unit);
 	UnitMovementMarker* GetMovementMarker(Unit* unit);
@@ -117,8 +121,6 @@ public:
 	/***/
 
 	void AnimateMarkers(float seconds);
-
-	void InitializeUnitMarkers();
 
 	void AddUnitMarker(Unit* unit);
 

@@ -60,7 +60,7 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer1, TextureB
 	int state = 0;
 	if (routingIndicator)
 		state = 2;
-	else if (_unit->team != _battleView->blueTeam)
+	else if (_unit->team != _battleView->_blueTeam)
 		state = 1;
 
 
@@ -105,8 +105,8 @@ void UnitCounter::AppendFacingMarker(TextureTriangleRenderer* renderer, BattleVi
 	float tx1 = index * txs;
 	float tx2 = tx1 + txs;
 
-	float ty1 = _unit->team == battleView->blueTeam ? 0.0f : 0.5f;
-	float ty2 = _unit->team == battleView->blueTeam ? 0.5f : 1.0f;
+	float ty1 = _unit->team == battleView->_blueTeam ? 0.0f : 0.5f;
+	float ty2 = _unit->team == battleView->_blueTeam ? 0.5f : 1.0f;
 
 	bounds2f bounds = battleView->GetUnitCurrentFacingMarkerBounds(_unit);
 	glm::vec2 p = bounds.center();
@@ -157,17 +157,17 @@ void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 		{
 			case SamuraiPlatform_Cav:
 			case SamuraiPlatform_Gen:
-				shape = _unit->team == _battleView->blueTeam ? billboardModel->_billboardShapeFighterCavBlue : billboardModel->_billboardShapeFighterCavRed;
+				shape = _unit->team == _battleView->_blueTeam ? billboardModel->_billboardShapeFighterCavBlue : billboardModel->_billboardShapeFighterCavRed;
 				size = 3.0;
 				break;
 
 			case SamuraiPlatform_Sam:
-				shape = _unit->team == _battleView->blueTeam ? billboardModel->_billboardShapeFighterSamBlue : billboardModel->_billboardShapeFighterSamRed;
+				shape = _unit->team == _battleView->_blueTeam ? billboardModel->_billboardShapeFighterSamBlue : billboardModel->_billboardShapeFighterSamRed;
 				size = 2.0;
 				break;
 
 			case SamuraiPlatform_Ash:
-				shape = _unit->team == _battleView->blueTeam ? billboardModel->_billboardShapeFighterAshBlue : billboardModel->_billboardShapeFighterAshRed;
+				shape = _unit->team == _battleView->_blueTeam ? billboardModel->_billboardShapeFighterAshBlue : billboardModel->_billboardShapeFighterAshRed;
 				size = 2.0;
 				break;
 		}

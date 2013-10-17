@@ -58,7 +58,7 @@ void BattleGesture::RenderHints()
 	sprite._color = glm::vec4(0, 0, 0, 0.2f);
 	sprite._viewport = _battleView->GetViewportBounds();
 
-	for (UnitCounter* unitMarker : _battleView->_unitMarkers)
+	for (UnitCounter* unitMarker : _battleView->GetUnitCounters())
 	{
 		bounds2f bounds = GetUnitCurrentBounds(unitMarker->_unit);
 
@@ -540,9 +540,9 @@ Unit* BattleGesture::FindFriendlyUnit(glm::vec2 screenPosition, glm::vec2 terrai
 	if (disableUnitTracking)
 		return nullptr;
 
-	Unit* unitByPosition = FindFriendlyUnitByCurrentPosition(screenPosition, terrainPosition);
-	Unit* unitByDestination = FindFriendlyUnitByFuturePosition(screenPosition, terrainPosition);
-	Unit* unitByModifier = FindFriendlyUnitByModifierArea(screenPosition, terrainPosition);
+	Unit* unitByPosition = FindPlayerUnitByCurrentPosition(screenPosition, terrainPosition);
+	Unit* unitByDestination = FindPlayerUnitByFuturePosition(screenPosition, terrainPosition);
+	Unit* unitByModifier = FindPlayerUnitByModifierArea(screenPosition, terrainPosition);
 
 	if (unitByPosition != nullptr && unitByDestination == nullptr)
 	{
@@ -570,7 +570,7 @@ Unit* BattleGesture::FindFriendlyUnit(glm::vec2 screenPosition, glm::vec2 terrai
 }
 
 
-Unit* BattleGesture::FindFriendlyUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition)
+Unit* BattleGesture::FindPlayerUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	Unit* result = nullptr;
 	UnitCounter* unitMarker = _battleView->GetNearestUnitCounter(terrainPosition, 0, _battleView->_player);
@@ -586,7 +586,7 @@ Unit* BattleGesture::FindFriendlyUnitByCurrentPosition(glm::vec2 screenPosition,
 }
 
 
-Unit* BattleGesture::FindFriendlyUnitByFuturePosition(glm::vec2 screenPosition, glm::vec2 terrainPosition)
+Unit* BattleGesture::FindPlayerUnitByFuturePosition(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	Unit* result = nullptr;
 	UnitMovementMarker* movementMarker = _battleView->GetNearestMovementMarker(terrainPosition, _battleView->_player);
@@ -602,7 +602,7 @@ Unit* BattleGesture::FindFriendlyUnitByFuturePosition(glm::vec2 screenPosition, 
 }
 
 
-Unit* BattleGesture::FindFriendlyUnitByModifierArea(glm::vec2 screenPosition, glm::vec2 terrainPosition)
+Unit* BattleGesture::FindPlayerUnitByModifierArea(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	Unit* result = nullptr;
 	float distance = 10000;

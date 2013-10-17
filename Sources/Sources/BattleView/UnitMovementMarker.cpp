@@ -40,7 +40,7 @@ void UnitMovementMarker::RenderMovementMarker(TextureBillboardRenderer* renderer
 		{
 			glm::vec3 position = _battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(finalDestination, 0.5);
 			glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
-			glm::vec2 texcoord = texsize * glm::vec2(_unit->team != _battleView->blueTeam ? 4 : 3, 0);
+			glm::vec2 texcoord = texsize * glm::vec2(_unit->team != _battleView->_blueTeam ? 4 : 3, 0);
 
 			renderer->AddBillboard(position, 32, affine2(texcoord, texcoord + texsize));
 		}
@@ -69,8 +69,8 @@ void UnitMovementMarker::AppendFacingMarker(TextureTriangleRenderer* renderer, B
 	float tx1 = 1 * txs;
 	float tx2 = tx1 + txs;
 
-	float ty1 = _unit->team == battleView->blueTeam ? 0.0f : 0.5f;
-	float ty2 = _unit->team == battleView->blueTeam ? 0.5f : 1.0f;
+	float ty1 = _unit->team == battleView->_blueTeam ? 0.0f : 0.5f;
+	float ty2 = _unit->team == battleView->_blueTeam ? 0.5f : 1.0f;
 
 	renderer->AddVertex(glm::vec3(p + d1, 0), glm::vec2(tx1, ty1));
 	renderer->AddVertex(glm::vec3(p + d2, 0), glm::vec2(tx1, ty2));
@@ -86,7 +86,7 @@ void UnitMovementMarker::RenderMovementFighters(ColorBillboardRenderer* renderer
 {
 	if (_unit->command.meleeTarget == nullptr)
 	{
-		bool isBlue = _unit->team == _battleView->blueTeam;
+		bool isBlue = _unit->team == _battleView->_blueTeam;
 		glm::vec4 color = isBlue ? glm::vec4(0, 0, 255, 32) / 255.0f : glm::vec4(255, 0, 0, 32) / 255.0f;
 
 		glm::vec2 finalDestination = _unit->command.GetDestination();

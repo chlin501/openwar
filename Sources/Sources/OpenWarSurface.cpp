@@ -132,7 +132,7 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 
 	_battleView = new BattleView(this, battleScript->GetBattleSimulator(), _renderers);
 	_battleView->_player = 1;
-	_battleView->blueTeam = 1;
+	_battleView->_blueTeam = 1;
 
 	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(battleScript->GetBattleSimulator()->GetGroundMap());
 	if (smoothGroundMap != nullptr)
@@ -166,7 +166,6 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 	if (battleScript->GetBattleSimulator() != nullptr)
 	{
 		battleScript->GetBattleSimulator()->AddObserver(_battleView);
-		battleScript->GetBattleSimulator()->currentPlayer = 1;
 	}
 }
 
@@ -265,7 +264,7 @@ void OpenWarSurface::UpdateSoundPlayer()
 		int infantryMarching = 0;
 		int infantryRunning = 0;
 
-		for (UnitCounter* unitMarker : _battleView->_unitMarkers)
+		for (UnitCounter* unitMarker : _battleView->GetUnitCounters())
 		{
 			Unit* unit = unitMarker->_unit;
 			if (glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)

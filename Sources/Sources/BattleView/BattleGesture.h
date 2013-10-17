@@ -54,9 +54,9 @@ private:
 	int GetFlipSign() const { return _battleView->GetFlip() ? -1 : 1; }
 
 	Unit* FindFriendlyUnit(glm::vec2 screenPosition, glm::vec2 terrainPosition);
-	Unit* FindFriendlyUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition);
-	Unit* FindFriendlyUnitByFuturePosition(glm::vec2 screenPosition, glm::vec2 terrainPosition);
-	Unit* FindFriendlyUnitByModifierArea(glm::vec2 screenPosition, glm::vec2 terrainPosition);
+	Unit* FindPlayerUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition);
+	Unit* FindPlayerUnitByFuturePosition(glm::vec2 screenPosition, glm::vec2 terrainPosition);
+	Unit* FindPlayerUnitByModifierArea(glm::vec2 screenPosition, glm::vec2 terrainPosition);
 
 	Unit* FindEnemyUnit(glm::vec2 touchPosition, glm::vec2 markerPosition);
 

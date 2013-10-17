@@ -279,7 +279,6 @@ struct UnitCommand
 	{
 	}
 
-
 	void UpdatePath(glm::vec2 curr, glm::vec2 dest)
 	{
 		MovementRules::UpdateMovementPath(path, curr, dest);
@@ -290,7 +289,6 @@ struct UnitCommand
 		path.clear();
 		path.push_back(p);
 	}
-
 
 	glm::vec2 GetDestination()
 	{
@@ -323,8 +321,8 @@ struct Unit
 	UnitCommand command; // updated by TouchGesture()
 
 	Unit() :
-	player(1),
-	team(1),
+	player(0),
+	team(0),
 	stats(),
 	fighters(nullptr),
 	state(),
@@ -363,41 +361,40 @@ public:
 
 class BattleSimulator
 {
+	std::set<BattleObserver*> _observers;
 	quadtree<Fighter*> _fighterQuadTree;
 	quadtree<Fighter*> _weaponQuadTree;
-	float _secondsSinceLastTimeStep;
-	std::set<BattleObserver*> _observers;
-	std::vector<Unit*> _units;
-	float _timeStep;
+
 	GroundMap* _groundMap;
 
-public:
-	bool practice;
-	int currentPlayer;
-	int winnerTeam;
+	std::vector<Unit*> _units;
+	std::vector<Shooting> _shootings;
 
-	std::vector<Shooting> activeShootings;
+	float _secondsSinceLastTimeStep;
+	float _timeStep;
+	int _winnerTeam;
 
 public:
 	BattleSimulator();
 	~BattleSimulator();
 
+	void AddObserver(BattleObserver* observer);
+	void RemoveObserver(BattleObserver* observer);
+
 	void SetGroundMap(GroundMap* value) { _groundMap = value; }
 	GroundMap* GetGroundMap() { return _groundMap; }
 	HeightMap* GetHeightMap() { return _groundMap->GetHeightMap(); }
 
-	void AddObserver(BattleObserver* observer);
-	void RemoveObserver(BattleObserver* observer);
-	const std::set<BattleObserver*>& GetObservers() const;
-
-	bool IsMelee() const;
-
 	const std::vector<Unit*>& GetUnits() { return _units; }
-
 	Unit* AddUnit(int player, int team, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
 	void RemoveUnit(Unit* unit);
 
+	void AddShooting(const Shooting& shooting);
+
 	void AdvanceTime(float secondsSinceLastTime);
+
+	bool IsMelee() const;
+	int GetWinnerTeam() const { return _winnerTeam; }
 
 private:
 	void SimulateOneTimeStep();
@@ -416,6 +413,7 @@ private:
 
 	void RemoveCasualties();
 	void RemoveDeadUnits();
+	void RemoveFinishedShootings();
 
 	UnitState NextUnitState(Unit* unit);
 	UnitMode NextUnitMode(Unit* unit);

@@ -124,12 +124,10 @@ BattleObserver::~BattleObserver()
 BattleSimulator::BattleSimulator() :
 _fighterQuadTree(0, 0, 1024, 1024),
 _weaponQuadTree(0, 0, 1024, 1024),
+_groundMap(nullptr),
 _secondsSinceLastTimeStep(0),
 _timeStep(1.0f / 15.0f),
-_groundMap(nullptr),
-practice(false),
-currentPlayer(0),
-winnerTeam(0)
+_winnerTeam(0)
 {
 }
 
@@ -175,12 +173,6 @@ void BattleSimulator::RemoveObserver(BattleObserver* observer)
 }
 
 
-const std::set<BattleObserver*>&BattleSimulator::GetObservers() const
-{
-	return _observers;
-}
-
-
 Unit* BattleSimulator::AddUnit(int player, int team, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position)
 {
 	Unit* unit = new Unit();
@@ -220,6 +212,9 @@ Unit* BattleSimulator::AddUnit(int player, int team, const char* unitClass, int 
 
 void BattleSimulator::RemoveUnit(Unit* unit)
 {
+	for (BattleObserver* observer : _observers)
+		observer->OnRemoveUnit(unit);
+
 	auto i = std::find(_units.begin(), _units.end(), unit);
 	_units.erase(i);
 
@@ -233,6 +228,15 @@ void BattleSimulator::RemoveUnit(Unit* unit)
 
 	delete[] unit->fighters;
 	delete unit;
+}
+
+
+void BattleSimulator::AddShooting(const Shooting& shooting)
+{
+	_shootings.push_back(shooting);
+
+	for (BattleObserver* observer : _observers)
+		observer->OnShooting(shooting);
 }
 
 
@@ -259,33 +263,26 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 		}
 	}
 
-	if (winnerTeam == 0)
+	if (_winnerTeam == 0)
 	{
-		int count1 = 0;
-		int count2 = 0;
+		std::map<int, int> total;
+		std::map<int, int> routing;
 
 		for (Unit* unit : _units)
 		{
-			if (!unit->state.IsRouting())
-			{
-				switch (unit->team)
-				{
-					case 1:
-						++count1;
-						break;
-					case 2:
-						++count2;
-						break;
-					default:
-						break;
-				}
-			}
+			total[unit->team] = total[unit->team] + 1;
+			if (unit->state.IsRouting())
+				routing[unit->team] = unit->team + 1;
 		}
 
-		if (count1 == 0)
-			winnerTeam = 2;
-		else if (count2 == 0)
-			winnerTeam = 1;
+		for (std::pair<int, int> i : total)
+		{
+			if (routing[i.first] == i.second)
+			{
+				_winnerTeam = i.first;
+				break;
+			}
+		}
 	}
 }
 
@@ -306,6 +303,7 @@ void BattleSimulator::SimulateOneTimeStep()
 	ResolveMissileCombat();
 	RemoveCasualties();
 	RemoveDeadUnits();
+	RemoveFinishedShootings();
 }
 
 
@@ -458,8 +456,7 @@ void BattleSimulator::ResolveMissileCombat()
 {
 	for (Unit* unit : _units)
 	{
-		bool controlsUnit = practice || currentPlayer == 0 || unit->player == currentPlayer;
-		if (controlsUnit && unit->state.shootingCounter > unit->shootingCounter)
+		if (unit->player != 0 && unit->state.shootingCounter > unit->shootingCounter)
 		{
 			TriggerShooting(unit);
 			unit->shootingCounter = unit->state.shootingCounter;
@@ -497,10 +494,7 @@ void BattleSimulator::TriggerShooting(Unit* unit)
 	float speed = arq ? 750 : 75; // meters per second
 	shooting.timeToImpact = distance / speed;
 
-	activeShootings.push_back(shooting);
-
-	for (BattleObserver* observer : _observers)
-		observer->OnShooting(shooting);
+	AddShooting(shooting);
 }
 
 
@@ -508,7 +502,7 @@ void BattleSimulator::ResolveProjectileCasualties()
 {
 	static int random = 0;
 
-	for (std::vector<Shooting>::iterator s = activeShootings.begin(); s != activeShootings.end(); ++s)
+	for (std::vector<Shooting>::iterator s = _shootings.begin(); s != _shootings.end(); ++s)
 	{
 		Shooting& shooting = *s;
 
@@ -606,6 +600,13 @@ void BattleSimulator::RemoveDeadUnits()
 }
 
 
+void BattleSimulator::RemoveFinishedShootings()
+{
+	auto i = std::remove_if(_shootings.begin(), _shootings.end(), [](const Shooting& s) { return s.projectiles.empty(); });
+	_shootings.erase(i, _shootings.end());
+}
+
+
 UnitState BattleSimulator::NextUnitState(Unit* unit)
 {
 	UnitState result;
@@ -667,7 +668,7 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 	{
 		float distance = glm::length(other->state.center - unit->state.center);
 		float weight = 1.0f * 50.0f / (distance + 50.0f);
-		if (other->player == unit->player)
+		if (other->team == unit->team)
 		{
 			result.influence -= weight
 					* (1 - other->state.morale)
@@ -676,17 +677,12 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 		}
 	}
 
-	if (winnerTeam != 0 && unit->team != winnerTeam)
+	if (_winnerTeam != 0 && unit->team != _winnerTeam)
 	{
 		result.morale = -1;
 	}
 
 	if (unit->fightersCount <= 8)
-	{
-		result.morale = -1;
-	}
-
-	if (practice && unit->team == 2 && unit->state.IsRouting())
 	{
 		result.morale = -1;
 	}
@@ -703,7 +699,7 @@ Unit* BattleSimulator::ClosestEnemyWithinLineOfFire(Unit* unit)
 	float closestDistance = 10000;
 	for (Unit* target : _units)
 	{
-		if (target->player != unit->player && IsWithinLineOfFire(unit, target->state.center))
+		if (target->team != unit->team && IsWithinLineOfFire(unit, target->state.center))
 		{
 			float distance = glm::length(target->state.center - unit->state.center);
 			if (distance < closestDistance)
@@ -930,7 +926,7 @@ glm::vec2 BattleSimulator::NextFighterPosition(Fighter* fighter)
 		for (quadtree<Fighter*>::iterator i(_weaponQuadTree.find(result.x, result.y, weaponDistance)); *i; ++i)
 		{
 			Fighter* obstacle = **i;
-			if (obstacle->unit->player != unit->player)
+			if (obstacle->unit->team != unit->team)
 			{
 				glm::vec2 r = obstacle->unit->stats.weaponReach * vector2_from_angle(obstacle->state.direction);
 				glm::vec2 position = obstacle->state.position + r;
@@ -1015,7 +1011,7 @@ Fighter* BattleSimulator::FindFighterStrikingTarget(Fighter* fighter)
 	for (quadtree<Fighter*>::iterator i(_fighterQuadTree.find(position.x, position.y, radius)); *i; ++i)
 	{
 		Fighter* target = **i;
-		if (target != fighter && target->unit->player != unit->player)
+		if (target != fighter && target->unit->team != unit->team)
 		{
 			return target;
 		}

@@ -38,8 +38,8 @@ static affine2 billboard_texcoords(int x, int y, bool flip)
 
 
 BattleView::BattleView(Surface* screen, BattleSimulator* battleSimulator, renderers* r) : TerrainView(screen, battleSimulator->GetHeightMap()),
-_renderers(r),
 _battleSimulator(battleSimulator),
+_renderers(r),
 _lightNormal(),
 _billboardTexture(nullptr),
 _billboardModel(nullptr),
@@ -63,7 +63,7 @@ _smoothTerrainSurface(nullptr),
 _smoothTerrainWater(nullptr),
 _smoothTerrainSky(nullptr),
 _tiledTerrainRenderer(nullptr),
-blueTeam(1),
+_blueTeam(1),
 _player(0)
 {
 	_textureUnitMarkers = new texture(resource("Textures/Texture256x256.png"));
@@ -219,6 +219,29 @@ void BattleView::OnAddUnit(Unit* unit)
 
 void BattleView::OnRemoveUnit(Unit* unit)
 {
+	for (auto i = _unitMarkers.begin(); i != _unitMarkers.end(); ++i)
+		if ((*i)->GetUnit() == unit)
+		{
+			delete *i;
+			_unitMarkers.erase(i);
+			break;
+		}
+
+	for (auto i = _movementMarkers.begin(); i != _movementMarkers.end(); ++i)
+		if ((*i)->GetUnit() == unit)
+		{
+			delete *i;
+			_movementMarkers.erase(i);
+			break;
+		}
+
+	for (auto i = _trackingMarkers.begin(); i != _trackingMarkers.end(); ++i)
+		if ((*i)->GetUnit() == unit)
+		{
+			delete *i;
+			_trackingMarkers.erase(i);
+			break;
+		}
 }
 
 
@@ -759,15 +782,6 @@ void BattleView::AnimateMarkers(float seconds)
 	::AnimateMarkers(_unitMarkers, seconds);
 	::AnimateMarkers(_shootingCounters, seconds);
 	::AnimateMarkers(_smokeMarkers, seconds);
-}
-
-
-void BattleView::InitializeUnitMarkers()
-{
-	for (Unit* unit : _battleSimulator->GetUnits())
-	{
-		AddUnitMarker(unit);
-	}
 }
 
 
