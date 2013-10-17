@@ -176,7 +176,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 
 				//_trackingMarker->SetDestination(&unit->command.waypoint);
 
-				glm::vec2 orientation = unit->command.GetDestination() + 18.0f * vector2_from_angle(unit->command.facing);
+				glm::vec2 orientation = unit->command.GetDestination() + 18.0f * vector2_from_angle(unit->command.bearing);
 				_trackingMarker->SetOrientation(&orientation);
 			}
 			else
@@ -185,7 +185,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 				if (_offsetToMarker < 0)
 					_offsetToMarker = 0;
 
-				glm::vec2 orientation = unit->state.center + 18.0f * vector2_from_angle(unit->state.direction);
+				glm::vec2 orientation = unit->state.center + 18.0f * vector2_from_angle(unit->state.bearing);
 				_trackingMarker->SetOrientation(&orientation);
 			}
 
@@ -310,12 +310,12 @@ void BattleGesture::TouchEnded(Touch* touch)
 			{
 				unit->command.missileTarget = missileTarget;
 				unit->command.missileTargetLocked = true;
-				unit->command.facing = angle(missileTarget->state.center - unit->command.GetDestination());
+				unit->command.bearing = angle(missileTarget->state.center - unit->command.GetDestination());
 				unit->state.loadingTimer = 0;
 			}
 			else if (orientation)
 			{
-				unit->command.facing = angle(*orientation - unit->command.GetDestination());
+				unit->command.bearing = angle(*orientation - unit->command.GetDestination());
 			}
 
 			if (!touch->HasMoved())
@@ -496,7 +496,7 @@ void BattleGesture::UpdateTrackingMarker()
 		}
 		else
 		{
-			glm::vec2 orientation = markerPosition + 18.0f * vector2_from_angle(unit->state.direction);
+			glm::vec2 orientation = markerPosition + 18.0f * vector2_from_angle(unit->state.bearing);
 			_trackingMarker->SetOrientation(&orientation);
 		}
 	}

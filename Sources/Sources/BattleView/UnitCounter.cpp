@@ -111,7 +111,7 @@ void UnitCounter::AppendFacingMarker(TextureTriangleRenderer* renderer, BattleVi
 	bounds2f bounds = battleView->GetUnitCurrentFacingMarkerBounds(_unit);
 	glm::vec2 p = bounds.center();
 	float size = bounds.height();
-	float direction = index != 0 ? -glm::half_pi<float>() : (_unit->state.direction - battleView->GetCameraFacing());
+	float direction = index != 0 ? -glm::half_pi<float>() : (_unit->state.bearing - battleView->GetCameraFacing());
 	if (battleView->GetFlip())
 		direction += glm::pi<float>();
 
@@ -137,7 +137,7 @@ void UnitCounter::AppendFighterWeapons(PlainLineRenderer* renderer)
 		for (Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
 		{
 			glm::vec2 p1 = fighter->state.position;
-			glm::vec2 p2 = p1 + _unit->stats.weaponReach * vector2_from_angle(fighter->state.direction);
+			glm::vec2 p2 = p1 + _unit->stats.weaponReach * vector2_from_angle(fighter->state.bearing);
 
 			renderer->AddLine(
 				_battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(p1, 1),
@@ -175,7 +175,7 @@ void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 
 		const float adjust = 0.5 - 2.0 / 64.0; // place texture 2 texels below ground
 		glm::vec3 p = _battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(fighter->state.position, adjust * size);
-		float facing = glm::degrees(fighter->state.direction);
+		float facing = glm::degrees(fighter->state.bearing);
 		billboardModel->dynamicBillboards.push_back(Billboard(p, facing, size, shape));
 	}
 }

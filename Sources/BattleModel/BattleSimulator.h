@@ -60,11 +60,14 @@ struct Projectile
 
 struct Shooting
 {
+	Unit* unit;
 	MissileType missileType;
 	float timeToImpact;
+	glm::vec2 target;
 	std::vector<Projectile> projectiles;
 
 	Shooting() :
+	unit(nullptr),
 	missileType(MissileType::None),
 	timeToImpact(0),
 	projectiles()
@@ -97,7 +100,7 @@ struct FighterState
 	// intermediate attributes
 	glm::vec2 destination;
 	glm::vec2 velocity;
-	float direction;
+	float bearing;
 	Fighter* meleeTarget;
 
 	FighterState() :
@@ -110,7 +113,7 @@ struct FighterState
 	opponent(nullptr),
 	destination(),
 	velocity(),
-	direction(0),
+	bearing(0),
 	meleeTarget(nullptr)
 	{
 	}
@@ -220,7 +223,7 @@ struct UnitState
 	// optimization attributes
 	UnitMode unitMode;
 	glm::vec2 center;
-	float direction;
+	float bearing;
 	float influence;
 
 	// intermediate attributes
@@ -248,7 +251,7 @@ struct UnitState
 	morale(1),
 	unitMode(UnitMode_Initializing),
 	center(),
-	direction(0),
+	bearing(0),
 	influence(0),
 	recentCasualties(0),
 	waypoint()
@@ -260,18 +263,18 @@ struct UnitState
 
 struct UnitCommand
 {
-	std::vector<glm::vec2> path;
-	float facing;
 	bool running;
+	std::vector<glm::vec2> path;
+	float bearing;
 	Unit* meleeTarget;
 	Unit* missileTarget;
 	bool missileTargetLocked; // updated by TouchGesture()
 	bool holdFire;
 
 	UnitCommand() :
-	path(),
-	facing(0),
 	running(false),
+	path(),
+	bearing(0),
 	meleeTarget(nullptr),
 	missileTarget(nullptr),
 	missileTargetLocked(false),
@@ -424,7 +427,6 @@ private:
 	glm::vec2 NextFighterVelocity(Fighter* fighter);
 
 	Fighter* FindFighterStrikingTarget(Fighter* fighter);
-	glm::vec2 CalculateFighterMissileTarget(Fighter* fighter);
 
 	bool IsWithinLineOfFire(Unit* unit, glm::vec2 position);
 	Unit* ClosestEnemyWithinLineOfFire(Unit* unit);

@@ -122,8 +122,6 @@ public:
 
 	void AnimateMarkers(float seconds);
 
-	void AddUnitMarker(Unit* unit);
-
 	void AddShootingAndSmokeCounters(const Shooting& shooting);
 
 	void AddShootingCounter(const Shooting& shooting);

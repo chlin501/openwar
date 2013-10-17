@@ -188,11 +188,11 @@ Unit* BattleSimulator::AddUnit(int player, int team, const char* unitClass, int 
 	for (Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
 		i->unit = unit;
 
-	unit->command.facing = team == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
+	unit->command.bearing = team == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
 
 	unit->state.unitMode = UnitMode_Initializing;
 	unit->state.center = position;
-	unit->state.direction = unit->command.facing;
+	unit->state.bearing = unit->command.bearing;
 
 	unit->command.missileTarget = nullptr;
 
@@ -322,7 +322,7 @@ void BattleSimulator::RebuildQuadTree()
 
 				if (unit->stats.weaponReach > 0)
 				{
-					glm::vec2 d = unit->stats.weaponReach * vector2_from_angle(fighter->state.direction);
+					glm::vec2 d = unit->stats.weaponReach * vector2_from_angle(fighter->state.bearing);
 					glm::vec2 p = fighter->state.position + d;
 					_weaponQuadTree.insert(p.x, p.y, fighter);
 				}
@@ -372,7 +372,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 
 	unitRange.center = unit->state.center;
 	unitRange.angleLength = (float)M_PI_2;
-	unitRange.angleStart = unit->state.direction - 0.5f * unitRange.angleLength;
+	unitRange.angleStart = unit->state.bearing - 0.5f * unitRange.angleLength;
 
 	unitRange.minimumRange = unit->stats.minimumRange;
 	unitRange.maximumRange = unit->stats.maximumRange;
@@ -471,9 +471,13 @@ void BattleSimulator::TriggerShooting(Unit* unit)
 {
 	if (unit->state.IsRouting())
 		return;
+	if (unit->command.missileTarget == nullptr)
+		return;
 
 	Shooting shooting;
+	shooting.unit = unit;
 	shooting.missileType = unit->stats.missileType;
+	shooting.target = unit->command.missileTarget->state.center;
 
 	bool arq = shooting.missileType == MissileType::Arq;
 	float distance = 0;
@@ -482,9 +486,12 @@ void BattleSimulator::TriggerShooting(Unit* unit)
 	{
 		if (fighter->state.readyState == ReadyState_Prepared)
 		{
+			float dx = 10.0f * ((rand() & 255) / 128.0f - 1.0f);
+			float dy = 10.0f * ((rand() & 255) / 127.0f - 1.0f);
+
 			Projectile projectile;
 			projectile.position1 = fighter->state.position;
-			projectile.position2 = CalculateFighterMissileTarget(fighter);
+			projectile.position2 = shooting.target + glm::vec2(dx, dy);
 			projectile.delay = (arq ? 0.5f : 0.2f) * ((rand() & 0x7FFF) / (float)0x7FFF);
 			shooting.projectiles.push_back(projectile);
 			distance += glm::length(projectile.position1 - projectile.position2) / unit->fightersCount;
@@ -612,7 +619,7 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 	UnitState result;
 
 	result.center = unit->CalculateUnitCenter();
-	result.direction = NextUnitDirection(unit);
+	result.bearing = NextUnitDirection(unit);
 	result.unitMode = NextUnitMode(unit);
 
 	result.shootingCounter = unit->state.shootingCounter;
@@ -746,9 +753,9 @@ UnitMode BattleSimulator::NextUnitMode(Unit* unit)
 float BattleSimulator::NextUnitDirection(Unit* unit)
 {
 	if (true) // unit->movement
-		return unit->command.facing;
+		return unit->command.bearing;
 	else
-		return unit->state.direction;
+		return unit->state.bearing;
 }
 
 
@@ -767,15 +774,15 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 
 	if (fighter->unit->state.unitMode == UnitMode_Moving)
 	{
-		result.direction = angle(original.velocity);
+		result.bearing = angle(original.velocity);
 	}
 	else if (original.opponent != nullptr)
 	{
-		result.direction = angle(original.opponent->state.position - original.position);
+		result.bearing = angle(original.opponent->state.position - original.position);
 	}
 	else
 	{
-		result.direction = fighter->unit->state.direction;
+		result.bearing = fighter->unit->state.bearing;
 	}
 
 
@@ -795,7 +802,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 	if (original.opponent != nullptr)
 	{
 		result.destination = original.opponent->state.position
-				- fighter->unit->stats.weaponReach * vector2_from_angle(original.direction);
+				- fighter->unit->stats.weaponReach * vector2_from_angle(original.bearing);
 	}
 	else
 	{
@@ -913,7 +920,8 @@ glm::vec2 BattleSimulator::NextFighterPosition(Fighter* fighter)
 			{
 				glm::vec2 position = obstacle->state.position;
 				glm::vec2 diff = position - result;
-				if (glm::dot(diff, diff) < fighterDistance * fighterDistance)
+				float distance2 = glm::dot(diff, diff);
+				if (0.01f < distance2 && distance2 < fighterDistance * fighterDistance)
 				{
 					adjust -= glm::normalize(diff) * fighterDistance;
 					++count;
@@ -928,7 +936,7 @@ glm::vec2 BattleSimulator::NextFighterPosition(Fighter* fighter)
 			Fighter* obstacle = **i;
 			if (obstacle->unit->team != unit->team)
 			{
-				glm::vec2 r = obstacle->unit->stats.weaponReach * vector2_from_angle(obstacle->state.direction);
+				glm::vec2 r = obstacle->unit->stats.weaponReach * vector2_from_angle(obstacle->state.bearing);
 				glm::vec2 position = obstacle->state.position + r;
 				glm::vec2 diff = position - result;
 				if (glm::dot(diff, diff) < weaponDistance * weaponDistance)
@@ -1005,7 +1013,7 @@ Fighter* BattleSimulator::FindFighterStrikingTarget(Fighter* fighter)
 {
 	Unit* unit = fighter->unit;
 
-	glm::vec2 position = fighter->state.position + unit->stats.weaponReach * vector2_from_angle(fighter->state.direction);
+	glm::vec2 position = fighter->state.position + unit->stats.weaponReach * vector2_from_angle(fighter->state.bearing);
 	float radius = 1.1f;
 
 	for (quadtree<Fighter*>::iterator i(_fighterQuadTree.find(position.x, position.y, radius)); *i; ++i)
@@ -1018,19 +1026,4 @@ Fighter* BattleSimulator::FindFighterStrikingTarget(Fighter* fighter)
 	}
 
 	return 0;
-}
-
-
-glm::vec2 BattleSimulator::CalculateFighterMissileTarget(Fighter* fighter)
-{
-	Unit* unit = fighter->unit;
-
-	if (unit->command.missileTarget != nullptr)
-	{
-		float dx = 10.0f * ((rand() & 255) / 128.0f - 1.0f);
-		float dy = 10.0f * ((rand() & 255) / 127.0f - 1.0f);
-		return unit->command.missileTarget->state.center + glm::vec2(dx, dy);
-	}
-
-	return glm::vec2();
 }

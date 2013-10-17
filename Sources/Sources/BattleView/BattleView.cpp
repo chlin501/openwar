@@ -213,7 +213,9 @@ BattleView::~BattleView()
 
 void BattleView::OnAddUnit(Unit* unit)
 {
-	AddUnitMarker(unit);
+	UnitCounter* marker = new UnitCounter(this, unit);
+	marker->Animate(0);
+	_unitMarkers.push_back(marker);
 }
 
 
@@ -742,7 +744,7 @@ bounds2f BattleView::GetUnitFacingMarkerBounds(glm::vec2 center, float direction
 
 bounds2f BattleView::GetUnitCurrentFacingMarkerBounds(Unit* unit)
 {
-	return GetUnitFacingMarkerBounds(unit->state.center, unit->state.direction);
+	return GetUnitFacingMarkerBounds(unit->state.center, unit->state.bearing);
 }
 
 
@@ -750,7 +752,7 @@ bounds2f BattleView::GetUnitFutureFacingMarkerBounds(Unit* unit)
 {
 	glm::vec2 center = !unit->command.path.empty() ? unit->command.path.back() : unit->state.center;
 
-	return GetUnitFacingMarkerBounds(center, unit->command.facing);
+	return GetUnitFacingMarkerBounds(center, unit->command.bearing);
 }
 
 
@@ -782,14 +784,6 @@ void BattleView::AnimateMarkers(float seconds)
 	::AnimateMarkers(_unitMarkers, seconds);
 	::AnimateMarkers(_shootingCounters, seconds);
 	::AnimateMarkers(_smokeMarkers, seconds);
-}
-
-
-void BattleView::AddUnitMarker(Unit* unit)
-{
-	UnitCounter* marker = new UnitCounter(this, unit);
-	marker->Animate(0);
-	_unitMarkers.push_back(marker);
 }
 
 

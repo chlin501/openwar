@@ -56,7 +56,7 @@ void UnitMovementMarker::AppendFacingMarker(TextureTriangleRenderer* renderer, B
 	bounds2f b = battleView->GetUnitFutureFacingMarkerBounds(_unit);
 	glm::vec2 p = b.center();
 	float size = b.height();
-	float direction = _unit->command.facing - battleView->GetCameraFacing();
+	float direction = _unit->command.bearing - battleView->GetCameraFacing();
 	if (battleView->GetFlip())
 		direction += glm::pi<float>();
 
@@ -92,7 +92,7 @@ void UnitMovementMarker::RenderMovementFighters(ColorBillboardRenderer* renderer
 		glm::vec2 finalDestination = _unit->command.GetDestination();
 
 		Formation formation = _unit->formation;
-		formation.SetDirection(_unit->command.facing);
+		formation.SetDirection(_unit->command.bearing);
 
 		glm::vec2 frontLeft = formation.GetFrontLeft(finalDestination);
 

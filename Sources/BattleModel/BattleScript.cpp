@@ -226,7 +226,7 @@ int BattleScript::NewUnit(int player, int team, const char* unitClass, int stren
 	UnitStats unitStats = SamuraiModule::GetDefaultUnitStats(unitClass);
 
 	Unit* unit = _battleSimulator->AddUnit(player, team, unitClass, strength, unitStats, position);
-	unit->command.facing = glm::radians(90 - bearing);
+	unit->command.bearing = glm::radians(90 - bearing);
 
 	return _unitId[unit];
 }
@@ -238,7 +238,7 @@ void BattleScript::SetUnitMovement(int unitId, bool running, std::vector<glm::ve
 	if (unit != nullptr)
 	{
 		unit->command.path = path;
-		unit->command.facing = heading;
+		unit->command.bearing = heading;
 		unit->command.meleeTarget = _units[chargeId];
 		unit->command.running = running;
 	}

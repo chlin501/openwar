@@ -137,7 +137,7 @@ void MovementRules::AdvanceTime(Unit* unit, float timeStep)
 	unit->formation.numberOfRanks = (int)fminf(GetMaxNumberOfRanks(unit), count);
 	unit->formation.numberOfFiles = (int)ceilf(count / ranks);
 
-	float direction = unit->command.facing;
+	float direction = unit->command.bearing;
 
 	if (unit->command.path.size() > 1)
 	{
