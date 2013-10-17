@@ -453,7 +453,7 @@ void BattleGesture::UpdateTrackingMarker()
 		float delta = 1.0f / fmaxf(1, glm::length(currentDestination - markerPosition));
 		for (float k = delta; k < 1; k += delta)
 		{
-			if (_battleView->GetBattleSimulator()->groundMap->IsImpassable(glm::mix(currentDestination, markerPosition, k)))
+			if (_battleView->GetBattleSimulator()->GetGroundMap()->IsImpassable(glm::mix(currentDestination, markerPosition, k)))
 			{
 				movementLimit = k;
 				break;

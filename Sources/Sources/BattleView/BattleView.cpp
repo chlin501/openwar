@@ -37,7 +37,7 @@ static affine2 billboard_texcoords(int x, int y, bool flip)
 
 
 
-BattleView::BattleView(Surface* screen, BattleSimulator* battleSimulator, renderers* r) : TerrainView(screen, battleSimulator->groundMap->GetHeightMap()),
+BattleView::BattleView(Surface* screen, BattleSimulator* battleSimulator, renderers* r) : TerrainView(screen, battleSimulator->GetHeightMap()),
 _renderers(r),
 _battleSimulator(battleSimulator),
 _lightNormal(),
@@ -70,7 +70,7 @@ _player(0)
 	_textureTouchMarker = new texture(resource("Textures/TouchMarker.png"));
 	_textureFacing = new texture(resource("Textures/Facing.png"));
 
-	SetContentBounds(battleSimulator->groundMap->GetBounds());
+	SetContentBounds(battleSimulator->GetGroundMap()->GetBounds());
 
 	_billboardTexture = new BillboardTexture();
 
@@ -236,7 +236,7 @@ void BattleView::OnCasualty(Unit* unit, glm::vec2 position)
 
 void BattleView::AddCasualty(Unit* unit, glm::vec2 position)
 {
-	glm::vec3 p = glm::vec3(position, _battleSimulator->heightMap->InterpolateHeight(position));
+	glm::vec3 p = glm::vec3(position, _battleSimulator->GetHeightMap()->InterpolateHeight(position));
 	SamuraiPlatform platform = SamuraiModule::GetSamuraiPlatform(unit->unitClass.c_str());
 	_casualtyMarker->AddCasualty(p, unit->player, unit->team, platform);
 }
@@ -258,7 +258,7 @@ void BattleView::Initialize()
 
 void BattleView::InitializeTerrainTrees()
 {
-	UpdateTerrainTrees(_battleSimulator->groundMap->GetBounds());
+	UpdateTerrainTrees(_battleSimulator->GetGroundMap()->GetBounds());
 }
 
 
@@ -305,7 +305,7 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 
 		int treeType = 0;
 		random_iterator random(*_randoms);
-		bounds2f mapbounds = _battleSimulator->groundMap->GetBounds();
+		bounds2f mapbounds = _battleSimulator->GetGroundMap()->GetBounds();
 		glm::vec2 center = mapbounds.center();
 		float radius = mapbounds.width() / 2;
 
@@ -320,7 +320,7 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 				glm::vec2 position = glm::vec2(x + dx, y + dy);
 				if (bounds.contains(position) && glm::distance(position, center) < radius)
 				{
-					if (_battleSimulator->groundMap->GetHeightMap()->InterpolateHeight(position) > 0 && _battleSimulator->groundMap->IsForest(position))
+					if (_battleSimulator->GetHeightMap()->InterpolateHeight(position) > 0 && _battleSimulator->GetGroundMap()->IsForest(position))
 					{
 						const float adjust = 0.5 - 2.0 / 64.0; // place texture 2 texels below ground
 						_billboardModel->staticBillboards.push_back(Billboard(GetPosition(position, adjust * 5), 0, 5, _billboardModel->_billboardTreeShapes[shape]));
@@ -793,8 +793,8 @@ void BattleView::AddShootingCounter(const Shooting& shooting)
 
 	for (const Projectile& projectile : shooting.projectiles)
 	{
-		glm::vec3 p1 = glm::vec3(projectile.position1, _battleSimulator->heightMap->InterpolateHeight(projectile.position1));
-		glm::vec3 p2 = glm::vec3(projectile.position2, _battleSimulator->heightMap->InterpolateHeight(projectile.position2));
+		glm::vec3 p1 = glm::vec3(projectile.position1, _battleSimulator->GetHeightMap()->InterpolateHeight(projectile.position1));
+		glm::vec3 p2 = glm::vec3(projectile.position2, _battleSimulator->GetHeightMap()->InterpolateHeight(projectile.position2));
 		shootingCounter->AddProjectile(p1, p2, projectile.delay, shooting.timeToImpact);
 	}
 }
@@ -823,8 +823,8 @@ void BattleView::AddSmokeMarker(const Shooting& shooting)
 
 	for (const Projectile& projectile : shooting.projectiles)
 	{
-		glm::vec3 p1 = glm::vec3(projectile.position1, _battleSimulator->heightMap->InterpolateHeight(projectile.position1));
-		glm::vec3 p2 = glm::vec3(projectile.position2, _battleSimulator->heightMap->InterpolateHeight(projectile.position2));
+		glm::vec3 p1 = glm::vec3(projectile.position1, _battleSimulator->GetHeightMap()->InterpolateHeight(projectile.position1));
+		glm::vec3 p2 = glm::vec3(projectile.position2, _battleSimulator->GetHeightMap()->InterpolateHeight(projectile.position2));
 		marker->AddParticle(p1, p2, projectile.delay);
 	}
 }

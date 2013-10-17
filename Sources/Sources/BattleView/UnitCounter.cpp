@@ -64,7 +64,7 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer1, TextureB
 		state = 1;
 
 
-	glm::vec3 position = _battleView->GetBattleSimulator()->groundMap->GetHeightMap()->GetPosition(_unit->state.center, 0);
+	glm::vec3 position = _battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(_unit->state.center, 0);
 	glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
 	glm::vec2 texcoord1 = texsize * glm::vec2(state, 0);
 	glm::vec2 texcoord2 = texsize * glm::vec2((int)_samuraiWeapon, 1 + (int)_samuraiPlatform);
@@ -140,8 +140,8 @@ void UnitCounter::AppendFighterWeapons(PlainLineRenderer* renderer)
 			glm::vec2 p2 = p1 + _unit->stats.weaponReach * vector2_from_angle(fighter->state.direction);
 
 			renderer->AddLine(
-				_battleView->GetBattleSimulator()->groundMap->GetHeightMap()->GetPosition(p1, 1),
-				_battleView->GetBattleSimulator()->groundMap->GetHeightMap()->GetPosition(p2, 1));
+				_battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(p1, 1),
+				_battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(p2, 1));
 		}
 	}
 }
@@ -174,7 +174,7 @@ void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 
 
 		const float adjust = 0.5 - 2.0 / 64.0; // place texture 2 texels below ground
-		glm::vec3 p = _battleView->GetBattleSimulator()->groundMap->GetHeightMap()->GetPosition(fighter->state.position, adjust * size);
+		glm::vec3 p = _battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(fighter->state.position, adjust * size);
 		float facing = glm::degrees(fighter->state.direction);
 		billboardModel->dynamicBillboards.push_back(Billboard(p, facing, size, shape));
 	}

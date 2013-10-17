@@ -170,7 +170,7 @@ void RangeMarker::RenderMissileTarget(GradientTriangleStripRenderer* renderer, g
 
 glm::vec3 RangeMarker::GetPosition(glm::vec2 p) const
 {
-	glm::vec3 result = _battleSimulator->groundMap->GetHeightMap()->GetPosition(p, 1);
+	glm::vec3 result = _battleSimulator->GetHeightMap()->GetPosition(p, 1);
 	if (result.z < 0.5f)
 		result.z = 0.5f;
 	return result;

@@ -125,15 +125,11 @@ BattleSimulator::BattleSimulator() :
 _fighterQuadTree(0, 0, 1024, 1024),
 _weaponQuadTree(0, 0, 1024, 1024),
 _secondsSinceLastTimeStep(0),
-_lastUnitId(0),
+_timeStep(1.0f / 15.0f),
+_groundMap(nullptr),
 practice(false),
-recentShootings(),
-groundMap(nullptr),
-heightMap(nullptr),
 currentPlayer(0),
-winnerTeam(0),
-time(0),
-timeStep(1.0f / 15.0f)
+winnerTeam(0)
 {
 }
 
@@ -245,15 +241,13 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 	//if (this != nullptr)
 	//	return;
 
-	recentShootings.clear();
-
 	bool didStep = false;
 
 	_secondsSinceLastTimeStep += secondsSinceLastTime;
-	while (_secondsSinceLastTimeStep >= timeStep)
+	while (_secondsSinceLastTimeStep >= _timeStep)
 	{
 		SimulateOneTimeStep();
-		_secondsSinceLastTimeStep -= timeStep;
+		_secondsSinceLastTimeStep -= _timeStep;
 		didStep = true;
 	}
 
@@ -263,12 +257,6 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 		{
 			UpdateUnitRange(unit);
 		}
-	}
-
-	for (BattleObserver* observer : _observers)
-	{
-		for (const Shooting& shooting : recentShootings)
-			observer->OnShooting(shooting);
 	}
 
 	if (winnerTeam == 0)
@@ -308,7 +296,7 @@ void BattleSimulator::SimulateOneTimeStep()
 
 	for (Unit* unit : _units)
 	{
-		MovementRules::AdvanceTime(unit, timeStep);
+		MovementRules::AdvanceTime(unit, _timeStep);
 	}
 
 	ComputeNextState();
@@ -318,8 +306,6 @@ void BattleSimulator::SimulateOneTimeStep()
 	ResolveMissileCombat();
 	RemoveCasualties();
 	RemoveDeadUnits();
-
-	time += timeStep;
 }
 
 
@@ -397,7 +383,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 
 	if (unitRange.minimumRange > 0 && unitRange.maximumRange > 0)
 	{
-		float centerHeight = heightMap->InterpolateHeight(unitRange.center) + 1.9f;
+		float centerHeight = _groundMap->GetHeightMap()->InterpolateHeight(unitRange.center) + 1.9f;
 
 		int n = 24;
 		for (int i = 0; i <= n; ++i)
@@ -409,7 +395,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 			float maxAngle = -100;
 			for (float range = unitRange.minimumRange + delta; range <= unitRange.maximumRange; range += delta)
 			{
-				float height = heightMap->InterpolateHeight(unitRange.center + range * direction) + 0.5f;
+				float height = _groundMap->GetHeightMap()->InterpolateHeight(unitRange.center + range * direction) + 0.5f;
 				float verticalAngle = glm::atan(height - centerHeight, range);
 				if (verticalAngle > maxAngle)
 				{
@@ -511,8 +497,10 @@ void BattleSimulator::TriggerShooting(Unit* unit)
 	float speed = arq ? 750 : 75; // meters per second
 	shooting.timeToImpact = distance / speed;
 
-	shootings.push_back(shooting);
-	recentShootings.push_back(shooting);
+	activeShootings.push_back(shooting);
+
+	for (BattleObserver* observer : _observers)
+		observer->OnShooting(shooting);
 }
 
 
@@ -520,11 +508,11 @@ void BattleSimulator::ResolveProjectileCasualties()
 {
 	static int random = 0;
 
-	for (std::vector<Shooting>::iterator s = shootings.begin(); s != shootings.end(); ++s)
+	for (std::vector<Shooting>::iterator s = activeShootings.begin(); s != activeShootings.end(); ++s)
 	{
 		Shooting& shooting = *s;
 
-		shooting.timeToImpact -= timeStep;
+		shooting.timeToImpact -= _timeStep;
 
 		std::vector<Projectile>::iterator i = shooting.projectiles.begin();
 		while (i != shooting.projectiles.end())
@@ -565,7 +553,7 @@ void BattleSimulator::RemoveCasualties()
 		}
 	}
 
-	bounds2f bounds = groundMap->GetBounds();
+	bounds2f bounds = _groundMap->GetBounds();
 	glm::vec2 center = bounds.center();
 	float radius = bounds.width() / 2;
 	float radius_squared = radius * radius;
@@ -647,9 +635,9 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 		result.loadingTimer = 0;
 		result.loadingDuration = 0;
 	}
-	else if (unit->state.loadingTimer + timeStep < unit->state.loadingDuration)
+	else if (unit->state.loadingTimer + _timeStep < unit->state.loadingDuration)
 	{
-		result.loadingTimer = unit->state.loadingTimer + timeStep;
+		result.loadingTimer = unit->state.loadingTimer + _timeStep;
 		result.loadingDuration = unit->state.loadingDuration;
 	}
 	else
@@ -775,7 +763,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 
 	result.readyState = original.readyState;
 	result.position = NextFighterPosition(fighter);
-	result.position_z = heightMap->InterpolateHeight(result.position);
+	result.position_z = _groundMap->GetHeightMap()->InterpolateHeight(result.position);
 	result.velocity = NextFighterVelocity(fighter);
 
 
@@ -846,9 +834,9 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 			break;
 
 		case ReadyState_Readying:
-			if (original.readyingTimer > timeStep)
+			if (original.readyingTimer > _timeStep)
 			{
-				result.readyingTimer = original.readyingTimer - timeStep;
+				result.readyingTimer = original.readyingTimer - _timeStep;
 			}
 			else
 			{
@@ -870,9 +858,9 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 			break;
 
 		case ReadyState_Striking:
-			if (original.strikingTimer > timeStep)
+			if (original.strikingTimer > _timeStep)
 			{
-				result.strikingTimer = original.strikingTimer - timeStep;
+				result.strikingTimer = original.strikingTimer - _timeStep;
 				result.opponent = original.opponent;
 			}
 			else
@@ -885,9 +873,9 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 			break;
 
 		case ReadyState_Stunned:
-			if (original.stunnedTimer > timeStep)
+			if (original.stunnedTimer > _timeStep)
 			{
-				result.stunnedTimer = original.stunnedTimer - timeStep;
+				result.stunnedTimer = original.stunnedTimer - _timeStep;
 			}
 			else
 			{
@@ -916,7 +904,7 @@ glm::vec2 BattleSimulator::NextFighterPosition(Fighter* fighter)
 	}
 	else
 	{
-		glm::vec2 result = fighter->state.position + fighter->state.velocity * timeStep;
+		glm::vec2 result = fighter->state.position + fighter->state.velocity * _timeStep;
 		glm::vec2 adjust;
 		int count = 0;
 
@@ -988,8 +976,8 @@ glm::vec2 BattleSimulator::NextFighterVelocity(Fighter* fighter)
 
 	if (glm::length(fighter->state.position - fighter->terrainPosition) > 4)
 	{
-		fighter->terrainForest = groundMap->IsForest(fighter->state.position);
-		fighter->terrainImpassable = groundMap->IsImpassable(fighter->state.position);
+		fighter->terrainForest = _groundMap->IsForest(fighter->state.position);
+		fighter->terrainImpassable = _groundMap->IsImpassable(fighter->state.position);
 		if (!fighter->terrainImpassable)
 			fighter->terrainPosition = fighter->state.position;
 	}

@@ -10,6 +10,7 @@
 #include <string>
 #include "../Library/Algorithms/quadtree.h"
 #include "MovementRules.h"
+#import "GroundMap.h"
 
 class GroundMap;
 class HeightMap;
@@ -366,27 +367,24 @@ class BattleSimulator
 	quadtree<Fighter*> _weaponQuadTree;
 	float _secondsSinceLastTimeStep;
 	std::set<BattleObserver*> _observers;
-	int _lastUnitId;
 	std::vector<Unit*> _units;
+	float _timeStep;
+	GroundMap* _groundMap;
 
 public:
 	bool practice;
-	std::vector<Shooting> recentShootings;
-
-	GroundMap* groundMap;
-	HeightMap* heightMap;
-
 	int currentPlayer;
 	int winnerTeam;
 
-	float time;
-	float timeStep;
-
-	std::vector<Shooting> shootings;
+	std::vector<Shooting> activeShootings;
 
 public:
 	BattleSimulator();
 	~BattleSimulator();
+
+	void SetGroundMap(GroundMap* value) { _groundMap = value; }
+	GroundMap* GetGroundMap() { return _groundMap; }
+	HeightMap* GetHeightMap() { return _groundMap->GetHeightMap(); }
 
 	void AddObserver(BattleObserver* observer);
 	void RemoveObserver(BattleObserver* observer);

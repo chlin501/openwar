@@ -59,7 +59,7 @@ void UnitTrackingMarker::RenderTrackingFighters(ColorBillboardRenderer* renderer
 			glm::vec2 offsetRight = formation.towardRight * (float)Unit::GetFighterFile(fighter);
 			glm::vec2 offsetBack = formation.towardBack * (float)Unit::GetFighterRank(fighter);
 
-			renderer->AddBillboard(_battleView->GetBattleSimulator()->groundMap->GetHeightMap()->GetPosition(frontLeft + offsetRight + offsetBack, 0.5), color, 3.0);
+			renderer->AddBillboard(_battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(frontLeft + offsetRight + offsetBack, 0.5), color, 3.0);
 		}
 	}
 }
@@ -71,7 +71,7 @@ void UnitTrackingMarker::RenderTrackingMarker(TextureBillboardRenderer* renderer
 	if (_meleeTarget == nullptr)
 	{
 		glm::vec2 destination = DestinationXXX();
-		glm::vec3 position = _battleView->GetBattleSimulator()->groundMap->GetHeightMap()->GetPosition(destination, 0);
+		glm::vec3 position = _battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(destination, 0);
 		glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
 		glm::vec2 texcoord = texsize * glm::vec2(_unit->team != _battleView->blueTeam ? 4 : 3, 0);
 
@@ -119,7 +119,7 @@ void UnitTrackingMarker::AppendFacingMarker(TextureTriangleRenderer* renderer, B
 void UnitTrackingMarker::RenderTrackingShadow(TextureBillboardRenderer* renderer)
 {
 	glm::vec2 destination = DestinationXXX();
-	glm::vec3 position = _battleView->GetBattleSimulator()->groundMap->GetHeightMap()->GetPosition(destination, 0);
+	glm::vec3 position = _battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(destination, 0);
 
 	renderer->AddBillboard(position, 32, affine2(glm::vec2(0, 0), glm::vec2(1, 1)));
 }
@@ -136,7 +136,7 @@ void UnitTrackingMarker::RenderTrackingPath(GradientTriangleRenderer* renderer)
 		else if (_running)
 			mode = 1;
 
-		HeightMap* heightMap = _battleView->GetBattleSimulator()->groundMap->GetHeightMap();
+		HeightMap* heightMap = _battleView->GetBattleSimulator()->GetHeightMap();
 		PathRenderer pathRenderer([heightMap](glm::vec2 p) { return heightMap->GetPosition(p, 1); });
 		pathRenderer.Path(renderer, _path, mode);
 	}
@@ -158,8 +158,8 @@ void UnitTrackingMarker::RenderOrientation(GradientTriangleRenderer* renderer)
 		glm::vec2 left = glm::vec2(dir.y, -dir.x);
 
 
-		renderer->AddVertex(_battleView->GetBattleSimulator()->groundMap->GetHeightMap()->GetPosition(center + 10.0f * left, 0), glm::vec4(0, 0, 0, 0));
-		renderer->AddVertex(_battleView->GetBattleSimulator()->groundMap->GetHeightMap()->GetPosition(tip + overshoot * dir, 0), glm::vec4(0, 0, 0, 0.1f));
-		renderer->AddVertex(_battleView->GetBattleSimulator()->groundMap->GetHeightMap()->GetPosition(center - 10.0f * left, 0), glm::vec4(0, 0, 0, 0));
+		renderer->AddVertex(_battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(center + 10.0f * left, 0), glm::vec4(0, 0, 0, 0));
+		renderer->AddVertex(_battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(tip + overshoot * dir, 0), glm::vec4(0, 0, 0, 0.1f));
+		renderer->AddVertex(_battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(center - 10.0f * left, 0), glm::vec4(0, 0, 0, 0));
 	}
 }

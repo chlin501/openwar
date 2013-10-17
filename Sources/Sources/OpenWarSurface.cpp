@@ -134,7 +134,7 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 	_battleView->_player = 1;
 	_battleView->blueTeam = 1;
 
-	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(battleScript->GetBattleSimulator()->groundMap);
+	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(battleScript->GetBattleSimulator()->GetGroundMap());
 	if (smoothGroundMap != nullptr)
 	{
 		_battleView->_smoothTerrainSurface = new SmoothTerrainRenderer(smoothGroundMap);
@@ -143,7 +143,7 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 		_battleView->_smoothTerrainSky = new SmoothTerrainSky();
 	}
 
-	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(battleScript->GetBattleSimulator()->groundMap);
+	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(battleScript->GetBattleSimulator()->GetGroundMap());
 	if (tiledGroundMap != nullptr)
 	{
 		tiledGroundMap->UpdateHeightMap();
