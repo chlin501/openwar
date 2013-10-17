@@ -4,7 +4,6 @@
 
 #include <cstring>
 #include <glm/gtc/constants.hpp>
-#include "../Library/Renderers/GradientRenderer.h"
 #include "BattleScript.h"
 #include "HeightMap.h"
 #include "SamuraiModule.h"
@@ -26,7 +25,8 @@ static void print_log(const char* operation, const char* message)
 
 BattleScript::BattleScript() :
 _battleSimulator(nullptr),
-_state(nullptr)
+_state(nullptr),
+_nextUnitId(1)
 {
 	_battleSimulator = new BattleSimulator();
 
@@ -40,13 +40,6 @@ _state(nullptr)
 
 	lua_pushcfunction(_state, openwar_simulator_init);
 	lua_setglobal(_state, "openwar_simulator_init");
-
-
-	lua_pushcfunction(_state, openwar_render_hint_line);
-	lua_setglobal(_state, "openwar_render_hint_line");
-
-	lua_pushcfunction(_state, openwar_render_hint_circle);
-	lua_setglobal(_state, "openwar_render_hint_circle");
 
 
 	lua_pushcfunction(_state, battle_message);
@@ -190,26 +183,41 @@ void BattleScript::Tick(double secondsSinceLastUpdate)
 }
 
 
-/*void BattleScript::RenderHints(GradientLineRenderer* renderer)
+
+/* BattleObserver */
+
+
+
+void BattleScript::OnAddUnit(Unit* unit)
 {
-	lua_getglobal(_state, "openwar_render_hints");
+	int unitId = _nextUnitId++;
+	_units[unitId] = unit;
+	_unitId[unit] = unitId;
+}
 
-	if (lua_isnil(_state, -1))
-	{
-		lua_pop(_state, 1);
-	}
-	else
-	{
-		_renderer = renderer;
 
-		int error = lua_pcall(_state, 0, 0, 0);
-		if (error)
-		{
-			print_log("ERROR", lua_tostring(_state, -1));
-			lua_pop(_state, 1);  // pop error message from the stack
-		}
-	}
-}*/
+void BattleScript::OnRemoveUnit(Unit* unit)
+{
+	int unitId = _unitId[unit];
+	_units.erase(unitId);
+	_unitId.erase(unit);
+}
+
+
+void BattleScript::OnShooting(const Shooting &shooting)
+{
+
+}
+
+
+void BattleScript::OnCasualty(Unit* unit, glm::vec2 position)
+{
+
+}
+
+
+/***/
+
 
 
 int BattleScript::NewUnit(int player, int team, const char* unitClass, int strength, glm::vec2 position, float bearing)
@@ -219,18 +227,18 @@ int BattleScript::NewUnit(int player, int team, const char* unitClass, int stren
 	Unit* unit = _battleSimulator->AddUnit(player, team, unitClass, strength, unitStats, position);
 	unit->command.facing = glm::radians(90 - bearing);
 
-	return unit->unitId;
+	return _unitId[unit];
 }
 
 
 void BattleScript::SetUnitMovement(int unitId, bool running, std::vector<glm::vec2> path, int chargeId, float heading)
 {
-	Unit* unit = _battleSimulator->GetUnit(unitId);
+	Unit* unit = _units[unitId];
 	if (unit != nullptr)
 	{
 		unit->command.path = path;
 		unit->command.facing = heading;
-		unit->command.meleeTarget = _battleSimulator->GetUnit(chargeId);
+		unit->command.meleeTarget = _units[chargeId];
 		unit->command.running = running;
 	}
 }
@@ -285,60 +293,6 @@ int BattleScript::openwar_terrain_init(lua_State* L)
 int BattleScript::openwar_simulator_init(lua_State* L)
 {
 	_battlescript->CreateBattleSimulator();
-	return 0;
-}
-
-
-int BattleScript::openwar_render_hint_line(lua_State* L)
-{
-	/*
-	int n = lua_gettop(L);
-
-	float x1 = n < 1 ? 0 : (float)lua_tonumber(L, 1);
-	float y1 = n < 2 ? 0 : (float)lua_tonumber(L, 2);
-	float x2 = n < 3 ? 0 : (float)lua_tonumber(L, 3);
-	float y2 = n < 4 ? 0 : (float)lua_tonumber(L, 4);
-
-	float z1 = _battlescript->_battleSimulator->heightMap->InterpolateHeight(glm::vec2(x1, y1));
-	float z2 = _battlescript->_battleSimulator->heightMap->InterpolateHeight(glm::vec2(x2, y2));
-
-	glm::vec4 c(0, 0, 0, 0.5f);
-
-	_battlescript->_renderer->AddLine(glm::vec3(x1, y1, z1), glm::vec3(x2, y2, z2), c, c);
-	*/
-
-	return 0;
-}
-
-
-int BattleScript::openwar_render_hint_circle(lua_State* L)
-{
-	/*
-	int n = lua_gettop(L);
-
-	float x = n < 1 ? 0 : (float)lua_tonumber(L, 1);
-	float y = n < 2 ? 0 : (float)lua_tonumber(L, 2);
-	float r = n < 3 ? 0 : (float)lua_tonumber(L, 3);
-
-	glm::vec4 c(0, 0, 0, 0.5f);
-
-	float da = 2 * glm::pi<float>() / 16;
-	for (int i = 0; i < 16; ++i)
-	{
-		float a1 = i * da;
-		float a2 = a1 + da;
-		float x1 = x + r * glm::cos(a1);
-		float y1 = y + r * glm::sin(a1);
-		float x2 = x + r * glm::cos(a2);
-		float y2 = y + r * glm::sin(a2);
-
-		float z1 = _battlescript->_battleSimulator->heightMap->InterpolateHeight(glm::vec2(x1, y1));
-		float z2 = _battlescript->_battleSimulator->heightMap->InterpolateHeight(glm::vec2(x2, y2));
-
-		_battlescript->_renderer->AddLine(glm::vec3(x1, y1, z1), glm::vec3(x2, y2, z2), c, c);
-	}
-	*/
-
 	return 0;
 }
 
@@ -404,7 +358,7 @@ int BattleScript::battle_get_unit_status(lua_State* L)
 	int n = lua_gettop(L);
 	int unitId = n < 1 ? 0 : (int)lua_tonumber(L, 1);
 
-	Unit* unit = _battlescript->_battleSimulator->GetUnit(unitId);
+	Unit* unit = _battlescript->_units[unitId];
 	if (unit != nullptr)
 	{
 		UnitStatus status(unit);

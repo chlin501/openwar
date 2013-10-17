@@ -11,10 +11,10 @@
 #include "../Library/Algorithms/quadtree.h"
 #include "MovementRules.h"
 
+class GroundMap;
+class HeightMap;
 struct Fighter;
 struct Unit;
-class HeightMap;
-class GroundMap;
 
 
 enum class PlatformType
@@ -301,10 +301,8 @@ struct UnitCommand
 struct Unit
 {
 	// static attributes
-	int unitId;
 	int player;
 	int team;
-
 	std::string unitClass;
 	UnitStats stats;
 	Fighter* fighters;
@@ -324,7 +322,6 @@ struct Unit
 	UnitCommand command; // updated by TouchGesture()
 
 	Unit() :
-	unitId(0),
 	player(1),
 	team(1),
 	stats(),
@@ -356,7 +353,8 @@ class BattleObserver
 public:
 	virtual ~BattleObserver();
 
-	virtual void OnNewUnit(Unit* unit) = 0;
+	virtual void OnAddUnit(Unit* unit) = 0;
+	virtual void OnRemoveUnit(Unit* unit) = 0;
 	virtual void OnShooting(const Shooting& shooting) = 0;
 	virtual void OnCasualty(Unit* unit, glm::vec2 position) = 0;
 };
@@ -369,6 +367,7 @@ class BattleSimulator
 	float _secondsSinceLastTimeStep;
 	std::set<BattleObserver*> _observers;
 	int _lastUnitId;
+	std::vector<Unit*> _units;
 
 public:
 	bool practice;
@@ -383,7 +382,6 @@ public:
 	float time;
 	float timeStep;
 
-	std::map<int, Unit*> units;
 	std::vector<Shooting> shootings;
 
 public:
@@ -394,17 +392,12 @@ public:
 	void RemoveObserver(BattleObserver* observer);
 	const std::set<BattleObserver*>& GetObservers() const;
 
-
-	Unit* GetUnit(int unitId) const
-	{
-		std::map<int, Unit*>::const_iterator i = units.find(unitId);
-		return i != units.end() ? (*i).second : 0;
-	}
-
 	bool IsMelee() const;
 
+	const std::vector<Unit*>& GetUnits() { return _units; }
+
 	Unit* AddUnit(int player, int team, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
-	void DeleteUnit(Unit* unit);
+	void RemoveUnit(Unit* unit);
 
 	void AdvanceTime(float secondsSinceLastTime);
 

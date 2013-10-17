@@ -30,9 +30,6 @@ UnitCounter::~UnitCounter()
 
 bool UnitCounter::Animate(float seconds)
 {
-	if (_battleView->GetBattleSimulator()->GetUnit(_unit->unitId) == 0)
-		return false;
-
 	float routingBlinkTime = _unit->state.GetRoutingBlinkTime();
 
 	if (!_unit->state.IsRouting() && routingBlinkTime != 0)

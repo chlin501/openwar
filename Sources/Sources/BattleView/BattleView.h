@@ -78,7 +78,8 @@ public:
 
 	BattleSimulator* GetBattleSimulator() const { return _battleSimulator; }
 
-	virtual void OnNewUnit(Unit* unit);
+	virtual void OnAddUnit(Unit* unit);
+	virtual void OnRemoveUnit(Unit* unit);
 	virtual void OnShooting(const Shooting& shooting);
 	virtual void OnCasualty(Unit* unit, glm::vec2 position);
 
@@ -97,7 +98,7 @@ public:
 	void InitializeTerrainTrees();
 	void UpdateTerrainTrees(bounds2f bounds);
 
-	void InitializeCameraPosition(const std::map<int, Unit*>& units);
+	void InitializeCameraPosition(const std::vector<Unit*>& units);
 
 	virtual void Render();
 	virtual void Update(double secondsSinceLastUpdate);

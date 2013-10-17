@@ -140,21 +140,18 @@ timeStep(1.0f / 15.0f)
 
 BattleSimulator::~BattleSimulator()
 {
-	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+	for (Unit* unit : _units)
 	{
-		Unit* unit = (*i).second;
 		delete[] unit->fighters;
 		delete unit;
 	}
 }
 
 
-
 bool BattleSimulator::IsMelee() const
 {
-	for (std::map<int, Unit*>::const_iterator i = units.begin(); i != units.end(); ++i)
+	for (const Unit* unit : _units)
 	{
-		const Unit* unit = (*i).second;
 		for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
 		{
 			if (fighter->state.opponent != nullptr)
@@ -166,12 +163,13 @@ bool BattleSimulator::IsMelee() const
 	return false;
 }
 
+
 void BattleSimulator::AddObserver(BattleObserver* observer)
 {
 	_observers.insert(observer);
 
-	for (std::pair<int, Unit*> i : units)
-		observer->OnNewUnit(i.second);
+	for (Unit* unit : _units)
+		observer->OnAddUnit(unit);
 }
 
 
@@ -191,7 +189,6 @@ Unit* BattleSimulator::AddUnit(int player, int team, const char* unitClass, int 
 {
 	Unit* unit = new Unit();
 
-	unit->unitId = ++_lastUnitId;
 	unit->player = player;
 	unit->team = team;
 	unit->unitClass = unitClass;
@@ -216,25 +213,26 @@ Unit* BattleSimulator::AddUnit(int player, int team, const char* unitClass, int 
 	unit->formation.numberOfRanks = (int)fminf(6, unit->fightersCount);
 	unit->formation.numberOfFiles = (int)ceilf((float)unit->fightersCount / unit->formation.numberOfRanks);
 
-	units[unit->unitId] = unit;
+	_units.push_back(unit);
 
 	for (BattleObserver* observer : _observers)
-		observer->OnNewUnit(unit);
+		observer->OnAddUnit(unit);
 
 	return unit;
 }
 
 
-void BattleSimulator::DeleteUnit(Unit* unit)
+void BattleSimulator::RemoveUnit(Unit* unit)
 {
-	units.erase(unit->unitId);
+	auto i = std::find(_units.begin(), _units.end(), unit);
+	_units.erase(i);
 
-	for (std::pair<int, Unit*> i : units)
+	for (Unit* other : _units)
 	{
-		if (i.second->command.meleeTarget == unit)
-			i.second->command.meleeTarget = nullptr;
-		if (i.second->command.missileTarget == unit)
-			i.second->command.missileTarget = nullptr;
+		if (other->command.meleeTarget == unit)
+			other->command.meleeTarget = nullptr;
+		if (other->command.missileTarget == unit)
+			other->command.missileTarget = nullptr;
 	}
 
 	delete[] unit->fighters;
@@ -261,9 +259,8 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 
 	if (!didStep)
 	{
-		for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+		for (Unit* unit : _units)
 		{
-			Unit* unit = (*i).second;
 			UpdateUnitRange(unit);
 		}
 	}
@@ -279,9 +276,8 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 		int count1 = 0;
 		int count2 = 0;
 
-		for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+		for (Unit* unit : _units)
 		{
-			Unit* unit = (*i).second;
 			if (!unit->state.IsRouting())
 			{
 				switch (unit->team)
@@ -310,9 +306,8 @@ void BattleSimulator::SimulateOneTimeStep()
 {
 	RebuildQuadTree();
 
-	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+	for (Unit* unit : _units)
 	{
-		Unit* unit = (*i).second;
 		MovementRules::AdvanceTime(unit, timeStep);
 	}
 
@@ -333,9 +328,8 @@ void BattleSimulator::RebuildQuadTree()
 	_fighterQuadTree.clear();
 	_weaponQuadTree.clear();
 
-	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+	for (Unit* unit : _units)
 	{
-		Unit* unit = (*i).second;
 		if (unit->state.unitMode != UnitMode_Initializing)
 		{
 			for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
@@ -356,9 +350,8 @@ void BattleSimulator::RebuildQuadTree()
 
 void BattleSimulator::ComputeNextState()
 {
-	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+	for (Unit* unit : _units)
 	{
-		Unit* unit = (*i).second;
 		unit->nextState = NextUnitState(unit);
 
 		for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
@@ -369,9 +362,8 @@ void BattleSimulator::ComputeNextState()
 
 void BattleSimulator::AssignNextState()
 {
-	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+	for (Unit* unit : _units)
 	{
-		Unit* unit = (*i).second;
 		unit->state = unit->nextState;
 
 		if (unit->state.IsRouting())
@@ -434,9 +426,8 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 
 void BattleSimulator::ResolveMeleeCombat()
 {
-	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+	for (Unit* unit : _units)
 	{
-		Unit* unit = (*i).second;
 		bool isMissile = unit->stats.missileType != MissileType::None;
 		for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
 		{
@@ -479,9 +470,8 @@ void BattleSimulator::ResolveMeleeCombat()
 
 void BattleSimulator::ResolveMissileCombat()
 {
-	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+	for (Unit* unit : _units)
 	{
-		Unit* unit = (*i).second;
 		bool controlsUnit = practice || currentPlayer == 0 || unit->player == currentPlayer;
 		if (controlsUnit && unit->state.shootingCounter > unit->shootingCounter)
 		{
@@ -566,9 +556,8 @@ void BattleSimulator::ResolveProjectileCasualties()
 
 void BattleSimulator::RemoveCasualties()
 {
-	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+	for (Unit* unit : _units)
 	{
-		Unit* unit = (*i).second;
 		for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
 		{
 			if (fighter->state.opponent != nullptr && fighter->state.opponent->casualty)
@@ -582,9 +571,8 @@ void BattleSimulator::RemoveCasualties()
 	float radius_squared = radius * radius;
 
 
-	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+	for (Unit* unit : _units)
 	{
-		Unit* unit = (*i).second;
 		int index = 0;
 		int n = unit->fightersCount;
 		for (int j = 0; j < n; ++j)
@@ -619,32 +607,14 @@ void BattleSimulator::RemoveCasualties()
 
 void BattleSimulator::RemoveDeadUnits()
 {
-	std::vector<int> remove;
-	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
-	{
-		Unit* unit = (*i).second;
+	std::vector<Unit*> remove;
+
+	for (Unit* unit : _units)
 		if (unit->fightersCount == 0)
-		{
-			remove.push_back(unit->unitId);
-		}
-	}
+			remove.push_back(unit);
 
-	for (std::vector<int>::iterator i = remove.begin(); i != remove.end(); ++i)
-	{
-		int unitIndex = *i;
-		units.erase(unitIndex);
-	}
-
-	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
-	{
-		Unit* unit = (*i).second;
-
-		if (unit->command.missileTarget != nullptr && GetUnit(unit->command.missileTarget->unitId) == 0)
-			unit->command.missileTarget = nullptr;
-
-		if (unit->command.meleeTarget != nullptr && GetUnit(unit->command.meleeTarget->unitId) == 0)
-			unit->command.meleeTarget = nullptr;
-	}
+	for (Unit* unit : remove)
+		RemoveUnit(unit);
 }
 
 
@@ -705,9 +675,8 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 		result.morale += (0.1f + unit->stats.trainingLevel) / 2000;
 	}
 
-	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+	for (Unit* other : _units)
 	{
-		Unit* other = (*i).second;
 		float distance = glm::length(other->state.center - unit->state.center);
 		float weight = 1.0f * 50.0f / (distance + 50.0f);
 		if (other->player == unit->player)
@@ -744,9 +713,8 @@ Unit* BattleSimulator::ClosestEnemyWithinLineOfFire(Unit* unit)
 {
 	Unit* closestEnemy = 0;
 	float closestDistance = 10000;
-	for (std::map<int, Unit*>::iterator i = units.begin(); i != units.end(); ++i)
+	for (Unit* target : _units)
 	{
-		Unit* target = (*i).second;
 		if (target->player != unit->player && IsWithinLineOfFire(unit, target->state.center))
 		{
 			float distance = glm::length(target->state.center - unit->state.center);

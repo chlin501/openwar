@@ -607,9 +607,8 @@ Unit* BattleGesture::FindFriendlyUnitByModifierArea(glm::vec2 screenPosition, gl
 	Unit* result = nullptr;
 	float distance = 10000;
 
-	for (std::pair<int, Unit*> i : _battleView->GetBattleSimulator()->units)
+	for (Unit* unit : _battleView->GetBattleSimulator()->GetUnits())
 	{
-		Unit* unit = i.second;
 		if (unit->player == _battleView->_player)
 		{
 			glm::vec2 center = !unit->command.path.empty() ? unit->command.path.back() : unit->state.center;

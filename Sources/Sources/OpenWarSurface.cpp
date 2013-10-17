@@ -268,7 +268,7 @@ void OpenWarSurface::UpdateSoundPlayer()
 		for (UnitCounter* unitMarker : _battleView->_unitMarkers)
 		{
 			Unit* unit = unitMarker->_unit;
-			if (_battleScript->GetBattleSimulator()->GetUnit(unit->unitId) != 0 && glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)
+			if (glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)
 			{
 				if (unit->stats.platformType == PlatformType::Cavalry)
 				{

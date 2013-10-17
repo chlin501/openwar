@@ -211,9 +211,14 @@ BattleView::~BattleView()
 }
 
 
-void BattleView::OnNewUnit(Unit* unit)
+void BattleView::OnAddUnit(Unit* unit)
 {
 	AddUnitMarker(unit);
+}
+
+
+void BattleView::OnRemoveUnit(Unit* unit)
+{
 }
 
 
@@ -247,7 +252,7 @@ void BattleView::Initialize()
 {
 	InitializeTerrainTrees();
 
-	InitializeCameraPosition(_battleSimulator->units);
+	InitializeCameraPosition(_battleSimulator->GetUnits());
 }
 
 
@@ -329,16 +334,15 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 
 
 
-void BattleView::InitializeCameraPosition(const std::map<int, Unit*>& units)
+void BattleView::InitializeCameraPosition(const std::vector<Unit*>& units)
 {
 	glm::vec2 friendlyCenter;
 	glm::vec2 enemyCenter;
 	int friendlyCount = 0;
 	int enemyCount = 0;
 
-	for (std::pair<int, Unit*> item : units)
+	for (Unit* unit : units)
 	{
-		Unit* unit = item.second;
 		if (!unit->state.IsRouting())
 		{
 			if (unit->player == _player)
@@ -434,11 +438,11 @@ void BattleView::Render()
 
 	// Range Markers
 
-	for (std::pair<int, Unit*> item : _battleSimulator->units)
+	for (Unit* unit : _battleSimulator->GetUnits())
 	{
-		if (item.second->player == _player)
+		if (unit->player == _player)
 		{
-			RangeMarker marker(_battleSimulator, item.second);
+			RangeMarker marker(_battleSimulator, unit);
 			_gradientTriangleStripRenderer->Reset();
 			marker.Render(_gradientTriangleStripRenderer);
 			_gradientTriangleStripRenderer->Draw(GetTransform());
@@ -760,9 +764,8 @@ void BattleView::AnimateMarkers(float seconds)
 
 void BattleView::InitializeUnitMarkers()
 {
-	for (std::pair<int, Unit*> item : _battleSimulator->units)
+	for (Unit* unit : _battleSimulator->GetUnits())
 	{
-		Unit* unit = item.second;
 		AddUnitMarker(unit);
 	}
 }

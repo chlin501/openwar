@@ -5,11 +5,12 @@
 #ifndef BattleScript_H
 #define BattleScript_H
 
+#include <map>
 #include "BattleSimulator.h"
 #include "lua.hpp"
 
 
-class BattleScript
+class BattleScript : public BattleObserver
 {
 	struct UnitStatus
 	{
@@ -23,12 +24,14 @@ class BattleScript
 	};
 
 	BattleSimulator* _battleSimulator;
-	//GradientLineRenderer* _renderer;
+	std::map<int, Unit*> _units;
+	std::map<Unit*, int> _unitId;
 	lua_State* _state;
+	int _nextUnitId;
 
 public:
 	BattleScript();
-	~BattleScript();
+	virtual ~BattleScript();
 
 	void SetGlobalNumber(const char* name, double value);
 	void SetGlobalString(const char* name, const char* value);
@@ -41,7 +44,12 @@ public:
 	void CreateBattleSimulator();
 
 	void Tick(double secondsSinceLastTick);
-	//void RenderHints(GradientLineRenderer* renderer);
+
+	// BattleObserver
+	virtual void OnAddUnit(Unit* unit);
+	virtual void OnRemoveUnit(Unit* unit);
+	virtual void OnShooting(const Shooting& shooting);
+	virtual void OnCasualty(Unit* unit, glm::vec2 position);
 
 private:
 	int NewUnit(int player, int team, const char* unitClass, int strength, glm::vec2 position, float bearing);
@@ -49,9 +57,6 @@ private:
 
 	static int openwar_terrain_init(lua_State* L);
 	static int openwar_simulator_init(lua_State* L);
-
-	static int openwar_render_hint_line(lua_State* L);
-	static int openwar_render_hint_circle(lua_State* L);
 
 	static int battle_message(lua_State* L);
 	static int battle_get_time(lua_State* L);

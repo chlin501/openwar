@@ -26,8 +26,7 @@ UnitMovementMarker::~UnitMovementMarker()
 
 bool UnitMovementMarker::Animate(float seconds)
 {
-	return _battleView->GetBattleSimulator()->GetUnit(_unit->unitId) != nullptr
-		&& !_unit->state.IsRouting()
+	return !_unit->state.IsRouting()
 		&& MovementRules::Length(_unit->command.path) > 8;
 }
 
