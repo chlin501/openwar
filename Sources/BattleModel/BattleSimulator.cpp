@@ -525,11 +525,14 @@ void BattleSimulator::ResolveProjectileCasualties()
 				for (quadtree<Fighter*>::iterator j(_fighterQuadTree.find(hitpoint.x, hitpoint.y, 0.45f)); *j; ++j)
 				{
 					Fighter* fighter = **j;
-					bool blocked = false;
-					if (fighter->terrainForest)
-						blocked = (random++ & 7) <= 5;
-					if (!blocked)
-						fighter->casualty = true;
+					if (fighter->unit->player != 0)
+					{
+						bool blocked = false;
+						if (fighter->terrainForest)
+							blocked = (random++ & 7) <= 5;
+						if (!blocked)
+							fighter->casualty = true;
+					}
 				}
 				shooting.projectiles.erase(i);
 			}
@@ -574,7 +577,7 @@ void BattleSimulator::RemoveCasualties()
 				++unit->state.recentCasualties;
 
 				for (BattleObserver* observer : _observers)
-					observer->OnCasualty(unit, unit->fighters[j].state.position);
+					observer->OnCasualty(unit->fighters[j]);
 			}
 			else
 			{

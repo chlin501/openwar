@@ -49,7 +49,7 @@ public:
 	virtual void OnAddUnit(Unit* unit);
 	virtual void OnRemoveUnit(Unit* unit);
 	virtual void OnShooting(const Shooting& shooting);
-	virtual void OnCasualty(Unit* unit, glm::vec2 position);
+	virtual void OnCasualty(const Fighter& fighter);
 
 private:
 	int NewUnit(int player, int team, const char* unitClass, int strength, glm::vec2 position, float bearing);

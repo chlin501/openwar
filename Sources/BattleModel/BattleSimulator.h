@@ -358,7 +358,7 @@ public:
 	virtual void OnAddUnit(Unit* unit) = 0;
 	virtual void OnRemoveUnit(Unit* unit) = 0;
 	virtual void OnShooting(const Shooting& shooting) = 0;
-	virtual void OnCasualty(Unit* unit, glm::vec2 position) = 0;
+	virtual void OnCasualty(const Fighter& fighter) = 0;
 };
 
 

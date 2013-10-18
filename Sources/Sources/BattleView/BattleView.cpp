@@ -253,9 +253,9 @@ void BattleView::OnShooting(Shooting const & shooting)
 }
 
 
-void BattleView::OnCasualty(Unit* unit, glm::vec2 position)
+void BattleView::OnCasualty(const Fighter& fighter)
 {
-	AddCasualty(unit, position);
+	AddCasualty(fighter.unit, fighter.state.position);
 }
 
 

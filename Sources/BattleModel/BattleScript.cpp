@@ -211,7 +211,7 @@ void BattleScript::OnShooting(const Shooting &shooting)
 }
 
 
-void BattleScript::OnCasualty(Unit* unit, glm::vec2 position)
+void BattleScript::OnCasualty(const Fighter& fighter)
 {
 
 }
