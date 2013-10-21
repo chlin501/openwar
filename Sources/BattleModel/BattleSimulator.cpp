@@ -220,6 +220,15 @@ void BattleSimulator::RemoveUnit(Unit* unit)
 
 	for (Unit* other : _units)
 	{
+		for (int i = 0; i < other->fightersCount; ++i)
+		{
+			Fighter* fighter = &other->fighters[i];
+			if (fighter->state.opponent != nullptr && fighter->state.opponent->unit == unit)
+				fighter->state.opponent = nullptr;
+			if (fighter->state.meleeTarget != nullptr && fighter->state.meleeTarget->unit == unit)
+				fighter->state.meleeTarget = nullptr;
+		}
+
 		if (other->command.meleeTarget == unit)
 			other->command.meleeTarget = nullptr;
 		if (other->command.missileTarget == unit)
