@@ -5,6 +5,7 @@
 #ifndef ButtonsView_H
 #define ButtonsView_H
 
+#include <string>
 #include "../Algebra/bounds.h"
 #include "../Graphics/texture.h"
 #include "../ViewCore/View.h"
@@ -75,6 +76,7 @@ public:
 	ButtonArea* GetButtonArea() const { return _buttonArea; }
 
 	const char* GetButtonText() const { return _buttonText.empty() ? nullptr : _buttonText.c_str(); }
+	void SetButtonText(const char* value) { _buttonText = value != nullptr ? value : ""; }
 
 	ButtonIcon* GetButtonIcon() const { return _buttonIcon; }
 	void SetButtonIcon(ButtonIcon* value) { _buttonIcon = value; }
