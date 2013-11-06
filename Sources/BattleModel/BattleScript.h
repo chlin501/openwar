@@ -23,14 +23,14 @@ class BattleScript : public BattleObserver
 		UnitStatus(Unit* unit);
 	};
 
-	BattleSimulator* _battleSimulator;
+	BattleSimulator* _simulator;
 	std::map<int, Unit*> _units;
 	std::map<Unit*, int> _unitId;
 	lua_State* _state;
 	int _nextUnitId;
 
 public:
-	BattleScript();
+	BattleScript(BattleSimulator* simulator);
 	virtual ~BattleScript();
 
 	void SetGlobalNumber(const char* name, double value);
@@ -39,9 +39,9 @@ public:
 	void AddPackagePath(const char* path);
 	void Execute(const char* script, size_t length);
 
-	BattleSimulator* GetBattleSimulator() const { return _battleSimulator; }
+	BattleSimulator* GetSimulator() const { return _simulator; }
 
-	void CreateBattleSimulator();
+	void CreateSimulator();
 
 	void Tick(double secondsSinceLastTick);
 

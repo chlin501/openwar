@@ -47,8 +47,10 @@
 		63F553C832A774E6970A5828 /* PathRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F555381CC651765405560B /* PathRenderer.cpp */; };
 		63F553D501D84AAEB66ECCF9 /* geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55CAFEA637F3D66215BD2 /* geometry.cpp */; };
 		63F55433D66E0956B386D227 /* UnitMovementMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55D5E1B7F9F2AFF583B2D /* UnitMovementMarker.cpp */; };
+		63F554616556A395A788A79A /* BattleCommander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55CCD729E593A1AF60AC3 /* BattleCommander.cpp */; };
 		63F5548D06981F2EA28B4C70 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55E03B1193B22920A311E /* Window.cpp */; };
 		63F554A56356060092C77122 /* framebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F553B7E5DD54BA26248B3A /* framebuffer.cpp */; };
+		63F554B794FA10FAD4611DBE /* BattleScenario.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55A61E69CB52A7505E66C /* BattleScenario.cpp */; };
 		63F554C3AFD11DF5918FA0E8 /* TextureRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55E7FF64AACC3DEBEF231 /* TextureRenderer.cpp */; };
 		63F554D599B9EA471445C976 /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F559F46C12DC702D63A12E /* texture.cpp */; };
 		63F554D6FFA9FCA63FD7AB05 /* SoundLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F5500E141C859C13F9FC93 /* SoundLoader.cpp */; };
@@ -163,6 +165,7 @@
 		63F550A448E1D6D3C5878C09 /* BillboardTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BillboardTexture.h; sourceTree = "<group>"; };
 		63F5510889D854BAA1901027 /* ColorBillboardRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ColorBillboardRenderer.cpp; sourceTree = "<group>"; };
 		63F5512629224214EAA271E9 /* PathRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathRenderer.h; sourceTree = "<group>"; };
+		63F5512700D8F875408129B0 /* BattleCommander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleCommander.h; sourceTree = "<group>"; };
 		63F55157BC0A9E510B62B787 /* TextureRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureRenderer.h; sourceTree = "<group>"; };
 		63F55193EB82580AA48251BC /* Touch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Touch.h; sourceTree = "<group>"; };
 		63F551DA5FF720685BD4D72F /* BillboardTerrainForest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BillboardTerrainForest.h; sourceTree = "<group>"; };
@@ -214,6 +217,7 @@
 		63F559F46C12DC702D63A12E /* texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = texture.cpp; sourceTree = "<group>"; };
 		63F559F96653B5741865983B /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = View.h; sourceTree = "<group>"; };
 		63F55A399C7906BE1D77A063 /* TerrainSky.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainSky.h; sourceTree = "<group>"; };
+		63F55A61E69CB52A7505E66C /* BattleScenario.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleScenario.cpp; sourceTree = "<group>"; };
 		63F55AB2BE0DA6BCCD070755 /* UnitTrackingMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitTrackingMarker.h; sourceTree = "<group>"; };
 		63F55AC129C1E8590AC60284 /* bspline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bspline.cpp; sourceTree = "<group>"; };
 		63F55AC9EFB69A66A162FA57 /* View.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = View.cpp; sourceTree = "<group>"; };
@@ -230,6 +234,7 @@
 		63F55C2E5A299BF382C33A05 /* geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = geometry.h; sourceTree = "<group>"; };
 		63F55C464CBF5588721C6A8D /* GradientRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientRenderer.h; sourceTree = "<group>"; };
 		63F55CAFEA637F3D66215BD2 /* geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = geometry.cpp; sourceTree = "<group>"; };
+		63F55CCD729E593A1AF60AC3 /* BattleCommander.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleCommander.cpp; sourceTree = "<group>"; };
 		63F55CD34CCD2630B8ACF544 /* animation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = animation.cpp; sourceTree = "<group>"; };
 		63F55CE5272DE6F5E75AD10C /* sampler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sampler.cpp; sourceTree = "<group>"; };
 		63F55D47F9AC5614AE3B6432 /* ButtonRendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonRendering.h; sourceTree = "<group>"; };
@@ -255,6 +260,7 @@
 		63F55F31EB1255C4B6B0337F /* Surface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Surface.h; sourceTree = "<group>"; };
 		63F55F465EEC5764D107A77E /* SoundLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundLoader.h; sourceTree = "<group>"; };
 		63F55F554D2048063A2E417C /* bounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bounds.h; sourceTree = "<group>"; };
+		63F55F8AEA7149588D5DA97F /* BattleScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleScenario.h; sourceTree = "<group>"; };
 		63F55FBEF0278E29E88A088C /* BattleGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleGesture.h; sourceTree = "<group>"; };
 		63F55FFCDBD2C7E4BDC29ABC /* PlainRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlainRenderer.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -299,6 +305,10 @@
 				4105FB241806D3890074C855 /* TiledGroundMap.h */,
 				63F556B39CE20E4EF1B28141 /* SamuraiModule.cpp */,
 				63F5585E94CA07B6133B52A1 /* SamuraiModule.h */,
+				63F55CCD729E593A1AF60AC3 /* BattleCommander.cpp */,
+				63F5512700D8F875408129B0 /* BattleCommander.h */,
+				63F55A61E69CB52A7505E66C /* BattleScenario.cpp */,
+				63F55F8AEA7149588D5DA97F /* BattleScenario.h */,
 			);
 			path = BattleModel;
 			sourceTree = "<group>";
@@ -767,6 +777,8 @@
 				63F55D81972105FD90CA832F /* OpenWarSurface.cpp in Sources */,
 				63F55BC7E8C99A6C96EE1A21 /* main.cpp in Sources */,
 				63F55932A50F5611BA25ED6F /* SamuraiModule.cpp in Sources */,
+				63F554616556A395A788A79A /* BattleCommander.cpp in Sources */,
+				63F554B794FA10FAD4611DBE /* BattleScenario.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,6 +18,7 @@
 
 #include "Sources/OpenWarSurface.h"
 #include "Library/ViewCore/Window.h"
+#include "BattleModel/BattleScenario.h"
 #include "BattleModel/BattleScript.h"
 #include "Sources/TerrainForest/BillboardTerrainForest.h"
 
@@ -56,8 +57,10 @@ static BattleScript* CreateBattleScript()
     
 	std::string directory = resource("Maps/").path();
 	std::string package_path = directory + "/?.lua";
-    
-	BattleScript* battleScript = new BattleScript();
+
+	BattleScenario* battleScenario = new BattleScenario();
+
+	BattleScript* battleScript = new BattleScript(battleScenario->GetSimulator());
 	battleScript->SetGlobalNumber("openwar_seed", 0);
 	battleScript->SetGlobalString("openwar_script_directory", directory.c_str());
 	battleScript->AddStandardPath();

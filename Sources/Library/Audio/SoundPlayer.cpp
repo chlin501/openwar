@@ -46,8 +46,8 @@ void SoundPlayer::Initialize()
 SoundPlayer::SoundPlayer()
 #ifdef OPENWAR_USE_OPENAL
 :
-_device(0),
-_context(0),
+_device(nullptr),
+_context(nullptr),
 _nextMatchlock(SoundSourceMatchlockFirst),
 _nextArrows(SoundSourceArrowsFirst),
 _nextCookie(1)
@@ -56,8 +56,8 @@ _nextCookie(1)
 #ifdef OPENWAR_USE_OPENAL
 	ALenum error;
 
-	_device = alcOpenDevice(0); // select the "preferred device"
-	if (_device)
+	_device = alcOpenDevice(nullptr); // select the "preferred device"
+	if (_device != nullptr)
 	{
 		_context = alcCreateContext(_device, 0);
 	}
