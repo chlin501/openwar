@@ -20,6 +20,8 @@ public:
 
 	void AddCommander(const char* id, BattleCommanderType type, const char* configuration);
 	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
+
+	void AddUnits();
 };
 
 
