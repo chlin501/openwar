@@ -80,6 +80,7 @@ public:
 	BattleSimulator* GetBattleSimulator() const { return _battleSimulator; }
 
 	// BattleObserver
+	virtual void OnSetGroundMap(GroundMap* groundMap);
 	virtual void OnAddUnit(Unit* unit);
 	virtual void OnRemoveUnit(Unit* unit);
 	virtual void OnShooting(const Shooting& shooting);

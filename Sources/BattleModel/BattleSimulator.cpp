@@ -11,7 +11,6 @@
 
 
 
-
 static float normalize_angle(float a)
 {
 	static float two_pi = 2.0f * (float)M_PI;
@@ -170,6 +169,15 @@ void BattleSimulator::AddObserver(BattleObserver* observer)
 void BattleSimulator::RemoveObserver(BattleObserver* observer)
 {
 	_observers.erase(observer);
+}
+
+
+void BattleSimulator::SetGroundMap(GroundMap* groundMap)
+{
+	_groundMap = groundMap;
+
+	for (BattleObserver* observer : _observers)
+		observer->OnSetGroundMap(groundMap);
 }
 
 

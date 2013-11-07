@@ -1,10 +1,13 @@
 #include <cstdlib>
 #include "../Library/resource.h"
+#include "../Library/Algebra/image.h"
 #include "GroundMap.h"
 #include "BattleScenario.h"
 #include "BattleSimulator.h"
-#include "SamuraiModule.h"
 #include "BattleScript.h"
+#include "SamuraiModule.h"
+#include "SmoothGroundMap.h"
+#include "TiledGroundMap.h"
 
 
 BattleScenario::BattleScenario(const char* name) :
@@ -39,13 +42,8 @@ void BattleScenario::Start(bool master)
 {
 	if (!_name.empty())
 	{
-		std::string directory = resource("Maps/").path();
-		std::string package_path = directory + "/?.lua";
-
-		_script->SetGlobalNumber("openwar_seed", std::rand());
-		_script->SetGlobalString("openwar_script_directory", directory.c_str());
-		_script->AddStandardPath();
-		_script->AddPackagePath(package_path.c_str());
+		_script->AddPackagePath(resource("Scripts/?.lua").path());
+		_script->AddPackagePath(resource("Maps/?.lua").path());
 
 		resource source(_name.c_str());
 		if (source.load())
@@ -56,34 +54,29 @@ void BattleScenario::Start(bool master)
 }
 
 
-void BattleScenario::Tick(double secondsSinceLastTick)
+void BattleScenario::SetSmoothMap(const char* name, float size)
 {
-	_script->Tick(secondsSinceLastTick);
+	std::string path = std::string("Maps/") + name;
+	image* map = new image(resource(path.c_str()));
+	bounds2f bounds(0, 0, size, size);
+
+	GroundMap* old = _simulator->GetGroundMap();
+	_simulator->SetGroundMap(new SmoothGroundMap(name, bounds, map));
+	delete old;
 }
 
 
-void BattleScenario::AddUnits()
+void BattleScenario::SetTiledMap(int x, int y)
 {
-	int player = 1;
-	int team = 1;
+	bounds2f bounds(0, 0, 1024, 1024);
 
-	for (BattleCommander* commander : _commanders)
-	{
-		if (commander->GetType() != BattleCommanderType::None)
-		{
-			float xpos = 500 + 40 * player;
-			float ypos = team == 1 ? 512 + 40 : 512 - 40;
-			glm::vec2 position = glm::vec2(xpos, ypos);
-			const char* unitClass = "SAM-KATA";
-			float bearing = 0;
+	GroundMap* old = _simulator->GetGroundMap();
+	_simulator->SetGroundMap(new TiledGroundMap(bounds, glm::ivec2(x, y)));
+	delete old;
+}
 
-			UnitStats unitStats = SamuraiModule::GetDefaultUnitStats(unitClass);
 
-			Unit* unit = _simulator->AddUnit(player, team, unitClass, 60, unitStats, position);
-			unit->command.bearing = glm::radians(90 - bearing);
-
-			++player;
-			team = team == 1 ? 2 : 1;
-		}
-	}
+void BattleScenario::Tick(double secondsSinceLastTick)
+{
+	_script->Tick(secondsSinceLastTick);
 }

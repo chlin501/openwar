@@ -2,8 +2,7 @@
 --
 -- This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-openwar_terrain_init("smooth", openwar_script_directory .. "/DefaultMap.tiff", 1024)
-openwar_simulator_init()
+openwar_init_groundmap("smooth", "DefaultMap.tiff", 1024)
 
 
 battle_message("Hello World")

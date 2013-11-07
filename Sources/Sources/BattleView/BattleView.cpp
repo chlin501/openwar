@@ -211,6 +211,12 @@ BattleView::~BattleView()
 }
 
 
+void BattleView::OnSetGroundMap(GroundMap* groundMap)
+{
+
+}
+
+
 void BattleView::OnAddUnit(Unit* unit)
 {
 	UnitCounter* marker = new UnitCounter(this, unit);

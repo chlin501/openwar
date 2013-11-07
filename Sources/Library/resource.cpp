@@ -103,11 +103,11 @@ resource::~resource()
 
 const char* resource::path() const
 {
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
+/*#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
 
     return GetPath(_name.c_str(), _type.c_str()).UTF8String;
 
-#else
+#else*/
 
     static std::string s;
     
@@ -121,7 +121,7 @@ const char* resource::path() const
     
     return s.c_str();
 
-#endif
+/*#endif*/
 }
 
 

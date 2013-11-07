@@ -355,6 +355,7 @@ class BattleObserver
 public:
 	virtual ~BattleObserver();
 
+	virtual void OnSetGroundMap(GroundMap* groundMap) = 0;
 	virtual void OnAddUnit(Unit* unit) = 0;
 	virtual void OnRemoveUnit(Unit* unit) = 0;
 	virtual void OnShooting(const Shooting& shooting) = 0;
@@ -384,7 +385,7 @@ public:
 	void AddObserver(BattleObserver* observer);
 	void RemoveObserver(BattleObserver* observer);
 
-	void SetGroundMap(GroundMap* value) { _groundMap = value; }
+	void SetGroundMap(GroundMap* groundMap);
 	GroundMap* GetGroundMap() { return _groundMap; }
 	HeightMap* GetHeightMap() { return _groundMap->GetHeightMap(); }
 

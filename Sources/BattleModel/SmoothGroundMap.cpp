@@ -6,7 +6,8 @@
 #include "HeightMap.h"
 
 
-SmoothGroundMap::SmoothGroundMap(bounds2f bounds, image* img) :
+SmoothGroundMap::SmoothGroundMap(const char* name, bounds2f bounds, image* img) :
+_name(name),
 _bounds(bounds),
 _image(img),
 _heightMap(nullptr)

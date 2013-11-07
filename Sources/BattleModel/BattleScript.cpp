@@ -12,7 +12,7 @@
 #include "BattleScenario.h"
 
 
-static BattleScript* _battlescript = nullptr;
+std::map<lua_State*, BattleScript*> BattleScript::_scripts;
 
 
 static void print_log(const char* operation, const char* message)
@@ -30,16 +30,12 @@ _simulator(scenario->GetSimulator()),
 _state(nullptr),
 _nextUnitId(1)
 {
-	_battlescript = this;
-
 	_state = luaL_newstate();
+
 	luaL_openlibs(_state);
 
-	lua_pushcfunction(_state, openwar_terrain_init);
-	lua_setglobal(_state, "openwar_terrain_init");
-
-	lua_pushcfunction(_state, openwar_simulator_init);
-	lua_setglobal(_state, "openwar_simulator_init");
+	lua_pushcfunction(_state, openwar_init_groundmap);
+	lua_setglobal(_state, "openwar_init_groundmap");
 
 
 	lua_pushcfunction(_state, battle_message);
@@ -65,37 +61,15 @@ _nextUnitId(1)
 
 	lua_pushcfunction(_state, battle_add_terrain_tree);
 	lua_setglobal(_state, "battle_add_terrain_tree");
+
+	_scripts[_state] = this;
 }
 
 
 BattleScript::~BattleScript()
 {
 	lua_close(_state);
-}
-
-
-void BattleScript::SetGlobalNumber(const char* name, double value)
-{
-	lua_pushnumber(_state, value);
-	lua_setglobal(_state, name);
-}
-
-
-void BattleScript::SetGlobalString(const char* name, const char* value)
-{
-	lua_pushstring(_state, value);
-	lua_setglobal(_state, name);
-}
-
-
-void BattleScript::AddStandardPath()
-{
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
-	NSString* path = [NSBundle mainBundle].resourcePath;
-	path = [path stringByAppendingPathComponent:@"Scripts"];
-	path = [path stringByAppendingPathComponent:@"?.lua"];
-	AddPackagePath(path.UTF8String);
-#endif
+	_scripts.erase(_state);
 }
 
 
@@ -149,8 +123,6 @@ void BattleScript::Execute(const char* script, size_t length)
 
 void BattleScript::Tick(double secondsSinceLastUpdate)
 {
-	_battlescript = this;
-
 	lua_getglobal(_state, "openwar_battle_tick");
 
 	if (lua_isnil(_state, -1))
@@ -175,9 +147,13 @@ void BattleScript::Tick(double secondsSinceLastUpdate)
 }
 
 
-
 /* BattleObserver */
 
+
+void BattleScript::OnSetGroundMap(GroundMap* groundMap)
+{
+
+}
 
 
 void BattleScript::OnAddUnit(Unit* unit)
@@ -240,48 +216,28 @@ void BattleScript::SetUnitMovement(int unitId, bool running, std::vector<glm::ve
 
 
 
-int BattleScript::openwar_terrain_init(lua_State* L)
+int BattleScript::openwar_init_groundmap(lua_State* L)
 {
+	BattleScript* script = _scripts[L];
+
 	int n = lua_gettop(L);
 	const char* s = n < 1 ? nullptr : lua_tostring(L, 1);
 
 	if (s != nullptr && std::strcmp(s, "smooth") == 0)
 	{
-		const char* p = n < 2 ? nullptr : lua_tostring(L, 2);
+		const char* name = n < 2 ? nullptr : lua_tostring(L, 2);
 		float size = n < 3 ? 1024 : (float)lua_tonumber(L, 3);
 
-#ifdef OPENWAR_USE_SDL
-
-		image* map = new image(resource(p));
-		bounds2f bounds(0, 0, size, size);
-
-#else
-
-		NSString* path = [NSString stringWithCString:p encoding:NSASCIIStringEncoding];
-		NSData* data = [NSData dataWithContentsOfFile:path];
-		image* map = ConvertTiffToImage(data);
-		bounds2f bounds(0, 0, size, size);
-
-#endif
-
-		SmoothGroundMap* smoothGroundMap = new SmoothGroundMap(bounds, map);
-		_battlescript->_simulator->SetGroundMap(smoothGroundMap);
+		script->_scenario->SetSmoothMap(name, size);
 	}
 	else if (s != nullptr && std::strcmp(s, "tiled") == 0)
 	{
-		int x = n < 2 ? 0 : (int)lua_tonumber(L, 2);
-		int y = n < 3 ? 0 : (int)lua_tonumber(L, 3);
+		int nx = n < 2 ? 0 : (int)lua_tonumber(L, 2);
+		int ny = n < 3 ? 0 : (int)lua_tonumber(L, 3);
 
-		TiledGroundMap* tiledGroundMap = new TiledGroundMap(bounds2f(0, 0, 1024, 1024), glm::ivec2(x, y));
-		_battlescript->_simulator->SetGroundMap(tiledGroundMap);
+		script->_scenario->SetTiledMap(nx, ny);
 	}
 
-	return 0;
-}
-
-
-int BattleScript::openwar_simulator_init(lua_State* L)
-{
 	return 0;
 }
 
@@ -307,6 +263,8 @@ int BattleScript::battle_get_time(lua_State* L)
 
 int BattleScript::battle_new_unit(lua_State* L)
 {
+	BattleScript* script = _scripts[L];
+
 	int n = lua_gettop(L);
 	int player = n < 1 ? 0 : (int)lua_tonumber(L, 1);
 	const char* platform = n < 2 ? "" : lua_tostring(L, 2);
@@ -318,7 +276,7 @@ int BattleScript::battle_new_unit(lua_State* L)
 
 	std::string unitClass = std::string(platform) + "-" + weapon;
 
-	int unitId = _battlescript->NewUnit(player, player, unitClass.c_str(), strength, glm::vec2(x, y), b);
+	int unitId = script->NewUnit(player, player, unitClass.c_str(), strength, glm::vec2(x, y), b);
 
 	lua_pushnumber(L, unitId);
 
@@ -328,6 +286,8 @@ int BattleScript::battle_new_unit(lua_State* L)
 
 int BattleScript::battle_set_unit_movement(lua_State* L)
 {
+	BattleScript* script = _scripts[L];
+
 	int n = lua_gettop(L);
 	int unitId = n < 1 ? 0 : (int)lua_tonumber(L, 1);
 	bool running = n < 2 ? false : lua_toboolean(L, 2);
@@ -336,7 +296,7 @@ int BattleScript::battle_set_unit_movement(lua_State* L)
 	int chargeId = n < 4 ? 0 : (int)lua_tonumber(L, 4);
 	float heading = n < 5 ? 0 : (float)lua_tonumber(L, 5);
 
-	_battlescript->SetUnitMovement(unitId, running, path, chargeId, heading);
+	script->SetUnitMovement(unitId, running, path, chargeId, heading);
 
 	return 0;
 }
@@ -344,10 +304,12 @@ int BattleScript::battle_set_unit_movement(lua_State* L)
 
 int BattleScript::battle_get_unit_status(lua_State* L)
 {
+	BattleScript* script = _scripts[L];
+
 	int n = lua_gettop(L);
 	int unitId = n < 1 ? 0 : (int)lua_tonumber(L, 1);
 
-	Unit* unit = _battlescript->_units[unitId];
+	Unit* unit = script->_units[unitId];
 	if (unit != nullptr)
 	{
 		UnitStatus status(unit);
@@ -366,7 +328,9 @@ int BattleScript::battle_get_unit_status(lua_State* L)
 
 int BattleScript::battle_set_terrain_tile(lua_State* L)
 {
-	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(_battlescript->_simulator->GetGroundMap());
+	BattleScript* script = _scripts[L];
+
+	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(script->_simulator->GetGroundMap());
 	if (tiledGroundMap != nullptr)
 	{
 		int n = lua_gettop(L);
@@ -385,7 +349,9 @@ int BattleScript::battle_set_terrain_tile(lua_State* L)
 
 int BattleScript::battle_set_terrain_height(lua_State* L)
 {
-	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(_battlescript->_simulator->GetGroundMap());
+	BattleScript* script = _scripts[L];
+
+	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(script->_simulator->GetGroundMap());
 	if (tiledGroundMap != nullptr)
 	{
 		int n = lua_gettop(L);

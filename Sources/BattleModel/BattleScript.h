@@ -14,6 +14,8 @@ class BattleScenario;
 
 class BattleScript : public BattleObserver
 {
+	static std::map<lua_State*, BattleScript*> _scripts;
+
 	struct UnitStatus
 	{
 		glm::vec2 position;
@@ -36,18 +38,13 @@ public:
 	BattleScript(BattleScenario* scenario);
 	virtual ~BattleScript();
 
-	void SetGlobalNumber(const char* name, double value);
-	void SetGlobalString(const char* name, const char* value);
-	void AddStandardPath();
 	void AddPackagePath(const char* path);
 	void Execute(const char* script, size_t length);
-
-	BattleScenario* GetScenario() const { return _scenario; }
-	BattleSimulator* GetSimulator() const { return _simulator; }
 
 	void Tick(double secondsSinceLastTick);
 
 	// BattleObserver
+	virtual void OnSetGroundMap(GroundMap* groundMap);
 	virtual void OnAddUnit(Unit* unit);
 	virtual void OnRemoveUnit(Unit* unit);
 	virtual void OnShooting(const Shooting& shooting);
@@ -57,8 +54,7 @@ private:
 	int NewUnit(int player, int team, const char* unitClass, int strength, glm::vec2 position, float bearing);
 	void SetUnitMovement(int unitId, bool running, std::vector<glm::vec2> path, int chargeId, float heading);
 
-	static int openwar_terrain_init(lua_State* L);
-	static int openwar_simulator_init(lua_State* L);
+	static int openwar_init_groundmap(lua_State* L);
 
 	static int battle_message(lua_State* L);
 	static int battle_get_time(lua_State* L);

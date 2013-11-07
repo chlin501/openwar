@@ -28,9 +28,10 @@ public:
 
 	void Start(bool master);
 
-	void Tick(double secondsSinceLastTick);
+	void SetSmoothMap(const char* name, float size);
+	void SetTiledMap(int x, int y);
 
-	void AddUnits();
+	void Tick(double secondsSinceLastTick);
 };
 
 

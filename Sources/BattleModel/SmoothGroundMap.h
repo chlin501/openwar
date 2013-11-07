@@ -6,6 +6,7 @@
 #define SmoothGroundMap_H
 
 #include <glm/glm.hpp>
+#include <string>
 #include "GroundMap.h"
 #include "../Library/Algebra/bounds.h"
 #include "../Library/Algebra/image.h"
@@ -15,12 +16,15 @@ class HeightMap;
 
 class SmoothGroundMap : public GroundMap
 {
+	std::string _name;
 	bounds2f _bounds;
 	image* _image;
 	HeightMap* _heightMap;
 
 public:
-	SmoothGroundMap(bounds2f bounds, image* img);
+	SmoothGroundMap(const char* name, bounds2f bounds, image* img);
+
+	const char* GetName() const { return _name.c_str(); }
 
 	virtual bounds2f GetBounds() const { return _bounds; }
 	virtual HeightMap* GetHeightMap() const { return _heightMap; }
