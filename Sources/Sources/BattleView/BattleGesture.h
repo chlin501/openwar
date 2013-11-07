@@ -9,8 +9,8 @@
 #include "../../Library/Algebra/bounds.h"
 #include "../../Library/ViewCore/Gesture.h"
 #include "../../Library/ViewCore/Touch.h"
-#include "BattleView.h"
 
+class BattleView;
 class UnitTrackingMarker;
 class Unit;
 class UnitCounter;
@@ -51,7 +51,7 @@ public:
 private:
 	void UpdateTrackingMarker();
 
-	int GetFlipSign() const { return _battleView->GetFlip() ? -1 : 1; }
+	int GetFlipSign() const;
 
 	Unit* FindFriendlyUnit(glm::vec2 screenPosition, glm::vec2 terrainPosition);
 	Unit* FindPlayerUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition);

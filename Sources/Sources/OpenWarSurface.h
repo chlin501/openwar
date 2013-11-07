@@ -5,48 +5,30 @@
 #ifndef OpenWarSurface_H
 #define OpenWarSurface_H
 
-#include "../Library/ViewCore/Surface.h"
+#include "BattleSurface.h"
 #include "TerrainView/EditorModel.h"
 
-class BattleGesture;
-class BattleModel;
-class BattleScript;
-class BattleView;
 class ButtonGesture;
 class ButtonItem;
 class ButtonRendering;
 class ButtonView;
-class BattleScenario;
-class BattleSimulator;
 class EditorGesture;
 class GradientLineRenderer;
-class SmoothTerrainSurfaceRenderer;
-class TerrainGesture;
-class TiledTerrainSurfaceRenderer;
+//class SmoothTerrainSurfaceRenderer;
+//class TiledTerrainSurfaceRenderer;
 
 
-class OpenWarSurface : public Surface
+class OpenWarSurface : public BattleSurface
 {
-public: // TODO: just testing
-	enum class Mode { None, Editing, Playing };
-	Mode _mode;
-
-	BattleScenario* _scenario;
-	BattleView* _battleView;
-
-	renderers* _renderers;
+public:
 	ButtonRendering* _buttonRendering;
 
 	EditorModel* _editorModel;
+	EditorGesture* _editorGesture;
 
 	ButtonView* _buttonsTopLeft;
 	ButtonView* _buttonsTopRight;
-
-	TerrainGesture* _terrainGesture;
-	BattleGesture* _battleGesture;
-	EditorGesture* _editorGesture;
 	ButtonGesture* _buttonGesture;
-
 	ButtonItem* _buttonItemHand;
 	ButtonItem* _buttonItemPaint;
 	ButtonItem* _buttonItemErase;
@@ -66,8 +48,6 @@ public:
 
 	virtual void ScreenSizeChanged();
 	virtual void Update(double secondsSinceLastUpdate);
-
-	virtual bool NeedsRender() const;
 	virtual void Render();
 
 	virtual void MouseEnter(glm::vec2 position);
@@ -75,8 +55,6 @@ public:
 	virtual void MouseLeave(glm::vec2 position);
 
 protected:
-	void UpdateSoundPlayer();
-
 	void ClickedPlay();
 	void ClickedPause();
 

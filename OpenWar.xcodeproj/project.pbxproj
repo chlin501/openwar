@@ -44,6 +44,7 @@
 		63F55211E9EC58D197413281 /* vertexbuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55210645696DF8C39FAA1 /* vertexbuffer.cpp */; };
 		63F552991717E520636434AD /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55AC9EFB69A66A162FA57 /* View.cpp */; };
 		63F5530271DC187BCEF0CF08 /* renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55C0BD31BFD5B101FB3DA /* renderer.cpp */; };
+		63F5538C9F13679CC41A3637 /* BattleSurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55F827F6CCD3DCD1A0C04 /* BattleSurface.cpp */; };
 		63F553C832A774E6970A5828 /* PathRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F555381CC651765405560B /* PathRenderer.cpp */; };
 		63F553D501D84AAEB66ECCF9 /* geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55CAFEA637F3D66215BD2 /* geometry.cpp */; };
 		63F55433D66E0956B386D227 /* UnitMovementMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55D5E1B7F9F2AFF583B2D /* UnitMovementMarker.cpp */; };
@@ -189,6 +190,7 @@
 		63F553CAD4D4F581C8F04465 /* BillboardTerrainForest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BillboardTerrainForest.cpp; sourceTree = "<group>"; };
 		63F553CB42E9E71501F4B017 /* ButtonView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ButtonView.cpp; sourceTree = "<group>"; };
 		63F553D7644D12FC7882284E /* uniforms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uniforms.h; sourceTree = "<group>"; };
+		63F554672815749AA328B7B9 /* BattleSurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleSurface.h; sourceTree = "<group>"; };
 		63F5547D56E6A2D1C43B5A71 /* string_shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = string_shape.h; sourceTree = "<group>"; };
 		63F554F7CD1A8ADB9D2F708A /* sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sprite.h; sourceTree = "<group>"; };
 		63F55523D79B2074202AE39A /* BillboardTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BillboardTexture.cpp; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 		63F55F31EB1255C4B6B0337F /* Surface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Surface.h; sourceTree = "<group>"; };
 		63F55F465EEC5764D107A77E /* SoundLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundLoader.h; sourceTree = "<group>"; };
 		63F55F554D2048063A2E417C /* bounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bounds.h; sourceTree = "<group>"; };
+		63F55F827F6CCD3DCD1A0C04 /* BattleSurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleSurface.cpp; sourceTree = "<group>"; };
 		63F55F8AEA7149588D5DA97F /* BattleScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleScenario.h; sourceTree = "<group>"; };
 		63F55FBEF0278E29E88A088C /* BattleGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleGesture.h; sourceTree = "<group>"; };
 		63F55FFCDBD2C7E4BDC29ABC /* PlainRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlainRenderer.h; sourceTree = "<group>"; };
@@ -432,6 +435,8 @@
 				4105FB3F1806D3C40074C855 /* TiledTerrain */,
 				63F5567B80EBBFC23C6EF38B /* OpenWarSurface.cpp */,
 				63F5509439B53C00F30EFF32 /* OpenWarSurface.h */,
+				63F55F827F6CCD3DCD1A0C04 /* BattleSurface.cpp */,
+				63F554672815749AA328B7B9 /* BattleSurface.h */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -779,6 +784,7 @@
 				63F55932A50F5611BA25ED6F /* SamuraiModule.cpp in Sources */,
 				63F554616556A395A788A79A /* BattleCommander.cpp in Sources */,
 				63F554B794FA10FAD4611DBE /* BattleScenario.cpp in Sources */,
+				63F5538C9F13679CC41A3637 /* BattleSurface.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

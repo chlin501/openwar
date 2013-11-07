@@ -535,6 +535,12 @@ void BattleGesture::UpdateTrackingMarker()
 }
 
 
+int BattleGesture::GetFlipSign() const
+{
+	return _battleView->GetFlip() ? -1 : 1;
+}
+
+
 Unit* BattleGesture::FindFriendlyUnit(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	if (disableUnitTracking)

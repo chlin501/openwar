@@ -2,35 +2,23 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "../Library/Audio/SoundPlayer.h"
+#include "../BattleModel/BattleScenario.h"
 #include "../Library/ViewExtra/ButtonView.h"
 #include "../Library/ViewExtra/ButtonGesture.h"
 #include "../Library/Renderers/GradientRenderer.h"
-#include "../BattleModel/BattleScenario.h"
-#include "../BattleModel/BattleSimulator.h"
 #include "BattleView/BattleGesture.h"
-#include "BattleView/UnitCounter.h"
+#include "BattleView/BattleView.h"
 #include "TerrainView/EditorGesture.h"
-#include "TerrainView/TerrainGesture.h"
-#include "SmoothTerrain/SmoothTerrainWater.h"
-#include "SmoothTerrain/SmoothTerrainSky.h"
-#include "TiledTerrain/TiledTerrainRenderer.h"
 #include "OpenWarSurface.h"
 
 
 
-OpenWarSurface::OpenWarSurface(glm::vec2 size, float pixelDensity) : Surface(size, pixelDensity),
-_mode(Mode::None),
-_scenario(nullptr),
-_battleView(nullptr),
-_renderers(nullptr),
+OpenWarSurface::OpenWarSurface(glm::vec2 size, float pixelDensity) : BattleSurface(size, pixelDensity),
 _buttonRendering(nullptr),
 _editorModel(nullptr),
+_editorGesture(nullptr),
 _buttonsTopLeft(nullptr),
 _buttonsTopRight(nullptr),
-_terrainGesture(nullptr),
-_battleGesture(nullptr),
-_editorGesture(nullptr),
 _buttonGesture(nullptr),
 _buttonItemHand(nullptr),
 _buttonItemPaint(nullptr),
@@ -42,10 +30,6 @@ _buttonItemWater(nullptr),
 _buttonItemFords(nullptr),
 _scriptHintRenderer(nullptr)
 {
-	SoundPlayer::Initialize();
-	SoundPlayer::singleton->Pause();
-
-	_renderers = renderers::singleton = new renderers();
 	_buttonRendering = new ButtonRendering(_renderers, pixelDensity);
 
 	_buttonsTopLeft = new ButtonView(this, _buttonRendering, ButtonAlignment::TopLeft);
@@ -99,79 +83,27 @@ OpenWarSurface::~OpenWarSurface()
 
 void OpenWarSurface::Reset(BattleScenario* scenario)
 {
-	delete _terrainGesture;
-	_terrainGesture = nullptr;
-
-	delete _battleGesture;
-	_battleGesture = nullptr;
-
 	delete _editorGesture;
 	_editorGesture = nullptr;
 
 	delete _editorModel;
 	_editorModel = nullptr;
 
-	if (_battleView != nullptr)
-	{
-		delete _battleView->_smoothTerrainSurface;
-		_battleView->_smoothTerrainSurface = nullptr;
+	BattleSurface::Reset(scenario);
 
-		delete _battleView->_tiledTerrainRenderer;
-		_battleView->_tiledTerrainRenderer = nullptr;
-	}
+	BattleView* battleView = GetBattleView();
+	_editorModel = new EditorModel(battleView, battleView->_smoothTerrainSurface);
+	_editorGesture = new EditorGesture(battleView, _editorModel);
 
-	delete _battleView;
-	_battleView = nullptr;
-
-	delete _scenario;
-	_scenario = nullptr;
-
-	/***/
-
-	_scenario = scenario;
-
-	_battleView = new BattleView(this, scenario->GetSimulator(), _renderers);
-	_battleView->_player = 1;
-	_battleView->_blueTeam = 1;
-
-	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(scenario->GetSimulator()->GetGroundMap());
-	if (smoothGroundMap != nullptr)
-	{
-		_battleView->_smoothTerrainSurface = new SmoothTerrainRenderer(smoothGroundMap);
-		_battleView->_smoothTerrainSurface->EnableRenderEdges();
-		_battleView->_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
-		_battleView->_smoothTerrainSky = new SmoothTerrainSky();
-	}
-
-	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(scenario->GetSimulator()->GetGroundMap());
-	if (tiledGroundMap != nullptr)
-	{
-		tiledGroundMap->UpdateHeightMap();
-		_battleView->_tiledTerrainRenderer = new TiledTerrainRenderer(tiledGroundMap);
-		_battleView->_smoothTerrainSky = new SmoothTerrainSky();
-	}
-
-	_battleView->Initialize();
-
-	_editorModel = new EditorModel(_battleView, _battleView->_smoothTerrainSurface);
-	_editorGesture = new EditorGesture(_battleView, _editorModel);
-
-	_battleGesture = new BattleGesture(_battleView);
-	_terrainGesture = new TerrainGesture(_battleView);
-
-	_mode = Mode::Editing;
-	//_mode = Mode::Playing;
+	SetPlaying(false);
 	UpdateButtonsAndGestures();
-
-	scenario->GetSimulator()->AddObserver(_battleView);
 }
 
 
 void OpenWarSurface::ScreenSizeChanged()
 {
+	BattleSurface::ScreenSizeChanged();
 	bounds2f viewport = bounds2f(0, 0, GetSize());
-	if (_battleView != nullptr)
-		_battleView->SetViewport(viewport);
 	_buttonsTopLeft->SetViewport(viewport);
 	_buttonsTopRight->SetViewport(viewport);
 }
@@ -179,27 +111,7 @@ void OpenWarSurface::ScreenSizeChanged()
 
 void OpenWarSurface::Update(double secondsSinceLastUpdate)
 {
-	if (_mode == Mode::Playing)
-	{
-		_scenario->Tick(secondsSinceLastUpdate);
-		UpdateSoundPlayer();
-	}
-	else if (_scenario != nullptr)
-	{
-		_scenario->Tick(0);
-	}
-
-	if (_battleView != nullptr)
-	{
-		_battleView->Update(secondsSinceLastUpdate);
-		_battleView->AnimateMarkers((float)secondsSinceLastUpdate);
-	}
-}
-
-
-bool OpenWarSurface::NeedsRender() const
-{
-	return true;
+	BattleSurface::Update(secondsSinceLastUpdate);
 }
 
 
@@ -211,22 +123,7 @@ void OpenWarSurface::Render()
 
 	glEnable(GL_BLEND);
 
-	if (_battleView != nullptr)
-	{
-		_battleView->Render();
-
-		/*
-		if (_battleScript != nullptr)
-		{
-			_scriptHintRenderer->Reset();
-			_battleScript->RenderHints(_scriptHintRenderer);
-			_scriptHintRenderer->Draw(_battleView->GetTransform());
-		}
-		*/
-	}
-
-	if (_battleGesture == nullptr)
-		_battleGesture->RenderHints();
+	BattleSurface::Render();
 
 	_buttonsTopLeft->Render();
 	_buttonsTopRight->Render();
@@ -251,64 +148,16 @@ void OpenWarSurface::MouseLeave(glm::vec2 position)
 }
 
 
-void OpenWarSurface::UpdateSoundPlayer()
-{
-	if (_mode == Mode::Playing)
-	{
-		int horseGallop = 0;
-		int horseTrot = 0;
-		int fighting = 0;
-		int infantryMarching = 0;
-		int infantryRunning = 0;
-
-		for (UnitCounter* unitMarker : _battleView->GetUnitCounters())
-		{
-			Unit* unit = unitMarker->_unit;
-			if (glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)
-			{
-				if (unit->stats.platformType == PlatformType::Cavalry)
-				{
-					if (unit->command.running)
-						++horseGallop;
-					else
-						++horseTrot;
-				}
-				else
-				{
-					if (unit->command.running)
-						++infantryRunning;
-					else
-						++infantryMarching;
-				}
-			}
-
-			if (unit->command.meleeTarget != nullptr)
-				++fighting;
-		}
-
-		SoundPlayer::singleton->UpdateInfantryWalking(infantryMarching != 0);
-		SoundPlayer::singleton->UpdateInfantryRunning(infantryRunning != 0);
-
-		SoundPlayer::singleton->UpdateCavalryWalking(horseTrot != 0);
-		SoundPlayer::singleton->UpdateCavalryRunning(horseGallop != 0);
-
-		SoundPlayer::singleton->UpdateFighting(_scenario->GetSimulator()->IsMelee());
-	}
-}
-
-
 void OpenWarSurface::ClickedPlay()
 {
-	_mode = Mode::Playing;
-	SoundPlayer::singleton->Resume();
+	SetPlaying(true);
 	UpdateButtonsAndGestures();
 }
 
 
 void OpenWarSurface::ClickedPause()
 {
-	_mode = Mode::Editing;
-	SoundPlayer::singleton->Pause();
+	SetPlaying(false);
 	UpdateButtonsAndGestures();
 }
 
@@ -335,42 +184,39 @@ void OpenWarSurface::SetEditorFeature(TerrainFeature terrainFeature)
 
 void OpenWarSurface::UpdateButtonsAndGestures()
 {
-	_buttonItemHand->SetDisabled(_mode != Mode::Editing);
-	_buttonItemPaint->SetDisabled(_mode != Mode::Editing);
-	_buttonItemErase->SetDisabled(_mode != Mode::Editing);
-	_buttonItemSmear->SetDisabled(_mode != Mode::Editing);
-	_buttonItemHills->SetDisabled(_mode != Mode::Editing);
-	_buttonItemTrees->SetDisabled(_mode != Mode::Editing);
-	_buttonItemWater->SetDisabled(_mode != Mode::Editing);
-	_buttonItemFords->SetDisabled(_mode != Mode::Editing);
+	bool playing = IsPlaying();
+	bool editing = _editorModel != nullptr && _editorModel->GetEditorMode() != EditorMode::Hand;
+	SetEditing(editing);
 
-	if (_mode == Mode::None)
-		return;
+	_buttonItemHand->SetDisabled (playing);
+	_buttonItemPaint->SetDisabled(playing);
+	_buttonItemErase->SetDisabled(playing);
+	_buttonItemSmear->SetDisabled(playing);
+	_buttonItemHills->SetDisabled(playing);
+	_buttonItemTrees->SetDisabled(playing);
+	_buttonItemWater->SetDisabled(playing);
+	_buttonItemFords->SetDisabled(playing);
 
-	_buttonItemHand->SetSelected(_editorModel->GetEditorMode() == EditorMode::Hand);
-	_buttonItemPaint->SetSelected(_editorModel->GetEditorMode() == EditorMode::Paint);
-	_buttonItemErase->SetSelected(_editorModel->GetEditorMode() == EditorMode::Erase);
-	_buttonItemSmear->SetSelected(_editorModel->GetEditorMode() == EditorMode::Smear);
-	_buttonItemHills->SetSelected(_editorModel->GetTerrainFeature() == TerrainFeature::Hills);
-	_buttonItemTrees->SetSelected(_editorModel->GetTerrainFeature() == TerrainFeature::Trees);
-	_buttonItemWater->SetSelected(_editorModel->GetTerrainFeature() == TerrainFeature::Water);
-	_buttonItemFords->SetSelected(_editorModel->GetTerrainFeature() == TerrainFeature::Fords);
+	if (_editorModel != nullptr)
+	{
+		_buttonItemHand->SetSelected(_editorModel->GetEditorMode() == EditorMode::Hand);
+		_buttonItemPaint->SetSelected(_editorModel->GetEditorMode() == EditorMode::Paint);
+		_buttonItemErase->SetSelected(_editorModel->GetEditorMode() == EditorMode::Erase);
+		_buttonItemSmear->SetSelected(_editorModel->GetEditorMode() == EditorMode::Smear);
+		_buttonItemHills->SetSelected(_editorModel->GetTerrainFeature() == TerrainFeature::Hills);
+		_buttonItemTrees->SetSelected(_editorModel->GetTerrainFeature() == TerrainFeature::Trees);
+		_buttonItemWater->SetSelected(_editorModel->GetTerrainFeature() == TerrainFeature::Water);
+		_buttonItemFords->SetSelected(_editorModel->GetTerrainFeature() == TerrainFeature::Fords);
+	}
 
-	_battleGesture->SetEnabled(_mode == Mode::Playing);
-	_editorGesture->SetEnabled(_mode == Mode::Editing);
+	if (_editorGesture != nullptr)
+	{
+		_editorGesture->SetEnabled(editing);
+	}
 
 	_buttonsTopRight->Reset();
-	switch (_mode)
-	{
-		case Mode::None:
-			break;
-
-		case Mode::Editing:
-			_buttonsTopRight->AddButtonArea()->AddButtonItem(_buttonRendering->buttonIconPlay)->SetAction([this](){ ClickedPlay(); });
-			break;
-
-		case Mode::Playing:
-			_buttonsTopRight->AddButtonArea()->AddButtonItem(_buttonRendering->buttonIconPause)->SetAction([this](){ ClickedPause(); });
-			break;
-	}
+	if (playing)
+		_buttonsTopRight->AddButtonArea()->AddButtonItem(_buttonRendering->buttonIconPause)->SetAction([this](){ ClickedPause(); });
+	else
+		_buttonsTopRight->AddButtonArea()->AddButtonItem(_buttonRendering->buttonIconPlay)->SetAction([this](){ ClickedPlay(); });
 }
