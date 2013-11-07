@@ -24,28 +24,12 @@
 
 static BattleScenario* CreateBattleScenario()
 {
-	resource source("Maps/DefaultMap.lua");
-	source.load();
-    
-	std::string directory = resource("Maps/").path();
-	std::string package_path = directory + "/?.lua";
-
-	BattleScenario* scenario = new BattleScenario();
+	BattleScenario* scenario = new BattleScenario("Maps/DefaultMap.lua");
 	scenario->AddCommander("1", BattleCommanderType::Screen, "");
 	scenario->AddCommander("2", BattleCommanderType::Script, "");
-
-	BattleScript* script = scenario->GetScript();
-
-	script->SetGlobalNumber("openwar_seed", 0);
-	script->SetGlobalString("openwar_script_directory", directory.c_str());
-	script->AddStandardPath();
-	script->AddPackagePath(package_path.c_str());
-    
-	script->Execute((const char*)source.data(), source.size());
-    
+	scenario->Start(true);
 	return scenario;
 }
-
 
 
 int main(int argc, char *argv[])

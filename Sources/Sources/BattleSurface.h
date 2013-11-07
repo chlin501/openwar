@@ -50,6 +50,9 @@ public:
 	virtual void Render();
 
 private:
+	void RemoveBattleViews();
+	void CreateBattleViews();
+
 	void UpdateSoundPlayer();
 	void UpdateBattleViewSize();
 };

@@ -31,83 +31,12 @@ BattleSurface::~BattleSurface()
 
 void BattleSurface::Reset(BattleScenario* scenario)
 {
-	for (Gesture* gesture : _battleGestures)
-		delete gesture;
-	_battleGestures.clear();
-
-	for (BattleView* battleView : _battleViews)
-	{
-		delete battleView->_smoothTerrainSurface;
-		battleView->_smoothTerrainSurface = nullptr;
-
-		delete battleView->_tiledTerrainRenderer;
-		battleView->_tiledTerrainRenderer = nullptr;
-
-		delete battleView;
-	}
-	_battleViews.clear();
+	RemoveBattleViews();
 
 	delete _scenario;
-	_scenario = nullptr;
-
-	/***/
-
 	_scenario = scenario;
 
-	SmoothTerrainRenderer* smoothTerrainRenderer = nullptr;
-	SmoothTerrainWater* smoothTerrainWater = nullptr;
-	SmoothTerrainSky* smoothTerrainSky = nullptr;
-	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(scenario->GetSimulator()->GetGroundMap());
-	if (smoothGroundMap != nullptr)
-	{
-		smoothTerrainRenderer = new SmoothTerrainRenderer(smoothGroundMap);
-		smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
-		smoothTerrainSky = new SmoothTerrainSky();
-		if (renderer_base::pixels_per_point() > 1.0)
-			smoothTerrainRenderer->EnableRenderEdges();
-	}
-
-	TiledTerrainRenderer* tiledTerrainRenderer = nullptr;
-	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(scenario->GetSimulator()->GetGroundMap());
-	if (tiledGroundMap != nullptr)
-	{
-		tiledGroundMap->UpdateHeightMap();
-		tiledTerrainRenderer = new TiledTerrainRenderer(tiledGroundMap);
-		smoothTerrainSky = new SmoothTerrainSky();
-	}
-
-	int player = 1;
-	for (BattleCommander* commander : _scenario->GetCommanders())
-	{
-		if (commander->GetType() == BattleCommanderType::Screen)
-		{
-			BattleView* battleView = new BattleView(this, scenario->GetSimulator(), _renderers);
-			battleView->_player = 1;
-			battleView->_blueTeam = 1;
-			battleView->_smoothTerrainSurface = smoothTerrainRenderer;
-			battleView->_smoothTerrainWater = smoothTerrainWater;
-			battleView->_smoothTerrainSky = smoothTerrainSky;
-			battleView->_tiledTerrainRenderer = tiledTerrainRenderer;
-
-			if (commander->GetConfiguration()[0] == '-')
-			{
-				battleView->SetFlip(true);
-				battleView->SetCameraFacing((float)M_PI);
-			}
-
-			battleView->Initialize();
-			_battleViews.push_back(battleView);
-			scenario->GetSimulator()->AddObserver(battleView);
-
-			BattleGesture* battleGesture = new BattleGesture(battleView);
-			_battleGestures.push_back(battleGesture);
-
-			TerrainGesture* terrainGesture = new TerrainGesture(battleView);
-			_terrainGestures.push_back(terrainGesture);
-		}
-	}
-
-	UpdateBattleViewSize();
+	CreateBattleViews();
 }
 
 
@@ -185,6 +114,89 @@ void BattleSurface::Render()
 
 	//if (_battleGesture != nullptr)
 	//	_battleGesture->RenderHints();
+}
+
+
+void BattleSurface::RemoveBattleViews()
+{
+	for (Gesture* gesture : _battleGestures)
+		delete gesture;
+	_battleGestures.clear();
+
+	for (BattleView* battleView : _battleViews)
+	{
+		delete battleView->_smoothTerrainSurface;
+		battleView->_smoothTerrainSurface = nullptr;
+
+		delete battleView->_tiledTerrainRenderer;
+		battleView->_tiledTerrainRenderer = nullptr;
+
+		delete battleView;
+	}
+	_battleViews.clear();
+}
+
+
+void BattleSurface::CreateBattleViews()
+{
+	BattleSimulator* simulator = _scenario->GetSimulator();
+
+	SmoothTerrainRenderer* smoothTerrainRenderer = nullptr;
+	SmoothTerrainWater* smoothTerrainWater = nullptr;
+	SmoothTerrainSky* smoothTerrainSky = nullptr;
+	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(simulator->GetGroundMap());
+	if (smoothGroundMap != nullptr)
+	{
+		smoothTerrainRenderer = new SmoothTerrainRenderer(smoothGroundMap);
+		smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
+		smoothTerrainSky = new SmoothTerrainSky();
+		if (renderer_base::pixels_per_point() > 1.0)
+			smoothTerrainRenderer->EnableRenderEdges();
+	}
+
+	TiledTerrainRenderer* tiledTerrainRenderer = nullptr;
+	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(simulator->GetGroundMap());
+	if (tiledGroundMap != nullptr)
+	{
+		tiledGroundMap->UpdateHeightMap();
+		tiledTerrainRenderer = new TiledTerrainRenderer(tiledGroundMap);
+		smoothTerrainSky = new SmoothTerrainSky();
+	}
+
+	int player = 1;
+	for (BattleCommander* commander : _scenario->GetCommanders())
+	{
+		if (commander->GetType() == BattleCommanderType::Screen)
+		{
+			BattleView* battleView = new BattleView(this, simulator, _renderers);
+			battleView->_player = player;
+			battleView->_blueTeam = 1;
+			battleView->_smoothTerrainSurface = smoothTerrainRenderer;
+			battleView->_smoothTerrainWater = smoothTerrainWater;
+			battleView->_smoothTerrainSky = smoothTerrainSky;
+			battleView->_tiledTerrainRenderer = tiledTerrainRenderer;
+
+			if (commander->GetConfiguration()[0] == '-')
+			{
+				battleView->SetFlip(true);
+				battleView->SetCameraFacing((float)M_PI);
+			}
+
+			battleView->Initialize();
+			_battleViews.push_back(battleView);
+			simulator->AddObserver(battleView);
+
+			BattleGesture* battleGesture = new BattleGesture(battleView);
+			_battleGestures.push_back(battleGesture);
+
+			TerrainGesture* terrainGesture = new TerrainGesture(battleView);
+			_terrainGestures.push_back(terrainGesture);
+		}
+
+		++player;
+	}
+
+	UpdateBattleViewSize();
 }
 
 

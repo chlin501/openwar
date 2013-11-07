@@ -1,3 +1,5 @@
+#include <cstdlib>
+#include "../Library/resource.h"
 #include "GroundMap.h"
 #include "BattleScenario.h"
 #include "BattleSimulator.h"
@@ -5,7 +7,8 @@
 #include "BattleScript.h"
 
 
-BattleScenario::BattleScenario() :
+BattleScenario::BattleScenario(const char* name) :
+_name(name),
 _simulator(nullptr),
 _script(nullptr)
 {
@@ -16,15 +19,12 @@ _script(nullptr)
 
 BattleScenario::~BattleScenario()
 {
+	for (BattleCommander* commander : _commanders)
+		delete commander;
+
 	GroundMap* groundMap = _simulator->GetGroundMap();
 	delete _simulator;
 	delete groundMap;
-}
-
-
-void BattleScenario::Tick(double secondsSinceLastTick)
-{
-	_script->Tick(secondsSinceLastTick);
 }
 
 
@@ -32,6 +32,33 @@ void BattleScenario::AddCommander(const char* id, BattleCommanderType type, cons
 {
 	BattleCommander* commander = new BattleCommander(id, type, configuration);
 	_commanders.push_back(commander);
+}
+
+
+void BattleScenario::Start(bool master)
+{
+	if (!_name.empty())
+	{
+		std::string directory = resource("Maps/").path();
+		std::string package_path = directory + "/?.lua";
+
+		_script->SetGlobalNumber("openwar_seed", std::rand());
+		_script->SetGlobalString("openwar_script_directory", directory.c_str());
+		_script->AddStandardPath();
+		_script->AddPackagePath(package_path.c_str());
+
+		resource source(_name.c_str());
+		if (source.load())
+		{
+			_script->Execute((const char*)source.data(), source.size());
+		}
+	}
+}
+
+
+void BattleScenario::Tick(double secondsSinceLastTick)
+{
+	_script->Tick(secondsSinceLastTick);
 }
 
 

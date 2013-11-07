@@ -155,7 +155,7 @@ bool resource::load(char const* type)
     
 	_data = ptr;
     
-    return false;
+    return true;
     
 #endif
 }
