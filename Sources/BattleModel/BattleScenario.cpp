@@ -2,12 +2,15 @@
 #include "BattleScenario.h"
 #include "BattleSimulator.h"
 #include "SamuraiModule.h"
+#include "BattleScript.h"
 
 
 BattleScenario::BattleScenario() :
-_simulator(nullptr)
+_simulator(nullptr),
+_script(nullptr)
 {
 	_simulator = new BattleSimulator();
+	_script = new BattleScript(this);
 }
 
 
@@ -16,6 +19,12 @@ BattleScenario::~BattleScenario()
 	GroundMap* groundMap = _simulator->GetGroundMap();
 	delete _simulator;
 	delete groundMap;
+}
+
+
+void BattleScenario::Tick(double secondsSinceLastTick)
+{
+	_script->Tick(secondsSinceLastTick);
 }
 
 

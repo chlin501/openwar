@@ -9,6 +9,7 @@
 #include "SamuraiModule.h"
 #include "SmoothGroundMap.h"
 #include "TiledGroundMap.h"
+#include "BattleScenario.h"
 
 
 static BattleScript* _battlescript = nullptr;
@@ -23,8 +24,9 @@ static void print_log(const char* operation, const char* message)
 
 
 
-BattleScript::BattleScript(BattleSimulator* simulator) :
-_simulator(simulator),
+BattleScript::BattleScript(BattleScenario* scenario) :
+_scenario(scenario),
+_simulator(scenario->GetSimulator()),
 _state(nullptr),
 _nextUnitId(1)
 {

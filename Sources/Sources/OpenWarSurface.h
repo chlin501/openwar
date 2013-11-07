@@ -16,6 +16,7 @@ class ButtonGesture;
 class ButtonItem;
 class ButtonRendering;
 class ButtonView;
+class BattleScenario;
 class BattleSimulator;
 class EditorGesture;
 class GradientLineRenderer;
@@ -30,7 +31,7 @@ public: // TODO: just testing
 	enum class Mode { None, Editing, Playing };
 	Mode _mode;
 
-	BattleScript* _battleScript;
+	BattleScenario* _scenario;
 	BattleView* _battleView;
 
 	renderers* _renderers;
@@ -61,7 +62,7 @@ public:
 	OpenWarSurface(glm::vec2 size, float pixelDensity);
 	virtual ~OpenWarSurface();
 
-	virtual void Reset(BattleScript* battleScript);
+	virtual void Reset(BattleScenario* scenario);
 
 	virtual void ScreenSizeChanged();
 	virtual void Update(double secondsSinceLastUpdate);

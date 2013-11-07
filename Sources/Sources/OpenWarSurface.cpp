@@ -6,7 +6,7 @@
 #include "../Library/ViewExtra/ButtonView.h"
 #include "../Library/ViewExtra/ButtonGesture.h"
 #include "../Library/Renderers/GradientRenderer.h"
-#include "../BattleModel/BattleScript.h"
+#include "../BattleModel/BattleScenario.h"
 #include "../BattleModel/BattleSimulator.h"
 #include "BattleView/BattleGesture.h"
 #include "BattleView/UnitCounter.h"
@@ -21,7 +21,7 @@
 
 OpenWarSurface::OpenWarSurface(glm::vec2 size, float pixelDensity) : Surface(size, pixelDensity),
 _mode(Mode::None),
-_battleScript(nullptr),
+_scenario(nullptr),
 _battleView(nullptr),
 _renderers(nullptr),
 _buttonRendering(nullptr),
@@ -97,7 +97,7 @@ OpenWarSurface::~OpenWarSurface()
 }
 
 
-void OpenWarSurface::Reset(BattleScript* battleScript)
+void OpenWarSurface::Reset(BattleScenario* scenario)
 {
 	delete _terrainGesture;
 	_terrainGesture = nullptr;
@@ -123,18 +123,18 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 	delete _battleView;
 	_battleView = nullptr;
 
-	delete _battleScript;
-	_battleScript = nullptr;
+	delete _scenario;
+	_scenario = nullptr;
 
 	/***/
 
-	_battleScript = battleScript;
+	_scenario = scenario;
 
-	_battleView = new BattleView(this, battleScript->GetSimulator(), _renderers);
+	_battleView = new BattleView(this, scenario->GetSimulator(), _renderers);
 	_battleView->_player = 1;
 	_battleView->_blueTeam = 1;
 
-	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(battleScript->GetSimulator()->GetGroundMap());
+	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(scenario->GetSimulator()->GetGroundMap());
 	if (smoothGroundMap != nullptr)
 	{
 		_battleView->_smoothTerrainSurface = new SmoothTerrainRenderer(smoothGroundMap);
@@ -143,7 +143,7 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 		_battleView->_smoothTerrainSky = new SmoothTerrainSky();
 	}
 
-	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(battleScript->GetSimulator()->GetGroundMap());
+	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(scenario->GetSimulator()->GetGroundMap());
 	if (tiledGroundMap != nullptr)
 	{
 		tiledGroundMap->UpdateHeightMap();
@@ -163,10 +163,7 @@ void OpenWarSurface::Reset(BattleScript* battleScript)
 	//_mode = Mode::Playing;
 	UpdateButtonsAndGestures();
 
-	if (battleScript->GetSimulator() != nullptr)
-	{
-		battleScript->GetSimulator()->AddObserver(_battleView);
-	}
+	scenario->GetSimulator()->AddObserver(_battleView);
 }
 
 
@@ -184,12 +181,12 @@ void OpenWarSurface::Update(double secondsSinceLastUpdate)
 {
 	if (_mode == Mode::Playing)
 	{
-		_battleScript->Tick(secondsSinceLastUpdate);
+		_scenario->Tick(secondsSinceLastUpdate);
 		UpdateSoundPlayer();
 	}
-	else if (_battleScript != nullptr)
+	else if (_scenario != nullptr)
 	{
-		_battleScript->Tick(0);
+		_scenario->Tick(0);
 	}
 
 	if (_battleView != nullptr)
@@ -295,7 +292,7 @@ void OpenWarSurface::UpdateSoundPlayer()
 		SoundPlayer::singleton->UpdateCavalryWalking(horseTrot != 0);
 		SoundPlayer::singleton->UpdateCavalryRunning(horseGallop != 0);
 
-		SoundPlayer::singleton->UpdateFighting(_battleScript->GetSimulator()->IsMelee());
+		SoundPlayer::singleton->UpdateFighting(_scenario->GetSimulator()->IsMelee());
 	}
 }
 

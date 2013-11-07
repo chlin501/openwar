@@ -20,63 +20,31 @@
 #include "Library/ViewCore/Window.h"
 #include "BattleModel/BattleScenario.h"
 #include "BattleModel/BattleScript.h"
-#include "Sources/TerrainForest/BillboardTerrainForest.h"
 
 
-
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
-
-static BattleScript* CreateBattleScript()
+static BattleScenario* CreateBattleScenario()
 {
-	NSString* path = [[NSBundle mainBundle] pathForResource:@"DefaultMap" ofType:@"lua" inDirectory:@"Maps"];
-	NSURL* sourceDirectory = [[[NSURL fileURLWithPath:path] URLByDeletingLastPathComponent] retain];
-	NSData* script = [NSData dataWithContentsOfFile:path];
-    
-	const char* directory = sourceDirectory.filePathURL.path.UTF8String;
-    
-	BattleScript* battleScript = new BattleScript();
-	battleScript->SetGlobalNumber("openwar_seed", 0);
-	battleScript->SetGlobalString("openwar_script_directory", directory);
-	battleScript->AddStandardPath();
-	battleScript->AddPackagePath((std::string(directory) + "/?.lua").c_str());
-    
-	battleScript->Execute((const char*)script.bytes, script.length);
-    
-	if (battleScript->GetBattleSimulator()->terrainForest == nullptr)
-		battleScript->GetBattleSimulator()->terrainForest = new BillboardTerrainForest();
-    
-	return battleScript;
-}
-
-#else
-
-static BattleScript* CreateBattleScript()
-{
-	resource script("Maps/DefaultMap.lua");
-	script.load();
+	resource source("Maps/DefaultMap.lua");
+	source.load();
     
 	std::string directory = resource("Maps/").path();
 	std::string package_path = directory + "/?.lua";
 
-	BattleScenario* battleScenario = new BattleScenario();
+	BattleScenario* scenario = new BattleScenario();
+	BattleScript* script = scenario->GetScript();
 
-	BattleScript* battleScript = new BattleScript(battleScenario->GetSimulator());
-	battleScript->SetGlobalNumber("openwar_seed", 0);
-	battleScript->SetGlobalString("openwar_script_directory", directory.c_str());
-	battleScript->AddStandardPath();
-	battleScript->AddPackagePath(package_path.c_str());
+	script->SetGlobalNumber("openwar_seed", 0);
+	script->SetGlobalString("openwar_script_directory", directory.c_str());
+	script->AddStandardPath();
+	script->AddPackagePath(package_path.c_str());
     
-	battleScript->Execute((const char*)script.data(), script.size());
+	script->Execute((const char*)source.data(), source.size());
     
-	//if (battleScript->GetBattleSimulator()->terrainForest == nullptr)
-	//	battleScript->GetBattleSimulator()->terrainForest = new BillboardTerrainForest();
-    
-	return battleScript;
+	return scenario;
 }
 
-#endif
 
- 
+
 int main(int argc, char *argv[])
 {
 	std::cout << "Hello" << std::endl;
@@ -101,7 +69,7 @@ int main(int argc, char *argv[])
 	OpenWarSurface* surface = new OpenWarSurface(glm::vec2(640, 480), 1);
 	window->SetSurface(surface);
 
-	surface->Reset(CreateBattleScript());
+	surface->Reset(CreateBattleScenario());
     
 	while (!Window::IsDone())
 		Window::ProcessEvents();

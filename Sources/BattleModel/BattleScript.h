@@ -9,6 +9,8 @@
 #include "BattleSimulator.h"
 #include "lua.hpp"
 
+class BattleScenario;
+
 
 class BattleScript : public BattleObserver
 {
@@ -23,6 +25,7 @@ class BattleScript : public BattleObserver
 		UnitStatus(Unit* unit);
 	};
 
+	BattleScenario* _scenario;
 	BattleSimulator* _simulator;
 	std::map<int, Unit*> _units;
 	std::map<Unit*, int> _unitId;
@@ -30,7 +33,7 @@ class BattleScript : public BattleObserver
 	int _nextUnitId;
 
 public:
-	BattleScript(BattleSimulator* simulator);
+	BattleScript(BattleScenario* scenario);
 	virtual ~BattleScript();
 
 	void SetGlobalNumber(const char* name, double value);
@@ -39,6 +42,7 @@ public:
 	void AddPackagePath(const char* path);
 	void Execute(const char* script, size_t length);
 
+	BattleScenario* GetScenario() const { return _scenario; }
 	BattleSimulator* GetSimulator() const { return _simulator; }
 
 	void CreateSimulator();
