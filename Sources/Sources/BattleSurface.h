@@ -10,6 +10,9 @@ class BattleScenario;
 class BattleScript;
 class BattleView;
 class TerrainGesture;
+class SmoothTerrainRenderer;
+class SmoothTerrainWater;
+class SmoothTerrainSky;
 
 
 class BattleSurface : public Surface
@@ -20,17 +23,18 @@ protected:
 private:
 	bool _playing;
 	bool _editing;
+
 	BattleScenario* _scenario;
-	BattleView* _battleView;
-	BattleGesture* _battleGesture;
-	TerrainGesture* _terrainGesture;
+	std::vector<BattleView*> _battleViews;
+	std::vector<BattleGesture*> _battleGestures;
+	std::vector<TerrainGesture*> _terrainGestures;
 
 public:
 	BattleSurface(glm::vec2 size, float pixelDensity);
 	~BattleSurface();
 
 	BattleScenario* GetScenario() const { return _scenario; }
-	BattleView* GetBattleView() const { return _battleView; }
+	const std::vector<BattleView*>& GetBattleViews() const { return _battleViews; }
 
 	virtual void Reset(BattleScenario* scenario);
 
@@ -45,8 +49,9 @@ public:
 	virtual bool NeedsRender() const;
 	virtual void Render();
 
-protected:
+private:
 	void UpdateSoundPlayer();
+	void UpdateBattleViewSize();
 };
 
 

@@ -91,9 +91,13 @@ void OpenWarSurface::Reset(BattleScenario* scenario)
 
 	BattleSurface::Reset(scenario);
 
-	BattleView* battleView = GetBattleView();
-	_editorModel = new EditorModel(battleView, battleView->_smoothTerrainSurface);
-	_editorGesture = new EditorGesture(battleView, _editorModel);
+	const std::vector<BattleView*>& battleViews = GetBattleViews();
+	if (!battleViews.empty())
+	{
+		BattleView* battleView = battleViews.front();
+		_editorModel = new EditorModel(battleView, battleView->_smoothTerrainSurface);
+		_editorGesture = new EditorGesture(battleView, _editorModel);
+	}
 
 	SetPlaying(false);
 	UpdateButtonsAndGestures();

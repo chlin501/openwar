@@ -31,6 +31,9 @@ static BattleScenario* CreateBattleScenario()
 	std::string package_path = directory + "/?.lua";
 
 	BattleScenario* scenario = new BattleScenario();
+	scenario->AddCommander("1", BattleCommanderType::Screen, "");
+	scenario->AddCommander("2", BattleCommanderType::Script, "");
+
 	BattleScript* script = scenario->GetScript();
 
 	script->SetGlobalNumber("openwar_seed", 0);

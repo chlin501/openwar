@@ -45,8 +45,6 @@ public:
 	BattleScenario* GetScenario() const { return _scenario; }
 	BattleSimulator* GetSimulator() const { return _simulator; }
 
-	void CreateSimulator();
-
 	void Tick(double secondsSinceLastTick);
 
 	// BattleObserver

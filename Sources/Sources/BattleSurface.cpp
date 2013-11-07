@@ -14,10 +14,7 @@ BattleSurface::BattleSurface(glm::vec2 size, float pixelDensity) : Surface(size,
 _renderers(nullptr),
 _playing(false),
 _editing(false),
-_scenario(nullptr),
-_battleView(nullptr),
-_battleGesture(nullptr),
-_terrainGesture(nullptr)
+_scenario(nullptr)
 {
 	_renderers = renderers::singleton = new renderers();
 
@@ -34,57 +31,83 @@ BattleSurface::~BattleSurface()
 
 void BattleSurface::Reset(BattleScenario* scenario)
 {
-	delete _terrainGesture;
-	_terrainGesture = nullptr;
+	for (Gesture* gesture : _battleGestures)
+		delete gesture;
+	_battleGestures.clear();
 
-	delete _battleGesture;
-	_battleGesture = nullptr;
-
-	if (_battleView != nullptr)
+	for (BattleView* battleView : _battleViews)
 	{
-		delete _battleView->_smoothTerrainSurface;
-		_battleView->_smoothTerrainSurface = nullptr;
+		delete battleView->_smoothTerrainSurface;
+		battleView->_smoothTerrainSurface = nullptr;
 
-		delete _battleView->_tiledTerrainRenderer;
-		_battleView->_tiledTerrainRenderer = nullptr;
+		delete battleView->_tiledTerrainRenderer;
+		battleView->_tiledTerrainRenderer = nullptr;
+
+		delete battleView;
 	}
-
-	delete _battleView;
-	_battleView = nullptr;
+	_battleViews.clear();
 
 	delete _scenario;
 	_scenario = nullptr;
 
-
+	/***/
 
 	_scenario = scenario;
 
-	_battleView = new BattleView(this, scenario->GetSimulator(), _renderers);
-	_battleView->_player = 1;
-	_battleView->_blueTeam = 1;
-
+	SmoothTerrainRenderer* smoothTerrainRenderer = nullptr;
+	SmoothTerrainWater* smoothTerrainWater = nullptr;
+	SmoothTerrainSky* smoothTerrainSky = nullptr;
 	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(scenario->GetSimulator()->GetGroundMap());
 	if (smoothGroundMap != nullptr)
 	{
-		_battleView->_smoothTerrainSurface = new SmoothTerrainRenderer(smoothGroundMap);
-		_battleView->_smoothTerrainSurface->EnableRenderEdges();
-		_battleView->_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
-		_battleView->_smoothTerrainSky = new SmoothTerrainSky();
+		smoothTerrainRenderer = new SmoothTerrainRenderer(smoothGroundMap);
+		smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
+		smoothTerrainSky = new SmoothTerrainSky();
+		if (renderer_base::pixels_per_point() > 1.0)
+			smoothTerrainRenderer->EnableRenderEdges();
 	}
 
+	TiledTerrainRenderer* tiledTerrainRenderer = nullptr;
 	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(scenario->GetSimulator()->GetGroundMap());
 	if (tiledGroundMap != nullptr)
 	{
 		tiledGroundMap->UpdateHeightMap();
-		_battleView->_tiledTerrainRenderer = new TiledTerrainRenderer(tiledGroundMap);
-		_battleView->_smoothTerrainSky = new SmoothTerrainSky();
+		tiledTerrainRenderer = new TiledTerrainRenderer(tiledGroundMap);
+		smoothTerrainSky = new SmoothTerrainSky();
 	}
 
-	_battleView->Initialize();
+	int player = 1;
+	for (BattleCommander* commander : _scenario->GetCommanders())
+	{
+		if (commander->GetType() == BattleCommanderType::Screen)
+		{
+			BattleView* battleView = new BattleView(this, scenario->GetSimulator(), _renderers);
+			battleView->_player = 1;
+			battleView->_blueTeam = 1;
+			battleView->_smoothTerrainSurface = smoothTerrainRenderer;
+			battleView->_smoothTerrainWater = smoothTerrainWater;
+			battleView->_smoothTerrainSky = smoothTerrainSky;
+			battleView->_tiledTerrainRenderer = tiledTerrainRenderer;
 
-	_battleGesture = new BattleGesture(_battleView);
-	_terrainGesture = new TerrainGesture(_battleView);
-	scenario->GetSimulator()->AddObserver(_battleView);
+			if (commander->GetConfiguration()[0] == '-')
+			{
+				battleView->SetFlip(true);
+				battleView->SetCameraFacing((float)M_PI);
+			}
+
+			battleView->Initialize();
+			_battleViews.push_back(battleView);
+			scenario->GetSimulator()->AddObserver(battleView);
+
+			BattleGesture* battleGesture = new BattleGesture(battleView);
+			_battleGestures.push_back(battleGesture);
+
+			TerrainGesture* terrainGesture = new TerrainGesture(battleView);
+			_terrainGestures.push_back(terrainGesture);
+		}
+	}
+
+	UpdateBattleViewSize();
 }
 
 
@@ -97,8 +120,8 @@ void BattleSurface::SetPlaying(bool value)
 	else
 		SoundPlayer::singleton->Pause();
 
-	if (_battleGesture != nullptr)
-		_battleGesture->SetEnabled(_playing);
+	for (BattleGesture* gesture : _battleGestures)
+		gesture->SetEnabled(_playing);
 }
 
 
@@ -106,20 +129,15 @@ void BattleSurface::SetEditing(bool value)
 {
 	_editing = value;
 
-	if (_terrainGesture != nullptr)
-		_terrainGesture->SetEnabled(!_editing);
+	for (TerrainGesture* gesture : _terrainGestures)
+		gesture->SetEnabled(!_editing);
 }
 
 
 void BattleSurface::ScreenSizeChanged()
 {
 	Surface::ScreenSizeChanged();
-
-	if (_battleView != nullptr)
-	{
-		bounds2f viewport = bounds2f(0, 0, GetSize());
-		_battleView->SetViewport(viewport);
-	}
+	UpdateBattleViewSize();
 }
 
 
@@ -135,10 +153,10 @@ void BattleSurface::Update(double secondsSinceLastUpdate)
 		_scenario->Tick(0);
 	}
 
-	if (_battleView != nullptr)
+	for (BattleView* battleView : _battleViews)
 	{
-		_battleView->Update(secondsSinceLastUpdate);
-		_battleView->AnimateMarkers((float)secondsSinceLastUpdate);
+		battleView->Update(secondsSinceLastUpdate);
+		battleView->AnimateMarkers((float)secondsSinceLastUpdate);
 	}
 }
 
@@ -151,9 +169,9 @@ bool BattleSurface::NeedsRender() const
 
 void BattleSurface::Render()
 {
-	if (_battleView != nullptr)
+	for (BattleView* battleView : _battleViews)
 	{
-		_battleView->Render();
+		battleView->Render();
 
 		/*
 		if (_battleScript != nullptr)
@@ -172,7 +190,7 @@ void BattleSurface::Render()
 
 void BattleSurface::UpdateSoundPlayer()
 {
-	if (_playing)
+	if (_playing && !_battleViews.empty())
 	{
 		int horseGallop = 0;
 		int horseTrot = 0;
@@ -180,7 +198,7 @@ void BattleSurface::UpdateSoundPlayer()
 		int infantryMarching = 0;
 		int infantryRunning = 0;
 
-		for (UnitCounter* unitMarker : _battleView->GetUnitCounters())
+		for (UnitCounter* unitMarker : _battleViews.front()->GetUnitCounters())
 		{
 			Unit* unit = unitMarker->_unit;
 			if (glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)
@@ -212,5 +230,21 @@ void BattleSurface::UpdateSoundPlayer()
 		SoundPlayer::singleton->UpdateCavalryRunning(horseGallop != 0);
 
 		SoundPlayer::singleton->UpdateFighting(_scenario->GetSimulator()->IsMelee());
+	}
+}
+
+
+void BattleSurface::UpdateBattleViewSize()
+{
+	if (!_battleViews.empty())
+	{
+		glm::vec2 size = GetSize();
+		float h = size.y / _battleViews.size();
+		float y = 0;
+		for (BattleView* battleView : _battleViews)
+		{
+			battleView->SetViewport(bounds2f(0, y, size.x, y + h));
+			y += h;
+		}
 	}
 }
