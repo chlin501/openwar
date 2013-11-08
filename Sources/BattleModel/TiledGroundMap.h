@@ -24,14 +24,14 @@ public:
 	};
 
 private:
+	HeightMap* _heightMap;
 	bounds2f _bounds;
 	glm::ivec2 _size;
-	HeightMap* _heightMap;
 	Tile* _tiles;
 	bspline_patch* _patch;
 
 public:
-	TiledGroundMap(bounds2f bounds, glm::ivec2 size);
+	TiledGroundMap(HeightMap* heightMap, bounds2f bounds, glm::ivec2 size);
 	virtual ~TiledGroundMap();
 
 	// GroundMap

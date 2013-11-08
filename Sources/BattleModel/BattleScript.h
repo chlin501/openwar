@@ -38,6 +38,10 @@ public:
 	BattleScript(BattleScenario* scenario);
 	virtual ~BattleScript();
 
+	void SetGlobalBoolean(const char* name, bool value);
+	void SetGlobalNumber(const char* name, double value);
+	void SetGlobalString(const char* name, const char* value);
+
 	void AddPackagePath(const char* path);
 	void Execute(const char* script, size_t length);
 

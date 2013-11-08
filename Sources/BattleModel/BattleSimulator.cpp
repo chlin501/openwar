@@ -123,16 +123,20 @@ BattleObserver::~BattleObserver()
 BattleSimulator::BattleSimulator() :
 _fighterQuadTree(0, 0, 1024, 1024),
 _weaponQuadTree(0, 0, 1024, 1024),
+_heightMap(nullptr),
 _groundMap(nullptr),
 _secondsSinceLastTimeStep(0),
 _timeStep(1.0f / 15.0f),
 _winnerTeam(0)
 {
+	_heightMap = new HeightMap(bounds2f(0, 0, 1024, 1024));
 }
 
 
 BattleSimulator::~BattleSimulator()
 {
+	delete _heightMap;
+
 	for (Unit* unit : _units)
 	{
 		delete[] unit->fighters;
@@ -398,7 +402,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 
 	if (unitRange.minimumRange > 0 && unitRange.maximumRange > 0)
 	{
-		float centerHeight = _groundMap->GetHeightMap()->InterpolateHeight(unitRange.center) + 1.9f;
+		float centerHeight = _heightMap->InterpolateHeight(unitRange.center) + 1.9f;
 
 		int n = 24;
 		for (int i = 0; i <= n; ++i)
@@ -410,7 +414,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 			float maxAngle = -100;
 			for (float range = unitRange.minimumRange + delta; range <= unitRange.maximumRange; range += delta)
 			{
-				float height = _groundMap->GetHeightMap()->InterpolateHeight(unitRange.center + range * direction) + 0.5f;
+				float height = _heightMap->InterpolateHeight(unitRange.center + range * direction) + 0.5f;
 				float verticalAngle = glm::atan(height - centerHeight, range);
 				if (verticalAngle > maxAngle)
 				{
@@ -574,7 +578,7 @@ void BattleSimulator::RemoveCasualties()
 		}
 	}
 
-	bounds2f bounds = _groundMap->GetBounds();
+	bounds2f bounds = _heightMap->GetBounds();
 	glm::vec2 center = bounds.center();
 	float radius = bounds.width() / 2;
 	float radius_squared = radius * radius;
@@ -786,7 +790,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 
 	result.readyState = original.readyState;
 	result.position = NextFighterPosition(fighter);
-	result.position_z = _groundMap->GetHeightMap()->InterpolateHeight(result.position);
+	result.position_z = _heightMap->InterpolateHeight(result.position);
 	result.velocity = NextFighterVelocity(fighter);
 
 
@@ -998,7 +1002,7 @@ glm::vec2 BattleSimulator::NextFighterVelocity(Fighter* fighter)
 			break;
 	}
 
-	if (glm::length(fighter->state.position - fighter->terrainPosition) > 4)
+	if (_groundMap != nullptr && glm::length(fighter->state.position - fighter->terrainPosition) > 4)
 	{
 		fighter->terrainForest = _groundMap->IsForest(fighter->state.position);
 		fighter->terrainImpassable = _groundMap->IsImpassable(fighter->state.position);

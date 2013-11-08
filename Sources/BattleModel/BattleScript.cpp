@@ -37,7 +37,6 @@ _nextUnitId(1)
 	lua_pushcfunction(_state, openwar_init_groundmap);
 	lua_setglobal(_state, "openwar_init_groundmap");
 
-
 	lua_pushcfunction(_state, battle_message);
 	lua_setglobal(_state, "battle_message");
 
@@ -70,6 +69,27 @@ BattleScript::~BattleScript()
 {
 	lua_close(_state);
 	_scripts.erase(_state);
+}
+
+
+void BattleScript::SetGlobalBoolean(const char* name, bool value)
+{
+	lua_pushboolean(_state, value);
+	lua_setglobal(_state, name);
+}
+
+
+void BattleScript::SetGlobalNumber(const char* name, double value)
+{
+	lua_pushnumber(_state, value);
+	lua_setglobal(_state, name);
+}
+
+
+void BattleScript::SetGlobalString(const char* name, const char* value)
+{
+	lua_pushstring(_state, value);
+	lua_setglobal(_state, name);
 }
 
 

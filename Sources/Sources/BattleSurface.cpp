@@ -137,6 +137,16 @@ void BattleSurface::RemoveBattleViews()
 }
 
 
+static bool ShouldEnableRenderEdges(float pixels_per_point)
+{
+#if TARGET_OS_IPHONE
+	return pixels_per_point > 1;
+#else
+	return true;
+#endif
+}
+
+
 void BattleSurface::CreateBattleViews()
 {
 	BattleSimulator* simulator = _scenario->GetSimulator();
@@ -150,7 +160,8 @@ void BattleSurface::CreateBattleViews()
 		smoothTerrainRenderer = new SmoothTerrainRenderer(smoothGroundMap);
 		smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
 		smoothTerrainSky = new SmoothTerrainSky();
-		if (renderer_base::pixels_per_point() > 1.0)
+
+		if (ShouldEnableRenderEdges(renderer_base::pixels_per_point()))
 			smoothTerrainRenderer->EnableRenderEdges();
 	}
 

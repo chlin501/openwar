@@ -2,6 +2,7 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
+#include <algorithm>
 #include "HeightMap.h"
 
 
@@ -14,8 +15,11 @@ _cacheMaxIndex(254),
 _cacheHeights(nullptr),
 _cacheNormals(nullptr)
 {
-	_cacheHeights = new float [_cacheStride * _cacheStride];
-	_cacheNormals = new glm::vec3[_cacheStride * _cacheStride];
+	int n = _cacheStride * _cacheStride;
+	_cacheHeights = new float [n];
+	_cacheNormals = new glm::vec3[n];
+	std::fill(_cacheHeights, _cacheHeights + n, 0.0f);
+	std::fill(_cacheNormals, _cacheNormals + n, glm::vec3(0, 0, 1));
 }
 
 

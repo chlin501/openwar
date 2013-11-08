@@ -369,6 +369,7 @@ class BattleSimulator
 	quadtree<Fighter*> _fighterQuadTree;
 	quadtree<Fighter*> _weaponQuadTree;
 
+	HeightMap* _heightMap;
 	GroundMap* _groundMap;
 
 	std::vector<Unit*> _units;
@@ -385,9 +386,10 @@ public:
 	void AddObserver(BattleObserver* observer);
 	void RemoveObserver(BattleObserver* observer);
 
+	HeightMap* GetHeightMap() { return _heightMap; }
+
 	void SetGroundMap(GroundMap* groundMap);
 	GroundMap* GetGroundMap() { return _groundMap; }
-	HeightMap* GetHeightMap() { return _groundMap->GetHeightMap(); }
 
 	const std::vector<Unit*>& GetUnits() { return _units; }
 	Unit* AddUnit(int player, int team, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);

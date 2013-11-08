@@ -16,13 +16,13 @@ class HeightMap;
 
 class SmoothGroundMap : public GroundMap
 {
+	HeightMap* _heightMap;
 	std::string _name;
 	bounds2f _bounds;
 	image* _image;
-	HeightMap* _heightMap;
 
 public:
-	SmoothGroundMap(const char* name, bounds2f bounds, image* img);
+	SmoothGroundMap(HeightMap* heightMap, const char* name, bounds2f bounds, image* img);
 
 	const char* GetName() const { return _name.c_str(); }
 

@@ -70,7 +70,7 @@ _player(0)
 	_textureTouchMarker = new texture(resource("Textures/TouchMarker.png"));
 	_textureFacing = new texture(resource("Textures/Facing.png"));
 
-	SetContentBounds(battleSimulator->GetGroundMap()->GetBounds());
+	SetContentBounds(battleSimulator->GetHeightMap()->GetBounds());
 
 	_billboardTexture = new BillboardTexture();
 
@@ -213,7 +213,12 @@ BattleView::~BattleView()
 
 void BattleView::OnSetGroundMap(GroundMap* groundMap)
 {
+	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(groundMap);
+	_smoothTerrainSurface = new SmoothTerrainRenderer(smoothGroundMap);
+	_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
+	_smoothTerrainSky = new SmoothTerrainSky();
 
+	UpdateTerrainTrees(groundMap->GetBounds());
 }
 
 
@@ -289,7 +294,7 @@ void BattleView::Initialize()
 
 void BattleView::InitializeTerrainTrees()
 {
-	UpdateTerrainTrees(_battleSimulator->GetGroundMap()->GetBounds());
+	UpdateTerrainTrees(_battleSimulator->GetHeightMap()->GetBounds());
 }
 
 
@@ -322,7 +327,7 @@ struct random_iterator
 
 void BattleView::UpdateTerrainTrees(bounds2f bounds)
 {
-	if (_smoothTerrainSurface != nullptr)
+	if (_smoothTerrainSurface != nullptr && _battleSimulator->GetGroundMap() != nullptr)
 	{
 		auto pos2 = std::remove_if(_billboardModel->staticBillboards.begin(), _billboardModel->staticBillboards.end(), [bounds](const Billboard& billboard) {
 			return bounds.contains(billboard.position.xy());

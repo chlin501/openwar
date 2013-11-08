@@ -44,6 +44,7 @@ void BattleScenario::Start(bool master)
 	{
 		_script->AddPackagePath(resource("Scripts/?.lua").path());
 		_script->AddPackagePath(resource("Maps/?.lua").path());
+		_script->SetGlobalBoolean("openwar_is_master", master);
 
 		resource source(_name.c_str());
 		if (source.load())
@@ -61,7 +62,7 @@ void BattleScenario::SetSmoothMap(const char* name, float size)
 	bounds2f bounds(0, 0, size, size);
 
 	GroundMap* old = _simulator->GetGroundMap();
-	_simulator->SetGroundMap(new SmoothGroundMap(name, bounds, map));
+	_simulator->SetGroundMap(new SmoothGroundMap(_simulator->GetHeightMap(), name, bounds, map));
 	delete old;
 }
 
@@ -71,7 +72,7 @@ void BattleScenario::SetTiledMap(int x, int y)
 	bounds2f bounds(0, 0, 1024, 1024);
 
 	GroundMap* old = _simulator->GetGroundMap();
-	_simulator->SetGroundMap(new TiledGroundMap(bounds, glm::ivec2(x, y)));
+	_simulator->SetGroundMap(new TiledGroundMap(_simulator->GetHeightMap(), bounds, glm::ivec2(x, y)));
 	delete old;
 }
 
