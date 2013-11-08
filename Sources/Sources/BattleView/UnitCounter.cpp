@@ -10,6 +10,7 @@
 #include "../../Library/Renderers/TextureRenderer.h"
 #include "BattleView.h"
 #include "UnitCounter.h"
+#include "BattleCommander.h"
 
 
 UnitCounter::UnitCounter(BattleView* battleView, Unit* unit) :
@@ -60,7 +61,7 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer, bool flip
 	int color = 3;
 	if (!routingIndicator)
 	{
-		if (_unit->team == _battleView->_blueTeam)
+		if (_unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam())
 			color = 2;
 		else
 			color = 0;
@@ -168,17 +169,17 @@ void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 		{
 			case SamuraiPlatform_Cav:
 			case SamuraiPlatform_Gen:
-				shape = _unit->team == _battleView->_blueTeam ? billboardModel->_billboardShapeFighterCavBlue : billboardModel->_billboardShapeFighterCavRed;
+				shape = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam() ? billboardModel->_billboardShapeFighterCavBlue : billboardModel->_billboardShapeFighterCavRed;
 				size = 3.0;
 				break;
 
 			case SamuraiPlatform_Sam:
-				shape = _unit->team == _battleView->_blueTeam ? billboardModel->_billboardShapeFighterSamBlue : billboardModel->_billboardShapeFighterSamRed;
+				shape = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam() ? billboardModel->_billboardShapeFighterSamBlue : billboardModel->_billboardShapeFighterSamRed;
 				size = 2.0;
 				break;
 
 			case SamuraiPlatform_Ash:
-				shape = _unit->team == _battleView->_blueTeam ? billboardModel->_billboardShapeFighterAshBlue : billboardModel->_billboardShapeFighterAshRed;
+				shape = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam() ? billboardModel->_billboardShapeFighterAshBlue : billboardModel->_billboardShapeFighterAshRed;
 				size = 2.0;
 				break;
 		}

@@ -6,6 +6,7 @@
 #include "../Library/Algebra/geometry.h"
 #include "BattleSimulator.h"
 #include "MovementRules.h"
+#include "BattleCommander.h"
 
 
 Formation::Formation() :
@@ -223,7 +224,7 @@ glm::vec2 MovementRules::NextFighterDestination(Fighter* fighter)
 
 	if (unit->state.IsRouting())
 	{
-		if (unit->team == 1)
+		if (unit->commander->GetTeam() == 1)
 			return glm::vec2(fighter->state.position.x * 3, -2000);
 		else
 			return glm::vec2(fighter->state.position.x * 3, 2000);

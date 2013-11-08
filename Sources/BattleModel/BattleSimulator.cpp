@@ -8,6 +8,7 @@
 #include "BattleSimulator.h"
 #include "GroundMap.h"
 #include "HeightMap.h"
+#include "BattleCommander.h"
 
 
 
@@ -185,12 +186,11 @@ void BattleSimulator::SetGroundMap(GroundMap* groundMap)
 }
 
 
-Unit* BattleSimulator::AddUnit(int player, int team, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position)
+Unit* BattleSimulator::AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position)
 {
 	Unit* unit = new Unit();
 
-	unit->player = player;
-	unit->team = team;
+	unit->commander = commander;
 	unit->unitClass = unitClass;
 	unit->stats = stats;
 
@@ -200,7 +200,7 @@ Unit* BattleSimulator::AddUnit(int player, int team, const char* unitClass, int 
 	for (Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
 		i->unit = unit;
 
-	unit->command.bearing = team == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
+	unit->command.bearing = commander->GetTeam() == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
 
 	unit->state.unitMode = UnitMode_Initializing;
 	unit->state.center = position;
@@ -291,9 +291,10 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 
 		for (Unit* unit : _units)
 		{
-			total[unit->team] = total[unit->team] + 1;
+			int team = unit->commander->GetTeam();
+			total[team] += 1;
 			if (unit->state.IsRouting())
-				routing[unit->team] = unit->team + 1;
+				routing[team] += 1;
 		}
 
 		for (std::pair<int, int> i : total)
@@ -477,7 +478,7 @@ void BattleSimulator::ResolveMissileCombat()
 {
 	for (Unit* unit : _units)
 	{
-		if (unit->player != 0 && unit->state.shootingCounter > unit->shootingCounter)
+		if (unit->commander->GetType() != BattleCommanderType::None && unit->state.shootingCounter > unit->shootingCounter)
 		{
 			TriggerShooting(unit);
 			unit->shootingCounter = unit->state.shootingCounter;
@@ -546,7 +547,7 @@ void BattleSimulator::ResolveProjectileCasualties()
 				for (quadtree<Fighter*>::iterator j(_fighterQuadTree.find(hitpoint.x, hitpoint.y, 0.45f)); *j; ++j)
 				{
 					Fighter* fighter = **j;
-					if (fighter->unit->player != 0)
+					if (fighter->unit->commander->GetType() != BattleCommanderType::None)
 					{
 						bool blocked = false;
 						if (fighter->terrainForest)
@@ -699,7 +700,7 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 	{
 		float distance = glm::length(other->state.center - unit->state.center);
 		float weight = 1.0f * 50.0f / (distance + 50.0f);
-		if (other->team == unit->team)
+		if (other->commander->GetTeam() == unit->commander->GetTeam())
 		{
 			result.influence -= weight
 					* (1 - other->state.morale)
@@ -708,7 +709,7 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 		}
 	}
 
-	if (_winnerTeam != 0 && unit->team != _winnerTeam)
+	if (_winnerTeam != 0 && unit->commander->GetTeam() != _winnerTeam)
 	{
 		result.morale = -1;
 	}
@@ -730,7 +731,7 @@ Unit* BattleSimulator::ClosestEnemyWithinLineOfFire(Unit* unit)
 	float closestDistance = 10000;
 	for (Unit* target : _units)
 	{
-		if (target->team != unit->team && IsWithinLineOfFire(unit, target->state.center))
+		if (target->commander->GetTeam() != unit->commander->GetTeam() && IsWithinLineOfFire(unit, target->state.center))
 		{
 			float distance = glm::length(target->state.center - unit->state.center);
 			if (distance < closestDistance)
@@ -958,7 +959,7 @@ glm::vec2 BattleSimulator::NextFighterPosition(Fighter* fighter)
 		for (quadtree<Fighter*>::iterator i(_weaponQuadTree.find(result.x, result.y, weaponDistance)); *i; ++i)
 		{
 			Fighter* obstacle = **i;
-			if (obstacle->unit->team != unit->team)
+			if (obstacle->unit->commander->GetTeam() != unit->commander->GetTeam())
 			{
 				glm::vec2 r = obstacle->unit->stats.weaponReach * vector2_from_angle(obstacle->state.bearing);
 				glm::vec2 position = obstacle->state.position + r;
@@ -1043,7 +1044,7 @@ Fighter* BattleSimulator::FindFighterStrikingTarget(Fighter* fighter)
 	for (quadtree<Fighter*>::iterator i(_fighterQuadTree.find(position.x, position.y, radius)); *i; ++i)
 	{
 		Fighter* target = **i;
-		if (target != fighter && target->unit->team != unit->team)
+		if (target != fighter && target->unit->commander->GetTeam() != unit->commander->GetTeam())
 		{
 			return target;
 		}

@@ -4,6 +4,7 @@
 
 #include <glm/gtc/constants.hpp>
 
+#include "../../BattleModel/BattleCommander.h"
 #include "../../Library/Renderers/ColorBillboardRenderer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
 #include "../../Library/Renderers/GradientRenderer.h"
@@ -43,7 +44,7 @@ void UnitTrackingMarker::RenderTrackingFighters(ColorBillboardRenderer* renderer
 {
 	if (!_meleeTarget && !_missileTarget)
 	{
-		bool isBlue = _unit->team == _battleView->_blueTeam;
+		bool isBlue = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam();
 		glm::vec4 color = isBlue ? glm::vec4(0, 0, 255, 16) / 255.0f : glm::vec4(255, 0, 0, 16) / 255.0f;
 
 		glm::vec2 destination = DestinationXXX();
@@ -73,7 +74,7 @@ void UnitTrackingMarker::RenderTrackingMarker(TextureBillboardRenderer* renderer
 		glm::vec2 destination = DestinationXXX();
 		glm::vec3 position = _battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(destination, 0);
 		glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
-		glm::vec2 texcoord = texsize * glm::vec2(_unit->team != _battleView->_blueTeam ? 4 : 3, 0);
+		glm::vec2 texcoord = texsize * glm::vec2(_unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam() ? 2 : 0, 2);
 
 		renderer->AddBillboard(position, 32, affine2(texcoord, texcoord + texsize));
 	}

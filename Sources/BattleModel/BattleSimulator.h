@@ -12,6 +12,7 @@
 #include "MovementRules.h"
 #import "GroundMap.h"
 
+class BattleCommander;
 class GroundMap;
 class HeightMap;
 struct Fighter;
@@ -303,8 +304,7 @@ struct UnitCommand
 struct Unit
 {
 	// static attributes
-	int player;
-	int team;
+	BattleCommander* commander;
 	std::string unitClass;
 	UnitStats stats;
 	Fighter* fighters;
@@ -324,8 +324,7 @@ struct Unit
 	UnitCommand command; // updated by TouchGesture()
 
 	Unit() :
-	player(0),
-	team(0),
+	commander(nullptr),
 	stats(),
 	fighters(nullptr),
 	state(),
@@ -392,7 +391,7 @@ public:
 	GroundMap* GetGroundMap() { return _groundMap; }
 
 	const std::vector<Unit*>& GetUnits() { return _units; }
-	Unit* AddUnit(int player, int team, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
+	Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
 	void RemoveUnit(Unit* unit);
 
 	void AddShooting(const Shooting& shooting);

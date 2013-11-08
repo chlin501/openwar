@@ -23,6 +23,7 @@
 #include "UnitCounter.h"
 #include "UnitMovementMarker.h"
 #include "UnitTrackingMarker.h"
+#include "BattleCommander.h"
 
 
 
@@ -58,12 +59,11 @@ _colorBillboardRenderer(nullptr),
 _textureTriangleRenderer(nullptr),
 _textureUnitMarkers(nullptr),
 _textureTouchMarker(nullptr),
+_commander(nullptr),
 _smoothTerrainSurface(nullptr),
 _smoothTerrainWater(nullptr),
 _smoothTerrainSky(nullptr),
-_tiledTerrainRenderer(nullptr),
-_blueTeam(1),
-_player(0)
+_tiledTerrainRenderer(nullptr)
 {
 	_textureUnitMarkers = new texture(resource("Textures/UnitMarkers.png"));
 	_textureTouchMarker = new texture(resource("Textures/TouchMarker.png"));
@@ -271,7 +271,7 @@ void BattleView::AddCasualty(Unit* unit, glm::vec2 position)
 {
 	glm::vec3 p = glm::vec3(position, _battleSimulator->GetHeightMap()->InterpolateHeight(position));
 	SamuraiPlatform platform = SamuraiModule::GetSamuraiPlatform(unit->unitClass.c_str());
-	_casualtyMarker->AddCasualty(p, unit->player, unit->team, platform);
+	_casualtyMarker->AddCasualty(p, unit->commander->GetTeam(), platform);
 }
 
 
@@ -378,7 +378,7 @@ void BattleView::InitializeCameraPosition(const std::vector<Unit*>& units)
 	{
 		if (!unit->state.IsRouting())
 		{
-			if (unit->player == _player)
+			if (unit->commander == _commander)
 			{
 				friendlyCenter += unit->state.center;
 				++friendlyCount;
@@ -473,7 +473,7 @@ void BattleView::Render()
 
 	for (Unit* unit : _battleSimulator->GetUnits())
 	{
-		if (unit->player == _player)
+		if (unit->commander == _commander)
 		{
 			RangeMarker marker(_battleSimulator, unit);
 			_gradientTriangleStripRenderer->Reset();
@@ -489,13 +489,13 @@ void BattleView::Render()
 	_textureTriangleRenderer->Reset();
 
 	for (UnitCounter* marker : _unitMarkers)
-		if (marker->GetUnit()->player == _player)
+		if (marker->GetUnit()->commander == _commander)
 			marker->AppendFacingMarker(_textureTriangleRenderer, this);
 	for (UnitMovementMarker* marker : _movementMarkers)
-		if (marker->GetUnit()->player == _player)
+		if (marker->GetUnit()->commander == _commander)
 			marker->AppendFacingMarker(_textureTriangleRenderer, this);
 	for (UnitTrackingMarker* marker : _trackingMarkers)
-		if (marker->GetUnit()->player == _player)
+		if (marker->GetUnit()->commander == _commander)
 			marker->AppendFacingMarker(_textureTriangleRenderer, this);
 
 	_textureTriangleRenderer->Draw(sprite_transform(GetViewportBounds()).transform(), _textureUnitMarkers);
@@ -635,7 +635,7 @@ UnitMovementMarker* BattleView::GetMovementMarker(Unit* unit)
 }
 
 
-UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, int player)
+UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, BattleCommander* commander)
 {
 	UnitMovementMarker* result = 0;
 	float nearest = INFINITY;
@@ -643,7 +643,7 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, int
 	for (UnitMovementMarker* marker : _movementMarkers)
 	{
 		Unit* unit = marker->GetUnit();
-		if (player != 0 && unit->player != player)
+		if (commander != nullptr && unit->commander != commander)
 			continue;
 
 		glm::vec2 p = unit->command.GetDestination();
@@ -863,7 +863,7 @@ void BattleView::RemoveAllSmokeMarkers()
 }
 
 
-UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int team, int playerId)
+UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int team, BattleCommander* commander)
 {
 	UnitCounter* result = 0;
 	float nearest = INFINITY;
@@ -871,9 +871,9 @@ UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int team, int
 	for (UnitCounter* marker : _unitMarkers)
 	{
 		Unit* unit = marker->_unit;
-		if (team != 0 && unit->team != team)
+		if (team != 0 && unit->commander->GetTeam() != team)
 			continue;
-		if (playerId != 0 && unit->player != playerId)
+		if (commander != nullptr && unit->commander != commander)
 			continue;
 
 		glm::vec2 p = unit->state.center;

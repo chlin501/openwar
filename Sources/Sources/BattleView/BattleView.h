@@ -12,7 +12,7 @@
 #include "../TiledTerrain/TiledTerrainRenderer.h"
 #include "../SmoothTerrain/SmoothTerrainRenderer.h"
 
-
+class BattleCommander;
 class CasualtyMarker;
 class ColorBillboardRenderer;
 class GradientLineRenderer;
@@ -63,20 +63,22 @@ class BattleView : public TerrainView, public BattleObserver
 	std::vector<ShootingCounter*> _shootingCounters;
 	std::vector<UnitCounter*> _unitMarkers;
 
+	BattleCommander* _commander;
+
 public:
 	SmoothTerrainRenderer* _smoothTerrainSurface;
 	SmoothTerrainWater* _smoothTerrainWater;
 	SmoothTerrainSky* _smoothTerrainSky;
 	TiledTerrainRenderer* _tiledTerrainRenderer;
 
-	int _blueTeam;
-	int _player;
-
 public:
 	BattleView(Surface* screen, BattleSimulator* battleSimulator, renderers* r);
 	~BattleView();
 
 	BattleSimulator* GetBattleSimulator() const { return _battleSimulator; }
+
+	BattleCommander* GetCommander() const { return _commander; }
+	void SetCommander(BattleCommander* value) { _commander = value; }
 
 	// BattleObserver
 	virtual void OnSetGroundMap(GroundMap* groundMap);
@@ -91,7 +93,7 @@ public:
 
 	UnitMovementMarker* AddMovementMarker(Unit* unit);
 	UnitMovementMarker* GetMovementMarker(Unit* unit);
-	UnitMovementMarker* GetNearestMovementMarker(glm::vec2 position, int player);
+	UnitMovementMarker* GetNearestMovementMarker(glm::vec2 position, BattleCommander* commander);
 
 	UnitTrackingMarker* AddTrackingMarker(Unit* unit);
 	UnitTrackingMarker* GetTrackingMarker(Unit* unit);
@@ -132,7 +134,7 @@ public:
 	SmokeCounter* AddSmokeMarker(MissileType missileType);
 	void RemoveAllSmokeMarkers();
 
-	UnitCounter* GetNearestUnitCounter(glm::vec2 position, int team, int playerId);
+	UnitCounter* GetNearestUnitCounter(glm::vec2 position, int team, BattleCommander* commander);
 };
 
 

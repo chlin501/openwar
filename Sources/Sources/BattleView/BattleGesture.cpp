@@ -15,6 +15,7 @@
 #include "UnitCounter.h"
 #include "UnitMovementMarker.h"
 #include "UnitTrackingMarker.h"
+#include "BattleCommander.h"
 
 
 #define SNAP_TO_UNIT_TRESHOLD 22 // meters
@@ -579,7 +580,7 @@ Unit* BattleGesture::FindFriendlyUnit(glm::vec2 screenPosition, glm::vec2 terrai
 Unit* BattleGesture::FindPlayerUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	Unit* result = nullptr;
-	UnitCounter* unitMarker = _battleView->GetNearestUnitCounter(terrainPosition, 0, _battleView->_player);
+	UnitCounter* unitMarker = _battleView->GetNearestUnitCounter(terrainPosition, 0, _battleView->GetCommander());
 	if (unitMarker != nullptr)
 	{
 		Unit* unit = unitMarker->_unit;
@@ -595,7 +596,7 @@ Unit* BattleGesture::FindPlayerUnitByCurrentPosition(glm::vec2 screenPosition, g
 Unit* BattleGesture::FindPlayerUnitByFuturePosition(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	Unit* result = nullptr;
-	UnitMovementMarker* movementMarker = _battleView->GetNearestMovementMarker(terrainPosition, _battleView->_player);
+	UnitMovementMarker* movementMarker = _battleView->GetNearestMovementMarker(terrainPosition, _battleView->GetCommander());
 	if (movementMarker != nullptr)
 	{
 		Unit* unit = movementMarker->GetUnit();
@@ -615,7 +616,7 @@ Unit* BattleGesture::FindPlayerUnitByModifierArea(glm::vec2 screenPosition, glm:
 
 	for (Unit* unit : _battleView->GetBattleSimulator()->GetUnits())
 	{
-		if (unit->player == _battleView->_player)
+		if (unit->commander == _battleView->GetCommander())
 		{
 			glm::vec2 center = !unit->command.path.empty() ? unit->command.path.back() : unit->state.center;
 			float d = glm::distance(center, terrainPosition);
@@ -633,7 +634,7 @@ Unit* BattleGesture::FindPlayerUnitByModifierArea(glm::vec2 screenPosition, glm:
 
 Unit* BattleGesture::FindEnemyUnit(glm::vec2 touchPosition, glm::vec2 markerPosition)
 {
-	int enemyTeam = _trackingMarker->GetUnit()->team == 1 ? 2 : 1;
+	int enemyTeam = _trackingMarker->GetUnit()->commander->GetTeam() == 1 ? 2 : 1;
 
 	UnitCounter* enemyMarker = nullptr;
 

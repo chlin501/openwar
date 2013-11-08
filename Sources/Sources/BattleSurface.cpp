@@ -180,8 +180,7 @@ void BattleSurface::CreateBattleViews()
 		if (commander->GetType() == BattleCommanderType::Screen)
 		{
 			BattleView* battleView = new BattleView(this, simulator, _renderers);
-			battleView->_player = player;
-			battleView->_blueTeam = 1;
+			battleView->SetCommander(commander);
 			battleView->_smoothTerrainSurface = smoothTerrainRenderer;
 			battleView->_smoothTerrainWater = smoothTerrainWater;
 			battleView->_smoothTerrainSky = smoothTerrainSky;

@@ -8,14 +8,14 @@ enum class BattleCommanderType { None, Screen, Script };
 
 class BattleCommander
 {
-	std::string _id;
+	int _team;
 	BattleCommanderType _type;
 	std::string _configuration;
 
 public:
-	BattleCommander(const char* id, BattleCommanderType type, const char* configuration);
+	BattleCommander(int team, BattleCommanderType type, const char* configuration);
 
-	const char* GetId() const { return _id.c_str(); }
+	int GetTeam() const { return _team; }
 	BattleCommanderType GetType() const { return _type; }
 	const char* GetConfiguration() const { return _configuration.c_str(); }
 };

@@ -55,7 +55,7 @@ public:
 	virtual void OnCasualty(const Fighter& fighter);
 
 private:
-	int NewUnit(int player, int team, const char* unitClass, int strength, glm::vec2 position, float bearing);
+	int NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing);
 	void SetUnitMovement(int unitId, bool running, std::vector<glm::vec2> path, int chargeId, float heading);
 
 	static int openwar_init_groundmap(lua_State* L);

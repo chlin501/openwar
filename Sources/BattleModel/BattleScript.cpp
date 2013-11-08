@@ -208,11 +208,13 @@ void BattleScript::OnCasualty(const Fighter& fighter)
 
 
 
-int BattleScript::NewUnit(int player, int team, const char* unitClass, int strength, glm::vec2 position, float bearing)
+int BattleScript::NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing)
 {
 	UnitStats unitStats = SamuraiModule::GetDefaultUnitStats(unitClass);
 
-	Unit* unit = _simulator->AddUnit(player, team, unitClass, strength, unitStats, position);
+	BattleCommander* commander = _scenario->GetCommanders()[commanderId - 1];
+
+	Unit* unit = _simulator->AddUnit(commander, unitClass, strength, unitStats, position);
 	unit->command.bearing = glm::radians(90 - bearing);
 
 	return _unitId[unit];
@@ -286,7 +288,7 @@ int BattleScript::battle_new_unit(lua_State* L)
 	BattleScript* script = _scripts[L];
 
 	int n = lua_gettop(L);
-	int player = n < 1 ? 0 : (int)lua_tonumber(L, 1);
+	int commander = n < 1 ? 0 : (int)lua_tonumber(L, 1);
 	const char* platform = n < 2 ? "" : lua_tostring(L, 2);
 	const char* weapon = n < 3 ? "" : lua_tostring(L, 3);
 	int strength = n < 4 ? 40 : (int)lua_tonumber(L, 4);
@@ -296,7 +298,7 @@ int BattleScript::battle_new_unit(lua_State* L)
 
 	std::string unitClass = std::string(platform) + "-" + weapon;
 
-	int unitId = script->NewUnit(player, player, unitClass.c_str(), strength, glm::vec2(x, y), b);
+	int unitId = script->NewUnit(commander, unitClass.c_str(), strength, glm::vec2(x, y), b);
 
 	lua_pushnumber(L, unitId);
 

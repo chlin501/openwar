@@ -19,15 +19,13 @@ public:
 	struct Casualty
 	{
 		glm::vec3 position;
-		int player;
 		int team;
 		SamuraiPlatform platform;
 		float time;
 		int seed;
 
-		Casualty(glm::vec3 position_, int player_, int team_, SamuraiPlatform platform_) :
+		Casualty(glm::vec3 position_, int team_, SamuraiPlatform platform_) :
 		position(position_),
-		player(player_),
 		team(team_),
 		platform(platform_),
 		time(0),
@@ -42,7 +40,7 @@ public:
 	CasualtyMarker(BattleSimulator* battleSimulator);
 	~CasualtyMarker();
 
-	void AddCasualty(glm::vec3 position, int player, int team, SamuraiPlatform platform);
+	void AddCasualty(glm::vec3 position, int team, SamuraiPlatform platform);
 	bool Animate(float seconds);
 
 	void RenderCasualtyColorBillboards(ColorBillboardRenderer* renderer);

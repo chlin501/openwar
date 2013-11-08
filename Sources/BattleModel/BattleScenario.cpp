@@ -31,10 +31,11 @@ BattleScenario::~BattleScenario()
 }
 
 
-void BattleScenario::AddCommander(const char* id, BattleCommanderType type, const char* configuration)
+BattleCommander* BattleScenario::AddCommander(int team, BattleCommanderType type, const char* configuration)
 {
-	BattleCommander* commander = new BattleCommander(id, type, configuration);
+	BattleCommander* commander = new BattleCommander(team, type, configuration);
 	_commanders.push_back(commander);
+	return commander;
 }
 
 

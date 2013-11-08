@@ -21,9 +21,9 @@ CasualtyMarker::~CasualtyMarker()
 }
 
 
-void CasualtyMarker::AddCasualty(glm::vec3 position, int player, int team, SamuraiPlatform platform)
+void CasualtyMarker::AddCasualty(glm::vec3 position, int team, SamuraiPlatform platform)
 {
-	casualties.push_back(Casualty(position, player, team, platform));
+	casualties.push_back(Casualty(position, team, platform));
 }
 
 
