@@ -58,7 +58,6 @@ class BattleView : public TerrainView, public BattleObserver
 
 	texture* _textureUnitMarkers;
 	texture* _textureTouchMarker;
-	texture* _textureFacing;
 
 	std::vector<SmokeCounter*> _smokeMarkers;
 	std::vector<ShootingCounter*> _shootingCounters;

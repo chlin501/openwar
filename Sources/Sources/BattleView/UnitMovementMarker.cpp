@@ -65,12 +65,11 @@ void UnitMovementMarker::AppendFacingMarker(TextureTriangleRenderer* renderer, B
 	glm::vec2 d3 = glm::vec2(d2.y, -d2.x);
 	glm::vec2 d4 = glm::vec2(d3.y, -d3.x);
 
-	float txs = 0.0625f;
-	float tx1 = 1 * txs;
-	float tx2 = tx1 + txs;
+	float tx1 = 0.125f;
+	float tx2 = 0.125f + 0.125f;
 
-	float ty1 = _unit->team == battleView->_blueTeam ? 0.0f : 0.5f;
-	float ty2 = _unit->team == battleView->_blueTeam ? 0.5f : 1.0f;
+	float ty1 = 0.75f;
+	float ty2 = 0.75f + 0.125f;
 
 	renderer->AddVertex(glm::vec3(p + d1, 0), glm::vec2(tx1, ty1));
 	renderer->AddVertex(glm::vec3(p + d2, 0), glm::vec2(tx1, ty2));

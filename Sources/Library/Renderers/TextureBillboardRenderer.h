@@ -45,9 +45,10 @@ struct texture_billboard_vertex
 {
 	glm::vec3 _position;
 	float _height;
-	float _order;
 	glm::vec2 _texcoord;
 	glm::vec2 _texsize;
+	int _index;
+	float _order;
 
 	texture_billboard_vertex(glm::vec3 p, float h, glm::vec2 tc, glm::vec2 ts) : _position(p), _height(h), _texcoord(tc), _texsize(ts)
 	{

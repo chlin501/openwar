@@ -91,11 +91,17 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 	float a = -glm::radians(cameraFacingDegrees);
 	float cos_a = cosf(a);
 	float sin_a = sinf(a);
+
+	int index = 0;
 	for (texture_billboard_vertex& v : _vbo._vertices)
+	{
+		v._index = index++;
 		v._order = cos_a * v._position.x - sin_a * v._position.y;
+	}
 
 	std::sort(_vbo._vertices.begin(), _vbo._vertices.end(), [](const texture_billboard_vertex& a, const texture_billboard_vertex& b) {
-		return a._order > b._order;
+		float diff = a._order - b._order;
+		return diff == 0 ? a._index < b._index : diff > 0;
 	});
 	_vbo.update(GL_STATIC_DRAW);
 

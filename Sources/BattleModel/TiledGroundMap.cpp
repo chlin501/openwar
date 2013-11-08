@@ -9,7 +9,7 @@
 
 
 TiledGroundMap::TiledGroundMap(HeightMap* heightMap, bounds2f bounds, glm::ivec2 size) :
-_heightMap(_heightMap),
+_heightMap(heightMap),
 _bounds(bounds),
 _size(size),
 _tiles(nullptr),

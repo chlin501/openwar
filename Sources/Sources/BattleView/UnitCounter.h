@@ -36,7 +36,7 @@ public:
 
 	bool Animate(float seconds);
 
-	void AppendUnitMarker(TextureBillboardRenderer* renderer1, TextureBillboardRenderer* renderer2, bool flip);
+	void AppendUnitMarker(TextureBillboardRenderer* renderer, bool flip);
 	void AppendFacingMarker(TextureTriangleRenderer* renderer, BattleView* battleView);
 
 	void AppendFighterWeapons(PlainLineRenderer* renderer);

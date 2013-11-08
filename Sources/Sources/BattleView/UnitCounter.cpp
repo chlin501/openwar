@@ -43,7 +43,7 @@ bool UnitCounter::Animate(float seconds)
 }
 
 
-void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer1, TextureBillboardRenderer* renderer2, bool flip)
+void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer, bool flip)
 {
 	bool routingIndicator = false;
 	float routingBlinkTime = _unit->state.GetRoutingBlinkTime();
@@ -57,27 +57,33 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer1, TextureB
 		routingIndicator = true;
 	}
 
-	int state = 0;
-	if (routingIndicator)
-		state = 2;
-	else if (_unit->team != _battleView->_blueTeam)
-		state = 1;
+	int color = 3;
+	if (!routingIndicator)
+	{
+		if (_unit->team == _battleView->_blueTeam)
+			color = 2;
+		else
+			color = 0;
+	}
 
 
 	glm::vec3 position = _battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(_unit->state.center, 0);
 	glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
-	glm::vec2 texcoord1 = texsize * glm::vec2(state, 0);
-	glm::vec2 texcoord2 = texsize * glm::vec2((int)_samuraiWeapon, 1 + (int)_samuraiPlatform);
+	glm::vec2 texcoord1 = texsize * glm::vec2(color, 0);
+	glm::vec2 texcoord2 = texsize * glm::vec2((int)_samuraiPlatform, 3);
+	glm::vec2 texcoord3 = texsize * glm::vec2(4, (int)_samuraiWeapon);
 
 	if (flip)
 	{
 		texcoord1 += texsize;
 		texcoord2 += texsize;
+		texcoord3 += texsize;
 		texsize = -texsize;
 	}
 
-	renderer1->AddBillboard(position, 32, affine2(texcoord1, texcoord1 + texsize));
-	renderer2->AddBillboard(position, 32, affine2(texcoord2, texcoord2 + texsize));
+	renderer->AddBillboard(position, 32, affine2(texcoord1, texcoord1 + texsize));
+	renderer->AddBillboard(position, 32, affine2(texcoord2, texcoord2 + texsize));
+	renderer->AddBillboard(position, 32, affine2(texcoord3, texcoord3 + texsize));
 }
 
 
@@ -90,28 +96,33 @@ void UnitCounter::AppendFacingMarker(TextureTriangleRenderer* renderer, BattleVi
 		return;
 	}
 
-	int index = 0;
+	int xindex = 0;
 	if (_unit->command.holdFire)
 	{
-		index = 11;
+		xindex = 11;
 	}
 	else if (_unit->state.loadingDuration != 0)
 	{
-		index = 2 + (int)glm::round(9 * _unit->state.loadingTimer / _unit->state.loadingDuration);
-		index = glm::min(10, index);
+		xindex = 2 + (int)glm::round(9 * _unit->state.loadingTimer / _unit->state.loadingDuration);
+		xindex = glm::min(10, xindex);
+	}
+	int yindex = 0;
+	if (xindex >= 6)
+	{
+		xindex -= 6;
+		yindex += 1;
 	}
 
-	float txs = 0.0625f;
-	float tx1 = index * txs;
-	float tx2 = tx1 + txs;
+	float tx1 = xindex * 0.125f;
+	float tx2 = tx1 + 0.125f;
 
-	float ty1 = _unit->team == battleView->_blueTeam ? 0.0f : 0.5f;
-	float ty2 = _unit->team == battleView->_blueTeam ? 0.5f : 1.0f;
+	float ty1 = 0.75f + yindex * 0.125f;
+	float ty2 = ty1 + 0.125f;
 
 	bounds2f bounds = battleView->GetUnitCurrentFacingMarkerBounds(_unit);
 	glm::vec2 p = bounds.center();
 	float size = bounds.height();
-	float direction = index != 0 ? -glm::half_pi<float>() : (_unit->state.bearing - battleView->GetCameraFacing());
+	float direction = xindex != 0 ? -glm::half_pi<float>() : (_unit->state.bearing - battleView->GetCameraFacing());
 	if (battleView->GetFlip())
 		direction += glm::pi<float>();
 

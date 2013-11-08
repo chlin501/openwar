@@ -58,7 +58,6 @@ _colorBillboardRenderer(nullptr),
 _textureTriangleRenderer(nullptr),
 _textureUnitMarkers(nullptr),
 _textureTouchMarker(nullptr),
-_textureFacing(nullptr),
 _smoothTerrainSurface(nullptr),
 _smoothTerrainWater(nullptr),
 _smoothTerrainSky(nullptr),
@@ -66,9 +65,8 @@ _tiledTerrainRenderer(nullptr),
 _blueTeam(1),
 _player(0)
 {
-	_textureUnitMarkers = new texture(resource("Textures/Texture256x256.png"));
+	_textureUnitMarkers = new texture(resource("Textures/UnitMarkers.png"));
 	_textureTouchMarker = new texture(resource("Textures/TouchMarker.png"));
-	_textureFacing = new texture(resource("Textures/Facing.png"));
 
 	SetContentBounds(battleSimulator->GetHeightMap()->GetBounds());
 
@@ -182,7 +180,6 @@ BattleView::~BattleView()
 
 	delete _textureUnitMarkers;
 	delete _textureTouchMarker;
-	delete _textureFacing;
 
 	delete _billboardTexture;
 	delete _billboardModel;
@@ -501,7 +498,7 @@ void BattleView::Render()
 		if (marker->GetUnit()->player == _player)
 			marker->AppendFacingMarker(_textureTriangleRenderer, this);
 
-	_textureTriangleRenderer->Draw(sprite_transform(GetViewportBounds()).transform(), _textureFacing);
+	_textureTriangleRenderer->Draw(sprite_transform(GetViewportBounds()).transform(), _textureUnitMarkers);
 
 
 
@@ -511,7 +508,7 @@ void BattleView::Render()
 	_textureBillboardRenderer2->Reset();
 
 	for (UnitCounter* marker : _unitMarkers)
-		marker->AppendUnitMarker(_textureBillboardRenderer1, _textureBillboardRenderer2, GetFlip());
+		marker->AppendUnitMarker(_textureBillboardRenderer2, GetFlip());
 	for (UnitMovementMarker* marker : _movementMarkers)
 		marker->RenderMovementMarker(_textureBillboardRenderer1);
 	for (UnitTrackingMarker* marker : _trackingMarkers)
