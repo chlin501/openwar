@@ -197,23 +197,33 @@ Unit* BattleSimulator::AddUnit(BattleCommander* commander, const char* unitClass
 	unit->fightersCount = numberOfFighters;
 	unit->fighters = new Fighter[numberOfFighters];
 
-	for (Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
-		i->unit = unit;
-
 	unit->command.bearing = commander->GetTeam() == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
 
 	unit->state.unitMode = UnitMode_Initializing;
 	unit->state.center = position;
+	unit->state.waypoint = position;
 	unit->state.bearing = unit->command.bearing;
 
 	unit->command.missileTarget = nullptr;
 
 	unit->formation.rankDistance = stats.fighterSize.y + stats.spacing.y;
 	unit->formation.fileDistance = stats.fighterSize.x + stats.spacing.x;
-	unit->formation.numberOfRanks = (int)fminf(6, unit->fightersCount);
+	unit->formation.numberOfRanks = (int)fminf(4, unit->fightersCount);
 	unit->formation.numberOfFiles = (int)ceilf((float)unit->fightersCount / unit->formation.numberOfRanks);
 
 	_units.push_back(unit);
+
+	for (Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
+		i->unit = unit;
+
+	MovementRules::AdvanceTime(unit, 0);
+	unit->nextState = NextUnitState(unit);
+	for (Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
+		i->nextState = NextFighterState(i);
+
+	unit->state = unit->nextState;
+	for (Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
+		i->state = i->nextState;
 
 	for (BattleObserver* observer : _observers)
 		observer->OnAddUnit(unit);

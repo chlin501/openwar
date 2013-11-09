@@ -21,7 +21,7 @@ _direction(0)
 
 glm::vec2 Formation::GetFrontLeft(glm::vec2 center)
 {
-	return center - towardRight * (float)numberOfFiles / 2.0f - towardBack * (float)numberOfRanks / 2.0f;
+	return center - towardRight * (0.5f * (numberOfFiles - 1)) - towardBack * (0.5f * (numberOfRanks - 1));
 }
 
 
@@ -30,12 +30,6 @@ void Formation::SetDirection(float direction)
 	_direction = direction;
 	towardRight = glm::vec2((float)sin(direction), -(float)cos(direction)) * fileDistance;
 	towardBack = glm::vec2(-(float)cos(direction), -(float)sin(direction)) * rankDistance;
-}
-
-
-static int GetMaxNumberOfRanks(Unit* unit)
-{
-	return 4;
 }
 
 
@@ -135,7 +129,7 @@ void MovementRules::AdvanceTime(Unit* unit, float timeStep)
 	float count = unit->fightersCount;
 	float ranks = unit->formation.numberOfRanks;
 
-	unit->formation.numberOfRanks = (int)fminf(GetMaxNumberOfRanks(unit), count);
+	unit->formation.numberOfRanks = (int)fminf(4, count);
 	unit->formation.numberOfFiles = (int)ceilf(count / ranks);
 
 	float direction = unit->command.bearing;
@@ -157,7 +151,7 @@ void MovementRules::AdvanceTime(Unit* unit, float timeStep)
 
 	unit->formation.SetDirection(direction);
 
-	if (unit->timeUntilSwapFighters < timeStep)
+	if (unit->timeUntilSwapFighters <= timeStep)
 	{
 		SwapFighters(unit);
 		unit->timeUntilSwapFighters = 5;
@@ -239,20 +233,20 @@ glm::vec2 MovementRules::NextFighterDestination(Fighter* fighter)
 		{
 			destination = fighter->state.position;
 			int n = 1;
-			for (int i = 1; i <= 10; ++i)
+			for (int i = 1; i <= 5; ++i)
 			{
 				Fighter* other = Unit::GetFighter(unit, rank, file - i);
 				if (other == 0)
 					break;
-				destination = (destination + other->state.position + (float)i * unit->formation.towardRight); // / 2;
+				destination += other->state.position + (float)i * unit->formation.towardRight;
 				++n;
 			}
-			for (int i = 1; i <= 10; ++i)
+			for (int i = 1; i <= 5; ++i)
 			{
 				Fighter* other = Unit::GetFighter(unit, rank, file + i);
-				if (other == 0)
+				if (other == nullptr)
 					break;
-				destination = (destination + other->state.position - (float)i * unit->formation.towardRight); // / 2;
+				destination += other->state.position - (float)i * unit->formation.towardRight;
 				++n;
 			}
 			destination /= n;
@@ -275,7 +269,7 @@ glm::vec2 MovementRules::NextFighterDestination(Fighter* fighter)
 		Fighter* fighterMiddle = Unit::GetFighter(unit, rank - 1, file);
 		Fighter* fighterRight = Unit::GetFighter(unit, rank - 1, file + 1);
 
-		if (fighterLeft == 0 || fighterRight == 0)
+		if (fighterLeft == nullptr || fighterRight == nullptr)
 		{
 			destination = fighterMiddle->state.destination;
 		}
