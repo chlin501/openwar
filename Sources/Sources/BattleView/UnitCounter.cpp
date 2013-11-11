@@ -61,10 +61,12 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer, bool flip
 	int color = 3;
 	if (!routingIndicator)
 	{
-		if (_unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam())
-			color = 2;
-		else
+		if (_unit->commander->GetTeam() != _battleView->GetCommander()->GetTeam())
 			color = 0;
+		else if (_unit->commander != _battleView->GetCommander())
+			color = 1;
+		else
+			color = 2;
 	}
 
 

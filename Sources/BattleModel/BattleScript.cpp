@@ -93,6 +93,35 @@ void BattleScript::SetGlobalString(const char* name, const char* value)
 }
 
 
+void BattleScript::SetCommanders(const char* name)
+{
+	const std::vector<BattleCommander*>& commanders = _scenario->GetCommanders();
+	int n = (int)commanders.size();
+
+	lua_createtable(_state, n, 0);
+	for (int i = 0; i < n; ++i)
+	{
+		int team = commanders[i]->GetTeam();
+		int type = (int)commanders[i]->GetType();
+
+		lua_pushnumber(_state, i + 1);
+
+		lua_createtable(_state, 0, 2);
+
+		lua_pushstring(_state, "team");
+		lua_pushnumber(_state, team);
+		lua_settable(_state, -3);
+
+		lua_pushstring(_state, "type");
+		lua_pushnumber(_state, type);
+		lua_settable(_state, -3);
+
+		lua_settable(_state, -3);
+	}
+	lua_setglobal(_state, name);
+}
+
+
 void BattleScript::AddPackagePath(const char* path)
 {
 	lua_getglobal(_state, "package");

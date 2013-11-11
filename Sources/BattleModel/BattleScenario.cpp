@@ -46,6 +46,7 @@ void BattleScenario::Start(bool master)
 		_script->AddPackagePath(resource("Scripts/?.lua").path());
 		_script->AddPackagePath(resource("Maps/?.lua").path());
 		_script->SetGlobalBoolean("openwar_is_master", master);
+		_script->SetCommanders("openwar_commanders");
 
 		resource source(_name.c_str());
 		if (source.load())

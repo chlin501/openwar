@@ -3,7 +3,7 @@
 
 #include <string>
 
-enum class BattleCommanderType { None, Screen, Script };
+enum class BattleCommanderType { None = 0, Screen = 1, Script = 2 };
 
 
 class BattleCommander
