@@ -55,6 +55,12 @@ ButtonItem::~ButtonItem()
 }
 
 
+void ButtonItem::SetButtonText(const char* value)
+{
+	_buttonText = value != nullptr ? value : "";
+	_buttonArea->GetButtonView()->UpdateLayout();
+}
+
 
 glm::vec2 ButtonItem::CalculateSize() const
 {

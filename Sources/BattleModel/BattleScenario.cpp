@@ -39,7 +39,7 @@ BattleCommander* BattleScenario::AddCommander(int team, BattleCommanderType type
 }
 
 
-void BattleScenario::Start(bool master)
+void BattleScenario::StartScript(bool master)
 {
 	if (!_name.empty())
 	{

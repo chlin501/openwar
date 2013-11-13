@@ -20,7 +20,6 @@ _scenario(nullptr)
 
 	SoundPlayer::Initialize();
 	SoundPlayer::singleton->Pause();
-
 }
 
 
@@ -174,36 +173,39 @@ void BattleSurface::CreateBattleViews()
 		smoothTerrainSky = new SmoothTerrainSky();
 	}
 
-	int player = 1;
+	std::vector<BattleCommander*> commanders;
+
 	for (BattleCommander* commander : _scenario->GetCommanders())
-	{
 		if (commander->GetType() == BattleCommanderType::Screen)
+			commanders.push_back(commander);
+
+	if (commanders.empty())
+		commanders.push_back(new BattleCommander(0, BattleCommanderType::None, ""));
+
+	for (BattleCommander* commander : commanders)
+	{
+		BattleView* battleView = new BattleView(this, simulator, _renderers);
+		battleView->SetCommander(commander);
+		battleView->_smoothTerrainSurface = smoothTerrainRenderer;
+		battleView->_smoothTerrainWater = smoothTerrainWater;
+		battleView->_smoothTerrainSky = smoothTerrainSky;
+		battleView->_tiledTerrainRenderer = tiledTerrainRenderer;
+
+		if (commander->GetConfiguration()[0] == '-')
 		{
-			BattleView* battleView = new BattleView(this, simulator, _renderers);
-			battleView->SetCommander(commander);
-			battleView->_smoothTerrainSurface = smoothTerrainRenderer;
-			battleView->_smoothTerrainWater = smoothTerrainWater;
-			battleView->_smoothTerrainSky = smoothTerrainSky;
-			battleView->_tiledTerrainRenderer = tiledTerrainRenderer;
-
-			if (commander->GetConfiguration()[0] == '-')
-			{
-				battleView->SetFlip(true);
-				battleView->SetCameraFacing((float)M_PI);
-			}
-
-			battleView->Initialize();
-			_battleViews.push_back(battleView);
-			simulator->AddObserver(battleView);
-
-			BattleGesture* battleGesture = new BattleGesture(battleView);
-			_battleGestures.push_back(battleGesture);
-
-			TerrainGesture* terrainGesture = new TerrainGesture(battleView);
-			_terrainGestures.push_back(terrainGesture);
+			battleView->SetFlip(true);
+			battleView->SetCameraFacing((float)M_PI);
 		}
 
-		++player;
+		battleView->Initialize();
+		_battleViews.push_back(battleView);
+		simulator->AddObserver(battleView);
+
+		BattleGesture* battleGesture = new BattleGesture(battleView);
+		_battleGestures.push_back(battleGesture);
+
+		TerrainGesture* terrainGesture = new TerrainGesture(battleView);
+		_terrainGestures.push_back(terrainGesture);
 	}
 
 	UpdateBattleViewSize();

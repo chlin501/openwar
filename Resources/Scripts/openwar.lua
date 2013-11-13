@@ -5,11 +5,11 @@ openwar.Unit = {}
 openwar.units = {}
 
 
-function openwar.Unit:new(player, platform, weapon, strength, x, y, facing)
+function openwar.Unit:new(commander, platform, weapon, strength, x, y, facing)
     local o =
     {
-        unit_id = battle_new_unit(player, platform, weapon, strength, x, y, facing),
-        player = player,
+        unit_id = battle_new_unit(commander, platform, weapon, strength, x, y, facing),
+        commander = commander,
         platform = platform,
         weapon = weapon,
         strength = strength,

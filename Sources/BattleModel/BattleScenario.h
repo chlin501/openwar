@@ -26,7 +26,7 @@ public:
 	BattleCommander* AddCommander(int team, BattleCommanderType type, const char* configuration);
 	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
 
-	void Start(bool master);
+	void StartScript(bool master);
 
 	void SetSmoothMap(const char* name, float size);
 	void SetTiledMap(int x, int y);

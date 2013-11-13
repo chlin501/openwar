@@ -76,7 +76,7 @@ public:
 	ButtonArea* GetButtonArea() const { return _buttonArea; }
 
 	const char* GetButtonText() const { return _buttonText.empty() ? nullptr : _buttonText.c_str(); }
-	void SetButtonText(const char* value) { _buttonText = value != nullptr ? value : ""; }
+	void SetButtonText(const char* value);
 
 	ButtonIcon* GetButtonIcon() const { return _buttonIcon; }
 	void SetButtonIcon(ButtonIcon* value) { _buttonIcon = value; }
@@ -145,6 +145,8 @@ private:
 
 public:
 	ButtonView(Surface* screen, ButtonRendering* buttonRendering, ButtonAlignment alignment);
+
+	ButtonAlignment GetAlignment() const { return _alignment; }
 
 	virtual void SetViewport(bounds2f value);
 
