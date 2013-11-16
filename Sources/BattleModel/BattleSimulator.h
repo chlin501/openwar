@@ -382,6 +382,8 @@ public:
 	BattleSimulator();
 	~BattleSimulator();
 
+	float GetTimeStep() const { return _timeStep; }
+
 	void AddObserver(BattleObserver* observer);
 	void RemoveObserver(BattleObserver* observer);
 
