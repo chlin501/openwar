@@ -35,11 +35,15 @@ void resource::init(const char* argv0)
 	std::string::size_type i = _app_path.rfind('/');
 	if (i != std::string::npos)
 	{
+#if TARGET_OS_IPHONE
+		_resources_path = _app_path.substr(0, i) + "/";
+#else
 		i = _app_path.rfind('/', i - 1);
 		if (i != std::string::npos)
 		{
 			_resources_path = _app_path.substr(0, i) + "/Resources/";
 		}
+#endif
 	}
 }
 
@@ -121,7 +125,7 @@ const char* resource::path() const
     
     return s.c_str();
 
-/*#endif*/
+//#endif
 }
 
 
