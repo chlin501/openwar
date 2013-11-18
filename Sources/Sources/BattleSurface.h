@@ -37,7 +37,7 @@ public:
 	const std::vector<BattleView*>& GetBattleViews() const { return _battleViews; }
 	BattleView* GetPrimaryBattleView() const { return _battleViews.empty() ? nullptr : _battleViews.front(); }
 
-	virtual void Reset(BattleScenario* scenario);
+	virtual void ResetBattleViews(BattleScenario* scenario);
 
 	void SetPlaying(bool value);
 	void SetEditing(bool value);

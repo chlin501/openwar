@@ -81,7 +81,7 @@ OpenWarSurface::~OpenWarSurface()
 }
 
 
-void OpenWarSurface::Reset(BattleScenario* scenario)
+void OpenWarSurface::ResetBattleViews(BattleScenario* scenario)
 {
 	delete _editorGesture;
 	_editorGesture = nullptr;
@@ -89,7 +89,7 @@ void OpenWarSurface::Reset(BattleScenario* scenario)
 	delete _editorModel;
 	_editorModel = nullptr;
 
-	BattleSurface::Reset(scenario);
+	BattleSurface::ResetBattleViews(scenario);
 
 	const std::vector<BattleView*>& battleViews = GetBattleViews();
 	if (!battleViews.empty())

@@ -28,7 +28,7 @@ BattleSurface::~BattleSurface()
 }
 
 
-void BattleSurface::Reset(BattleScenario* scenario)
+void BattleSurface::ResetBattleViews(BattleScenario* scenario)
 {
 	RemoveBattleViews();
 

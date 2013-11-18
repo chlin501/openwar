@@ -27,7 +27,7 @@ static BattleScenario* CreateBattleScenario()
 	BattleScenario* scenario = new BattleScenario("Maps/DefaultMap.lua");
 	scenario->AddCommander(1, BattleCommanderType::Screen, "");
 	scenario->AddCommander(2, BattleCommanderType::Script, "");
-	scenario->Start(true);
+	scenario->StartScript(true);
 	return scenario;
 }
 
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 	OpenWarSurface* surface = new OpenWarSurface(glm::vec2(640, 480), 1);
 	window->SetSurface(surface);
 
-	surface->Reset(CreateBattleScenario());
+	surface->ResetBattleViews(CreateBattleScenario());
     
 	while (!Window::IsDone())
 		Window::ProcessEvents();
