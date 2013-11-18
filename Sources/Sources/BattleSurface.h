@@ -35,6 +35,7 @@ public:
 
 	BattleScenario* GetScenario() const { return _scenario; }
 	const std::vector<BattleView*>& GetBattleViews() const { return _battleViews; }
+	BattleView* GetPrimaryBattleView() const { return _battleViews.empty() ? nullptr : _battleViews.front(); }
 
 	virtual void Reset(BattleScenario* scenario);
 
@@ -50,11 +51,11 @@ public:
 	virtual void Render();
 
 private:
-	void RemoveBattleViews();
 	void CreateBattleViews();
+	void RemoveBattleViews();
+	void UpdateBattleViewSize();
 
 	void UpdateSoundPlayer();
-	void UpdateBattleViewSize();
 };
 
 

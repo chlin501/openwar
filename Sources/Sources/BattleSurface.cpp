@@ -32,10 +32,10 @@ void BattleSurface::Reset(BattleScenario* scenario)
 {
 	RemoveBattleViews();
 
-	delete _scenario;
 	_scenario = scenario;
 
-	CreateBattleViews();
+	if (scenario != nullptr)
+		CreateBattleViews();
 }
 
 
@@ -116,25 +116,6 @@ void BattleSurface::Render()
 }
 
 
-void BattleSurface::RemoveBattleViews()
-{
-	for (Gesture* gesture : _battleGestures)
-		delete gesture;
-	_battleGestures.clear();
-
-	for (BattleView* battleView : _battleViews)
-	{
-		delete battleView->_smoothTerrainSurface;
-		battleView->_smoothTerrainSurface = nullptr;
-
-		delete battleView->_tiledTerrainRenderer;
-		battleView->_tiledTerrainRenderer = nullptr;
-
-		delete battleView;
-	}
-	_battleViews.clear();
-}
-
 
 static bool ShouldEnableRenderEdges(float pixels_per_point)
 {
@@ -212,6 +193,60 @@ void BattleSurface::CreateBattleViews()
 }
 
 
+void BattleSurface::RemoveBattleViews()
+{
+	for (Gesture* gesture : _battleGestures)
+		delete gesture;
+	_battleGestures.clear();
+
+	for (Gesture* gesture : _terrainGestures)
+		delete gesture;
+	_terrainGestures.clear();
+
+	std::set<SmoothTerrainRenderer*> smoothTerrainRenderers;
+	std::set<TiledTerrainRenderer*> tiledTerrainRenderers;
+
+	for (BattleView* battleView : _battleViews)
+	{
+		if (battleView->_smoothTerrainSurface != nullptr)
+		{
+			smoothTerrainRenderers.insert(battleView->_smoothTerrainSurface);
+			battleView->_smoothTerrainSurface = nullptr;
+		}
+		if (battleView->_tiledTerrainRenderer != nullptr)
+		{
+			tiledTerrainRenderers.insert(battleView->_tiledTerrainRenderer);
+			battleView->_tiledTerrainRenderer = nullptr;
+		}
+		delete battleView;
+	}
+
+	for (SmoothTerrainRenderer* smoothTerrainRenderer : smoothTerrainRenderers)
+		delete smoothTerrainRenderer;
+
+	for (TiledTerrainRenderer* tiledTerrainRenderer : tiledTerrainRenderers)
+		delete tiledTerrainRenderer;
+
+	_battleViews.clear();
+}
+
+
+void BattleSurface::UpdateBattleViewSize()
+{
+	if (!_battleViews.empty())
+	{
+		glm::vec2 size = GetSize();
+		float h = size.y / _battleViews.size();
+		float y = 0;
+		for (BattleView* battleView : _battleViews)
+		{
+			battleView->SetViewport(bounds2f(0, y, size.x, y + h));
+			y += h;
+		}
+	}
+}
+
+
 void BattleSurface::UpdateSoundPlayer()
 {
 	if (_playing && !_battleViews.empty())
@@ -254,21 +289,5 @@ void BattleSurface::UpdateSoundPlayer()
 		SoundPlayer::singleton->UpdateCavalryRunning(horseGallop != 0);
 
 		SoundPlayer::singleton->UpdateFighting(_scenario->GetSimulator()->IsMelee());
-	}
-}
-
-
-void BattleSurface::UpdateBattleViewSize()
-{
-	if (!_battleViews.empty())
-	{
-		glm::vec2 size = GetSize();
-		float h = size.y / _battleViews.size();
-		float y = 0;
-		for (BattleView* battleView : _battleViews)
-		{
-			battleView->SetViewport(bounds2f(0, y, size.x, y + h));
-			y += h;
-		}
 	}
 }
