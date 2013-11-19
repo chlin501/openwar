@@ -157,7 +157,7 @@ void BattleSurface::CreateBattleViews()
 	std::vector<BattleCommander*> commanders;
 
 	for (BattleCommander* commander : _scenario->GetCommanders())
-		if (commander->GetType() == BattleCommanderType::Screen)
+		if (commander->GetType() == BattleCommanderType::Player)
 			commanders.push_back(commander);
 
 	if (commanders.empty())

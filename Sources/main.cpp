@@ -25,7 +25,7 @@
 static BattleScenario* CreateBattleScenario()
 {
 	BattleScenario* scenario = new BattleScenario("Maps/DefaultMap.lua");
-	scenario->AddCommander(1, BattleCommanderType::Screen, "");
+	scenario->AddCommander(1, BattleCommanderType::Player, "");
 	scenario->AddCommander(2, BattleCommanderType::Script, "");
 	scenario->StartScript(true);
 	return scenario;
