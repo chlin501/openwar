@@ -141,10 +141,12 @@ void BattleGesture::TouchBegan(Touch* touch)
 		return;
 	if (!_battleView->GetViewportBounds().contains(touch->GetPosition()))
 		return;
+	if (_battleView->GetCommander() == nullptr || _battleView->GetCommander()->GetType() != BattleCommanderType::Player)
+		return;
 
 	glm::vec2 screenPosition = touch->GetPosition();
 	glm::vec2 terrainPosition = _battleView->GetTerrainPosition3(screenPosition).xy();
-	Unit* unit = FindFriendlyUnit(screenPosition, terrainPosition);
+	Unit* unit = FindPlayerUnit(screenPosition, terrainPosition);
 
 	if (_trackingTouch == nullptr)
 	{
@@ -542,7 +544,7 @@ int BattleGesture::GetFlipSign() const
 }
 
 
-Unit* BattleGesture::FindFriendlyUnit(glm::vec2 screenPosition, glm::vec2 terrainPosition)
+Unit* BattleGesture::FindPlayerUnit(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	if (disableUnitTracking)
 		return nullptr;

@@ -201,6 +201,8 @@ void BattleSurface::RemoveBattleViews()
 
 	for (BattleView* battleView : _battleViews)
 	{
+		battleView->GetSimulator()->RemoveObserver(battleView);
+
 		if (battleView->_smoothTerrainSurface != nullptr)
 		{
 			smoothTerrainRenderers.insert(battleView->_smoothTerrainSurface);

@@ -69,10 +69,13 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer, bool flip
 			color = 2;
 	}
 
+	int command = 0;
+	if (_unit->commander == _battleView->GetCommander() && _unit->commander->GetType() != BattleCommanderType::Player)
+		command = 2;
 
 	glm::vec3 position = _battleView->GetSimulator()->GetHeightMap()->GetPosition(_unit->state.center, 0);
 	glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
-	glm::vec2 texcoord1 = texsize * glm::vec2(color, 0);
+	glm::vec2 texcoord1 = texsize * glm::vec2(color, command);
 	glm::vec2 texcoord2 = texsize * glm::vec2((int)_samuraiPlatform, 3);
 	glm::vec2 texcoord3 = texsize * glm::vec2(4, (int)_samuraiWeapon);
 

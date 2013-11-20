@@ -53,7 +53,7 @@ private:
 
 	int GetFlipSign() const;
 
-	Unit* FindFriendlyUnit(glm::vec2 screenPosition, glm::vec2 terrainPosition);
+	Unit* FindPlayerUnit(glm::vec2 screenPosition, glm::vec2 terrainPosition);
 	Unit* FindPlayerUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition);
 	Unit* FindPlayerUnitByFuturePosition(glm::vec2 screenPosition, glm::vec2 terrainPosition);
 	Unit* FindPlayerUnitByModifierArea(glm::vec2 screenPosition, glm::vec2 terrainPosition);
