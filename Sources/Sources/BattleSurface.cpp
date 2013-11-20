@@ -28,11 +28,12 @@ BattleSurface::~BattleSurface()
 }
 
 
-void BattleSurface::ResetBattleViews(BattleScenario* scenario)
+void BattleSurface::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
 {
 	RemoveBattleViews();
 
 	_scenario = scenario;
+	_commanders = commanders;
 
 	if (scenario != nullptr)
 		CreateBattleViews();
@@ -154,18 +155,10 @@ void BattleSurface::CreateBattleViews()
 		smoothTerrainSky = new SmoothTerrainSky();
 	}
 
-	std::vector<BattleCommander*> commanders;
-
-	for (BattleCommander* commander : _scenario->GetCommanders())
-		if (commander->GetType() == BattleCommanderType::Player)
-			commanders.push_back(commander);
-
-	if (commanders.empty())
-		commanders.push_back(new BattleCommander(0, BattleCommanderType::None, ""));
-
-	for (BattleCommander* commander : commanders)
+	for (BattleCommander* commander : _commanders)
 	{
-		BattleView* battleView = new BattleView(this, simulator, _renderers);
+		BattleView* battleView = new BattleView(this, _renderers);
+		battleView->SetSimulator(simulator);
 		battleView->SetCommander(commander);
 		battleView->_smoothTerrainSurface = smoothTerrainRenderer;
 		battleView->_smoothTerrainWater = smoothTerrainWater;

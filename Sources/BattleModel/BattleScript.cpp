@@ -188,11 +188,6 @@ void BattleScript::Tick(double secondsSinceLastUpdate)
 			lua_pop(_state, 1);  /* pop error message from the stack */
 		}
 	}
-
-	if (_simulator != nullptr)
-	{
-		_simulator->AdvanceTime((float)secondsSinceLastUpdate);
-	}
 }
 
 

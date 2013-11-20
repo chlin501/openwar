@@ -81,7 +81,7 @@ OpenWarSurface::~OpenWarSurface()
 }
 
 
-void OpenWarSurface::ResetBattleViews(BattleScenario* scenario)
+void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
 {
 	delete _editorGesture;
 	_editorGesture = nullptr;
@@ -89,7 +89,7 @@ void OpenWarSurface::ResetBattleViews(BattleScenario* scenario)
 	delete _editorModel;
 	_editorModel = nullptr;
 
-	BattleSurface::ResetBattleViews(scenario);
+	BattleSurface::ResetBattleViews(scenario, commanders);
 
 	const std::vector<BattleView*>& battleViews = GetBattleViews();
 	if (!battleViews.empty())
@@ -116,6 +116,9 @@ void OpenWarSurface::ScreenSizeChanged()
 void OpenWarSurface::Update(double secondsSinceLastUpdate)
 {
 	BattleSurface::Update(secondsSinceLastUpdate);
+
+	if (_scenario != nullptr && _playing)
+		_scenario->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);
 }
 
 

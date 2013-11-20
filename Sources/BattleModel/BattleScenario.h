@@ -23,7 +23,7 @@ public:
 	BattleSimulator* GetSimulator() const { return _simulator; }
 	BattleScript* GetScript() const { return _script; }
 
-	BattleCommander* AddCommander(int team, BattleCommanderType type, const char* configuration);
+	BattleCommander* AddCommander(const char* id, int team, BattleCommanderType type, const char* configuration);
 	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
 
 	void StartScript(bool master);

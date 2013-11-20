@@ -4,6 +4,7 @@
 #include "../Library/Graphics/renderer.h"
 #include "../Library/ViewCore/Surface.h"
 
+class BattleCommander;
 class BattleGesture;
 class BattleModel;
 class BattleScenario;
@@ -20,11 +21,13 @@ class BattleSurface : public Surface
 protected:
 	renderers* _renderers;
 
-private:
+protected:
 	bool _playing;
 	bool _editing;
 
 	BattleScenario* _scenario;
+	std::vector<BattleCommander*> _commanders;
+
 	std::vector<BattleView*> _battleViews;
 	std::vector<BattleGesture*> _battleGestures;
 	std::vector<TerrainGesture*> _terrainGestures;
@@ -37,7 +40,7 @@ public:
 	const std::vector<BattleView*>& GetBattleViews() const { return _battleViews; }
 	BattleView* GetPrimaryBattleView() const { return _battleViews.empty() ? nullptr : _battleViews.front(); }
 
-	virtual void ResetBattleViews(BattleScenario* scenario);
+	virtual void ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
 
 	void SetPlaying(bool value);
 	void SetEditing(bool value);

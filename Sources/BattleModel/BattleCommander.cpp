@@ -1,7 +1,8 @@
 #include "BattleCommander.h"
 
 
-BattleCommander::BattleCommander(int team, BattleCommanderType type, const char* configuration) :
+BattleCommander::BattleCommander(const char* id, int team, BattleCommanderType type, const char* configuration) :
+_id(id),
 _team(team),
 _type(type),
 _configuration(configuration)

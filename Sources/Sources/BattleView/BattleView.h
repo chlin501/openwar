@@ -33,7 +33,9 @@ class SmokeCounter;
 
 class BattleView : public TerrainView, public BattleObserver
 {
-	BattleSimulator* _battleSimulator;
+	BattleSimulator* _simulator;
+	BattleCommander* _commander;
+
 	renderers* _renderers;
 
 	glm::vec3 _lightNormal;
@@ -63,7 +65,6 @@ class BattleView : public TerrainView, public BattleObserver
 	std::vector<ShootingCounter*> _shootingCounters;
 	std::vector<UnitCounter*> _unitMarkers;
 
-	BattleCommander* _commander;
 
 public:
 	SmoothTerrainRenderer* _smoothTerrainSurface;
@@ -72,10 +73,11 @@ public:
 	TiledTerrainRenderer* _tiledTerrainRenderer;
 
 public:
-	BattleView(Surface* screen, BattleSimulator* battleSimulator, renderers* r);
+	BattleView(Surface* screen, renderers* r);
 	~BattleView();
 
-	BattleSimulator* GetBattleSimulator() const { return _battleSimulator; }
+	BattleSimulator* GetSimulator() const { return _simulator; }
+	void SetSimulator(BattleSimulator* simulator);
 
 	BattleCommander* GetCommander() const { return _commander; }
 	void SetCommander(BattleCommander* value) { _commander = value; }

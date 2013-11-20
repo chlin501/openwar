@@ -39,7 +39,7 @@ void UnitMovementMarker::RenderMovementMarker(TextureBillboardRenderer* renderer
 	{
 		if (_unit->command.meleeTarget == nullptr)
 		{
-			glm::vec3 position = _battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(finalDestination, 0.5);
+			glm::vec3 position = _battleView->GetSimulator()->GetHeightMap()->GetPosition(finalDestination, 0.5);
 			glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
 			glm::vec2 texcoord = texsize * glm::vec2(_unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam() ? 2 : 0, 2);
 
@@ -101,7 +101,7 @@ void UnitMovementMarker::RenderMovementFighters(ColorBillboardRenderer* renderer
 			glm::vec2 offsetRight = formation.towardRight * (float)Unit::GetFighterFile(fighter);
 			glm::vec2 offsetBack = formation.towardBack * (float)Unit::GetFighterRank(fighter);
 
-			renderer->AddBillboard(_battleView->GetBattleSimulator()->GetHeightMap()->GetPosition(frontLeft + offsetRight + offsetBack, 0.5), color, 3.0);
+			renderer->AddBillboard(_battleView->GetSimulator()->GetHeightMap()->GetPosition(frontLeft + offsetRight + offsetBack, 0.5), color, 3.0);
 		}
 	}
 }
@@ -117,7 +117,7 @@ void UnitMovementMarker::RenderMovementPath(GradientTriangleRenderer* renderer)
 		else if (_unit->command.running)
 			mode = 1;
 
-		HeightMap* heightMap = _battleView->GetBattleSimulator()->GetHeightMap();
+		HeightMap* heightMap = _battleView->GetSimulator()->GetHeightMap();
 		PathRenderer pathRenderer([heightMap](glm::vec2 p) { return heightMap->GetPosition(p, 1); });
 		pathRenderer.Path(renderer, _unit->command.path, mode);
 	}

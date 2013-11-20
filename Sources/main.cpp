@@ -25,8 +25,8 @@
 static BattleScenario* CreateBattleScenario()
 {
 	BattleScenario* scenario = new BattleScenario("Maps/DefaultMap.lua");
-	scenario->AddCommander(1, BattleCommanderType::Player, "");
-	scenario->AddCommander(2, BattleCommanderType::Script, "");
+	scenario->AddCommander("1", 1, BattleCommanderType::Player, "");
+	scenario->AddCommander("2", 2, BattleCommanderType::Script, "");
 	scenario->StartScript(true);
 	return scenario;
 }
@@ -56,7 +56,9 @@ int main(int argc, char *argv[])
 	OpenWarSurface* surface = new OpenWarSurface(glm::vec2(640, 480), 1);
 	window->SetSurface(surface);
 
-	surface->ResetBattleViews(CreateBattleScenario());
+	BattleScenario* scenario = CreateBattleScenario();
+	std::vector<BattleCommander*> commanders(1, scenario->GetCommanders().front());
+	surface->ResetBattleViews(scenario, commanders);
     
 	while (!Window::IsDone())
 		Window::ProcessEvents();

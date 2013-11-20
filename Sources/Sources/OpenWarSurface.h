@@ -44,7 +44,7 @@ public:
 	OpenWarSurface(glm::vec2 size, float pixelDensity);
 	virtual ~OpenWarSurface();
 
-	virtual void ResetBattleViews(BattleScenario* scenario);
+	virtual void ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
 
 	virtual void ScreenSizeChanged();
 	virtual void Update(double secondsSinceLastUpdate);

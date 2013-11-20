@@ -12,11 +12,11 @@
 #include "TerrainView.h"
 
 
-TerrainView::TerrainView(Surface* screen, HeightMap* heightMap) : View(screen),
+TerrainView::TerrainView(Surface* screen) : View(screen),
 _cameraTilt((float)M_PI_4),
 _cameraFacing(0),
 _mouseHintVisible(false),
-_heightMap(heightMap)
+_heightMap(nullptr)
 {
 }
 
@@ -58,12 +58,14 @@ void TerrainView::RenderMouseHint(PlainLineRenderer* renderer)
 }
 
 
-void TerrainView::SetContentBounds(bounds2f value)
+void TerrainView::SetHeightMap(HeightMap* heightMap)
 {
-	_contentBounds = value;
+	_heightMap = heightMap;
 
-	glm::vec2 center = value.center();
-	glm::vec2 size = value.size();
+	_contentBounds = heightMap->GetBounds();
+
+	glm::vec2 center = _contentBounds.center();
+	glm::vec2 size = _contentBounds.size();
 
 	_cameraPosition = glm::vec3(center - 0.2f * size, 0.2f * size.y);
 	_cameraTilt = (float)M_PI_4;

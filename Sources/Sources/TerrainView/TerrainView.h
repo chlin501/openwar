@@ -26,15 +26,16 @@ protected:
 	HeightMap* _heightMap;
 
 public:
-	TerrainView(Surface* screen, HeightMap* heightMap);
+	TerrainView(Surface* screen);
 	virtual ~TerrainView();
 
 	void ShowMouseHint(glm::vec2 position);
 	void HideMouseHint();
 	void RenderMouseHint(PlainLineRenderer* renderer);
 
+	void SetHeightMap(HeightMap* heightMap);
+
 	bounds2f GetContentBounds() const { return _contentBounds; }
-	void SetContentBounds(bounds2f value);
 	float GetContentRadius() const;
 
 	glm::vec2 GetScreenTop() const;
