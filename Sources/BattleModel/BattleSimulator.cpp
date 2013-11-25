@@ -309,9 +309,10 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 
 		for (std::pair<int, int> i : total)
 		{
-			if (routing[i.first] == i.second)
+			int team = i.first;
+			if (routing[team] == i.second)
 			{
-				_winnerTeam = i.first;
+				_winnerTeam = 3 - team;
 				break;
 			}
 		}
