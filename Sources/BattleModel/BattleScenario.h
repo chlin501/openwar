@@ -9,6 +9,15 @@ class BattleScript;
 class BattleSimulator;
 
 
+enum class BattleOutcome
+{
+	None,
+	Won,
+	Lost,
+	Draw
+};
+
+
 class BattleScenario
 {
 	std::string _name;
@@ -27,6 +36,8 @@ public:
 	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
 
 	void StartScript(bool master);
+
+	BattleOutcome GetOutcome(int team) const;
 
 	void SetSmoothMap(const char* name, float size);
 	void SetTiledMap(int x, int y);

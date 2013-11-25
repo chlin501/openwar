@@ -57,6 +57,15 @@ void BattleScenario::StartScript(bool master)
 }
 
 
+BattleOutcome BattleScenario::GetOutcome(int team) const
+{
+	int winnerTeam = _simulator->GetWinnerTeam();
+	if (winnerTeam == 0)
+		return BattleOutcome::None;
+	return team == winnerTeam ? BattleOutcome::Won : BattleOutcome::Lost;
+}
+
+
 void BattleScenario::SetSmoothMap(const char* name, float size)
 {
 	std::string path = std::string("Maps/") + name;
