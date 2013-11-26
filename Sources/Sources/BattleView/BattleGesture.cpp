@@ -348,14 +348,14 @@ void BattleGesture::TouchEnded(Touch* touch)
 
 			unit->timeUntilSwapFighters = 0.2f;
 
-			if (_battleView->GetMovementMarker(unit) == nullptr)
-				_battleView->AddMovementMarker(unit);
+			_battleView->RemoveTrackingMarker(_trackingMarker);
+			_trackingMarker = nullptr;
+
+			_battleView->GetSimulator()->OnUnitCommand(unit);
 
 			if (touch->GetTapCount() == 1)
 				SoundPlayer::singleton->Play(SoundBufferCommandAck);
 
-			_battleView->RemoveTrackingMarker(_trackingMarker);
-			_trackingMarker = nullptr;
 		}
 	}
 

@@ -262,6 +262,13 @@ void BattleSimulator::RemoveUnit(Unit* unit)
 }
 
 
+void BattleSimulator::OnUnitCommand(Unit* unit)
+{
+	for (BattleObserver* observer : _observers)
+		observer->OnCommand(unit);
+}
+
+
 void BattleSimulator::AddShooting(const Shooting& shooting)
 {
 	_shootings.push_back(shooting);

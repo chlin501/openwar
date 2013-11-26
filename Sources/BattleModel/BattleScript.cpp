@@ -216,15 +216,18 @@ void BattleScript::OnRemoveUnit(Unit* unit)
 }
 
 
+void BattleScript::OnCommand(Unit* unit)
+{
+}
+
+
 void BattleScript::OnShooting(const Shooting &shooting)
 {
-
 }
 
 
 void BattleScript::OnCasualty(const Fighter& fighter)
 {
-
 }
 
 
@@ -254,6 +257,7 @@ void BattleScript::SetUnitMovement(int unitId, bool running, std::vector<glm::ve
 		unit->command.bearing = heading;
 		unit->command.meleeTarget = _units[chargeId];
 		unit->command.running = running;
+		_simulator->OnUnitCommand(unit);
 	}
 }
 

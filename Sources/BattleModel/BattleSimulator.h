@@ -357,6 +357,7 @@ public:
 	virtual void OnSetGroundMap(GroundMap* groundMap) = 0;
 	virtual void OnAddUnit(Unit* unit) = 0;
 	virtual void OnRemoveUnit(Unit* unit) = 0;
+	virtual void OnCommand(Unit* unit) = 0;
 	virtual void OnShooting(const Shooting& shooting) = 0;
 	virtual void OnCasualty(const Fighter& fighter) = 0;
 };
@@ -395,6 +396,8 @@ public:
 	const std::vector<Unit*>& GetUnits() { return _units; }
 	Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
 	void RemoveUnit(Unit* unit);
+
+	void OnUnitCommand(Unit* unit);
 
 	void AddShooting(const Shooting& shooting);
 

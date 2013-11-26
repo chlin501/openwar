@@ -259,6 +259,13 @@ void BattleView::OnRemoveUnit(Unit* unit)
 }
 
 
+void BattleView::OnCommand(Unit* unit)
+{
+	if (unit->commander == _commander && GetMovementMarker(unit) == nullptr)
+		AddMovementMarker(unit);
+}
+
+
 void BattleView::OnShooting(Shooting const & shooting)
 {
 	AddShootingAndSmokeCounters(shooting);
