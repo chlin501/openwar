@@ -53,7 +53,8 @@ public:
 	virtual void OnAddUnit(Unit* unit);
 	virtual void OnRemoveUnit(Unit* unit);
 	virtual void OnCommand(Unit* unit, float timer);
-	virtual void OnShooting(const Shooting& shooting);
+	virtual void OnShooting(const Shooting& shooting, float timer);
+	virtual void OnRelease(const Shooting& shooting);
 	virtual void OnCasualty(const Fighter& fighter);
 
 private:

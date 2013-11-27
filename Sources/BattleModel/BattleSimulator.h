@@ -361,7 +361,8 @@ public:
 	virtual void OnAddUnit(Unit* unit) = 0;
 	virtual void OnRemoveUnit(Unit* unit) = 0;
 	virtual void OnCommand(Unit* unit, float timer) = 0;
-	virtual void OnShooting(const Shooting& shooting) = 0;
+	virtual void OnShooting(const Shooting& shooting, float timer) = 0;
+	virtual void OnRelease(const Shooting& shooting) = 0;
 	virtual void OnCasualty(const Fighter& fighter) = 0;
 };
 
@@ -376,7 +377,7 @@ class BattleSimulator
 	GroundMap* _groundMap;
 
 	std::vector<Unit*> _units;
-	std::vector<Shooting> _shootings;
+	std::vector<std::pair<float, Shooting>> _shootings;
 
 	float _secondsSinceLastTimeStep;
 	float _timeStep;
@@ -402,7 +403,7 @@ public:
 
 	void SetUnitCommand(Unit* unit, const UnitCommand& command, float timer);
 
-	void AddShooting(const Shooting& shooting);
+	void AddShooting(const Shooting& shooting, float timer);
 
 	void AdvanceTime(float secondsSinceLastTime);
 

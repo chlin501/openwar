@@ -278,12 +278,12 @@ void BattleSimulator::SetUnitCommand(Unit* unit, const UnitCommand& command, flo
 }
 
 
-void BattleSimulator::AddShooting(const Shooting& shooting)
+void BattleSimulator::AddShooting(const Shooting& shooting, float timer)
 {
-	_shootings.push_back(shooting);
+	_shootings.push_back(std::pair<float, Shooting>(timer, shooting));
 
 	for (BattleObserver* observer : _observers)
-		observer->OnShooting(shooting);
+		observer->OnShooting(shooting, timer);
 }
 
 
@@ -563,7 +563,7 @@ void BattleSimulator::TriggerShooting(Unit* unit)
 	float speed = arq ? 750 : 75; // meters per second
 	shooting.timeToImpact = distance / speed;
 
-	AddShooting(shooting);
+	AddShooting(shooting, 0.4f);
 }
 
 
@@ -571,38 +571,52 @@ void BattleSimulator::ResolveProjectileCasualties()
 {
 	static int random = 0;
 
-	for (std::vector<Shooting>::iterator s = _shootings.begin(); s != _shootings.end(); ++s)
+	for (std::pair<float, Shooting>& s : _shootings)
 	{
-		Shooting& shooting = *s;
 
-		shooting.timeToImpact -= _timeStep;
-
-		std::vector<Projectile>::iterator i = shooting.projectiles.begin();
-		while (i != shooting.projectiles.end())
+		if (s.first > 0)
 		{
-			Projectile& projectile = *i;
-			if (shooting.timeToImpact <= 0)
+			s.first -= _timeStep;
+			if (s.first < 0)
 			{
-				glm::vec2 hitpoint = projectile.position2;
-				for (quadtree<Fighter*>::iterator j(_fighterQuadTree.find(hitpoint.x, hitpoint.y, 0.45f)); *j; ++j)
+				s.first = 0;
+				for (BattleObserver* observer : _observers)
+					observer->OnRelease(s.second);
+			}
+		}
+
+		if (s.first == 0)
+		{
+			Shooting& shooting = s.second;
+			shooting.timeToImpact -= _timeStep;
+
+			std::vector<Projectile>::iterator i = shooting.projectiles.begin();
+			while (i != shooting.projectiles.end())
+			{
+				Projectile& projectile = *i;
+				if (shooting.timeToImpact <= 0)
 				{
-					Fighter* fighter = **j;
-					if (fighter->unit->commander->GetType() != BattleCommanderType::None)
+					glm::vec2 hitpoint = projectile.position2;
+					for (quadtree<Fighter*>::iterator j(_fighterQuadTree.find(hitpoint.x, hitpoint.y, 0.45f)); *j; ++j)
 					{
-						bool blocked = false;
-						if (fighter->terrainForest)
-							blocked = (random++ & 7) <= 5;
-						if (!blocked)
-							fighter->casualty = true;
+						Fighter* fighter = **j;
+						if (fighter->unit->commander->GetType() != BattleCommanderType::None)
+						{
+							bool blocked = false;
+							if (fighter->terrainForest)
+								blocked = (random++ & 7) <= 5;
+							if (!blocked)
+								fighter->casualty = true;
+						}
 					}
+					shooting.projectiles.erase(i);
 				}
-				shooting.projectiles.erase(i);
+				else
+				{
+					++i;
+				}
+				++random;
 			}
-			else
-			{
-				++i;
-			}
-			++random;
 		}
 	}
 }
@@ -674,7 +688,7 @@ void BattleSimulator::RemoveDeadUnits()
 
 void BattleSimulator::RemoveFinishedShootings()
 {
-	auto i = std::remove_if(_shootings.begin(), _shootings.end(), [](const Shooting& s) { return s.projectiles.empty(); });
+	auto i = std::remove_if(_shootings.begin(), _shootings.end(), [](const std::pair<float, Shooting>& s) { return s.second.projectiles.empty(); });
 	_shootings.erase(i, _shootings.end());
 }
 

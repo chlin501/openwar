@@ -221,7 +221,12 @@ void BattleScript::OnCommand(Unit* unit, float timer)
 }
 
 
-void BattleScript::OnShooting(const Shooting& shooting)
+void BattleScript::OnShooting(const Shooting& shooting, float timer)
+{
+}
+
+
+void BattleScript::OnRelease(const Shooting& shooting)
 {
 }
 

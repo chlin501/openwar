@@ -266,7 +266,12 @@ void BattleView::OnCommand(Unit* unit, float timer)
 }
 
 
-void BattleView::OnShooting(Shooting const & shooting)
+void BattleView::OnShooting(Shooting const & shooting, float timer)
+{
+}
+
+
+void BattleView::OnRelease(const Shooting& shooting)
 {
 	AddShootingAndSmokeCounters(shooting);
 }
