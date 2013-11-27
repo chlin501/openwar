@@ -253,11 +253,14 @@ void BattleScript::SetUnitMovement(int unitId, bool running, std::vector<glm::ve
 	Unit* unit = _units[unitId];
 	if (unit != nullptr)
 	{
-		unit->command.path = path;
-		unit->command.bearing = heading;
-		unit->command.meleeTarget = _units[chargeId];
-		unit->command.running = running;
-		_simulator->OnUnitCommand(unit);
+		UnitCommand command;
+
+		command.path = path;
+		command.running = running;
+		command.bearing = heading;
+		command.meleeTarget = _units[chargeId];
+
+		_simulator->SetUnitCommand(unit, command);
 	}
 }
 

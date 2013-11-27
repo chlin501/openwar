@@ -264,22 +264,20 @@ struct UnitState
 
 struct UnitCommand
 {
-	bool running;
 	std::vector<glm::vec2> path;
+	bool running;
 	float bearing;
 	Unit* meleeTarget;
-	Unit* missileTarget;
-	bool missileTargetLocked; // updated by TouchGesture()
-	bool holdFire;
+	Unit* missileTarget; // set to self to hold fire
+	bool missileTargetLocked;
 
 	UnitCommand() :
-	running(false),
 	path(),
+	running(false),
 	bearing(0),
 	meleeTarget(nullptr),
 	missileTarget(nullptr),
-	missileTargetLocked(false),
-	holdFire(false)
+	missileTargetLocked(false)
 	{
 	}
 
@@ -397,7 +395,7 @@ public:
 	Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
 	void RemoveUnit(Unit* unit);
 
-	void OnUnitCommand(Unit* unit);
+	void SetUnitCommand(Unit* unit, const UnitCommand& command);
 
 	void AddShooting(const Shooting& shooting);
 

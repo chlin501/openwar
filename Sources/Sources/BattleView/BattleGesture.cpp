@@ -194,10 +194,11 @@ void BattleGesture::TouchBegan(Touch* touch)
 
 			if (touch->GetTapCount() > 1 && _tappedUnitCenter && !_tappedDestination)
 			{
-				unit->command.meleeTarget = nullptr;
-				unit->command.ClearPathAndSetDestination(unit->state.center);
-				unit->command.missileTarget = nullptr;
-				unit->command.missileTargetLocked = false;
+				UnitCommand command;
+
+				command.ClearPathAndSetDestination(unit->state.center);
+
+				_battleView->GetSimulator()->SetUnitCommand(unit, command);
 			}
 
 			_trackingMarker->SetRunning(touch->GetTapCount() > 1 || (!_tappedUnitCenter && unit->command.running));
@@ -280,68 +281,49 @@ void BattleGesture::TouchEnded(Touch* touch)
 		if (_trackingMarker != nullptr)
 		{
 			Unit* unit = _trackingMarker->GetUnit();
-			unit->command.path.clear();
+			UnitCommand command;
 
-			std::vector<glm::vec2>& path = _trackingMarker->_path;
-			if (!path.empty())
-			{
-				unit->command.path.insert(unit->command.path.begin(), path.begin(), path.end());
-			}
-
-			unit->command.meleeTarget = _trackingMarker->GetMeleeTarget();
-			unit->command.running = _trackingMarker->GetRunning();
-
-			/*if (destinationUnit != nullptr)
-			{
-				unit->command.waypoint = destinationUnit->state.center;
-			}
-			else if (destination)
-			{
-				unit->command.waypoint = *destination;
-			}*/
+			command.path = _trackingMarker->_path;
+			command.running = _trackingMarker->GetRunning();
+			command.meleeTarget = _trackingMarker->GetMeleeTarget();
 
 			Unit* missileTarget = _trackingMarker->GetMissileTarget();
 			glm::vec2* orientation = _trackingMarker->GetOrientationX();
 
-			if (unit->command.holdFire)
+			if (missileTarget != nullptr)
 			{
-				unit->command.missileTarget = nullptr;
-				unit->command.missileTargetLocked = false;
-				unit->state.loadingTimer = 0;
-			}
-			else if (missileTarget != nullptr)
-			{
-				unit->command.missileTarget = missileTarget;
-				unit->command.missileTargetLocked = true;
-				unit->command.bearing = angle(missileTarget->state.center - unit->command.GetDestination());
+				command.missileTarget = missileTarget;
+				command.missileTargetLocked = true;
+				if (missileTarget != unit)
+					command.bearing = angle(missileTarget->state.center - command.GetDestination());
 				unit->state.loadingTimer = 0;
 			}
 			else if (orientation)
 			{
-				unit->command.bearing = angle(*orientation - unit->command.GetDestination());
+				command.bearing = angle(*orientation - command.GetDestination());
 			}
 
 			if (!touch->HasMoved())
 			{
 				if (_tappedUnitCenter && touch->GetTapCount() > 1)
 				{
-					unit->command.meleeTarget = nullptr;
-					unit->command.ClearPathAndSetDestination(unit->state.center);
-					unit->command.missileTarget = nullptr;
-					unit->command.missileTargetLocked = false;
+					command.meleeTarget = nullptr;
+					command.ClearPathAndSetDestination(unit->state.center);
+					command.missileTarget = nullptr;
+					command.missileTargetLocked = false;
 				}
 				else if (_tappedDestination && !_tappedUnitCenter)
 				{
-					if (!unit->command.running)
+					if (!command.running)
 					{
-						unit->command.running = true;
+						command.running = true;
 					}
 				}
 				else if (_tappedUnitCenter && !_tappedDestination)
 				{
-					if (unit->command.running)
+					if (command.running)
 					{
-						unit->command.running = false;
+						command.running = false;
 					}
 				}
 			}
@@ -351,7 +333,7 @@ void BattleGesture::TouchEnded(Touch* touch)
 			_battleView->RemoveTrackingMarker(_trackingMarker);
 			_trackingMarker = nullptr;
 
-			_battleView->GetSimulator()->OnUnitCommand(unit);
+			_battleView->GetSimulator()->SetUnitCommand(unit, command);
 
 			if (touch->GetTapCount() == 1)
 				SoundPlayer::singleton->Play(SoundBufferCommandAck);
@@ -516,8 +498,7 @@ void BattleGesture::UpdateTrackingMarker()
 
 		if (holdFire)
 		{
-			_trackingMarker->GetUnit()->command.holdFire = true;
-			_trackingMarker->SetMissileTarget(nullptr);
+			_trackingMarker->SetMissileTarget(_trackingMarker->GetUnit());
 			_trackingMarker->SetOrientation(nullptr);
 		}
 		else
@@ -530,7 +511,6 @@ void BattleGesture::UpdateTrackingMarker()
 			if (enemyUnit != nullptr && _trackingMarker->GetMissileTarget() == nullptr)
 				SoundPlayer::singleton->Play(SoundBufferCommandMod);
 
-			_trackingMarker->GetUnit()->command.holdFire = false;
 			_trackingMarker->SetMissileTarget(enemyUnit);
 			_trackingMarker->SetOrientation(&markerPosition);
 		}

@@ -262,8 +262,10 @@ void BattleSimulator::RemoveUnit(Unit* unit)
 }
 
 
-void BattleSimulator::OnUnitCommand(Unit* unit)
+void BattleSimulator::SetUnitCommand(Unit* unit, const UnitCommand& command)
 {
+	unit->command = command;
+
 	for (BattleObserver* observer : _observers)
 		observer->OnCommand(unit);
 }
@@ -667,18 +669,16 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 
 	result.shootingCounter = unit->state.shootingCounter;
 
-	if (unit->command.missileTargetLocked)
-	{
-		if (unit->command.missileTarget != nullptr && !IsWithinLineOfFire(unit, unit->command.missileTarget->state.center))
-		{
-			unit->command.missileTargetLocked = false;
-			unit->command.missileTarget = nullptr;
-		}
-	}
-
-	if (!unit->command.missileTargetLocked && !unit->command.holdFire)
+	if (!unit->command.missileTargetLocked)
 	{
 		unit->command.missileTarget = ClosestEnemyWithinLineOfFire(unit);
+	}
+	else if (unit->command.missileTarget != nullptr
+		&& unit->command.missileTarget != unit
+		&& !IsWithinLineOfFire(unit, unit->command.missileTarget->state.center))
+	{
+		unit->command.missileTargetLocked = false;
+		unit->command.missileTarget = nullptr;
 	}
 
 	if (unit->state.unitMode != UnitMode_Standing || unit->command.missileTarget == nullptr)

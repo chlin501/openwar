@@ -103,7 +103,7 @@ void UnitCounter::AppendFacingMarker(TextureTriangleRenderer* renderer, BattleVi
 	}
 
 	int xindex = 0;
-	if (_unit->command.holdFire)
+	if (_unit->command.missileTarget == _unit)
 	{
 		xindex = 11;
 	}
@@ -128,7 +128,7 @@ void UnitCounter::AppendFacingMarker(TextureTriangleRenderer* renderer, BattleVi
 	bounds2f bounds = battleView->GetUnitCurrentFacingMarkerBounds(_unit);
 	glm::vec2 p = bounds.center();
 	float size = bounds.height();
-	float direction = xindex != 0 ? -glm::half_pi<float>() : (_unit->state.bearing - battleView->GetCameraFacing());
+	float direction = xindex != 0 || yindex != 0 ? -glm::half_pi<float>() : (_unit->state.bearing - battleView->GetCameraFacing());
 	if (battleView->GetFlip())
 		direction += glm::pi<float>();
 
