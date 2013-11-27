@@ -262,12 +262,19 @@ void BattleSimulator::RemoveUnit(Unit* unit)
 }
 
 
-void BattleSimulator::SetUnitCommand(Unit* unit, const UnitCommand& command)
+void BattleSimulator::SetUnitCommand(Unit* unit, const UnitCommand& command, float timer)
 {
-	unit->command = command;
+	unit->nextCommand = command;
+	unit->nextCommandTimer = timer;
+
+	if (unit->nextCommandTimer <= 0)
+	{
+		unit->command = unit->nextCommand;
+		unit->nextCommandTimer = 0;
+	}
 
 	for (BattleObserver* observer : _observers)
-		observer->OnCommand(unit);
+		observer->OnCommand(unit, timer);
 }
 
 
@@ -331,6 +338,19 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 
 void BattleSimulator::SimulateOneTimeStep()
 {
+	for (Unit* unit : _units)
+	{
+		if (unit->nextCommandTimer > 0)
+		{
+			unit->nextCommandTimer -= _timeStep;
+			if (unit->nextCommandTimer <= 0)
+			{
+				unit->command = unit->nextCommand;
+				unit->nextCommandTimer = 0;
+			}
+		}
+	}
+
 	RebuildQuadTree();
 
 	for (Unit* unit : _units)

@@ -95,15 +95,17 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer, bool flip
 
 void UnitCounter::AppendFacingMarker(TextureTriangleRenderer* renderer, BattleView* battleView)
 {
+	const UnitCommand& command = _unit->GetCommand();
+
 	if (_unit->state.unitMode != UnitMode_Standing
-		|| _unit->command.meleeTarget != nullptr
+		|| command.meleeTarget != nullptr
 		|| _unit->state.IsRouting())
 	{
 		return;
 	}
 
 	int xindex = 0;
-	if (_unit->command.missileTarget == _unit)
+	if (command.missileTarget == _unit)
 	{
 		xindex = 11;
 	}
@@ -166,6 +168,7 @@ void UnitCounter::AppendFighterWeapons(PlainLineRenderer* renderer)
 
 void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 {
+	bool isSameTeam = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam();
 	for (Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
 	{
 		float size = 2.0;
@@ -174,21 +177,20 @@ void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 		{
 			case SamuraiPlatform_Cav:
 			case SamuraiPlatform_Gen:
-				shape = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam() ? billboardModel->_billboardShapeFighterCavBlue : billboardModel->_billboardShapeFighterCavRed;
+				shape = isSameTeam ? billboardModel->_billboardShapeFighterCavBlue : billboardModel->_billboardShapeFighterCavRed;
 				size = 3.0;
 				break;
 
 			case SamuraiPlatform_Sam:
-				shape = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam() ? billboardModel->_billboardShapeFighterSamBlue : billboardModel->_billboardShapeFighterSamRed;
+				shape = isSameTeam ? billboardModel->_billboardShapeFighterSamBlue : billboardModel->_billboardShapeFighterSamRed;
 				size = 2.0;
 				break;
 
 			case SamuraiPlatform_Ash:
-				shape = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam() ? billboardModel->_billboardShapeFighterAshBlue : billboardModel->_billboardShapeFighterAshRed;
+				shape = isSameTeam ? billboardModel->_billboardShapeFighterAshBlue : billboardModel->_billboardShapeFighterAshRed;
 				size = 2.0;
 				break;
 		}
-
 
 		const float adjust = 0.5 - 2.0 / 64.0; // place texture 2 texels below ground
 		glm::vec3 p = _battleView->GetSimulator()->GetHeightMap()->GetPosition(fighter->state.position, adjust * size);

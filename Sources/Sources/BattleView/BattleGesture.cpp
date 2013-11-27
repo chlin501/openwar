@@ -155,6 +155,8 @@ void BattleGesture::TouchBegan(Touch* touch)
 
 		if (unit != nullptr && _battleView->GetTrackingMarker(unit) == nullptr)
 		{
+			const UnitCommand command = unit->GetCommand();
+
 			_allowTargetEnemyUnit = unit->stats.missileType != MissileType::None;
 			_trackingMarker = _battleView->AddTrackingMarker(unit);
 
@@ -175,11 +177,9 @@ void BattleGesture::TouchBegan(Touch* touch)
 
 				std::vector<glm::vec2>& path = _trackingMarker->_path;
 				path.clear();
-				path.insert(path.begin(), unit->command.path.begin(), unit->command.path.end());
+				path.insert(path.begin(), command.path.begin(), command.path.end());
 
-				//_trackingMarker->SetDestination(&unit->command.waypoint);
-
-				glm::vec2 orientation = unit->command.GetDestination() + 18.0f * vector2_from_angle(unit->command.bearing);
+				glm::vec2 orientation = command.GetDestination() + 18.0f * vector2_from_angle(command.bearing);
 				_trackingMarker->SetOrientation(&orientation);
 			}
 			else
@@ -198,10 +198,10 @@ void BattleGesture::TouchBegan(Touch* touch)
 
 				command.ClearPathAndSetDestination(unit->state.center);
 
-				_battleView->GetSimulator()->SetUnitCommand(unit, command);
+				_battleView->GetSimulator()->SetUnitCommand(unit, command, 0.4);
 			}
 
-			_trackingMarker->SetRunning(touch->GetTapCount() > 1 || (!_tappedUnitCenter && unit->command.running));
+			_trackingMarker->SetRunning(touch->GetTapCount() > 1 || (!_tappedUnitCenter && command.running));
 
 			CaptureTouch(touch);
 			_trackingTouch = touch;
@@ -333,7 +333,7 @@ void BattleGesture::TouchEnded(Touch* touch)
 			_battleView->RemoveTrackingMarker(_trackingMarker);
 			_trackingMarker = nullptr;
 
-			_battleView->GetSimulator()->SetUnitCommand(unit, command);
+			_battleView->GetSimulator()->SetUnitCommand(unit, command, 0.4);
 
 			if (touch->GetTapCount() == 1)
 				SoundPlayer::singleton->Play(SoundBufferCommandAck);
@@ -546,7 +546,7 @@ Unit* BattleGesture::FindPlayerUnit(glm::vec2 screenPosition, glm::vec2 terrainP
 	if (unitByPosition != nullptr && unitByDestination != nullptr)
 	{
 		float distanceToPosition = glm::length(unitByPosition->state.center - screenPosition);
-		float distanceToDestination = glm::length(unitByDestination->command.GetDestination() - screenPosition);
+		float distanceToDestination = glm::length(unitByDestination->GetCommand().GetDestination() - screenPosition);
 		return distanceToPosition < distanceToDestination
 				? unitByPosition
 				: unitByDestination;
@@ -600,7 +600,8 @@ Unit* BattleGesture::FindPlayerUnitByModifierArea(glm::vec2 screenPosition, glm:
 	{
 		if (unit->commander == _battleView->GetCommander())
 		{
-			glm::vec2 center = !unit->command.path.empty() ? unit->command.path.back() : unit->state.center;
+			const UnitCommand& command = unit->GetCommand();
+			glm::vec2 center = !command.path.empty() ? command.path.back() : unit->state.center;
 			float d = glm::distance(center, terrainPosition);
 			if (d < distance && !unit->state.IsRouting() && GetUnitModifierBounds(unit).contains(screenPosition))
 			{

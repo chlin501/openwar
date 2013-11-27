@@ -27,17 +27,21 @@ UnitMovementMarker::~UnitMovementMarker()
 
 bool UnitMovementMarker::Animate(float seconds)
 {
-	return !_unit->state.IsRouting()
-		&& MovementRules::Length(_unit->command.path) > 8;
+	if (_unit->state.IsRouting())
+		return false;
+
+	const UnitCommand& command = _unit->GetCommand();
+	return command.path.size() > 2 || MovementRules::Length(command.path) > 8;
 }
 
 
 void UnitMovementMarker::RenderMovementMarker(TextureBillboardRenderer* renderer)
 {
-	glm::vec2 finalDestination = _unit->command.GetDestination();
-	if (_unit->command.path.size() > 1 || glm::length(_unit->state.center - finalDestination) > 25)
+	const UnitCommand& command = _unit->GetCommand();
+	glm::vec2 finalDestination = command.GetDestination();
+	if (command.path.size() > 1 || glm::length(_unit->state.center - finalDestination) > 25)
 	{
-		if (_unit->command.meleeTarget == nullptr)
+		if (command.meleeTarget == nullptr)
 		{
 			glm::vec3 position = _battleView->GetSimulator()->GetHeightMap()->GetPosition(finalDestination, 0.5);
 			glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
@@ -54,10 +58,12 @@ void UnitMovementMarker::AppendFacingMarker(TextureTriangleRenderer* renderer, B
 	if (_unit->state.unitMode != UnitMode_Moving)
 		return;
 
+	const UnitCommand& command = _unit->GetCommand();
+
 	bounds2f b = battleView->GetUnitFutureFacingMarkerBounds(_unit);
 	glm::vec2 p = b.center();
 	float size = b.height();
-	float direction = _unit->command.bearing - battleView->GetCameraFacing();
+	float direction = command.bearing - battleView->GetCameraFacing();
 	if (battleView->GetFlip())
 		direction += glm::pi<float>();
 
@@ -84,15 +90,16 @@ void UnitMovementMarker::AppendFacingMarker(TextureTriangleRenderer* renderer, B
 
 void UnitMovementMarker::RenderMovementFighters(ColorBillboardRenderer* renderer)
 {
-	if (_unit->command.meleeTarget == nullptr)
+	const UnitCommand& command = _unit->GetCommand();
+	if (command.meleeTarget == nullptr)
 	{
 		bool isBlue = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam();
 		glm::vec4 color = isBlue ? glm::vec4(0, 0, 255, 32) / 255.0f : glm::vec4(255, 0, 0, 32) / 255.0f;
 
-		glm::vec2 finalDestination = _unit->command.GetDestination();
+		glm::vec2 finalDestination = command.GetDestination();
 
 		Formation formation = _unit->formation;
-		formation.SetDirection(_unit->command.bearing);
+		formation.SetDirection(command.bearing);
 
 		glm::vec2 frontLeft = formation.GetFrontLeft(finalDestination);
 
@@ -109,16 +116,17 @@ void UnitMovementMarker::RenderMovementFighters(ColorBillboardRenderer* renderer
 
 void UnitMovementMarker::RenderMovementPath(GradientTriangleRenderer* renderer)
 {
-	if (!_unit->command.path.empty())
+	const UnitCommand& command = _unit->GetCommand();
+	if (!command.path.empty())
 	{
 		int mode = 0;
-		if (_unit->command.meleeTarget != nullptr)
+		if (command.meleeTarget != nullptr)
 			mode = 2;
-		else if (_unit->command.running)
+		else if (command.running)
 			mode = 1;
 
 		HeightMap* heightMap = _battleView->GetSimulator()->GetHeightMap();
 		PathRenderer pathRenderer([heightMap](glm::vec2 p) { return heightMap->GetPosition(p, 1); });
-		pathRenderer.Path(renderer, _unit->command.path, mode);
+		pathRenderer.Path(renderer, command.path, mode);
 	}
 }

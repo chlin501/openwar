@@ -259,7 +259,7 @@ void BattleView::OnRemoveUnit(Unit* unit)
 }
 
 
-void BattleView::OnCommand(Unit* unit)
+void BattleView::OnCommand(Unit* unit, float timer)
 {
 	if (unit->commander == _commander && GetMovementMarker(unit) == nullptr)
 		AddMovementMarker(unit);
@@ -657,7 +657,8 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, Bat
 		if (commander != nullptr && unit->commander != commander)
 			continue;
 
-		glm::vec2 p = unit->command.GetDestination();
+		const UnitCommand& command = unit->GetCommand();
+		glm::vec2 p = command.GetDestination();
 		float dx = p.x - position.x;
 		float dy = p.y - position.y;
 		float d = dx * dx + dy * dy;
@@ -742,7 +743,8 @@ bounds2f BattleView::GetUnitCurrentIconViewportBounds(Unit* unit)
 
 bounds2f BattleView::GetUnitFutureIconViewportBounds(Unit* unit)
 {
-	glm::vec3 position = GetPosition(!unit->command.path.empty() ? unit->command.path.back() : unit->state.center, 0);
+	const UnitCommand& command = unit->GetCommand();
+	glm::vec3 position = GetPosition(!command.path.empty() ? command.path.back() : unit->state.center, 0);
 	return GetBillboardBounds(position, 32);
 }
 
@@ -769,9 +771,11 @@ bounds2f BattleView::GetUnitCurrentFacingMarkerBounds(Unit* unit)
 
 bounds2f BattleView::GetUnitFutureFacingMarkerBounds(Unit* unit)
 {
-	glm::vec2 center = !unit->command.path.empty() ? unit->command.path.back() : unit->state.center;
+	const UnitCommand& command = unit->GetCommand();
 
-	return GetUnitFacingMarkerBounds(center, unit->command.bearing);
+	glm::vec2 center = !command.path.empty() ? command.path.back() : unit->state.center;
+
+	return GetUnitFacingMarkerBounds(center, command.bearing);
 }
 
 

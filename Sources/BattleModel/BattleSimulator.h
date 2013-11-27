@@ -292,7 +292,7 @@ struct UnitCommand
 		path.push_back(p);
 	}
 
-	glm::vec2 GetDestination()
+	glm::vec2 GetDestination() const
 	{
 		return !path.empty() != 0 ? path.back() : glm::vec2(512, 512);
 	}
@@ -319,7 +319,9 @@ struct Unit
 	UnitRange unitRange;
 
 	// control attributes
-	UnitCommand command; // updated by TouchGesture()
+	UnitCommand command;
+	UnitCommand nextCommand;
+	float nextCommandTimer;
 
 	Unit() :
 	commander(nullptr),
@@ -332,13 +334,16 @@ struct Unit
 	timeUntilSwapFighters(0),
 	nextState(),
 	unitRange(),
-	command()
+	command(),
+	nextCommand(),
+	nextCommandTimer(0)
 	{
 	}
 
 	glm::vec2 CalculateUnitCenter();
 
 	float GetSpeed();
+	const UnitCommand& GetCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
 
 	static int GetFighterRank(Fighter* fighter);
 	static int GetFighterFile(Fighter* fighter);
@@ -355,7 +360,7 @@ public:
 	virtual void OnSetGroundMap(GroundMap* groundMap) = 0;
 	virtual void OnAddUnit(Unit* unit) = 0;
 	virtual void OnRemoveUnit(Unit* unit) = 0;
-	virtual void OnCommand(Unit* unit) = 0;
+	virtual void OnCommand(Unit* unit, float timer) = 0;
 	virtual void OnShooting(const Shooting& shooting) = 0;
 	virtual void OnCasualty(const Fighter& fighter) = 0;
 };
@@ -395,7 +400,7 @@ public:
 	Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
 	void RemoveUnit(Unit* unit);
 
-	void SetUnitCommand(Unit* unit, const UnitCommand& command);
+	void SetUnitCommand(Unit* unit, const UnitCommand& command, float timer);
 
 	void AddShooting(const Shooting& shooting);
 
