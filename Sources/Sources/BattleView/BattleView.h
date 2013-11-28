@@ -90,6 +90,7 @@ public:
 	virtual void OnShooting(const Shooting& shooting, float timer);
 	virtual void OnRelease(const Shooting& shooting);
 	virtual void OnCasualty(const Fighter& fighter);
+	virtual void OnRouting(Unit* unit);
 
 	void AddCasualty(Unit* unit, glm::vec2 position);
 

@@ -283,6 +283,11 @@ void BattleView::OnCasualty(const Fighter& fighter)
 }
 
 
+void BattleView::OnRouting(Unit* unit)
+{
+}
+
+
 void BattleView::AddCasualty(Unit* unit, glm::vec2 position)
 {
 	glm::vec3 p = glm::vec3(position, _simulator->GetHeightMap()->InterpolateHeight(position));

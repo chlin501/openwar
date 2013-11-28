@@ -56,6 +56,7 @@ public:
 	virtual void OnShooting(const Shooting& shooting, float timer);
 	virtual void OnRelease(const Shooting& shooting);
 	virtual void OnCasualty(const Fighter& fighter);
+	virtual void OnRouting(Unit* unit);
 
 private:
 	int NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing);

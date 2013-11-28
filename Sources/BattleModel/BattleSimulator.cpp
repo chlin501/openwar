@@ -410,6 +410,10 @@ void BattleSimulator::AssignNextState()
 {
 	for (Unit* unit : _units)
 	{
+		if (!unit->state.IsRouting() && unit->nextState.IsRouting())
+			for (BattleObserver* observer : _observers)
+				observer->OnRouting(unit);
+
 		unit->state = unit->nextState;
 
 		if (unit->state.IsRouting())

@@ -236,6 +236,11 @@ void BattleScript::OnCasualty(const Fighter& fighter)
 }
 
 
+void BattleScript::OnRouting(Unit* unit)
+{
+}
+
+
 /***/
 
 

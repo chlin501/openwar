@@ -364,6 +364,7 @@ public:
 	virtual void OnShooting(const Shooting& shooting, float timer) = 0;
 	virtual void OnRelease(const Shooting& shooting) = 0;
 	virtual void OnCasualty(const Fighter& fighter) = 0;
+	virtual void OnRouting(Unit* unit) = 0;
 };
 
 
