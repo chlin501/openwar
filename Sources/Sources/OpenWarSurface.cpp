@@ -95,7 +95,7 @@ void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vecto
 	if (!battleViews.empty())
 	{
 		BattleView* battleView = battleViews.front();
-		_editorModel = new EditorModel(battleView, battleView->_smoothTerrainSurface);
+		_editorModel = new EditorModel(battleView, battleView->GetSmoothTerrainRenderer());
 		_editorGesture = new EditorGesture(battleView, _editorModel);
 	}
 

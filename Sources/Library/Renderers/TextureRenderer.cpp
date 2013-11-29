@@ -47,6 +47,7 @@ TextureRenderer::TextureRenderer()
 
 TextureRenderer::~TextureRenderer()
 {
+	delete _renderer;
 }
 
 
@@ -72,7 +73,6 @@ void TextureRenderer::Draw(const glm::mat4x4& transform, const texture* texture)
 
 TextureTriangleRenderer::~TextureTriangleRenderer()
 {
-
 }
 
 

@@ -85,6 +85,8 @@ _groundMap(groundMap)
 
 SmoothTerrainWater::~SmoothTerrainWater()
 {
+	delete _water_inside_renderer;
+	delete _water_border_renderer;
 }
 
 

@@ -15,6 +15,7 @@ SmoothTerrainSky::SmoothTerrainSky()
 
 SmoothTerrainSky::~SmoothTerrainSky()
 {
+	delete _textureBackgroundLinen;
 }
 
 

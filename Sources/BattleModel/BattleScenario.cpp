@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include "../Library/resource.h"
-#include "../Library/Algebra/image.h"
 #include "GroundMap.h"
 #include "BattleScenario.h"
 #include "BattleSimulator.h"
@@ -13,7 +12,8 @@
 BattleScenario::BattleScenario(const char* name) :
 _name(name),
 _simulator(nullptr),
-_script(nullptr)
+_script(nullptr),
+_smoothMap(nullptr)
 {
 	_simulator = new BattleSimulator();
 	_script = new BattleScript(this);
@@ -28,6 +28,8 @@ BattleScenario::~BattleScenario()
 	GroundMap* groundMap = _simulator->GetGroundMap();
 	delete _simulator;
 	delete groundMap;
+
+	delete _smoothMap;
 }
 
 
@@ -69,11 +71,14 @@ BattleOutcome BattleScenario::GetOutcome(int team) const
 void BattleScenario::SetSmoothMap(const char* name, float size)
 {
 	std::string path = std::string("Maps/") + name;
-	image* map = new image(resource(path.c_str()));
+
+	delete _smoothMap;
+	_smoothMap = new image(resource(path.c_str()));
+
 	bounds2f bounds(0, 0, size, size);
 
 	GroundMap* old = _simulator->GetGroundMap();
-	_simulator->SetGroundMap(new SmoothGroundMap(_simulator->GetHeightMap(), name, bounds, map));
+	_simulator->SetGroundMap(new SmoothGroundMap(_simulator->GetHeightMap(), name, bounds, _smoothMap));
 	delete old;
 }
 

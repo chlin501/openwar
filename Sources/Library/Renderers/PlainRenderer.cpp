@@ -43,6 +43,7 @@ PlainRenderer::PlainRenderer()
 
 PlainRenderer::~PlainRenderer()
 {
+	delete _renderer;
 }
 
 

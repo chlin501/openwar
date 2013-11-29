@@ -192,6 +192,10 @@ BattleView::~BattleView()
 	delete _colorBillboardRenderer;
 	delete _textureTriangleRenderer;
 
+	delete _smoothTerrainSurface;
+	delete _smoothTerrainWater;
+	delete _smoothTerrainSky;
+	delete _tiledTerrainRenderer;
 
 	for (ShootingCounter* shootingCounter : _shootingCounters)
 		delete shootingCounter;
@@ -209,14 +213,54 @@ void BattleView::SetSimulator(BattleSimulator* simulator)
 	_simulator = simulator;
 	SetHeightMap(simulator->GetHeightMap());
 	_casualtyMarker = new CasualtyMarker(_simulator);
+
+	GroundMap* groundMap = simulator->GetGroundMap();
+	if (groundMap != nullptr)
+		OnSetGroundMap(simulator->GetGroundMap());
+}
+
+
+static bool ShouldEnableRenderEdges(float pixels_per_point)
+{
+//#if TARGET_OS_IPHONE
+//	return pixels_per_point > 1;
+//#else
+	return true;
+//#endif
 }
 
 
 void BattleView::OnSetGroundMap(GroundMap* groundMap)
 {
+	delete _smoothTerrainSurface;
+	_smoothTerrainSurface = nullptr;
+
+	delete _smoothTerrainWater;
+	_smoothTerrainWater = nullptr;
+
+	delete _smoothTerrainSky;
+	_smoothTerrainSky = nullptr;
+
+	delete _tiledTerrainRenderer;
+	_tiledTerrainRenderer = nullptr;
+
 	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(groundMap);
-	_smoothTerrainSurface = new SmoothTerrainRenderer(smoothGroundMap);
-	_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
+	if (smoothGroundMap != nullptr)
+	{
+		_smoothTerrainSurface = new SmoothTerrainRenderer(smoothGroundMap);
+		_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
+
+		if (ShouldEnableRenderEdges(renderer_base::pixels_per_point()))
+			_smoothTerrainSurface->EnableRenderEdges();
+	}
+
+	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(groundMap);
+	if (tiledGroundMap != nullptr)
+	{
+		tiledGroundMap->UpdateHeightMap();
+		_tiledTerrainRenderer = new TiledTerrainRenderer(tiledGroundMap);
+	}
+
 	_smoothTerrainSky = new SmoothTerrainSky();
 
 	UpdateTerrainTrees(groundMap->GetBounds());

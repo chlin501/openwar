@@ -16,6 +16,7 @@ _shapeCount(0)
 
 BillboardTexture::~BillboardTexture()
 {
+	delete _texture;
 }
 
 

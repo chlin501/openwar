@@ -118,52 +118,15 @@ void BattleSurface::Render()
 
 
 
-static bool ShouldEnableRenderEdges(float pixels_per_point)
-{
-#if TARGET_OS_IPHONE
-	return pixels_per_point > 1;
-#else
-	return true;
-#endif
-}
-
-
 void BattleSurface::CreateBattleViews()
 {
 	BattleSimulator* simulator = _scenario->GetSimulator();
-
-	SmoothTerrainRenderer* smoothTerrainRenderer = nullptr;
-	SmoothTerrainWater* smoothTerrainWater = nullptr;
-	SmoothTerrainSky* smoothTerrainSky = nullptr;
-	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(simulator->GetGroundMap());
-	if (smoothGroundMap != nullptr)
-	{
-		smoothTerrainRenderer = new SmoothTerrainRenderer(smoothGroundMap);
-		smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
-		smoothTerrainSky = new SmoothTerrainSky();
-
-		if (ShouldEnableRenderEdges(renderer_base::pixels_per_point()))
-			smoothTerrainRenderer->EnableRenderEdges();
-	}
-
-	TiledTerrainRenderer* tiledTerrainRenderer = nullptr;
-	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(simulator->GetGroundMap());
-	if (tiledGroundMap != nullptr)
-	{
-		tiledGroundMap->UpdateHeightMap();
-		tiledTerrainRenderer = new TiledTerrainRenderer(tiledGroundMap);
-		smoothTerrainSky = new SmoothTerrainSky();
-	}
 
 	for (BattleCommander* commander : _commanders)
 	{
 		BattleView* battleView = new BattleView(this, _renderers);
 		battleView->SetSimulator(simulator);
 		battleView->SetCommander(commander);
-		battleView->_smoothTerrainSurface = smoothTerrainRenderer;
-		battleView->_smoothTerrainWater = smoothTerrainWater;
-		battleView->_smoothTerrainSky = smoothTerrainSky;
-		battleView->_tiledTerrainRenderer = tiledTerrainRenderer;
 
 		if (commander->GetConfiguration()[0] == '-')
 		{
@@ -196,31 +159,11 @@ void BattleSurface::RemoveBattleViews()
 		delete gesture;
 	_terrainGestures.clear();
 
-	std::set<SmoothTerrainRenderer*> smoothTerrainRenderers;
-	std::set<TiledTerrainRenderer*> tiledTerrainRenderers;
-
 	for (BattleView* battleView : _battleViews)
 	{
 		battleView->GetSimulator()->RemoveObserver(battleView);
-
-		if (battleView->_smoothTerrainSurface != nullptr)
-		{
-			smoothTerrainRenderers.insert(battleView->_smoothTerrainSurface);
-			battleView->_smoothTerrainSurface = nullptr;
-		}
-		if (battleView->_tiledTerrainRenderer != nullptr)
-		{
-			tiledTerrainRenderers.insert(battleView->_tiledTerrainRenderer);
-			battleView->_tiledTerrainRenderer = nullptr;
-		}
 		delete battleView;
 	}
-
-	for (SmoothTerrainRenderer* smoothTerrainRenderer : smoothTerrainRenderers)
-		delete smoothTerrainRenderer;
-
-	for (TiledTerrainRenderer* tiledTerrainRenderer : tiledTerrainRenderers)
-		delete tiledTerrainRenderer;
 
 	_battleViews.clear();
 }

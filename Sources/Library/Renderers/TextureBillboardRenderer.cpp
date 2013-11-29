@@ -67,6 +67,7 @@ TextureBillboardRenderer::TextureBillboardRenderer()
 
 TextureBillboardRenderer::~TextureBillboardRenderer()
 {
+	delete _texture_billboard_renderer;
 }
 
 

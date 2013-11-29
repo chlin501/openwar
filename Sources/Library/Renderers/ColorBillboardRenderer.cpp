@@ -60,6 +60,7 @@ ColorBillboardRenderer::ColorBillboardRenderer()
 
 ColorBillboardRenderer::~ColorBillboardRenderer()
 {
+	delete _renderer;
 }
 
 

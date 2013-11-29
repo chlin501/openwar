@@ -46,6 +46,7 @@ GradientRenderer::GradientRenderer()
 
 GradientRenderer::~GradientRenderer()
 {
+	delete _renderer;
 }
 
 

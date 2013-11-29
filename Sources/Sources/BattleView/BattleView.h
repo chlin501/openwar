@@ -65,8 +65,6 @@ class BattleView : public TerrainView, public BattleObserver
 	std::vector<ShootingCounter*> _shootingCounters;
 	std::vector<UnitCounter*> _unitMarkers;
 
-
-public:
 	SmoothTerrainRenderer* _smoothTerrainSurface;
 	SmoothTerrainWater* _smoothTerrainWater;
 	SmoothTerrainSky* _smoothTerrainSky;
@@ -81,6 +79,9 @@ public:
 
 	BattleCommander* GetCommander() const { return _commander; }
 	void SetCommander(BattleCommander* value) { _commander = value; }
+
+	SmoothTerrainRenderer* GetSmoothTerrainRenderer() const { return _smoothTerrainSurface; }
+	SmoothTerrainWater* GetSmoothTerrainWater() const { return _smoothTerrainWater; }
 
 	// BattleObserver
 	virtual void OnSetGroundMap(GroundMap* groundMap);

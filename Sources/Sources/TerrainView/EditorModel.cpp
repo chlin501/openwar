@@ -94,7 +94,7 @@ void EditorModel::Paint(TerrainFeature feature, glm::vec2 position, bool value)
 
 	_smoothTerrainSurface->UpdateChanges(bounds);
 	_battleView->UpdateTerrainTrees(bounds);
-	_battleView->_smoothTerrainWater->Update();
+	_battleView->GetSmoothTerrainWater()->Update();
 }
 
 
@@ -131,5 +131,5 @@ void EditorModel::SmearPaint(TerrainFeature feature, glm::vec2 position)
 
 	_smoothTerrainSurface->UpdateChanges(bounds);
 	_battleView->UpdateTerrainTrees(bounds);
-	_battleView->_smoothTerrainWater->Update();
+	_battleView->GetSmoothTerrainWater()->Update();
 }
