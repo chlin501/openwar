@@ -210,6 +210,16 @@ BattleView::~BattleView()
 
 void BattleView::SetSimulator(BattleSimulator* simulator)
 {
+	if (simulator == _simulator)
+		return;
+
+	if (_simulator != nullptr)
+	{
+		for (Unit* unit : _simulator->GetUnits())
+			OnRemoveUnit(unit);
+		_simulator->RemoveObserver(this);
+	}
+
 	_simulator = simulator;
 	SetHeightMap(simulator->GetHeightMap());
 	_casualtyMarker = new CasualtyMarker(_simulator);
@@ -217,21 +227,31 @@ void BattleView::SetSimulator(BattleSimulator* simulator)
 	GroundMap* groundMap = simulator->GetGroundMap();
 	if (groundMap != nullptr)
 		OnSetGroundMap(simulator->GetGroundMap());
+
+	_simulator->AddObserver(this);
 }
 
 
 static bool ShouldEnableRenderEdges(float pixels_per_point)
 {
-//#if TARGET_OS_IPHONE
-//	return pixels_per_point > 1;
-//#else
+#if TARGET_OS_IPHONE
+	return pixels_per_point > 1;
+#else
 	return true;
-//#endif
+#endif
 }
 
 
 void BattleView::OnSetGroundMap(GroundMap* groundMap)
 {
+	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(groundMap);
+	if (smoothGroundMap != nullptr
+		&& _smoothTerrainSurface != nullptr
+		&& std::strcmp(smoothGroundMap->GetName(), _smoothTerrainSurface->GetSmoothGroundMap()->GetName()) == 0)
+	{
+		return; // no change, same map
+	}
+
 	delete _smoothTerrainSurface;
 	_smoothTerrainSurface = nullptr;
 
@@ -244,7 +264,6 @@ void BattleView::OnSetGroundMap(GroundMap* groundMap)
 	delete _tiledTerrainRenderer;
 	_tiledTerrainRenderer = nullptr;
 
-	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(groundMap);
 	if (smoothGroundMap != nullptr)
 	{
 		_smoothTerrainSurface = new SmoothTerrainRenderer(smoothGroundMap);

@@ -54,8 +54,10 @@ public:
 	virtual void Render();
 
 private:
-	void CreateBattleViews();
-	void RemoveBattleViews();
+	void CreateBattleView(BattleCommander* commander);
+	void ResetBattleView(BattleView* battleView, BattleCommander* commander);
+	void RemoveBattleView(BattleView* battleView);
+
 	void UpdateBattleViewSize();
 
 	void UpdateSoundPlayer();

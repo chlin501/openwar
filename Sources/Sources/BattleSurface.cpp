@@ -30,13 +30,25 @@ BattleSurface::~BattleSurface()
 
 void BattleSurface::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
 {
-	RemoveBattleViews();
-
 	_scenario = scenario;
 	_commanders = commanders;
 
-	if (scenario != nullptr)
-		CreateBattleViews();
+	int count = scenario != nullptr ? (int)commanders.size() : 0;
+
+	while ((int)_battleViews.size() > count)
+		RemoveBattleView(_battleViews.back());
+
+	for (int i = 0; i < count; ++i)
+	{
+		BattleCommander* commander = _commanders[i];
+		if (i < (int)_battleViews.size())
+			ResetBattleView(_battleViews[i], commander);
+		else
+			CreateBattleView(commander);
+
+	}
+
+	UpdateBattleViewSize();
 }
 
 
@@ -118,54 +130,76 @@ void BattleSurface::Render()
 
 
 
-void BattleSurface::CreateBattleViews()
+void BattleSurface::CreateBattleView(BattleCommander* commander)
 {
 	BattleSimulator* simulator = _scenario->GetSimulator();
 
-	for (BattleCommander* commander : _commanders)
+	BattleView* battleView = new BattleView(this, _renderers);
+	battleView->SetSimulator(simulator);
+	battleView->SetCommander(commander);
+
+	if (commander->GetConfiguration()[0] == '-')
 	{
-		BattleView* battleView = new BattleView(this, _renderers);
-		battleView->SetSimulator(simulator);
-		battleView->SetCommander(commander);
-
-		if (commander->GetConfiguration()[0] == '-')
-		{
-			battleView->SetFlip(true);
-			battleView->SetCameraFacing((float)M_PI);
-		}
-
-		battleView->Initialize();
-		_battleViews.push_back(battleView);
-		simulator->AddObserver(battleView);
-
-		BattleGesture* battleGesture = new BattleGesture(battleView);
-		_battleGestures.push_back(battleGesture);
-
-		TerrainGesture* terrainGesture = new TerrainGesture(battleView);
-		_terrainGestures.push_back(terrainGesture);
+		battleView->SetFlip(true);
+		battleView->SetCameraFacing((float)M_PI);
 	}
 
-	UpdateBattleViewSize();
+	battleView->Initialize();
+	_battleViews.push_back(battleView);
+
+	BattleGesture* battleGesture = new BattleGesture(battleView);
+	_battleGestures.push_back(battleGesture);
+
+	TerrainGesture* terrainGesture = new TerrainGesture(battleView);
+	_terrainGestures.push_back(terrainGesture);
 }
 
 
-void BattleSurface::RemoveBattleViews()
+void BattleSurface::ResetBattleView(BattleView* battleView, BattleCommander* commander)
 {
-	for (Gesture* gesture : _battleGestures)
-		delete gesture;
-	_battleGestures.clear();
+	battleView->SetSimulator(_scenario->GetSimulator());
+	battleView->SetCommander(commander);
+}
 
-	for (Gesture* gesture : _terrainGestures)
-		delete gesture;
-	_terrainGestures.clear();
 
-	for (BattleView* battleView : _battleViews)
+void BattleSurface::RemoveBattleView(BattleView* battleView)
+{
+	for (auto i = _battleGestures.begin(); i != _battleGestures.end(); )
 	{
-		battleView->GetSimulator()->RemoveObserver(battleView);
-		delete battleView;
+		if ((*i)->GetBattleView() == battleView)
+		{
+			delete *i;
+			i = _battleGestures.erase(i);
+		}
+		else
+		{
+			++i;
+		}
 	}
 
-	_battleViews.clear();
+	for (auto i = _terrainGestures.begin(); i != _terrainGestures.end(); )
+	{
+		if ((*i)->GetTerrainView() == battleView)
+		{
+			delete *i;
+			i = _terrainGestures.erase(i);
+		}
+		else
+		{
+			++i;
+		}
+	}
+
+	for (auto i = _battleViews.begin(); i != _battleViews.end(); )
+	{
+		if (*i == battleView)
+			i = _battleViews.erase(i);
+		else
+			++i;
+	}
+
+	battleView->GetSimulator()->RemoveObserver(battleView);
+	delete battleView;
 }
 
 

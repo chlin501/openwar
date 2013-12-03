@@ -64,13 +64,14 @@ void TerrainView::SetHeightMap(HeightMap* heightMap)
 
 	_contentBounds = heightMap->GetBounds();
 
+	/*
 	glm::vec2 center = _contentBounds.center();
 	glm::vec2 size = _contentBounds.size();
 
 	_cameraPosition = glm::vec3(center - 0.2f * size, 0.2f * size.y);
 	_cameraTilt = (float)M_PI_4;
 	_cameraFacing = 0;
-	MoveCamera(_cameraPosition);
+	MoveCamera(_cameraPosition);*/
 }
 
 

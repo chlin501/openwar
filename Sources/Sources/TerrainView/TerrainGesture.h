@@ -37,6 +37,8 @@ public:
 	TerrainGesture(TerrainView* terrainView);
 	virtual ~TerrainGesture();
 
+	TerrainView* GetTerrainView() const { return _terrainView; }
+
 	virtual void RenderHints();
 	virtual void Update(Surface* surface, double secondsSinceLastUpdate);
 

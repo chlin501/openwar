@@ -37,6 +37,8 @@ public:
 
 	BattleGesture(BattleView* battleView);
 
+	BattleView* GetBattleView() const { return _battleView; }
+
 	virtual void Update(Surface* surface, double secondsSinceLastUpdate);
 	virtual void RenderHints();
 
