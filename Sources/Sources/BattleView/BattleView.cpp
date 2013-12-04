@@ -245,12 +245,12 @@ static bool ShouldEnableRenderEdges(float pixels_per_point)
 void BattleView::OnSetGroundMap(GroundMap* groundMap)
 {
 	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(groundMap);
-	if (smoothGroundMap != nullptr
+	/*if (smoothGroundMap != nullptr
 		&& _smoothTerrainSurface != nullptr
-		&& std::strcmp(smoothGroundMap->GetName(), _smoothTerrainSurface->GetSmoothGroundMap()->GetName()) == 0)
+		&& smoothGroundMap->GetImage() == _smoothTerrainSurface->GetSmoothGroundMap()->GetImage())
 	{
-		return; // no change, same map
-	}
+		return; // no image, same map
+	}*/
 
 	delete _smoothTerrainSurface;
 	_smoothTerrainSurface = nullptr;

@@ -72,14 +72,15 @@ void BattleScenario::SetSmoothMap(const char* name, float size)
 {
 	std::string path = std::string("Maps/") + name;
 
-	delete _smoothMap;
-	_smoothMap = new image(resource(path.c_str()));
+	image* oldSmoothMap = _smoothMap;
+	GroundMap* oldGroundMap = _simulator->GetGroundMap();
 
 	bounds2f bounds(0, 0, size, size);
-
-	GroundMap* old = _simulator->GetGroundMap();
+	_smoothMap = new image(resource(path.c_str()));
 	_simulator->SetGroundMap(new SmoothGroundMap(_simulator->GetHeightMap(), name, bounds, _smoothMap));
-	delete old;
+
+	delete oldGroundMap;
+	delete oldSmoothMap;
 }
 
 
