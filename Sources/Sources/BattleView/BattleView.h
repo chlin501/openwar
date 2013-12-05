@@ -110,7 +110,7 @@ public:
 	void InitializeTerrainTrees();
 	void UpdateTerrainTrees(bounds2f bounds);
 
-	void InitializeCameraPosition(const std::vector<Unit*>& units);
+	void InitializeCameraPosition();
 
 	virtual void Render();
 	virtual void Update(double secondsSinceLastUpdate);
