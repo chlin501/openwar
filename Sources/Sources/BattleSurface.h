@@ -42,6 +42,8 @@ public:
 
 	virtual void ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
 
+	void ResetCameraPosition();
+
 	void SetPlaying(bool value);
 	void SetEditing(bool value);
 	bool IsPlaying() const { return _playing; }

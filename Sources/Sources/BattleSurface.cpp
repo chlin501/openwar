@@ -45,10 +45,16 @@ void BattleSurface::ResetBattleViews(BattleScenario* scenario, const std::vector
 			ResetBattleView(_battleViews[i], commander);
 		else
 			CreateBattleView(commander);
-
 	}
 
 	UpdateBattleViewSize();
+}
+
+
+void BattleSurface::ResetCameraPosition()
+{
+	for (BattleView* battleView : _battleViews)
+		battleView->InitializeCameraPosition();
 }
 
 

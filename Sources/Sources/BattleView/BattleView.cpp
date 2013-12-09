@@ -293,8 +293,6 @@ void BattleView::OnAddUnit(Unit* unit)
 	_unitMarkers.push_back(marker);
 
 	OnCommand(unit, 0);
-
-	InitializeCameraPosition();
 }
 
 
