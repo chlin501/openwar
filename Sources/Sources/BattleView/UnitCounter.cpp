@@ -69,9 +69,7 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer, bool flip
 			color = 2;
 	}
 
-	int command = 0;
-	if (_unit->commander == _battleView->GetCommander() && _unit->commander->GetType() != BattleCommanderType::Player)
-		command = 2;
+	int command = _unit->commander == _battleView->GetCommander() && _unit->commander->IsActive() ? 0 : 1;
 
 	glm::vec3 position = _battleView->GetSimulator()->GetHeightMap()->GetPosition(_unit->state.center, 0);
 	glm::vec2 texsize(0.1875, 0.1875); // 48 / 256

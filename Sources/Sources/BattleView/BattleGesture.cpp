@@ -141,7 +141,11 @@ void BattleGesture::TouchBegan(Touch* touch)
 		return;
 	if (!_battleView->GetViewportBounds().contains(touch->GetPosition()))
 		return;
-	if (_battleView->GetCommander() == nullptr || _battleView->GetCommander()->GetType() != BattleCommanderType::Player)
+	if (_battleView->GetCommander() == nullptr)
+		return;
+	if (_battleView->GetCommander()->GetType() != BattleCommanderType::Player)
+		return;
+	if (!_battleView->GetCommander()->IsActive())
 		return;
 
 	glm::vec2 screenPosition = touch->GetPosition();

@@ -292,6 +292,8 @@ void BattleView::OnAddUnit(Unit* unit)
 	marker->Animate(0);
 	_unitMarkers.push_back(marker);
 
+	OnCommand(unit, 0);
+
 	InitializeCameraPosition();
 }
 

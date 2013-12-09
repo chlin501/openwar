@@ -5,6 +5,7 @@ BattleCommander::BattleCommander(const char* id, int team, BattleCommanderType t
 _id(id),
 _team(team),
 _type(type),
-_configuration(configuration)
+_configuration(configuration),
+_isActive(false)
 {
 }

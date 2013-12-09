@@ -41,6 +41,15 @@ BattleCommander* BattleScenario::AddCommander(const char* id, int team, BattleCo
 }
 
 
+BattleCommander* BattleScenario::GetCommander(const char* id) const
+{
+	for (BattleCommander* commander : _commanders)
+		if (std::strcmp(commander->GetId(), id) == 0)
+			return commander;
+	return nullptr;
+}
+
+
 void BattleScenario::StartScript(bool master)
 {
 	if (!_name.empty())

@@ -12,6 +12,7 @@ class BattleCommander
 	int _team;
 	BattleCommanderType _type;
 	std::string _configuration;
+	bool _isActive;
 
 public:
 	BattleCommander(const char* id, int team, BattleCommanderType type, const char* configuration);
@@ -20,6 +21,9 @@ public:
 	int GetTeam() const { return _team; }
 	BattleCommanderType GetType() const { return _type; }
 	const char* GetConfiguration() const { return _configuration.c_str(); }
+
+	bool IsActive() const { return _isActive; }
+	void SetActive(bool value) { _isActive = value; }
 };
 
 
