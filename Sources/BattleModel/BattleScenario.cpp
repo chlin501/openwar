@@ -79,6 +79,9 @@ BattleOutcome BattleScenario::GetOutcome(int team) const
 
 void BattleScenario::SetSmoothMap(const char* name, float size)
 {
+	if (_smoothMapName == name)
+		return;
+
 	std::string path = std::string("Maps/") + name;
 
 	image* oldSmoothMap = _smoothMap;
@@ -90,6 +93,8 @@ void BattleScenario::SetSmoothMap(const char* name, float size)
 
 	delete oldGroundMap;
 	delete oldSmoothMap;
+
+	_smoothMapName = name;
 }
 
 

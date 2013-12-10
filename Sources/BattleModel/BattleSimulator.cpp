@@ -167,7 +167,10 @@ void BattleSimulator::AddObserver(BattleObserver* observer)
 	_observers.insert(observer);
 
 	for (Unit* unit : _units)
+	{
 		observer->OnAddUnit(unit);
+		observer->OnCommand(unit, 0);
+	}
 }
 
 

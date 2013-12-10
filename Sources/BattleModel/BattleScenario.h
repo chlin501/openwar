@@ -25,6 +25,7 @@ class BattleScenario
 	BattleSimulator* _simulator;
 	BattleScript* _script;
 	std::vector<BattleCommander*> _commanders;
+	std::string _smoothMapName;
 	image* _smoothMap;
 
 public:

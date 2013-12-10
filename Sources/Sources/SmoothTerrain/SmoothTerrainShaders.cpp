@@ -570,33 +570,33 @@ static glm::vec3 adjust_brightness(glm::vec3 c, float brightness)
 
 texture* SmoothTerrainShaders::create_colormap()
 {
-	static glm::vec3 r[256];
-
-	for (int i = 0; i < 256; ++i)
+	static image* img = nullptr;
+	if (img == nullptr)
 	{
-		r[i].r = (rand() & 0x7fff) / (float)0x7fff;
-		r[i].g = (rand() & 0x7fff) / (float)0x7fff;
-		r[i].b = (rand() & 0x7fff) / (float)0x7fff;
-	}
-
-	image img(64, 256);
-	for (int x = 0; x < 64; ++x)
-		for (int y = 0; y < 256; ++y)
+		static glm::vec3 r[256];
+		for (int i = 0; i < 256; ++i)
 		{
-			float brightness = x / 63.0f;
-			float h = -2.5f + 0.5f * y;
-			glm::vec3 c = heightcolor(h);
-			c = adjust_brightness(c, brightness);
-			if (h > 0)
-				c = glm::mix(c, r[y], 0.015f);
-
-			img.set_pixel(x, 255 - y, glm::vec4(c, 1));
+			r[i].r = (rand() & 0x7fff) / (float)0x7fff;
+			r[i].g = (rand() & 0x7fff) / (float)0x7fff;
+			r[i].b = (rand() & 0x7fff) / (float)0x7fff;
 		}
 
-	//NSData* data = ConvertImageToTiff(&img);
-	//[data writeToFile:@"/Users/nicke/Desktop/height.tiff" atomically:YES];
+		img = new image(64, 256);
+		for (int x = 0; x < 64; ++x)
+			for (int y = 0; y < 256; ++y)
+			{
+				float brightness = x / 63.0f;
+				float h = -2.5f + 0.5f * y;
+				glm::vec3 c = heightcolor(h);
+				c = adjust_brightness(c, brightness);
+				if (h > 0)
+					c = glm::mix(c, r[y], 0.015f);
 
-	texture* result = new texture(img);
+				img->set_pixel(x, 255 - y, glm::vec4(c, 1));
+			}
+	}
+
+	texture* result = new texture(*img);
 
 	glBindTexture(GL_TEXTURE_2D, result->id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

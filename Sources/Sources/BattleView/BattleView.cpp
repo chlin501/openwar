@@ -291,8 +291,6 @@ void BattleView::OnAddUnit(Unit* unit)
 	UnitCounter* marker = new UnitCounter(this, unit);
 	marker->Animate(0);
 	_unitMarkers.push_back(marker);
-
-	OnCommand(unit, 0);
 }
 
 

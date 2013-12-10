@@ -141,8 +141,8 @@ void BattleSurface::CreateBattleView(BattleCommander* commander)
 	BattleSimulator* simulator = _scenario->GetSimulator();
 
 	BattleView* battleView = new BattleView(this, _renderers);
-	battleView->SetSimulator(simulator);
 	battleView->SetCommander(commander);
+	battleView->SetSimulator(simulator);
 
 	if (commander->GetConfiguration()[0] == '-')
 	{
@@ -163,8 +163,8 @@ void BattleSurface::CreateBattleView(BattleCommander* commander)
 
 void BattleSurface::ResetBattleView(BattleView* battleView, BattleCommander* commander)
 {
-	battleView->SetSimulator(_scenario->GetSimulator());
 	battleView->SetCommander(commander);
+	battleView->SetSimulator(_scenario->GetSimulator());
 }
 
 
