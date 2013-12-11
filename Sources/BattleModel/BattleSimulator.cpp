@@ -193,6 +193,8 @@ Unit* BattleSimulator::AddUnit(BattleCommander* commander, const char* unitClass
 {
 	Unit* unit = new Unit();
 
+	float bearing = commander->GetTeam() == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
+
 	unit->commander = commander;
 	unit->unitClass = unitClass;
 	unit->stats = stats;
@@ -200,14 +202,13 @@ Unit* BattleSimulator::AddUnit(BattleCommander* commander, const char* unitClass
 	unit->fightersCount = numberOfFighters;
 	unit->fighters = new Fighter[numberOfFighters];
 
-	unit->command.bearing = commander->GetTeam() == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
+	unit->command.bearing = bearing;
+	unit->nextCommand = unit->command;
 
 	unit->state.unitMode = UnitMode_Initializing;
 	unit->state.center = position;
 	unit->state.waypoint = position;
-	unit->state.bearing = unit->command.bearing;
-
-	unit->command.missileTarget = nullptr;
+	unit->state.bearing = bearing;
 
 	unit->formation.rankDistance = stats.fighterSize.y + stats.spacing.y;
 	unit->formation.fileDistance = stats.fighterSize.x + stats.spacing.x;
