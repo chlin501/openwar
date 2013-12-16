@@ -202,7 +202,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 
 				command.ClearPathAndSetDestination(unit->state.center);
 
-				_battleView->GetSimulator()->SetUnitCommand(unit, command, 0.4);
+				_battleView->GetSimulator()->SetUnitCommand(unit, command, _battleView->GetSimulator()->GetTimerDelay());
 			}
 
 			_trackingMarker->SetRunning(touch->GetTapCount() > 1 || (!_tappedUnitCenter && command.running));
@@ -337,7 +337,7 @@ void BattleGesture::TouchEnded(Touch* touch)
 			_battleView->RemoveTrackingMarker(_trackingMarker);
 			_trackingMarker = nullptr;
 
-			_battleView->GetSimulator()->SetUnitCommand(unit, command, 0.4);
+			_battleView->GetSimulator()->SetUnitCommand(unit, command, _battleView->GetSimulator()->GetTimerDelay());
 
 			if (touch->GetTapCount() == 1)
 				SoundPlayer::singleton->Play(SoundBufferCommandAck);

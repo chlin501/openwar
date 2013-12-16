@@ -270,7 +270,7 @@ void BattleScript::SetUnitMovement(int unitId, bool running, std::vector<glm::ve
 		command.bearing = heading;
 		command.meleeTarget = _units[chargeId];
 
-		_simulator->SetUnitCommand(unit, command, 0.4);
+		_simulator->SetUnitCommand(unit, command, _simulator->GetTimerDelay());
 	}
 }
 

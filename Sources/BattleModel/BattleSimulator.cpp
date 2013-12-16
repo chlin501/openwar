@@ -571,7 +571,7 @@ void BattleSimulator::TriggerShooting(Unit* unit)
 	float speed = arq ? 750 : 75; // meters per second
 	shooting.timeToImpact = distance / speed;
 
-	AddShooting(shooting, 0.4f);
+	AddShooting(shooting, GetTimerDelay());
 }
 
 

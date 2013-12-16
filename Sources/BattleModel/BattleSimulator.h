@@ -389,6 +389,7 @@ public:
 	~BattleSimulator();
 
 	float GetTimeStep() const { return _timeStep; }
+	float GetTimerDelay() const { return 0.25f; }
 
 	void AddObserver(BattleObserver* observer);
 	void RemoveObserver(BattleObserver* observer);
