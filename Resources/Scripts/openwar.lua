@@ -22,6 +22,7 @@ function openwar.Unit:new(commander, platform, weapon, strength, x, y, facing)
     setmetatable(o, self)
     self.__index = self
     openwar.units[o.unit_id] = o;
+
     return o
 end
 

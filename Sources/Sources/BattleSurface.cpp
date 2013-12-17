@@ -90,14 +90,15 @@ void BattleSurface::ScreenSizeChanged()
 
 void BattleSurface::Update(double secondsSinceLastUpdate)
 {
-	if (_playing)
+	if (_scenario != nullptr)
 	{
-		_scenario->Tick(secondsSinceLastUpdate);
-		UpdateSoundPlayer();
-	}
-	else if (_scenario != nullptr)
-	{
-		_scenario->Tick(0);
+		if (_playing)
+			_scenario->Tick(secondsSinceLastUpdate);
+		else
+			_scenario->Tick(0);
+
+		if (_playing)
+			UpdateSoundPlayer();
 	}
 
 	for (BattleView* battleView : _battleViews)

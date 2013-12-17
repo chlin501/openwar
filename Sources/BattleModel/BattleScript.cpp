@@ -202,9 +202,12 @@ void BattleScript::OnSetGroundMap(GroundMap* groundMap)
 
 void BattleScript::OnAddUnit(Unit* unit)
 {
-	int unitId = _nextUnitId++;
-	_units[unitId] = unit;
-	_unitId[unit] = unitId;
+	if (_unitId[unit] == 0)
+	{
+		int unitId = _nextUnitId++;
+		_units[unitId] = unit;
+		_unitId[unit] = unitId;
+	}
 }
 
 
@@ -254,7 +257,11 @@ int BattleScript::NewUnit(int commanderId, const char* unitClass, int strength, 
 	Unit* unit = _simulator->AddUnit(commander, unitClass, strength, unitStats, position);
 	unit->command.bearing = glm::radians(90 - bearing);
 
-	return _unitId[unit];
+	int unitId = _nextUnitId++;
+	_units[unitId] = unit;
+	_unitId[unit] = unitId;
+
+	return unitId;
 }
 
 
