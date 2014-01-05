@@ -41,6 +41,11 @@ _allowTargetEnemyUnit(false)
 }
 
 
+BattleGesture::~BattleGesture()
+{
+}
+
+
 void BattleGesture::Update(Surface* surface, double secondsSinceLastUpdate)
 {
 

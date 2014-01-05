@@ -36,6 +36,7 @@ public:
 	static bool disableUnitTracking;
 
 	BattleGesture(BattleView* battleView);
+	virtual ~BattleGesture();
 
 	BattleView* GetBattleView() const { return _battleView; }
 

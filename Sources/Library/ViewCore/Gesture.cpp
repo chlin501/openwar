@@ -22,6 +22,10 @@ _enabled(true)
 
 Gesture::~Gesture()
 {
+	for (Touch* touch : _touches)
+		if (touch->_gesture == this)
+			touch->_gesture = nullptr;
+
 	auto i = std::find(_gestures->begin(), _gestures->end(), this);
 	if (i != _gestures->end())
 		_gestures->erase(i);

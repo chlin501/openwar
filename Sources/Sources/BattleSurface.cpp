@@ -166,6 +166,20 @@ void BattleSurface::ResetBattleView(BattleView* battleView, BattleCommander* com
 {
 	battleView->SetCommander(commander);
 	battleView->SetSimulator(_scenario->GetSimulator());
+
+	for (auto i = _battleGestures.begin(); i != _battleGestures.end(); ++i)
+		if ((*i)->GetBattleView() == battleView)
+		{
+			delete *i;
+			*i = new BattleGesture(battleView);
+		}
+
+	for (auto i = _terrainGestures.begin(); i != _terrainGestures.end(); ++i)
+		if ((*i)->GetTerrainView() == battleView)
+		{
+			delete *i;
+			*i = new TerrainGesture(battleView);
+		}
 }
 
 
