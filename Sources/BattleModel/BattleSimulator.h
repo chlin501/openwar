@@ -294,7 +294,7 @@ struct UnitCommand
 
 	glm::vec2 GetDestination() const
 	{
-		return !path.empty() != 0 ? path.back() : glm::vec2(512, 512);
+		return !path.empty() ? path.back() : glm::vec2(512, 512);
 	}
 };
 
