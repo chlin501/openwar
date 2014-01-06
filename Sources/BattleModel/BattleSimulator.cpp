@@ -486,7 +486,7 @@ void BattleSimulator::ResolveMeleeCombat()
 		for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
 		{
 			Fighter* meleeTarget = fighter->state.meleeTarget;
-			if (meleeTarget != nullptr)
+			if (meleeTarget != nullptr && meleeTarget->unit->commander->GetType() != BattleCommanderType::None)
 			{
 				Unit* enemyUnit = meleeTarget->unit;
 				float killProbability = 0.5f;
@@ -632,51 +632,68 @@ void BattleSimulator::ResolveProjectileCasualties()
 
 void BattleSimulator::RemoveCasualties()
 {
-	for (Unit* unit : _units)
-	{
-		for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
-		{
-			if (fighter->state.opponent != nullptr && fighter->state.opponent->casualty)
-				fighter->state.opponent = nullptr;
-		}
-	}
-
 	bounds2f bounds = _heightMap->GetBounds();
 	glm::vec2 center = bounds.center();
 	float radius = bounds.width() / 2;
 	float radius_squared = radius * radius;
 
+	for (Unit* unit : _units)
+	{
+		if (unit->commander->GetType() != BattleCommanderType::None)
+		{
+			Fighter* end = unit->fighters + unit->fightersCount;
+			for (Fighter* fighter = unit->fighters; fighter != end; ++fighter)
+			{
+				if (!fighter->casualty)
+				{
+					fighter->casualty = fighter->terrainImpassable && unit->state.IsRouting();
+				}
+
+				if (!fighter->casualty)
+				{
+					glm::vec2 diff = fighter->state.position - center;
+					fighter->casualty = glm::dot(diff, diff) >= radius_squared;
+				}
+			}
+		}
+	}
 
 	for (Unit* unit : _units)
 	{
+		Fighter* end = unit->fighters + unit->fightersCount;
+		for (Fighter* fighter = unit->fighters; fighter != end; ++fighter)
+			if (fighter->state.opponent != nullptr && fighter->state.opponent->casualty)
+				fighter->state.opponent = nullptr;
+	}
+
+	for (Unit* unit : _units)
+	{
+		std::vector<Fighter> fighters;
+
 		int index = 0;
 		int n = unit->fightersCount;
 		for (int j = 0; j < n; ++j)
 		{
-			if (unit->fighters[j].terrainImpassable && unit->state.IsRouting())
-				unit->fighters[j].casualty = true;
-
 			if (unit->fighters[j].casualty)
 			{
 				++unit->state.recentCasualties;
-
-				for (BattleObserver* observer : _observers)
-					observer->OnCasualty(unit->fighters[j]);
+				fighters.push_back(unit->fighters[j]);
 			}
 			else
 			{
-				glm::vec2 diff = unit->fighters[j].state.position - center;
-				if (glm::dot(diff, diff) < radius_squared)
-				{
-					if (index < j)
-						unit->fighters[index].state = unit->fighters[j].state;
-					unit->fighters[index].casualty = false;
-					index++;
-				}
+				if (index < j)
+					unit->fighters[index].state = unit->fighters[j].state;
+				unit->fighters[index].casualty = false;
+				index++;
 			}
 		}
 
 		unit->fightersCount = index;
+
+		for (BattleObserver* observer : _observers)
+			for (const Fighter& fighter : fighters)
+				observer->OnCasualty(fighter);
+
 	}
 }
 
