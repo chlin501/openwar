@@ -259,6 +259,11 @@ void BattleSimulator::RemoveUnit(Unit* unit)
 			other->command.meleeTarget = nullptr;
 		if (other->command.missileTarget == unit)
 			other->command.missileTarget = nullptr;
+
+		if (other->nextCommand.meleeTarget == unit)
+			other->nextCommand.meleeTarget = nullptr;
+		if (other->nextCommand.missileTarget == unit)
+			other->nextCommand.missileTarget = nullptr;
 	}
 
 	delete[] unit->fighters;
@@ -836,12 +841,12 @@ UnitMode BattleSimulator::NextUnitMode(Unit* unit)
 			return UnitMode_Standing;
 
 		case UnitMode_Standing:
-			if (glm::length(unit->state.center - unit->command.GetDestination()) > 8)
+			if (unit->command.path.size() > 2 || glm::length(unit->state.center - unit->command.GetDestination()) > 8)
 				return UnitMode_Moving;
 			break;
 
 		case UnitMode_Moving:
-			if (glm::length(unit->state.center - unit->command.GetDestination()) <= 8)
+			if (unit->command.path.size() <= 2 && glm::length(unit->state.center - unit->command.GetDestination()) <= 8)
 				return UnitMode_Standing;
 			break;
 
@@ -1101,7 +1106,7 @@ glm::vec2 BattleSimulator::NextFighterVelocity(Fighter* fighter)
 
 	glm::vec2 diff = destination - fighter->state.position;
 	float diff_len = glm::dot(diff, diff);
-	if (diff_len < 0.01)
+	if (diff_len < 0.3f)
 		return diff;
 
 	glm::vec2 delta = glm::normalize(diff) * speed;

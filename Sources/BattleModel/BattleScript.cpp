@@ -62,6 +62,8 @@ _nextUnitId(1)
 	lua_setglobal(_state, "battle_add_terrain_tree");
 
 	_scripts[_state] = this;
+
+	_simulator->AddObserver(this);
 }
 
 

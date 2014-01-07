@@ -25,6 +25,8 @@ BattleScenario::~BattleScenario()
 	for (BattleCommander* commander : _commanders)
 		delete commander;
 
+	delete _script;
+
 	GroundMap* groundMap = _simulator->GetGroundMap();
 	delete _simulator;
 	delete groundMap;
