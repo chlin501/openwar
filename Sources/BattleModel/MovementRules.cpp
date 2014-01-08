@@ -216,12 +216,30 @@ glm::vec2 MovementRules::NextFighterDestination(Fighter* fighter)
 {
 	Unit* unit = fighter->unit;
 
-	if (unit->state.IsRouting())
+	const UnitState& unitState = unit->state;
+	const FighterState& fighterState = fighter->state;
+
+	if (unitState.IsRouting())
 	{
 		if (unit->commander->GetTeam() == 1)
-			return glm::vec2(fighter->state.position.x * 3, -2000);
+			return glm::vec2(fighterState.position.x * 3, -2000);
 		else
-			return glm::vec2(fighter->state.position.x * 3, 2000);
+			return glm::vec2(fighterState.position.x * 3, 2000);
+	}
+
+	if (fighterState.opponent != nullptr)
+	{
+		return fighterState.opponent->state.position
+			- unit->stats.weaponReach * vector2_from_angle(fighterState.bearing);
+	}
+
+	switch (fighterState.readyState)
+	{
+		case ReadyState_Striking:
+		case ReadyState_Stunned:
+			return fighterState.position;
+		default:
+			break;
 	}
 
 	int rank = Unit::GetFighterRank(fighter);
@@ -229,9 +247,9 @@ glm::vec2 MovementRules::NextFighterDestination(Fighter* fighter)
 	glm::vec2 destination;
 	if (rank == 0)
 	{
-		if (unit->state.unitMode == UnitMode_Moving)
+		if (unitState.unitMode == UnitMode_Moving)
 		{
-			destination = fighter->state.position;
+			destination = fighterState.position;
 			int n = 1;
 			for (int i = 1; i <= 5; ++i)
 			{
@@ -252,14 +270,14 @@ glm::vec2 MovementRules::NextFighterDestination(Fighter* fighter)
 			destination /= n;
 			destination -= glm::normalize(unit->formation.towardBack) * unit->GetSpeed();
 		}
-		else if (unit->state.unitMode == UnitMode_Turning)
+		else if (unitState.unitMode == UnitMode_Turning)
 		{
-			glm::vec2 frontLeft = unit->formation.GetFrontLeft(unit->state.center);
+			glm::vec2 frontLeft = unit->formation.GetFrontLeft(unitState.center);
 			destination = frontLeft + unit->formation.towardRight * (float)file;
 		}
 		else
 		{
-			glm::vec2 frontLeft = unit->formation.GetFrontLeft(unit->state.waypoint);
+			glm::vec2 frontLeft = unit->formation.GetFrontLeft(unitState.waypoint);
 			destination = frontLeft + unit->formation.towardRight * (float)file;
 		}
 	}

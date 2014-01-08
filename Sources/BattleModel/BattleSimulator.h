@@ -176,6 +176,7 @@ struct UnitStats
 	weaponReach(0),
 	trainingLevel(0),
 	strikingDuration(0),
+	readyingDuration(0),
 	fireRate(25.0f), // rounds per minute
 	minimumRange(0),
 	maximumRange(0),

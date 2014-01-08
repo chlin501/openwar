@@ -895,7 +895,9 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 
 	// OPPONENT
 
-	if (original.opponent != 0 && glm::length(original.position - original.opponent->state.position) <= fighter->unit->stats.weaponReach * 2)
+	if (original.opponent != nullptr
+		&& (original.opponent - original.opponent->unit->fighters) < original.opponent->unit->fightersCount
+		&& glm::length(original.position - original.opponent->state.position) <= fighter->unit->stats.weaponReach * 2)
 	{
 		result.opponent = original.opponent;
 	}
@@ -906,26 +908,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 
 	// DESTINATION
 
-	if (original.opponent != nullptr)
-	{
-		result.destination = original.opponent->state.position
-				- fighter->unit->stats.weaponReach * vector2_from_angle(original.bearing);
-	}
-	else
-	{
-		switch (original.readyState)
-		{
-			case ReadyState_Unready:
-			case ReadyState_Readying:
-			case ReadyState_Prepared:
-				result.destination = MovementRules::NextFighterDestination(fighter);
-				break;
-
-			default:
-				result.destination = original.position;
-				break;
-		}
-	}
+	result.destination = MovementRules::NextFighterDestination(fighter);
 
 	// READY STATE
 
@@ -1132,5 +1115,5 @@ Fighter* BattleSimulator::FindFighterStrikingTarget(Fighter* fighter)
 		}
 	}
 
-	return 0;
+	return nullptr;
 }
