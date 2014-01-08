@@ -13,7 +13,6 @@
 class HeightMap
 {
 	bounds2f _bounds;
-	int _imageSize;
 	int _cacheStride;
 	int _cacheMaxIndex;
 	float* _cacheHeights;

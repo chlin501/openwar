@@ -9,7 +9,6 @@
 
 HeightMap::HeightMap(bounds2f bounds) :
 _bounds(bounds),
-_imageSize(256),
 _cacheStride(256),
 _cacheMaxIndex(254),
 _cacheHeights(nullptr),
@@ -64,8 +63,8 @@ float HeightMap::InterpolateHeight(glm::vec2 position) const
 {
 	glm::vec2 p = (position - _bounds.min) / _bounds.size();
 
-	float x = glm::floor(p.x * _imageSize);
-	float y = glm::floor(p.y * _imageSize);
+	float x = p.x * _cacheStride;
+	float y = p.y * _cacheStride;
 
 	// find triangle midpoint coordinates (x1, y1)
 
