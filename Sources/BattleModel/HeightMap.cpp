@@ -158,6 +158,8 @@ const float* HeightMap::InternalIntersect(ray r)
 	int dx = r.direction.x < 0 ? -1 : 1;
 	int dy = r.direction.y < 0 ? -1 : 1;
 
+	height = height.grow(0.1f); // workaround for intersect precision problem
+
 	while (height.contains(p.z) && bounds_2.contains(x, y))
 	{
 		glm::vec3 p00 = glm::vec3(x, y, GetHeight(x, y));
