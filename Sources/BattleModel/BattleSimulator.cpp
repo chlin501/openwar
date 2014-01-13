@@ -586,28 +586,29 @@ void BattleSimulator::ResolveProjectileCasualties()
 
 	for (std::pair<float, Shooting>& s : _shootings)
 	{
-
 		if (s.first > 0)
 		{
 			s.first -= _timeStep;
-			if (s.first < 0)
-			{
-				s.first = 0;
-				for (BattleObserver* observer : _observers)
-					observer->OnRelease(s.second);
-			}
 		}
 
-		if (s.first == 0)
+		if (s.first <= 0)
 		{
 			Shooting& shooting = s.second;
+
+			if (!shooting.released)
+			{
+				for (BattleObserver* observer : _observers)
+					observer->OnRelease(s.second);
+				shooting.released = true;
+			}
+
 			shooting.timeToImpact -= _timeStep;
 
 			std::vector<Projectile>::iterator i = shooting.projectiles.begin();
 			while (i != shooting.projectiles.end())
 			{
 				Projectile& projectile = *i;
-				if (shooting.timeToImpact <= 0)
+				if (shooting.timeToImpact + projectile.delay <= 0)
 				{
 					glm::vec2 hitpoint = projectile.position2;
 					for (quadtree<Fighter*>::iterator j(_fighterQuadTree.find(hitpoint.x, hitpoint.y, 0.45f)); *j; ++j)

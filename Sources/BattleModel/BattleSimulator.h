@@ -65,12 +65,14 @@ struct Shooting
 	MissileType missileType;
 	float timeToImpact;
 	glm::vec2 target;
+	bool released;
 	std::vector<Projectile> projectiles;
 
 	Shooting() :
 	unit(nullptr),
 	missileType(MissileType::None),
 	timeToImpact(0),
+	released(false),
 	projectiles()
 	{
 	}
