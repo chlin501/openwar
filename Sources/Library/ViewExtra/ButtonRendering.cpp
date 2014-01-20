@@ -72,7 +72,7 @@ void ButtonRendering::RenderCornerButton(bounds2f viewport, texture* texture, bo
 	AddRect(shape, bounds2f(inner.max.x, inner.max.y, outer.max.x, outer.max.y), bounds2f(0.5, 0.5, 1.0, 1.0));
 
 	texture_uniforms uniforms;
-	uniforms._transform = sprite_transform(viewport).transform();
+	uniforms._transform = ViewportTransform(viewport);
 	uniforms._texture = texture;
 
 	_renderers->_texture_renderer->render(shape, uniforms);
@@ -101,7 +101,7 @@ void ButtonRendering::RenderTextureRect(bounds2f viewport, texture* texture, bou
 	if (alpha == 1)
 	{
 		texture_uniforms uniforms;
-		uniforms._transform = sprite_transform(viewport).transform();
+		uniforms._transform = ViewportTransform(viewport);
 		uniforms._texture = texture;
 
 		_renderers->_texture_renderer->render(shape, uniforms);
@@ -109,7 +109,7 @@ void ButtonRendering::RenderTextureRect(bounds2f viewport, texture* texture, bou
 	else
 	{
 		texture_alpha_uniforms uniforms;
-		uniforms._transform = sprite_transform(viewport).transform();
+		uniforms._transform = ViewportTransform(viewport);
 		uniforms._texture = texture;
 		uniforms._alpha = alpha;
 
@@ -146,7 +146,6 @@ void ButtonRendering::RenderButtonText(bounds2f viewport, glm::vec2 position, co
 
 	glm::vec2 p = position - 0.5f * _string_font->measure(text) - glm::vec2(0, 1);
 
-	sprite_transform transform(viewport);
 	string_uniforms uniforms;
 	uniforms._texture = &_string_font->_texture;
 	uniforms._color = glm::vec4(0, 0, 0, 0.15f);
@@ -154,18 +153,15 @@ void ButtonRendering::RenderButtonText(bounds2f viewport, glm::vec2 position, co
 		for (int dy = -1; dy <= 1; ++dy)
 			if (dx != 0 || dy != 0)
 			{
-				transform._translate = p + glm::vec2(dx, dy);
-				uniforms._transform = transform.transform();
+				uniforms._transform = ViewportTransform(viewport, p + glm::vec2(dx, dy));
 				_string_font->_renderer->render(_string_shape->_vbo, uniforms);
 			}
 
-	transform._translate = p + glm::vec2(0, -1);
-	uniforms._transform = transform.transform();
+	uniforms._transform = ViewportTransform(viewport, p + glm::vec2(0, -1));
 	uniforms._color = glm::vec4(0, 0, 0, 1);
 	_string_font->_renderer->render(_string_shape->_vbo, uniforms);
 
-	transform._translate = p;
-	uniforms._transform = transform.transform();
+	uniforms._transform = ViewportTransform(viewport, p);
 	uniforms._color = glm::vec4(1, 1, 1, 1);
 	_string_font->_renderer->render(_string_shape->_vbo, uniforms);
 }

@@ -100,7 +100,7 @@ void BattleGesture::RenderHints()
 	}
 
 	color_uniforms uniforms;
-	uniforms._transform = sprite_transform(_battleView->GetViewportBounds()).transform();
+	uniforms._transform = ViewportTransform(_battleView->GetViewportBounds());
 	uniforms._color = glm::vec4(0, 0, 0, 0.2f);
 	renderers::singleton->_plain_renderer->render(shape, uniforms);
 

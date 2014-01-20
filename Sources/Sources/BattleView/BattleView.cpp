@@ -590,7 +590,7 @@ void BattleView::Render()
 		if (marker->GetUnit()->commander == _commander)
 			marker->AppendFacingMarker(_textureTriangleRenderer, this);
 
-	_textureTriangleRenderer->Draw(sprite_transform(GetViewportBounds()).transform(), _textureUnitMarkers);
+	_textureTriangleRenderer->Draw(ViewportTransform(GetViewportBounds()), _textureUnitMarkers);
 
 
 

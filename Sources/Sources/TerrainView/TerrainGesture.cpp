@@ -75,7 +75,7 @@ void TerrainGesture::RenderHints()
 	glLineWidth(2);
 
 	color_uniforms uniforms;
-	uniforms._transform = sprite_transform(_terrainView->GetViewportBounds()).transform();
+	uniforms._transform = ViewportTransform(_terrainView->GetViewportBounds());
 	uniforms._color = glm::vec4(0, 0, 0, 1);
 	renderers::singleton->_plain_renderer->render(shape, uniforms);
 
