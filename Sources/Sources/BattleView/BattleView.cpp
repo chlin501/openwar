@@ -12,7 +12,6 @@
 #include "../../Library/Renderers/ColorBillboardRenderer.h"
 #include "../../Library/Renderers/PlainRenderer.h"
 #include "../../Library/Renderers/TextureRenderer.h"
-#include "../../Library/Renderers/sprite.h"
 #include "../SmoothTerrain/SmoothTerrainWater.h"
 #include "../SmoothTerrain/SmoothTerrainSky.h"
 #include "BattleView.h"

@@ -8,7 +8,6 @@
 
 #include "../../BattleModel/BattleSimulator.h"
 #include "../../Library/Audio/SoundPlayer.h"
-#include "../../Library/Renderers/sprite.h"
 #include "../../Library/Renderers/PlainRenderer.h"
 #include "BattleGesture.h"
 #include "BattleView.h"

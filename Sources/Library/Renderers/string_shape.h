@@ -16,10 +16,7 @@
 #endif
 
 #include "../Algebra/bounds.h"
-
-#include "animation.h"
 #include "../Graphics/renderer.h"
-#include "sprite.h"
 #include "../Graphics/vertex.h"
 #include "../Graphics/texture.h"
 

@@ -5,7 +5,7 @@
 #include "TerrainGesture.h"
 #include "TerrainView.h"
 #include "../../Library/ViewCore/Touch.h"
-#include "../../Library/Renderers/sprite.h"
+#include "renderer.h"
 
 
 TerrainGesture::TerrainGesture(TerrainView* terrainView) :
