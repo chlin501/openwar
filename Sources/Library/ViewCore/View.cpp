@@ -7,6 +7,25 @@
 
 
 
+glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate, float rotate)
+{
+	glm::vec2 viewport_center = viewport.center();
+	glm::vec2 viewport_scale = 2.0f / viewport.size();
+
+	glm::mat4x4 result = glm::scale(glm::mat4x4(), glm::vec3(viewport_scale.x, viewport_scale.y, 1.0f))
+		* glm::translate(glm::mat4x4(), glm::vec3(translate.x - viewport_center.x, translate.y - viewport_center.y, 0.0f));
+
+	if (rotate != 0)
+		result = result * glm::rotate(glm::mat4x4(), rotate * 180 / (float)M_PI, glm::vec3(0, 0, 1));
+
+	return result;
+}
+
+
+
+
+
+
 View::View(Surface* surface) :
 _surface(surface),
 _viewport(),

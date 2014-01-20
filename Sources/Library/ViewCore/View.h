@@ -8,6 +8,9 @@
 #include "Surface.h"
 
 
+glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate = glm::vec2(), float rotate = 0);
+
+
 class View
 {
 	Surface* _surface;
