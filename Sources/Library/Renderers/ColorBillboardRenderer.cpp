@@ -84,5 +84,8 @@ void ColorBillboardRenderer::Draw(const glm::mat4x4& transform, const glm::vec3 
 	uniforms._upvector = cameraUp;
 	uniforms._viewport_height = 0.25f * renderer_base::pixels_per_point() * viewportHeight;
 
-	_renderer->render(_vbo, uniforms);
+	_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_renderer->get_uniform<glm::vec3>("upvector").set_value(uniforms._upvector);
+	_renderer->get_uniform<float>("viewport_height").set_value(uniforms._viewport_height);
+	_renderer->render(_vbo);
 }

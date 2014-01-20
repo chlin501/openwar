@@ -51,12 +51,10 @@ void PlainRenderer::Draw(const glm::mat4x4& transform, const glm::vec4& color)
 {
 	glLineWidth(1);
 
-
-	uniforms uniforms;
-	uniforms._transform = transform;
-	uniforms._color = color;
-
-	_renderer->render(_vbo, uniforms);
+	_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
+	_renderer->get_uniform<float>("point_size").set_value(1);
+	_renderer->get_uniform<glm::vec4>("color").set_value(color);
+	_renderer->render(_vbo);
 }
 
 

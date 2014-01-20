@@ -4,7 +4,6 @@
 
 #include "../../BattleModel/HeightMap.h"
 #include "../../Library/Graphics/renderer.h"
-#include "../../Library/Graphics/uniforms.h"
 #include "../../Library/Graphics/vertexbuffer.h"
 #include "TiledTerrainRenderer.h"
 
@@ -104,10 +103,8 @@ void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3&
 
 			shape.update(GL_STATIC_DRAW);
 
-			texture_uniforms uniforms;
-			uniforms._transform = transform;
-			uniforms._texture = _textures[tile->texture];
-
-			renderers::singleton->_texture_renderer3->render(shape, uniforms);
+			renderers::singleton->_texture_renderer3->get_uniform<glm::mat4>("transform").set_value(transform);
+			renderers::singleton->_texture_renderer3->get_uniform<const texture*>("texture").set_value(_textures[tile->texture]);
+			renderers::singleton->_texture_renderer3->render(shape);
 		}
 }

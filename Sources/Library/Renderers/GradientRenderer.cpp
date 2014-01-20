@@ -54,9 +54,9 @@ void GradientRenderer::Draw(const glm::mat4x4& transform)
 {
 	glLineWidth(1);
 
-	uniforms uniforms;
-	uniforms._transform = transform;
-	_renderer->render(_vbo, uniforms);
+	_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
+	_renderer->get_uniform<float>("point_size").set_value(1);
+	_renderer->render(_vbo);
 }
 
 

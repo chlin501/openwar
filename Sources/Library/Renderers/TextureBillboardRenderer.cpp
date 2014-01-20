@@ -114,7 +114,13 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 	uniforms._min_point_size = sizeLimit.min;
 	uniforms._max_point_size = sizeLimit.max;
 
-	_texture_billboard_renderer->render(_vbo, uniforms);
+	_texture_billboard_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_texture_billboard_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
+	_texture_billboard_renderer->get_uniform<glm::vec3>("upvector").set_value(uniforms._upvector);
+	_texture_billboard_renderer->get_uniform<float>("viewport_height").set_value(uniforms._viewport_height);
+	_texture_billboard_renderer->get_uniform<float>("min_point_size").set_value(uniforms._min_point_size);
+	_texture_billboard_renderer->get_uniform<float>("max_point_size").set_value(uniforms._max_point_size);
+	_texture_billboard_renderer->render(_vbo);
 }
 
 

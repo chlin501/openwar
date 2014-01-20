@@ -58,13 +58,11 @@ void TextureTriangleRenderer::Reset()
 }
 
 
-void TextureRenderer::Draw(const glm::mat4x4& transform, const texture* texture)
+void TextureRenderer::Draw(const glm::mat4x4& transform, const texture* texturex)
 {
-	uniforms uniforms;
-	uniforms._transform = transform;
-	uniforms._texture = texture;
-
-	_renderer->render(_vbo, uniforms);
+	_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
+	_renderer->get_uniform<const texture*>("texture").set_value(texturex);
+	_renderer->render(_vbo);
 }
 
 

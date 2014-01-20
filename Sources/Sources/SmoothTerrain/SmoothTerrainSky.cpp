@@ -45,7 +45,9 @@ void SmoothTerrainSky::Render(renderers* _renderers, float cameraDirectionZ, boo
 	gradient_uniforms uniforms;
 	uniforms._transform = flip ? glm::scale(glm::mat4x4(), glm::vec3(-1.0f, -1.0f, 1.0f)) : glm::mat4x4();
 
-	_renderers->_gradient_renderer->render(shape, uniforms);
+	_renderers->_gradient_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_renderers->_gradient_renderer->get_uniform<float>("pixel_size").set_value(1);
+	_renderers->_gradient_renderer->render(shape);
 }
 
 
@@ -71,5 +73,7 @@ void SmoothTerrainSky::RenderBackgroundLinen(renderers* _renderers, bounds2f vie
 	uniforms._transform = flip ? glm::scale(glm::mat4x4(), glm::vec3(-1.0f, -1.0f, 1.0f)) : glm::mat4x4();
 	uniforms._texture = _textureBackgroundLinen;
 
-	_renderers->_texture_renderer->render(shape, uniforms);
+	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
+	_renderers->_texture_renderer->render(shape);
 }

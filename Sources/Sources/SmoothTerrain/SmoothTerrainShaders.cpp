@@ -102,7 +102,13 @@ void SmoothTerrainShaders::render_terrain_inside(vertexbuffer<terrain_vertex>& s
 		_terrain_inside->_blend_sfactor = GL_ONE;
 		_terrain_inside->_blend_dfactor = GL_ZERO;
 	}
-	_terrain_inside->render(shape, uniforms);
+
+	_terrain_inside->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_terrain_inside->get_uniform<glm::vec3>("light_normal").set_value(uniforms._light_normal);
+	_terrain_inside->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
+	_terrain_inside->get_uniform<const texture*>("colormap").set_value(uniforms._colormap);
+	_terrain_inside->get_uniform<const texture*>("splatmap").set_value(uniforms._splatmap);
+	_terrain_inside->render(shape);
 }
 
 
@@ -178,7 +184,13 @@ void SmoothTerrainShaders::render_terrain_border(vertexbuffer<terrain_vertex>& s
 		_terrain_border->_blend_sfactor = GL_ONE;
 		_terrain_border->_blend_dfactor = GL_ZERO;
 	}
-	_terrain_border->render(shape, uniforms);
+
+	_terrain_border->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_terrain_border->get_uniform<glm::vec3>("light_normal").set_value(uniforms._light_normal);
+	_terrain_border->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
+	_terrain_border->get_uniform<const texture*>("colormap").set_value(uniforms._colormap);
+	_terrain_border->get_uniform<const texture*>("splatmap").set_value(uniforms._splatmap);
+	_terrain_border->render(shape);
 }
 
 
@@ -228,7 +240,10 @@ void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shap
 		_terrain_skirt->_blend_sfactor = GL_ONE;
 		_terrain_skirt->_blend_dfactor = GL_ZERO;
 	}
-	_terrain_skirt->render(shape, uniforms);
+
+	_terrain_skirt->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_terrain_skirt->get_uniform<const texture*>("texture").set_value(uniforms._texture);
+	_terrain_skirt->render(shape);
 }
 
 
@@ -264,7 +279,13 @@ void SmoothTerrainShaders::render_depth_inside(vertexbuffer<terrain_vertex>& sha
 		_depth_inside->_blend_sfactor = GL_ONE;
 		_depth_inside->_blend_dfactor = GL_ZERO;
 	}
-	_depth_inside->render(shape, uniforms);
+
+	_depth_inside->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_depth_inside->get_uniform<glm::vec3>("light_normal").set_value(uniforms._light_normal);
+	_depth_inside->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
+	_depth_inside->get_uniform<const texture*>("colormap").set_value(uniforms._colormap);
+	_depth_inside->get_uniform<const texture*>("splatmap").set_value(uniforms._splatmap);
+	_depth_inside->render(shape);
 }
 
 
@@ -309,7 +330,13 @@ void SmoothTerrainShaders::render_depth_border(vertexbuffer<terrain_vertex>& sha
 		_depth_border->_blend_sfactor = GL_ONE;
 		_depth_border->_blend_dfactor = GL_ZERO;
 	}
-	_depth_border->render(shape, uniforms);
+
+	_depth_border->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_depth_border->get_uniform<glm::vec3>("light_normal").set_value(uniforms._light_normal);
+	_depth_border->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
+	_depth_border->get_uniform<const texture*>("colormap").set_value(uniforms._colormap);
+	_depth_border->get_uniform<const texture*>("splatmap").set_value(uniforms._splatmap);
+	_depth_border->render(shape);
 }
 
 
@@ -346,7 +373,9 @@ void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape,
 		_depth_skirt->_blend_sfactor = GL_ONE;
 		_depth_skirt->_blend_dfactor = GL_ZERO;
 	}
-	_depth_skirt->render(shape, uniforms);
+
+	_depth_skirt->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_depth_skirt->render(shape);
 }
 
 
@@ -433,7 +462,10 @@ void SmoothTerrainShaders::render_sobel_filter(vertexbuffer<texture_vertex>& sha
 		_sobel_filter->_blend_sfactor = GL_SRC_ALPHA;
 		_sobel_filter->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 	}
-	_sobel_filter->render(shape, uniforms);
+
+	_depth_skirt->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_depth_skirt->get_uniform<const texture*>("depth").set_value(uniforms._depth);
+	_sobel_filter->render(shape);
 }
 
 
@@ -479,7 +511,12 @@ void SmoothTerrainShaders::render_ground_shadow(vertexbuffer<plain_vertex>& shap
 		_ground_shadow->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 	}
 
-	_ground_shadow->render(shape, uniforms);
+	_ground_shadow->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_ground_shadow->get_uniform<glm::vec3>("light_normal").set_value(uniforms._light_normal);
+	_ground_shadow->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
+	_ground_shadow->get_uniform<const texture*>("colormap").set_value(uniforms._colormap);
+	_ground_shadow->get_uniform<const texture*>("splatmap").set_value(uniforms._splatmap);
+	_ground_shadow->render(shape);
 }
 
 

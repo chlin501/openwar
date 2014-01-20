@@ -176,6 +176,13 @@ void SmoothTerrainWater::Render(const glm::mat4x4& transform)
 	uniforms._map_bounds = glm::vec4(bounds.min, bounds.size());
 	uniforms._texture = nullptr;
 
-	_water_inside_renderer->render(_shape_water_inside, uniforms);
-	_water_border_renderer->render(_shape_water_border, uniforms);
+	_water_inside_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_water_inside_renderer->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
+	_water_inside_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
+	_water_inside_renderer->render(_shape_water_inside);
+
+	_water_border_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_water_border_renderer->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
+	_water_border_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
+	_water_border_renderer->render(_shape_water_border);
 }

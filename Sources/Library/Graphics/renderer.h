@@ -6,11 +6,109 @@
 #define RENDERER_H
 
 #include "vertexbuffer.h"
-#include "uniforms.h"
+#include "texture.h"
 
 #ifndef CHECK_ERROR_GL
 extern void CHECK_ERROR_GL();
 #endif
+
+
+
+
+enum shader_uniform_type
+{
+	shader_uniform_type_int,
+	shader_uniform_type_float,
+	shader_uniform_type_vector2,
+	shader_uniform_type_vector3,
+	shader_uniform_type_vector4,
+	shader_uniform_type_matrix2,
+	shader_uniform_type_matrix3,
+	shader_uniform_type_matrix4,
+	shader_uniform_type_texture
+};
+
+inline shader_uniform_type get_shader_uniform_type(int*) { return shader_uniform_type_int; }
+inline shader_uniform_type get_shader_uniform_type(float*) { return shader_uniform_type_float; }
+inline shader_uniform_type get_shader_uniform_type(glm::vec2*) { return shader_uniform_type_vector2; }
+inline shader_uniform_type get_shader_uniform_type(glm::vec3*) { return shader_uniform_type_vector3; }
+inline shader_uniform_type get_shader_uniform_type(glm::vec4*) { return shader_uniform_type_vector4; }
+inline shader_uniform_type get_shader_uniform_type(glm::mat2x2*) { return shader_uniform_type_matrix2; }
+inline shader_uniform_type get_shader_uniform_type(glm::mat3x3*) { return shader_uniform_type_matrix3; }
+inline shader_uniform_type get_shader_uniform_type(glm::mat4x4*) { return shader_uniform_type_matrix4; }
+inline shader_uniform_type get_shader_uniform_type(const texture**) { return shader_uniform_type_texture; }
+
+inline shader_uniform_type get_shader_uniform_type(const int*) { return shader_uniform_type_int; }
+inline shader_uniform_type get_shader_uniform_type(const float*) { return shader_uniform_type_float; }
+inline shader_uniform_type get_shader_uniform_type(const glm::vec2*) { return shader_uniform_type_vector2; }
+inline shader_uniform_type get_shader_uniform_type(const glm::vec3*) { return shader_uniform_type_vector3; }
+inline shader_uniform_type get_shader_uniform_type(const glm::vec4*) { return shader_uniform_type_vector4; }
+inline shader_uniform_type get_shader_uniform_type(const glm::mat2x2*) { return shader_uniform_type_matrix2; }
+inline shader_uniform_type get_shader_uniform_type(const glm::mat3x3*) { return shader_uniform_type_matrix3; }
+inline shader_uniform_type get_shader_uniform_type(const glm::mat4x4*) { return shader_uniform_type_matrix4; }
+inline shader_uniform_type get_shader_uniform_type(const texture* const*) { return shader_uniform_type_texture; }
+
+
+
+struct plain_uniforms
+{
+	glm::mat4x4 _transform;
+};
+
+
+struct gradient_uniforms
+{
+	glm::mat4x4 _transform;
+	GLfloat _point_size;
+
+	gradient_uniforms() : _point_size(1) {}
+};
+
+
+struct color_uniforms
+{
+	glm::mat4x4 _transform;
+	GLfloat _point_size;
+	glm::vec4 _color;
+
+	color_uniforms() : _point_size(1) {}
+};
+
+
+struct texture_uniforms
+{
+	glm::mat4x4 _transform;
+	const texture* _texture;
+};
+
+struct texture_alpha_uniforms
+{
+	glm::mat4x4 _transform;
+	const texture* _texture;
+	float _alpha;
+};
+
+struct string_uniforms
+{
+	glm::mat4x4 _transform;
+	const texture* _texture;
+	glm::vec4 _color;
+};
+
+
+struct ground_uniforms
+{
+	glm::mat4x4 _transform;
+	const texture* _texture;
+	glm::vec2 _obstacle1;
+	glm::vec2 _obstacle2;
+	glm::vec2 _obstacle3;
+	glm::vec2 _obstacle4;
+	glm::vec2 _obstacle5;
+	glm::vec2 _obstacle6;
+};
+
+
 
 
 inline GLint get_vertex_attribute_size(float*) { return 1; }
@@ -56,6 +154,85 @@ struct renderer_shader_uniform
 	}
 
 	void set_value(const void* uniforms);
+};
+
+
+template <class T>
+class shader_uniform
+{
+	GLuint _program;
+	GLint _location;
+	GLenum _texture;
+
+public:
+	shader_uniform(GLuint program, GLint location, GLenum texture) :
+	_program(program), _location(location), _texture(texture)
+	{
+	}
+
+	void set_value(const T& value)
+	{
+		glUseProgram(_program);
+		const void* v = (const char*)&value;
+		switch (get_shader_uniform_type(&value))
+		{
+			case shader_uniform_type_int:
+				glUniform1iv(_location, 1, (const GLint*)v);
+				CHECK_ERROR_GL();
+				break;
+
+			case shader_uniform_type_float:
+				glUniform1fv(_location, 1, (const GLfloat*)v);
+				CHECK_ERROR_GL();
+				break;
+
+			case shader_uniform_type_vector2:
+				glUniform2fv(_location, 1, (const GLfloat*)v);
+				CHECK_ERROR_GL();
+				break;
+
+			case shader_uniform_type_vector3:
+				glUniform3fv(_location, 1, (const GLfloat*)v);
+				CHECK_ERROR_GL();
+				break;
+
+			case shader_uniform_type_vector4:
+				glUniform4fv(_location, 1, (const GLfloat*)v);
+				CHECK_ERROR_GL();
+				break;
+
+			case shader_uniform_type_matrix2:
+				glUniformMatrix2fv(_location, 1, GL_FALSE, (const GLfloat*)v);
+				CHECK_ERROR_GL();
+				break;
+
+			case shader_uniform_type_matrix3:
+				glUniformMatrix3fv(_location, 1, GL_FALSE, (const GLfloat*)v);
+				CHECK_ERROR_GL();
+				break;
+
+			case shader_uniform_type_matrix4:
+				glUniformMatrix4fv(_location, 1, GL_FALSE, (const GLfloat*)v);
+				CHECK_ERROR_GL();
+				break;
+
+			case shader_uniform_type_texture: {
+				texture**t = (texture**)v;
+				glActiveTexture(GL_TEXTURE0 + _texture);
+				CHECK_ERROR_GL();
+				if (*t != nullptr)
+				{
+					glBindTexture(GL_TEXTURE_2D, (*t)->id);
+					CHECK_ERROR_GL();
+				}
+				glUniform1i(_location, _texture);
+				CHECK_ERROR_GL();
+				break;
+			}
+			default:
+				break;
+		}
+	}
 };
 
 
@@ -140,6 +317,15 @@ public:
 
 	static bool link_program(GLuint program);
 	static bool validate_program(GLuint program);
+
+	template <class T>
+	shader_uniform<T> get_uniform(const char* name)
+	{
+		for (const renderer_shader_uniform& u : _shader_uniforms)
+			if (std::strcmp(name, u._name + 1) == 0)
+				return shader_uniform<T>(_program, u._location, u._texture);
+		return shader_uniform<T>(0, 0, 0);
+	}
 };
 
 
@@ -192,6 +378,37 @@ public:
 		shape.unbind(_vertex_attributes);
 	}
 
+	void render(vertexbuffer<vertex_type>& shape)
+	{
+		if (shape.count() == 0)
+			return;
+
+		glUseProgram(_program);
+		CHECK_ERROR_GL();
+
+		shape.bind(_vertex_attributes);
+
+		if (_blend_sfactor != GL_ONE || _blend_dfactor != GL_ZERO)
+		{
+			glEnable(GL_BLEND);
+			CHECK_ERROR_GL();
+			glBlendFunc(_blend_sfactor, _blend_dfactor);
+			CHECK_ERROR_GL();
+		}
+
+		glDrawArrays(shape._mode, 0, shape.count());
+		CHECK_ERROR_GL();
+
+		if (_blend_sfactor != GL_ONE || _blend_dfactor != GL_ZERO)
+		{
+			glDisable(GL_BLEND);
+			CHECK_ERROR_GL();
+			glBlendFunc(GL_ONE, GL_ZERO);
+			CHECK_ERROR_GL();
+		}
+
+		shape.unbind(_vertex_attributes);
+	}
 };
 
 
