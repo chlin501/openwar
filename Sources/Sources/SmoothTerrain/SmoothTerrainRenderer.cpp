@@ -94,9 +94,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 		_renderers->render_depth_inside(_vboInside, du);
 		_renderers->render_depth_border(_vboBorder, du);
 
-		plain_uniforms pu;
-		pu._transform = uniforms._transform;
-		_renderers->render_depth_skirt(_vboSkirt, pu);
+		_renderers->render_depth_skirt(_vboSkirt, uniforms._transform);
 	}
 
 	_renderers->render_terrain_inside(_vboInside, uniforms);
@@ -112,10 +110,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	texture_uniforms tu;
-	tu._transform = uniforms._transform;
-	tu._texture = _colormap;
-	_renderers->render_terrain_skirt(_vboSkirt, tu);
+	_renderers->render_terrain_skirt(_vboSkirt, uniforms._transform, _colormap);
 
 	if (_depth != nullptr)
 	{

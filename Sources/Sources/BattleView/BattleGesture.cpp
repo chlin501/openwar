@@ -98,13 +98,9 @@ void BattleGesture::RenderHints()
 		}
 	}
 
-	color_uniforms uniforms;
-	uniforms._transform = ViewportTransform(_battleView->GetViewportBounds());
-	uniforms._color = glm::vec4(0, 0, 0, 0.2f);
-
-	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(_battleView->GetViewportBounds()));
 	renderers::singleton->_plain_renderer->get_uniform<float>("point_size").set_value(1);
-	renderers::singleton->_plain_renderer->get_uniform<glm::vec4>("color").set_value(uniforms._color);
+	renderers::singleton->_plain_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 0.2f));
 	renderers::singleton->_plain_renderer->render(shape);
 
 

@@ -70,12 +70,8 @@ void ButtonRendering::RenderCornerButton(bounds2f viewport, texture* texturex, b
 	AddRect(shape, bounds2f(inner.min.x, inner.max.y, inner.max.x, outer.max.y), bounds2f(0.5, 0.5, 0.5, 1.0));
 	AddRect(shape, bounds2f(inner.max.x, inner.max.y, outer.max.x, outer.max.y), bounds2f(0.5, 0.5, 1.0, 1.0));
 
-	texture_uniforms uniforms;
-	uniforms._transform = ViewportTransform(viewport);
-	uniforms._texture = texturex;
-
-	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
+	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(viewport));
+	_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
 	_renderers->_texture_renderer->render(shape);
 }
 
@@ -101,24 +97,15 @@ void ButtonRendering::RenderTextureRect(bounds2f viewport, texture* texturex, bo
 
 	if (alpha == 1)
 	{
-		texture_uniforms uniforms;
-		uniforms._transform = ViewportTransform(viewport);
-		uniforms._texture = texturex;
-
-		_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-		_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
+		_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(viewport));
+		_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
 		_renderers->_texture_renderer->render(shape);
 	}
 	else
 	{
-		texture_alpha_uniforms uniforms;
-		uniforms._transform = ViewportTransform(viewport);
-		uniforms._texture = texturex;
-		uniforms._alpha = alpha;
-
-		_renderers->_alpha_texture_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-		_renderers->_alpha_texture_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
-		_renderers->_alpha_texture_renderer->get_uniform<float>("alpha").set_value(uniforms._alpha);
+		_renderers->_alpha_texture_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(viewport));
+		_renderers->_alpha_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
+		_renderers->_alpha_texture_renderer->get_uniform<float>("alpha").set_value(alpha);
 		_renderers->_alpha_texture_renderer->render(shape);
 	}
 }
@@ -152,34 +139,22 @@ void ButtonRendering::RenderButtonText(bounds2f viewport, glm::vec2 position, co
 
 	glm::vec2 p = position - 0.5f * _string_font->measure(text) - glm::vec2(0, 1);
 
-	string_uniforms uniforms;
-	uniforms._texture = &_string_font->_texture;
-	uniforms._color = glm::vec4(0, 0, 0, 0.15f);
+	_string_font->_renderer->get_uniform<const texture*>("texture").set_value(&_string_font->_texture);
+	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 0.15f));
+
 	for (int dx = -1; dx <= 1; ++dx)
 		for (int dy = -1; dy <= 1; ++dy)
 			if (dx != 0 || dy != 0)
 			{
-				uniforms._transform = ViewportTransform(viewport, p + glm::vec2(dx, dy));
-
-				_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-				_string_font->_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
-				_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(uniforms._color);
+				_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(viewport, p + glm::vec2(dx, dy)));
 				_string_font->_renderer->render(_string_shape->_vbo);
 			}
 
-	uniforms._transform = ViewportTransform(viewport, p + glm::vec2(0, -1));
-	uniforms._color = glm::vec4(0, 0, 0, 1);
-
-	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_string_font->_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
-	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(uniforms._color);
+	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(viewport, p + glm::vec2(0, -1)));
+	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 1));
 	_string_font->_renderer->render(_string_shape->_vbo);
 
-	uniforms._transform = ViewportTransform(viewport, p);
-	uniforms._color = glm::vec4(1, 1, 1, 1);
-
-	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_string_font->_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
-	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(uniforms._color);
+	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(viewport, p));
+	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(1, 1, 1, 1));
 	_string_font->_renderer->render(_string_shape->_vbo);
 }

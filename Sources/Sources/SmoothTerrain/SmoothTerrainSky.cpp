@@ -42,10 +42,9 @@ void SmoothTerrainSky::Render(renderers* _renderers, float cameraDirectionZ, boo
 	shape._vertices.push_back(color_vertex(glm::vec2(1, 0.2), c1));
 	shape._vertices.push_back(color_vertex(glm::vec2(-1, 0.2), c1));
 
-	gradient_uniforms uniforms;
-	uniforms._transform = flip ? glm::scale(glm::mat4x4(), glm::vec3(-1.0f, -1.0f, 1.0f)) : glm::mat4x4();
+	glm::mat4 transform = flip ? glm::scale(glm::mat4x4(), glm::vec3(-1.0f, -1.0f, 1.0f)) : glm::mat4x4();
 
-	_renderers->_gradient_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_renderers->_gradient_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 	_renderers->_gradient_renderer->get_uniform<float>("pixel_size").set_value(1);
 	_renderers->_gradient_renderer->render(shape);
 }
@@ -69,11 +68,9 @@ void SmoothTerrainSky::RenderBackgroundLinen(renderers* _renderers, bounds2f vie
 	shape._vertices.push_back(texture_vertex(glm::vec2(1, -1), glm::vec2(vt1.x, vt0.y)));
 	shape._vertices.push_back(texture_vertex(glm::vec2(-1, -1), glm::vec2(vt0.x, vt0.y)));
 
-	texture_uniforms uniforms;
-	uniforms._transform = flip ? glm::scale(glm::mat4x4(), glm::vec3(-1.0f, -1.0f, 1.0f)) : glm::mat4x4();
-	uniforms._texture = _textureBackgroundLinen;
+	glm::mat4 transform = flip ? glm::scale(glm::mat4x4(), glm::vec3(-1.0f, -1.0f, 1.0f)) : glm::mat4x4();
 
-	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
+	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
+	_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(_textureBackgroundLinen);
 	_renderers->_texture_renderer->render(shape);
 }

@@ -64,11 +64,11 @@ struct SmoothTerrainShaders
 
 	void render_terrain_inside(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms);
 	void render_terrain_border(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms);
-	void render_terrain_skirt(vertexbuffer<skirt_vertex>& shape, const texture_uniforms& uniforms);
+	void render_terrain_skirt(vertexbuffer<skirt_vertex>& shape, const glm::mat4& transform, const texture* texture);
 
 	void render_depth_inside(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms);
 	void render_depth_border(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms);
-	void render_depth_skirt(vertexbuffer<skirt_vertex>& shape, const plain_uniforms& uniforms);
+	void render_depth_skirt(vertexbuffer<skirt_vertex>& shape, const glm::mat4& transform);
 
 	void render_sobel_filter(vertexbuffer<texture_vertex>& shape, const sobel_uniforms& uniforms);
 

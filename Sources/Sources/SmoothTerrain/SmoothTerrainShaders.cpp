@@ -195,7 +195,7 @@ void SmoothTerrainShaders::render_terrain_border(vertexbuffer<terrain_vertex>& s
 
 
 
-void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shape, const texture_uniforms& uniforms)
+void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shape, const glm::mat4& transform, const texture* texturex)
 {
 	if (_terrain_skirt == nullptr)
 	{
@@ -241,8 +241,8 @@ void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shap
 		_terrain_skirt->_blend_dfactor = GL_ZERO;
 	}
 
-	_terrain_skirt->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_terrain_skirt->get_uniform<const texture*>("texture").set_value(uniforms._texture);
+	_terrain_skirt->get_uniform<glm::mat4>("transform").set_value(transform);
+	_terrain_skirt->get_uniform<const texture*>("texture").set_value(texturex);
 	_terrain_skirt->render(shape);
 }
 
@@ -341,7 +341,7 @@ void SmoothTerrainShaders::render_depth_border(vertexbuffer<terrain_vertex>& sha
 
 
 
-void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape, const plain_uniforms& uniforms)
+void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape, const glm::mat4& transform)
 {
 	if (_depth_skirt == nullptr)
 	{
@@ -374,7 +374,7 @@ void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape,
 		_depth_skirt->_blend_dfactor = GL_ZERO;
 	}
 
-	_depth_skirt->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+	_depth_skirt->get_uniform<glm::mat4>("transform").set_value(transform);
 	_depth_skirt->render(shape);
 }
 
