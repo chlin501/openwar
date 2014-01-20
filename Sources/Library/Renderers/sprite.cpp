@@ -99,9 +99,3 @@ string_sprite::string_sprite(renderer<texture_alpha_vertex, string_uniforms>* re
 	_color(glm::vec4(1, 1, 1, 1))
 {
 }
-
-
-
-texture_sprite::texture_sprite(renderer<texture_vertex, texture_uniforms>* renderer) : texture_sprite_base<texture_vertex>(renderer)
-{
-}

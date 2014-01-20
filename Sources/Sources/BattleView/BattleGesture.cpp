@@ -59,11 +59,6 @@ void BattleGesture::RenderHints()
 	vertexbuffer<plain_vertex> shape;
 	shape._mode = GL_LINES;
 
-	plain_sprite sprite(renderers::singleton->_plain_renderer);
-	sprite._shape = &shape;
-	sprite._color = glm::vec4(0, 0, 0, 0.2f);
-	sprite._viewport = _battleView->GetViewportBounds();
-
 	for (UnitCounter* unitMarker : _battleView->GetUnitCounters())
 	{
 		bounds2f bounds = GetUnitCurrentBounds(unitMarker->_unit);
@@ -104,7 +99,10 @@ void BattleGesture::RenderHints()
 		}
 	}
 
-	sprite.render();
+	color_uniforms uniforms;
+	uniforms._transform = sprite_transform(_battleView->GetViewportBounds()).transform();
+	uniforms._color = glm::vec4(0, 0, 0, 0.2f);
+	renderers::singleton->_plain_renderer->render(shape, uniforms);
 
 
 	/*PlainLineRenderer renderer;

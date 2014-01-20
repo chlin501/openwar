@@ -41,11 +41,6 @@ void TerrainGesture::RenderHints()
 	vertexbuffer<plain_vertex> shape;
 	shape._mode = GL_LINES;
 
-	plain_sprite sprite(renderers::singleton->_plain_renderer);
-	sprite._shape = &shape;
-	sprite._color = glm::vec4(0, 0, 0, 1);
-	sprite._viewport = _terrainView->GetViewportBounds();
-
 	glm::vec2 left = _terrainView->GetScreenLeft();
 	glm::vec2 bottom = _terrainView->GetScreenBottom();
 	glm::vec2 top = _terrainView->GetScreenTop();
@@ -78,7 +73,12 @@ void TerrainGesture::RenderHints()
 	}
 
 	glLineWidth(2);
-	sprite.render();
+
+	color_uniforms uniforms;
+	uniforms._transform = sprite_transform(_terrainView->GetViewportBounds()).transform();
+	uniforms._color = glm::vec4(0, 0, 0, 1);
+	renderers::singleton->_plain_renderer->render(shape, uniforms);
+
 	glLineWidth(1);
 }
 

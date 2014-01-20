@@ -144,27 +144,28 @@ void ButtonRendering::RenderButtonText(bounds2f viewport, glm::vec2 position, co
 	_string_shape->add(text, glm::mat4x4());
 	_string_shape->update(GL_STATIC_DRAW);
 
-	string_sprite sprite(_string_font->_renderer);
-	sprite._viewport = viewport;
-	sprite._texture = &_string_font->_texture;
-	sprite._shape = &_string_shape->_vbo;
-
 	glm::vec2 p = position - 0.5f * _string_font->measure(text) - glm::vec2(0, 1);
 
-	sprite._color = glm::vec4(0, 0, 0, 0.15);
+	sprite_transform transform(viewport);
+	string_uniforms uniforms;
+	uniforms._texture = &_string_font->_texture;
+	uniforms._color = glm::vec4(0, 0, 0, 0.15f);
 	for (int dx = -1; dx <= 1; ++dx)
 		for (int dy = -1; dy <= 1; ++dy)
 			if (dx != 0 || dy != 0)
 			{
-				sprite._translate = p + glm::vec2(dx, dy);
-				sprite.render();
+				transform._translate = p + glm::vec2(dx, dy);
+				uniforms._transform = transform.transform();
+				_string_font->_renderer->render(_string_shape->_vbo, uniforms);
 			}
 
-	sprite._translate = p + glm::vec2(0, -1);
-	sprite._color = glm::vec4(0, 0, 0, 1);
-	sprite.render();
+	transform._translate = p + glm::vec2(0, -1);
+	uniforms._transform = transform.transform();
+	uniforms._color = glm::vec4(0, 0, 0, 1);
+	_string_font->_renderer->render(_string_shape->_vbo, uniforms);
 
-	sprite._translate = p;
-	sprite._color = glm::vec4(1, 1, 1, 1);
-	sprite.render();
+	transform._translate = p;
+	uniforms._transform = transform.transform();
+	uniforms._color = glm::vec4(1, 1, 1, 1);
+	_string_font->_renderer->render(_string_shape->_vbo, uniforms);
 }

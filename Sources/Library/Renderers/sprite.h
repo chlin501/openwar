@@ -114,12 +114,11 @@ struct string_sprite : public sprite<texture_alpha_vertex, string_uniforms>, pub
 
 
 
-template <class _Vertex>
-struct texture_sprite_base : public sprite<_Vertex, texture_uniforms>, public sprite_transform
+struct texture_sprite : public sprite<texture_vertex, texture_uniforms>, public sprite_transform
 {
 	animated<texture*> _texture;
 
-	texture_sprite_base(renderer<_Vertex, texture_uniforms>* renderer) : sprite<_Vertex, texture_uniforms>(renderer),
+	texture_sprite(renderer<texture_vertex, texture_uniforms>* renderer) : sprite<texture_vertex, texture_uniforms>(renderer),
 		_texture(nullptr)
 	{
 	}
@@ -133,15 +132,6 @@ struct texture_sprite_base : public sprite<_Vertex, texture_uniforms>, public sp
 	}
 };
 
-
-
-struct texture_sprite : public texture_sprite_base<texture_vertex>
-{
-	texture_sprite(renderer<texture_vertex, texture_uniforms>* renderer);
-};
-
-
-typedef texture_sprite texture_texture_sprite;
 
 
 
