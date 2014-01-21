@@ -29,7 +29,7 @@ protected:
 	};
 
 	vertexbuffer<vertex> _vbo;
-	renderer<vertex>* _renderer;
+	renderer1<vertex>* _renderer;
 
 public:
 	PlainRenderer();

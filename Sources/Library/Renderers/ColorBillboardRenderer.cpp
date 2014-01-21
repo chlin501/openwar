@@ -7,8 +7,9 @@
 
 ColorBillboardRenderer::ColorBillboardRenderer()
 {
-	_renderer = new renderer<vertex>((
-		VERTEX_ATTRIBUTE(vertex, _position),
+	_renderer = new renderer3<vertex>(
+		"position", "color", "height",
+		(VERTEX_ATTRIBUTE(vertex, _position),
 		VERTEX_ATTRIBUTE(vertex, _color),
 		VERTEX_ATTRIBUTE(vertex, _height)),
 		VERTEX_SHADER

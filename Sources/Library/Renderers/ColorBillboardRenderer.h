@@ -28,7 +28,7 @@ class ColorBillboardRenderer
 		float _viewport_height;
 	};
 
-	renderer<vertex>* _renderer;
+	renderer3<vertex>* _renderer;
 	vertexbuffer<vertex> _vbo;
 
 public:

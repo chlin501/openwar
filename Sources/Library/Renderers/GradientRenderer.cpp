@@ -7,7 +7,8 @@
 
 GradientRenderer::GradientRenderer()
 {
-	_renderer = new renderer<vertex>((
+	_renderer = new renderer2<vertex>(
+		"position", "color", (
 			VERTEX_ATTRIBUTE(vertex, _position),
 			VERTEX_ATTRIBUTE(vertex, _color)),
 			VERTEX_SHADER

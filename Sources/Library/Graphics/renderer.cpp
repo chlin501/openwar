@@ -50,13 +50,7 @@ renderer_specification operator,(renderer_specification x, renderer_vertex_attri
 
 
 
-static const GLchar* decode_name(const GLchar* name)
-{
-	return *name == '_' ? name + 1 : name;
-}
-
-
-renderer_base::renderer_base(const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
+renderer_base::renderer_base(std::vector<const char*> attrs, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
 _nextUniformTexture(0),
 _vertex_attributes(specification._vertex_attributes),
 _blend_sfactor(GL_ONE),
@@ -75,8 +69,7 @@ _blend_dfactor(GL_ZERO)
 
 	for (GLuint index = 0; index < _vertex_attributes.size(); ++index)
 	{
-		const GLchar* name = decode_name(_vertex_attributes[index]._name);
-		glBindAttribLocation(_program, index, name);
+		glBindAttribLocation(_program, index, attrs[index]);
 		CHECK_ERROR_GL();
 	}
 
@@ -236,7 +229,8 @@ bool renderer_base::validate_program(GLuint program)
 
 renderers::renderers()
 {
-	_distance_renderer = new renderer<texture_vertex>((
+	_distance_renderer = new renderer2<texture_vertex>(
+		"position", "texcoord", (
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
 		VERTEX_SHADER
@@ -331,7 +325,8 @@ renderers::renderers()
 	_distance_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
-	_gradient_renderer = new renderer<color_vertex>((
+	_gradient_renderer = new renderer2<color_vertex>(
+		"position", "color", (
 		VERTEX_ATTRIBUTE(color_vertex, _position),
 		VERTEX_ATTRIBUTE(color_vertex, _color)),
 		VERTEX_SHADER
@@ -366,7 +361,8 @@ renderers::renderers()
 	_gradient_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
-	_gradient_renderer3 = new renderer<color_vertex3>((
+	_gradient_renderer3 = new renderer2<color_vertex3>(
+		"position", "color", (
 		VERTEX_ATTRIBUTE(color_vertex3, _position),
 		VERTEX_ATTRIBUTE(color_vertex3, _color)),
 		VERTEX_SHADER
@@ -400,7 +396,8 @@ renderers::renderers()
 	_gradient_renderer3->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
-	_ground_renderer = new renderer<texture_vertex>((
+	_ground_renderer = new renderer2<texture_vertex>(
+		"position", "texcoord", (
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
 		VERTEX_SHADER
@@ -457,7 +454,8 @@ renderers::renderers()
 
 
 
-	_plain_renderer = new renderer<plain_vertex>((
+	_plain_renderer = new renderer1<plain_vertex>(
+		"position", (
 		VERTEX_ATTRIBUTE(plain_vertex, _position)),
 		VERTEX_SHADER
 		({
@@ -488,7 +486,8 @@ renderers::renderers()
 
 
 
-	_plain_renderer3 = new renderer<plain_vertex3>((
+	_plain_renderer3 = new renderer1<plain_vertex3>(
+		"position", (
 		VERTEX_ATTRIBUTE(plain_vertex3, _position)),
 		VERTEX_SHADER
 		({
@@ -519,7 +518,8 @@ renderers::renderers()
 
 
 
-	_texture_renderer = new renderer<texture_vertex>((
+	_texture_renderer = new renderer2<texture_vertex>(
+		"position", "texcoord", (
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
 		VERTEX_SHADER
@@ -555,7 +555,8 @@ renderers::renderers()
 
 
 
-	_texture_renderer3 = new renderer<texture_vertex3>((
+	_texture_renderer3 = new renderer2<texture_vertex3>(
+		"position", "texcoord", (
 			VERTEX_ATTRIBUTE(texture_vertex3, _position),
 					VERTEX_ATTRIBUTE(texture_vertex3, _texcoord)),
 					VERTEX_SHADER
@@ -591,7 +592,8 @@ renderers::renderers()
 
 
 
-	_opaque_texture_renderer = new renderer<texture_vertex>((
+	_opaque_texture_renderer = new renderer2<texture_vertex>(
+		"position", "texcoord", (
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
 		VERTEX_SHADER
@@ -626,7 +628,8 @@ renderers::renderers()
 	_opaque_texture_renderer->_blend_dfactor = GL_ZERO;
 
 
-	_alpha_texture_renderer = new renderer<texture_vertex>((
+	_alpha_texture_renderer = new renderer2<texture_vertex>(
+		"position", "texcoord", (
 			VERTEX_ATTRIBUTE(texture_vertex, _position),
 			VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
 			VERTEX_SHADER

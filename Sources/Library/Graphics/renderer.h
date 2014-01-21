@@ -127,14 +127,13 @@ inline GLenum get_vertex_attribute_type(glm::vec4*) { return GL_FLOAT; }
 
 struct renderer_vertex_attribute
 {
-	const GLchar* _name;
 	GLint _size;
 	GLenum _type;
 	GLsizei _stride;
 	GLintptr _offset;
 
-	renderer_vertex_attribute(const GLchar* name, GLint size, GLenum type, GLsizei stride, GLintptr offset)
-		: _name(name), _size(size), _type(type), _stride(stride), _offset(offset)
+	renderer_vertex_attribute(GLint size, GLenum type, GLsizei stride, GLintptr offset)
+		: _size(size), _type(type), _stride(stride), _offset(offset)
 	{
 	}
 };
@@ -242,7 +241,7 @@ renderer_specification operator,(renderer_specification x, renderer_vertex_attri
 #define VERTEX_ATTRIBUTE_OFFSET(_Vertex, _Name) (GLintptr)MEMBER_POINTER(_Vertex, _Name)
 
 #define VERTEX_ATTRIBUTE(_Vertex, _Name) \
-	renderer_vertex_attribute(#_Name, \
+	renderer_vertex_attribute( \
 		VERTEX_ATTRIBUTE_SIZE(_Vertex, _Name), \
 		VERTEX_ATTRIBUTE_TYPE(_Vertex, _Name), \
 		VERTEX_ATTRIBUTE_STRIDE(_Vertex, _Name), \
@@ -264,7 +263,7 @@ public:
 	GLenum _blend_sfactor;
 	GLenum _blend_dfactor;
 
-	renderer_base(const renderer_specification& specification, const char* vertexshader, const char* fragmentshader);
+	renderer_base(std::vector<const char*> attrs, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader);
 	virtual ~renderer_base();
 
 	static float pixels_per_point();
@@ -304,8 +303,8 @@ class renderer : public renderer_base
 public:
 	typedef _Vertex vertex_type;
 
-	renderer(const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
-	renderer_base(specification, vertexshader, fragmentshader)
+	renderer(std::vector<const char*> attrs, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
+	renderer_base(attrs, specification, vertexshader, fragmentshader)
 	{
 	}
 
@@ -342,21 +341,93 @@ public:
 	}
 };
 
+inline std::vector<const char*> makelist(const char* a1)
+{
+	std::vector<const char*> result;
+	result.push_back(a1);
+	return result;
+}
+inline std::vector<const char*> makelist(const char* a1, const char* a2)
+{
+	std::vector<const char*> result;
+	result.push_back(a1);
+	result.push_back(a2);
+	return result;
+}
+inline std::vector<const char*> makelist(const char* a1, const char* a2, const char* a3)
+{
+	std::vector<const char*> result;
+	result.push_back(a1);
+	result.push_back(a2);
+	result.push_back(a3);
+	return result;
+}
+inline std::vector<const char*> makelist(const char* a1, const char* a2, const char* a3, const char* a4)
+{
+	std::vector<const char*> result;
+	result.push_back(a1);
+	result.push_back(a2);
+	result.push_back(a3);
+	result.push_back(a4);
+	return result;
+}
+
+
+template <class _Vertex>
+class renderer1 : public renderer<_Vertex>
+{
+public:
+	renderer1(const char* a1, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
+	renderer<_Vertex>(makelist(a1), specification, vertexshader, fragmentshader)
+	{
+	}
+};
+
+template <class _Vertex>
+class renderer2 : public renderer<_Vertex>
+{
+public:
+	renderer2(const char* a1, const char* a2, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
+	renderer<_Vertex>(makelist(a1, a2), specification, vertexshader, fragmentshader)
+	{
+	}
+};
+
+template <class _Vertex>
+class renderer3 : public renderer<_Vertex>
+{
+public:
+	renderer3(const char* a1, const char* a2, const char* a3, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
+	renderer<_Vertex>(makelist(a1, a2, a3), specification, vertexshader, fragmentshader)
+	{
+	}
+};
+
+template <class _Vertex>
+class renderer4 : public renderer<_Vertex>
+{
+public:
+	renderer4(const char* a1, const char* a2, const char* a3, const char* a4, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
+	renderer<_Vertex>(makelist(a1, a2, a3, a4), specification, vertexshader, fragmentshader)
+	{
+	}
+};
+
 
 struct renderers
 {
 	static renderers* singleton;
 
-	renderer<texture_vertex>* _distance_renderer;
-	renderer<color_vertex>* _gradient_renderer;
-	renderer<color_vertex3>* _gradient_renderer3;
-	renderer<texture_vertex>* _ground_renderer;
-	renderer<plain_vertex>* _plain_renderer;
-	renderer<plain_vertex3>* _plain_renderer3;
-	renderer<texture_vertex>* _texture_renderer;
-	renderer<texture_vertex3>* _texture_renderer3;
-	renderer<texture_vertex>* _opaque_texture_renderer;
-	renderer<texture_vertex>* _alpha_texture_renderer;
+	renderer2<texture_vertex>* _distance_renderer;
+	renderer2<color_vertex>* _gradient_renderer;
+	renderer2<color_vertex3>* _gradient_renderer3;
+	renderer2<texture_vertex>* _ground_renderer;
+	renderer1<plain_vertex>* _plain_renderer;
+	renderer1<plain_vertex3>* _plain_renderer3;
+	renderer2<texture_vertex>* _texture_renderer;
+	renderer2<texture_vertex3>* _texture_renderer3;
+	renderer2<texture_vertex>* _opaque_texture_renderer;
+	renderer2<texture_vertex>* _alpha_texture_renderer;
 
 	renderers();
 };
