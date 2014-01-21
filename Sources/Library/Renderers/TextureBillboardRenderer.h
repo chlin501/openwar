@@ -41,16 +41,7 @@ struct BillboardModel
 };
 
 
-
-struct texture_billboard_vertex : public vertex4<glm::vec3, float, glm::vec2, glm::vec2>
-{
-	int _index;
-	float _order;
-
-	texture_billboard_vertex(glm::vec3 v1, float v2, glm::vec2 v3, glm::vec2 v4) : vertex4<glm::vec3, float, glm::vec2, glm::vec2>(v1, v2, v3, v4)
-	{
-	}
-};
+typedef vertex4<glm::vec3, float, glm::vec2, glm::vec2> texture_billboard_vertex;
 
 struct texture_billboard_uniforms
 {

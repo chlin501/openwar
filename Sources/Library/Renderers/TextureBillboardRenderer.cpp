@@ -82,8 +82,20 @@ void TextureBillboardRenderer::AddBillboard(glm::vec3 position, float height, af
 }
 
 
+
+struct billboard_index
+{
+	int index;
+	float order;
+};
+
 void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
 {
+	static std::vector<texture_billboard_vertex> vertices;
+	static std::vector<billboard_index> indices;
+
+	vertices.insert(vertices.end(), _vbo._vertices.begin(), _vbo._vertices.end());
+
 	float a = -glm::radians(cameraFacingDegrees);
 	float cos_a = cosf(a);
 	float sin_a = sinf(a);
@@ -91,14 +103,24 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 	int index = 0;
 	for (texture_billboard_vertex& v : _vbo._vertices)
 	{
-		v._index = index++;
-		v._order = cos_a * v._1.x - sin_a * v._1.y;
+		billboard_index i;
+		i.index = index++;
+		i.order = cos_a * v._1.x - sin_a * v._1.y;
+		indices.push_back(i);
 	}
 
-	std::sort(_vbo._vertices.begin(), _vbo._vertices.end(), [](const texture_billboard_vertex& a, const texture_billboard_vertex& b) -> bool {
-		float diff = a._order - b._order;
-		return diff == 0 ? a._index < b._index : diff > 0;
+	std::sort(indices.begin(), indices.end(), [](const billboard_index& a, const billboard_index& b) -> bool {
+		float diff = a.order - b.order;
+		return diff == 0 ? a.index < b.index : diff > 0;
 	});
+
+	_vbo._vertices.clear();
+	for (const billboard_index& i : indices)
+		_vbo._vertices.push_back(vertices[i.index]);
+
+	vertices.clear();
+	indices.clear();
+
 	_vbo.update(GL_STATIC_DRAW);
 
 	texture_billboard_uniforms uniforms;
