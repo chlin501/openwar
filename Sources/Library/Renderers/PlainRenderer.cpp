@@ -9,7 +9,6 @@ PlainRenderer::PlainRenderer()
 {
 	_renderer = new renderer1<glm::vec3>(
 		"position",
-		(VERTEX_ATTRIBUTE(vertex, _1)),
 		VERTEX_SHADER
 		({
 			attribute vec3 position;

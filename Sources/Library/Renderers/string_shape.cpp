@@ -80,10 +80,7 @@ void string_font::initialize()
 		_image = new image(512, 512);
 
 	_renderer = new renderer3<glm::vec2, glm::vec2, float>(
-		"position", "texcoord", "alpha", (
-		VERTEX_ATTRIBUTE(texture_alpha_vertex, _1),
-		VERTEX_ATTRIBUTE(texture_alpha_vertex, _2),
-		VERTEX_ATTRIBUTE(texture_alpha_vertex, _3)),
+		"position", "texcoord", "alpha",
 		VERTEX_SHADER
 		({
 			attribute vec2 position;

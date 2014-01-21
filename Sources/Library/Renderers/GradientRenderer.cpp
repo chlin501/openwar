@@ -8,10 +8,8 @@
 GradientRenderer::GradientRenderer()
 {
 	_renderer = new renderer2<glm::vec3, glm::vec4>(
-		"position", "color", (
-			VERTEX_ATTRIBUTE(vertex, _1),
-			VERTEX_ATTRIBUTE(vertex, _2)),
-			VERTEX_SHADER
+		"position", "color",
+		VERTEX_SHADER
 		({
 			attribute vec3 position;
 			attribute vec4 color;

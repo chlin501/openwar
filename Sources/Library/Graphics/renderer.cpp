@@ -29,25 +29,6 @@ static void print_log(const char* operation, const char* log)
 }
 
 
-renderer_specification operator,(renderer_vertex_attribute x, renderer_vertex_attribute y)
-{
-	renderer_specification result;
-	result._vertex_attributes.push_back(x);
-	result._vertex_attributes.push_back(y);
-	return result;
-}
-
-
-renderer_specification operator,(renderer_specification x, renderer_vertex_attribute y)
-{
-	renderer_specification result;
-	result._vertex_attributes = x._vertex_attributes;
-	result._vertex_attributes.push_back(y);
-	return result;
-}
-
-
-
 
 
 renderer_base::renderer_base(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader) :
@@ -229,9 +210,7 @@ bool renderer_base::validate_program(GLuint program)
 renderers::renderers()
 {
 	_distance_renderer = new renderer2<glm::vec2, glm::vec2>(
-		"position", "texcoord", (
-		VERTEX_ATTRIBUTE(texture_vertex, _1),
-		VERTEX_ATTRIBUTE(texture_vertex, _2)),
+		"position", "texcoord",
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
@@ -325,9 +304,7 @@ renderers::renderers()
 
 
 	_gradient_renderer = new renderer2<glm::vec2, glm::vec4>(
-		"position", "color", (
-		VERTEX_ATTRIBUTE(color_vertex, _1),
-		VERTEX_ATTRIBUTE(color_vertex, _2)),
+		"position", "color",
 		VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -361,9 +338,7 @@ renderers::renderers()
 
 
 	_gradient_renderer3 = new renderer2<glm::vec3, glm::vec4>(
-		"position", "color", (
-		VERTEX_ATTRIBUTE(color_vertex3, _1),
-		VERTEX_ATTRIBUTE(color_vertex3, _2)),
+		"position", "color",
 		VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -396,9 +371,7 @@ renderers::renderers()
 
 
 	_ground_renderer = new renderer2<glm::vec2, glm::vec2>(
-		"position", "texcoord", (
-		VERTEX_ATTRIBUTE(texture_vertex, _1),
-		VERTEX_ATTRIBUTE(texture_vertex, _2)),
+		"position", "texcoord",
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
@@ -454,8 +427,7 @@ renderers::renderers()
 
 
 	_plain_renderer = new renderer1<glm::vec2>(
-		"position", (
-		VERTEX_ATTRIBUTE(plain_vertex, _1)),
+		"position",
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
@@ -486,8 +458,7 @@ renderers::renderers()
 
 
 	_plain_renderer3 = new renderer1<glm::vec3>(
-		"position", (
-		VERTEX_ATTRIBUTE(plain_vertex3, _1)),
+		"position",
 		VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -518,9 +489,7 @@ renderers::renderers()
 
 
 	_texture_renderer = new renderer2<glm::vec2, glm::vec2>(
-		"position", "texcoord", (
-		VERTEX_ATTRIBUTE(texture_vertex, _1),
-		VERTEX_ATTRIBUTE(texture_vertex, _2)),
+		"position", "texcoord",
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -555,36 +524,34 @@ renderers::renderers()
 
 
 	_texture_renderer3 = new renderer2<glm::vec3, glm::vec2>(
-		"position", "texcoord", (
-			VERTEX_ATTRIBUTE(texture_vertex3, _1),
-			VERTEX_ATTRIBUTE(texture_vertex3, _2)),
-			VERTEX_SHADER
+		"position", "texcoord",
+		VERTEX_SHADER
 		({
-						uniform mat4 transform;
-						attribute vec3 position;
-						attribute vec2 texcoord;
-						varying vec2 _texcoord;
+			uniform mat4 transform;
+			attribute vec3 position;
+			attribute vec2 texcoord;
+			varying vec2 _texcoord;
 
-						void main()
-						{
-							vec4 p = transform * vec4(position.x, position.y, position.z, 1);
+			void main()
+			{
+				vec4 p = transform * vec4(position.x, position.y, position.z, 1);
 
-							_texcoord = texcoord;
+				_texcoord = texcoord;
 
-							gl_Position = p;
-							gl_PointSize = 1.0;
-						}
-					}),
-					FRAGMENT_SHADER
+				gl_Position = p;
+				gl_PointSize = 1.0;
+			}
+		}),
+		FRAGMENT_SHADER
 		({
-						uniform sampler2D texture;
-						varying vec2 _texcoord;
+			uniform sampler2D texture;
+			varying vec2 _texcoord;
 
-						void main()
-						{
-							gl_FragColor = texture2D(texture, _texcoord);
-						}
-					})
+			void main()
+			{
+				gl_FragColor = texture2D(texture, _texcoord);
+			}
+		})
 	);
 	_texture_renderer3->_blend_sfactor = GL_ONE;
 	_texture_renderer3->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
@@ -592,9 +559,7 @@ renderers::renderers()
 
 
 	_opaque_texture_renderer = new renderer2<glm::vec2, glm::vec2>(
-		"position", "texcoord", (
-		VERTEX_ATTRIBUTE(texture_vertex, _1),
-		VERTEX_ATTRIBUTE(texture_vertex, _2)),
+		"position", "texcoord",
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -628,10 +593,8 @@ renderers::renderers()
 
 
 	_alpha_texture_renderer = new renderer2<glm::vec2, glm::vec2>(
-		"position", "texcoord", (
-			VERTEX_ATTRIBUTE(texture_vertex, _1),
-			VERTEX_ATTRIBUTE(texture_vertex, _2)),
-			VERTEX_SHADER
+		"position", "texcoord",
+		VERTEX_SHADER
 		({
 			uniform mat4 transform;
 			attribute vec2 position;

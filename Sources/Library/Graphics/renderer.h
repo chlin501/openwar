@@ -154,34 +154,6 @@ public:
 };
 
 
-struct renderer_specification
-{
-	std::vector<renderer_vertex_attribute> _vertex_attributes;
-	renderer_specification() { }
-	renderer_specification(const renderer_vertex_attribute& x)
-	{
-		_vertex_attributes.push_back(x);
-	}
-};
-
-
-renderer_specification operator,(renderer_vertex_attribute x, renderer_vertex_attribute y);
-renderer_specification operator,(renderer_specification x, renderer_vertex_attribute y);
-
-
-#define MEMBER_POINTER(_Vertex, _Name) &((_Vertex*)nullptr)->_Name
-
-#define VERTEX_ATTRIBUTE_SIZE(_Vertex, _Name) get_vertex_attribute_size(MEMBER_POINTER(_Vertex, _Name))
-#define VERTEX_ATTRIBUTE_TYPE(_Vertex, _Name) get_vertex_attribute_type(MEMBER_POINTER(_Vertex, _Name))
-#define VERTEX_ATTRIBUTE_STRIDE(_Vertex, _Name) sizeof(_Vertex)
-#define VERTEX_ATTRIBUTE_OFFSET(_Vertex, _Name) (GLintptr)MEMBER_POINTER(_Vertex, _Name)
-
-#define VERTEX_ATTRIBUTE(_Vertex, _Name) \
-	renderer_vertex_attribute( \
-		VERTEX_ATTRIBUTE_SIZE(_Vertex, _Name), \
-		VERTEX_ATTRIBUTE_TYPE(_Vertex, _Name), \
-		VERTEX_ATTRIBUTE_STRIDE(_Vertex, _Name), \
-		VERTEX_ATTRIBUTE_OFFSET(_Vertex, _Name))
 
 #define VERTEX_SHADER(source) (#source)
 #define FRAGMENT_SHADER(source) (#source)
@@ -313,10 +285,14 @@ template <class T1>
 class renderer1 : public renderer<vertex1<T1>>
 {
 public:
-	renderer1(const char* a1, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
+	renderer1(const char* a1, const char* vertexshader, const char* fragmentshader) :
 	renderer<vertex1<T1>>(makelist(a1), vertexshader, fragmentshader)
 	{
-		this->_vertex_attributes.push_back(specification._vertex_attributes[0]);
+		this->_vertex_attributes.push_back(renderer_vertex_attribute(
+			get_vertex_attribute_size((T1*)nullptr),
+			get_vertex_attribute_type((T1*)nullptr),
+			sizeof(vertex1<T1>),
+			(GLintptr)(&((vertex1<T1>*)nullptr)->_1)));
 	}
 };
 
@@ -324,11 +300,20 @@ template <class T1, class T2>
 class renderer2 : public renderer<vertex2<T1, T2>>
 {
 public:
-	renderer2(const char* a1, const char* a2, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
+	renderer2(const char* a1, const char* a2, const char* vertexshader, const char* fragmentshader) :
 	renderer<vertex2<T1, T2>>(makelist(a1, a2), vertexshader, fragmentshader)
 	{
-		this->_vertex_attributes.push_back(specification._vertex_attributes[0]);
-		this->_vertex_attributes.push_back(specification._vertex_attributes[1]);
+		this->_vertex_attributes.push_back(renderer_vertex_attribute(
+			get_vertex_attribute_size((T1*)nullptr),
+			get_vertex_attribute_type((T1*)nullptr),
+			sizeof(vertex2<T1, T2>),
+			(GLintptr)(&((vertex2<T1, T2>*)nullptr)->_1)));
+
+		this->_vertex_attributes.push_back(renderer_vertex_attribute(
+			get_vertex_attribute_size((T2*)nullptr),
+			get_vertex_attribute_type((T2*)nullptr),
+			sizeof(vertex2<T1, T2>),
+			(GLintptr)(&((vertex2<T1, T2>*)nullptr)->_2)));
 	}
 };
 
@@ -336,12 +321,26 @@ template <class T1, class T2, class T3>
 class renderer3 : public renderer<vertex3<T1, T2, T3>>
 {
 public:
-	renderer3(const char* a1, const char* a2, const char* a3, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
+	renderer3(const char* a1, const char* a2, const char* a3, const char* vertexshader, const char* fragmentshader) :
 	renderer<vertex3<T1, T2, T3>>(makelist(a1, a2, a3), vertexshader, fragmentshader)
 	{
-		this->_vertex_attributes.push_back(specification._vertex_attributes[0]);
-		this->_vertex_attributes.push_back(specification._vertex_attributes[1]);
-		this->_vertex_attributes.push_back(specification._vertex_attributes[2]);
+		this->_vertex_attributes.push_back(renderer_vertex_attribute(
+			get_vertex_attribute_size((T1*)nullptr),
+			get_vertex_attribute_type((T1*)nullptr),
+			sizeof(vertex3<T1, T2, T3>),
+			(GLintptr)(&((vertex3<T1, T2, T3>*)nullptr)->_1)));
+
+		this->_vertex_attributes.push_back(renderer_vertex_attribute(
+			get_vertex_attribute_size((T2*)nullptr),
+			get_vertex_attribute_type((T2*)nullptr),
+			sizeof(vertex3<T1, T2, T3>),
+			(GLintptr)(&((vertex3<T1, T2, T3>*)nullptr)->_2)));
+
+		this->_vertex_attributes.push_back(renderer_vertex_attribute(
+			get_vertex_attribute_size((T3*)nullptr),
+			get_vertex_attribute_type((T3*)nullptr),
+			sizeof(vertex3<T1, T2, T3>),
+			(GLintptr)(&((vertex3<T1, T2, T3>*)nullptr)->_3)));
 	}
 };
 
@@ -349,13 +348,32 @@ template <class T1, class T2, class T3, class T4>
 class renderer4 : public renderer<vertex4<T1, T2, T3, T4>>
 {
 public:
-	renderer4(const char* a1, const char* a2, const char* a3, const char* a4, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
+	renderer4(const char* a1, const char* a2, const char* a3, const char* a4, const char* vertexshader, const char* fragmentshader) :
 	renderer<vertex4<T1, T2, T3, T4>>(makelist(a1, a2, a3, a4), vertexshader, fragmentshader)
 	{
-		this->_vertex_attributes.push_back(specification._vertex_attributes[0]);
-		this->_vertex_attributes.push_back(specification._vertex_attributes[1]);
-		this->_vertex_attributes.push_back(specification._vertex_attributes[2]);
-		this->_vertex_attributes.push_back(specification._vertex_attributes[3]);
+		this->_vertex_attributes.push_back(renderer_vertex_attribute(
+			get_vertex_attribute_size((T1*)nullptr),
+			get_vertex_attribute_type((T1*)nullptr),
+			sizeof(vertex4<T1, T2, T3, T4>),
+			(GLintptr)(&((vertex4<T1, T2, T3, T4>*)nullptr)->_1)));
+
+		this->_vertex_attributes.push_back(renderer_vertex_attribute(
+			get_vertex_attribute_size((T2*)nullptr),
+			get_vertex_attribute_type((T2*)nullptr),
+			sizeof(vertex4<T1, T2, T3, T4>),
+			(GLintptr)(&((vertex4<T1, T2, T3, T4>*)nullptr)->_2)));
+
+		this->_vertex_attributes.push_back(renderer_vertex_attribute(
+			get_vertex_attribute_size((T3*)nullptr),
+			get_vertex_attribute_type((T3*)nullptr),
+			sizeof(vertex4<T1, T2, T3, T4>),
+			(GLintptr)(&((vertex4<T1, T2, T3, T4>*)nullptr)->_3)));
+
+		this->_vertex_attributes.push_back(renderer_vertex_attribute(
+			get_vertex_attribute_size((T4*)nullptr),
+			get_vertex_attribute_type((T4*)nullptr),
+			sizeof(vertex4<T1, T2, T3, T4>),
+			(GLintptr)(&((vertex4<T1, T2, T3, T4>*)nullptr)->_4)));
 	}
 };
 

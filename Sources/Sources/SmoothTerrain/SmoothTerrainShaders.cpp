@@ -38,9 +38,7 @@ void SmoothTerrainShaders::render_terrain_inside(vertexbuffer<terrain_vertex>& s
 	if (_terrain_inside == nullptr)
 	{
 		_terrain_inside = new renderer2<glm::vec3, glm::vec3>(
-			"position", "normal", (
-			VERTEX_ATTRIBUTE(terrain_vertex, _1),
-			VERTEX_ATTRIBUTE(terrain_vertex, _2)),
+			"position", "normal",
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -114,9 +112,7 @@ void SmoothTerrainShaders::render_terrain_border(vertexbuffer<terrain_vertex>& s
 	if (_terrain_border == nullptr)
 	{
 		_terrain_border = new renderer2<glm::vec3, glm::vec3>(
-			"position", "normal", (
-			VERTEX_ATTRIBUTE(terrain_vertex, _1),
-			VERTEX_ATTRIBUTE(terrain_vertex, _2)),
+			"position", "normal",
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -192,9 +188,7 @@ void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shap
 	if (_terrain_skirt == nullptr)
 	{
 		_terrain_skirt = new renderer2<glm::vec3, float>(
-			"position", "height", (
-			VERTEX_ATTRIBUTE(skirt_vertex, _1),
-			VERTEX_ATTRIBUTE(skirt_vertex, _2)),
+			"position", "height",
 			VERTEX_SHADER
 			({
 				attribute vec3 position;
@@ -244,9 +238,7 @@ void SmoothTerrainShaders::render_depth_inside(vertexbuffer<terrain_vertex>& sha
 	if (_depth_inside == nullptr)
 	{
 		_depth_inside = new renderer2<glm::vec3, glm::vec3>(
-			"position", "normal", (
-			VERTEX_ATTRIBUTE(terrain_vertex, _1),
-			VERTEX_ATTRIBUTE(terrain_vertex, _2)),
+			"position", "normal",
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -286,9 +278,7 @@ void SmoothTerrainShaders::render_depth_border(vertexbuffer<terrain_vertex>& sha
 	if (_depth_border == nullptr)
 	{
 		_depth_border = new renderer2<glm::vec3, glm::vec3>(
-			"position", "normal", (
-			VERTEX_ATTRIBUTE(terrain_vertex, _1),
-			VERTEX_ATTRIBUTE(terrain_vertex, _2)),
+			"position", "normal",
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -336,9 +326,7 @@ void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape,
 	if (_depth_skirt == nullptr)
 	{
 		_depth_skirt = new renderer2<glm::vec3, float>(
-			"position", "height", (
-			VERTEX_ATTRIBUTE(skirt_vertex, _1),
-			VERTEX_ATTRIBUTE(skirt_vertex, _2)),
+			"position", "height",
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -374,9 +362,7 @@ void SmoothTerrainShaders::render_sobel_filter(vertexbuffer<texture_vertex>& sha
 	if (_sobel_filter == nullptr)
 	{
 		_sobel_filter = new renderer2<glm::vec2, glm::vec2>(
-			"position", "texcoord", (
-			VERTEX_ATTRIBUTE(texture_vertex, _1),
-			VERTEX_ATTRIBUTE(texture_vertex, _2)),
+			"position", "texcoord",
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -463,37 +449,36 @@ void SmoothTerrainShaders::render_ground_shadow(vertexbuffer<plain_vertex>& shap
 	if (_ground_shadow == nullptr)
 	{
 		_ground_shadow = new renderer1<glm::vec2>(
-			"position", (
-			VERTEX_ATTRIBUTE(plain_vertex, _1)),
-				VERTEX_SHADER
+			"position",
+			VERTEX_SHADER
 			({
-					uniform mat4 transform;
-					uniform vec4 map_bounds;
-					attribute vec2 position;
-					varying vec2 _groundpos;
+				uniform mat4 transform;
+				uniform vec4 map_bounds;
+				attribute vec2 position;
+				varying vec2 _groundpos;
 
-					void main()
-					{
-						vec4 p = transform * vec4(position, -2.5, 1);
+				void main()
+				{
+					vec4 p = transform * vec4(position, -2.5, 1);
 
-						_groundpos = (position - map_bounds.xy) / map_bounds.zw;
+					_groundpos = (position - map_bounds.xy) / map_bounds.zw;
 
-						gl_Position = p;
-						gl_PointSize = 1.0;
-					}
-				}),
-				FRAGMENT_SHADER
+					gl_Position = p;
+					gl_PointSize = 1.0;
+				}
+			}),
+			FRAGMENT_SHADER
 			({
-					varying vec2 _groundpos;
+				varying vec2 _groundpos;
 
-					void main()
-					{
-						float d = distance(_groundpos, vec2(0.5, 0.5)) - 0.5;
-						float a = clamp(0.3 - d * 24.0, 0.0, 0.3);
+				void main()
+				{
+					float d = distance(_groundpos, vec2(0.5, 0.5)) - 0.5;
+					float a = clamp(0.3 - d * 24.0, 0.0, 0.3);
 
-						gl_FragColor = vec4(0, 0, 0, a);
-					}
-				})
+					gl_FragColor = vec4(0, 0, 0, a);
+				}
+			})
 		);
 		_ground_shadow->_blend_sfactor = GL_SRC_ALPHA;
 		_ground_shadow->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;

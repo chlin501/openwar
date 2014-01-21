@@ -8,9 +8,7 @@
 TextureRenderer::TextureRenderer()
 {
 	_renderer = new renderer2<glm::vec3, glm::vec2>(
-		"position", "texcoord", (
-		VERTEX_ATTRIBUTE(vertex, _1),
-		VERTEX_ATTRIBUTE(vertex, _2)),
+		"position", "texcoord",
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
