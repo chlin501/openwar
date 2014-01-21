@@ -5,7 +5,7 @@
 #include "../BattleModel/BattleScenario.h"
 #include "../Library/ViewExtra/ButtonView.h"
 #include "../Library/ViewExtra/ButtonGesture.h"
-#include "../Library/Renderers/GradientRenderer.h"
+#include "../Library/Renderers/GradientShape3.h"
 #include "BattleView/BattleGesture.h"
 #include "BattleView/BattleView.h"
 #include "TerrainView/EditorGesture.h"
@@ -71,7 +71,7 @@ _scriptHintRenderer(nullptr)
 
 	UpdateButtonsAndGestures();
 
-	_scriptHintRenderer = new GradientLineRenderer();
+	_scriptHintRenderer = new GradientLineShape3(GetGraphicsContext());
 }
 
 

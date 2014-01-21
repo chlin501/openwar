@@ -5,9 +5,12 @@
 #include "GradientShape3.h"
 
 
-GradientShape3::GradientShape3()
+GradientShape3::GradientShape3(graphicscontext* gc)
 {
-	_renderer = new shaderprogram2<glm::vec3, glm::vec4>(
+	static int shaderprogram_id = graphicscontext::generate_shaderprogram_id();
+
+	_shaderprogram = gc->load_shaderprogram2<glm::vec3, glm::vec4>(
+		shaderprogram_id,
 		"position", "color",
 		VERTEX_SHADER
 		({
@@ -36,14 +39,13 @@ GradientShape3::GradientShape3()
 			}
 		})
 	);
-	_renderer->_blend_sfactor = GL_SRC_ALPHA;
-	_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_shaderprogram->_blend_sfactor = GL_SRC_ALPHA;
+	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }
 
 
 GradientShape3::~GradientShape3()
 {
-	delete _renderer;
 }
 
 
@@ -51,9 +53,9 @@ void GradientShape3::Draw(const glm::mat4x4& transform)
 {
 	glLineWidth(1);
 
-	_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
-	_renderer->get_uniform<float>("point_size").set_value(1);
-	_renderer->render(_vbo);
+	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
+	_shaderprogram->get_uniform<float>("point_size").set_value(1);
+	_shaderprogram->render(_vbo);
 }
 
 

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "../Algebra/bounds.h"
+#include "graphicscontext.h"
 
 class Gesture;
 class Touch;
@@ -15,6 +16,7 @@ class Touch;
 
 class Surface
 {
+	graphicscontext* _gc;
 	float _pixelDensity;
 	glm::vec2 _origin;
 	glm::vec2 _size;
@@ -24,6 +26,8 @@ public:
 
 	Surface(glm::vec2 size, float pixelDensity);
 	virtual ~Surface();
+
+	graphicscontext* GetGraphicsContext() const { return _gc; }
 
 	float GetPixelDensity() const { return _pixelDensity; }
 

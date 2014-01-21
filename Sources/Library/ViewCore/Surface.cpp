@@ -10,9 +10,11 @@
 
 
 Surface::Surface(glm::vec2 size, float pixelDensity) :
+_gc(nullptr),
 _pixelDensity(pixelDensity),
 _size(size)
 {
+	_gc = new graphicscontext(pixelDensity);
 }
 
 

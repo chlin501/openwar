@@ -5,9 +5,12 @@
 #include "TextureShape3.h"
 
 
-TextureShape3::TextureShape3()
+TextureShape3::TextureShape3(graphicscontext* gc)
 {
-	_renderer = new shaderprogram2<glm::vec3, glm::vec2>(
+	static int shaderprogram_id = graphicscontext::generate_shaderprogram_id();
+
+	_shaderprogram = gc->load_shaderprogram2<glm::vec3, glm::vec2>(
+		shaderprogram_id,
 		"position", "texcoord",
 		VERTEX_SHADER
 		({
@@ -37,14 +40,13 @@ TextureShape3::TextureShape3()
 			}
 		})
 	);
-	_renderer->_blend_sfactor = GL_ONE;
-	_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_shaderprogram->_blend_sfactor = GL_ONE;
+	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }
 
 
 TextureShape3::~TextureShape3()
 {
-	delete _renderer;
 }
 
 
@@ -57,9 +59,9 @@ void TextureTriangleShape3::Reset()
 
 void TextureShape3::Draw(const glm::mat4x4& transform, const texture* texturex)
 {
-	_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
-	_renderer->get_uniform<const texture*>("texture").set_value(texturex);
-	_renderer->render(_vbo);
+	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
+	_shaderprogram->get_uniform<const texture*>("texture").set_value(texturex);
+	_shaderprogram->render(_vbo);
 }
 
 

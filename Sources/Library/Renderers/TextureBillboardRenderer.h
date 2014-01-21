@@ -5,6 +5,7 @@
 #ifndef TextureBillboardRenderer_H
 #define TextureBillboardRenderer_H
 
+#include "graphicscontext.h"
 #include "shaderprogram.h"
 #include "BillboardTexture.h"
 
@@ -41,27 +42,17 @@ struct BillboardModel
 };
 
 
-typedef vertex4<glm::vec3, float, glm::vec2, glm::vec2> texture_billboard_vertex;
-
-struct texture_billboard_uniforms
-{
-	glm::mat4x4 _transform;
-	const texture* _texture;
-	glm::vec3 _upvector;
-	float _viewport_height;
-	float _min_point_size;
-	float _max_point_size;
-};
-
-
 class TextureBillboardRenderer
 {
 public:
-	shaderprogram4<glm::vec3, float, glm::vec2, glm::vec2>* _texture_billboard_renderer;
-	vertexbuffer<texture_billboard_vertex> _vbo;
+	typedef vertex4<glm::vec3, float, glm::vec2, glm::vec2> vertex;
+	typedef shaderprogram4<glm::vec3, float, glm::vec2, glm::vec2> shaderprogram;
+
+	shaderprogram* _shaderprogram;
+	vertexbuffer<vertex> _vbo;
 
 public:
-	TextureBillboardRenderer();
+	TextureBillboardRenderer(graphicscontext* gc);
 	~TextureBillboardRenderer();
 
 	void Reset();

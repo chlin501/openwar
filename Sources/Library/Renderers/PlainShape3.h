@@ -5,6 +5,7 @@
 #ifndef LineRenderer_H
 #define LineRenderer_H
 
+#include "graphicscontext.h"
 #include "shaderprogram.h"
 
 
@@ -12,12 +13,13 @@ class PlainShape3
 {
 protected:
 	typedef vertex1<glm::vec3> vertex;
+	typedef shaderprogram1<glm::vec3> shaderprogram;
 
 	vertexbuffer<vertex> _vbo;
-	shaderprogram1<glm::vec3>* _renderer;
+	shaderprogram* _shaderprogram;
 
 public:
-	PlainShape3();
+	PlainShape3(graphicscontext* gc);
 	virtual ~PlainShape3();
 
 	virtual void Reset() = 0;
@@ -28,6 +30,7 @@ public:
 class PlainLineShape3 : public PlainShape3
 {
 public:
+	PlainLineShape3(graphicscontext* gc) : PlainShape3(gc) { }
 	virtual void Reset();
 	void AddLine(const glm::vec3& p1, const glm::vec3& p2);
 };
@@ -36,6 +39,7 @@ public:
 class PlainTriangleShape3 : public PlainShape3
 {
 public:
+	PlainTriangleShape3(graphicscontext* gc) : PlainShape3(gc) { }
 	virtual void Reset();
 	void AddVertex(const glm::vec3& p);
 };

@@ -148,17 +148,19 @@ _tiledTerrainRenderer(nullptr)
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeSmoke[i], 0, billboard_texcoords(i, 7, false));
 	}
 
-	_textureBillboardRenderer = new TextureBillboardRenderer();
-	_textureBillboardRenderer1 = new TextureBillboardRenderer();
-	_textureBillboardRenderer2 = new TextureBillboardRenderer();
+	graphicscontext* gc = screen->GetGraphicsContext();
 
-	_plainLineRenderer = new PlainLineShape3();
-	_plainTriangleRenderer = new PlainTriangleShape3();
-	_gradientLineRenderer = new GradientLineShape3();
-	_gradientTriangleRenderer = new GradientTriangleShape3();
-	_gradientTriangleStripRenderer = new GradientTriangleStripShape3();
-	_colorBillboardRenderer = new ColorBillboardShape();
-	_textureTriangleRenderer = new TextureTriangleShape3();
+	_textureBillboardRenderer = new TextureBillboardRenderer(gc);
+	_textureBillboardRenderer1 = new TextureBillboardRenderer(gc);
+	_textureBillboardRenderer2 = new TextureBillboardRenderer(gc);
+
+	_plainLineRenderer = new PlainLineShape3(gc);
+	_plainTriangleRenderer = new PlainTriangleShape3(gc);
+	_gradientLineRenderer = new GradientLineShape3(gc);
+	_gradientTriangleRenderer = new GradientTriangleShape3(gc);
+	_gradientTriangleStripRenderer = new GradientTriangleStripShape3(gc);
+	_colorBillboardRenderer = new ColorBillboardShape(gc);
+	_textureTriangleRenderer = new TextureTriangleShape3(gc);
 }
 
 

@@ -5,6 +5,9 @@
 #include "graphicscontext.h"
 
 
+int graphicscontext::_shaderprogram_id = 0;
+
+
 graphicscontext::graphicscontext(float pixelDensity) :
 _pixeldensity(pixelDensity)
 {
@@ -13,4 +16,10 @@ _pixeldensity(pixelDensity)
 
 graphicscontext::~graphicscontext()
 {
+}
+
+
+int graphicscontext::generate_shaderprogram_id()
+{
+	return ++_shaderprogram_id;
 }

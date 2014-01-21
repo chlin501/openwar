@@ -6,9 +6,12 @@
 #include "TextureBillboardRenderer.h"
 
 
-TextureBillboardRenderer::TextureBillboardRenderer()
+TextureBillboardRenderer::TextureBillboardRenderer(graphicscontext* gc)
 {
-	_texture_billboard_renderer = new shaderprogram4<glm::vec3, float, glm::vec2, glm::vec2>(
+	static int shaderprogram_id = graphicscontext::generate_shaderprogram_id();
+
+	_shaderprogram = gc->load_shaderprogram4<glm::vec3, float, glm::vec2, glm::vec2>(
+		shaderprogram_id,
 		"position", "height", "texcoord", "texsize",
 		VERTEX_SHADER
 		({
@@ -51,14 +54,13 @@ TextureBillboardRenderer::TextureBillboardRenderer()
 			gl_FragColor = color;
 		}
 	}));
-	_texture_billboard_renderer->_blend_sfactor = GL_ONE;
-	_texture_billboard_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_shaderprogram->_blend_sfactor = GL_ONE;
+	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }
 
 
 TextureBillboardRenderer::~TextureBillboardRenderer()
 {
-	delete _texture_billboard_renderer;
 }
 
 
@@ -74,7 +76,7 @@ void TextureBillboardRenderer::AddBillboard(glm::vec3 position, float height, af
 	glm::vec2 texpos = texcoords.transform(glm::vec2(0, 0));
 	glm::vec2 texsize = texcoords.transform(glm::vec2(1, 1)) - texpos;
 
-	_vbo._vertices.push_back(texture_billboard_vertex(position, height, texpos, texsize));
+	_vbo._vertices.push_back(vertex(position, height, texpos, texsize));
 }
 
 
@@ -87,7 +89,7 @@ struct billboard_index
 
 void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
 {
-	static std::vector<texture_billboard_vertex> vertices;
+	static std::vector<vertex> vertices;
 	static std::vector<billboard_index> indices;
 
 	vertices.insert(vertices.end(), _vbo._vertices.begin(), _vbo._vertices.end());
@@ -97,7 +99,7 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 	float sin_a = sinf(a);
 
 	int index = 0;
-	for (texture_billboard_vertex& v : _vbo._vertices)
+	for (vertex& v : _vbo._vertices)
 	{
 		billboard_index i;
 		i.index = index++;
@@ -119,21 +121,13 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 
 	_vbo.update(GL_STATIC_DRAW);
 
-	texture_billboard_uniforms uniforms;
-	uniforms._transform = transform;
-	uniforms._texture = tex;
-	uniforms._upvector = cameraUp;
-	uniforms._viewport_height = shaderprogram_base::pixels_per_point() * viewportHeight;
-	uniforms._min_point_size = sizeLimit.min;
-	uniforms._max_point_size = sizeLimit.max;
-
-	_texture_billboard_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_texture_billboard_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
-	_texture_billboard_renderer->get_uniform<glm::vec3>("upvector").set_value(uniforms._upvector);
-	_texture_billboard_renderer->get_uniform<float>("viewport_height").set_value(uniforms._viewport_height);
-	_texture_billboard_renderer->get_uniform<float>("min_point_size").set_value(uniforms._min_point_size);
-	_texture_billboard_renderer->get_uniform<float>("max_point_size").set_value(uniforms._max_point_size);
-	_texture_billboard_renderer->render(_vbo);
+	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
+	_shaderprogram->get_uniform<const texture*>("texture").set_value(tex);
+	_shaderprogram->get_uniform<glm::vec3>("upvector").set_value(cameraUp);
+	_shaderprogram->get_uniform<float>("viewport_height").set_value(shaderprogram_base::pixels_per_point() * viewportHeight);
+	_shaderprogram->get_uniform<float>("min_point_size").set_value(sizeLimit.min);
+	_shaderprogram->get_uniform<float>("max_point_size").set_value(sizeLimit.max);
+	_shaderprogram->render(_vbo);
 }
 
 

@@ -13,7 +13,7 @@ class ButtonItem;
 class ButtonRendering;
 class ButtonView;
 class EditorGesture;
-class GradientLineRenderer;
+class GradientLineShape3;
 //class SmoothTerrainSurfaceRenderer;
 //class TiledTerrainSurfaceRenderer;
 
@@ -38,7 +38,7 @@ public:
 	ButtonItem* _buttonItemWater;
 	ButtonItem* _buttonItemFords;
 
-	GradientLineRenderer* _scriptHintRenderer;
+	GradientLineShape3* _scriptHintRenderer;
 
 public:
 	OpenWarSurface(glm::vec2 size, float pixelDensity);
