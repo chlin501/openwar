@@ -50,9 +50,8 @@ renderer_specification operator,(renderer_specification x, renderer_vertex_attri
 
 
 
-renderer_base::renderer_base(std::vector<const char*> attrs, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
+renderer_base::renderer_base(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader) :
 _nextUniformTexture(0),
-_vertex_attributes(specification._vertex_attributes),
 _blend_sfactor(GL_ONE),
 _blend_dfactor(GL_ZERO)
 {
@@ -67,7 +66,7 @@ _blend_dfactor(GL_ZERO)
     glAttachShader(_program, fragment_shader);
 	CHECK_ERROR_GL();
 
-	for (GLuint index = 0; index < _vertex_attributes.size(); ++index)
+	for (GLuint index = 0; index < attrs.size(); ++index)
 	{
 		glBindAttribLocation(_program, index, attrs[index]);
 		CHECK_ERROR_GL();
@@ -229,7 +228,7 @@ bool renderer_base::validate_program(GLuint program)
 
 renderers::renderers()
 {
-	_distance_renderer = new renderer2<texture_vertex>(
+	_distance_renderer = new renderer2<glm::vec2, glm::vec2>(
 		"position", "texcoord", (
 		VERTEX_ATTRIBUTE(texture_vertex, _1),
 		VERTEX_ATTRIBUTE(texture_vertex, _2)),
@@ -325,7 +324,7 @@ renderers::renderers()
 	_distance_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
-	_gradient_renderer = new renderer2<color_vertex>(
+	_gradient_renderer = new renderer2<glm::vec2, glm::vec4>(
 		"position", "color", (
 		VERTEX_ATTRIBUTE(color_vertex, _1),
 		VERTEX_ATTRIBUTE(color_vertex, _2)),
@@ -361,7 +360,7 @@ renderers::renderers()
 	_gradient_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
-	_gradient_renderer3 = new renderer2<color_vertex3>(
+	_gradient_renderer3 = new renderer2<glm::vec3, glm::vec4>(
 		"position", "color", (
 		VERTEX_ATTRIBUTE(color_vertex3, _1),
 		VERTEX_ATTRIBUTE(color_vertex3, _2)),
@@ -396,7 +395,7 @@ renderers::renderers()
 	_gradient_renderer3->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
-	_ground_renderer = new renderer2<texture_vertex>(
+	_ground_renderer = new renderer2<glm::vec2, glm::vec2>(
 		"position", "texcoord", (
 		VERTEX_ATTRIBUTE(texture_vertex, _1),
 		VERTEX_ATTRIBUTE(texture_vertex, _2)),
@@ -454,7 +453,7 @@ renderers::renderers()
 
 
 
-	_plain_renderer = new renderer1<plain_vertex>(
+	_plain_renderer = new renderer1<glm::vec2>(
 		"position", (
 		VERTEX_ATTRIBUTE(plain_vertex, _1)),
 		VERTEX_SHADER
@@ -486,7 +485,7 @@ renderers::renderers()
 
 
 
-	_plain_renderer3 = new renderer1<plain_vertex3>(
+	_plain_renderer3 = new renderer1<glm::vec3>(
 		"position", (
 		VERTEX_ATTRIBUTE(plain_vertex3, _1)),
 		VERTEX_SHADER
@@ -518,7 +517,7 @@ renderers::renderers()
 
 
 
-	_texture_renderer = new renderer2<texture_vertex>(
+	_texture_renderer = new renderer2<glm::vec2, glm::vec2>(
 		"position", "texcoord", (
 		VERTEX_ATTRIBUTE(texture_vertex, _1),
 		VERTEX_ATTRIBUTE(texture_vertex, _2)),
@@ -555,7 +554,7 @@ renderers::renderers()
 
 
 
-	_texture_renderer3 = new renderer2<texture_vertex3>(
+	_texture_renderer3 = new renderer2<glm::vec3, glm::vec2>(
 		"position", "texcoord", (
 			VERTEX_ATTRIBUTE(texture_vertex3, _1),
 			VERTEX_ATTRIBUTE(texture_vertex3, _2)),
@@ -592,7 +591,7 @@ renderers::renderers()
 
 
 
-	_opaque_texture_renderer = new renderer2<texture_vertex>(
+	_opaque_texture_renderer = new renderer2<glm::vec2, glm::vec2>(
 		"position", "texcoord", (
 		VERTEX_ATTRIBUTE(texture_vertex, _1),
 		VERTEX_ATTRIBUTE(texture_vertex, _2)),
@@ -628,7 +627,7 @@ renderers::renderers()
 	_opaque_texture_renderer->_blend_dfactor = GL_ZERO;
 
 
-	_alpha_texture_renderer = new renderer2<texture_vertex>(
+	_alpha_texture_renderer = new renderer2<glm::vec2, glm::vec2>(
 		"position", "texcoord", (
 			VERTEX_ATTRIBUTE(texture_vertex, _1),
 			VERTEX_ATTRIBUTE(texture_vertex, _2)),

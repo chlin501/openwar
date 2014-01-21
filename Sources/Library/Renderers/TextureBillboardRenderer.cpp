@@ -8,7 +8,7 @@
 
 TextureBillboardRenderer::TextureBillboardRenderer()
 {
-	_texture_billboard_renderer = new renderer4<texture_billboard_vertex>(
+	_texture_billboard_renderer = new renderer4<glm::vec3, float, glm::vec2, glm::vec2>(
 		"position", "height", "texcoord", "texsize", (
 		VERTEX_ATTRIBUTE(texture_billboard_vertex, _1),
 		VERTEX_ATTRIBUTE(texture_billboard_vertex, _2),

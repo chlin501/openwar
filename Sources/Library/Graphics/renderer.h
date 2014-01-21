@@ -199,7 +199,7 @@ public:
 	GLenum _blend_sfactor;
 	GLenum _blend_dfactor;
 
-	renderer_base(std::vector<const char*> attrs, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader);
+	renderer_base(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader);
 	virtual ~renderer_base();
 
 	static float pixels_per_point();
@@ -239,8 +239,8 @@ class renderer : public renderer_base
 public:
 	typedef _Vertex vertex_type;
 
-	renderer(std::vector<const char*> attrs, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
-	renderer_base(attrs, specification, vertexshader, fragmentshader)
+	renderer(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader) :
+	renderer_base(attrs, vertexshader, fragmentshader)
 	{
 	}
 
@@ -309,43 +309,53 @@ inline std::vector<const char*> makelist(const char* a1, const char* a2, const c
 }
 
 
-template <class _Vertex>
-class renderer1 : public renderer<_Vertex>
+template <class T1>
+class renderer1 : public renderer<vertex1<T1>>
 {
 public:
 	renderer1(const char* a1, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
-	renderer<_Vertex>(makelist(a1), specification, vertexshader, fragmentshader)
+	renderer<vertex1<T1>>(makelist(a1), vertexshader, fragmentshader)
 	{
+		this->_vertex_attributes.push_back(specification._vertex_attributes[0]);
 	}
 };
 
-template <class _Vertex>
-class renderer2 : public renderer<_Vertex>
+template <class T1, class T2>
+class renderer2 : public renderer<vertex2<T1, T2>>
 {
 public:
 	renderer2(const char* a1, const char* a2, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
-	renderer<_Vertex>(makelist(a1, a2), specification, vertexshader, fragmentshader)
+	renderer<vertex2<T1, T2>>(makelist(a1, a2), vertexshader, fragmentshader)
 	{
+		this->_vertex_attributes.push_back(specification._vertex_attributes[0]);
+		this->_vertex_attributes.push_back(specification._vertex_attributes[1]);
 	}
 };
 
-template <class _Vertex>
-class renderer3 : public renderer<_Vertex>
+template <class T1, class T2, class T3>
+class renderer3 : public renderer<vertex3<T1, T2, T3>>
 {
 public:
 	renderer3(const char* a1, const char* a2, const char* a3, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
-	renderer<_Vertex>(makelist(a1, a2, a3), specification, vertexshader, fragmentshader)
+	renderer<vertex3<T1, T2, T3>>(makelist(a1, a2, a3), vertexshader, fragmentshader)
 	{
+		this->_vertex_attributes.push_back(specification._vertex_attributes[0]);
+		this->_vertex_attributes.push_back(specification._vertex_attributes[1]);
+		this->_vertex_attributes.push_back(specification._vertex_attributes[2]);
 	}
 };
 
-template <class _Vertex>
-class renderer4 : public renderer<_Vertex>
+template <class T1, class T2, class T3, class T4>
+class renderer4 : public renderer<vertex4<T1, T2, T3, T4>>
 {
 public:
 	renderer4(const char* a1, const char* a2, const char* a3, const char* a4, const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
-	renderer<_Vertex>(makelist(a1, a2, a3, a4), specification, vertexshader, fragmentshader)
+	renderer<vertex4<T1, T2, T3, T4>>(makelist(a1, a2, a3, a4), vertexshader, fragmentshader)
 	{
+		this->_vertex_attributes.push_back(specification._vertex_attributes[0]);
+		this->_vertex_attributes.push_back(specification._vertex_attributes[1]);
+		this->_vertex_attributes.push_back(specification._vertex_attributes[2]);
+		this->_vertex_attributes.push_back(specification._vertex_attributes[3]);
 	}
 };
 
@@ -354,16 +364,16 @@ struct renderers
 {
 	static renderers* singleton;
 
-	renderer2<texture_vertex>* _distance_renderer;
-	renderer2<color_vertex>* _gradient_renderer;
-	renderer2<color_vertex3>* _gradient_renderer3;
-	renderer2<texture_vertex>* _ground_renderer;
-	renderer1<plain_vertex>* _plain_renderer;
-	renderer1<plain_vertex3>* _plain_renderer3;
-	renderer2<texture_vertex>* _texture_renderer;
-	renderer2<texture_vertex3>* _texture_renderer3;
-	renderer2<texture_vertex>* _opaque_texture_renderer;
-	renderer2<texture_vertex>* _alpha_texture_renderer;
+	renderer2<glm::vec2, glm::vec2>* _distance_renderer;
+	renderer2<glm::vec2, glm::vec4>* _gradient_renderer;
+	renderer2<glm::vec3, glm::vec4>* _gradient_renderer3;
+	renderer2<glm::vec2, glm::vec2>* _ground_renderer;
+	renderer1<glm::vec2>* _plain_renderer;
+	renderer1<glm::vec3>* _plain_renderer3;
+	renderer2<glm::vec2, glm::vec2>* _texture_renderer;
+	renderer2<glm::vec3, glm::vec2>* _texture_renderer3;
+	renderer2<glm::vec2, glm::vec2>* _opaque_texture_renderer;
+	renderer2<glm::vec2, glm::vec2>* _alpha_texture_renderer;
 
 	renderers();
 };

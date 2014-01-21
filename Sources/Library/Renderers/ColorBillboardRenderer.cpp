@@ -7,7 +7,7 @@
 
 ColorBillboardRenderer::ColorBillboardRenderer()
 {
-	_renderer = new renderer3<vertex>(
+	_renderer = new renderer3<glm::vec3, glm::vec4, float>(
 		"position", "color", "height",
 		(VERTEX_ATTRIBUTE(vertex, _1),
 		VERTEX_ATTRIBUTE(vertex, _2),

@@ -19,7 +19,7 @@ class ColorBillboardRenderer
 		float _viewport_height;
 	};
 
-	renderer3<vertex>* _renderer;
+	renderer3<glm::vec3, glm::vec4, float>* _renderer;
 	vertexbuffer<vertex> _vbo;
 
 public:

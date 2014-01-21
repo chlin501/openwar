@@ -7,7 +7,7 @@
 
 TextureRenderer::TextureRenderer()
 {
-	_renderer = new renderer2<vertex>(
+	_renderer = new renderer2<glm::vec3, glm::vec2>(
 		"position", "texcoord", (
 		VERTEX_ATTRIBUTE(vertex, _1),
 		VERTEX_ATTRIBUTE(vertex, _2)),

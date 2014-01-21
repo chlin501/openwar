@@ -23,7 +23,7 @@ protected:
 	};
 
 	vertexbuffer<vertex> _vbo;
-	renderer1<vertex>* _renderer;
+	renderer1<glm::vec3>* _renderer;
 
 public:
 	PlainRenderer();

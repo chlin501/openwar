@@ -21,7 +21,7 @@ protected:
 		uniforms() : _point_size(1) {}
 	};
 
-	renderer2<vertex>* _renderer;
+	renderer2<glm::vec3, glm::vec4>* _renderer;
 	vertexbuffer<vertex> _vbo;
 
 public:
