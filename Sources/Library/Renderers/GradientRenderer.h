@@ -28,7 +28,7 @@ protected:
 		uniforms() : _point_size(1) {}
 	};
 
-	renderer<vertex, uniforms>* _renderer;
+	renderer<vertex>* _renderer;
 	vertexbuffer<vertex> _vbo;
 
 public:

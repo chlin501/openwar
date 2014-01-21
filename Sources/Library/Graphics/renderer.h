@@ -330,52 +330,14 @@ public:
 
 
 
-template <class _Vertex, class _Uniforms>
+template <class _Vertex>
 class renderer : public renderer_base
 {
 public:
 	typedef _Vertex vertex_type;
-	typedef _Uniforms uniforms_type;
 
 	renderer(const renderer_specification& specification) : renderer_base(specification)
 	{
-	}
-
-	void render(vertexbuffer<vertex_type>& shape, const uniforms_type& uniforms)
-	{
-		if (shape.count() == 0)
-			return;
-
-		glUseProgram(_program);
-		CHECK_ERROR_GL();
-
-		shape.bind(_vertex_attributes);
-
-		for (int i = 0; i < (int)_shader_uniforms.size(); ++i)
-		{
-			_shader_uniforms[i].set_value(&uniforms);
-		}
-
-		if (_blend_sfactor != GL_ONE || _blend_dfactor != GL_ZERO)
-		{
-			glEnable(GL_BLEND);
-			CHECK_ERROR_GL();
-			glBlendFunc(_blend_sfactor, _blend_dfactor);
-			CHECK_ERROR_GL();
-		}
-
-		glDrawArrays(shape._mode, 0, shape.count());
-		CHECK_ERROR_GL();
-
-		if (_blend_sfactor != GL_ONE || _blend_dfactor != GL_ZERO)
-		{
-			glDisable(GL_BLEND);
-			CHECK_ERROR_GL();
-			glBlendFunc(GL_ONE, GL_ZERO);
-			CHECK_ERROR_GL();
-		}
-
-		shape.unbind(_vertex_attributes);
 	}
 
 	void render(vertexbuffer<vertex_type>& shape)
@@ -411,26 +373,26 @@ public:
 	}
 };
 
-
+/*
 typedef renderer<plain_vertex, color_uniforms> plain_renderer;
 typedef renderer<color_vertex, gradient_uniforms> gradient_renderer;
 typedef renderer<texture_vertex, texture_uniforms> texture_renderer;
-
+*/
 
 struct renderers
 {
 	static renderers* singleton;
 
-	renderer<texture_vertex, texture_uniforms>* _distance_renderer;
-	renderer<color_vertex, gradient_uniforms>* _gradient_renderer;
-	renderer<color_vertex3, gradient_uniforms>* _gradient_renderer3;
-	renderer<texture_vertex, ground_uniforms>* _ground_renderer;
-	renderer<plain_vertex, color_uniforms>* _plain_renderer;
-	renderer<plain_vertex3, color_uniforms>* _plain_renderer3;
-	renderer<texture_vertex, texture_uniforms>* _texture_renderer;
-	renderer<texture_vertex3, texture_uniforms>* _texture_renderer3;
-	renderer<texture_vertex, texture_uniforms>* _opaque_texture_renderer;
-	renderer<texture_vertex, texture_alpha_uniforms>* _alpha_texture_renderer;
+	renderer<texture_vertex>* _distance_renderer;
+	renderer<color_vertex>* _gradient_renderer;
+	renderer<color_vertex3>* _gradient_renderer3;
+	renderer<texture_vertex>* _ground_renderer;
+	renderer<plain_vertex>* _plain_renderer;
+	renderer<plain_vertex3>* _plain_renderer3;
+	renderer<texture_vertex>* _texture_renderer;
+	renderer<texture_vertex3>* _texture_renderer3;
+	renderer<texture_vertex>* _opaque_texture_renderer;
+	renderer<texture_vertex>* _alpha_texture_renderer;
 
 	renderers();
 };

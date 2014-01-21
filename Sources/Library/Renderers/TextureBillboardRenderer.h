@@ -69,7 +69,7 @@ struct texture_billboard_uniforms
 class TextureBillboardRenderer
 {
 public:
-	renderer<texture_billboard_vertex, texture_billboard_uniforms>* _texture_billboard_renderer;
+	renderer<texture_billboard_vertex>* _texture_billboard_renderer;
 	vertexbuffer<texture_billboard_vertex> _vbo;
 
 public:

@@ -22,8 +22,8 @@ class SmoothTerrainWater
 
 	GroundMap* _groundMap;
 
-	renderer<plain_vertex, ground_texture_uniforms>* _water_inside_renderer;
-	renderer<plain_vertex, ground_texture_uniforms>* _water_border_renderer;
+	renderer<plain_vertex>* _water_inside_renderer;
+	renderer<plain_vertex>* _water_border_renderer;
 
 	vertexbuffer<plain_vertex> _shape_water_inside;
 	vertexbuffer<plain_vertex> _shape_water_border;

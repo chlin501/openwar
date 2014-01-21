@@ -7,7 +7,7 @@
 
 PlainRenderer::PlainRenderer()
 {
-	_renderer = new renderer<vertex, uniforms>((
+	_renderer = new renderer<vertex>((
 		VERTEX_ATTRIBUTE(vertex, _position),
 		SHADER_UNIFORM(uniforms, _transform),
 		SHADER_UNIFORM(uniforms, _point_size),

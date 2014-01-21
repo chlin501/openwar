@@ -37,7 +37,7 @@ void SmoothTerrainShaders::render_terrain_inside(vertexbuffer<terrain_vertex>& s
 {
 	if (_terrain_inside == nullptr)
 	{
-		_terrain_inside = new renderer<terrain_vertex, terrain_uniforms>((
+		_terrain_inside = new renderer<terrain_vertex>((
 			VERTEX_ATTRIBUTE(terrain_vertex, _position),
 			VERTEX_ATTRIBUTE(terrain_vertex, _normal),
 			SHADER_UNIFORM(terrain_uniforms, _transform),
@@ -117,7 +117,7 @@ void SmoothTerrainShaders::render_terrain_border(vertexbuffer<terrain_vertex>& s
 {
 	if (_terrain_border == nullptr)
 	{
-		_terrain_border = new renderer<terrain_vertex, terrain_uniforms>((
+		_terrain_border = new renderer<terrain_vertex>((
 			VERTEX_ATTRIBUTE(terrain_vertex, _position),
 			VERTEX_ATTRIBUTE(terrain_vertex, _normal),
 			SHADER_UNIFORM(terrain_uniforms, _transform),
@@ -199,7 +199,7 @@ void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shap
 {
 	if (_terrain_skirt == nullptr)
 	{
-		_terrain_skirt = new renderer<skirt_vertex, texture_uniforms>((
+		_terrain_skirt = new renderer<skirt_vertex>((
 			VERTEX_ATTRIBUTE(skirt_vertex, _position),
 			VERTEX_ATTRIBUTE(skirt_vertex, _height),
 			SHADER_UNIFORM(texture_uniforms, _transform),
@@ -252,7 +252,7 @@ void SmoothTerrainShaders::render_depth_inside(vertexbuffer<terrain_vertex>& sha
 {
 	if (_depth_inside == nullptr)
 	{
-		_depth_inside = new renderer<terrain_vertex, terrain_uniforms>((
+		_depth_inside = new renderer<terrain_vertex>((
 			VERTEX_ATTRIBUTE(terrain_vertex, _position),
 			VERTEX_ATTRIBUTE(terrain_vertex, _normal),
 			SHADER_UNIFORM(terrain_uniforms, _transform),
@@ -294,7 +294,7 @@ void SmoothTerrainShaders::render_depth_border(vertexbuffer<terrain_vertex>& sha
 {
 	if (_depth_border == nullptr)
 	{
-		_depth_border = new renderer<terrain_vertex, terrain_uniforms>((
+		_depth_border = new renderer<terrain_vertex>((
 			VERTEX_ATTRIBUTE(terrain_vertex, _position),
 			VERTEX_ATTRIBUTE(terrain_vertex, _normal),
 			SHADER_UNIFORM(terrain_uniforms, _transform),
@@ -345,7 +345,7 @@ void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape,
 {
 	if (_depth_skirt == nullptr)
 	{
-		_depth_skirt = new renderer<skirt_vertex, plain_uniforms>((
+		_depth_skirt = new renderer<skirt_vertex>((
 			VERTEX_ATTRIBUTE(skirt_vertex, _position),
 			VERTEX_ATTRIBUTE(skirt_vertex, _height),
 			SHADER_UNIFORM(plain_uniforms, _transform),
@@ -383,7 +383,7 @@ void SmoothTerrainShaders::render_sobel_filter(vertexbuffer<texture_vertex>& sha
 {
 	if (_sobel_filter == nullptr)
 	{
-		_sobel_filter = new renderer<texture_vertex, sobel_uniforms>((
+		_sobel_filter = new renderer<texture_vertex>((
 			VERTEX_ATTRIBUTE(texture_vertex, _position),
 			VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
 			SHADER_UNIFORM(sobel_uniforms, _transform),
@@ -473,7 +473,7 @@ void SmoothTerrainShaders::render_ground_shadow(vertexbuffer<plain_vertex>& shap
 {
 	if (_ground_shadow == nullptr)
 	{
-		_ground_shadow = new renderer<plain_vertex, terrain_uniforms>((
+		_ground_shadow = new renderer<plain_vertex>((
 			VERTEX_ATTRIBUTE(plain_vertex, _position),
 				SHADER_UNIFORM(terrain_uniforms, _transform),
 				SHADER_UNIFORM(terrain_uniforms, _map_bounds),

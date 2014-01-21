@@ -366,7 +366,7 @@ bool renderer_base::validate_program(GLuint program)
 
 renderers::renderers()
 {
-	_distance_renderer = new renderer<texture_vertex, texture_uniforms>((
+	_distance_renderer = new renderer<texture_vertex>((
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
 		SHADER_UNIFORM(texture_uniforms, _transform),
@@ -463,7 +463,7 @@ renderers::renderers()
 	_distance_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
-	_gradient_renderer = new renderer<color_vertex, gradient_uniforms>((
+	_gradient_renderer = new renderer<color_vertex>((
 		VERTEX_ATTRIBUTE(color_vertex, _position),
 		VERTEX_ATTRIBUTE(color_vertex, _color),
 		SHADER_UNIFORM(gradient_uniforms, _transform),
@@ -500,7 +500,7 @@ renderers::renderers()
 	_gradient_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
-	_gradient_renderer3 = new renderer<color_vertex3, gradient_uniforms>((
+	_gradient_renderer3 = new renderer<color_vertex3>((
 		VERTEX_ATTRIBUTE(color_vertex3, _position),
 		VERTEX_ATTRIBUTE(color_vertex3, _color),
 		SHADER_UNIFORM(gradient_uniforms, _transform),
@@ -536,7 +536,7 @@ renderers::renderers()
 	_gradient_renderer3->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
-	_ground_renderer = new renderer<texture_vertex, ground_uniforms>((
+	_ground_renderer = new renderer<texture_vertex>((
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
 		SHADER_UNIFORM(ground_uniforms, _transform),
@@ -601,7 +601,7 @@ renderers::renderers()
 
 
 
-	_plain_renderer = new renderer<plain_vertex, color_uniforms>((
+	_plain_renderer = new renderer<plain_vertex>((
 		VERTEX_ATTRIBUTE(plain_vertex, _position),
 		SHADER_UNIFORM(color_uniforms, _transform),
 		SHADER_UNIFORM(gradient_uniforms, _point_size),
@@ -635,7 +635,7 @@ renderers::renderers()
 
 
 
-	_plain_renderer3 = new renderer<plain_vertex3, color_uniforms>((
+	_plain_renderer3 = new renderer<plain_vertex3>((
 		VERTEX_ATTRIBUTE(plain_vertex3, _position),
 		SHADER_UNIFORM(color_uniforms, _transform),
 		SHADER_UNIFORM(gradient_uniforms, _point_size),
@@ -669,7 +669,7 @@ renderers::renderers()
 
 
 
-	_texture_renderer = new renderer<texture_vertex, texture_uniforms>((
+	_texture_renderer = new renderer<texture_vertex>((
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
 		SHADER_UNIFORM(texture_uniforms, _transform),
@@ -707,7 +707,7 @@ renderers::renderers()
 
 
 
-	_texture_renderer3 = new renderer<texture_vertex3, texture_uniforms>((
+	_texture_renderer3 = new renderer<texture_vertex3>((
 			VERTEX_ATTRIBUTE(texture_vertex3, _position),
 					VERTEX_ATTRIBUTE(texture_vertex3, _texcoord),
 					SHADER_UNIFORM(texture_uniforms, _transform),
@@ -745,7 +745,7 @@ renderers::renderers()
 
 
 
-	_opaque_texture_renderer = new renderer<texture_vertex, texture_uniforms>((
+	_opaque_texture_renderer = new renderer<texture_vertex>((
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
 		SHADER_UNIFORM(texture_uniforms, _transform),
@@ -782,7 +782,7 @@ renderers::renderers()
 	_opaque_texture_renderer->_blend_dfactor = GL_ZERO;
 
 
-	_alpha_texture_renderer = new renderer<texture_vertex, texture_alpha_uniforms>((
+	_alpha_texture_renderer = new renderer<texture_vertex>((
 			VERTEX_ATTRIBUTE(texture_vertex, _position),
 			VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
 			SHADER_UNIFORM(texture_alpha_uniforms, _transform),

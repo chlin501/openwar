@@ -79,7 +79,7 @@ void string_font::initialize()
 	if (_image == nullptr)
 		_image = new image(512, 512);
 
-	_renderer = new renderer<texture_alpha_vertex, string_uniforms>((
+	_renderer = new renderer<texture_alpha_vertex>((
 		VERTEX_ATTRIBUTE(texture_alpha_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_alpha_vertex, _texcoord),
 		VERTEX_ATTRIBUTE(texture_alpha_vertex, _alpha),

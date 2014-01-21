@@ -7,7 +7,7 @@
 
 TextureRenderer::TextureRenderer()
 {
-	_renderer = new renderer<vertex, uniforms>((
+	_renderer = new renderer<vertex>((
 		VERTEX_ATTRIBUTE(vertex, _position),
 		VERTEX_ATTRIBUTE(vertex, _texcoord),
 		SHADER_UNIFORM(uniforms, _transform),

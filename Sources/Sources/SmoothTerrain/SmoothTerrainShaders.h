@@ -50,14 +50,14 @@ struct sobel_uniforms
 
 struct SmoothTerrainShaders
 {
-	renderer<terrain_vertex, terrain_uniforms>* _terrain_inside;
-	renderer<terrain_vertex, terrain_uniforms>* _terrain_border;
-	renderer<skirt_vertex, texture_uniforms>* _terrain_skirt;
-	renderer<terrain_vertex, terrain_uniforms>* _depth_inside;
-	renderer<terrain_vertex, terrain_uniforms>* _depth_border;
-	renderer<skirt_vertex, plain_uniforms>* _depth_skirt;
-	renderer<texture_vertex, sobel_uniforms>* _sobel_filter;
-	renderer<plain_vertex, terrain_uniforms>* _ground_shadow;
+	renderer<terrain_vertex>* _terrain_inside;
+	renderer<terrain_vertex>* _terrain_border;
+	renderer<skirt_vertex>* _terrain_skirt;
+	renderer<terrain_vertex>* _depth_inside;
+	renderer<terrain_vertex>* _depth_border;
+	renderer<skirt_vertex>* _depth_skirt;
+	renderer<texture_vertex>* _sobel_filter;
+	renderer<plain_vertex>* _ground_shadow;
 
 	SmoothTerrainShaders();
 	~SmoothTerrainShaders();

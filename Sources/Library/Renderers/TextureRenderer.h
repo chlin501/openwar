@@ -26,7 +26,7 @@ protected:
 		const texture* _texture;
 	};
 
-	renderer<vertex, uniforms>* _renderer;
+	renderer<vertex>* _renderer;
 	vertexbuffer<vertex> _vbo;
 
 public:

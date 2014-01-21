@@ -42,7 +42,7 @@ struct string_font
 #endif
 #endif
     
-	renderer<texture_alpha_vertex, string_uniforms>* _renderer;
+	renderer<texture_alpha_vertex>* _renderer;
 	float _pixelDensity;
 	texture _texture;
 
