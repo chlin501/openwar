@@ -5,7 +5,7 @@
 #ifndef TextureRenderer_H
 #define TextureRenderer_H
 
-#include "../Graphics/renderer.h"
+#include "shaderprogram.h"
 
 
 class TextureRenderer
@@ -19,7 +19,7 @@ protected:
 		const texture* _texture;
 	};
 
-	renderer<vertex>* _renderer;
+	shaderprogram<vertex>* _renderer;
 	vertexbuffer<vertex> _vbo;
 
 public:

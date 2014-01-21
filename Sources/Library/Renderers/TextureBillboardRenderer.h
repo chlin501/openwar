@@ -5,7 +5,7 @@
 #ifndef TextureBillboardRenderer_H
 #define TextureBillboardRenderer_H
 
-#include "../Graphics/renderer.h"
+#include "shaderprogram.h"
 #include "BillboardTexture.h"
 
 
@@ -57,7 +57,7 @@ struct texture_billboard_uniforms
 class TextureBillboardRenderer
 {
 public:
-	renderer4<glm::vec3, float, glm::vec2, glm::vec2>* _texture_billboard_renderer;
+	shaderprogram4<glm::vec3, float, glm::vec2, glm::vec2>* _texture_billboard_renderer;
 	vertexbuffer<texture_billboard_vertex> _vbo;
 
 public:

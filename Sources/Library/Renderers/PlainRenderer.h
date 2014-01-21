@@ -5,7 +5,7 @@
 #ifndef LineRenderer_H
 #define LineRenderer_H
 
-#include "../Graphics/renderer.h"
+#include "shaderprogram.h"
 
 
 class PlainRenderer
@@ -23,7 +23,7 @@ protected:
 	};
 
 	vertexbuffer<vertex> _vbo;
-	renderer1<glm::vec3>* _renderer;
+	shaderprogram1<glm::vec3>* _renderer;
 
 public:
 	PlainRenderer();

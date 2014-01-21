@@ -12,7 +12,7 @@
 #endif
 
 #include "texture.h"
-#include "renderer.h"
+#include "shaderprogram.h"
 #include "../Algebra/image.h"
 
 
@@ -109,7 +109,7 @@ void texture::load(const resource& r)
 			}
 		}
 
-		if (renderer_base::pixels_per_point() > 1)
+		if (shaderprogram_base::pixels_per_point() > 1)
 		{
 			NSString* name2x = [NSString stringWithFormat:@"%@@2x.png", stem];
 			image = [UIImage imageNamed:name2x];

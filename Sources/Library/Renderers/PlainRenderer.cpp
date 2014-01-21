@@ -7,7 +7,7 @@
 
 PlainRenderer::PlainRenderer()
 {
-	_renderer = new renderer1<glm::vec3>(
+	_renderer = new shaderprogram1<glm::vec3>(
 		"position",
 		VERTEX_SHADER
 		({

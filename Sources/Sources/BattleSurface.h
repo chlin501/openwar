@@ -1,7 +1,7 @@
 #ifndef BattleSurface_H
 #define BattleSurface_H
 
-#include "../Library/Graphics/renderer.h"
+#include "shaderprogram.h"
 #include "../Library/ViewCore/Surface.h"
 
 class BattleCommander;

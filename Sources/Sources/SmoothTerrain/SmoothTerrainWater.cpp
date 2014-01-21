@@ -9,7 +9,7 @@
 SmoothTerrainWater::SmoothTerrainWater(GroundMap* groundMap) :
 _groundMap(groundMap)
 {
-	_water_inside_renderer = new renderer1<glm::vec2>(
+	_water_inside_renderer = new shaderprogram1<glm::vec2>(
 		"position",
 		VERTEX_SHADER
 		({
@@ -38,7 +38,7 @@ _groundMap(groundMap)
 
 
 
-	_water_border_renderer = new renderer1<glm::vec2>(
+	_water_border_renderer = new shaderprogram1<glm::vec2>(
 		"position",
 		VERTEX_SHADER
 		({

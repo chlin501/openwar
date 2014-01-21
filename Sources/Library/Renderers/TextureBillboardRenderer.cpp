@@ -8,7 +8,7 @@
 
 TextureBillboardRenderer::TextureBillboardRenderer()
 {
-	_texture_billboard_renderer = new renderer4<glm::vec3, float, glm::vec2, glm::vec2>(
+	_texture_billboard_renderer = new shaderprogram4<glm::vec3, float, glm::vec2, glm::vec2>(
 		"position", "height", "texcoord", "texsize",
 		VERTEX_SHADER
 		({
@@ -123,7 +123,7 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 	uniforms._transform = transform;
 	uniforms._texture = tex;
 	uniforms._upvector = cameraUp;
-	uniforms._viewport_height = renderer_base::pixels_per_point() * viewportHeight;
+	uniforms._viewport_height = shaderprogram_base::pixels_per_point() * viewportHeight;
 	uniforms._min_point_size = sizeLimit.min;
 	uniforms._max_point_size = sizeLimit.max;
 

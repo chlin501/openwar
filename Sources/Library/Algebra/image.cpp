@@ -22,7 +22,7 @@
 #endif
 
 #if TARGET_OS_IPHONE
-#include "../Graphics/renderer.h"
+#include "shaderprogram.h"
 #endif
 
 
@@ -153,7 +153,7 @@ _format(GL_RGBA)
     
 	NSString* name = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:r.name()], [NSString stringWithUTF8String:r.type()]];
 	UIImage* img = nil;
-	if (renderer_base::pixels_per_point() > 1 && [name hasSuffix:@".png"])
+	if (shaderprogram_base::pixels_per_point() > 1 && [name hasSuffix:@".png"])
 	{
 		NSString* stem = [name substringToIndex:name.length - 4];
 		NSString* name2x = [NSString stringWithFormat:@"%@@2x.png", stem];

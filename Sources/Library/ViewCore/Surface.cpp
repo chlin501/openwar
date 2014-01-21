@@ -4,7 +4,7 @@
 
 #include "Surface.h"
 
-#include "../Graphics/renderer.h"
+#include "shaderprogram.h"
 #include "Gesture.h"
 
 

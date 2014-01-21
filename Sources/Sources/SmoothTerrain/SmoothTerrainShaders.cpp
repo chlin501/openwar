@@ -37,7 +37,7 @@ void SmoothTerrainShaders::render_terrain_inside(vertexbuffer<terrain_vertex>& s
 {
 	if (_terrain_inside == nullptr)
 	{
-		_terrain_inside = new renderer2<glm::vec3, glm::vec3>(
+		_terrain_inside = new shaderprogram2<glm::vec3, glm::vec3>(
 			"position", "normal",
 			VERTEX_SHADER
 			({
@@ -111,7 +111,7 @@ void SmoothTerrainShaders::render_terrain_border(vertexbuffer<terrain_vertex>& s
 {
 	if (_terrain_border == nullptr)
 	{
-		_terrain_border = new renderer2<glm::vec3, glm::vec3>(
+		_terrain_border = new shaderprogram2<glm::vec3, glm::vec3>(
 			"position", "normal",
 			VERTEX_SHADER
 			({
@@ -187,7 +187,7 @@ void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shap
 {
 	if (_terrain_skirt == nullptr)
 	{
-		_terrain_skirt = new renderer2<glm::vec3, float>(
+		_terrain_skirt = new shaderprogram2<glm::vec3, float>(
 			"position", "height",
 			VERTEX_SHADER
 			({
@@ -237,7 +237,7 @@ void SmoothTerrainShaders::render_depth_inside(vertexbuffer<terrain_vertex>& sha
 {
 	if (_depth_inside == nullptr)
 	{
-		_depth_inside = new renderer2<glm::vec3, glm::vec3>(
+		_depth_inside = new shaderprogram2<glm::vec3, glm::vec3>(
 			"position", "normal",
 			VERTEX_SHADER
 			({
@@ -277,7 +277,7 @@ void SmoothTerrainShaders::render_depth_border(vertexbuffer<terrain_vertex>& sha
 {
 	if (_depth_border == nullptr)
 	{
-		_depth_border = new renderer2<glm::vec3, glm::vec3>(
+		_depth_border = new shaderprogram2<glm::vec3, glm::vec3>(
 			"position", "normal",
 			VERTEX_SHADER
 			({
@@ -325,7 +325,7 @@ void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape,
 {
 	if (_depth_skirt == nullptr)
 	{
-		_depth_skirt = new renderer2<glm::vec3, float>(
+		_depth_skirt = new shaderprogram2<glm::vec3, float>(
 			"position", "height",
 			VERTEX_SHADER
 			({
@@ -361,7 +361,7 @@ void SmoothTerrainShaders::render_sobel_filter(vertexbuffer<texture_vertex>& sha
 {
 	if (_sobel_filter == nullptr)
 	{
-		_sobel_filter = new renderer2<glm::vec2, glm::vec2>(
+		_sobel_filter = new shaderprogram2<glm::vec2, glm::vec2>(
 			"position", "texcoord",
 			VERTEX_SHADER
 			({
@@ -448,7 +448,7 @@ void SmoothTerrainShaders::render_ground_shadow(vertexbuffer<plain_vertex>& shap
 {
 	if (_ground_shadow == nullptr)
 	{
-		_ground_shadow = new renderer1<glm::vec2>(
+		_ground_shadow = new shaderprogram1<glm::vec2>(
 			"position",
 			VERTEX_SHADER
 			({

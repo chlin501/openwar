@@ -3,7 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "View.h"
-#include "../Graphics/renderer.h"
+#include "shaderprogram.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 

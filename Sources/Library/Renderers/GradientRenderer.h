@@ -5,7 +5,7 @@
 #ifndef ColorLineRenderer_H
 #define ColorLineRenderer_H
 
-#include "../Graphics/renderer.h"
+#include "shaderprogram.h"
 
 
 class GradientRenderer
@@ -21,7 +21,7 @@ protected:
 		uniforms() : _point_size(1) {}
 	};
 
-	renderer2<glm::vec3, glm::vec4>* _renderer;
+	shaderprogram2<glm::vec3, glm::vec4>* _renderer;
 	vertexbuffer<vertex> _vbo;
 
 public:

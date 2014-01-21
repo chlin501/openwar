@@ -8,7 +8,7 @@
 #include "../../Library/Graphics/framebuffer.h"
 #include "../../Library/Graphics/renderbuffer.h"
 #include "../../Library/Graphics/vertexbuffer.h"
-#include "../../Library/Graphics/renderer.h"
+#include "shaderprogram.h"
 
 
 typedef vertex2<glm::vec3, glm::vec3> terrain_vertex;
@@ -35,14 +35,14 @@ struct sobel_uniforms
 
 struct SmoothTerrainShaders
 {
-	renderer<terrain_vertex>* _terrain_inside;
-	renderer<terrain_vertex>* _terrain_border;
-	renderer<skirt_vertex>* _terrain_skirt;
-	renderer<terrain_vertex>* _depth_inside;
-	renderer<terrain_vertex>* _depth_border;
-	renderer<skirt_vertex>* _depth_skirt;
-	renderer<texture_vertex>* _sobel_filter;
-	renderer<plain_vertex>* _ground_shadow;
+	shaderprogram<terrain_vertex>* _terrain_inside;
+	shaderprogram<terrain_vertex>* _terrain_border;
+	shaderprogram<skirt_vertex>* _terrain_skirt;
+	shaderprogram<terrain_vertex>* _depth_inside;
+	shaderprogram<terrain_vertex>* _depth_border;
+	shaderprogram<skirt_vertex>* _depth_skirt;
+	shaderprogram<texture_vertex>* _sobel_filter;
+	shaderprogram<plain_vertex>* _ground_shadow;
 
 	SmoothTerrainShaders();
 	~SmoothTerrainShaders();

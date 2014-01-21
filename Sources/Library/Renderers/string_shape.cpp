@@ -79,7 +79,7 @@ void string_font::initialize()
 	if (_image == nullptr)
 		_image = new image(512, 512);
 
-	_renderer = new renderer3<glm::vec2, glm::vec2, float>(
+	_renderer = new shaderprogram3<glm::vec2, glm::vec2, float>(
 		"position", "texcoord", "alpha",
 		VERTEX_SHADER
 		({

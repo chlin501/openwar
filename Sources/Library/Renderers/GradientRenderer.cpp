@@ -7,7 +7,7 @@
 
 GradientRenderer::GradientRenderer()
 {
-	_renderer = new renderer2<glm::vec3, glm::vec4>(
+	_renderer = new shaderprogram2<glm::vec3, glm::vec4>(
 		"position", "color",
 		VERTEX_SHADER
 		({

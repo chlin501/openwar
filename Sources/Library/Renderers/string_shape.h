@@ -16,7 +16,7 @@
 #endif
 
 #include "../Algebra/bounds.h"
-#include "../Graphics/renderer.h"
+#include "shaderprogram.h"
 #include "../Graphics/vertex.h"
 #include "../Graphics/texture.h"
 
@@ -42,7 +42,7 @@ struct string_font
 #endif
 #endif
     
-	renderer<texture_alpha_vertex>* _renderer;
+	shaderprogram<texture_alpha_vertex>* _renderer;
 	float _pixelDensity;
 	texture _texture;
 

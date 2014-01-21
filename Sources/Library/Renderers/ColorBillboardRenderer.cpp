@@ -7,7 +7,7 @@
 
 ColorBillboardRenderer::ColorBillboardRenderer()
 {
-	_renderer = new renderer3<glm::vec3, glm::vec4, float>(
+	_renderer = new shaderprogram3<glm::vec3, glm::vec4, float>(
 		"position", "color", "height",
 		VERTEX_SHADER
 		({
@@ -77,7 +77,7 @@ void ColorBillboardRenderer::Draw(const glm::mat4x4& transform, const glm::vec3 
 	uniforms uniforms;
 	uniforms._transform = transform;
 	uniforms._upvector = cameraUp;
-	uniforms._viewport_height = 0.25f * renderer_base::pixels_per_point() * viewportHeight;
+	uniforms._viewport_height = 0.25f * shaderprogram_base::pixels_per_point() * viewportHeight;
 
 	_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
 	_renderer->get_uniform<glm::vec3>("upvector").set_value(uniforms._upvector);
