@@ -11,7 +11,7 @@ _groundMap(groundMap)
 {
 	_water_inside_renderer = new renderer1<plain_vertex>(
 		"position", (
-		VERTEX_ATTRIBUTE(plain_vertex, _position)),
+		VERTEX_ATTRIBUTE(plain_vertex, _1)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -41,7 +41,7 @@ _groundMap(groundMap)
 
 	_water_border_renderer = new renderer1<plain_vertex>(
 		"position", (
-		VERTEX_ATTRIBUTE(plain_vertex, _position)),
+		VERTEX_ATTRIBUTE(plain_vertex, _1)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -94,9 +94,9 @@ static int inside_circle(bounds2f bounds, glm::vec2 p)
 
 static int inside_circle(bounds2f bounds, plain_vertex v1, plain_vertex v2, plain_vertex v3)
 {
-	return inside_circle(bounds, v1._position)
-			+ inside_circle(bounds, v2._position)
-			+ inside_circle(bounds, v3._position);
+	return inside_circle(bounds, v1._1)
+		+ inside_circle(bounds, v2._1)
+		+ inside_circle(bounds, v3._1);
 
 }
 

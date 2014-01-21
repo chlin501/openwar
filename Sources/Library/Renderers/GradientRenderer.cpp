@@ -9,8 +9,8 @@ GradientRenderer::GradientRenderer()
 {
 	_renderer = new renderer2<vertex>(
 		"position", "color", (
-			VERTEX_ATTRIBUTE(vertex, _position),
-			VERTEX_ATTRIBUTE(vertex, _color)),
+			VERTEX_ATTRIBUTE(vertex, _1),
+			VERTEX_ATTRIBUTE(vertex, _2)),
 			VERTEX_SHADER
 		({
 			attribute vec3 position;

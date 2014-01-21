@@ -9,7 +9,7 @@ PlainRenderer::PlainRenderer()
 {
 	_renderer = new renderer1<vertex>(
 		"position",
-		(VERTEX_ATTRIBUTE(vertex, _position)),
+		(VERTEX_ATTRIBUTE(vertex, _1)),
 		VERTEX_SHADER
 		({
 			attribute vec3 position;

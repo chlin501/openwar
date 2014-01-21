@@ -231,8 +231,8 @@ renderers::renderers()
 {
 	_distance_renderer = new renderer2<texture_vertex>(
 		"position", "texcoord", (
-		VERTEX_ATTRIBUTE(texture_vertex, _position),
-		VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
+		VERTEX_ATTRIBUTE(texture_vertex, _1),
+		VERTEX_ATTRIBUTE(texture_vertex, _2)),
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
@@ -327,8 +327,8 @@ renderers::renderers()
 
 	_gradient_renderer = new renderer2<color_vertex>(
 		"position", "color", (
-		VERTEX_ATTRIBUTE(color_vertex, _position),
-		VERTEX_ATTRIBUTE(color_vertex, _color)),
+		VERTEX_ATTRIBUTE(color_vertex, _1),
+		VERTEX_ATTRIBUTE(color_vertex, _2)),
 		VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -363,8 +363,8 @@ renderers::renderers()
 
 	_gradient_renderer3 = new renderer2<color_vertex3>(
 		"position", "color", (
-		VERTEX_ATTRIBUTE(color_vertex3, _position),
-		VERTEX_ATTRIBUTE(color_vertex3, _color)),
+		VERTEX_ATTRIBUTE(color_vertex3, _1),
+		VERTEX_ATTRIBUTE(color_vertex3, _2)),
 		VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -398,8 +398,8 @@ renderers::renderers()
 
 	_ground_renderer = new renderer2<texture_vertex>(
 		"position", "texcoord", (
-		VERTEX_ATTRIBUTE(texture_vertex, _position),
-		VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
+		VERTEX_ATTRIBUTE(texture_vertex, _1),
+		VERTEX_ATTRIBUTE(texture_vertex, _2)),
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
@@ -456,7 +456,7 @@ renderers::renderers()
 
 	_plain_renderer = new renderer1<plain_vertex>(
 		"position", (
-		VERTEX_ATTRIBUTE(plain_vertex, _position)),
+		VERTEX_ATTRIBUTE(plain_vertex, _1)),
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
@@ -488,7 +488,7 @@ renderers::renderers()
 
 	_plain_renderer3 = new renderer1<plain_vertex3>(
 		"position", (
-		VERTEX_ATTRIBUTE(plain_vertex3, _position)),
+		VERTEX_ATTRIBUTE(plain_vertex3, _1)),
 		VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -520,8 +520,8 @@ renderers::renderers()
 
 	_texture_renderer = new renderer2<texture_vertex>(
 		"position", "texcoord", (
-		VERTEX_ATTRIBUTE(texture_vertex, _position),
-		VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
+		VERTEX_ATTRIBUTE(texture_vertex, _1),
+		VERTEX_ATTRIBUTE(texture_vertex, _2)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -557,9 +557,9 @@ renderers::renderers()
 
 	_texture_renderer3 = new renderer2<texture_vertex3>(
 		"position", "texcoord", (
-			VERTEX_ATTRIBUTE(texture_vertex3, _position),
-					VERTEX_ATTRIBUTE(texture_vertex3, _texcoord)),
-					VERTEX_SHADER
+			VERTEX_ATTRIBUTE(texture_vertex3, _1),
+			VERTEX_ATTRIBUTE(texture_vertex3, _2)),
+			VERTEX_SHADER
 		({
 						uniform mat4 transform;
 						attribute vec3 position;
@@ -594,8 +594,8 @@ renderers::renderers()
 
 	_opaque_texture_renderer = new renderer2<texture_vertex>(
 		"position", "texcoord", (
-		VERTEX_ATTRIBUTE(texture_vertex, _position),
-		VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
+		VERTEX_ATTRIBUTE(texture_vertex, _1),
+		VERTEX_ATTRIBUTE(texture_vertex, _2)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -630,8 +630,8 @@ renderers::renderers()
 
 	_alpha_texture_renderer = new renderer2<texture_vertex>(
 		"position", "texcoord", (
-			VERTEX_ATTRIBUTE(texture_vertex, _position),
-			VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
+			VERTEX_ATTRIBUTE(texture_vertex, _1),
+			VERTEX_ATTRIBUTE(texture_vertex, _2)),
 			VERTEX_SHADER
 		({
 			uniform mat4 transform;

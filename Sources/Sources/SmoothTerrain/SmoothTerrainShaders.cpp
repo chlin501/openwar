@@ -39,8 +39,8 @@ void SmoothTerrainShaders::render_terrain_inside(vertexbuffer<terrain_vertex>& s
 	{
 		_terrain_inside = new renderer2<terrain_vertex>(
 			"position", "normal", (
-			VERTEX_ATTRIBUTE(terrain_vertex, _position),
-			VERTEX_ATTRIBUTE(terrain_vertex, _normal)),
+			VERTEX_ATTRIBUTE(terrain_vertex, _1),
+			VERTEX_ATTRIBUTE(terrain_vertex, _2)),
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -115,8 +115,8 @@ void SmoothTerrainShaders::render_terrain_border(vertexbuffer<terrain_vertex>& s
 	{
 		_terrain_border = new renderer2<terrain_vertex>(
 			"position", "normal", (
-			VERTEX_ATTRIBUTE(terrain_vertex, _position),
-			VERTEX_ATTRIBUTE(terrain_vertex, _normal)),
+			VERTEX_ATTRIBUTE(terrain_vertex, _1),
+			VERTEX_ATTRIBUTE(terrain_vertex, _2)),
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -193,8 +193,8 @@ void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shap
 	{
 		_terrain_skirt = new renderer2<skirt_vertex>(
 			"position", "height", (
-			VERTEX_ATTRIBUTE(skirt_vertex, _position),
-			VERTEX_ATTRIBUTE(skirt_vertex, _height)),
+			VERTEX_ATTRIBUTE(skirt_vertex, _1),
+			VERTEX_ATTRIBUTE(skirt_vertex, _2)),
 			VERTEX_SHADER
 			({
 				attribute vec3 position;
@@ -245,8 +245,8 @@ void SmoothTerrainShaders::render_depth_inside(vertexbuffer<terrain_vertex>& sha
 	{
 		_depth_inside = new renderer2<terrain_vertex>(
 			"position", "normal", (
-			VERTEX_ATTRIBUTE(terrain_vertex, _position),
-			VERTEX_ATTRIBUTE(terrain_vertex, _normal)),
+			VERTEX_ATTRIBUTE(terrain_vertex, _1),
+			VERTEX_ATTRIBUTE(terrain_vertex, _2)),
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -287,8 +287,8 @@ void SmoothTerrainShaders::render_depth_border(vertexbuffer<terrain_vertex>& sha
 	{
 		_depth_border = new renderer2<terrain_vertex>(
 			"position", "normal", (
-			VERTEX_ATTRIBUTE(terrain_vertex, _position),
-			VERTEX_ATTRIBUTE(terrain_vertex, _normal)),
+			VERTEX_ATTRIBUTE(terrain_vertex, _1),
+			VERTEX_ATTRIBUTE(terrain_vertex, _2)),
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -337,8 +337,8 @@ void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape,
 	{
 		_depth_skirt = new renderer2<skirt_vertex>(
 			"position", "height", (
-			VERTEX_ATTRIBUTE(skirt_vertex, _position),
-			VERTEX_ATTRIBUTE(skirt_vertex, _height)),
+			VERTEX_ATTRIBUTE(skirt_vertex, _1),
+			VERTEX_ATTRIBUTE(skirt_vertex, _2)),
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -375,8 +375,8 @@ void SmoothTerrainShaders::render_sobel_filter(vertexbuffer<texture_vertex>& sha
 	{
 		_sobel_filter = new renderer2<texture_vertex>(
 			"position", "texcoord", (
-			VERTEX_ATTRIBUTE(texture_vertex, _position),
-			VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
+			VERTEX_ATTRIBUTE(texture_vertex, _1),
+			VERTEX_ATTRIBUTE(texture_vertex, _2)),
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -464,7 +464,7 @@ void SmoothTerrainShaders::render_ground_shadow(vertexbuffer<plain_vertex>& shap
 	{
 		_ground_shadow = new renderer1<plain_vertex>(
 			"position", (
-			VERTEX_ATTRIBUTE(plain_vertex, _position)),
+			VERTEX_ATTRIBUTE(plain_vertex, _1)),
 				VERTEX_SHADER
 			({
 					uniform mat4 transform;

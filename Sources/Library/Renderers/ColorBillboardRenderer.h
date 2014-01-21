@@ -10,16 +10,7 @@
 
 class ColorBillboardRenderer
 {
-	struct vertex
-	{
-		glm::vec3 _position;
-		glm::vec4 _color;
-		float _height;
-
-		vertex(glm::vec3 p, glm::vec4 c, float h) : _position(p), _color(c), _height(h)
-		{
-		}
-	};
+	typedef vertex3<glm::vec3, glm::vec4, float> vertex;
 
 	struct uniforms
 	{

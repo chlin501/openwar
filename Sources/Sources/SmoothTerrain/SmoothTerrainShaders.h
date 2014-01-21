@@ -11,23 +11,8 @@
 #include "../../Library/Graphics/renderer.h"
 
 
-struct terrain_vertex
-{
-	glm::vec3 _position;
-	glm::vec3 _normal;
-
-	terrain_vertex(glm::vec3 p, glm::vec3 n) : _position(p), _normal(n) {}
-};
-
-
-struct skirt_vertex
-{
-	glm::vec3 _position;
-	float _height;
-
-	skirt_vertex() {}
-	skirt_vertex(glm::vec3 p, float h) : _position(p), _height(h) { }
-};
+typedef vertex2<glm::vec3, glm::vec3> terrain_vertex;
+typedef vertex2<glm::vec3, float> skirt_vertex;
 
 
 struct terrain_uniforms

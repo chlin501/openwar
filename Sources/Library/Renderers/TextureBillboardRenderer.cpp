@@ -10,10 +10,10 @@ TextureBillboardRenderer::TextureBillboardRenderer()
 {
 	_texture_billboard_renderer = new renderer4<texture_billboard_vertex>(
 		"position", "height", "texcoord", "texsize", (
-		VERTEX_ATTRIBUTE(texture_billboard_vertex, _position),
-		VERTEX_ATTRIBUTE(texture_billboard_vertex, _height),
-		VERTEX_ATTRIBUTE(texture_billboard_vertex, _texcoord),
-		VERTEX_ATTRIBUTE(texture_billboard_vertex, _texsize)),
+		VERTEX_ATTRIBUTE(texture_billboard_vertex, _1),
+		VERTEX_ATTRIBUTE(texture_billboard_vertex, _2),
+		VERTEX_ATTRIBUTE(texture_billboard_vertex, _3),
+		VERTEX_ATTRIBUTE(texture_billboard_vertex, _4)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -92,10 +92,10 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 	for (texture_billboard_vertex& v : _vbo._vertices)
 	{
 		v._index = index++;
-		v._order = cos_a * v._position.x - sin_a * v._position.y;
+		v._order = cos_a * v._1.x - sin_a * v._1.y;
 	}
 
-	std::sort(_vbo._vertices.begin(), _vbo._vertices.end(), [](const texture_billboard_vertex& a, const texture_billboard_vertex& b) {
+	std::sort(_vbo._vertices.begin(), _vbo._vertices.end(), [](const texture_billboard_vertex& a, const texture_billboard_vertex& b) -> bool {
 		float diff = a._order - b._order;
 		return diff == 0 ? a._index < b._index : diff > 0;
 	});

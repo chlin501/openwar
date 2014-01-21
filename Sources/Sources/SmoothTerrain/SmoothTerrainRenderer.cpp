@@ -324,12 +324,12 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 		// inside
 		for (terrain_vertex& vertex : _vboInside._vertices)
 		{
-			glm::vec2 p = vertex._position.xy();
+			glm::vec2 p = vertex._1.xy();
 			if (bounds.contains(p))
 			{
 				glm::ivec2 i = _smoothGroundMap->ToGroundmapCoordinate(p);
-				vertex._position.z = _smoothGroundMap->GetHeightMap()->GetHeight(i.x, i.y);
-				vertex._normal = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
+				vertex._1.z = _smoothGroundMap->GetHeightMap()->GetHeight(i.x, i.y);
+				vertex._2 = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
 			}
 		}
 		_vboInside.update(GL_STATIC_DRAW);
@@ -337,12 +337,12 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 		// border
 		for (terrain_vertex& vertex : _vboBorder._vertices)
 		{
-			glm::vec2 p = vertex._position.xy();
+			glm::vec2 p = vertex._1.xy();
 			if (bounds.contains(p))
 			{
 				glm::ivec2 i = _smoothGroundMap->ToGroundmapCoordinate(p);
-				vertex._position.z = _smoothGroundMap->GetHeightMap()->GetHeight(i.x, i.y);
-				vertex._normal = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
+				vertex._1.z = _smoothGroundMap->GetHeightMap()->GetHeight(i.x, i.y);
+				vertex._2 = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
 			}
 		}
 		_vboBorder.update(GL_STATIC_DRAW);
@@ -353,10 +353,10 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 	{
 		for (plain_vertex3& vertex : _vboLines._vertices)
 		{
-			glm::vec2 p = vertex._position.xy();
+			glm::vec2 p = vertex._1.xy();
 			if (bounds.contains(p))
 			{
-				vertex._position.z = _smoothGroundMap->GetHeightMap()->InterpolateHeight(p);
+				vertex._1.z = _smoothGroundMap->GetHeightMap()->InterpolateHeight(p);
 			}
 		}
 		_vboLines.update(GL_STATIC_DRAW);
@@ -365,12 +365,12 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 	// skirt
 	for (size_t i = 0; i < _vboSkirt._vertices.size(); i += 2)
 	{
-		glm::vec2 p = _vboSkirt._vertices[i]._position.xy();
+		glm::vec2 p = _vboSkirt._vertices[i]._1.xy();
 		if (bounds.contains(p))
 		{
 			float h = fmaxf(0, _smoothGroundMap->GetHeightMap()->InterpolateHeight(p));
-			_vboSkirt._vertices[i]._height = h;
-			_vboSkirt._vertices[i]._position.z = h;
+			_vboSkirt._vertices[i]._2 = h;
+			_vboSkirt._vertices[i]._1.z = h;
 		}
 	}
 	_vboSkirt.update(GL_STATIC_DRAW);
@@ -448,9 +448,9 @@ static int inside_circle(bounds2f bounds, glm::vec2 p)
 
 static int inside_circle(bounds2f bounds, terrain_vertex v1, terrain_vertex v2, terrain_vertex v3)
 {
-	return inside_circle(bounds, v1._position.xy())
-		+ inside_circle(bounds, v2._position.xy())
-		+ inside_circle(bounds, v3._position.xy());
+	return inside_circle(bounds, v1._1.xy())
+		+ inside_circle(bounds, v2._1.xy())
+		+ inside_circle(bounds, v3._1.xy());
 
 }
 

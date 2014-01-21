@@ -81,9 +81,9 @@ void string_font::initialize()
 
 	_renderer = new renderer3<texture_alpha_vertex>(
 		"position", "texcoord", "alpha", (
-		VERTEX_ATTRIBUTE(texture_alpha_vertex, _position),
-		VERTEX_ATTRIBUTE(texture_alpha_vertex, _texcoord),
-		VERTEX_ATTRIBUTE(texture_alpha_vertex, _alpha)),
+		VERTEX_ATTRIBUTE(texture_alpha_vertex, _1),
+		VERTEX_ATTRIBUTE(texture_alpha_vertex, _2),
+		VERTEX_ATTRIBUTE(texture_alpha_vertex, _3)),
 		VERTEX_SHADER
 		({
 			attribute vec2 position;

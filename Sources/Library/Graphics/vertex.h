@@ -57,78 +57,13 @@ struct vertex4
 };
 
 
-
-
-
-
-struct plain_vertex
-{
-	glm::vec2 _position;
-
-	plain_vertex() {}
-	plain_vertex(glm::vec2 p) : _position(p) {}
-};
-
-
-struct plain_vertex3
-{
-	glm::vec3 _position;
-
-	plain_vertex3() {}
-	plain_vertex3(glm::vec3 p) : _position(p) {}
-};
-
-
-struct color_vertex
-{
-	glm::vec2 _position;
-	glm::vec4 _color;
-
-	color_vertex() {}
-	color_vertex(glm::vec2 p, glm::vec4 c) : _position(p), _color(c) {}
-};
-
-
-struct color_vertex3
-{
-	glm::vec3 _position;
-	glm::vec4 _color;
-
-	color_vertex3() {}
-	color_vertex3(glm::vec3 p, glm::vec4 c) : _position(p), _color(c) {}
-};
-
-
-struct texture_vertex
-{
-	glm::vec2 _position;
-	glm::vec2 _texcoord;
-
-	texture_vertex() {}
-	texture_vertex(glm::vec2 p, glm::vec2 t) : _position(p), _texcoord(t) {}
-};
-
-
-struct texture_vertex3
-{
-	glm::vec3 _position;
-	glm::vec2 _texcoord;
-
-	texture_vertex3() {}
-	texture_vertex3(glm::vec3 p, glm::vec2 t) : _position(p), _texcoord(t) {}
-};
-
-
-struct texture_alpha_vertex
-{
-	glm::vec2 _position;
-	glm::vec2 _texcoord;
-	float _alpha;
-
-	texture_alpha_vertex() {}
-	texture_alpha_vertex(glm::vec2 p, glm::vec2 t, float a) : _position(p), _texcoord(t), _alpha(a) {}
-};
+typedef vertex1<glm::vec2> plain_vertex;
+typedef vertex1<glm::vec3> plain_vertex3;
+typedef vertex2<glm::vec2, glm::vec4> color_vertex;
+typedef vertex2<glm::vec3, glm::vec4> color_vertex3;
+typedef vertex2<glm::vec2, glm::vec2> texture_vertex;
+typedef vertex2<glm::vec3, glm::vec2> texture_vertex3;
+typedef vertex3<glm::vec2, glm::vec2, float> texture_alpha_vertex;
 
 
 #endif
-

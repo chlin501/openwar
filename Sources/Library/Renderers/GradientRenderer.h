@@ -11,14 +11,7 @@
 class GradientRenderer
 {
 protected:
-	struct vertex
-	{
-		glm::vec3 _position;
-		glm::vec4 _color;
-
-		vertex() {}
-		vertex(glm::vec3 p, glm::vec4 c) : _position(p), _color(c) {}
-	};
+	typedef vertex2<glm::vec3, glm::vec4> vertex;
 
 	struct uniforms
 	{

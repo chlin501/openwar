@@ -9,9 +9,9 @@ ColorBillboardRenderer::ColorBillboardRenderer()
 {
 	_renderer = new renderer3<vertex>(
 		"position", "color", "height",
-		(VERTEX_ATTRIBUTE(vertex, _position),
-		VERTEX_ATTRIBUTE(vertex, _color),
-		VERTEX_ATTRIBUTE(vertex, _height)),
+		(VERTEX_ATTRIBUTE(vertex, _1),
+		VERTEX_ATTRIBUTE(vertex, _2),
+		VERTEX_ATTRIBUTE(vertex, _3)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;

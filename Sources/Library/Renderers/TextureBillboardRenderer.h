@@ -41,16 +41,13 @@ struct BillboardModel
 };
 
 
-struct texture_billboard_vertex
+
+struct texture_billboard_vertex : public vertex4<glm::vec3, float, glm::vec2, glm::vec2>
 {
-	glm::vec3 _position;
-	float _height;
-	glm::vec2 _texcoord;
-	glm::vec2 _texsize;
 	int _index;
 	float _order;
 
-	texture_billboard_vertex(glm::vec3 p, float h, glm::vec2 tc, glm::vec2 ts) : _position(p), _height(h), _texcoord(tc), _texsize(ts)
+	texture_billboard_vertex(glm::vec3 v1, float v2, glm::vec2 v3, glm::vec2 v4) : vertex4<glm::vec3, float, glm::vec2, glm::vec2>(v1, v2, v3, v4)
 	{
 	}
 };

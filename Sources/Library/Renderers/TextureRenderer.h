@@ -11,14 +11,7 @@
 class TextureRenderer
 {
 protected:
-	struct vertex
-	{
-		glm::vec3 _position;
-		glm::vec2 _texcoord;
-
-		vertex() {}
-		vertex(glm::vec3 p, glm::vec2 t) : _position(p), _texcoord(t) {}
-	};
+	typedef vertex2<glm::vec3, glm::vec2> vertex;
 
 	struct uniforms
 	{

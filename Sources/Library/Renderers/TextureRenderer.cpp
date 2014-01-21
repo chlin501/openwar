@@ -9,8 +9,8 @@ TextureRenderer::TextureRenderer()
 {
 	_renderer = new renderer2<vertex>(
 		"position", "texcoord", (
-		VERTEX_ATTRIBUTE(vertex, _position),
-		VERTEX_ATTRIBUTE(vertex, _texcoord)),
+		VERTEX_ATTRIBUTE(vertex, _1),
+		VERTEX_ATTRIBUTE(vertex, _2)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;

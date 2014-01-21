@@ -11,13 +11,7 @@
 class PlainRenderer
 {
 protected:
-	struct vertex
-	{
-		glm::vec3 _position;
-
-		vertex() {}
-		vertex(glm::vec3 p) : _position(p) {}
-	};
+	typedef vertex1<glm::vec3> vertex;
 
 	struct uniforms
 	{
