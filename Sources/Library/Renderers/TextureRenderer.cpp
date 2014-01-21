@@ -10,8 +10,6 @@ TextureRenderer::TextureRenderer()
 	_renderer = new renderer<vertex>((
 		VERTEX_ATTRIBUTE(vertex, _position),
 		VERTEX_ATTRIBUTE(vertex, _texcoord),
-		SHADER_UNIFORM(uniforms, _transform),
-		SHADER_UNIFORM(uniforms, _texture),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;

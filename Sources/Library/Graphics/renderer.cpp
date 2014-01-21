@@ -38,15 +38,6 @@ renderer_specification operator,(renderer_vertex_attribute x, renderer_vertex_at
 }
 
 
-renderer_specification operator,(renderer_vertex_attribute x, renderer_shader_uniform y)
-{
-	renderer_specification result;
-	result._vertex_attributes.push_back(x);
-	result._shader_uniforms.push_back(y);
-	return result;
-}
-
-
 renderer_specification operator,(renderer_vertex_attribute x, renderer_vertex_shader y)
 {
 	renderer_specification result;
@@ -61,19 +52,6 @@ renderer_specification operator,(renderer_specification x, renderer_vertex_attri
 	renderer_specification result;
 	result._vertex_attributes = x._vertex_attributes;
 	result._vertex_attributes.push_back(y);
-	result._shader_uniforms = x._shader_uniforms;
-	result._vertex_shader = x._vertex_shader;
-	result._fragment_shader = x._fragment_shader;
-	return result;
-}
-
-
-renderer_specification operator,(renderer_specification x, renderer_shader_uniform y)
-{
-	renderer_specification result;
-	result._vertex_attributes = x._vertex_attributes;
-	result._shader_uniforms = x._shader_uniforms;
-	result._shader_uniforms.push_back(y);
 	result._vertex_shader = x._vertex_shader;
 	result._fragment_shader = x._fragment_shader;
 	return result;
@@ -84,7 +62,6 @@ renderer_specification operator,(renderer_specification x, renderer_vertex_shade
 {
 	renderer_specification result;
 	result._vertex_attributes = x._vertex_attributes;
-	result._shader_uniforms = x._shader_uniforms;
 	result._vertex_shader = y._source;
 	result._fragment_shader = x._fragment_shader;
 	return result;
@@ -95,78 +72,11 @@ renderer_specification operator,(renderer_specification x, renderer_fragment_sha
 {
 	renderer_specification result;
 	result._vertex_attributes = x._vertex_attributes;
-	result._shader_uniforms = x._shader_uniforms;
 	result._vertex_shader = x._vertex_shader;
 	result._fragment_shader = y._source;
 	return result;
 }
 
-
-
-
-void renderer_shader_uniform::set_value(const void* uniforms)
-{
-	const void* v = (const char*)uniforms + _offset;
-
-	switch (_type)
-	{
-		case shader_uniform_type_int:
-	        glUniform1iv(_location, 1, (const GLint*)v);
-	        CHECK_ERROR_GL();
-	        break;
-
-		case shader_uniform_type_float:
-	        glUniform1fv(_location, 1, (const GLfloat*)v);
-	        CHECK_ERROR_GL();
-	        break;
-
-		case shader_uniform_type_vector2:
-	        glUniform2fv(_location, 1, (const GLfloat*)v);
-	        CHECK_ERROR_GL();
-	        break;
-
-		case shader_uniform_type_vector3:
-	        glUniform3fv(_location, 1, (const GLfloat*)v);
-	        CHECK_ERROR_GL();
-	        break;
-
-		case shader_uniform_type_vector4:
-	        glUniform4fv(_location, 1, (const GLfloat*)v);
-	        CHECK_ERROR_GL();
-	        break;
-
-		case shader_uniform_type_matrix2:
-	        glUniformMatrix2fv(_location, 1, GL_FALSE, (const GLfloat*)v);
-	        CHECK_ERROR_GL();
-	        break;
-
-		case shader_uniform_type_matrix3:
-	        glUniformMatrix3fv(_location, 1, GL_FALSE, (const GLfloat*)v);
-	        CHECK_ERROR_GL();
-	        break;
-
-		case shader_uniform_type_matrix4:
-	        glUniformMatrix4fv(_location, 1, GL_FALSE, (const GLfloat*)v);
-	        CHECK_ERROR_GL();
-	        break;
-
-		case shader_uniform_type_texture: {
-			texture**t = (texture**)v;
-	        glActiveTexture(GL_TEXTURE0 + _texture);
-			CHECK_ERROR_GL();
-			if (*t != nullptr)
-			{
-                glBindTexture(GL_TEXTURE_2D, (*t)->id);
-				CHECK_ERROR_GL();
-			}
-            glUniform1i(_location, _texture);
-			CHECK_ERROR_GL();
-			break;
-		}
-		default:
-			break;
-	}
-}
 
 
 
@@ -177,10 +87,10 @@ static const GLchar* decode_name(const GLchar* name)
 
 
 renderer_base::renderer_base(const renderer_specification& specification) :
-	_vertex_attributes(specification._vertex_attributes),
-	_shader_uniforms(specification._shader_uniforms),
-	_blend_sfactor(GL_ONE),
-	_blend_dfactor(GL_ZERO)
+_nextUniformTexture(0),
+_vertex_attributes(specification._vertex_attributes),
+_blend_sfactor(GL_ONE),
+_blend_dfactor(GL_ZERO)
 {
 	_program = glCreateProgram();
 	CHECK_ERROR_GL();
@@ -219,16 +129,6 @@ renderer_base::renderer_base(const renderer_specification& specification) :
 	CHECK_ERROR_GL();
 	glDeleteShader(fragment_shader);
 	CHECK_ERROR_GL();
-
-	GLenum texture = 0;
-	for (int i = 0; i < (int)_shader_uniforms.size(); ++i)
-	{
-		const GLchar* name = decode_name(_shader_uniforms[i]._name);
-		_shader_uniforms[i]._location = glGetUniformLocation(_program, name);
-		CHECK_ERROR_GL();
-		if (_shader_uniforms[i]._type == shader_uniform_type_texture)
-			_shader_uniforms[i]._texture = texture++;
-	}
 }
 
 
@@ -369,8 +269,6 @@ renderers::renderers()
 	_distance_renderer = new renderer<texture_vertex>((
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
-		SHADER_UNIFORM(texture_uniforms, _transform),
-		SHADER_UNIFORM(texture_uniforms, _texture),
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
@@ -466,8 +364,6 @@ renderers::renderers()
 	_gradient_renderer = new renderer<color_vertex>((
 		VERTEX_ATTRIBUTE(color_vertex, _position),
 		VERTEX_ATTRIBUTE(color_vertex, _color),
-		SHADER_UNIFORM(gradient_uniforms, _transform),
-		SHADER_UNIFORM(gradient_uniforms, _point_size),
 		VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -503,8 +399,6 @@ renderers::renderers()
 	_gradient_renderer3 = new renderer<color_vertex3>((
 		VERTEX_ATTRIBUTE(color_vertex3, _position),
 		VERTEX_ATTRIBUTE(color_vertex3, _color),
-		SHADER_UNIFORM(gradient_uniforms, _transform),
-		SHADER_UNIFORM(gradient_uniforms, _point_size),
 		VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -539,14 +433,6 @@ renderers::renderers()
 	_ground_renderer = new renderer<texture_vertex>((
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
-		SHADER_UNIFORM(ground_uniforms, _transform),
-		SHADER_UNIFORM(ground_uniforms, _texture),
-		SHADER_UNIFORM(ground_uniforms, _obstacle1),
-		SHADER_UNIFORM(ground_uniforms, _obstacle2),
-		SHADER_UNIFORM(ground_uniforms, _obstacle3),
-		SHADER_UNIFORM(ground_uniforms, _obstacle4),
-		SHADER_UNIFORM(ground_uniforms, _obstacle5),
-		SHADER_UNIFORM(ground_uniforms, _obstacle6),
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
@@ -603,9 +489,6 @@ renderers::renderers()
 
 	_plain_renderer = new renderer<plain_vertex>((
 		VERTEX_ATTRIBUTE(plain_vertex, _position),
-		SHADER_UNIFORM(color_uniforms, _transform),
-		SHADER_UNIFORM(gradient_uniforms, _point_size),
-		SHADER_UNIFORM(color_uniforms, _color),
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
@@ -637,9 +520,6 @@ renderers::renderers()
 
 	_plain_renderer3 = new renderer<plain_vertex3>((
 		VERTEX_ATTRIBUTE(plain_vertex3, _position),
-		SHADER_UNIFORM(color_uniforms, _transform),
-		SHADER_UNIFORM(gradient_uniforms, _point_size),
-		SHADER_UNIFORM(color_uniforms, _color),
 		VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -672,8 +552,6 @@ renderers::renderers()
 	_texture_renderer = new renderer<texture_vertex>((
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
-		SHADER_UNIFORM(texture_uniforms, _transform),
-		SHADER_UNIFORM(texture_uniforms, _texture),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -710,8 +588,6 @@ renderers::renderers()
 	_texture_renderer3 = new renderer<texture_vertex3>((
 			VERTEX_ATTRIBUTE(texture_vertex3, _position),
 					VERTEX_ATTRIBUTE(texture_vertex3, _texcoord),
-					SHADER_UNIFORM(texture_uniforms, _transform),
-					SHADER_UNIFORM(texture_uniforms, _texture),
 					VERTEX_SHADER
 		({
 						uniform mat4 transform;
@@ -748,8 +624,6 @@ renderers::renderers()
 	_opaque_texture_renderer = new renderer<texture_vertex>((
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
-		SHADER_UNIFORM(texture_uniforms, _transform),
-		SHADER_UNIFORM(texture_uniforms, _texture),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -785,9 +659,6 @@ renderers::renderers()
 	_alpha_texture_renderer = new renderer<texture_vertex>((
 			VERTEX_ATTRIBUTE(texture_vertex, _position),
 			VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
-			SHADER_UNIFORM(texture_alpha_uniforms, _transform),
-			SHADER_UNIFORM(texture_alpha_uniforms, _texture),
-			SHADER_UNIFORM(texture_alpha_uniforms, _alpha),
 			VERTEX_SHADER
 		({
 			uniform mat4 transform;

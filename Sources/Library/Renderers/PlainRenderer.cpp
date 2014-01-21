@@ -9,9 +9,6 @@ PlainRenderer::PlainRenderer()
 {
 	_renderer = new renderer<vertex>((
 		VERTEX_ATTRIBUTE(vertex, _position),
-		SHADER_UNIFORM(uniforms, _transform),
-		SHADER_UNIFORM(uniforms, _point_size),
-		SHADER_UNIFORM(uniforms, _color),
 		VERTEX_SHADER
 		({
 			attribute vec3 position;

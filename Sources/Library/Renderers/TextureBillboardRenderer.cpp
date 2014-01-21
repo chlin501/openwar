@@ -13,12 +13,6 @@ TextureBillboardRenderer::TextureBillboardRenderer()
 		VERTEX_ATTRIBUTE(texture_billboard_vertex, _height),
 		VERTEX_ATTRIBUTE(texture_billboard_vertex, _texcoord),
 		VERTEX_ATTRIBUTE(texture_billboard_vertex, _texsize),
-		SHADER_UNIFORM(texture_billboard_uniforms, _transform),
-		SHADER_UNIFORM(texture_billboard_uniforms, _texture),
-		SHADER_UNIFORM(texture_billboard_uniforms, _upvector),
-		SHADER_UNIFORM(texture_billboard_uniforms, _viewport_height),
-		SHADER_UNIFORM(texture_billboard_uniforms, _min_point_size),
-		SHADER_UNIFORM(texture_billboard_uniforms, _max_point_size),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;

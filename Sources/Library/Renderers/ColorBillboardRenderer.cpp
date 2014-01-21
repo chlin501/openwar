@@ -11,9 +11,6 @@ ColorBillboardRenderer::ColorBillboardRenderer()
 		VERTEX_ATTRIBUTE(vertex, _position),
 		VERTEX_ATTRIBUTE(vertex, _color),
 		VERTEX_ATTRIBUTE(vertex, _height),
-		SHADER_UNIFORM(uniforms, _transform),
-		SHADER_UNIFORM(uniforms, _upvector),
-		SHADER_UNIFORM(uniforms, _viewport_height),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;

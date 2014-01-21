@@ -11,9 +11,6 @@ _groundMap(groundMap)
 {
 	_water_inside_renderer = new renderer<plain_vertex>((
 		VERTEX_ATTRIBUTE(plain_vertex, _position),
-		SHADER_UNIFORM(ground_texture_uniforms, _transform),
-		SHADER_UNIFORM(ground_texture_uniforms, _map_bounds),
-		SHADER_UNIFORM(ground_texture_uniforms, _texture),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -43,9 +40,6 @@ _groundMap(groundMap)
 
 	_water_border_renderer = new renderer<plain_vertex>((
 		VERTEX_ATTRIBUTE(plain_vertex, _position),
-		SHADER_UNIFORM(ground_texture_uniforms, _transform),
-		SHADER_UNIFORM(ground_texture_uniforms, _map_bounds),
-		SHADER_UNIFORM(ground_texture_uniforms, _texture),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;

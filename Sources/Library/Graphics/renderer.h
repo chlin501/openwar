@@ -5,6 +5,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include <map>
 #include "vertexbuffer.h"
 #include "texture.h"
 
@@ -139,24 +140,6 @@ struct renderer_vertex_attribute
 };
 
 
-struct renderer_shader_uniform
-{
-	GLint _location;
-	const GLchar* _name;
-	shader_uniform_type _type;
-	int _offset;
-	GLenum _texture;
-
-	renderer_shader_uniform(const GLchar* name, shader_uniform_type type, int offset)
-		: _location(0), _name(name), _type(type), _offset(offset)
-	{
-		_texture = 0;
-	}
-
-	void set_value(const void* uniforms);
-};
-
-
 template <class T>
 class shader_uniform
 {
@@ -254,7 +237,6 @@ struct renderer_fragment_shader
 struct renderer_specification
 {
 	std::vector<renderer_vertex_attribute> _vertex_attributes;
-	std::vector<renderer_shader_uniform> _shader_uniforms;
 	const char* _vertex_shader;
 	const char* _fragment_shader;
 	renderer_specification() : _vertex_shader(nullptr), _fragment_shader(nullptr) { }
@@ -262,10 +244,8 @@ struct renderer_specification
 
 
 renderer_specification operator,(renderer_vertex_attribute x, renderer_vertex_attribute y);
-renderer_specification operator,(renderer_vertex_attribute x, renderer_shader_uniform y);
 renderer_specification operator,(renderer_vertex_attribute x, renderer_vertex_shader y);
 renderer_specification operator,(renderer_specification x, renderer_vertex_attribute y);
-renderer_specification operator,(renderer_specification x, renderer_shader_uniform y);
 renderer_specification operator,(renderer_specification x, renderer_vertex_shader y);
 renderer_specification operator,(renderer_specification x, renderer_fragment_shader y);
 
@@ -284,16 +264,6 @@ renderer_specification operator,(renderer_specification x, renderer_fragment_sha
 		VERTEX_ATTRIBUTE_STRIDE(_Vertex, _Name), \
 		VERTEX_ATTRIBUTE_OFFSET(_Vertex, _Name))
 
-#define SHADER_UNIFORM_TYPE(_Uniforms, _Name) get_shader_uniform_type(MEMBER_POINTER(_Uniforms, _Name))
-#define SHADER_UNIFORM_OFFSET(_Uniforms, _Name) (const char*)&((_Uniforms*)nullptr)->_Name - (const char*)nullptr
-
-
-#define SHADER_UNIFORM(_Uniforms, _Name) \
-	renderer_shader_uniform(#_Name, \
-		SHADER_UNIFORM_TYPE(_Uniforms, _Name), \
-		SHADER_UNIFORM_OFFSET(_Uniforms, _Name))
-
-
 #define VERTEX_SHADER(source) renderer_vertex_shader(#source)
 #define FRAGMENT_SHADER(source) renderer_fragment_shader(#source)
 
@@ -301,9 +271,11 @@ renderer_specification operator,(renderer_specification x, renderer_fragment_sha
 
 class renderer_base
 {
+	std::map<GLint, GLenum> _uniformTexture;
+	GLenum _nextUniformTexture;
+
 public:
 	std::vector<renderer_vertex_attribute> _vertex_attributes;
-	std::vector<renderer_shader_uniform> _shader_uniforms;
 	GLuint _program;
 	GLenum _blend_sfactor;
 	GLenum _blend_dfactor;
@@ -321,10 +293,22 @@ public:
 	template <class T>
 	shader_uniform<T> get_uniform(const char* name)
 	{
-		for (const renderer_shader_uniform& u : _shader_uniforms)
-			if (std::strcmp(name, u._name + 1) == 0)
-				return shader_uniform<T>(_program, u._location, u._texture);
-		return shader_uniform<T>(0, 0, 0);
+		GLint location = glGetUniformLocation(_program, name);
+		GLenum texture = 0;
+		auto i = _uniformTexture.find(location);
+		if (i != _uniformTexture.end())
+		{
+			texture = i->second;
+		}
+		else
+		{
+			shader_uniform_type type = get_shader_uniform_type((const T*)nullptr);
+			if (type == shader_uniform_type_texture)
+				texture =  _nextUniformTexture++;
+			_uniformTexture[location] = texture;
+		}
+
+		return shader_uniform<T>(_program, location, texture);
 	}
 };
 

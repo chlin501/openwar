@@ -83,9 +83,6 @@ void string_font::initialize()
 		VERTEX_ATTRIBUTE(texture_alpha_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_alpha_vertex, _texcoord),
 		VERTEX_ATTRIBUTE(texture_alpha_vertex, _alpha),
-		SHADER_UNIFORM(string_uniforms, _transform),
-		SHADER_UNIFORM(string_uniforms, _texture),
-		SHADER_UNIFORM(string_uniforms, _color),
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
