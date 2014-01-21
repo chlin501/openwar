@@ -9,7 +9,7 @@ GradientRenderer::GradientRenderer()
 {
 	_renderer = new renderer<vertex>((
 			VERTEX_ATTRIBUTE(vertex, _position),
-			VERTEX_ATTRIBUTE(vertex, _color),
+			VERTEX_ATTRIBUTE(vertex, _color)),
 			VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -36,7 +36,7 @@ GradientRenderer::GradientRenderer()
 				gl_FragColor = v_color;
 			}
 		})
-	));
+	);
 	_renderer->_blend_sfactor = GL_SRC_ALPHA;
 	_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }

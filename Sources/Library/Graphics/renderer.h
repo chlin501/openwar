@@ -219,35 +219,19 @@ public:
 };
 
 
-struct renderer_vertex_shader
-{
-	const GLchar* _source;
-
-	renderer_vertex_shader(const GLchar* source) : _source(source) { }
-};
-
-
-struct renderer_fragment_shader
-{
-	const GLchar* _source;
-	renderer_fragment_shader(const GLchar* source) : _source(source) { }
-};
-
-
 struct renderer_specification
 {
 	std::vector<renderer_vertex_attribute> _vertex_attributes;
-	const char* _vertex_shader;
-	const char* _fragment_shader;
-	renderer_specification() : _vertex_shader(nullptr), _fragment_shader(nullptr) { }
+	renderer_specification() { }
+	renderer_specification(const renderer_vertex_attribute& x)
+	{
+		_vertex_attributes.push_back(x);
+	}
 };
 
 
 renderer_specification operator,(renderer_vertex_attribute x, renderer_vertex_attribute y);
-renderer_specification operator,(renderer_vertex_attribute x, renderer_vertex_shader y);
 renderer_specification operator,(renderer_specification x, renderer_vertex_attribute y);
-renderer_specification operator,(renderer_specification x, renderer_vertex_shader y);
-renderer_specification operator,(renderer_specification x, renderer_fragment_shader y);
 
 
 #define MEMBER_POINTER(_Vertex, _Name) &((_Vertex*)nullptr)->_Name
@@ -264,8 +248,8 @@ renderer_specification operator,(renderer_specification x, renderer_fragment_sha
 		VERTEX_ATTRIBUTE_STRIDE(_Vertex, _Name), \
 		VERTEX_ATTRIBUTE_OFFSET(_Vertex, _Name))
 
-#define VERTEX_SHADER(source) renderer_vertex_shader(#source)
-#define FRAGMENT_SHADER(source) renderer_fragment_shader(#source)
+#define VERTEX_SHADER(source) (#source)
+#define FRAGMENT_SHADER(source) (#source)
 
 
 
@@ -280,7 +264,7 @@ public:
 	GLenum _blend_sfactor;
 	GLenum _blend_dfactor;
 
-	renderer_base(const renderer_specification& specification);
+	renderer_base(const renderer_specification& specification, const char* vertexshader, const char* fragmentshader);
 	virtual ~renderer_base();
 
 	static float pixels_per_point();
@@ -320,7 +304,8 @@ class renderer : public renderer_base
 public:
 	typedef _Vertex vertex_type;
 
-	renderer(const renderer_specification& specification) : renderer_base(specification)
+	renderer(const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
+	renderer_base(specification, vertexshader, fragmentshader)
 	{
 	}
 
@@ -357,11 +342,6 @@ public:
 	}
 };
 
-/*
-typedef renderer<plain_vertex, color_uniforms> plain_renderer;
-typedef renderer<color_vertex, gradient_uniforms> gradient_renderer;
-typedef renderer<texture_vertex, texture_uniforms> texture_renderer;
-*/
 
 struct renderers
 {

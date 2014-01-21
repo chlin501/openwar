@@ -9,7 +9,7 @@ TextureRenderer::TextureRenderer()
 {
 	_renderer = new renderer<vertex>((
 		VERTEX_ATTRIBUTE(vertex, _position),
-		VERTEX_ATTRIBUTE(vertex, _texcoord),
+		VERTEX_ATTRIBUTE(vertex, _texcoord)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -37,7 +37,7 @@ TextureRenderer::TextureRenderer()
 				gl_FragColor = texture2D(texture, _texcoord);
 			}
 		})
-	));
+	);
 	_renderer->_blend_sfactor = GL_ONE;
 	_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }

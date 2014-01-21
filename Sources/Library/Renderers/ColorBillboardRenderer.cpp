@@ -10,7 +10,7 @@ ColorBillboardRenderer::ColorBillboardRenderer()
 	_renderer = new renderer<vertex>((
 		VERTEX_ATTRIBUTE(vertex, _position),
 		VERTEX_ATTRIBUTE(vertex, _color),
-		VERTEX_ATTRIBUTE(vertex, _height),
+		VERTEX_ATTRIBUTE(vertex, _height)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -49,7 +49,7 @@ ColorBillboardRenderer::ColorBillboardRenderer()
 			{
 				gl_FragColor = _color;
 			}
-		})));
+		}));
 	_renderer->_blend_sfactor = GL_SRC_ALPHA;
 	_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }

@@ -8,7 +8,7 @@
 PlainRenderer::PlainRenderer()
 {
 	_renderer = new renderer<vertex>((
-		VERTEX_ATTRIBUTE(vertex, _position),
+		VERTEX_ATTRIBUTE(vertex, _position)),
 		VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -31,7 +31,7 @@ PlainRenderer::PlainRenderer()
 			{
 				gl_FragColor = color;
 			}
-		}))
+		})
 	);
 	_renderer->_blend_sfactor = GL_SRC_ALPHA;
 	_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;

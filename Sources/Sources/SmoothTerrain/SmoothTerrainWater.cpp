@@ -10,7 +10,7 @@ SmoothTerrainWater::SmoothTerrainWater(GroundMap* groundMap) :
 _groundMap(groundMap)
 {
 	_water_inside_renderer = new renderer<plain_vertex>((
-		VERTEX_ATTRIBUTE(plain_vertex, _position),
+		VERTEX_ATTRIBUTE(plain_vertex, _position)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -32,14 +32,14 @@ _groundMap(groundMap)
 				gl_FragColor = vec4(0.44 * 0.5, 0.72 * 0.5, 0.91 * 0.5, 0.5);
 				}
 			})
-	));
+	);
 	_water_inside_renderer->_blend_sfactor = GL_ONE;
 	_water_inside_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
 
 	_water_border_renderer = new renderer<plain_vertex>((
-		VERTEX_ATTRIBUTE(plain_vertex, _position),
+		VERTEX_ATTRIBUTE(plain_vertex, _position)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -69,7 +69,7 @@ _groundMap(groundMap)
 				gl_FragColor = vec4(0.44 * 0.5, 0.72 * 0.5, 0.91 * 0.5, 0.5);
 			}
 		})
-	));
+	);
 	_water_border_renderer->_blend_sfactor = GL_ONE;
 	_water_border_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 

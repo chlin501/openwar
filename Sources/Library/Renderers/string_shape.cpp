@@ -82,7 +82,7 @@ void string_font::initialize()
 	_renderer = new renderer<texture_alpha_vertex>((
 		VERTEX_ATTRIBUTE(texture_alpha_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_alpha_vertex, _texcoord),
-		VERTEX_ATTRIBUTE(texture_alpha_vertex, _alpha),
+		VERTEX_ATTRIBUTE(texture_alpha_vertex, _alpha)),
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
@@ -118,7 +118,7 @@ void string_font::initialize()
 				gl_FragColor = result;
 			}
 		})
-	));
+	);
 	_renderer->_blend_sfactor = GL_SRC_ALPHA;
 	_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }

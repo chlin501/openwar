@@ -39,7 +39,7 @@ void SmoothTerrainShaders::render_terrain_inside(vertexbuffer<terrain_vertex>& s
 	{
 		_terrain_inside = new renderer<terrain_vertex>((
 			VERTEX_ATTRIBUTE(terrain_vertex, _position),
-			VERTEX_ATTRIBUTE(terrain_vertex, _normal),
+			VERTEX_ATTRIBUTE(terrain_vertex, _normal)),
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -93,7 +93,7 @@ void SmoothTerrainShaders::render_terrain_inside(vertexbuffer<terrain_vertex>& s
 				    gl_FragColor = vec4(color, 1.0);
 				}
 			})
-		));
+		);
 		_terrain_inside->_blend_sfactor = GL_ONE;
 		_terrain_inside->_blend_dfactor = GL_ZERO;
 	}
@@ -114,7 +114,7 @@ void SmoothTerrainShaders::render_terrain_border(vertexbuffer<terrain_vertex>& s
 	{
 		_terrain_border = new renderer<terrain_vertex>((
 			VERTEX_ATTRIBUTE(terrain_vertex, _position),
-			VERTEX_ATTRIBUTE(terrain_vertex, _normal),
+			VERTEX_ATTRIBUTE(terrain_vertex, _normal)),
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -170,7 +170,7 @@ void SmoothTerrainShaders::render_terrain_border(vertexbuffer<terrain_vertex>& s
 				    gl_FragColor = vec4(color, 1.0);
 				}
 			})
-		));
+		);
 		_terrain_border->_blend_sfactor = GL_ONE;
 		_terrain_border->_blend_dfactor = GL_ZERO;
 	}
@@ -191,7 +191,7 @@ void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shap
 	{
 		_terrain_skirt = new renderer<skirt_vertex>((
 			VERTEX_ATTRIBUTE(skirt_vertex, _position),
-			VERTEX_ATTRIBUTE(skirt_vertex, _height),
+			VERTEX_ATTRIBUTE(skirt_vertex, _height)),
 			VERTEX_SHADER
 			({
 				attribute vec3 position;
@@ -223,7 +223,7 @@ void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shap
 
 				    gl_FragColor = vec4(color, 1);
 				}
-			}))
+			})
 		);
 		_terrain_skirt->_blend_sfactor = GL_ONE;
 		_terrain_skirt->_blend_dfactor = GL_ZERO;
@@ -242,7 +242,7 @@ void SmoothTerrainShaders::render_depth_inside(vertexbuffer<terrain_vertex>& sha
 	{
 		_depth_inside = new renderer<terrain_vertex>((
 			VERTEX_ATTRIBUTE(terrain_vertex, _position),
-			VERTEX_ATTRIBUTE(terrain_vertex, _normal),
+			VERTEX_ATTRIBUTE(terrain_vertex, _normal)),
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -262,7 +262,7 @@ void SmoothTerrainShaders::render_depth_inside(vertexbuffer<terrain_vertex>& sha
 				    gl_FragColor = vec4(1, 1, 1, 1);
 				}
 			})
-		));
+		);
 		_depth_inside->_blend_sfactor = GL_ONE;
 		_depth_inside->_blend_dfactor = GL_ZERO;
 	}
@@ -283,7 +283,7 @@ void SmoothTerrainShaders::render_depth_border(vertexbuffer<terrain_vertex>& sha
 	{
 		_depth_border = new renderer<terrain_vertex>((
 			VERTEX_ATTRIBUTE(terrain_vertex, _position),
-			VERTEX_ATTRIBUTE(terrain_vertex, _normal),
+			VERTEX_ATTRIBUTE(terrain_vertex, _normal)),
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -311,7 +311,7 @@ void SmoothTerrainShaders::render_depth_border(vertexbuffer<terrain_vertex>& sha
 				    gl_FragColor = vec4(1);
 				}
 			})
-		));
+		);
 		_depth_border->_blend_sfactor = GL_ONE;
 		_depth_border->_blend_dfactor = GL_ZERO;
 	}
@@ -332,7 +332,7 @@ void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape,
 	{
 		_depth_skirt = new renderer<skirt_vertex>((
 			VERTEX_ATTRIBUTE(skirt_vertex, _position),
-			VERTEX_ATTRIBUTE(skirt_vertex, _height),
+			VERTEX_ATTRIBUTE(skirt_vertex, _height)),
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -352,7 +352,7 @@ void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape,
 				{
 				    gl_FragColor = vec4(1);
 				}
-			}))
+			})
 		);
 		_depth_skirt->_blend_sfactor = GL_ONE;
 		_depth_skirt->_blend_dfactor = GL_ZERO;
@@ -369,7 +369,7 @@ void SmoothTerrainShaders::render_sobel_filter(vertexbuffer<texture_vertex>& sha
 	{
 		_sobel_filter = new renderer<texture_vertex>((
 			VERTEX_ATTRIBUTE(texture_vertex, _position),
-			VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
+			VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
@@ -440,7 +440,7 @@ void SmoothTerrainShaders::render_sobel_filter(vertexbuffer<texture_vertex>& sha
 					gl_FragColor = vec4(0.0725, 0.151, 0.1275, k);
 				}
 			})
-		));
+		);
 		_sobel_filter->_blend_sfactor = GL_SRC_ALPHA;
 		_sobel_filter->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 	}
@@ -456,7 +456,7 @@ void SmoothTerrainShaders::render_ground_shadow(vertexbuffer<plain_vertex>& shap
 	if (_ground_shadow == nullptr)
 	{
 		_ground_shadow = new renderer<plain_vertex>((
-			VERTEX_ATTRIBUTE(plain_vertex, _position),
+			VERTEX_ATTRIBUTE(plain_vertex, _position)),
 				VERTEX_SHADER
 			({
 					uniform mat4 transform;
@@ -485,7 +485,7 @@ void SmoothTerrainShaders::render_ground_shadow(vertexbuffer<plain_vertex>& shap
 
 						gl_FragColor = vec4(0, 0, 0, a);
 					}
-				}))
+				})
 		);
 		_ground_shadow->_blend_sfactor = GL_SRC_ALPHA;
 		_ground_shadow->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;

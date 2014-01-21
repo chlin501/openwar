@@ -38,44 +38,14 @@ renderer_specification operator,(renderer_vertex_attribute x, renderer_vertex_at
 }
 
 
-renderer_specification operator,(renderer_vertex_attribute x, renderer_vertex_shader y)
-{
-	renderer_specification result;
-	result._vertex_attributes.push_back(x);
-	result._vertex_shader = y._source;
-	return result;
-}
-
-
 renderer_specification operator,(renderer_specification x, renderer_vertex_attribute y)
 {
 	renderer_specification result;
 	result._vertex_attributes = x._vertex_attributes;
 	result._vertex_attributes.push_back(y);
-	result._vertex_shader = x._vertex_shader;
-	result._fragment_shader = x._fragment_shader;
 	return result;
 }
 
-
-renderer_specification operator,(renderer_specification x, renderer_vertex_shader y)
-{
-	renderer_specification result;
-	result._vertex_attributes = x._vertex_attributes;
-	result._vertex_shader = y._source;
-	result._fragment_shader = x._fragment_shader;
-	return result;
-}
-
-
-renderer_specification operator,(renderer_specification x, renderer_fragment_shader y)
-{
-	renderer_specification result;
-	result._vertex_attributes = x._vertex_attributes;
-	result._vertex_shader = x._vertex_shader;
-	result._fragment_shader = y._source;
-	return result;
-}
 
 
 
@@ -86,7 +56,7 @@ static const GLchar* decode_name(const GLchar* name)
 }
 
 
-renderer_base::renderer_base(const renderer_specification& specification) :
+renderer_base::renderer_base(const renderer_specification& specification, const char* vertexshader, const char* fragmentshader) :
 _nextUniformTexture(0),
 _vertex_attributes(specification._vertex_attributes),
 _blend_sfactor(GL_ONE),
@@ -95,8 +65,8 @@ _blend_dfactor(GL_ZERO)
 	_program = glCreateProgram();
 	CHECK_ERROR_GL();
 
-	GLuint vertex_shader = compile_shader(GL_VERTEX_SHADER, specification._vertex_shader);
-	GLuint fragment_shader = compile_shader(GL_FRAGMENT_SHADER, specification._fragment_shader);
+	GLuint vertex_shader = compile_shader(GL_VERTEX_SHADER, vertexshader);
+	GLuint fragment_shader = compile_shader(GL_FRAGMENT_SHADER, fragmentshader);
 
     glAttachShader(_program, vertex_shader);
 	CHECK_ERROR_GL();
@@ -268,7 +238,7 @@ renderers::renderers()
 {
 	_distance_renderer = new renderer<texture_vertex>((
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
-		VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
+		VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
@@ -356,14 +326,14 @@ renderers::renderers()
 			    gl_FragColor = vec4(rgb, alpha);
 			}
 		})
-	));
+	);
 	_distance_renderer->_blend_sfactor = GL_ONE;
 	_distance_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
 	_gradient_renderer = new renderer<color_vertex>((
 		VERTEX_ATTRIBUTE(color_vertex, _position),
-		VERTEX_ATTRIBUTE(color_vertex, _color),
+		VERTEX_ATTRIBUTE(color_vertex, _color)),
 		VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -391,14 +361,14 @@ renderers::renderers()
 				gl_FragColor = v_color;
 			}
 		})
-	));
+	);
 	_gradient_renderer->_blend_sfactor = GL_SRC_ALPHA;
 	_gradient_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
 	_gradient_renderer3 = new renderer<color_vertex3>((
 		VERTEX_ATTRIBUTE(color_vertex3, _position),
-		VERTEX_ATTRIBUTE(color_vertex3, _color),
+		VERTEX_ATTRIBUTE(color_vertex3, _color)),
 		VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -425,14 +395,14 @@ renderers::renderers()
 				gl_FragColor = v_color;
 			}
 		})
-	));
+	);
 	_gradient_renderer3->_blend_sfactor = GL_SRC_ALPHA;
 	_gradient_renderer3->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
 	_ground_renderer = new renderer<texture_vertex>((
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
-		VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
+		VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
@@ -481,14 +451,14 @@ renderers::renderers()
 			        gl_FragColor = texture2D(texture, _texcoord);
 			}
 		})
-	));
+	);
 	_ground_renderer->_blend_sfactor = GL_ONE;
 	_ground_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
 
 	_plain_renderer = new renderer<plain_vertex>((
-		VERTEX_ATTRIBUTE(plain_vertex, _position),
+		VERTEX_ATTRIBUTE(plain_vertex, _position)),
 		VERTEX_SHADER
 		({
 			attribute vec2 position;
@@ -511,7 +481,7 @@ renderers::renderers()
 			{
 			    gl_FragColor = color;
 			}
-		}))
+		})
 	);
 	_plain_renderer->_blend_sfactor = GL_SRC_ALPHA;
 	_plain_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
@@ -519,7 +489,7 @@ renderers::renderers()
 
 
 	_plain_renderer3 = new renderer<plain_vertex3>((
-		VERTEX_ATTRIBUTE(plain_vertex3, _position),
+		VERTEX_ATTRIBUTE(plain_vertex3, _position)),
 		VERTEX_SHADER
 		({
 			attribute vec3 position;
@@ -542,7 +512,7 @@ renderers::renderers()
 			{
 				gl_FragColor = color;
 			}
-		}))
+		})
 	);
 	_plain_renderer3->_blend_sfactor = GL_SRC_ALPHA;
 	_plain_renderer3->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
@@ -551,7 +521,7 @@ renderers::renderers()
 
 	_texture_renderer = new renderer<texture_vertex>((
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
-		VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
+		VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -579,7 +549,7 @@ renderers::renderers()
 			    gl_FragColor = texture2D(texture, _texcoord);
 			}
 		})
-	));
+	);
 	_texture_renderer->_blend_sfactor = GL_ONE;
 	_texture_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
@@ -587,7 +557,7 @@ renderers::renderers()
 
 	_texture_renderer3 = new renderer<texture_vertex3>((
 			VERTEX_ATTRIBUTE(texture_vertex3, _position),
-					VERTEX_ATTRIBUTE(texture_vertex3, _texcoord),
+					VERTEX_ATTRIBUTE(texture_vertex3, _texcoord)),
 					VERTEX_SHADER
 		({
 						uniform mat4 transform;
@@ -615,7 +585,7 @@ renderers::renderers()
 							gl_FragColor = texture2D(texture, _texcoord);
 						}
 					})
-	));
+	);
 	_texture_renderer3->_blend_sfactor = GL_ONE;
 	_texture_renderer3->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
@@ -623,7 +593,7 @@ renderers::renderers()
 
 	_opaque_texture_renderer = new renderer<texture_vertex>((
 		VERTEX_ATTRIBUTE(texture_vertex, _position),
-		VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
+		VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -651,14 +621,14 @@ renderers::renderers()
 			    gl_FragColor = texture2D(texture, _texcoord);
 			}
 		})
-	));
+	);
 	_opaque_texture_renderer->_blend_sfactor = GL_ONE;
 	_opaque_texture_renderer->_blend_dfactor = GL_ZERO;
 
 
 	_alpha_texture_renderer = new renderer<texture_vertex>((
 			VERTEX_ATTRIBUTE(texture_vertex, _position),
-			VERTEX_ATTRIBUTE(texture_vertex, _texcoord),
+			VERTEX_ATTRIBUTE(texture_vertex, _texcoord)),
 			VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -688,7 +658,7 @@ renderers::renderers()
 				gl_FragColor = c;
 			}
 		})
-	));
+	);
 	_alpha_texture_renderer->_blend_sfactor = GL_ONE;
 	_alpha_texture_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 

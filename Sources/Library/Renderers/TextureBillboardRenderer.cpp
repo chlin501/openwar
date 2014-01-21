@@ -12,7 +12,7 @@ TextureBillboardRenderer::TextureBillboardRenderer()
 		VERTEX_ATTRIBUTE(texture_billboard_vertex, _position),
 		VERTEX_ATTRIBUTE(texture_billboard_vertex, _height),
 		VERTEX_ATTRIBUTE(texture_billboard_vertex, _texcoord),
-		VERTEX_ATTRIBUTE(texture_billboard_vertex, _texsize),
+		VERTEX_ATTRIBUTE(texture_billboard_vertex, _texsize)),
 		VERTEX_SHADER
 		({
 			uniform mat4 transform;
@@ -53,7 +53,7 @@ TextureBillboardRenderer::TextureBillboardRenderer()
 
 			gl_FragColor = color;
 		}
-	})));
+	}));
 	_texture_billboard_renderer->_blend_sfactor = GL_ONE;
 	_texture_billboard_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }
