@@ -2,10 +2,10 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "PlainRenderer.h"
+#include "PlainShape3.h"
 
 
-PlainRenderer::PlainRenderer()
+PlainShape3::PlainShape3()
 {
 	_renderer = new shaderprogram1<glm::vec3>(
 		"position",
@@ -38,13 +38,13 @@ PlainRenderer::PlainRenderer()
 }
 
 
-PlainRenderer::~PlainRenderer()
+PlainShape3::~PlainShape3()
 {
 	delete _renderer;
 }
 
 
-void PlainRenderer::Draw(const glm::mat4x4& transform, const glm::vec4& color)
+void PlainShape3::Draw(const glm::mat4x4& transform, const glm::vec4& color)
 {
 	glLineWidth(1);
 
@@ -58,14 +58,14 @@ void PlainRenderer::Draw(const glm::mat4x4& transform, const glm::vec4& color)
 /***/
 
 
-void PlainLineRenderer::Reset()
+void PlainLineShape3::Reset()
 {
 	_vbo._mode = GL_LINES;
 	_vbo._vertices.clear();
 }
 
 
-void PlainLineRenderer::AddLine(const glm::vec3& p1, const glm::vec3& p2)
+void PlainLineShape3::AddLine(const glm::vec3& p1, const glm::vec3& p2)
 {
 	_vbo._vertices.push_back(vertex(p1));
 	_vbo._vertices.push_back(vertex(p2));
@@ -75,14 +75,14 @@ void PlainLineRenderer::AddLine(const glm::vec3& p1, const glm::vec3& p2)
 /***/
 
 
-void PlainTriangleRenderer::Reset()
+void PlainTriangleShape3::Reset()
 {
 	_vbo._mode = GL_TRIANGLES;
 	_vbo._vertices.clear();
 }
 
 
-void PlainTriangleRenderer::AddVertex(const glm::vec3& p)
+void PlainTriangleShape3::AddVertex(const glm::vec3& p)
 {
 	_vbo._vertices.push_back(vertex(p));
 }

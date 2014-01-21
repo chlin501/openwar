@@ -8,7 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../../BattleModel/HeightMap.h"
-#include "../../Library/Renderers/PlainRenderer.h"
+#include "PlainShape3.h"
 #include "TerrainView.h"
 
 
@@ -40,7 +40,7 @@ void TerrainView::HideMouseHint()
 }
 
 
-void TerrainView::RenderMouseHint(PlainLineRenderer* renderer)
+void TerrainView::RenderMouseHint(PlainLineShape3* renderer)
 {
 	if (_mouseHintVisible)
 	{

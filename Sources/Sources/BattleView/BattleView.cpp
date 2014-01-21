@@ -8,10 +8,10 @@
 
 #include <glm/gtc/constants.hpp>
 
-#include "../../Library/Renderers/GradientRenderer.h"
-#include "../../Library/Renderers/ColorBillboardRenderer.h"
-#include "../../Library/Renderers/PlainRenderer.h"
-#include "../../Library/Renderers/TextureRenderer.h"
+#include "GradientShape3.h"
+#include "ColorBillboardShape.h"
+#include "PlainShape3.h"
+#include "TextureShape3.h"
 #include "../SmoothTerrain/SmoothTerrainWater.h"
 #include "../SmoothTerrain/SmoothTerrainSky.h"
 #include "BattleView.h"
@@ -152,13 +152,13 @@ _tiledTerrainRenderer(nullptr)
 	_textureBillboardRenderer1 = new TextureBillboardRenderer();
 	_textureBillboardRenderer2 = new TextureBillboardRenderer();
 
-	_plainLineRenderer = new PlainLineRenderer();
-	_plainTriangleRenderer = new PlainTriangleRenderer();
-	_gradientLineRenderer = new GradientLineRenderer();
-	_gradientTriangleRenderer = new GradientTriangleRenderer();
-	_gradientTriangleStripRenderer = new GradientTriangleStripRenderer();
-	_colorBillboardRenderer = new ColorBillboardRenderer();
-	_textureTriangleRenderer = new TextureTriangleRenderer();
+	_plainLineRenderer = new PlainLineShape3();
+	_plainTriangleRenderer = new PlainTriangleShape3();
+	_gradientLineRenderer = new GradientLineShape3();
+	_gradientTriangleRenderer = new GradientTriangleShape3();
+	_gradientTriangleStripRenderer = new GradientTriangleStripShape3();
+	_colorBillboardRenderer = new ColorBillboardShape();
+	_textureTriangleRenderer = new TextureTriangleShape3();
 }
 
 

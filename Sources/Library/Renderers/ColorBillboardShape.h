@@ -8,23 +8,16 @@
 #include "shaderprogram.h"
 
 
-class ColorBillboardRenderer
+class ColorBillboardShape
 {
 	typedef vertex3<glm::vec3, glm::vec4, float> vertex;
-
-	struct uniforms
-	{
-		glm::mat4x4 _transform;
-		glm::vec3 _upvector;
-		float _viewport_height;
-	};
 
 	shaderprogram3<glm::vec3, glm::vec4, float>* _renderer;
 	vertexbuffer<vertex> _vbo;
 
 public:
-	ColorBillboardRenderer();
-	~ColorBillboardRenderer();
+	ColorBillboardShape();
+	~ColorBillboardShape();
 
 	void Reset();
 	void AddBillboard(const glm::vec3& position, const glm::vec4& color, float height);

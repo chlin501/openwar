@@ -9,10 +9,10 @@
 #include "../../BattleModel/BattleSimulator.h"
 
 class BattleView;
-class ColorBillboardRenderer;
-class GradientTriangleRenderer;
+class ColorBillboardShape;
+class GradientTriangleShape3;
 class TextureBillboardRenderer;
-class TextureTriangleRenderer;
+class TextureTriangleShape3;
 
 
 class UnitTrackingMarker : public UnitMarker
@@ -79,12 +79,12 @@ public:
 
 	float GetFacing() const;
 
-	void RenderTrackingFighters(ColorBillboardRenderer* renderer);
+	void RenderTrackingFighters(ColorBillboardShape* renderer);
 	void RenderTrackingMarker(TextureBillboardRenderer* renderer);
-	void AppendFacingMarker(TextureTriangleRenderer* renderer, BattleView* battleView);
+	void AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView);
 	void RenderTrackingShadow(TextureBillboardRenderer* renderer);
-	void RenderTrackingPath(GradientTriangleRenderer* renderer);
-	void RenderOrientation(GradientTriangleRenderer* renderer);
+	void RenderTrackingPath(GradientTriangleShape3* renderer);
+	void RenderOrientation(GradientTriangleShape3* renderer);
 };
 
 

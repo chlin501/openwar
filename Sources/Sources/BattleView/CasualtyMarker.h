@@ -9,7 +9,7 @@
 #include "../../BattleModel/BattleSimulator.h"
 #include "../../BattleModel/SamuraiModule.h"
 
-class ColorBillboardRenderer;
+class ColorBillboardShape;
 class BillboardModel;
 
 
@@ -43,7 +43,7 @@ public:
 	void AddCasualty(glm::vec3 position, int team, SamuraiPlatform platform);
 	bool Animate(float seconds);
 
-	void RenderCasualtyColorBillboards(ColorBillboardRenderer* renderer);
+	void RenderCasualtyColorBillboards(ColorBillboardShape* renderer);
 	void AppendCasualtyBillboards(BillboardModel* billboardModel);
 };
 

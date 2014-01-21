@@ -9,7 +9,7 @@
 #include "../../BattleModel/HeightMap.h"
 #include "../../BattleModel/SmoothGroundMap.h"
 #include "../../Library/Algebra/geometry.h"
-#include "../../Library/Renderers/GradientRenderer.h"
+#include "GradientShape3.h"
 
 
 RangeMarker::RangeMarker(BattleSimulator* battleSimulator, Unit* unit) :
@@ -19,7 +19,7 @@ _unit(unit)
 }
 
 
-void RangeMarker::Render(GradientTriangleStripRenderer* renderer)
+void RangeMarker::Render(GradientTriangleStripShape3* renderer)
 {
 	const UnitCommand& command = _unit->GetCommand();
 	if (command.missileTarget != nullptr)
@@ -33,7 +33,7 @@ void RangeMarker::Render(GradientTriangleStripRenderer* renderer)
 }
 
 
-void RangeMarker::RenderMissileRange(GradientTriangleStripRenderer* renderer, const UnitRange& unitRange)
+void RangeMarker::RenderMissileRange(GradientTriangleStripShape3* renderer, const UnitRange& unitRange)
 {
 	glm::vec2 center = unitRange.center;
 	const float thickness = 8;
@@ -93,7 +93,7 @@ void RangeMarker::RenderMissileRange(GradientTriangleStripRenderer* renderer, co
 
 
 
-void RangeMarker::RenderMissileTarget(GradientTriangleStripRenderer* renderer, glm::vec2 target)
+void RangeMarker::RenderMissileTarget(GradientTriangleStripShape3* renderer, glm::vec2 target)
 {
 	glm::vec4 c0 = glm::vec4(255, 64, 64, 0) / 255.0f;
 	glm::vec4 c1 = glm::vec4(255, 64, 64, 24) / 255.0f;

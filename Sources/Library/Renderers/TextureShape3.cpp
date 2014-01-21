@@ -2,10 +2,10 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "TextureRenderer.h"
+#include "TextureShape3.h"
 
 
-TextureRenderer::TextureRenderer()
+TextureShape3::TextureShape3()
 {
 	_renderer = new shaderprogram2<glm::vec3, glm::vec2>(
 		"position", "texcoord",
@@ -42,20 +42,20 @@ TextureRenderer::TextureRenderer()
 }
 
 
-TextureRenderer::~TextureRenderer()
+TextureShape3::~TextureShape3()
 {
 	delete _renderer;
 }
 
 
-void TextureTriangleRenderer::Reset()
+void TextureTriangleShape3::Reset()
 {
 	_vbo._mode = GL_TRIANGLES;
 	_vbo._vertices.clear();
 }
 
 
-void TextureRenderer::Draw(const glm::mat4x4& transform, const texture* texturex)
+void TextureShape3::Draw(const glm::mat4x4& transform, const texture* texturex)
 {
 	_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 	_renderer->get_uniform<const texture*>("texture").set_value(texturex);
@@ -66,12 +66,12 @@ void TextureRenderer::Draw(const glm::mat4x4& transform, const texture* texturex
 /***/
 
 
-TextureTriangleRenderer::~TextureTriangleRenderer()
+TextureTriangleShape3::~TextureTriangleShape3()
 {
 }
 
 
-void TextureTriangleRenderer::AddVertex(glm::vec3 p, glm::vec2 t)
+void TextureTriangleShape3::AddVertex(glm::vec3 p, glm::vec2 t)
 {
 	_vbo._vertices.push_back(vertex(p, t));
 }

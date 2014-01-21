@@ -3,7 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "CasualtyMarker.h"
-#include "../../Library/Renderers/ColorBillboardRenderer.h"
+#include "ColorBillboardShape.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
 #include "../../BattleModel/HeightMap.h"
 #include "../../BattleModel/SmoothGroundMap.h"
@@ -37,7 +37,7 @@ bool CasualtyMarker::Animate(float seconds)
 
 
 
-void CasualtyMarker::RenderCasualtyColorBillboards(ColorBillboardRenderer* renderer)
+void CasualtyMarker::RenderCasualtyColorBillboards(ColorBillboardShape* renderer)
 {
 	if (casualties.empty())
 		return;

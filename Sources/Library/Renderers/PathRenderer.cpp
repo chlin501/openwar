@@ -6,9 +6,9 @@
 #include <glm/gtc/constants.hpp>
 
 #include "PathRenderer.h"
-#include "GradientRenderer.h"
-#include "TextureRenderer.h"
-#include "GradientRenderer.h"
+#include "GradientShape3.h"
+#include "TextureShape3.h"
+#include "GradientShape3.h"
 #include "../Algorithms/bspline.h"
 #include "../Algebra/geometry.h"
 
@@ -50,7 +50,7 @@ static glm::vec2 safe_normalize(glm::vec2 v)
 }
 
 
-void PathRenderer::RenderPath(GradientTriangleRenderer* renderer, const std::vector<glm::vec2>& path)
+void PathRenderer::RenderPath(GradientTriangleShape3* renderer, const std::vector<glm::vec2>& path)
 {
 	if (path.size() < 2)
 		return;
@@ -225,7 +225,7 @@ static void bspline_split_segments(std::vector<std::vector<glm::vec2>>& segments
 }
 
 
-void PathRenderer::Path(GradientTriangleRenderer* renderer, const std::vector<glm::vec2>& path, int mode)
+void PathRenderer::Path(GradientTriangleShape3* renderer, const std::vector<glm::vec2>& path, int mode)
 {
 	if (path.size() == 0)
 		return;

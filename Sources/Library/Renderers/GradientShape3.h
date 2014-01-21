@@ -8,32 +8,24 @@
 #include "shaderprogram.h"
 
 
-class GradientRenderer
+class GradientShape3
 {
 protected:
 	typedef vertex2<glm::vec3, glm::vec4> vertex;
-
-	struct uniforms
-	{
-		glm::mat4x4 _transform;
-		GLfloat _point_size;
-
-		uniforms() : _point_size(1) {}
-	};
 
 	shaderprogram2<glm::vec3, glm::vec4>* _renderer;
 	vertexbuffer<vertex> _vbo;
 
 public:
-	GradientRenderer();
-	virtual ~GradientRenderer();
+	GradientShape3();
+	virtual ~GradientShape3();
 
 	virtual void Reset() = 0;
 	void Draw(const glm::mat4x4& transform);
 };
 
 
-class GradientLineRenderer : public GradientRenderer
+class GradientLineShape3 : public GradientShape3
 {
 public:
 	virtual void Reset();
@@ -41,7 +33,7 @@ public:
 };
 
 
-class GradientTriangleRenderer : public GradientRenderer
+class GradientTriangleShape3 : public GradientShape3
 {
 public:
 	virtual void Reset();
@@ -49,7 +41,7 @@ public:
 };
 
 
-class GradientTriangleStripRenderer : public GradientRenderer
+class GradientTriangleStripShape3 : public GradientShape3
 {
 public:
 	virtual void Reset();

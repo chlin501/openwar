@@ -5,9 +5,9 @@
 #include <glm/gtc/constants.hpp>
 
 #include "../../BattleModel/BattleSimulator.h"
-#include "../../Library/Renderers/PlainRenderer.h"
+#include "PlainShape3.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
-#include "../../Library/Renderers/TextureRenderer.h"
+#include "TextureShape3.h"
 #include "BattleView.h"
 #include "UnitCounter.h"
 #include "BattleCommander.h"
@@ -91,7 +91,7 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer, bool flip
 }
 
 
-void UnitCounter::AppendFacingMarker(TextureTriangleRenderer* renderer, BattleView* battleView)
+void UnitCounter::AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView)
 {
 	const UnitCommand& command = _unit->GetCommand();
 
@@ -147,7 +147,7 @@ void UnitCounter::AppendFacingMarker(TextureTriangleRenderer* renderer, BattleVi
 }
 
 
-void UnitCounter::AppendFighterWeapons(PlainLineRenderer* renderer)
+void UnitCounter::AppendFighterWeapons(PlainLineShape3* renderer)
 {
 	if (_unit->stats.weaponReach > 0)
 	{

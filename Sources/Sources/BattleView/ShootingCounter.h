@@ -6,7 +6,7 @@
 #define ShootingMarker_H
 
 #include "../../BattleModel/BattleSimulator.h"
-class GradientLineRenderer;
+class GradientLineShape3;
 
 
 class ShootingCounter
@@ -38,11 +38,11 @@ public:
 	bool Animate(float seconds);
 	void AddProjectile(glm::vec3 position1, glm::vec3 position2, float delay, float duration);
 
-	void Render(GradientLineRenderer* renderer);
+	void Render(GradientLineShape3* renderer);
 
 private:
-	void RenderArrow(GradientLineRenderer* renderer, glm::vec3 p1, glm::vec3 p2, float t);
-	void RenderBullet(GradientLineRenderer* renderer, glm::vec3 p1, glm::vec3 p2, float t);
+	void RenderArrow(GradientLineShape3* renderer, glm::vec3 p1, glm::vec3 p2, float t);
+	void RenderBullet(GradientLineShape3* renderer, glm::vec3 p1, glm::vec3 p2, float t);
 };
 
 

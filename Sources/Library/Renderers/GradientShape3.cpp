@@ -2,10 +2,10 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "GradientRenderer.h"
+#include "GradientShape3.h"
 
 
-GradientRenderer::GradientRenderer()
+GradientShape3::GradientShape3()
 {
 	_renderer = new shaderprogram2<glm::vec3, glm::vec4>(
 		"position", "color",
@@ -41,13 +41,13 @@ GradientRenderer::GradientRenderer()
 }
 
 
-GradientRenderer::~GradientRenderer()
+GradientShape3::~GradientShape3()
 {
 	delete _renderer;
 }
 
 
-void GradientRenderer::Draw(const glm::mat4x4& transform)
+void GradientShape3::Draw(const glm::mat4x4& transform)
 {
 	glLineWidth(1);
 
@@ -60,14 +60,14 @@ void GradientRenderer::Draw(const glm::mat4x4& transform)
 /***/
 
 
-void GradientLineRenderer::Reset()
+void GradientLineShape3::Reset()
 {
 	_vbo._mode = GL_LINES;
 	_vbo._vertices.clear();
 }
 
 
-void GradientLineRenderer::AddLine(const glm::vec3& p1, const glm::vec3& p2, const glm::vec4& c1, const glm::vec4& c2)
+void GradientLineShape3::AddLine(const glm::vec3& p1, const glm::vec3& p2, const glm::vec4& c1, const glm::vec4& c2)
 {
 	_vbo._vertices.push_back(vertex(p1, c1));
 	_vbo._vertices.push_back(vertex(p2, c2));
@@ -77,14 +77,14 @@ void GradientLineRenderer::AddLine(const glm::vec3& p1, const glm::vec3& p2, con
 /***/
 
 
-void GradientTriangleRenderer::Reset()
+void GradientTriangleShape3::Reset()
 {
 	_vbo._mode = GL_TRIANGLES;
 	_vbo._vertices.clear();
 }
 
 
-void GradientTriangleRenderer::AddVertex(const glm::vec3& p, const glm::vec4& c)
+void GradientTriangleShape3::AddVertex(const glm::vec3& p, const glm::vec4& c)
 {
 	_vbo._vertices.push_back(vertex(p, c));
 }
@@ -93,14 +93,14 @@ void GradientTriangleRenderer::AddVertex(const glm::vec3& p, const glm::vec4& c)
 /***/
 
 
-void GradientTriangleStripRenderer::Reset()
+void GradientTriangleStripShape3::Reset()
 {
 	_vbo._mode = GL_TRIANGLE_STRIP;
 	_vbo._vertices.clear();
 }
 
 
-void GradientTriangleStripRenderer::AddVertex(const glm::vec3& p, const glm::vec4& c, bool separator)
+void GradientTriangleStripShape3::AddVertex(const glm::vec3& p, const glm::vec4& c, bool separator)
 {
 	if (separator && !_vbo._vertices.empty())
 	{

@@ -5,10 +5,10 @@
 #include <glm/gtc/constants.hpp>
 
 #include "../../BattleModel/BattleSimulator.h"
-#include "../../Library/Renderers/ColorBillboardRenderer.h"
+#include "ColorBillboardShape.h"
 #include "../../Library/Renderers/PathRenderer.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
-#include "../../Library/Renderers/TextureRenderer.h"
+#include "TextureShape3.h"
 #include "BattleView.h"
 #include "UnitMovementMarker.h"
 #include "BattleCommander.h"
@@ -53,7 +53,7 @@ void UnitMovementMarker::RenderMovementMarker(TextureBillboardRenderer* renderer
 }
 
 
-void UnitMovementMarker::AppendFacingMarker(TextureTriangleRenderer* renderer, BattleView* battleView)
+void UnitMovementMarker::AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView)
 {
 	if (_unit->state.unitMode != UnitMode_Moving)
 		return;
@@ -88,7 +88,7 @@ void UnitMovementMarker::AppendFacingMarker(TextureTriangleRenderer* renderer, B
 }
 
 
-void UnitMovementMarker::RenderMovementFighters(ColorBillboardRenderer* renderer)
+void UnitMovementMarker::RenderMovementFighters(ColorBillboardShape* renderer)
 {
 	const UnitCommand& command = _unit->GetCommand();
 	if (command.meleeTarget == nullptr)
@@ -114,7 +114,7 @@ void UnitMovementMarker::RenderMovementFighters(ColorBillboardRenderer* renderer
 }
 
 
-void UnitMovementMarker::RenderMovementPath(GradientTriangleRenderer* renderer)
+void UnitMovementMarker::RenderMovementPath(GradientTriangleShape3* renderer)
 {
 	const UnitCommand& command = _unit->GetCommand();
 	if (!command.path.empty())

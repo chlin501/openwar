@@ -8,33 +8,24 @@
 #include "shaderprogram.h"
 
 
-class PlainRenderer
+class PlainShape3
 {
 protected:
 	typedef vertex1<glm::vec3> vertex;
-
-	struct uniforms
-	{
-		glm::mat4x4 _transform;
-		GLfloat _point_size;
-		glm::vec4 _color;
-
-		uniforms() : _point_size(1) { }
-	};
 
 	vertexbuffer<vertex> _vbo;
 	shaderprogram1<glm::vec3>* _renderer;
 
 public:
-	PlainRenderer();
-	virtual ~PlainRenderer();
+	PlainShape3();
+	virtual ~PlainShape3();
 
 	virtual void Reset() = 0;
 	void Draw(const glm::mat4x4& transform, const glm::vec4& color);
 };
 
 
-class PlainLineRenderer : public PlainRenderer
+class PlainLineShape3 : public PlainShape3
 {
 public:
 	virtual void Reset();
@@ -42,7 +33,7 @@ public:
 };
 
 
-class PlainTriangleRenderer : public PlainRenderer
+class PlainTriangleShape3 : public PlainShape3
 {
 public:
 	virtual void Reset();

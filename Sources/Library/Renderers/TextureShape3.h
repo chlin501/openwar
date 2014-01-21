@@ -8,33 +8,27 @@
 #include "shaderprogram.h"
 
 
-class TextureRenderer
+class TextureShape3
 {
 protected:
 	typedef vertex2<glm::vec3, glm::vec2> vertex;
-
-	struct uniforms
-	{
-		glm::mat4x4 _transform;
-		const texture* _texture;
-	};
 
 	shaderprogram<vertex>* _renderer;
 	vertexbuffer<vertex> _vbo;
 
 public:
-	TextureRenderer();
-	virtual ~TextureRenderer();
+	TextureShape3();
+	virtual ~TextureShape3();
 
 	virtual void Reset() = 0;
 	void Draw(const glm::mat4x4& transform, const texture* texture);
 };
 
 
-class TextureTriangleRenderer : public TextureRenderer
+class TextureTriangleShape3 : public TextureShape3
 {
 public:
-	virtual ~TextureTriangleRenderer();
+	virtual ~TextureTriangleShape3();
 	virtual void Reset();
 
 	void AddVertex(glm::vec3 p, glm::vec2 t);

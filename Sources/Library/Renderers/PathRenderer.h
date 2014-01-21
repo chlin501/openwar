@@ -8,7 +8,7 @@
 #include <functional>
 #include <vector>
 
-class GradientTriangleRenderer;
+class GradientTriangleShape3;
 
 
 class PathRenderer
@@ -27,10 +27,10 @@ public:
 	float GetOffset() const { return _offset; }
 	void SetOffset(float value) { _offset = value; }
 
-	void Path(GradientTriangleRenderer* renderer, const std::vector<glm::vec2>& path, int mode);
+	void Path(GradientTriangleShape3* renderer, const std::vector<glm::vec2>& path, int mode);
 
 private:
-	void RenderPath(GradientTriangleRenderer* renderer, const std::vector<glm::vec2>& path);
+	void RenderPath(GradientTriangleShape3* renderer, const std::vector<glm::vec2>& path);
 };
 
 

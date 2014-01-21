@@ -14,16 +14,16 @@
 
 class BattleCommander;
 class CasualtyMarker;
-class ColorBillboardRenderer;
-class GradientLineRenderer;
-class GradientTriangleRenderer;
-class GradientTriangleStripRenderer;
+class ColorBillboardShape;
+class GradientLineShape3;
+class GradientTriangleShape3;
+class GradientTriangleStripShape3;
 class UnitMovementMarker;
-class PlainLineRenderer;
-class PlainTriangleRenderer;
+class PlainLineShape3;
+class PlainTriangleShape3;
 class RangeMarker;
 class ShootingCounter;
-class TextureTriangleRenderer;
+class TextureTriangleShape3;
 class UnitTrackingMarker;
 class UnitCounter;
 class SmoothTerrainWater;
@@ -50,13 +50,13 @@ class BattleView : public TerrainView, public BattleObserver
 	std::vector<UnitMovementMarker*> _movementMarkers;
 	std::vector<UnitTrackingMarker*> _trackingMarkers;
 
-	PlainLineRenderer* _plainLineRenderer;
-	PlainTriangleRenderer* _plainTriangleRenderer;
-	GradientLineRenderer* _gradientLineRenderer;
-	GradientTriangleRenderer* _gradientTriangleRenderer;
-	GradientTriangleStripRenderer* _gradientTriangleStripRenderer;
-	ColorBillboardRenderer* _colorBillboardRenderer;
-	TextureTriangleRenderer* _textureTriangleRenderer;
+	PlainLineShape3* _plainLineRenderer;
+	PlainTriangleShape3* _plainTriangleRenderer;
+	GradientLineShape3* _gradientLineRenderer;
+	GradientTriangleShape3* _gradientTriangleRenderer;
+	GradientTriangleStripShape3* _gradientTriangleStripRenderer;
+	ColorBillboardShape* _colorBillboardRenderer;
+	TextureTriangleShape3* _textureTriangleRenderer;
 
 	texture* _textureUnitMarkers;
 	texture* _textureTouchMarker;

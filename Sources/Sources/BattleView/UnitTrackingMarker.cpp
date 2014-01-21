@@ -5,10 +5,10 @@
 #include <glm/gtc/constants.hpp>
 
 #include "../../BattleModel/BattleCommander.h"
-#include "../../Library/Renderers/ColorBillboardRenderer.h"
+#include "ColorBillboardShape.h"
 #include "../../Library/Renderers/TextureBillboardRenderer.h"
-#include "../../Library/Renderers/GradientRenderer.h"
-#include "../../Library/Renderers/TextureRenderer.h"
+#include "GradientShape3.h"
+#include "TextureShape3.h"
 #include "../../Library/Renderers/PathRenderer.h"
 #include "BattleView.h"
 #include "UnitTrackingMarker.h"
@@ -40,7 +40,7 @@ float UnitTrackingMarker::GetFacing() const
 }
 
 
-void UnitTrackingMarker::RenderTrackingFighters(ColorBillboardRenderer* renderer)
+void UnitTrackingMarker::RenderTrackingFighters(ColorBillboardShape* renderer)
 {
 	if (!_meleeTarget && !_missileTarget)
 	{
@@ -81,7 +81,7 @@ void UnitTrackingMarker::RenderTrackingMarker(TextureBillboardRenderer* renderer
 }
 
 
-void UnitTrackingMarker::AppendFacingMarker(TextureTriangleRenderer* renderer, BattleView* battleView)
+void UnitTrackingMarker::AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView)
 {
 	if (_path.empty())
 		return;
@@ -126,7 +126,7 @@ void UnitTrackingMarker::RenderTrackingShadow(TextureBillboardRenderer* renderer
 
 
 
-void UnitTrackingMarker::RenderTrackingPath(GradientTriangleRenderer* renderer)
+void UnitTrackingMarker::RenderTrackingPath(GradientTriangleShape3* renderer)
 {
 	if (!_path.empty())
 	{
@@ -143,7 +143,7 @@ void UnitTrackingMarker::RenderTrackingPath(GradientTriangleRenderer* renderer)
 }
 
 
-void UnitTrackingMarker::RenderOrientation(GradientTriangleRenderer* renderer)
+void UnitTrackingMarker::RenderOrientation(GradientTriangleShape3* renderer)
 {
 	if (_renderOrientation && _hasOrientation && !_path.empty())
 	{

@@ -7,7 +7,7 @@
 
 #include "../../BattleModel/BattleSimulator.h"
 
-class GradientTriangleStripRenderer;
+class GradientTriangleStripShape3;
 
 
 class RangeMarker
@@ -19,11 +19,11 @@ public:
 public:
 	RangeMarker(BattleSimulator* battleSimulator, Unit* unit);
 
-	void Render(GradientTriangleStripRenderer* renderer);
+	void Render(GradientTriangleStripShape3* renderer);
 
 private:
-	void RenderMissileRange(GradientTriangleStripRenderer* renderer, const UnitRange& unitRange);
-	void RenderMissileTarget(GradientTriangleStripRenderer* renderer, glm::vec2 target);
+	void RenderMissileRange(GradientTriangleStripShape3* renderer, const UnitRange& unitRange);
+	void RenderMissileTarget(GradientTriangleStripShape3* renderer, glm::vec2 target);
 
 	glm::vec3 GetPosition(glm::vec2 p) const;
 };

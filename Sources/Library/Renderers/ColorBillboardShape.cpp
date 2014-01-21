@@ -2,10 +2,10 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "ColorBillboardRenderer.h"
+#include "ColorBillboardShape.h"
 
 
-ColorBillboardRenderer::ColorBillboardRenderer()
+ColorBillboardShape::ColorBillboardShape()
 {
 	_renderer = new shaderprogram3<glm::vec3, glm::vec4, float>(
 		"position", "color", "height",
@@ -53,34 +53,31 @@ ColorBillboardRenderer::ColorBillboardRenderer()
 }
 
 
-ColorBillboardRenderer::~ColorBillboardRenderer()
+ColorBillboardShape::~ColorBillboardShape()
 {
 	delete _renderer;
 }
 
 
-void ColorBillboardRenderer::Reset()
+void ColorBillboardShape::Reset()
 {
 	_vbo._mode = GL_POINTS;
 	_vbo._vertices.clear();
 }
 
 
-void ColorBillboardRenderer::AddBillboard(const glm::vec3& position, const glm::vec4& color, float height)
+void ColorBillboardShape::AddBillboard(const glm::vec3& position, const glm::vec4& color, float height)
 {
 	_vbo._vertices.push_back(vertex(position, color, height));
 }
 
 
-void ColorBillboardRenderer::Draw(const glm::mat4x4& transform, const glm::vec3 cameraUp, float viewportHeight)
+void ColorBillboardShape::Draw(const glm::mat4x4& transform, const glm::vec3 cameraUp, float viewportHeight)
 {
-	uniforms uniforms;
-	uniforms._transform = transform;
-	uniforms._upvector = cameraUp;
-	uniforms._viewport_height = 0.25f * shaderprogram_base::pixels_per_point() * viewportHeight;
+	float viewport_height = 0.25f * shaderprogram_base::pixels_per_point() * viewportHeight;
 
-	_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_renderer->get_uniform<glm::vec3>("upvector").set_value(uniforms._upvector);
-	_renderer->get_uniform<float>("viewport_height").set_value(uniforms._viewport_height);
+	_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
+	_renderer->get_uniform<glm::vec3>("upvector").set_value(cameraUp);
+	_renderer->get_uniform<float>("viewport_height").set_value(viewport_height);
 	_renderer->render(_vbo);
 }

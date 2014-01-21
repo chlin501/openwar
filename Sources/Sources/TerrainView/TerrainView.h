@@ -10,7 +10,7 @@
 #include "../../Library/ViewCore/View.h"
 #include "../../Library/Algebra/geometry.h"
 
-class PlainLineRenderer;
+class PlainLineShape3;
 
 
 class TerrainView : public View
@@ -31,7 +31,7 @@ public:
 
 	void ShowMouseHint(glm::vec2 position);
 	void HideMouseHint();
-	void RenderMouseHint(PlainLineRenderer* renderer);
+	void RenderMouseHint(PlainLineShape3* renderer);
 
 	void SetHeightMap(HeightMap* heightMap);
 
