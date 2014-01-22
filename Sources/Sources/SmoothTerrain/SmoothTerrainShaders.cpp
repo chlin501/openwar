@@ -193,7 +193,9 @@ void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shap
 			({
 				attribute vec3 position;
 				attribute float height;
+
 				uniform mat4 transform;
+
 				varying vec2 _colorcoord;
 				varying float _height;
 
@@ -210,6 +212,7 @@ void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shap
 			FRAGMENT_SHADER
 			({
 				uniform sampler2D texture;
+
 				varying vec2 _colorcoord;
 				varying float _height;
 
@@ -242,6 +245,7 @@ void SmoothTerrainShaders::render_depth_inside(vertexbuffer<terrain_vertex>& sha
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
+
 				attribute vec3 position;
 				attribute vec3 normal;
 
@@ -264,10 +268,6 @@ void SmoothTerrainShaders::render_depth_inside(vertexbuffer<terrain_vertex>& sha
 	}
 
 	_depth_inside->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_depth_inside->get_uniform<glm::vec3>("light_normal").set_value(uniforms._light_normal);
-	_depth_inside->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
-	_depth_inside->get_uniform<const texture*>("colormap").set_value(uniforms._colormap);
-	_depth_inside->get_uniform<const texture*>("splatmap").set_value(uniforms._splatmap);
 	_depth_inside->render(shape);
 }
 
@@ -283,8 +283,10 @@ void SmoothTerrainShaders::render_depth_border(vertexbuffer<terrain_vertex>& sha
 			({
 				uniform mat4 transform;
 				uniform vec4 map_bounds;
+
 				attribute vec3 position;
 				attribute vec3 normal;
+
 				varying vec2 _terraincoord;
 
 				void main()
@@ -312,10 +314,7 @@ void SmoothTerrainShaders::render_depth_border(vertexbuffer<terrain_vertex>& sha
 	}
 
 	_depth_border->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_depth_border->get_uniform<glm::vec3>("light_normal").set_value(uniforms._light_normal);
 	_depth_border->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
-	_depth_border->get_uniform<const texture*>("colormap").set_value(uniforms._colormap);
-	_depth_border->get_uniform<const texture*>("splatmap").set_value(uniforms._splatmap);
 	_depth_border->render(shape);
 }
 
@@ -330,6 +329,7 @@ void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape,
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
+
 				attribute vec3 position;
 				attribute float height;
 
@@ -366,6 +366,7 @@ void SmoothTerrainShaders::render_sobel_filter(vertexbuffer<texture_vertex>& sha
 			VERTEX_SHADER
 			({
 				uniform mat4 transform;
+
 				attribute vec2 position;
 				attribute vec2 texcoord;
 
@@ -454,7 +455,9 @@ void SmoothTerrainShaders::render_ground_shadow(vertexbuffer<plain_vertex>& shap
 			({
 				uniform mat4 transform;
 				uniform vec4 map_bounds;
+
 				attribute vec2 position;
+
 				varying vec2 _groundpos;
 
 				void main()
@@ -485,10 +488,7 @@ void SmoothTerrainShaders::render_ground_shadow(vertexbuffer<plain_vertex>& shap
 	}
 
 	_ground_shadow->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_ground_shadow->get_uniform<glm::vec3>("light_normal").set_value(uniforms._light_normal);
 	_ground_shadow->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
-	_ground_shadow->get_uniform<const texture*>("colormap").set_value(uniforms._colormap);
-	_ground_shadow->get_uniform<const texture*>("splatmap").set_value(uniforms._splatmap);
 	_ground_shadow->render(shape);
 }
 
