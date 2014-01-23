@@ -10,7 +10,7 @@
 #include "BattleView/BattleView.h"
 #include "TerrainView/EditorGesture.h"
 #include "OpenWarSurface.h"
-
+#include <glm/gtc/matrix_transform.hpp>
 
 
 OpenWarSurface::OpenWarSurface(glm::vec2 size, float pixelDensity) : BattleSurface(size, pixelDensity),
@@ -124,6 +124,11 @@ void OpenWarSurface::Update(double secondsSinceLastUpdate)
 
 void OpenWarSurface::RenderSurface()
 {
+	glm::vec2 size = GetSize();
+	glm::vec2 translate = -size / 2.0f;
+	glm::vec2 scale = 2.0f / size;
+	glm::mat4 transform = glm::translate(glm::scale(glm::mat4x4(), glm::vec3(scale, 1.0f)), glm::vec3(translate, 0.0f));
+
 	glClearColor(0.9137f, 0.8666f, 0.7647f, 1.0f);
 	glClearDepth(1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -132,8 +137,8 @@ void OpenWarSurface::RenderSurface()
 
 	BattleSurface::RenderSurface();
 
-	_buttonsTopLeft->Render(_buttonsTopLeft->GetRenderTransform());
-	_buttonsTopRight->Render(_buttonsTopRight->GetRenderTransform());
+	_buttonsTopLeft->Render(transform* _buttonsTopLeft->GetContentTransform());
+	_buttonsTopRight->Render(transform* _buttonsTopRight->GetContentTransform());
 }
 
 
