@@ -328,10 +328,8 @@ void ButtonView::UpdateLayout()
 
 
 
-void ButtonView::RenderContent()
+void ButtonView::Render(const glm::mat4& transform)
 {
-	glm::mat4 transform = ViewportTransform(GetFrame());
-
 	for (ButtonArea* buttonArea : _buttonAreas)
 	{
 		_buttonRendering->RenderBackground(transform, buttonArea->_bounds);

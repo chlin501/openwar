@@ -498,10 +498,8 @@ void BattleView::InitializeCameraPosition()
 	}
 }
 
-void BattleView::RenderContent()
+void BattleView::Render(const glm::mat4& transform)
 {
-	glm::mat4 transform = GetTransform();
-
 	UseViewport();
 
 	glm::vec2 facing = vector2_from_angle(GetCameraFacing() - 2.5f * (float)M_PI_4);
@@ -804,7 +802,7 @@ static bool is_iphone()
 
 bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 {
-	glm::mat4x4 transform = GetTransform();
+	glm::mat4x4 transform = GetTerrainTransform();
 	glm::vec3 upvector = GetCameraUpVector();
 	float viewport_height = GetFrame().height();
 	bounds1f sizeLimit = GetUnitIconSizeLimit() / shaderprogram_base::pixels_per_point();

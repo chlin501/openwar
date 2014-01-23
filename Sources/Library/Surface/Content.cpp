@@ -86,6 +86,18 @@ void Content::ScreenSizeChanged()
 }
 
 
+glm::mat4 Content::GetContentTransform() const
+{
+	return ViewportTransform(bounds2f(0, 0, _surface->GetSize()));
+}
+
+
+void Content::RenderContent()
+{
+	Render(GetContentTransform());
+}
+
+
 /*void View::Update(double secondsSinceLastUpdate)
 {
 }*/

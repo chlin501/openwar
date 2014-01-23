@@ -161,7 +161,7 @@ public:
 
 	void UpdateLayout();
 
-	virtual void RenderContent();
+	virtual void Render(const glm::mat4& transform);
 
 	virtual void Update(double secondsSinceLastUpdate);
 };

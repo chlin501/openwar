@@ -38,7 +38,11 @@ public:
 
 	virtual void ScreenSizeChanged();
 
-	virtual void RenderContent() = 0;
+	virtual glm::mat4 GetContentTransform() const;
+
+	void RenderContent();
+
+	virtual void Render(const glm::mat4& transform) = 0;
 	virtual void Update(double secondsSinceLastUpdate) = 0;
 
 private:

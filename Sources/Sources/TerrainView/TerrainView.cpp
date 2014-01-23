@@ -27,6 +27,12 @@ TerrainView::~TerrainView()
 }
 
 
+glm::mat4 TerrainView::GetContentTransform() const
+{
+	return GetTerrainTransform();
+}
+
+
 void TerrainView::ShowMouseHint(glm::vec2 position)
 {
 	_mouseHintPosition = position;
@@ -192,7 +198,7 @@ glm::mat4x4 TerrainView::GetViewMatrix() const
 ray TerrainView::GetCameraRay(glm::vec2 screenPosition) const
 {
 	glm::vec2 viewPosition = SurfaceToContent(screenPosition);
-	glm::mat4x4 inverse = glm::inverse(GetTransform());
+	glm::mat4x4 inverse = glm::inverse(GetTerrainTransform());
 	glm::vec4 p1 = inverse * glm::vec4(viewPosition, 0, 1.0f);
 	glm::vec4 p2 = inverse * glm::vec4(viewPosition, 0.5f, 1.0f);
 
@@ -340,7 +346,7 @@ static glm::vec3 transform_d(const glm::mat4x4& m, glm::vec3 v)
 
 glm::vec3 TerrainView::ScreenToContent(glm::vec2 value) const
 {
-	glm::mat4x4 transform = glm::inverse(GetTransform());
+	glm::mat4x4 transform = glm::inverse(GetTerrainTransform());
 	glm::vec2 p = SurfaceToContent(value);
 	return transform_d(transform, glm::vec3(p, 0));
 }
@@ -348,7 +354,7 @@ glm::vec3 TerrainView::ScreenToContent(glm::vec2 value) const
 
 glm::vec2 TerrainView::ContentToScreen(glm::vec3 value) const
 {
-	glm::mat4x4 transform = GetTransform();
+	glm::mat4x4 transform = GetTerrainTransform();
 	glm::vec3 v = transform_d(transform, value);
 	return ContentToSurface(v.xy());
 }

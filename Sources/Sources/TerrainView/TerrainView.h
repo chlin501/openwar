@@ -29,13 +29,16 @@ public:
 	TerrainView(Surface* screen);
 	virtual ~TerrainView();
 
+	virtual glm::mat4 GetContentTransform() const;
+
+	bounds2f GetContentBounds() const { return _contentBounds; }
+
 	void ShowMouseHint(glm::vec2 position);
 	void HideMouseHint();
 	void RenderMouseHint(PlainLineShape3* renderer);
 
 	void SetHeightMap(HeightMap* heightMap);
 
-	bounds2f GetContentBounds() const { return _contentBounds; }
 	float GetContentRadius() const;
 
 	glm::vec2 GetScreenTop() const;
@@ -53,7 +56,7 @@ public:
 
 	glm::mat4x4 GetProjectionMatrix() const;
 	glm::mat4x4 GetViewMatrix() const;
-	glm::mat4x4 GetTransform() const { return GetProjectionMatrix() * GetViewMatrix(); }
+	glm::mat4x4 GetTerrainTransform() const { return GetProjectionMatrix() * GetViewMatrix(); }
 	ray GetCameraRay(glm::vec2 screenPosition) const;
 	glm::vec3 GetTerrainPosition2(glm::vec2 screenPosition) const;
 	glm::vec3 GetTerrainPosition3(glm::vec2 screenPosition) const;
