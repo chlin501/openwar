@@ -8,7 +8,7 @@
 #include <string>
 #include "../Algebra/bounds.h"
 #include "../Graphics/texture.h"
-#include "../Surface/View.h"
+#include "Content.h"
 #include "ButtonRendering.h"
 
 
@@ -134,7 +134,7 @@ public:
 };
 
 
-class ButtonView : public View
+class ButtonView : public Content
 {
 public:
 	ButtonRendering* _buttonRendering;

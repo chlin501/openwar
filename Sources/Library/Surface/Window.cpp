@@ -202,7 +202,7 @@ void Window::ProcessWindow(const SDL_WindowEvent& event)
 	SDL_GetWindowPosition(_window, &x, &y);
 	SDL_GetWindowSize(_window, &w, &h);
 
-	_surface->SetOrigin(glm::vec2(x, y));
+	_surface->SetPosition(glm::vec2(x, y));
 	_surface->SetSize(glm::vec2(w, h));
 	_surface->ScreenSizeChanged();
 }

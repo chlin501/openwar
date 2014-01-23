@@ -202,7 +202,7 @@ void ButtonArea::UpdateBounds(bounds2f bounds)
 
 
 
-ButtonView::ButtonView(Surface* screen, ButtonRendering* buttonRendering, ButtonAlignment alignment) : View(screen),
+ButtonView::ButtonView(Surface* screen, ButtonRendering* buttonRendering, ButtonAlignment alignment) : Content(screen),
 _buttonRendering(buttonRendering),
 _alignment(alignment)
 {
@@ -212,7 +212,7 @@ _alignment(alignment)
 
 void ButtonView::SetViewport(bounds2f value)
 {
-	View::SetViewport(value);
+	Content::SetViewport(value);
 	UpdateLayout();
 }
 

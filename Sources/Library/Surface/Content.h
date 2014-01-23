@@ -2,8 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef VIEW_H
-#define VIEW_H
+#ifndef CONTENT_H
+#define CONTENT_H
 
 #include "Surface.h"
 
@@ -11,7 +11,7 @@
 glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate = glm::vec2(), float rotate = 0);
 
 
-class View
+class Content
 {
 	Surface* _surface;
 	bounds2f _viewport;
@@ -19,8 +19,8 @@ class View
 	bool _flip;
 
 public:
-	View(Surface* surface);
-	virtual ~View();
+	Content(Surface* surface);
+	virtual ~Content();
 
 	Surface* GetSurface() const { return _surface; }
 

@@ -7,13 +7,13 @@
 
 #include "../../BattleModel/GroundMap.h"
 #include "../../BattleModel/HeightMap.h"
-#include "../../Library/Surface/View.h"
+#include "Content.h"
 #include "../../Library/Algebra/geometry.h"
 
 class PlainLineShape3;
 
 
-class TerrainView : public View
+class TerrainView : public Content
 {
 	bounds2f _contentBounds;
 	glm::vec3 _cameraPosition;

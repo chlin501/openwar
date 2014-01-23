@@ -18,7 +18,7 @@ class Surface
 {
 	graphicscontext* _gc;
 	float _pixelDensity;
-	glm::vec2 _origin;
+	glm::vec2 _position;
 	glm::vec2 _size;
 
 public:
@@ -29,10 +29,8 @@ public:
 
 	graphicscontext* GetGraphicsContext() const { return _gc; }
 
-	float GetPixelDensity() const { return _pixelDensity; }
-
-	glm::vec2 GetOrigin() const { return _origin; }
-	void SetOrigin(glm::vec2 value) { _origin = value; }
+	virtual glm::vec2 GetPosition() const { return _position; }
+	virtual void SetPosition(glm::vec2 value) { _position = value; }
 
 	glm::vec2 GetSize() const { return _size; }
 	void SetSize(glm::vec2 value) { _size = value; }

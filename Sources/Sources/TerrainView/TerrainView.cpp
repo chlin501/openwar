@@ -12,7 +12,7 @@
 #include "TerrainView.h"
 
 
-TerrainView::TerrainView(Surface* screen) : View(screen),
+TerrainView::TerrainView(Surface* screen) : Content(screen),
 _cameraTilt((float)M_PI_4),
 _cameraFacing(0),
 _mouseHintVisible(false),

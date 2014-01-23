@@ -2,7 +2,7 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "View.h"
+#include "Content.h"
 #include "shaderprogram.h"
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -24,7 +24,7 @@ glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate, float rotate
 
 
 
-View::View(Surface* surface) :
+Content::Content(Surface* surface) :
 _surface(surface),
 _viewport(),
 _aspect(0),
@@ -34,25 +34,25 @@ _flip(false)
 }
 
 
-View::~View()
+Content::~Content()
 {
 }
 
 
-bounds2f View::GetViewportBounds() const
+bounds2f Content::GetViewportBounds() const
 {
 	return _viewport.is_empty() ? bounds2f(0, 0, _surface->GetSize()) : _viewport;
 }
 
 
-void View::SetViewport(bounds2f value)
+void Content::SetViewport(bounds2f value)
 {
 	_viewport = value;
 	UpdateAspect();
 }
 
 
-void View::UseViewport()
+void Content::UseViewport()
 {
 	if (_viewport.is_empty())
 	{
@@ -60,27 +60,27 @@ void View::UseViewport()
 	}
 	else
 	{
-		bounds2f viewport = _viewport * GetSurface()->GetPixelDensity();
+		bounds2f viewport = _viewport * GetSurface()->GetGraphicsContext()->get_pixeldensity();
 		glViewport((GLint)viewport.min.x, (GLint)viewport.min.y, (GLsizei)viewport.size().x, (GLsizei)viewport.size().y);
 	}
 }
 
 
-glm::vec2 View::ScreenToView(glm::vec2 value) const
+glm::vec2 Content::ScreenToView(glm::vec2 value) const
 {
 	bounds2f viewport = GetViewportBounds();
 	return 2.0f * (value - viewport.p11()) / viewport.size() - 1.0f;
 }
 
 
-glm::vec2 View::ViewToScreen(glm::vec2 value) const
+glm::vec2 Content::ViewToScreen(glm::vec2 value) const
 {
 	bounds2f viewport = GetViewportBounds();
 	return viewport.p11() + (value + 1.0f) / 2.0f * viewport.size();
 }
 
 
-void View::ScreenSizeChanged()
+void Content::ScreenSizeChanged()
 {
 	UpdateAspect();
 }
@@ -92,7 +92,7 @@ void View::ScreenSizeChanged()
 
 
 
-void View::UpdateAspect()
+void Content::UpdateAspect()
 {
 	if (_viewport.is_empty())
 		_aspect = _surface->GetSize().y / _surface->GetSize().x;
