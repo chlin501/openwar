@@ -9,17 +9,15 @@
 
 #include "../Algebra/bounds.h"
 #include "graphicscontext.h"
+#include "Container.h"
 
 class Gesture;
 class Touch;
 
 
-class Surface
+class Surface : public Container
 {
 	graphicscontext* _gc;
-	float _pixelDensity;
-	glm::vec2 _position;
-	glm::vec2 _size;
 
 public:
 	std::vector<Gesture*> _gestures;
@@ -29,21 +27,14 @@ public:
 
 	graphicscontext* GetGraphicsContext() const { return _gc; }
 
-	virtual glm::vec2 GetPosition() const { return _position; }
-	virtual void SetPosition(glm::vec2 value) { _position = value; }
 
-	glm::vec2 GetSize() const { return _size; }
-	void SetSize(glm::vec2 value) { _size = value; }
-
-	void UseViewport();
-
-	bounds2f GetSpriteViewport() const;
+	virtual void UseViewport();
 
 	virtual void ScreenSizeChanged();
 
 	virtual bool NeedsRender() const = 0;
+
 	virtual void RenderSurface() = 0;
-	virtual void Update(double secondsSinceLastUpdate) = 0;
 
 	virtual bool ShowContextualMenu(glm::vec2 position);
 

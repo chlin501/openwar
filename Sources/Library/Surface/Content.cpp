@@ -2,9 +2,9 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "Content.h"
-#include "shaderprogram.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "Content.h"
+#include "Surface.h"
 
 
 
@@ -25,9 +25,20 @@ glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate, float rotate
 
 
 Content::Content(Surface* surface) :
+_container(nullptr),
 _surface(surface),
 _frame(),
-_aspect(0),
+_anchor(),
+_flip(false)
+{
+}
+
+
+Content::Content() :
+_container(nullptr),
+_surface(nullptr),
+_frame(),
+_anchor(),
 _flip(false)
 {
 }
@@ -35,6 +46,18 @@ _flip(false)
 
 Content::~Content()
 {
+}
+
+
+Container* Content::GetContainer() const
+{
+	return _container;
+}
+
+
+void Content::SetContainer(Container* value)
+{
+	SetContentContainer(this, value);
 }
 
 
@@ -46,7 +69,45 @@ bounds2f Content::GetFrame() const
 
 void Content::SetFrame(bounds2f value)
 {
-	_frame = value;
+	SetFrameValue(value);
+}
+
+
+glm::vec2 Content::GetAnchor() const
+{
+	return _anchor;
+}
+
+
+void Content::SetAnchor(glm::vec2 value)
+{
+	_anchor = value;
+}
+
+
+glm::vec2 Content::GetPosition() const
+{
+	return glm::mix(_frame.min, _frame.max, _anchor);
+}
+
+
+void Content::SetPosition(glm::vec2 value)
+{
+	glm::vec2 delta = value - GetPosition();
+	SetFrameValue(_frame + delta);
+}
+
+
+glm::vec2 Content::GetSize() const
+{
+	return _frame.size();
+}
+
+
+void Content::SetSize(glm::vec2 value)
+{
+	glm::vec2 p = GetPosition();
+	SetFrameValue(bounds2f(p - value * _anchor,  p + value * (glm::vec2(1, 1) - _anchor)));
 }
 
 
@@ -71,12 +132,44 @@ glm::vec2 Content::ContentToSurface(glm::vec2 value) const
 }
 
 
-void Content::ScreenSizeChanged()
+glm::mat4 Content::GetContentTransform() const
 {
+	glm::mat4 t;
+	t = glm::translate(t, glm::vec3(_frame.min, 0));
+	return t;
 }
 
 
-glm::mat4 Content::GetRenderTransform() const
+void Content::SetFrameValue(const bounds2f& value)
 {
-	return ViewportTransform(bounds2f(0, 0, _surface->GetSize()));
+	/*glm::vec2 oldPosition = GetPosition();
+	glm::vec2 oldSize = GetSize();
+	float oldLeft = GetLeft();
+	float oldRight = GetRight();
+	float oldBottom = GetBottom();
+	float oldTop = GetTop();
+	float oldWidth = GetWidth();
+	float oldHeight = GetHeight();*/
+
+	_frame = value;
+
+	//if (_container != nullptr)
+	//	_container->OnFrameChanged(this);
+
+	/*if (oldPosition != GetPosition())
+		position.CallObserver();
+	if (oldSize != GetSize())
+		size.CallObserver();
+	if (oldLeft != GetLeft())
+		left.CallObserver();
+	if (oldRight != GetRight())
+		right.CallObserver();
+	if (oldBottom != GetBottom())
+		bottom.CallObserver();
+	if (oldTop != GetTop())
+		top.CallObserver();
+	if (oldWidth != GetWidth())
+		width.CallObserver();
+	if (oldHeight != GetHeight())
+		height.CallObserver();*/
 }

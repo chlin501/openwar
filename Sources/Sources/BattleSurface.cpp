@@ -9,6 +9,8 @@
 #include "TerrainView/TerrainGesture.h"
 #include "BattleSurface.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 
 BattleSurface::BattleSurface(glm::vec2 size, float pixelDensity) : Surface(size, pixelDensity),
 _renderers(nullptr),
@@ -117,9 +119,14 @@ bool BattleSurface::NeedsRender() const
 
 void BattleSurface::RenderSurface()
 {
+	glm::vec2 size = GetSize();
+	glm::vec2 translate = -size / 2.0f;
+	glm::vec2 scale = 2.0f / size;
+	glm::mat4 transform = glm::translate(glm::scale(glm::mat4x4(), glm::vec3(scale, 1.0f)), glm::vec3(translate, 0.0f));
+
 	for (BattleView* battleView : _battleViews)
 	{
-		battleView->Render(battleView->GetRenderTransform());
+		battleView->Render(transform * battleView->GetContentTransform());
 
 		/*
 		if (_battleScript != nullptr)

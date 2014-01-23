@@ -29,8 +29,6 @@ public:
 	TerrainView(Surface* screen);
 	virtual ~TerrainView();
 
-	virtual glm::mat4 GetRenderTransform() const;
-
 	bounds2f GetContentBounds() const { return _contentBounds; }
 
 	void ShowMouseHint(glm::vec2 position);
@@ -71,7 +69,7 @@ public:
 	glm::vec3 ScreenToContent(glm::vec2 value) const;
 	glm::vec2 ContentToScreen(glm::vec3 value) const;
 
-	glm::vec3 GetPosition(glm::vec2 p, float h = 1) { return _heightMap->GetPosition(p, h); };
+	glm::vec3 GetTerrainPosition(glm::vec2 p, float h = 1) { return _heightMap->GetPosition(p, h); };
 
 };
 

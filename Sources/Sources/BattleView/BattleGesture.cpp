@@ -53,6 +53,8 @@ void BattleGesture::Update(Surface* surface, double secondsSinceLastUpdate)
 
 void BattleGesture::RenderHints()
 {
+	glm::mat4 transform = ViewportTransform(_battleView->GetFrame());
+
 	_battleView->UseViewport();
 
 	vertexbuffer<plain_vertex> shape;
@@ -98,7 +100,7 @@ void BattleGesture::RenderHints()
 		}
 	}
 
-	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(_battleView->GetFrame()));
+	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 	renderers::singleton->_plain_renderer->get_uniform<float>("point_size").set_value(1);
 	renderers::singleton->_plain_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 0.2f));
 	renderers::singleton->_plain_renderer->render(shape);

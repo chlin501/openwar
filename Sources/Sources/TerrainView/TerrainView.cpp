@@ -27,12 +27,6 @@ TerrainView::~TerrainView()
 }
 
 
-glm::mat4 TerrainView::GetRenderTransform() const
-{
-	return GetTerrainTransform();
-}
-
-
 void TerrainView::ShowMouseHint(glm::vec2 position)
 {
 	_mouseHintPosition = position;

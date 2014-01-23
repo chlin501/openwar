@@ -23,6 +23,9 @@
 #include "UnitMovementMarker.h"
 #include "UnitTrackingMarker.h"
 #include "BattleCommander.h"
+#include "Surface.h"
+
+#include <glm/gtc/matrix_transform.hpp>
 
 
 
@@ -441,7 +444,7 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 					if (_simulator->GetHeightMap()->InterpolateHeight(position) > 0 && _simulator->GetGroundMap()->IsForest(position))
 					{
 						const float adjust = 0.5 - 2.0 / 64.0; // place texture 2 texels below ground
-						_billboardModel->staticBillboards.push_back(Billboard(GetPosition(position, adjust * 5), 0, 5, _billboardModel->_billboardTreeShapes[shape]));
+						_billboardModel->staticBillboards.push_back(Billboard(GetTerrainPosition(position, adjust * 5), 0, 5, _billboardModel->_billboardTreeShapes[shape]));
 					}
 				}
 
@@ -498,8 +501,11 @@ void BattleView::InitializeCameraPosition()
 	}
 }
 
-void BattleView::Render(const glm::mat4& transform)
+void BattleView::Render(const glm::mat4& transformx)
 {
+	glm::mat4 transform = GetTerrainTransform();
+	glm::mat4 surfaceTransform = ViewportTransform(GetFrame());
+
 	UseViewport();
 
 	glm::vec2 facing = vector2_from_angle(GetCameraFacing() - 2.5f * (float)M_PI_4);
@@ -591,7 +597,7 @@ void BattleView::Render(const glm::mat4& transform)
 		if (marker->GetUnit()->commander == _commander)
 			marker->AppendFacingMarker(_textureTriangleRenderer, this);
 
-	_textureTriangleRenderer->Draw(ViewportTransform(GetFrame()), _textureUnitMarkers);
+	_textureTriangleRenderer->Draw(surfaceTransform, _textureUnitMarkers);
 
 
 
@@ -818,7 +824,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 
 bounds2f BattleView::GetUnitCurrentIconViewportBounds(Unit* unit)
 {
-	glm::vec3 position = GetPosition(unit->state.center, 0);
+	glm::vec3 position = GetTerrainPosition(unit->state.center, 0);
 	return GetBillboardBounds(position, 32);
 }
 
@@ -826,14 +832,14 @@ bounds2f BattleView::GetUnitCurrentIconViewportBounds(Unit* unit)
 bounds2f BattleView::GetUnitFutureIconViewportBounds(Unit* unit)
 {
 	const UnitCommand& command = unit->GetCommand();
-	glm::vec3 position = GetPosition(!command.path.empty() ? command.path.back() : unit->state.center, 0);
+	glm::vec3 position = GetTerrainPosition(!command.path.empty() ? command.path.back() : unit->state.center, 0);
 	return GetBillboardBounds(position, 32);
 }
 
 
 bounds2f BattleView::GetUnitFacingMarkerBounds(glm::vec2 center, float direction)
 {
-	bounds2f iconBounds = GetBillboardBounds(GetPosition(center, 0), 32);
+	bounds2f iconBounds = GetBillboardBounds(GetTerrainPosition(center, 0), 32);
 
 	glm::vec2 position = iconBounds.center();
 	float size = iconBounds.height();

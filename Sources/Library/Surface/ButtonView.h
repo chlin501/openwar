@@ -150,8 +150,6 @@ public:
 
 	virtual void SetFrame(bounds2f value);
 
-	virtual void ScreenSizeChanged();
-
 	const std::vector<ButtonArea*>& GetButtonAreas() const {  return _buttonAreas; }
 
 	bool HasButtons() const;

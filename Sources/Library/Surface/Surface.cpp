@@ -10,11 +10,10 @@
 
 
 Surface::Surface(glm::vec2 size, float pixelDensity) :
-_gc(nullptr),
-_pixelDensity(pixelDensity),
-_size(size)
+_gc(nullptr)
 {
 	_gc = new graphicscontext(pixelDensity);
+	SetSize(size);
 }
 
 
@@ -25,28 +24,14 @@ Surface::~Surface()
 
 void Surface::UseViewport()
 {
-	GLsizei width = (GLsizei)(_size.x * _pixelDensity);
-	GLsizei height = (GLsizei)(_size.y * _pixelDensity);
-	glViewport(0, 0, width, height);
-}
-
-
-bounds2f Surface::GetSpriteViewport() const
-{
-	return bounds2f(0, 0, _size);
+	glm::vec2 size = GetSize() * _gc->get_pixeldensity();
+	glViewport(0, 0, (GLsizei)size.x, (GLsizei)size.y);
 }
 
 
 void Surface::ScreenSizeChanged()
 {
-
 }
-
-
-/*void Surface::Update(double secondsSinceLastUpdate)
-{
-}*/
-
 
 
 bool Surface::ShowContextualMenu(glm::vec2 position)

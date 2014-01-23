@@ -217,12 +217,6 @@ void ButtonView::SetFrame(bounds2f value)
 }
 
 
-void ButtonView::ScreenSizeChanged()
-{
-	UpdateLayout();
-}
-
-
 bool ButtonView::HasButtons() const
 {
 	return !_buttonAreas.empty() && !_buttonAreas.front()->buttonItems.empty();
