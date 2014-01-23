@@ -4,7 +4,7 @@
 
 #include "CasualtyMarker.h"
 #include "ColorBillboardShape.h"
-#include "../../Library/Renderers/TextureBillboardRenderer.h"
+#include "../../Library/Shapes/TextureBillboardRenderer.h"
 #include "../../BattleModel/HeightMap.h"
 #include "../../BattleModel/SmoothGroundMap.h"
 

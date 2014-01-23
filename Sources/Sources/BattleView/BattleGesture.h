@@ -7,8 +7,8 @@
 
 #include "../../BattleModel/BattleSimulator.h"
 #include "../../Library/Algebra/bounds.h"
-#include "../../Library/ViewCore/Gesture.h"
-#include "../../Library/ViewCore/Touch.h"
+#include "../../Library/Surface/Gesture.h"
+#include "../../Library/Surface/Touch.h"
 
 class BattleView;
 class UnitTrackingMarker;

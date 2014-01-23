@@ -5,7 +5,7 @@
 #ifndef ButtonGesture_H
 #define ButtonGesture_H
 
-#include "../ViewCore/Gesture.h"
+#include "../Surface/Gesture.h"
 
 class ButtonItem;
 class ButtonView;

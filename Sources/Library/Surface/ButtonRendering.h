@@ -7,7 +7,7 @@
 
 #include "../Algebra/bounds.h"
 #include "../Graphics/texture.h"
-#include "../Renderers/string_shape.h"
+#include "../Shapes/string_shape.h"
 
 
 struct ButtonIcon;

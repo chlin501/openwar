@@ -4,7 +4,7 @@
 
 #include "SmokeCounter.h"
 #include "../../Library/Audio/SoundPlayer.h"
-#include "../../Library/Renderers/TextureBillboardRenderer.h"
+#include "../../Library/Shapes/TextureBillboardRenderer.h"
 
 
 

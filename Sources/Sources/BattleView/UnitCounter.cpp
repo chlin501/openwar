@@ -6,7 +6,7 @@
 
 #include "../../BattleModel/BattleSimulator.h"
 #include "PlainShape3.h"
-#include "../../Library/Renderers/TextureBillboardRenderer.h"
+#include "../../Library/Shapes/TextureBillboardRenderer.h"
 #include "TextureShape3.h"
 #include "BattleView.h"
 #include "UnitCounter.h"

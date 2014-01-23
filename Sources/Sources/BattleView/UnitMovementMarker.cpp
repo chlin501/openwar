@@ -6,8 +6,8 @@
 
 #include "../../BattleModel/BattleSimulator.h"
 #include "ColorBillboardShape.h"
-#include "../../Library/Renderers/PathRenderer.h"
-#include "../../Library/Renderers/TextureBillboardRenderer.h"
+#include "../../Library/Shapes/PathRenderer.h"
+#include "../../Library/Shapes/TextureBillboardRenderer.h"
 #include "TextureShape3.h"
 #include "BattleView.h"
 #include "UnitMovementMarker.h"

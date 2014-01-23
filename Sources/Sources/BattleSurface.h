@@ -2,7 +2,7 @@
 #define BattleSurface_H
 
 #include "shaderprogram.h"
-#include "../Library/ViewCore/Surface.h"
+#include "../Library/Surface/Surface.h"
 
 class BattleCommander;
 class BattleGesture;

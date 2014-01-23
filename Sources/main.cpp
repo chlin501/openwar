@@ -17,7 +17,7 @@
 #endif
 
 #include "Sources/OpenWarSurface.h"
-#include "Library/ViewCore/Window.h"
+#include "Library/Surface/Window.h"
 #include "BattleModel/BattleScenario.h"
 #include "BattleModel/BattleScript.h"
 

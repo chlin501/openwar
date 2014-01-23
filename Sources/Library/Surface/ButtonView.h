@@ -8,7 +8,7 @@
 #include <string>
 #include "../Algebra/bounds.h"
 #include "../Graphics/texture.h"
-#include "../ViewCore/View.h"
+#include "../Surface/View.h"
 #include "ButtonRendering.h"
 
 

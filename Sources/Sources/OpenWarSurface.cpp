@@ -3,9 +3,9 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "../BattleModel/BattleScenario.h"
-#include "../Library/ViewExtra/ButtonView.h"
-#include "../Library/ViewExtra/ButtonGesture.h"
-#include "../Library/Renderers/GradientShape3.h"
+#include "../Library/Surface/ButtonView.h"
+#include "../Library/Surface/ButtonGesture.h"
+#include "../Library/Shapes/GradientShape3.h"
 #include "BattleView/BattleGesture.h"
 #include "BattleView/BattleView.h"
 #include "TerrainView/EditorGesture.h"
