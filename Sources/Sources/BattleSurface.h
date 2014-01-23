@@ -53,7 +53,7 @@ public:
 	virtual void ScreenSizeChanged();
 	virtual void Update(double secondsSinceLastUpdate);
 	virtual bool NeedsRender() const;
-	virtual void Render();
+	virtual void RenderSurface();
 
 private:
 	void CreateBattleView(BattleCommander* commander);

@@ -101,7 +101,7 @@ glm::vec2 TerrainView::GetScreenLeft() const
 		angle += (float)M_PI;
 	float radius = GetContentRadius();
 
-	glm::vec2 result(GetViewportBounds().max.x, 0);
+	glm::vec2 result(GetFrame().max.x, 0);
 
 	int n = 20;
 	for (int i = 0; i < n; ++i)
@@ -126,8 +126,8 @@ glm::vec2 TerrainView::GetScreenBottom() const
 
 	glm::vec2 result = ContentToScreen(glm::vec3(center + radius * vector2_from_angle(angle), 0));
 
-	if (result.y > GetViewportBounds().max.y)
-		result.y = GetViewportBounds().min.y;
+	if (result.y > GetFrame().max.y)
+		result.y = GetFrame().min.y;
 
 	return result;
 }
@@ -141,7 +141,7 @@ glm::vec2 TerrainView::GetScreenRight() const
 		angle += (float)M_PI;
 	float radius = GetContentRadius();
 
-	glm::vec2 result(GetViewportBounds().min.x, 0);
+	glm::vec2 result(GetFrame().min.x, 0);
 
 	int n = 20;
 	for (int i = 4; i < n - 4; ++i)
@@ -176,7 +176,7 @@ glm::mat4x4 TerrainView::GetProjectionMatrix() const
 {
 	float r = 2 * glm::length(_contentBounds.size());
 
-	return glm::perspective(45.0f, 1.0f / GetViewportAspect(), 0.01f * r, r);
+	return glm::perspective(45.0f, 1.0f / GetFrameAspect(), 0.01f * r, r);
 }
 
 
@@ -191,7 +191,7 @@ glm::mat4x4 TerrainView::GetViewMatrix() const
 
 ray TerrainView::GetCameraRay(glm::vec2 screenPosition) const
 {
-	glm::vec2 viewPosition = ScreenToView(screenPosition);
+	glm::vec2 viewPosition = SurfaceToContent(screenPosition);
 	glm::mat4x4 inverse = glm::inverse(GetTransform());
 	glm::vec4 p1 = inverse * glm::vec4(viewPosition, 0, 1.0f);
 	glm::vec4 p2 = inverse * glm::vec4(viewPosition, 0.5f, 1.0f);
@@ -307,7 +307,7 @@ void TerrainView::MoveCamera(glm::vec3 position)
 
 void TerrainView::ClampCameraPosition()
 {
-	glm::vec2 centerScreen = GetViewportBounds().center();
+	glm::vec2 centerScreen = GetFrame().center();
 	glm::vec2 contentCamera = GetTerrainPosition2(centerScreen).xy();
 	glm::vec2 contentCenter = GetContentBounds().center();
 	float contentRadius = _heightMap->GetBounds().width() / 2;
@@ -341,7 +341,7 @@ static glm::vec3 transform_d(const glm::mat4x4& m, glm::vec3 v)
 glm::vec3 TerrainView::ScreenToContent(glm::vec2 value) const
 {
 	glm::mat4x4 transform = glm::inverse(GetTransform());
-	glm::vec2 p = ScreenToView(value);
+	glm::vec2 p = SurfaceToContent(value);
 	return transform_d(transform, glm::vec3(p, 0));
 }
 
@@ -350,5 +350,5 @@ glm::vec2 TerrainView::ContentToScreen(glm::vec3 value) const
 {
 	glm::mat4x4 transform = GetTransform();
 	glm::vec3 v = transform_d(transform, value);
-	return ViewToScreen(v.xy());
+	return ContentToSurface(v.xy());
 }

@@ -98,7 +98,7 @@ void BattleGesture::RenderHints()
 		}
 	}
 
-	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(_battleView->GetViewportBounds()));
+	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(_battleView->GetFrame()));
 	renderers::singleton->_plain_renderer->get_uniform<float>("point_size").set_value(1);
 	renderers::singleton->_plain_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 0.2f));
 	renderers::singleton->_plain_renderer->render(shape);
@@ -141,7 +141,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 		return;
 	if (touch->GetGesture() != nullptr)
 		return;
-	if (!_battleView->GetViewportBounds().contains(touch->GetPosition()))
+	if (!_battleView->GetFrame().contains(touch->GetPosition()))
 		return;
 	if (_battleView->GetCommander() == nullptr)
 		return;

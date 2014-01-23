@@ -5,7 +5,7 @@
 #include "ButtonRendering.h"
 #include "ButtonView.h"
 #include "../Graphics/vertexbuffer.h"
-
+#include <glm/gtc/matrix_transform.hpp>
 
 
 ButtonRendering::ButtonRendering(renderers* r, float pixelDensity) :
@@ -50,7 +50,7 @@ static void AddRect(vertexbuffer<texture_vertex>& shape, bounds2f bounds, bounds
 }
 
 
-void ButtonRendering::RenderCornerButton(bounds2f viewport, texture* texturex, bounds2f bounds, float radius)
+void ButtonRendering::RenderCornerButton(const glm::mat4& transform, texture* texturex, bounds2f bounds, float radius)
 {
 	vertexbuffer<texture_vertex> shape;
 	shape._mode = GL_TRIANGLES;
@@ -70,23 +70,23 @@ void ButtonRendering::RenderCornerButton(bounds2f viewport, texture* texturex, b
 	AddRect(shape, bounds2f(inner.min.x, inner.max.y, inner.max.x, outer.max.y), bounds2f(0.5, 0.5, 0.5, 1.0));
 	AddRect(shape, bounds2f(inner.max.x, inner.max.y, outer.max.x, outer.max.y), bounds2f(0.5, 0.5, 1.0, 1.0));
 
-	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(viewport));
+	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 	_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
 	_renderers->_texture_renderer->render(shape);
 }
 
 
-void ButtonRendering::RenderButtonIcon(bounds2f viewport, glm::vec2 position, ButtonIcon* buttonIcon, bool disabled)
+void ButtonRendering::RenderButtonIcon(const glm::mat4& transform, glm::vec2 position, ButtonIcon* buttonIcon, bool disabled)
 {
 	if (buttonIcon != nullptr)
 	{
 		bounds2f b = bounds2f(position).grow(buttonIcon->size * buttonIcon->scale / 2.0f);
-		RenderTextureRect(viewport, buttonIcon->_texture, b, buttonIcon->bounds, disabled ? 0.5 : 1);
+		RenderTextureRect(transform, buttonIcon->_texture, b, buttonIcon->bounds, disabled ? 0.5 : 1);
 	}
 }
 
 
-void ButtonRendering::RenderTextureRect(bounds2f viewport, texture* texturex, bounds2f b, bounds2f t, float alpha)
+void ButtonRendering::RenderTextureRect(const glm::mat4& transform, texture* texturex, bounds2f b, bounds2f t, float alpha)
 {
 	vertexbuffer<texture_vertex> shape;
 	shape._mode = GL_TRIANGLE_STRIP;
@@ -97,13 +97,13 @@ void ButtonRendering::RenderTextureRect(bounds2f viewport, texture* texturex, bo
 
 	if (alpha == 1)
 	{
-		_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(viewport));
+		_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 		_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
 		_renderers->_texture_renderer->render(shape);
 	}
 	else
 	{
-		_renderers->_alpha_texture_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(viewport));
+		_renderers->_alpha_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 		_renderers->_alpha_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
 		_renderers->_alpha_texture_renderer->get_uniform<float>("alpha").set_value(alpha);
 		_renderers->_alpha_texture_renderer->render(shape);
@@ -111,27 +111,25 @@ void ButtonRendering::RenderTextureRect(bounds2f viewport, texture* texturex, bo
 }
 
 
-void ButtonRendering::RenderBackground(bounds2f viewport, bounds2f bounds)
+void ButtonRendering::RenderBackground(const glm::mat4& transform, bounds2f bounds)
 {
-	RenderCornerButton(viewport, _textureButtonBackground, bounds.grow(10), 32);
+	RenderCornerButton(transform, _textureButtonBackground, bounds.grow(10), 32);
 }
 
 
-void ButtonRendering::RenderHighlight(bounds2f viewport, bounds2f bounds)
+void ButtonRendering::RenderHighlight(const glm::mat4& transform, bounds2f bounds)
 {
-	RenderTextureRect(viewport, _textureButtonHighlight, bounds, bounds2f(0, 0, 1, 1));
-	//RenderCornerButton(viewport, _texture_highlight, bounds.grow(10), 32);
+	RenderTextureRect(transform, _textureButtonHighlight, bounds, bounds2f(0, 0, 1, 1));
 }
 
 
-void ButtonRendering::RenderSelected(bounds2f viewport, bounds2f bounds)
+void ButtonRendering::RenderSelected(const glm::mat4& transform, bounds2f bounds)
 {
-	//RenderTextureRect(viewport, _texture_selected, bounds, bounds2(0, 0, 1, 1));
-	RenderCornerButton(viewport, _textureButtonSelected, bounds.grow(10), 32);
+	RenderCornerButton(transform, _textureButtonSelected, bounds.grow(10), 32);
 }
 
 
-void ButtonRendering::RenderButtonText(bounds2f viewport, glm::vec2 position, const char* text)
+void ButtonRendering::RenderButtonText(const glm::mat4& transform, glm::vec2 position, const char* text)
 {
 	_string_shape->clear();
 	_string_shape->add(text, glm::mat4x4());
@@ -146,15 +144,15 @@ void ButtonRendering::RenderButtonText(bounds2f viewport, glm::vec2 position, co
 		for (int dy = -1; dy <= 1; ++dy)
 			if (dx != 0 || dy != 0)
 			{
-				_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(viewport, p + glm::vec2(dx, dy)));
+				_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(glm::translate(transform, glm::vec3(p, 0) + glm::vec3(dx, dy, 0)));
 				_string_font->_renderer->render(_string_shape->_vbo);
 			}
 
-	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(viewport, p + glm::vec2(0, -1)));
+	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(glm::translate(transform, glm::vec3(p, 0) + glm::vec3(0, -1, 0)));
 	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 1));
 	_string_font->_renderer->render(_string_shape->_vbo);
 
-	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(viewport, p));
+	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(glm::translate(transform, glm::vec3(p, 0)));
 	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(1, 1, 1, 1));
 	_string_font->_renderer->render(_string_shape->_vbo);
 }

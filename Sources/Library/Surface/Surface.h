@@ -42,7 +42,7 @@ public:
 	virtual void ScreenSizeChanged();
 
 	virtual bool NeedsRender() const = 0;
-	virtual void Render() = 0;
+	virtual void RenderSurface() = 0;
 	virtual void Update(double secondsSinceLastUpdate) = 0;
 
 	virtual bool ShowContextualMenu(glm::vec2 position);

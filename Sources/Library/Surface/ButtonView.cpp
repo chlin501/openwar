@@ -210,9 +210,9 @@ _alignment(alignment)
 
 
 
-void ButtonView::SetViewport(bounds2f value)
+void ButtonView::SetFrame(bounds2f value)
 {
-	Content::SetViewport(value);
+	Content::SetFrame(value);
 	UpdateLayout();
 }
 
@@ -249,7 +249,7 @@ ButtonArea* ButtonView::AddButtonArea(int numberOfColumns)
 
 void ButtonView::UpdateLayout()
 {
-	bounds2f viewport = GetViewportBounds();
+	bounds2f viewport = GetFrame();
 	glm::vec2 viewport_center = viewport.center();
 	float margin = 3;
 	float spacing = 20;
@@ -328,27 +328,27 @@ void ButtonView::UpdateLayout()
 
 
 
-void ButtonView::Render()
+void ButtonView::RenderContent()
 {
-	bounds2f viewport = GetViewportBounds();
+	glm::mat4 transform = ViewportTransform(GetFrame());
 
 	for (ButtonArea* buttonArea : _buttonAreas)
 	{
-		_buttonRendering->RenderBackground(viewport, buttonArea->_bounds);
+		_buttonRendering->RenderBackground(transform, buttonArea->_bounds);
 
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
 		{
 			if (buttonItem->IsSelected())
-				_buttonRendering->RenderSelected(viewport, buttonItem->GetBounds());
+				_buttonRendering->RenderSelected(transform, buttonItem->GetBounds());
 
 			if (buttonItem->GetButtonIcon() != nullptr)
-				_buttonRendering->RenderButtonIcon(viewport, buttonItem->GetBounds().center(), buttonItem->GetButtonIcon(), buttonItem->IsDisabled());
+				_buttonRendering->RenderButtonIcon(transform, buttonItem->GetBounds().center(), buttonItem->GetButtonIcon(), buttonItem->IsDisabled());
 
 			if (buttonItem->IsHighlight())
-				_buttonRendering->RenderHighlight(viewport, buttonItem->GetBounds());
+				_buttonRendering->RenderHighlight(transform, buttonItem->GetBounds());
 
 			if (buttonItem->GetButtonText() != nullptr)
-				_buttonRendering->RenderButtonText(viewport, buttonItem->GetBounds().center(), buttonItem->GetButtonText());
+				_buttonRendering->RenderButtonText(transform, buttonItem->GetBounds().center(), buttonItem->GetButtonText());
 		}
 	}
 }

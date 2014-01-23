@@ -489,8 +489,8 @@ void BattleView::InitializeCameraPosition()
 		friendlyCenter /= friendlyCount;
 		enemyCenter /= enemyCount;
 
-		glm::vec2 friendlyScreen = ViewToScreen(glm::vec2(0, GetFlip() ? 0.15 : -0.15));
-		glm::vec2 enemyScreen = ViewToScreen(glm::vec2(0, GetFlip() ? -0.65 : 0.65));
+		glm::vec2 friendlyScreen = ContentToSurface(glm::vec2(0, GetFlip() ? 0.15 : -0.15));
+		glm::vec2 enemyScreen = ContentToSurface(glm::vec2(0, GetFlip() ? -0.65 : 0.65));
 
 		Zoom(glm::vec3(friendlyCenter, 0), glm::vec3(enemyCenter, 0), friendlyScreen, enemyScreen, 0);
 
@@ -498,8 +498,10 @@ void BattleView::InitializeCameraPosition()
 	}
 }
 
-void BattleView::Render()
+void BattleView::RenderContent()
 {
+	glm::mat4 transform = GetTransform();
+
 	UseViewport();
 
 	glm::vec2 facing = vector2_from_angle(GetCameraFacing() - 2.5f * (float)M_PI_4);
@@ -511,7 +513,7 @@ void BattleView::Render()
 	glDisable(GL_DEPTH_TEST);
 	if (_smoothTerrainSky != nullptr)
 	{
-		_smoothTerrainSky->RenderBackgroundLinen(_renderers, GetViewportBounds(), GetFlip());
+		_smoothTerrainSky->RenderBackgroundLinen(_renderers, GetFrame(), GetFlip());
 		_smoothTerrainSky->Render(_renderers, GetCameraDirection().z, GetFlip());
 	}
 
@@ -522,17 +524,17 @@ void BattleView::Render()
 	glEnable(GL_CULL_FACE);
 
 	if (_smoothTerrainSurface != nullptr)
-		_smoothTerrainSurface->Render(GetTransform(), _lightNormal);
+		_smoothTerrainSurface->Render(transform, _lightNormal);
 
 	if (_tiledTerrainRenderer != nullptr)
-		_tiledTerrainRenderer->Render(GetTransform(), _lightNormal);
+		_tiledTerrainRenderer->Render(transform, _lightNormal);
 
 
 	// Terrain Water
 
 	glDisable(GL_CULL_FACE);
 	if (_smoothTerrainWater != nullptr)
-		_smoothTerrainWater->Render(GetTransform());
+		_smoothTerrainWater->Render(transform);
 
 
 	// Fighter Weapons
@@ -541,14 +543,14 @@ void BattleView::Render()
 	_plainLineRenderer->Reset();
 	for (UnitCounter* marker : _unitMarkers)
 		marker->AppendFighterWeapons(_plainLineRenderer);
-	_plainLineRenderer->Draw(GetTransform(), glm::vec4(0.4, 0.4, 0.4, 0.6));
+	_plainLineRenderer->Draw(transform, glm::vec4(0.4, 0.4, 0.4, 0.6));
 
 
 	// Color Billboards
 
 	_colorBillboardRenderer->Reset();
 	_casualtyMarker->RenderCasualtyColorBillboards(_colorBillboardRenderer);
-	_colorBillboardRenderer->Draw(GetTransform(), GetCameraUpVector(), GetViewportBounds().height());
+	_colorBillboardRenderer->Draw(transform, GetCameraUpVector(), GetFrame().height());
 
 
 	// Texture Billboards
@@ -559,7 +561,7 @@ void BattleView::Render()
 		marker->AppendFighterBillboards(_billboardModel);
 	for (SmokeCounter* marker : _smokeMarkers)
 		marker->AppendSmokeBillboards(_billboardModel);
-	_textureBillboardRenderer->Render(_billboardModel, GetTransform(), GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetViewportBounds().height(), GetFlip());
+	_textureBillboardRenderer->Render(_billboardModel, transform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), GetFlip());
 
 
 	// Range Markers
@@ -571,7 +573,7 @@ void BattleView::Render()
 			RangeMarker marker(_simulator, unit);
 			_gradientTriangleStripRenderer->Reset();
 			marker.Render(_gradientTriangleStripRenderer);
-			_gradientTriangleStripRenderer->Draw(GetTransform());
+			_gradientTriangleStripRenderer->Draw(transform);
 		}
 	}
 
@@ -591,7 +593,7 @@ void BattleView::Render()
 		if (marker->GetUnit()->commander == _commander)
 			marker->AppendFacingMarker(_textureTriangleRenderer, this);
 
-	_textureTriangleRenderer->Draw(ViewportTransform(GetViewportBounds()), _textureUnitMarkers);
+	_textureTriangleRenderer->Draw(ViewportTransform(GetFrame()), _textureUnitMarkers);
 
 
 
@@ -608,8 +610,8 @@ void BattleView::Render()
 		marker->RenderTrackingMarker(_textureBillboardRenderer1);
 
 	bounds1f sizeLimit = GetUnitIconSizeLimit();
-	_textureBillboardRenderer1->Draw(_textureUnitMarkers, GetTransform(), GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetViewportBounds().height(), sizeLimit);
-	_textureBillboardRenderer2->Draw(_textureUnitMarkers, GetTransform(), GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetViewportBounds().height(), sizeLimit);
+	_textureBillboardRenderer1->Draw(_textureUnitMarkers, transform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), sizeLimit);
+	_textureBillboardRenderer2->Draw(_textureUnitMarkers, transform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), sizeLimit);
 
 
 	// Tracking Markers
@@ -619,7 +621,7 @@ void BattleView::Render()
 	{
 		_textureBillboardRenderer1->Reset();
 		marker->RenderTrackingShadow(_textureBillboardRenderer1);
-		_textureBillboardRenderer1->Draw(_textureTouchMarker, GetTransform(), GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetViewportBounds().height(), bounds1f(64, 64));
+		_textureBillboardRenderer1->Draw(_textureTouchMarker, transform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), bounds1f(64, 64));
 	}
 
 
@@ -629,7 +631,7 @@ void BattleView::Render()
 	_gradientTriangleRenderer->Reset();
 	for (UnitMovementMarker* marker : _movementMarkers)
 		marker->RenderMovementPath(_gradientTriangleRenderer);
-	_gradientTriangleRenderer->Draw(GetTransform());//, glm::vec4(0.5, 0.5, 1, 0.25));
+	_gradientTriangleRenderer->Draw(transform);//, glm::vec4(0.5, 0.5, 1, 0.25));
 
 
 	// Tracking Path
@@ -640,7 +642,7 @@ void BattleView::Render()
 		_gradientTriangleRenderer->Reset();
 		marker->RenderTrackingPath(_gradientTriangleRenderer);
 		marker->RenderOrientation(_gradientTriangleRenderer);
-		_gradientTriangleRenderer->Draw(GetTransform());
+		_gradientTriangleRenderer->Draw(transform);
 	}
 
 
@@ -650,7 +652,7 @@ void BattleView::Render()
 	_colorBillboardRenderer->Reset();
 	for (UnitTrackingMarker* marker : _trackingMarkers)
 		marker->RenderTrackingFighters(_colorBillboardRenderer);
-	_colorBillboardRenderer->Draw(GetTransform(), GetCameraUpVector(), GetViewportBounds().height());
+	_colorBillboardRenderer->Draw(transform, GetCameraUpVector(), GetFrame().height());
 
 
 	// Movement Fighters
@@ -658,7 +660,7 @@ void BattleView::Render()
 	_colorBillboardRenderer->Reset();
 	for (UnitMovementMarker* marker : _movementMarkers)
 		marker->RenderMovementFighters(_colorBillboardRenderer);
-	_colorBillboardRenderer->Draw(GetTransform(), GetCameraUpVector(), GetViewportBounds().height());
+	_colorBillboardRenderer->Draw(transform, GetCameraUpVector(), GetFrame().height());
 
 
 	// Shooting Counters
@@ -666,14 +668,14 @@ void BattleView::Render()
 	_gradientLineRenderer->Reset();
 	for (ShootingCounter* shootingCounter : _shootingCounters)
 		shootingCounter->Render(_gradientLineRenderer);
-	_gradientLineRenderer->Draw(GetTransform());
+	_gradientLineRenderer->Draw(transform);
 
 
 	// Mouse Hint
 
 	_plainLineRenderer->Reset();
 	RenderMouseHint(_plainLineRenderer);
-	_plainLineRenderer->Draw(GetTransform(), glm::vec4(0, 0, 0, 0.5f));
+	_plainLineRenderer->Draw(transform, glm::vec4(0, 0, 0, 0.5f));
 
 
 	glDepthMask(true);
@@ -804,7 +806,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 {
 	glm::mat4x4 transform = GetTransform();
 	glm::vec3 upvector = GetCameraUpVector();
-	float viewport_height = GetViewportBounds().height();
+	float viewport_height = GetFrame().height();
 	bounds1f sizeLimit = GetUnitIconSizeLimit() / shaderprogram_base::pixels_per_point();
 
 	glm::vec3 position2 = position + height * 0.5f * viewport_height * upvector;
@@ -812,7 +814,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 	glm::vec4 q = transform * glm::vec4(position2, 1);
 	float s = glm::clamp(glm::abs(q.y / q.w - p.y / p.w), sizeLimit.min, sizeLimit.max);
 
-	return bounds2_from_center(ViewToScreen((glm::vec2)p.xy() / p.w), s / 2);
+	return bounds2_from_center(ContentToSurface((glm::vec2)p.xy() / p.w), s / 2);
 }
 
 

@@ -48,7 +48,7 @@ public:
 
 	virtual void ScreenSizeChanged();
 	virtual void Update(double secondsSinceLastUpdate);
-	virtual void Render();
+	virtual void RenderSurface();
 
 	virtual void MouseEnter(glm::vec2 position);
 	virtual void MouseHover(glm::vec2 position);

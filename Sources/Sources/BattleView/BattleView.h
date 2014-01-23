@@ -112,7 +112,7 @@ public:
 
 	void InitializeCameraPosition();
 
-	virtual void Render();
+	virtual void RenderContent();
 	virtual void Update(double secondsSinceLastUpdate);
 
 	bounds2f GetBillboardBounds(glm::vec3 position, float height);

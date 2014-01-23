@@ -41,14 +41,14 @@ struct ButtonRendering
 
 	ButtonRendering(renderers* r, float pixelDensity);
 
-	void RenderBackground(bounds2f viewport, bounds2f bounds);
-	void RenderHighlight(bounds2f viewport, bounds2f bounds);
-	void RenderSelected(bounds2f viewport, bounds2f bounds);
-	void RenderButtonText(bounds2f viewport, glm::vec2 position, const char* text);
+	void RenderBackground(const glm::mat4& transform, bounds2f bounds);
+	void RenderHighlight(const glm::mat4& transform, bounds2f bounds);
+	void RenderSelected(const glm::mat4& transform, bounds2f bounds);
+	void RenderButtonText(const glm::mat4& transform, glm::vec2 position, const char* text);
 
-	void RenderCornerButton(bounds2f viewport, texture* texture, bounds2f bounds, float radius);
-	void RenderButtonIcon(bounds2f viewport, glm::vec2 position, ButtonIcon* buttonIcon, bool disabled);
-	void RenderTextureRect(bounds2f viewport, texture* texture, bounds2f b, bounds2f t, float alpha = 1);
+	void RenderCornerButton(const glm::mat4& transform, texture* texture, bounds2f bounds, float radius);
+	void RenderButtonIcon(const glm::mat4& transform, glm::vec2 position, ButtonIcon* buttonIcon, bool disabled);
+	void RenderTextureRect(const glm::mat4& transform, texture* texture, bounds2f b, bounds2f t, float alpha = 1);
 
 };
 

@@ -148,7 +148,7 @@ public:
 
 	ButtonAlignment GetAlignment() const { return _alignment; }
 
-	virtual void SetViewport(bounds2f value);
+	virtual void SetFrame(bounds2f value);
 
 	virtual void ScreenSizeChanged();
 
@@ -161,7 +161,7 @@ public:
 
 	void UpdateLayout();
 
-	virtual void Render();
+	virtual void RenderContent();
 
 	virtual void Update(double secondsSinceLastUpdate);
 };

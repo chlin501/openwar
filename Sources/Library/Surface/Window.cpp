@@ -389,7 +389,7 @@ void Window::Render()
 {
 	if (_surface->NeedsRender())
 	{
-		_surface->Render();
+		_surface->RenderSurface();
 		SDL_GL_SwapWindow(_window);
 	}
 }

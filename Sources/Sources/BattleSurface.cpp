@@ -115,11 +115,11 @@ bool BattleSurface::NeedsRender() const
 }
 
 
-void BattleSurface::Render()
+void BattleSurface::RenderSurface()
 {
 	for (BattleView* battleView : _battleViews)
 	{
-		battleView->Render();
+		battleView->RenderContent();
 
 		/*
 		if (_battleScript != nullptr)
@@ -233,7 +233,7 @@ void BattleSurface::UpdateBattleViewSize()
 		float y = 0;
 		for (BattleView* battleView : _battleViews)
 		{
-			battleView->SetViewport(bounds2f(0, y, size.x, y + h));
+			battleView->SetFrame(bounds2f(0, y, size.x, y + h));
 			y += h;
 		}
 	}

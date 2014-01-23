@@ -108,8 +108,8 @@ void OpenWarSurface::ScreenSizeChanged()
 {
 	BattleSurface::ScreenSizeChanged();
 	bounds2f viewport = bounds2f(0, 0, GetSize());
-	_buttonsTopLeft->SetViewport(viewport);
-	_buttonsTopRight->SetViewport(viewport);
+	_buttonsTopLeft->SetFrame(viewport);
+	_buttonsTopRight->SetFrame(viewport);
 }
 
 
@@ -122,7 +122,7 @@ void OpenWarSurface::Update(double secondsSinceLastUpdate)
 }
 
 
-void OpenWarSurface::Render()
+void OpenWarSurface::RenderSurface()
 {
 	glClearColor(0.9137f, 0.8666f, 0.7647f, 1.0f);
 	glClearDepth(1.0f);
@@ -130,10 +130,10 @@ void OpenWarSurface::Render()
 
 	glEnable(GL_BLEND);
 
-	BattleSurface::Render();
+	BattleSurface::RenderSurface();
 
-	_buttonsTopLeft->Render();
-	_buttonsTopRight->Render();
+	_buttonsTopLeft->RenderContent();
+	_buttonsTopRight->RenderContent();
 }
 
 
