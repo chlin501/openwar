@@ -26,7 +26,6 @@ public:
 
 	bounds2f GetFrame() const;
 	virtual void SetFrame(bounds2f value);
-	float GetFrameAspect() const { return _aspect; }
 
 	void UseViewport();
 
@@ -38,15 +37,10 @@ public:
 
 	virtual void ScreenSizeChanged();
 
-	virtual glm::mat4 GetContentTransform() const;
-
-	void RenderContent();
+	virtual glm::mat4 GetRenderTransform() const;
 
 	virtual void Render(const glm::mat4& transform) = 0;
 	virtual void Update(double secondsSinceLastUpdate) = 0;
-
-private:
-	void UpdateAspect();
 };
 
 

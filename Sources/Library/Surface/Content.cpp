@@ -30,7 +30,6 @@ _frame(),
 _aspect(0),
 _flip(false)
 {
-	UpdateAspect();
 }
 
 
@@ -41,28 +40,20 @@ Content::~Content()
 
 bounds2f Content::GetFrame() const
 {
-	return _frame.is_empty() ? bounds2f(0, 0, _surface->GetSize()) : _frame;
+	return _frame;
 }
 
 
 void Content::SetFrame(bounds2f value)
 {
 	_frame = value;
-	UpdateAspect();
 }
 
 
 void Content::UseViewport()
 {
-	if (_frame.is_empty())
-	{
-		_surface->UseViewport();
-	}
-	else
-	{
-		bounds2f viewport = _frame * GetSurface()->GetGraphicsContext()->get_pixeldensity();
-		glViewport((GLint)viewport.min.x, (GLint)viewport.min.y, (GLsizei)viewport.size().x, (GLsizei)viewport.size().y);
-	}
+	bounds2f viewport = _frame * GetSurface()->GetGraphicsContext()->get_pixeldensity();
+	glViewport((GLint)viewport.min.x, (GLint)viewport.min.y, (GLsizei)viewport.size().x, (GLsizei)viewport.size().y);
 }
 
 
@@ -82,32 +73,10 @@ glm::vec2 Content::ContentToSurface(glm::vec2 value) const
 
 void Content::ScreenSizeChanged()
 {
-	UpdateAspect();
 }
 
 
-glm::mat4 Content::GetContentTransform() const
+glm::mat4 Content::GetRenderTransform() const
 {
 	return ViewportTransform(bounds2f(0, 0, _surface->GetSize()));
-}
-
-
-void Content::RenderContent()
-{
-	Render(GetContentTransform());
-}
-
-
-/*void View::Update(double secondsSinceLastUpdate)
-{
-}*/
-
-
-
-void Content::UpdateAspect()
-{
-	if (_frame.is_empty())
-		_aspect = _surface->GetSize().y / _surface->GetSize().x;
-	else
-		_aspect = _frame.size().y / _frame.size().x;
 }

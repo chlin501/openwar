@@ -29,7 +29,7 @@ public:
 	TerrainView(Surface* screen);
 	virtual ~TerrainView();
 
-	virtual glm::mat4 GetContentTransform() const;
+	virtual glm::mat4 GetRenderTransform() const;
 
 	bounds2f GetContentBounds() const { return _contentBounds; }
 

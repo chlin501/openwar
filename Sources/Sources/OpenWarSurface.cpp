@@ -132,8 +132,8 @@ void OpenWarSurface::RenderSurface()
 
 	BattleSurface::RenderSurface();
 
-	_buttonsTopLeft->RenderContent();
-	_buttonsTopRight->RenderContent();
+	_buttonsTopLeft->Render(_buttonsTopLeft->GetRenderTransform());
+	_buttonsTopRight->Render(_buttonsTopRight->GetRenderTransform());
 }
 
 

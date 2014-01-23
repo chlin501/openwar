@@ -119,7 +119,7 @@ void BattleSurface::RenderSurface()
 {
 	for (BattleView* battleView : _battleViews)
 	{
-		battleView->RenderContent();
+		battleView->Render(battleView->GetRenderTransform());
 
 		/*
 		if (_battleScript != nullptr)
@@ -151,8 +151,10 @@ void BattleSurface::CreateBattleView(BattleCommander* commander)
 		battleView->SetCameraFacing((float)M_PI);
 	}
 
-	battleView->Initialize();
 	_battleViews.push_back(battleView);
+	UpdateBattleViewSize();
+
+	battleView->Initialize();
 
 	BattleGesture* battleGesture = new BattleGesture(battleView);
 	_battleGestures.push_back(battleGesture);

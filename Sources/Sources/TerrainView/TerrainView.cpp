@@ -27,7 +27,7 @@ TerrainView::~TerrainView()
 }
 
 
-glm::mat4 TerrainView::GetContentTransform() const
+glm::mat4 TerrainView::GetRenderTransform() const
 {
 	return GetTerrainTransform();
 }
@@ -182,7 +182,10 @@ glm::mat4x4 TerrainView::GetProjectionMatrix() const
 {
 	float r = 2 * glm::length(_contentBounds.size());
 
-	return glm::perspective(45.0f, 1.0f / GetFrameAspect(), 0.01f * r, r);
+	glm::vec2 frameSize = GetFrame().size();
+	float frameAspect = frameSize.y / frameSize.x;
+
+	return glm::perspective(45.0f, 1.0f / frameAspect, 0.01f * r, r);
 }
 
 
