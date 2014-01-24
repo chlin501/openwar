@@ -26,7 +26,7 @@ protected:
 	HeightMap* _heightMap;
 
 public:
-	TerrainView(Surface* screen);
+	TerrainView();
 	virtual ~TerrainView();
 
 	bounds2f GetContentBounds() const { return _contentBounds; }

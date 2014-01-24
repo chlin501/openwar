@@ -27,10 +27,9 @@ public:
 
 	graphicscontext* GetGraphicsContext() const { return _gc; }
 
+	// Surface
 
 	virtual void UseViewport();
-
-	virtual void ScreenSizeChanged();
 
 	virtual bool NeedsRender() const = 0;
 
@@ -41,6 +40,11 @@ public:
 	virtual void MouseEnter(glm::vec2 position);
 	virtual void MouseHover(glm::vec2 position);
 	virtual void MouseLeave(glm::vec2 position);
+
+	// Content
+
+	virtual void OnFrameChanged();
+
 };
 
 

@@ -144,7 +144,7 @@ private:
 	std::vector<ButtonArea*> _obsolete;
 
 public:
-	ButtonView(Surface* screen, ButtonRendering* buttonRendering, ButtonAlignment alignment);
+	ButtonView(ButtonRendering* buttonRendering, ButtonAlignment alignment);
 
 	ButtonAlignment GetAlignment() const { return _alignment; }
 

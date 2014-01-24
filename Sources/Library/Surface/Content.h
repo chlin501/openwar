@@ -19,8 +19,8 @@ class Content
 {
 	friend void SetContentContainer(Content*, Container*);
 
-	Container* _container;
 	Surface* _surface;
+	Container* _container;
 	bounds2f _frame;
 	glm::vec2 _anchor;
 	bool _flip;
@@ -38,6 +38,7 @@ public:
 
 	virtual bounds2f GetFrame() const;
 	virtual void SetFrame(bounds2f value);
+	virtual void OnFrameChanged();
 
 	virtual glm::vec2 GetAnchor() const;
 	virtual void SetAnchor(glm::vec2 value);

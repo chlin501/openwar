@@ -15,9 +15,13 @@ public:
 	Container();
 	virtual ~Container();
 
+	// Container
+
 	virtual void AddContent(Content* content);
 	virtual void RemoveContent(Content* content);
 	virtual bool HasContent(Content* content);
+
+	// Content
 
 	virtual void Render(const glm::mat4& transform);
 };

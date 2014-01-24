@@ -32,8 +32,11 @@ _scriptHintRenderer(nullptr)
 {
 	_buttonRendering = new ButtonRendering(_renderers, pixelDensity);
 
-	_buttonsTopLeft = new ButtonView(this, _buttonRendering, ButtonAlignment::TopLeft);
-	_buttonsTopRight = new ButtonView(this, _buttonRendering, ButtonAlignment::TopRight);
+	_buttonsTopLeft = new ButtonView(_buttonRendering, ButtonAlignment::TopLeft);
+	_buttonsTopRight = new ButtonView(_buttonRendering, ButtonAlignment::TopRight);
+
+	_buttonsTopLeft->SetContainer(this);
+	_buttonsTopRight->SetContainer(this);
 
 	_buttonGesture = new ButtonGesture();
 	_buttonGesture->buttonViews.push_back(_buttonsTopLeft);
@@ -104,9 +107,9 @@ void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vecto
 }
 
 
-void OpenWarSurface::ScreenSizeChanged()
+void OpenWarSurface::OnFrameChanged()
 {
-	BattleSurface::ScreenSizeChanged();
+	BattleSurface::OnFrameChanged();
 	bounds2f viewport = bounds2f(0, 0, GetSize());
 	_buttonsTopLeft->SetFrame(viewport);
 	_buttonsTopRight->SetFrame(viewport);

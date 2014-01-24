@@ -25,8 +25,8 @@ glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate, float rotate
 
 
 Content::Content(Surface* surface) :
-_container(nullptr),
 _surface(surface),
+_container(nullptr),
 _frame(),
 _anchor(),
 _flip(false)
@@ -35,8 +35,8 @@ _flip(false)
 
 
 Content::Content() :
-_container(nullptr),
 _surface(nullptr),
+_container(nullptr),
 _frame(),
 _anchor(),
 _flip(false)
@@ -70,6 +70,11 @@ bounds2f Content::GetFrame() const
 void Content::SetFrame(bounds2f value)
 {
 	SetFrameValue(value);
+}
+
+
+void Content::OnFrameChanged()
+{
 }
 
 
@@ -152,6 +157,8 @@ void Content::SetFrameValue(const bounds2f& value)
 	float oldHeight = GetHeight();*/
 
 	_frame = value;
+
+	OnFrameChanged();
 
 	//if (_container != nullptr)
 	//	_container->OnFrameChanged(this);

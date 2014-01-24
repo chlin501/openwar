@@ -83,9 +83,9 @@ void BattleSurface::SetEditing(bool value)
 }
 
 
-void BattleSurface::ScreenSizeChanged()
+void BattleSurface::OnFrameChanged()
 {
-	Surface::ScreenSizeChanged();
+	Surface::OnFrameChanged();
 	UpdateBattleViewSize();
 }
 
@@ -148,7 +148,8 @@ void BattleSurface::CreateBattleView(BattleCommander* commander)
 {
 	BattleSimulator* simulator = _scenario->GetSimulator();
 
-	BattleView* battleView = new BattleView(this, _renderers);
+	BattleView* battleView = new BattleView(GetGraphicsContext(), _renderers);
+	battleView->SetContainer(this);
 	battleView->SetCommander(commander);
 	battleView->SetSimulator(simulator);
 

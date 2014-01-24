@@ -29,7 +29,7 @@ void Surface::UseViewport()
 }
 
 
-void Surface::ScreenSizeChanged()
+void Surface::OnFrameChanged()
 {
 }
 

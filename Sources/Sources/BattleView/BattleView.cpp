@@ -40,7 +40,7 @@ static affine2 billboard_texcoords(int x, int y, bool flip)
 
 
 
-BattleView::BattleView(Surface* screen, renderers* r) : TerrainView(screen),
+BattleView::BattleView(graphicscontext* gc, renderers* r) :
 _simulator(nullptr),
 _commander(nullptr),
 _renderers(r),
@@ -150,8 +150,6 @@ _tiledTerrainRenderer(nullptr)
 		_billboardModel->_billboardShapeSmoke[i] = _billboardTexture->AddShape(1);
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeSmoke[i], 0, billboard_texcoords(i, 7, false));
 	}
-
-	graphicscontext* gc = screen->GetGraphicsContext();
 
 	_textureBillboardRenderer = new TextureBillboardRenderer(gc);
 	_textureBillboardRenderer1 = new TextureBillboardRenderer(gc);

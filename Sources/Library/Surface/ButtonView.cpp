@@ -202,7 +202,7 @@ void ButtonArea::UpdateBounds(bounds2f bounds)
 
 
 
-ButtonView::ButtonView(Surface* screen, ButtonRendering* buttonRendering, ButtonAlignment alignment) : Content(screen),
+ButtonView::ButtonView(ButtonRendering* buttonRendering, ButtonAlignment alignment) :
 _buttonRendering(buttonRendering),
 _alignment(alignment)
 {

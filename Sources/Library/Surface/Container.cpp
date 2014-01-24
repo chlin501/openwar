@@ -1,4 +1,5 @@
 #include "Container.h"
+#include "Surface.h"
 
 
 Container::Container()
@@ -40,6 +41,10 @@ void Container::Render(const glm::mat4& transform)
 
 void SetContentContainer(Content* content, Container* container)
 {
+	Surface* surface = nullptr;
+	for (Container* c = container; surface == nullptr && c != nullptr; c = c->GetContainer())
+		surface = dynamic_cast<Surface*>(c);
+
 	Container* existing = content->GetContainer();
 	if (existing != container)
 	{
@@ -53,6 +58,7 @@ void SetContentContainer(Content* content, Container* container)
 				}
 		}
 
+		content->_surface = surface;
 		content->_container = container;
 
 		if (container != nullptr)

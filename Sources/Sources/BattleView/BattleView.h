@@ -71,7 +71,7 @@ class BattleView : public TerrainView, public BattleObserver
 	TiledTerrainRenderer* _tiledTerrainRenderer;
 
 public:
-	BattleView(Surface* screen, renderers* r);
+	BattleView(graphicscontext* gc, renderers* r);
 	~BattleView();
 
 	BattleSimulator* GetSimulator() const { return _simulator; }

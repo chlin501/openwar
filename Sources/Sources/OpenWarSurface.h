@@ -44,15 +44,21 @@ public:
 	OpenWarSurface(glm::vec2 size, float pixelDensity);
 	virtual ~OpenWarSurface();
 
+	// BattleSurface
+
 	virtual void ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
 
-	virtual void ScreenSizeChanged();
-	virtual void Update(double secondsSinceLastUpdate);
+	// Surface
+
 	virtual void RenderSurface();
 
 	virtual void MouseEnter(glm::vec2 position);
 	virtual void MouseHover(glm::vec2 position);
 	virtual void MouseLeave(glm::vec2 position);
+
+	// Content
+	virtual void OnFrameChanged();
+	virtual void Update(double secondsSinceLastUpdate);
 
 protected:
 	void ClickedPlay();

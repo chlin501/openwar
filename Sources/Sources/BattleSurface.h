@@ -50,10 +50,12 @@ public:
 	bool IsEditing() const { return _editing; }
 
 	// Surface
-	virtual void ScreenSizeChanged();
 	virtual void Update(double secondsSinceLastUpdate);
 	virtual bool NeedsRender() const;
 	virtual void RenderSurface();
+
+	// Content
+	virtual void OnFrameChanged();
 
 private:
 	void CreateBattleView(BattleCommander* commander);
