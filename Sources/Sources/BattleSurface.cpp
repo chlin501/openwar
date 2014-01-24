@@ -16,12 +16,16 @@ BattleSurface::BattleSurface(glm::vec2 size, float pixelDensity) : Surface(size,
 _renderers(nullptr),
 _playing(false),
 _editing(false),
-_scenario(nullptr)
+_scenario(nullptr),
+_battleLayer(nullptr)
 {
 	_renderers = renderers::singleton = new renderers();
 
 	SoundPlayer::Initialize();
 	SoundPlayer::singleton->Pause();
+
+	_battleLayer = new Container();
+	_battleLayer->SetContainer(this);
 }
 
 
@@ -103,9 +107,10 @@ void BattleSurface::Update(double secondsSinceLastUpdate)
 			UpdateSoundPlayer();
 	}
 
+	Surface::Update(secondsSinceLastUpdate);
+
 	for (BattleView* battleView : _battleViews)
 	{
-		battleView->Update(secondsSinceLastUpdate);
 		battleView->AnimateMarkers((float)secondsSinceLastUpdate);
 	}
 }
@@ -117,39 +122,12 @@ bool BattleSurface::NeedsRender() const
 }
 
 
-void BattleSurface::RenderSurface()
-{
-	glm::vec2 size = GetSize();
-	glm::vec2 translate = -size / 2.0f;
-	glm::vec2 scale = 2.0f / size;
-	glm::mat4 transform = glm::translate(glm::scale(glm::mat4x4(), glm::vec3(scale, 1.0f)), glm::vec3(translate, 0.0f));
-
-	for (BattleView* battleView : _battleViews)
-	{
-		battleView->Render(transform * battleView->GetContentTransform());
-
-		/*
-		if (_battleScript != nullptr)
-		{
-			_scriptHintRenderer->Reset();
-			_battleScript->RenderHints(_scriptHintRenderer);
-			_scriptHintRenderer->Draw(_battleView->GetTransform());
-		}
-		*/
-	}
-
-	//if (_battleGesture != nullptr)
-	//	_battleGesture->RenderHints();
-}
-
-
-
 void BattleSurface::CreateBattleView(BattleCommander* commander)
 {
 	BattleSimulator* simulator = _scenario->GetSimulator();
 
 	BattleView* battleView = new BattleView(GetGraphicsContext(), _renderers);
-	battleView->SetContainer(this);
+	battleView->SetContainer(_battleLayer);
 	battleView->SetCommander(commander);
 	battleView->SetSimulator(simulator);
 
@@ -236,11 +214,14 @@ void BattleSurface::RemoveBattleView(BattleView* battleView)
 
 void BattleSurface::UpdateBattleViewSize()
 {
+	_battleLayer->SetFrame(bounds2f(0, 0, GetSize()));
+
 	if (!_battleViews.empty())
 	{
 		glm::vec2 size = GetSize();
 		float h = size.y / _battleViews.size();
 		float y = 0;
+
 		for (BattleView* battleView : _battleViews)
 		{
 			battleView->SetFrame(bounds2f(0, y, size.x, y + h));

@@ -3,9 +3,8 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "Surface.h"
-
-#include "shaderprogram.h"
 #include "Gesture.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 
 
@@ -29,8 +28,20 @@ void Surface::UseViewport()
 }
 
 
-void Surface::OnFrameChanged()
+void Surface::RenderSurface()
 {
+	glm::vec2 size = GetSize();
+	glViewport(0, 0, (GLsizei)size.x, (GLsizei)size.y);
+
+	glClearColor(1, 0.5f, 0.5f, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	glm::vec2 translate = -size / 2.0f;
+	glm::vec2 scale = 2.0f / size;
+	glm::mat4 transform = glm::translate(glm::scale(glm::mat4x4(), glm::vec3(scale, 1.0f)), glm::vec3(translate, 0.0f));
+
+	Container::Render(transform);
 }
 
 

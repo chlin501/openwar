@@ -14,10 +14,9 @@ class Surface;
 glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate = glm::vec2(), float rotate = 0);
 
 
-
 class Content
 {
-	friend void SetContentContainer(Content*, Container*);
+	friend void SetContentContainer(Content*, Container*, Content*);
 
 	Surface* _surface;
 	Container* _container;
@@ -26,14 +25,13 @@ class Content
 	bool _flip;
 
 public:
-	Content(Surface* surface);
 	Content();
 	virtual ~Content();
 
 	Surface* GetSurface() const { return _surface; }
 
 	virtual Container* GetContainer() const;
-	virtual void SetContainer(Container* value);
+	virtual void SetContainer(Container* value, Content* behindContent = nullptr);
 
 
 	virtual bounds2f GetFrame() const;
@@ -60,8 +58,8 @@ public:
 
 	virtual glm::mat4 GetContentTransform() const;
 
-	virtual void Render(const glm::mat4& transform) = 0;
 	virtual void Update(double secondsSinceLastUpdate) = 0;
+	virtual void Render(const glm::mat4& transform) = 0;
 
 private:
 	void SetFrameValue(const bounds2f& value);

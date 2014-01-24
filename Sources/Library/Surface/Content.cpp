@@ -24,16 +24,6 @@ glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate, float rotate
 
 
 
-Content::Content(Surface* surface) :
-_surface(surface),
-_container(nullptr),
-_frame(),
-_anchor(),
-_flip(false)
-{
-}
-
-
 Content::Content() :
 _surface(nullptr),
 _container(nullptr),
@@ -46,6 +36,7 @@ _flip(false)
 
 Content::~Content()
 {
+	SetContainer(nullptr, nullptr);
 }
 
 
@@ -55,9 +46,9 @@ Container* Content::GetContainer() const
 }
 
 
-void Content::SetContainer(Container* value)
+void Content::SetContainer(Container* value, Content* behindContent)
 {
-	SetContentContainer(this, value);
+	SetContentContainer(this, value, behindContent);
 }
 
 

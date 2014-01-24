@@ -28,6 +28,7 @@ protected:
 	BattleScenario* _scenario;
 	std::vector<BattleCommander*> _commanders;
 
+	Container* _battleLayer;
 	std::vector<BattleView*> _battleViews;
 	std::vector<BattleGesture*> _battleGestures;
 	std::vector<TerrainGesture*> _terrainGestures;
@@ -52,7 +53,6 @@ public:
 	// Surface
 	virtual void Update(double secondsSinceLastUpdate);
 	virtual bool NeedsRender() const;
-	virtual void RenderSurface();
 
 	// Content
 	virtual void OnFrameChanged();

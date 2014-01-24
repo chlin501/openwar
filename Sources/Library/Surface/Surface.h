@@ -33,18 +33,13 @@ public:
 
 	virtual bool NeedsRender() const = 0;
 
-	virtual void RenderSurface() = 0;
+	virtual void RenderSurface();
 
 	virtual bool ShowContextualMenu(glm::vec2 position);
 
 	virtual void MouseEnter(glm::vec2 position);
 	virtual void MouseHover(glm::vec2 position);
 	virtual void MouseLeave(glm::vec2 position);
-
-	// Content
-
-	virtual void OnFrameChanged();
-
 };
 
 
