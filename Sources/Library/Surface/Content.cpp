@@ -123,6 +123,19 @@ void Content::SetSize(glm::vec2 value)
 }
 
 
+bounds2f Content::GetBounds() const
+{
+	return _bounds;
+}
+
+
+void Content::SetBounds(const bounds2f& value)
+{
+	_bounds = value;
+	//OnBoundsChanged();
+}
+
+
 float Content::GetRotate() const
 {
 	return _rotate;
@@ -244,4 +257,34 @@ void Content::SetFrameValue(const bounds2f& value)
 		width.CallObserver();
 	if (oldHeight != GetHeight())
 		height.CallObserver();*/
+}
+
+
+void Content::RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const
+{
+	vertexbuffer<plain_vertex> shape;
+	shape._mode = GL_TRIANGLE_STRIP;
+	shape._vertices.push_back(plain_vertex(bounds.p11()));
+	shape._vertices.push_back(plain_vertex(bounds.p12()));
+	shape._vertices.push_back(plain_vertex(bounds.p21()));
+	shape._vertices.push_back(plain_vertex(bounds.p22()));
+
+	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
+	renderers::singleton->_plain_renderer->get_uniform<glm::vec4>("color").set_value(color);
+	renderers::singleton->_plain_renderer->render(shape);
+}
+
+
+void Content::RenderOutline(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const
+{
+	vertexbuffer<plain_vertex> shape;
+	shape._mode = GL_LINE_LOOP;
+	shape._vertices.push_back(plain_vertex(bounds.p11()));
+	shape._vertices.push_back(plain_vertex(bounds.p12()));
+	shape._vertices.push_back(plain_vertex(bounds.p22()));
+	shape._vertices.push_back(plain_vertex(bounds.p21()));
+
+	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
+	renderers::singleton->_plain_renderer->get_uniform<glm::vec4>("color").set_value(color);
+	renderers::singleton->_plain_renderer->render(shape);
 }

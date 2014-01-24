@@ -65,6 +65,15 @@ void Container::Render(const glm::mat4& transform)
 }
 
 
+void Container::FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void (Hotspot*)> action)
+{
+	for (Content* content : _contents)
+	{
+		content->FindHotspots(transform * content->GetContentTransform(), position, action);
+	}
+}
+
+
 void SetContentContainer(Content* content, Container* container, Content* behindContent)
 {
 	Surface* surface = nullptr;

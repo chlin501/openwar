@@ -2,7 +2,7 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "ButtonView.h"
+#include "ButtonGrid.h"
 
 
 
@@ -83,7 +83,7 @@ glm::vec2 ButtonItem::CalculateSize() const
 
 
 
-ButtonArea::ButtonArea(ButtonView* buttonView, int numberOfColumns) :
+ButtonArea::ButtonArea(ButtonGrid* buttonView, int numberOfColumns) :
 _buttonView(buttonView),
 noaction([](){})
 {
@@ -202,7 +202,7 @@ void ButtonArea::UpdateBounds(bounds2f bounds)
 
 
 
-ButtonView::ButtonView(ButtonRendering* buttonRendering, ButtonAlignment alignment) :
+ButtonGrid::ButtonGrid(ButtonRendering* buttonRendering, ButtonAlignment alignment) :
 _buttonRendering(buttonRendering),
 _alignment(alignment)
 {
@@ -210,21 +210,21 @@ _alignment(alignment)
 
 
 
-void ButtonView::SetFrame(bounds2f value)
+void ButtonGrid::SetFrame(bounds2f value)
 {
 	Content::SetFrame(value);
 	UpdateLayout();
 }
 
 
-bool ButtonView::HasButtons() const
+bool ButtonGrid::HasButtons() const
 {
 	return !_buttonAreas.empty() && !_buttonAreas.front()->buttonItems.empty();
 }
 
 
 
-void ButtonView::Reset()
+void ButtonGrid::Reset()
 {
 	_obsolete.insert(_obsolete.end(), _buttonAreas.begin(), _buttonAreas.end());
 	_buttonAreas.clear();
@@ -232,7 +232,7 @@ void ButtonView::Reset()
 
 
 
-ButtonArea* ButtonView::AddButtonArea(int numberOfColumns)
+ButtonArea* ButtonGrid::AddButtonArea(int numberOfColumns)
 {
 	ButtonArea* buttonArea = new ButtonArea(this, numberOfColumns);
 	_buttonAreas.push_back(buttonArea);
@@ -241,7 +241,7 @@ ButtonArea* ButtonView::AddButtonArea(int numberOfColumns)
 
 
 
-void ButtonView::UpdateLayout()
+void ButtonGrid::UpdateLayout()
 {
 	bounds2f viewport = GetFrame();
 	glm::vec2 viewport_center = viewport.center();
@@ -321,8 +321,18 @@ void ButtonView::UpdateLayout()
 }
 
 
+void ButtonGrid::Update(double secondsSinceLastUpdate)
+{
+	if (!_obsolete.empty())
+	{
+		for (ButtonArea* buttonArea : _obsolete)
+			delete buttonArea;
+		_obsolete.clear();
+	}
+}
 
-void ButtonView::Render(const glm::mat4& transform)
+
+void ButtonGrid::Render(const glm::mat4& transform)
 {
 	for (ButtonArea* buttonArea : _buttonAreas)
 	{
@@ -346,13 +356,7 @@ void ButtonView::Render(const glm::mat4& transform)
 }
 
 
-
-void ButtonView::Update(double secondsSinceLastUpdate)
+void ButtonGrid::FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void (Hotspot*)> action)
 {
-	if (!_obsolete.empty())
-	{
-		for (ButtonArea* buttonArea : _obsolete)
-			delete buttonArea;
-		_obsolete.clear();
-	}
+
 }

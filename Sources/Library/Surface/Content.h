@@ -5,9 +5,11 @@
 #ifndef CONTENT_H
 #define CONTENT_H
 
+#include <functional>
 #include "bounds.h"
 
 class Container;
+class Hotspot;
 class Surface;
 
 
@@ -23,6 +25,7 @@ class Content
 	bool _visible;
 	bounds2f _frame;
 	glm::vec2 _anchor;
+	bounds2f _bounds;
 	float _rotate;
 	glm::vec2 _scale;
 	glm::vec2 _translate;
@@ -61,6 +64,11 @@ public:
 
 	//
 
+	virtual bounds2f GetBounds() const;
+	virtual void SetBounds(const bounds2f& value);
+
+	//
+
 	virtual float GetRotate() const;
 	virtual void SetRotate(float value);
 
@@ -88,9 +96,14 @@ public:
 
 	virtual void Update(double secondsSinceLastUpdate) = 0;
 	virtual void Render(const glm::mat4& transform) = 0;
+	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(Hotspot*)> action) = 0;
 
 private:
 	void SetFrameValue(const bounds2f& value);
+
+protected:
+	void RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const;
+	void RenderOutline(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const;
 };
 
 

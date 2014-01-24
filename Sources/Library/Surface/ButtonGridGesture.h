@@ -5,20 +5,21 @@
 #ifndef ButtonGesture_H
 #define ButtonGesture_H
 
-#include "Gesture.h"
+#include "../Surface/Gesture.h"
 
 class ButtonItem;
-class Button;
+class ButtonGrid;
 
 
-class ButtonGesture : public Gesture
+class ButtonGridGesture : public Gesture
 {
-	Surface* _surface;
-	Button* _buttonControl;
+	ButtonItem* _buttonItem;
 
 public:
-	ButtonGesture(Surface* surface);
-	virtual ~ButtonGesture();
+	std::vector<ButtonGrid*> buttonViews;
+
+	ButtonGridGesture();
+	virtual ~ButtonGridGesture();
 
 	virtual void Update(Surface* surface, double secondsSinceLastUpdate);
 

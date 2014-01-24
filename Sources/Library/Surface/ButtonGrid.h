@@ -13,7 +13,7 @@
 
 
 class ButtonArea;
-class ButtonView;
+class ButtonGrid;
 
 
 struct ButtonAlignment
@@ -106,7 +106,7 @@ public:
 
 class ButtonArea
 {
-	ButtonView* _buttonView;
+	ButtonGrid* _buttonView;
 
 public:
 	std::vector<ButtonItem*> buttonItems;
@@ -116,13 +116,13 @@ public:
 	std::function<void()> noaction;
 	glm::vec2 _margin;
 
-	ButtonArea(ButtonView* buttonView, int numberOfColumns);
+	ButtonArea(ButtonGrid* buttonView, int numberOfColumns);
 	~ButtonArea();
 
 	glm::vec2 GetMargin() const { return _margin; }
 	void SetMargin(glm::vec2 value) { _margin = value; }
 
-	ButtonView* GetButtonView() const { return _buttonView; }
+	ButtonGrid* GetButtonView() const { return _buttonView; }
 
 	ButtonItem* AddButtonItem(const char* buttonText);
 	ButtonItem* AddButtonItem(ButtonIcon* buttonIcon);
@@ -134,7 +134,7 @@ public:
 };
 
 
-class ButtonView : public Content
+class ButtonGrid : public Content
 {
 public:
 	ButtonRendering* _buttonRendering;
@@ -144,7 +144,7 @@ private:
 	std::vector<ButtonArea*> _obsolete;
 
 public:
-	ButtonView(ButtonRendering* buttonRendering, ButtonAlignment alignment);
+	ButtonGrid(ButtonRendering* buttonRendering, ButtonAlignment alignment);
 
 	ButtonAlignment GetAlignment() const { return _alignment; }
 
@@ -159,9 +159,9 @@ public:
 
 	void UpdateLayout();
 
-	virtual void Render(const glm::mat4& transform);
-
 	virtual void Update(double secondsSinceLastUpdate);
+	virtual void Render(const glm::mat4& transform);
+	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(Hotspot*)> action);
 };
 
 

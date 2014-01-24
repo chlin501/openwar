@@ -35,7 +35,12 @@
 		41B2299217EC730E00DFA0B6 /* Textures in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298E17EC730E00DFA0B6 /* Textures */; };
 		41D4084B1891029E00EAFEFA /* ButtonGesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408451891029E00EAFEFA /* ButtonGesture.cpp */; };
 		41D4084C1891029E00EAFEFA /* ButtonRendering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408471891029E00EAFEFA /* ButtonRendering.cpp */; };
-		41D4084D1891029E00EAFEFA /* ButtonView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408491891029E00EAFEFA /* ButtonView.cpp */; };
+		41D408AF1892DDDE00EAFEFA /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408A21892DDDE00EAFEFA /* Animation.cpp */; };
+		41D408B01892DDDE00EAFEFA /* Button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408A41892DDDE00EAFEFA /* Button.cpp */; };
+		41D408B11892DDDE00EAFEFA /* ButtonGrid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408A61892DDDE00EAFEFA /* ButtonGrid.cpp */; };
+		41D408B21892DDDE00EAFEFA /* ButtonGridGesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408A81892DDDE00EAFEFA /* ButtonGridGesture.cpp */; };
+		41D408B31892DDDE00EAFEFA /* ButtonHotspot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408AA1892DDDE00EAFEFA /* ButtonHotspot.cpp */; };
+		41D408B41892DDDE00EAFEFA /* Hotspot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408AC1892DDDE00EAFEFA /* Hotspot.cpp */; };
 		41EE144A17E8A4290085D3F2 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41EE144217E8A4020085D3F2 /* SDL2_image.framework */; };
 		41EE144B17E8A4290085D3F2 /* SDL2_net.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41EE144317E8A4020085D3F2 /* SDL2_net.framework */; };
 		41EE144C17E8A4290085D3F2 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41EE144417E8A4020085D3F2 /* SDL2_ttf.framework */; };
@@ -160,8 +165,19 @@
 		41D408461891029E00EAFEFA /* ButtonGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonGesture.h; sourceTree = "<group>"; };
 		41D408471891029E00EAFEFA /* ButtonRendering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ButtonRendering.cpp; sourceTree = "<group>"; };
 		41D408481891029E00EAFEFA /* ButtonRendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonRendering.h; sourceTree = "<group>"; };
-		41D408491891029E00EAFEFA /* ButtonView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ButtonView.cpp; sourceTree = "<group>"; };
-		41D4084A1891029E00EAFEFA /* ButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonView.h; sourceTree = "<group>"; };
+		41D408A21892DDDE00EAFEFA /* Animation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Animation.cpp; sourceTree = "<group>"; };
+		41D408A31892DDDE00EAFEFA /* Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animation.h; sourceTree = "<group>"; };
+		41D408A41892DDDE00EAFEFA /* Button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Button.cpp; sourceTree = "<group>"; };
+		41D408A51892DDDE00EAFEFA /* Button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Button.h; sourceTree = "<group>"; };
+		41D408A61892DDDE00EAFEFA /* ButtonGrid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ButtonGrid.cpp; sourceTree = "<group>"; };
+		41D408A71892DDDE00EAFEFA /* ButtonGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonGrid.h; sourceTree = "<group>"; };
+		41D408A81892DDDE00EAFEFA /* ButtonGridGesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ButtonGridGesture.cpp; sourceTree = "<group>"; };
+		41D408A91892DDDE00EAFEFA /* ButtonGridGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonGridGesture.h; sourceTree = "<group>"; };
+		41D408AA1892DDDE00EAFEFA /* ButtonHotspot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ButtonHotspot.cpp; sourceTree = "<group>"; };
+		41D408AB1892DDDE00EAFEFA /* ButtonHotspot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonHotspot.h; sourceTree = "<group>"; };
+		41D408AC1892DDDE00EAFEFA /* Hotspot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hotspot.cpp; sourceTree = "<group>"; };
+		41D408AD1892DDDE00EAFEFA /* Hotspot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hotspot.h; sourceTree = "<group>"; };
+		41D408AE1892DDDE00EAFEFA /* Property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Property.h; sourceTree = "<group>"; };
 		41EE144217E8A4020085D3F2 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
 		41EE144317E8A4020085D3F2 /* SDL2_net.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_net.framework; path = ../../../Library/Frameworks/SDL2_net.framework; sourceTree = "<group>"; };
 		41EE144417E8A4020085D3F2 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = ../../../Library/Frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
@@ -409,12 +425,23 @@
 		63F5509FBDF9B166B4498329 /* Surface */ = {
 			isa = PBXGroup;
 			children = (
+				41D408A21892DDDE00EAFEFA /* Animation.cpp */,
+				41D408A31892DDDE00EAFEFA /* Animation.h */,
+				41D408A41892DDDE00EAFEFA /* Button.cpp */,
+				41D408A51892DDDE00EAFEFA /* Button.h */,
+				41D408A61892DDDE00EAFEFA /* ButtonGrid.cpp */,
+				41D408A71892DDDE00EAFEFA /* ButtonGrid.h */,
+				41D408A81892DDDE00EAFEFA /* ButtonGridGesture.cpp */,
+				41D408A91892DDDE00EAFEFA /* ButtonGridGesture.h */,
+				41D408AA1892DDDE00EAFEFA /* ButtonHotspot.cpp */,
+				41D408AB1892DDDE00EAFEFA /* ButtonHotspot.h */,
+				41D408AC1892DDDE00EAFEFA /* Hotspot.cpp */,
+				41D408AD1892DDDE00EAFEFA /* Hotspot.h */,
+				41D408AE1892DDDE00EAFEFA /* Property.h */,
 				41D408451891029E00EAFEFA /* ButtonGesture.cpp */,
 				41D408461891029E00EAFEFA /* ButtonGesture.h */,
 				41D408471891029E00EAFEFA /* ButtonRendering.cpp */,
 				41D408481891029E00EAFEFA /* ButtonRendering.h */,
-				41D408491891029E00EAFEFA /* ButtonView.cpp */,
-				41D4084A1891029E00EAFEFA /* ButtonView.h */,
 				63F55E9460C9DAACCDCCA217 /* Gesture.cpp */,
 				63F553A5C950C36CB298DCA0 /* Gesture.h */,
 				63F55D85DD218A9816498CE7 /* Surface.cpp */,
@@ -726,7 +753,9 @@
 				63F554D599B9EA471445C976 /* texture.cpp in Sources */,
 				63F55211E9EC58D197413281 /* vertexbuffer.cpp in Sources */,
 				63F5567BE5C32F9B5F7D3AB7 /* BillboardTexture.cpp in Sources */,
+				41D408B11892DDDE00EAFEFA /* ButtonGrid.cpp in Sources */,
 				63F553C832A774E6970A5828 /* PathRenderer.cpp in Sources */,
+				41D408B01892DDDE00EAFEFA /* Button.cpp in Sources */,
 				4105FB331806D3970074C855 /* ShootingCounter.cpp in Sources */,
 				63F558DDB64E7B6125214060 /* string_shape.cpp in Sources */,
 				63F559BF719B416B43EFC1C6 /* TextureBillboardRenderer.cpp in Sources */,
@@ -743,10 +772,12 @@
 				63F55D45A7A30820587225CB /* BattleGesture.cpp in Sources */,
 				63F5582E120B722D806CDB58 /* CasualtyMarker.cpp in Sources */,
 				63F55433D66E0956B386D227 /* UnitMovementMarker.cpp in Sources */,
+				41D408B41892DDDE00EAFEFA /* Hotspot.cpp in Sources */,
 				63F5596C0986FE7D81143BE1 /* RangeMarker.cpp in Sources */,
 				63F5563E7284F60A11F8D90F /* UnitTrackingMarker.cpp in Sources */,
 				63F559482A86E47274136F37 /* UnitMarker.cpp in Sources */,
 				4105FB341806D3970074C855 /* SmokeCounter.cpp in Sources */,
+				41D408AF1892DDDE00EAFEFA /* Animation.cpp in Sources */,
 				63F55D68A07CFDC7816F111A /* SmoothTerrainWater.cpp in Sources */,
 				63F55ECBBDB6C8631D7D8524 /* BillboardTerrainForest.cpp in Sources */,
 				4105FB2B1806D3890074C855 /* SmoothGroundMap.cpp in Sources */,
@@ -758,14 +789,15 @@
 				63F5570002E7A8C45BA9193F /* TerrainView.cpp in Sources */,
 				63F55DC9F91104DB98854A0F /* EditorModel.cpp in Sources */,
 				63F55E04CBD1D5B38067D31A /* EditorGesture.cpp in Sources */,
+				41D408B21892DDDE00EAFEFA /* ButtonGridGesture.cpp in Sources */,
 				4105FB3E1806D3A50074C855 /* SmoothTerrainSky.cpp in Sources */,
 				63F55D81972105FD90CA832F /* OpenWarSurface.cpp in Sources */,
 				63F55BC7E8C99A6C96EE1A21 /* main.cpp in Sources */,
 				63F55932A50F5611BA25ED6F /* SamuraiModule.cpp in Sources */,
 				63F554616556A395A788A79A /* BattleCommander.cpp in Sources */,
+				41D408B31892DDDE00EAFEFA /* ButtonHotspot.cpp in Sources */,
 				63F554B794FA10FAD4611DBE /* BattleScenario.cpp in Sources */,
 				63F5538C9F13679CC41A3637 /* BattleSurface.cpp in Sources */,
-				41D4084D1891029E00EAFEFA /* ButtonView.cpp in Sources */,
 				63F553FC586F6F67D08BA702 /* shaderprogram.cpp in Sources */,
 				63F55FA51728DE3100052FF0 /* graphicscontext.cpp in Sources */,
 				41D4084B1891029E00EAFEFA /* ButtonGesture.cpp in Sources */,

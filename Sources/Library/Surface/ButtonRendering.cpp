@@ -3,7 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "ButtonRendering.h"
-#include "ButtonView.h"
+#include "ButtonGrid.h"
 #include "../Graphics/vertexbuffer.h"
 #include <glm/gtc/matrix_transform.hpp>
 

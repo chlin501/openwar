@@ -114,6 +114,7 @@ public:
 
 	virtual void Render(const glm::mat4& transform);
 	virtual void Update(double secondsSinceLastUpdate);
+	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(Hotspot*)> action);
 
 	bounds2f GetBillboardBounds(glm::vec3 position, float height);
 

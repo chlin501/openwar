@@ -8,10 +8,10 @@
 #include "BattleSurface.h"
 #include "TerrainView/EditorModel.h"
 
-class ButtonGesture;
+class ButtonGridGesture;
 class ButtonItem;
 class ButtonRendering;
-class ButtonView;
+class ButtonGrid;
 class EditorGesture;
 class GradientLineShape3;
 //class SmoothTerrainSurfaceRenderer;
@@ -26,9 +26,9 @@ public:
 	EditorModel* _editorModel;
 	EditorGesture* _editorGesture;
 
-	ButtonView* _buttonsTopLeft;
-	ButtonView* _buttonsTopRight;
-	ButtonGesture* _buttonGesture;
+	ButtonGrid* _buttonsTopLeft;
+	ButtonGrid* _buttonsTopRight;
+	ButtonGridGesture* _buttonGesture;
 	ButtonItem* _buttonItemHand;
 	ButtonItem* _buttonItemPaint;
 	ButtonItem* _buttonItemErase;

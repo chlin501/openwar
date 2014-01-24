@@ -3,8 +3,8 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "../BattleModel/BattleScenario.h"
-#include "../Library/Surface/ButtonView.h"
-#include "../Library/Surface/ButtonGesture.h"
+#include "ButtonGrid.h"
+#include "ButtonGridGesture.h"
 #include "../Library/Shapes/GradientShape3.h"
 #include "BattleView/BattleGesture.h"
 #include "BattleView/BattleView.h"
@@ -32,13 +32,13 @@ _scriptHintRenderer(nullptr)
 {
 	_buttonRendering = new ButtonRendering(_renderers, pixelDensity);
 
-	_buttonsTopLeft = new ButtonView(_buttonRendering, ButtonAlignment::TopLeft);
-	_buttonsTopRight = new ButtonView(_buttonRendering, ButtonAlignment::TopRight);
+	_buttonsTopLeft = new ButtonGrid(_buttonRendering, ButtonAlignment::TopLeft);
+	_buttonsTopRight = new ButtonGrid(_buttonRendering, ButtonAlignment::TopRight);
 
 	_buttonsTopLeft->SetContainer(this);
 	_buttonsTopRight->SetContainer(this);
 
-	_buttonGesture = new ButtonGesture();
+	_buttonGesture = new ButtonGridGesture();
 	_buttonGesture->buttonViews.push_back(_buttonsTopLeft);
 	_buttonGesture->buttonViews.push_back(_buttonsTopRight);
 

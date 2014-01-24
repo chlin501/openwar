@@ -2,14 +2,17 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
+#include "Button.h"
 #include "ButtonGesture.h"
-#include "ButtonView.h"
-#include "../Surface/Touch.h"
+#include "ButtonHotspot.h"
+#include "Touch.h"
+#include "Surface.h"
 
 
 
-ButtonGesture::ButtonGesture() :
-_buttonItem(nullptr)
+ButtonGesture::ButtonGesture(Surface* surface) :
+_surface(surface),
+_buttonControl(nullptr)
 {
 }
 
@@ -31,8 +34,8 @@ void ButtonGesture::Update(Surface* surface, double secondsSinceLastUpdate)
 
 void ButtonGesture::KeyDown(Surface* surface, char key)
 {
-	for (ButtonView* buttonView : buttonViews)
-		if (buttonView->GetSurface() == surface)
+	/*for (ButtonControl* buttonView : buttonViews)
+		if (buttonView->GetWindow() == surface)
 			for (ButtonArea* buttonArea : buttonView->GetButtonAreas())
 				for (ButtonItem* buttonItem : buttonArea->buttonItems)
 					if (buttonItem->HasAction()
@@ -41,7 +44,7 @@ void ButtonGesture::KeyDown(Surface* surface, char key)
 					{
 						buttonItem->CallAction();
 					}
-
+	*/
 }
 
 
@@ -50,40 +53,36 @@ void ButtonGesture::TouchBegan(Touch* touch)
 	if (touch->HasGesture() || !_touches.empty())
 		return;
 
-	for (ButtonView* buttonView : buttonViews)
-		if (buttonView->GetSurface() == touch->GetSurface())
-			for (ButtonArea* buttonArea : buttonView->GetButtonAreas())
-				for (ButtonItem* buttonItem : buttonArea->buttonItems)
-					if (buttonItem->HasAction()
-							&& !buttonItem->IsDisabled()
-							&& buttonItem->GetBounds().contains(touch->GetPosition()))
-					{
-						_buttonItem = buttonItem;
-					}
+	_surface->FindHotspots(glm::mat4(), touch->GetPosition(), [this](Hotspot* hotspot) {
+		ButtonHotspot* buttonHotspot = dynamic_cast<ButtonHotspot*>(hotspot);
+		if (buttonHotspot != nullptr)
+			_buttonControl = buttonHotspot->GetButtonControl();
+	});
 
-	if (_buttonItem != nullptr)
+	if (_buttonControl != nullptr)
 	{
 		CaptureTouch(touch);
-		_buttonItem->SetHighlight(true);
+		_buttonControl->SetHighlight(true);
 	}
-	else
-	{
-		for (ButtonView* buttonView : buttonViews)
-			if (buttonView->GetSurface() == touch->GetSurface())
-				for (ButtonArea* buttonArea : buttonView->GetButtonAreas())
-				{
-					buttonArea->noaction();
-				}
-	}
+
 }
 
 
 
 void ButtonGesture::TouchMoved()
 {
-	if (_buttonItem != nullptr && !_touches.empty())
+	if (_buttonControl != nullptr && !_touches.empty())
 	{
-		_buttonItem->SetHighlight(_buttonItem->GetBounds().contains(_touches.front()->GetPosition()));
+		bool inside = false;
+
+		glm::vec2 p = _touches.front()->GetPosition();
+		_surface->FindHotspots(glm::mat4(), p, [this, &inside](Hotspot* hotspot) {
+			ButtonHotspot* buttonHotspot = dynamic_cast<ButtonHotspot*>(hotspot);
+			if (buttonHotspot != nullptr && buttonHotspot->GetButtonControl() == _buttonControl)
+				inside = true;
+		});
+
+		_buttonControl->SetHighlight(inside);
 	}
 }
 
@@ -91,12 +90,13 @@ void ButtonGesture::TouchMoved()
 
 void ButtonGesture::TouchEnded(Touch* touch)
 {
-	if (_buttonItem != nullptr)
+	if (_buttonControl != nullptr)
 	{
-		if (_buttonItem->GetBounds().contains(touch->GetPosition()))
-			_buttonItem->CallAction();
+		std::function<void()> action = _buttonControl->GetAction();
+		if (action)
+			action();
 
-		_buttonItem->SetHighlight(false);
-		_buttonItem = nullptr;
+		_buttonControl->SetHighlight(false);
+		_buttonControl = nullptr;
 	}
 }
