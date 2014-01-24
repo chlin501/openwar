@@ -29,6 +29,9 @@ _surface(nullptr),
 _container(nullptr),
 _frame(),
 _anchor(),
+_rotate(0),
+_scale(1, 1),
+_translate(),
 _flip(false)
 {
 }
@@ -107,6 +110,72 @@ void Content::SetSize(glm::vec2 value)
 }
 
 
+float Content::GetRotate() const
+{
+	return _rotate;
+}
+
+
+void Content::SetRotate(float value)
+{
+	_rotate = value;
+}
+
+
+glm::vec2 Content::GetScale() const
+{
+	return _scale;
+}
+
+
+void Content::SetScale(glm::vec2 value)
+{
+	_scale = value;
+}
+
+
+glm::vec2 Content::GetTranslate() const
+{
+	return _translate;
+}
+
+
+void Content::SetTranslate(glm::vec2 value)
+{
+	_translate = value;
+}
+
+
+glm::mat4 Content::GetTransform() const
+{
+	return _transform;
+}
+
+
+void Content::SetTransform(const glm::mat4& value)
+{
+	_transform = value;
+}
+
+
+glm::mat4 Content::GetContentTransform() const
+{
+	bounds2f frame = GetFrame();
+
+	glm::mat4 t;
+	t = glm::translate(t, glm::vec3(frame.min, 0));
+
+	glm::vec3 offset = glm::vec3(frame.size() * _anchor, 0);
+	t = glm::translate(t, offset);
+	t = glm::translate(t, glm::vec3(_translate, 0));
+	t = glm::rotate(t, _rotate, glm::vec3(0, 0, 1));
+	t = glm::scale(t, glm::vec3(_scale, 1));
+	t = glm::translate(t, -offset);
+
+	return t;
+}
+
+
 void Content::UseViewport()
 {
 	bounds2f viewport = _frame * GetSurface()->GetGraphicsContext()->get_pixeldensity();
@@ -125,14 +194,6 @@ glm::vec2 Content::ContentToSurface(glm::vec2 value) const
 {
 	bounds2f viewport = GetFrame();
 	return viewport.p11() + (value + 1.0f) / 2.0f * viewport.size();
-}
-
-
-glm::mat4 Content::GetContentTransform() const
-{
-	glm::mat4 t;
-	t = glm::translate(t, glm::vec3(_frame.min, 0));
-	return t;
 }
 
 

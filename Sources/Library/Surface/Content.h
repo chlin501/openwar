@@ -22,6 +22,10 @@ class Content
 	Container* _container;
 	bounds2f _frame;
 	glm::vec2 _anchor;
+	float _rotate;
+	glm::vec2 _scale;
+	glm::vec2 _translate;
+	glm::mat4 _transform;
 	bool _flip;
 
 public:
@@ -33,6 +37,7 @@ public:
 	virtual Container* GetContainer() const;
 	virtual void SetContainer(Container* value, Content* behindContent = nullptr);
 
+	//
 
 	virtual bounds2f GetFrame() const;
 	virtual void SetFrame(bounds2f value);
@@ -47,6 +52,24 @@ public:
 	virtual glm::vec2 GetSize() const;
 	virtual void SetSize(glm::vec2 value);
 
+	//
+
+	virtual float GetRotate() const;
+	virtual void SetRotate(float value);
+
+	virtual glm::vec2 GetScale() const;
+	virtual void SetScale(glm::vec2 value);
+
+	virtual glm::vec2 GetTranslate() const;
+	virtual void SetTranslate(glm::vec2 value);
+
+	virtual glm::mat4 GetTransform() const;
+	virtual void SetTransform(const glm::mat4& value);
+
+	virtual glm::mat4 GetContentTransform() const;
+
+
+
 
 	virtual void UseViewport();
 
@@ -55,8 +78,6 @@ public:
 
 	glm::vec2 SurfaceToContent(glm::vec2 value) const;
 	glm::vec2 ContentToSurface(glm::vec2 value) const;
-
-	virtual glm::mat4 GetContentTransform() const;
 
 	virtual void Update(double secondsSinceLastUpdate) = 0;
 	virtual void Render(const glm::mat4& transform) = 0;
