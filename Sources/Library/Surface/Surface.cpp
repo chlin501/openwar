@@ -37,9 +37,9 @@ void Surface::RenderSurface()
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	glm::vec2 translate = -size / 2.0f;
-	glm::vec2 scale = 2.0f / size;
-	glm::mat4 transform = glm::translate(glm::scale(glm::mat4x4(), glm::vec3(scale, 1.0f)), glm::vec3(translate, 0.0f));
+	glm::mat4 transform;
+	transform = glm::translate(transform, glm::vec3(-1, -1, 0));
+	transform = glm::scale(transform, glm::vec3(2.0f / size, 1.0f));
 
 	Container::Render(transform);
 }

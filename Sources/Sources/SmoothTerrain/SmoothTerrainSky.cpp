@@ -19,7 +19,7 @@ SmoothTerrainSky::~SmoothTerrainSky()
 }
 
 
-void SmoothTerrainSky::Render(renderers* _renderers, float cameraDirectionZ, bool flip)
+void SmoothTerrainSky::Render(const glm::mat4& transform, renderers* _renderers, bounds2f frame, float cameraDirectionZ, bool flip)
 {
 	vertexbuffer<color_vertex> shape;
 
@@ -35,40 +35,51 @@ void SmoothTerrainSky::Render(renderers* _renderers, float cameraDirectionZ, boo
 	glm::vec4 c2 = glm::vec4(160, 207, 243, 255) / 255.0f;
 	c2.a = blend;
 
-	shape._vertices.push_back(color_vertex(glm::vec2(-1, 0.2), c1));
-	shape._vertices.push_back(color_vertex(glm::vec2(-1, 1.0), c2));
-	shape._vertices.push_back(color_vertex(glm::vec2(1, 1.0), c2));
-	shape._vertices.push_back(color_vertex(glm::vec2(1, 1.0), c2));
-	shape._vertices.push_back(color_vertex(glm::vec2(1, 0.2), c1));
-	shape._vertices.push_back(color_vertex(glm::vec2(-1, 0.2), c1));
+	float x0 = frame.min.x;
+	float x1 = frame.max.x;
+	float y0 = frame.y().lerp(0.2f);
+	float y1 = frame.max.y;
 
-	glm::mat4 transform = flip ? glm::scale(glm::mat4x4(), glm::vec3(-1.0f, -1.0f, 1.0f)) : glm::mat4x4();
+	shape._vertices.push_back(color_vertex(glm::vec2(x0, y0), c1));
+	shape._vertices.push_back(color_vertex(glm::vec2(x0, y1), c2));
+	shape._vertices.push_back(color_vertex(glm::vec2(x1, y1), c2));
+	shape._vertices.push_back(color_vertex(glm::vec2(x1, y1), c2));
+	shape._vertices.push_back(color_vertex(glm::vec2(x1, y0), c1));
+	shape._vertices.push_back(color_vertex(glm::vec2(x0, y0), c1));
 
-	_renderers->_gradient_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
+	glm::mat4 t = transform;
+	if (flip)
+		t = glm::scale(t, glm::vec3(-1.0f, -1.0f, 1.0f));
+
+	_renderers->_gradient_renderer->get_uniform<glm::mat4>("transform").set_value(t);
 	_renderers->_gradient_renderer->get_uniform<float>("pixel_size").set_value(1);
 	_renderers->_gradient_renderer->render(shape);
 }
 
 
 
-void SmoothTerrainSky::RenderBackgroundLinen(renderers* _renderers, bounds2f viewport, bool flip)
+void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, renderers* _renderers, bounds2f frame, bool flip)
 {
 	vertexbuffer<texture_vertex> shape;
 
 	shape._mode = GL_TRIANGLES;
 	shape._vertices.clear();
 
+	glm::vec2 size = frame.size();
 	glm::vec2 vt0 = glm::vec2();
-	glm::vec2 vt1 = viewport.size() / 128.0f;
+	glm::vec2 vt1 = size / 128.0f;
 
-	shape._vertices.push_back(texture_vertex(glm::vec2(-1, -1), glm::vec2(vt0.x, vt0.y)));
-	shape._vertices.push_back(texture_vertex(glm::vec2(-1, 1), glm::vec2(vt0.x, vt1.y)));
-	shape._vertices.push_back(texture_vertex(glm::vec2(1, 1), glm::vec2(vt1.x, vt1.y)));
-	shape._vertices.push_back(texture_vertex(glm::vec2(1, 1), glm::vec2(vt1.x, vt1.y)));
-	shape._vertices.push_back(texture_vertex(glm::vec2(1, -1), glm::vec2(vt1.x, vt0.y)));
-	shape._vertices.push_back(texture_vertex(glm::vec2(-1, -1), glm::vec2(vt0.x, vt0.y)));
+	float x0 = frame.min.x;
+	float x1 = frame.max.x;
+	float y0 = frame.min.y;
+	float y1 = frame.max.y;
 
-	glm::mat4 transform = flip ? glm::scale(glm::mat4x4(), glm::vec3(-1.0f, -1.0f, 1.0f)) : glm::mat4x4();
+	shape._vertices.push_back(texture_vertex(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
+	shape._vertices.push_back(texture_vertex(glm::vec2(x0, y1), glm::vec2(vt0.x, vt1.y)));
+	shape._vertices.push_back(texture_vertex(glm::vec2(x1, y1), glm::vec2(vt1.x, vt1.y)));
+	shape._vertices.push_back(texture_vertex(glm::vec2(x1, y1), glm::vec2(vt1.x, vt1.y)));
+	shape._vertices.push_back(texture_vertex(glm::vec2(x1, y0), glm::vec2(vt1.x, vt0.y)));
+	shape._vertices.push_back(texture_vertex(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
 
 	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 	_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(_textureBackgroundLinen);

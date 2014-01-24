@@ -55,7 +55,7 @@ void BattleGesture::RenderHints()
 {
 	glm::mat4 transform = ViewportTransform(_battleView->GetFrame());
 
-	_battleView->UseViewport();
+	//_battleView->UseViewport();
 
 	vertexbuffer<plain_vertex> shape;
 	shape._mode = GL_LINES;

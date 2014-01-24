@@ -55,6 +55,7 @@ public:
 	glm::mat4x4 GetProjectionMatrix() const;
 	glm::mat4x4 GetViewMatrix() const;
 	glm::mat4x4 GetTerrainTransform() const { return GetProjectionMatrix() * GetViewMatrix(); }
+
 	ray GetCameraRay(glm::vec2 screenPosition) const;
 	glm::vec3 GetTerrainPosition2(glm::vec2 screenPosition) const;
 	glm::vec3 GetTerrainPosition3(glm::vec2 screenPosition) const;

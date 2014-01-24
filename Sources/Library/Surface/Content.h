@@ -20,6 +20,7 @@ class Content
 
 	Surface* _surface;
 	Container* _container;
+	bool _visible;
 	bounds2f _frame;
 	glm::vec2 _anchor;
 	float _rotate;
@@ -36,6 +37,12 @@ public:
 
 	virtual Container* GetContainer() const;
 	virtual void SetContainer(Container* value, Content* behindContent = nullptr);
+
+
+	//
+
+	virtual bool IsVisible() const;
+	void SetVisible(bool value);
 
 	//
 

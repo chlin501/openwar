@@ -27,6 +27,7 @@ glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate, float rotate
 Content::Content() :
 _surface(nullptr),
 _container(nullptr),
+_visible(true),
 _frame(),
 _anchor(),
 _rotate(0),
@@ -52,6 +53,18 @@ Container* Content::GetContainer() const
 void Content::SetContainer(Container* value, Content* behindContent)
 {
 	SetContentContainer(this, value, behindContent);
+}
+
+
+bool Content::IsVisible() const
+{
+	return _visible;
+}
+
+
+void Content::SetVisible(bool value)
+{
+	_visible = value;
 }
 
 

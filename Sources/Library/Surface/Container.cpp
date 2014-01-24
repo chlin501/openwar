@@ -56,8 +56,11 @@ void Container::Render(const glm::mat4& transform)
 {
 	for (Content* content : _contents)
 	{
-		//content->UseViewport();
-		content->Render(transform * content->GetContentTransform());
+		if (content->IsVisible())
+		{
+			//content->UseViewport();
+			content->Render(transform * content->GetContentTransform());
+		}
 	}
 }
 

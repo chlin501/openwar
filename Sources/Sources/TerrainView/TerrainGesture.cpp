@@ -36,7 +36,7 @@ void TerrainGesture::RenderHints()
 	if (this != nullptr)
 		return;
 
-	_terrainView->UseViewport();
+	//_terrainView->UseViewport();
 
 	vertexbuffer<plain_vertex> shape;
 	shape._mode = GL_LINES;
