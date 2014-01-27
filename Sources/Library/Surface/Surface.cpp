@@ -35,9 +35,7 @@ bounds2f Surface::GetViewport() const
 
 void Surface::RenderSurface()
 {
-	glm::vec2 size = GetSize();
-
-	glClearColor(1, 0.5f, 0.5f, 1);
+	glClearColor(0.5f, 0.5f, 0.5f, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
