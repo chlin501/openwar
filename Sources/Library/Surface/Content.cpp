@@ -44,6 +44,12 @@ Content::~Content()
 }
 
 
+Surface* Content::GetSurface() const
+{
+	return _surface;
+}
+
+
 Container* Content::GetContainer() const
 {
 	return _container;
@@ -66,6 +72,31 @@ void Content::SetVisible(bool value)
 {
 	_visible = value;
 }
+
+
+bounds2f Content::GetViewport() const
+{
+	return _viewport;
+}
+
+
+void Content::SetViewport(bounds2f value)
+{
+	_viewport = value;
+}
+
+
+void Content::UseViewport()
+{
+	bounds2f viewport;
+
+	for (Content* c = this; c != nullptr && viewport.is_empty(); c = c->GetContainer())
+		viewport = c->GetViewport();
+
+	viewport = viewport * GetSurface()->GetGraphicsContext()->get_pixeldensity();
+	glViewport((GLint)viewport.min.x, (GLint)viewport.min.y, (GLsizei)viewport.size().x, (GLsizei)viewport.size().y);
+}
+
 
 
 bounds2f Content::GetFrame() const
@@ -184,28 +215,57 @@ void Content::SetTransform(const glm::mat4& value)
 }
 
 
+glm::mat4 Content::GetViewportTransform() const
+{
+	bounds2f viewport;
+
+	for (const Content* c = this; c != nullptr && viewport.is_empty(); c = c->GetContainer())
+		viewport = c->GetViewport();
+
+	glm::mat4 result;
+
+	if (!viewport.is_empty())
+	{
+		glm::vec2 size = viewport.size();
+
+		result = glm::translate(result, glm::vec3(-1, -1, 0));
+		result = glm::scale(result, glm::vec3(2 / size.x, 2 / size.y, 1));
+		result = glm::translate(result, glm::vec3(-viewport.min, 0));
+	}
+
+	return result;
+}
+
+
+glm::mat4 Content::GetContainerTransform() const
+{
+	glm::mat4 result;
+
+	/*for (const Content* c = this; c != nullptr; c = c->GetContainer())
+	{
+		result = c->GetContentTransform() * result;
+	}*/
+
+	return result;
+}
+
+
 glm::mat4 Content::GetContentTransform() const
 {
 	bounds2f frame = GetFrame();
 
-	glm::mat4 t;
-	t = glm::translate(t, glm::vec3(frame.min, 0));
+	glm::mat4 result;
+
+	result = glm::translate(result, glm::vec3(frame.min, 0));
 
 	glm::vec3 offset = glm::vec3(frame.size() * _anchor, 0);
-	t = glm::translate(t, offset);
-	t = glm::translate(t, glm::vec3(_translate, 0));
-	t = glm::rotate(t, _rotate, glm::vec3(0, 0, 1));
-	t = glm::scale(t, glm::vec3(_scale, 1));
-	t = glm::translate(t, -offset);
+	result = glm::translate(result, offset);
+	result = glm::translate(result, glm::vec3(_translate, 0));
+	result = glm::rotate(result, _rotate, glm::vec3(0, 0, 1));
+	result = glm::scale(result, glm::vec3(_scale, 1));
+	result = glm::translate(result, -offset);
 
-	return t;
-}
-
-
-void Content::UseViewport()
-{
-	bounds2f viewport = _frame * GetSurface()->GetGraphicsContext()->get_pixeldensity();
-	glViewport((GLint)viewport.min.x, (GLint)viewport.min.y, (GLsizei)viewport.size().x, (GLsizei)viewport.size().y);
+	return result;
 }
 
 

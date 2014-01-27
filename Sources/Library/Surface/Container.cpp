@@ -58,8 +58,8 @@ void Container::Render(const glm::mat4& transform)
 	{
 		if (content->IsVisible())
 		{
-			//content->UseViewport();
-			content->Render(transform * content->GetContentTransform());
+			content->UseViewport();
+			content->Render(content->GetViewportTransform() * content->GetContainerTransform() * content->GetContentTransform());
 		}
 	}
 }

@@ -27,9 +27,12 @@ public:
 
 	graphicscontext* GetGraphicsContext() const { return _gc; }
 
-	// Surface
+	// Content
 
-	virtual void UseViewport();
+	virtual Surface* GetSurface() const;
+	virtual bounds2f GetViewport() const;
+
+	// Surface
 
 	virtual bool NeedsRender() const = 0;
 

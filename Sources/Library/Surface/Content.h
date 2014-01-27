@@ -23,6 +23,7 @@ class Content
 	Surface* _surface;
 	Container* _container;
 	bool _visible;
+	bounds2f _viewport;
 	bounds2f _frame;
 	glm::vec2 _anchor;
 	bounds2f _bounds;
@@ -36,7 +37,7 @@ public:
 	Content();
 	virtual ~Content();
 
-	Surface* GetSurface() const { return _surface; }
+	virtual Surface* GetSurface() const;
 
 	virtual Container* GetContainer() const;
 	virtual void SetContainer(Container* value, Content* behindContent = nullptr);
@@ -46,6 +47,10 @@ public:
 
 	virtual bool IsVisible() const;
 	void SetVisible(bool value);
+
+	virtual bounds2f GetViewport() const;
+	virtual void SetViewport(bounds2f value);
+	virtual void UseViewport();
 
 	//
 
@@ -81,12 +86,12 @@ public:
 	virtual glm::mat4 GetTransform() const;
 	virtual void SetTransform(const glm::mat4& value);
 
+	//
+
+	virtual glm::mat4 GetViewportTransform() const;
+	virtual glm::mat4 GetContainerTransform() const;
 	virtual glm::mat4 GetContentTransform() const;
 
-
-
-
-	virtual void UseViewport();
 
 	bool GetFlip() const { return _flip; }
 	void SetFlip(bool value) { _flip = value; }

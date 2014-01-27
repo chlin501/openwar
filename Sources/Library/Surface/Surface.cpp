@@ -21,27 +21,28 @@ Surface::~Surface()
 }
 
 
-void Surface::UseViewport()
+Surface* Surface::GetSurface() const
 {
-	glm::vec2 size = GetSize() * _gc->get_pixeldensity();
-	glViewport(0, 0, (GLsizei)size.x, (GLsizei)size.y);
+	return const_cast<Surface*>(this);
+}
+
+
+bounds2f Surface::GetViewport() const
+{
+	return bounds2f(0, 0, GetSize());
 }
 
 
 void Surface::RenderSurface()
 {
 	glm::vec2 size = GetSize();
-	glViewport(0, 0, (GLsizei)size.x, (GLsizei)size.y);
 
 	glClearColor(1, 0.5f, 0.5f, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	glm::mat4 transform;
-	transform = glm::translate(transform, glm::vec3(-1, -1, 0));
-	transform = glm::scale(transform, glm::vec3(2.0f / size, 1.0f));
-
-	Container::Render(transform);
+	UseViewport();
+	Container::Render(GetViewportTransform() * GetContainerTransform() * GetContentTransform());
 }
 
 

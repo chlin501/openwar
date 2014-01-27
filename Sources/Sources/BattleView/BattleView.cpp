@@ -503,7 +503,6 @@ void BattleView::InitializeCameraPosition()
 void BattleView::Render(const glm::mat4& transformx)
 {
 	glm::mat4 containerTransform = transformx * glm::inverse(GetContentTransform());
-
 	glm::mat4 terrainTransform = GetTerrainTransform();
 
 	glm::mat4 adjustmentTransform;
@@ -512,8 +511,8 @@ void BattleView::Render(const glm::mat4& transformx)
 	adjustmentTransform = glm::translate(adjustmentTransform, glm::vec3(1, 1, 0));
 
 	glm::mat4 contentTransform = transformx * adjustmentTransform * terrainTransform;
+	glm::mat4 facingTransform = transformx * glm::translate(glm::mat4(), glm::vec3(-GetFrame().min, 0));
 
-	//UseViewport();
 
 	glm::vec2 facing = vector2_from_angle(GetCameraFacing() - 2.5f * (float)M_PI_4);
 	_lightNormal = glm::normalize(glm::vec3(facing, -1));
@@ -604,7 +603,7 @@ void BattleView::Render(const glm::mat4& transformx)
 		if (marker->GetUnit()->commander == _commander)
 			marker->AppendFacingMarker(_textureTriangleRenderer, this);
 
-	_textureTriangleRenderer->Draw(transformx, _textureUnitMarkers);
+	_textureTriangleRenderer->Draw(facingTransform, _textureUnitMarkers);
 
 
 

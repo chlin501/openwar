@@ -224,7 +224,9 @@ void BattleSurface::UpdateBattleViewSize()
 
 		for (BattleView* battleView : _battleViews)
 		{
-			battleView->SetFrame(bounds2f(0, y, size.x, y + h));
+			bounds2f frame = bounds2f(0, y, size.x, y + h);
+			battleView->SetFrame(frame);
+			battleView->SetViewport(frame);
 			y += h;
 		}
 	}
