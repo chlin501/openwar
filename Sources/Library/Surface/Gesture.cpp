@@ -68,16 +68,6 @@ void Gesture::Magnify(Surface* surface, glm::vec2 position)
 }
 
 
-void Gesture::TouchWasCaptured(Touch* touch)
-{
-}
-
-
-void Gesture::TouchWasUncaptured(Touch* touch)
-{
-}
-
-
 void Gesture::TouchWasCancelled(Touch* touch)
 {
 }
@@ -87,17 +77,4 @@ void Gesture::CaptureTouch(Touch* touch)
 {
 	_touches.push_back(touch);
 	touch->_gesture = this;
-}
-
-
-void Gesture::UncaptureTouch(Touch* touch)
-{
-	auto i = std::find(_touches.begin(), _touches.end(), touch);
-	if (i != _touches.end())
-		_touches.erase(i);
-
-	if (touch->_gesture == this)
-	{
-		touch->_gesture = nullptr;
-	}
 }

@@ -27,7 +27,11 @@ _previousButtons()
 Touch::~Touch()
 {
 	if (_gesture != nullptr)
-		_gesture->UncaptureTouch(this);
+	{
+		auto i = std::find(_gesture->_touches.begin(), _gesture->_touches.end(), this);
+		if (i != _gesture->_touches.end())
+			_gesture->_touches.erase(i);
+	}
 }
 
 
