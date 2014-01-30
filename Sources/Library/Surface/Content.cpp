@@ -33,7 +33,20 @@ _anchor(),
 _rotate(0),
 _scale(1, 1),
 _translate(),
-_flip(false)
+_flip(false),
+_bounds(),
+frame([this](){ return GetFrame(); }, [this](bounds2f value) { SetFrame(value); }),
+position([this](){ return GetPosition(); }, [this](glm::vec2 value) { SetPosition(value); }),
+size([this](){ return GetSize(); }, [this](glm::vec2 value) { SetSize(value); }),
+left([this](){ return GetLeft(); }, [this](float value) { SetLeft(value); }),
+right([this](){ return GetRight(); }, [this](float value) { SetRight(value); }),
+bottom([this](){ return GetBottom(); }, [this](float value) { SetBottom(value); }),
+top([this](){ return GetTop(); }, [this](float value) { SetTop(value); }),
+width([this](){ return GetWidth(); }, [this](float value) { SetWidth(value); }),
+height([this](){ return GetHeight(); }, [this](float value) { SetHeight(value); }),
+rotate([this](){ return GetRotate(); }, [this](float value) { SetRotate(value); }),
+scale([this](){ return GetScale(); }, [this](glm::vec2 value) { SetScale(value); }),
+translate([this](){ return GetTranslate(); }, [this](glm::vec2 value) { SetTranslate(value); })
 {
 }
 
@@ -154,6 +167,82 @@ void Content::SetSize(glm::vec2 value)
 }
 
 
+float Content::GetLeft() const
+{
+	return _frame.min.x;
+}
+
+
+void Content::SetLeft(float value)
+{
+	SetFrameValue(bounds2f(value, _frame.min.y, _frame.max.x, _frame.max.y));
+}
+
+
+float Content::GetRight() const
+{
+	return _frame.max.x;
+}
+
+
+void Content::SetRight(float value)
+{
+	SetFrameValue(bounds2f(_frame.min.x, _frame.min.y, value, _frame.max.y));
+}
+
+
+float Content::GetBottom() const
+{
+	return _frame.min.y;
+}
+
+
+void Content::SetBottom(float value)
+{
+	SetFrameValue(bounds2f(_frame.min.x, value, _frame.max.x, _frame.max.y));
+}
+
+
+float Content::GetTop() const
+{
+	return _frame.max.y;
+}
+
+
+void Content::SetTop(float value)
+{
+	SetFrameValue(bounds2f(_frame.min.x, _frame.min.y, _frame.max.x, value));
+}
+
+
+float Content::GetWidth() const
+{
+	return _frame.max.x - _frame.min.x;
+}
+
+
+void Content::SetWidth(float value)
+{
+	float a = _anchor.x;
+	float p = glm::mix(_frame.min.x, _frame.max.x, a);
+	SetFrameValue(bounds2f(p - value * a, p + value * (1 - a), _frame.y()));
+}
+
+
+float Content::GetHeight() const
+{
+	return _frame.max.y - _frame.min.y;
+}
+
+
+void Content::SetHeight(float value)
+{
+	float a = _anchor.y;
+	float p = glm::mix(_frame.min.y, _frame.max.y, a);
+	SetFrameValue(bounds2f(_frame.x(), p - value * a, p + value * (1 - a)));
+}
+
+
 bounds2f Content::GetBounds() const
 {
 	return _bounds;
@@ -163,7 +252,7 @@ bounds2f Content::GetBounds() const
 void Content::SetBounds(const bounds2f& value)
 {
 	_bounds = value;
-	//OnBoundsChanged();
+	OnBoundsChanged();
 }
 
 
@@ -285,23 +374,20 @@ glm::vec2 Content::ContentToSurface(glm::vec2 value) const
 
 void Content::SetFrameValue(const bounds2f& value)
 {
-	/*glm::vec2 oldPosition = GetPosition();
+	glm::vec2 oldPosition = GetPosition();
 	glm::vec2 oldSize = GetSize();
 	float oldLeft = GetLeft();
 	float oldRight = GetRight();
 	float oldBottom = GetBottom();
 	float oldTop = GetTop();
 	float oldWidth = GetWidth();
-	float oldHeight = GetHeight();*/
+	float oldHeight = GetHeight();
 
 	_frame = value;
 
 	OnFrameChanged();
 
-	//if (_container != nullptr)
-	//	_container->OnFrameChanged(this);
-
-	/*if (oldPosition != GetPosition())
+	if (oldPosition != GetPosition())
 		position.CallObserver();
 	if (oldSize != GetSize())
 		size.CallObserver();
@@ -316,7 +402,13 @@ void Content::SetFrameValue(const bounds2f& value)
 	if (oldWidth != GetWidth())
 		width.CallObserver();
 	if (oldHeight != GetHeight())
-		height.CallObserver();*/
+		height.CallObserver();
+}
+
+
+void Content::OnBoundsChanged()
+{
+
 }
 
 

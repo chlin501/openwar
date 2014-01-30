@@ -2,8 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef ButtonGesture_H
-#define ButtonGesture_H
+#ifndef ButtonGridGesture_H
+#define ButtonGridGesture_H
 
 #include "../Surface/Gesture.h"
 

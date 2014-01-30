@@ -290,7 +290,7 @@ void TerrainView::MoveCamera(glm::vec3 position)
 
 	float h = position.z;
 	glm::vec2 p = (glm::vec2)position.xy() - contentBounds.center();
-	p = rotate(p, -_cameraFacing);
+	p = ::rotate(p, -_cameraFacing);
 	float w = contentRadius - p.x;
 	float pitch = -atan2f(h, w) - (0.125f - 0.02f) * (float)M_PI;
 
