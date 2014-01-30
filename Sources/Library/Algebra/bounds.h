@@ -163,16 +163,29 @@ template <class T, glm::precision P> inline bounds1<T, P> operator +(bounds1<T, 
 template <class T, glm::precision P> inline bounds2<T, P> operator +(bounds2<T, P> b, glm::detail::tvec2<T, P> v) {return bounds2<T, P>(b.min + v, b.max + v);}
 template <class T, glm::precision P> inline bounds3<T, P> operator +(bounds3<T, P> b, glm::detail::tvec3<T, P> v) {return bounds3<T, P>(b.min + v, b.max + v);}
 
+template <class T, glm::precision P> inline bounds1<T, P> operator +(bounds1<T, P> b1, bounds1<T, P> b2) {return bounds1<T, P>(b1.min + b2.min, b1.max + b2.max);}
+template <class T, glm::precision P> inline bounds2<T, P> operator +(bounds2<T, P> b1, bounds2<T, P> b2) {return bounds2<T, P>(b1.min + b2.min, b1.max + b2.max);}
+template <class T, glm::precision P> inline bounds3<T, P> operator +(bounds3<T, P> b1, bounds3<T, P> b2) {return bounds3<T, P>(b1.min + b2.min, b1.max + b2.max);}
 
 template <class T, glm::precision P> inline bounds1<T, P> operator -(bounds1<T, P> b, T k) {return bounds1<T, P>(b.min - k, b.max - k);}
 template <class T, glm::precision P> inline bounds2<T, P> operator -(bounds2<T, P> b, glm::detail::tvec2<T, P> v) {return bounds2<T, P>(b.min - v, b.max - v);}
 template <class T, glm::precision P> inline bounds3<T, P> operator -(bounds3<T, P> b, glm::detail::tvec3<T, P> v) {return bounds3<T, P>(b.min - v, b.max - v);}
+
+template <class T, glm::precision P> inline bounds1<T, P> operator -(bounds1<T, P> b1, bounds1<T, P> b2) {return bounds1<T, P>(b1.min - b2.min, b1.max - b2.max);}
+template <class T, glm::precision P> inline bounds2<T, P> operator -(bounds2<T, P> b1, bounds2<T, P> b2) {return bounds2<T, P>(b1.min - b2.min, b1.max - b2.max);}
+template <class T, glm::precision P> inline bounds3<T, P> operator -(bounds3<T, P> b1, bounds3<T, P> b2) {return bounds3<T, P>(b1.min - b2.min, b1.max - b2.max);}
 
 template <class T, glm::precision P> inline bounds1<T, P> operator *(bounds1<T, P> b, T k) {return bounds1<T, P>(b.min * k, b.max * k);}
 template <class T, glm::precision P> inline bounds2<T, P> operator *(bounds2<T, P> b, T k) {return bounds2<T, P>(b.min * k, b.max * k);}
 template <class T, glm::precision P> inline bounds3<T, P> operator *(bounds3<T, P> b, T k) {return bounds3<T, P>(b.min * k, b.max * k);}
 template <class T, glm::precision P> inline bounds2<T, P> operator *(bounds2<T, P> b, glm::detail::tvec2<T, P> v) {return bounds2<T, P>(b.min * v, b.max * v);}
 template <class T, glm::precision P> inline bounds3<T, P> operator *(bounds3<T, P> b, glm::detail::tvec3<T, P> v) {return bounds3<T, P>(b.min * v, b.max * v);}
+
+template <class T, glm::precision P> inline bounds1<T, P> operator *(T k, bounds1<T, P> b) {return bounds1<T, P>(k * b.min, k * b.max);}
+template <class T, glm::precision P> inline bounds2<T, P> operator *(T k, bounds2<T, P> b) {return bounds2<T, P>(k * b.min, k * b.max);}
+template <class T, glm::precision P> inline bounds3<T, P> operator *(T k, bounds3<T, P> b) {return bounds3<T, P>(k * b.min, k * b.max);}
+template <class T, glm::precision P> inline bounds2<T, P> operator *(glm::detail::tvec2<T, P> v, bounds2<T, P> b) {return bounds2<T, P>(v * b.min, v * b.max);}
+template <class T, glm::precision P> inline bounds3<T, P> operator *(glm::detail::tvec3<T, P> v, bounds3<T, P> b) {return bounds3<T, P>(v * b.min, v * b.max);}
 
 template <class T, glm::precision P> inline bounds1<T, P> operator /(bounds1<T, P> b, T k) {return bounds1<T, P>(b.min / k, b.max / k);}
 template <class T, glm::precision P> inline bounds2<T, P> operator /(bounds2<T, P> b, T k) {return bounds2<T, P>(b.min / k, b.max / k);}
