@@ -2,7 +2,7 @@
 #define BattleSurface_H
 
 #include "shaderprogram.h"
-#include "../Library/Surface/Surface.h"
+#include "../../Library/Surface/Container.h"
 
 class BattleCommander;
 class BattleGesture;
@@ -16,7 +16,7 @@ class SmoothTerrainWater;
 class SmoothTerrainSky;
 
 
-class BattleSurface : public Surface
+class BattleLayer : public Container
 {
 protected:
 	renderers* _renderers;
@@ -28,14 +28,13 @@ protected:
 	BattleScenario* _scenario;
 	std::vector<BattleCommander*> _commanders;
 
-	Container* _battleLayer;
 	std::vector<BattleView*> _battleViews;
 	std::vector<BattleGesture*> _battleGestures;
 	std::vector<TerrainGesture*> _terrainGestures;
 
 public:
-	BattleSurface(glm::vec2 size, float pixelDensity);
-	~BattleSurface();
+	BattleLayer();
+	~BattleLayer();
 
 	BattleScenario* GetScenario() const { return _scenario; }
 	const std::vector<BattleView*>& GetBattleViews() const { return _battleViews; }

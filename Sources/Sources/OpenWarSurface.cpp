@@ -13,7 +13,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-OpenWarSurface::OpenWarSurface(glm::vec2 size, float pixelDensity) : BattleSurface(size, pixelDensity),
+OpenWarSurface::OpenWarSurface(glm::vec2 size, float pixelDensity) : Surface(size, pixelDensity),
 _buttonRendering(nullptr),
 _editorModel(nullptr),
 _editorGesture(nullptr),
@@ -28,9 +28,13 @@ _buttonItemHills(nullptr),
 _buttonItemTrees(nullptr),
 _buttonItemWater(nullptr),
 _buttonItemFords(nullptr),
-_scriptHintRenderer(nullptr)
+_scriptHintRenderer(nullptr),
+_battleLayer(nullptr)
 {
-	_buttonRendering = new ButtonRendering(_renderers, pixelDensity);
+	_battleLayer = new BattleLayer();
+	_battleLayer->SetContainer(this);
+
+	_buttonRendering = new ButtonRendering(renderers::singleton, pixelDensity);
 
 	_buttonsTopLeft = new ButtonGrid(_buttonRendering, ButtonAlignment::TopLeft);
 	_buttonsTopRight = new ButtonGrid(_buttonRendering, ButtonAlignment::TopRight);
@@ -72,6 +76,7 @@ _scriptHintRenderer(nullptr)
 	_buttonItemWater->SetKeyboardShortcut('7');
 	_buttonItemFords->SetKeyboardShortcut('8');
 
+	OnFrameChanged();
 	UpdateButtonsAndGestures();
 
 	_scriptHintRenderer = new GradientLineShape3(GetGraphicsContext());
@@ -92,9 +97,9 @@ void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vecto
 	delete _editorModel;
 	_editorModel = nullptr;
 
-	BattleSurface::ResetBattleViews(scenario, commanders);
+	_battleLayer->ResetBattleViews(scenario, commanders);
 
-	const std::vector<BattleView*>& battleViews = GetBattleViews();
+	const std::vector<BattleView*>& battleViews = _battleLayer->GetBattleViews();
 	if (!battleViews.empty())
 	{
 		BattleView* battleView = battleViews.front();
@@ -102,15 +107,17 @@ void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vecto
 		_editorGesture = new EditorGesture(battleView, _editorModel);
 	}
 
-	SetPlaying(false);
+	_battleLayer->SetPlaying(false);
 	UpdateButtonsAndGestures();
 }
 
 
 void OpenWarSurface::OnFrameChanged()
 {
-	BattleSurface::OnFrameChanged();
+	Surface::OnFrameChanged();
+
 	bounds2f viewport = bounds2f(0, 0, GetSize());
+	_battleLayer->SetFrame(viewport);
 	_buttonsTopLeft->SetFrame(viewport);
 	_buttonsTopRight->SetFrame(viewport);
 }
@@ -118,10 +125,16 @@ void OpenWarSurface::OnFrameChanged()
 
 void OpenWarSurface::Update(double secondsSinceLastUpdate)
 {
-	BattleSurface::Update(secondsSinceLastUpdate);
+	Surface::Update(secondsSinceLastUpdate);
 
-	if (_scenario != nullptr && _playing)
-		_scenario->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);
+	if (_battleLayer->GetScenario() != nullptr && _battleLayer->IsPlaying())
+		_battleLayer->GetScenario()->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);
+}
+
+
+bool OpenWarSurface::NeedsRender() const
+{
+	return true;
 }
 
 
@@ -138,7 +151,7 @@ void OpenWarSurface::RenderSurface()
 
 	glEnable(GL_BLEND);
 
-	BattleSurface::RenderSurface();
+	Surface::RenderSurface();
 
 	_buttonsTopLeft->Render(transform * _buttonsTopLeft->GetContentTransform());
 	_buttonsTopRight->Render(transform * _buttonsTopRight->GetContentTransform());
@@ -165,14 +178,14 @@ void OpenWarSurface::MouseLeave(glm::vec2 position)
 
 void OpenWarSurface::ClickedPlay()
 {
-	SetPlaying(true);
+	_battleLayer->SetPlaying(true);
 	UpdateButtonsAndGestures();
 }
 
 
 void OpenWarSurface::ClickedPause()
 {
-	SetPlaying(false);
+	_battleLayer->SetPlaying(false);
 	UpdateButtonsAndGestures();
 }
 
@@ -199,9 +212,9 @@ void OpenWarSurface::SetEditorFeature(TerrainFeature terrainFeature)
 
 void OpenWarSurface::UpdateButtonsAndGestures()
 {
-	bool playing = IsPlaying();
+	bool playing = _battleLayer->IsPlaying();
 	bool editing = _editorModel != nullptr && _editorModel->GetEditorMode() != EditorMode::Hand;
-	SetEditing(editing);
+	_battleLayer->SetEditing(editing);
 
 	_buttonItemHand->SetDisabled (playing);
 	_buttonItemPaint->SetDisabled(playing);

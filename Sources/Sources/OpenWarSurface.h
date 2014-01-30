@@ -5,7 +5,8 @@
 #ifndef OpenWarSurface_H
 #define OpenWarSurface_H
 
-#include "BattleSurface.h"
+#include "Surface.h"
+#include "BattleLayer.h"
 #include "TerrainView/EditorModel.h"
 
 class ButtonGridGesture;
@@ -18,7 +19,7 @@ class GradientLineShape3;
 //class TiledTerrainSurfaceRenderer;
 
 
-class OpenWarSurface : public BattleSurface
+class OpenWarSurface : public Surface
 {
 public:
 	ButtonRendering* _buttonRendering;
@@ -40,6 +41,8 @@ public:
 
 	GradientLineShape3* _scriptHintRenderer;
 
+	BattleLayer* _battleLayer;
+
 public:
 	OpenWarSurface(glm::vec2 size, float pixelDensity);
 	virtual ~OpenWarSurface();
@@ -50,6 +53,8 @@ public:
 
 	// Surface
 
+
+	virtual bool NeedsRender() const;
 	virtual void RenderSurface();
 
 	virtual void MouseEnter(glm::vec2 position);

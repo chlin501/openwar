@@ -1,40 +1,40 @@
-#include "../BattleModel/BattleScenario.h"
-#include "../BattleModel/BattleSimulator.h"
-#include "../Library/Audio/SoundPlayer.h"
-#include "BattleView/BattleGesture.h"
-#include "BattleView/BattleView.h"
-#include "BattleView/UnitCounter.h"
-#include "SmoothTerrain/SmoothTerrainWater.h"
-#include "SmoothTerrain/SmoothTerrainSky.h"
-#include "TerrainView/TerrainGesture.h"
-#include "BattleSurface.h"
+#include "../../BattleModel/BattleScenario.h"
+#include "../../BattleModel/BattleSimulator.h"
+#include "../../Library/Audio/SoundPlayer.h"
+#include "BattleGesture.h"
+#include "BattleView.h"
+#include "BattleLayer.h"
+#include "UnitCounter.h"
+#include "../SmoothTerrain/SmoothTerrainWater.h"
+#include "../SmoothTerrain/SmoothTerrainSky.h"
+#include "../TerrainView/TerrainGesture.h"
+#include "Surface.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
 
-BattleSurface::BattleSurface(glm::vec2 size, float pixelDensity) : Surface(size, pixelDensity),
+BattleLayer::BattleLayer() :
 _renderers(nullptr),
 _playing(false),
 _editing(false),
-_scenario(nullptr),
-_battleLayer(nullptr)
+_scenario(nullptr)
 {
-	_renderers = renderers::singleton = new renderers();
+	if (renderers::singleton == nullptr)
+		renderers::singleton = new renderers();
+
+	_renderers = renderers::singleton;
 
 	SoundPlayer::Initialize();
 	SoundPlayer::singleton->Pause();
-
-	_battleLayer = new Container();
-	_battleLayer->SetContainer(this);
 }
 
 
-BattleSurface::~BattleSurface()
+BattleLayer::~BattleLayer()
 {
 }
 
 
-void BattleSurface::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
+void BattleLayer::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
 {
 	_scenario = scenario;
 	_commanders = commanders;
@@ -57,14 +57,14 @@ void BattleSurface::ResetBattleViews(BattleScenario* scenario, const std::vector
 }
 
 
-void BattleSurface::ResetCameraPosition()
+void BattleLayer::ResetCameraPosition()
 {
 	for (BattleView* battleView : _battleViews)
 		battleView->InitializeCameraPosition();
 }
 
 
-void BattleSurface::SetPlaying(bool value)
+void BattleLayer::SetPlaying(bool value)
 {
 	_playing = value;
 
@@ -78,7 +78,7 @@ void BattleSurface::SetPlaying(bool value)
 }
 
 
-void BattleSurface::SetEditing(bool value)
+void BattleLayer::SetEditing(bool value)
 {
 	_editing = value;
 
@@ -87,14 +87,14 @@ void BattleSurface::SetEditing(bool value)
 }
 
 
-void BattleSurface::OnFrameChanged()
+void BattleLayer::OnFrameChanged()
 {
-	Surface::OnFrameChanged();
+	Container::OnFrameChanged();
 	UpdateBattleViewSize();
 }
 
 
-void BattleSurface::Update(double secondsSinceLastUpdate)
+void BattleLayer::Update(double secondsSinceLastUpdate)
 {
 	if (_scenario != nullptr)
 	{
@@ -107,7 +107,7 @@ void BattleSurface::Update(double secondsSinceLastUpdate)
 			UpdateSoundPlayer();
 	}
 
-	Surface::Update(secondsSinceLastUpdate);
+	Container::Update(secondsSinceLastUpdate);
 
 	for (BattleView* battleView : _battleViews)
 	{
@@ -116,18 +116,18 @@ void BattleSurface::Update(double secondsSinceLastUpdate)
 }
 
 
-bool BattleSurface::NeedsRender() const
+bool BattleLayer::NeedsRender() const
 {
 	return true;
 }
 
 
-void BattleSurface::CreateBattleView(BattleCommander* commander)
+void BattleLayer::CreateBattleView(BattleCommander* commander)
 {
 	BattleSimulator* simulator = _scenario->GetSimulator();
 
-	BattleView* battleView = new BattleView(GetGraphicsContext(), _renderers);
-	battleView->SetContainer(_battleLayer);
+	BattleView* battleView = new BattleView(GetSurface()->GetGraphicsContext(), _renderers);
+	battleView->SetContainer(this);
 	battleView->SetCommander(commander);
 	battleView->SetSimulator(simulator);
 
@@ -150,7 +150,7 @@ void BattleSurface::CreateBattleView(BattleCommander* commander)
 }
 
 
-void BattleSurface::ResetBattleView(BattleView* battleView, BattleCommander* commander)
+void BattleLayer::ResetBattleView(BattleView* battleView, BattleCommander* commander)
 {
 	battleView->SetCommander(commander);
 	battleView->SetSimulator(_scenario->GetSimulator());
@@ -171,7 +171,7 @@ void BattleSurface::ResetBattleView(BattleView* battleView, BattleCommander* com
 }
 
 
-void BattleSurface::RemoveBattleView(BattleView* battleView)
+void BattleLayer::RemoveBattleView(BattleView* battleView)
 {
 	for (auto i = _battleGestures.begin(); i != _battleGestures.end(); )
 	{
@@ -212,9 +212,9 @@ void BattleSurface::RemoveBattleView(BattleView* battleView)
 }
 
 
-void BattleSurface::UpdateBattleViewSize()
+void BattleLayer::UpdateBattleViewSize()
 {
-	_battleLayer->SetFrame(bounds2f(0, 0, GetSize()));
+	//SetFrame(bounds2f(0, 0, GetSize()));
 
 	if (!_battleViews.empty())
 	{
@@ -233,7 +233,7 @@ void BattleSurface::UpdateBattleViewSize()
 }
 
 
-void BattleSurface::UpdateSoundPlayer()
+void BattleLayer::UpdateSoundPlayer()
 {
 	if (_playing && !_battleViews.empty())
 	{
