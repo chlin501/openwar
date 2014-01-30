@@ -68,6 +68,8 @@ _smoothTerrainWater(nullptr),
 _smoothTerrainSky(nullptr),
 _tiledTerrainRenderer(nullptr)
 {
+	SetUsingDepth(true);
+
 	_textureUnitMarkers = new texture(resource("Textures/UnitMarkers.png"));
 	_textureTouchMarker = new texture(resource("Textures/TouchMarker.png"));
 

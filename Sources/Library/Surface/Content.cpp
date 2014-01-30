@@ -35,6 +35,7 @@ _scale(1, 1),
 _translate(),
 _flip(false),
 _bounds(),
+_isUsingDepth(false),
 frame([this](){ return GetFrame(); }, [this](bounds2f value) { SetFrame(value); }),
 position([this](){ return GetPosition(); }, [this](glm::vec2 value) { SetPosition(value); }),
 size([this](){ return GetSize(); }, [this](glm::vec2 value) { SetSize(value); }),
@@ -253,6 +254,18 @@ void Content::SetBounds(const bounds2f& value)
 {
 	_bounds = value;
 	OnBoundsChanged();
+}
+
+
+bool Content::IsUsingDepth() const
+{
+	return _isUsingDepth;
+}
+
+
+void Content::SetUsingDepth(bool value)
+{
+	_isUsingDepth = value;
 }
 
 

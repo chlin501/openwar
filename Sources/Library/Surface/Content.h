@@ -28,6 +28,7 @@ class Content
 	bounds2f _frame;
 	glm::vec2 _anchor;
 	bounds2f _bounds;
+	bool _isUsingDepth;
 	float _rotate;
 	glm::vec2 _scale;
 	glm::vec2 _translate;
@@ -105,6 +106,9 @@ public:
 
 	virtual bounds2f GetBounds() const;
 	virtual void SetBounds(const bounds2f& value);
+
+	virtual bool IsUsingDepth() const;
+	virtual void SetUsingDepth(bool value);
 
 	//
 

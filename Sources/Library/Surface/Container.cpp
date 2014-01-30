@@ -59,6 +59,17 @@ void Container::Render(const glm::mat4& transform)
 		if (content->IsVisible())
 		{
 			content->UseViewport();
+
+			if (content->IsUsingDepth())
+			{
+				glClear(GL_DEPTH_BUFFER_BIT);
+				glEnable(GL_DEPTH_TEST);
+			}
+			else
+			{
+				glDisable(GL_DEPTH_TEST);
+			}
+
 			content->Render(content->GetViewportTransform() * content->GetContainerTransform() * content->GetContentTransform());
 		}
 	}
