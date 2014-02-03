@@ -10,6 +10,7 @@
 #include "../Graphics/texture.h"
 #include "Content.h"
 #include "ButtonRendering.h"
+#include "ButtonHotspot.h"
 
 
 class ButtonArea;
@@ -57,14 +58,12 @@ struct ButtonIcon
 
 class ButtonItem
 {
+	std::shared_ptr<ButtonHotspot> _hotspot;
 	ButtonArea* _buttonArea;
 	std::string _buttonText;
 	ButtonIcon* _buttonIcon;
-	bool _hasAction;
-	std::function<void()> _action;
 	char _keyboardShortcut;
 	bounds2f _bounds;
-	bool _highlight;
 	bool _selected;
 	bool _disabled;
 
@@ -73,6 +72,7 @@ public:
 	ButtonItem(ButtonArea* buttonArea, ButtonIcon* icon);
 	~ButtonItem();
 
+	std::shared_ptr<ButtonHotspot> GetHotspot() const { return _hotspot; }
 	ButtonArea* GetButtonArea() const { return _buttonArea; }
 
 	const char* GetButtonText() const { return _buttonText.empty() ? nullptr : _buttonText.c_str(); }
@@ -81,9 +81,9 @@ public:
 	ButtonIcon* GetButtonIcon() const { return _buttonIcon; }
 	void SetButtonIcon(ButtonIcon* value) { _buttonIcon = value; }
 
-	ButtonItem* SetAction(std::function<void()> action) { _action = action; _hasAction = true; return this; }
-	bool HasAction() const { return _hasAction; }
-	void CallAction() const { _action(); }
+	ButtonItem* SetAction(std::function<void()> action) { _hotspot->SetAction(action); return this; }
+	bool HasAction() const { return (bool)_hotspot->GetAction(); }
+	void CallAction() const { _hotspot->GetAction()(); }
 
 	char GetKeyboardShortcut() const { return _keyboardShortcut; }
 	void SetKeyboardShortcut(char value) { _keyboardShortcut = value; }
@@ -91,8 +91,8 @@ public:
 	bounds2f GetBounds() const { return _bounds; }
 	void SetBounds(bounds2f value) { _bounds = value; }
 
-	bool IsHighlight() const { return _highlight; }
-	void SetHighlight(bool value) { _highlight = value; }
+	bool IsHighlight() const { return _hotspot->GetHighlight(); }
+	void SetHighlight(bool value) { _hotspot->SetHighlight(value); }
 
 	bool IsSelected() const { return _selected; }
 	void SetSelected(bool value) { _selected = value; }
@@ -161,7 +161,7 @@ public:
 
 	virtual void Update(double secondsSinceLastUpdate);
 	virtual void Render(const glm::mat4& transform);
-	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(Hotspot*)> action);
+	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(std::shared_ptr<Hotspot>)> action);
 };
 
 

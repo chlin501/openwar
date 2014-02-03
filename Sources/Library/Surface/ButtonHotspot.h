@@ -5,6 +5,7 @@
 #ifndef ButtonHotspot_H
 #define ButtonHotspot_H
 
+#include <functional>
 #include "Hotspot.h"
 
 class Button;
@@ -12,13 +13,18 @@ class Button;
 
 class ButtonHotspot : public Hotspot
 {
-	Button* _buttonControl;
+	std::function<void()> _action;
+	bool _highlight;
 
 public:
-	ButtonHotspot(Button* buttonControl);
+	ButtonHotspot();
 	virtual ~ButtonHotspot();
 
-	Button* GetButtonControl() const { return _buttonControl; }
+	virtual std::function<void()> GetAction() const;
+	virtual void SetAction(std::function<void()> value);
+
+	virtual bool GetHighlight() const;
+	virtual void SetHighlight(bool value);
 };
 
 

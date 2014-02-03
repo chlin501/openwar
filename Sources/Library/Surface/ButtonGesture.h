@@ -2,21 +2,25 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef ButtonGesture_H
-#define ButtonGesture_H
+#ifndef ButtonGridGesture_H
+#define ButtonGridGesture_H
 
-#include "Gesture.h"
+#include "../Surface/Gesture.h"
 
+class ButtonHotspot;
 class ButtonItem;
-class Button;
+class ButtonGrid;
 
 
 class ButtonGesture : public Gesture
 {
 	Surface* _surface;
-	Button* _buttonControl;
+	ButtonItem* _buttonItem;
+	std::shared_ptr<ButtonHotspot> _hotspot;
 
 public:
+	std::vector<ButtonGrid*> buttonViews;
+
 	ButtonGesture(Surface* surface);
 	virtual ~ButtonGesture();
 

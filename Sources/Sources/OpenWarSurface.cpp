@@ -4,7 +4,7 @@
 
 #include "../BattleModel/BattleScenario.h"
 #include "ButtonGrid.h"
-#include "ButtonGridGesture.h"
+#include "ButtonGesture.h"
 #include "../Library/Shapes/GradientShape3.h"
 #include "BattleView/BattleGesture.h"
 #include "BattleView/BattleView.h"
@@ -42,7 +42,7 @@ _battleLayer(nullptr)
 	_buttonsTopLeft->SetContainer(this);
 	_buttonsTopRight->SetContainer(this);
 
-	_buttonGesture = new ButtonGridGesture();
+	_buttonGesture = new ButtonGesture(this);
 	_buttonGesture->buttonViews.push_back(_buttonsTopLeft);
 	_buttonGesture->buttonViews.push_back(_buttonsTopRight);
 

@@ -9,7 +9,7 @@
 #include "BattleLayer.h"
 #include "TerrainView/EditorModel.h"
 
-class ButtonGridGesture;
+class ButtonGesture;
 class ButtonItem;
 class ButtonRendering;
 class ButtonGrid;
@@ -29,7 +29,7 @@ public:
 
 	ButtonGrid* _buttonsTopLeft;
 	ButtonGrid* _buttonsTopRight;
-	ButtonGridGesture* _buttonGesture;
+	ButtonGesture* _buttonGesture;
 	ButtonItem* _buttonItemHand;
 	ButtonItem* _buttonItemPaint;
 	ButtonItem* _buttonItemErase;

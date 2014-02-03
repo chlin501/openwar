@@ -5,12 +5,37 @@
 #include "ButtonHotspot.h"
 
 
-ButtonHotspot::ButtonHotspot(Button* buttonControl) :
-_buttonControl(buttonControl)
+ButtonHotspot::ButtonHotspot() :
+_action(),
+_highlight(false)
 {
 }
 
 
 ButtonHotspot::~ButtonHotspot()
 {
+}
+
+
+std::function<void ()> ButtonHotspot::GetAction() const
+{
+	return _action;
+}
+
+
+void ButtonHotspot::SetAction(std::function<void ()> value)
+{
+	_action = value;
+}
+
+
+bool ButtonHotspot::GetHighlight() const
+{
+	return _highlight;
+}
+
+
+void ButtonHotspot::SetHighlight(bool value)
+{
+	_highlight = value;
 }

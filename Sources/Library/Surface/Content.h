@@ -6,6 +6,7 @@
 #define CONTENT_H
 
 #include <functional>
+#include <memory>
 #include "bounds.h"
 #include "Property.h"
 
@@ -139,7 +140,7 @@ public:
 
 	virtual void Update(double secondsSinceLastUpdate) = 0;
 	virtual void Render(const glm::mat4& transform) = 0;
-	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(Hotspot*)> action) = 0;
+	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(std::shared_ptr<Hotspot>)> action) = 0;
 
 private:
 	void SetFrameValue(const bounds2f& value);

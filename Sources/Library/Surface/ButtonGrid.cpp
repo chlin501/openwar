@@ -21,31 +21,29 @@ const ButtonAlignment ButtonAlignment::BottomRight(ButtonAlignment::Vertical::Bo
 
 
 ButtonItem::ButtonItem(ButtonArea* buttonArea, const char* text) :
+_hotspot(),
 _buttonArea(buttonArea),
 _buttonText(text),
 _buttonIcon(nullptr),
-_hasAction(false),
-_action([](){}),
 _keyboardShortcut('\0'),
-_highlight(false),
 _selected(false),
 _disabled(false)
 {
+	_hotspot = std::make_shared<ButtonHotspot>();
 }
 
 
 
 ButtonItem::ButtonItem(ButtonArea* buttonArea, ButtonIcon* icon) :
+_hotspot(),
 _buttonArea(buttonArea),
 _buttonText(),
 _buttonIcon(icon),
-_hasAction(false),
-_action([](){}),
 _keyboardShortcut('\0'),
-_highlight(false),
 _selected(false),
 _disabled(false)
 {
+	_hotspot = std::make_shared<ButtonHotspot>();
 }
 
 
@@ -356,7 +354,14 @@ void ButtonGrid::Render(const glm::mat4& transform)
 }
 
 
-void ButtonGrid::FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void (Hotspot*)> action)
+void ButtonGrid::FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(std::shared_ptr<Hotspot>)> action)
 {
-
+	for (ButtonArea* buttonArea : _buttonAreas)
+		for (ButtonItem* buttonItem : buttonArea->buttonItems)
+			if (buttonItem->HasAction()
+				&& !buttonItem->IsDisabled()
+				&& buttonItem->GetBounds().contains(position))
+			{
+				action(buttonItem->GetHotspot());
+			}
 }

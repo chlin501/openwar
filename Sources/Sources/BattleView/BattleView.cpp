@@ -724,7 +724,7 @@ void BattleView::Update(double secondsSinceLastUpdate)
 }
 
 
-void BattleView::FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void (Hotspot*)> action)
+void BattleView::FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(std::shared_ptr<Hotspot>)> action)
 {
 
 }
