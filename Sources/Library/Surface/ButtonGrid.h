@@ -91,7 +91,7 @@ public:
 	bounds2f GetBounds() const { return _bounds; }
 	void SetBounds(bounds2f value) { _bounds = value; }
 
-	bool IsHighlight() const { return _hotspot->GetHighlight(); }
+	bool IsHighlight() const { return _hotspot->IsHighlight(); }
 	void SetHighlight(bool value) { _hotspot->SetHighlight(value); }
 
 	bool IsSelected() const { return _selected; }

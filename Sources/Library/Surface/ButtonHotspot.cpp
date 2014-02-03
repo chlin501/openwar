@@ -29,7 +29,7 @@ void ButtonHotspot::SetAction(std::function<void ()> value)
 }
 
 
-bool ButtonHotspot::GetHighlight() const
+bool ButtonHotspot::IsHighlight() const
 {
 	return _highlight;
 }

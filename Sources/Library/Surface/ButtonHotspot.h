@@ -23,7 +23,7 @@ public:
 	virtual std::function<void()> GetAction() const;
 	virtual void SetAction(std::function<void()> value);
 
-	virtual bool GetHighlight() const;
+	virtual bool IsHighlight() const;
 	virtual void SetHighlight(bool value);
 };
 
