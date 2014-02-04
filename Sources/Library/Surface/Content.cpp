@@ -60,6 +60,8 @@ Content::~Content()
 
 Surface* Content::GetSurface() const
 {
+	if (_surface == nullptr && _container != nullptr)
+		_surface = _container->GetSurface();
 	return _surface;
 }
 
@@ -343,10 +345,10 @@ glm::mat4 Content::GetContainerTransform() const
 {
 	glm::mat4 result;
 
-	/*for (const Content* c = this; c != nullptr; c = c->GetContainer())
+	for (const Content* c = GetContainer(); c != nullptr; c = c->GetContainer())
 	{
 		result = c->GetContentTransform() * result;
-	}*/
+	}
 
 	return result;
 }

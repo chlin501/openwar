@@ -22,7 +22,7 @@ class Content
 {
 	friend void SetContentContainer(Content*, Container*, Content*);
 
-	Surface* _surface;
+	mutable Surface* _surface;
 	Container* _container;
 	bool _visible;
 	bounds2f _viewport;

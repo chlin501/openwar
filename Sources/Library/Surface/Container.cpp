@@ -80,7 +80,10 @@ void Container::FindHotspots(const glm::mat4 transform, glm::vec2 position, std:
 {
 	for (Content* content : _contents)
 	{
-		content->FindHotspots(transform * content->GetContentTransform(), position, action);
+		if (content->IsVisible())
+		{
+			content->FindHotspots(content->GetContainerTransform() * content->GetContentTransform(), position, action);
+		}
 	}
 }
 
