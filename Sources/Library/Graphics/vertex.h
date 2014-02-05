@@ -63,7 +63,7 @@ typedef vertex2<glm::vec2, glm::vec4> color_vertex;
 typedef vertex2<glm::vec3, glm::vec4> color_vertex3;
 typedef vertex2<glm::vec2, glm::vec2> texture_vertex;
 typedef vertex2<glm::vec3, glm::vec2> texture_vertex3;
-typedef vertex3<glm::vec2, glm::vec2, float> texture_alpha_vertex;
+//typedef vertex3<glm::vec2, glm::vec2, float> texture_alpha_vertex;
 
 
 #endif

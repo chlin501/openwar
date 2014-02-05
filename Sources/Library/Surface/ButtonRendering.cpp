@@ -17,7 +17,7 @@ _renderers(r)
 	_textureButtonIcons = new texture(resource("Textures/ButtonIcons.png"));
 
 	_string_font = new stringfont(true, 18, pixelDensity);
-	_string_shape = new string_shape(_string_font);
+	_string_shape = new stringshape(_string_font);
 
 	_textureEditorTools = new texture(resource("Textures/EditorTools.png"));
 

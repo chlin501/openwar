@@ -11,14 +11,14 @@
 #include "vertexbuffer.h"
 
 
-class vertexglyphversion
+class glyphversion
 {
 	static int _highest_version;
 
 public:
 	int value;
 
-	vertexglyphversion() : value(++_highest_version) { }
+	glyphversion() : value(++_highest_version) { }
 	void increase() { value = ++_highest_version; }
 };
 
@@ -29,11 +29,11 @@ struct vertexglyph1
 	typedef std::function<void(std::vector<vertex1<T1>>& vertices)> generator_type;
 
 	generator_type generator;
-	vertexglyphversion* version;
+	glyphversion* version;
 
 	vertexglyph1() : generator(), version(nullptr) { }
 	vertexglyph1(generator_type g) : generator(g), version(nullptr) { }
-	vertexglyph1(generator_type g, vertexglyphversion* v) : generator(g), version(v) { }
+	vertexglyph1(generator_type g, glyphversion* v) : generator(g), version(v) { }
 };
 
 
@@ -43,11 +43,11 @@ struct vertexglyph2
 	typedef std::function<void(std::vector<vertex2<T1, T2>>& vertices)> generator_type;
 
 	generator_type generator;
-	vertexglyphversion* version;
+	glyphversion* version;
 
 	vertexglyph2() : generator(), version(nullptr) { }
 	vertexglyph2(generator_type g) : generator(g), version(nullptr) { }
-	vertexglyph2(generator_type g, vertexglyphversion* v) : generator(g), version(v) { }
+	vertexglyph2(generator_type g, glyphversion* v) : generator(g), version(v) { }
 };
 
 
@@ -57,11 +57,11 @@ struct vertexglyph3
 	typedef std::function<void(std::vector<vertex3<T1, T2, T3>>& vertices)> generator_type;
 
 	generator_type generator;
-	vertexglyphversion* version;
+	glyphversion* version;
 
 	vertexglyph3() : generator(), version(nullptr) { }
 	vertexglyph3(generator_type g) : generator(g), version(nullptr) { }
-	vertexglyph3(generator_type g, vertexglyphversion* v) : generator(g), version(v) { }
+	vertexglyph3(generator_type g, glyphversion* v) : generator(g), version(v) { }
 };
 
 
@@ -71,11 +71,11 @@ struct vertexglyph4
 	typedef std::function<void(std::vector<vertex4<T1, T2, T3, T4>>& vertices)> generator_type;
 
 	generator_type generator;
-	vertexglyphversion* version;
+	glyphversion* version;
 
 	vertexglyph4() : generator(), version(nullptr) { }
 	vertexglyph4(generator_type g) : generator(g), version(nullptr) { }
-	vertexglyph4(generator_type g, vertexglyphversion* v) : generator(g), version(v) { }
+	vertexglyph4(generator_type g, glyphversion* v) : generator(g), version(v) { }
 };
 
 
@@ -105,7 +105,7 @@ public:
 		return version != _version;
 	}
 
-	vertexbuffer<vertex_type>& update()
+	vertexbuffer<vertex_type>& update_vbo()
 	{
 		if (needs_update())
 		{
@@ -151,7 +151,7 @@ public:
 		return version != _version;
 	}
 
-	vertexbuffer<vertex_type>& update()
+	vertexbuffer<vertex_type>& update_vbo()
 	{
 		if (needs_update())
 		{
@@ -174,6 +174,7 @@ public:
 template <class T1, class T2, class T3>
 class vertexshape3
 {
+public:
 	typedef vertex3<T1, T2, T3> vertex_type;
 	typedef vertexglyph3<T1, T2, T3> vertexglyph_type;
 
@@ -197,7 +198,7 @@ public:
 		return version != _version;
 	}
 
-	vertexbuffer<vertex_type>& update()
+	vertexbuffer<vertex_type>& update_vbo()
 	{
 		if (needs_update())
 		{
@@ -243,7 +244,7 @@ public:
 		return version != _version;
 	}
 
-	vertexbuffer<vertex_type>& update()
+	vertexbuffer<vertex_type>& update_vbo()
 	{
 		if (needs_update())
 		{

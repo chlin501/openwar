@@ -60,7 +60,6 @@
 		63F5563E7284F60A11F8D90F /* UnitTrackingMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F558098EC65E4AB2495C2C /* UnitTrackingMarker.cpp */; };
 		63F5567BE5C32F9B5F7D3AB7 /* BillboardTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55523D79B2074202AE39A /* BillboardTexture.cpp */; };
 		63F5570002E7A8C45BA9193F /* TerrainView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F558F731F350A8BBE8E5A1 /* TerrainView.cpp */; };
-		63F5573A9D6A5AFDB18173E1 /* string_shape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55F17AD7011663788FE96 /* string_shape.cpp */; };
 		63F5575DCDE438070E9DF48C /* BattleView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F5561912400A1271CD5499 /* BattleView.cpp */; };
 		63F5582E120B722D806CDB58 /* CasualtyMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55DFD84BC5463290D7393 /* CasualtyMarker.cpp */; };
 		63F55886DA1CF72461C234F2 /* Gesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55E9460C9DAACCDCCA217 /* Gesture.cpp */; };
@@ -248,7 +247,6 @@
 		63F55C05BD2ADE30FBA4092E /* TextureBillboardRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureBillboardRenderer.cpp; sourceTree = "<group>"; };
 		63F55C169045D64730913DC2 /* TextureShape3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureShape3.cpp; sourceTree = "<group>"; };
 		63F55C2E5A299BF382C33A05 /* geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = geometry.h; sourceTree = "<group>"; };
-		63F55C9D8EF84DF04AE4B695 /* string_shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = string_shape.h; sourceTree = "<group>"; };
 		63F55CAFEA637F3D66215BD2 /* geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = geometry.cpp; sourceTree = "<group>"; };
 		63F55CCD729E593A1AF60AC3 /* BattleCommander.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleCommander.cpp; sourceTree = "<group>"; };
 		63F55CE5272DE6F5E75AD10C /* sampler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sampler.cpp; sourceTree = "<group>"; };
@@ -274,7 +272,6 @@
 		63F55EEF8FC4CE4CEEA1572B /* stringshape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringshape.h; sourceTree = "<group>"; };
 		63F55EF1EE65EFB0B7B5017A /* GradientShape3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GradientShape3.cpp; sourceTree = "<group>"; };
 		63F55F15640E6646ED5ED674 /* bspline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bspline.h; sourceTree = "<group>"; };
-		63F55F17AD7011663788FE96 /* string_shape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = string_shape.cpp; sourceTree = "<group>"; };
 		63F55F31EB1255C4B6B0337F /* Surface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Surface.h; sourceTree = "<group>"; };
 		63F55F465EEC5764D107A77E /* SoundLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundLoader.h; sourceTree = "<group>"; };
 		63F55F554D2048063A2E417C /* bounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bounds.h; sourceTree = "<group>"; };
@@ -552,8 +549,6 @@
 				63F5529281F316A88607F23F /* shaderprogram.h */,
 				63F5519FFA1D5F8D9BF7BC48 /* graphicscontext.cpp */,
 				63F55DDEF995CCAA56254D50 /* graphicscontext.h */,
-				63F55F17AD7011663788FE96 /* string_shape.cpp */,
-				63F55C9D8EF84DF04AE4B695 /* string_shape.h */,
 				63F5559E6DF0933DFFCB8D89 /* stringshape.cpp */,
 				63F55EEF8FC4CE4CEEA1572B /* stringshape.h */,
 				63F55BB8818189968D42D118 /* vertexshape.cpp */,
@@ -804,7 +799,6 @@
 				63F55BD3ACA27EBA687A311C /* Content.cpp in Sources */,
 				63F55A844DE11EF22E362160 /* Container.cpp in Sources */,
 				63F55E0A4ECCD6FE29C8406F /* BattleLayer.cpp in Sources */,
-				63F5573A9D6A5AFDB18173E1 /* string_shape.cpp in Sources */,
 				63F559A0A2B20AE4CE28BD5F /* stringshape.cpp in Sources */,
 				63F55C111CA41085C4252341 /* vertexshape.cpp in Sources */,
 			);

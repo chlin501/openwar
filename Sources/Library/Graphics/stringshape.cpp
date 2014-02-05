@@ -1,5 +1,109 @@
 #include "stringshape.h"
 #include "../Algebra/image.h"
+#include <glm/gtc/matrix_transform.hpp>
+
+
+
+#if !defined(ENABLE_BIDIRECTIONAL_TEXT)
+#define ENABLE_BIDIRECTIONAL_TEXT 0
+//#error ENABLE_BIDIRECTIONAL_TEXT not defined
+#endif
+
+#if ENABLE_BIDIRECTIONAL_TEXT
+
+
+#include "unicode/ubidi.h"
+
+
+static unichar* ReserveSrcBuffer(int required)
+{
+	static unichar* buffer = nullptr;
+	static int reserved = 0;
+
+	if (buffer == nullptr || required > reserved)
+	{
+		delete buffer;
+		buffer = new unichar[required];
+		reserved = required;
+	}
+
+	return buffer;
+}
+
+
+static unichar* ReserveDstBuffer(int required)
+{
+	static unichar* buffer = nullptr;
+	static int reserved = 0;
+
+	if (buffer == nullptr || required > reserved)
+	{
+		delete buffer;
+		buffer = new unichar[required];
+		reserved = required;
+	}
+
+	return buffer;
+}
+
+
+
+static bool MayNeedReorder(unichar c)
+{
+	return c > 255;
+}
+
+
+static bool CanSkipReorder(NSString* string)
+{
+	NSUInteger length = string.length;
+	if (length > 16)
+		return false;
+
+	static unichar buffer[16];
+	[string getCharacters:buffer];
+
+	for (NSUInteger i = 0; i < length; ++i)
+		if (MayNeedReorder(buffer[i]))
+			return false;
+
+	return true;
+}
+
+
+
+static NSString* ReorderToDisplayDirection(NSString* string)
+{
+	if (CanSkipReorder(string))
+		return string;
+
+	UErrorCode error = U_ZERO_ERROR;
+	int length = (int)string.length;
+
+	unichar* src = ReserveSrcBuffer(length);
+	unichar* dst = ReserveDstBuffer(length * 2);
+
+	UBiDi* ubidi = ubidi_openSized(length, 0, &error);
+    if (error != 0)
+        NSLog(@"%04x", error);
+
+	[string getCharacters:src];
+    ubidi_setPara(ubidi, src, length, UBIDI_DEFAULT_LTR, NULL, &error);
+    if (error != 0)
+        NSLog(@"%04x", error);
+
+	length = ubidi_writeReordered(ubidi, dst, length * 2, UBIDI_DO_MIRRORING | UBIDI_REMOVE_BIDI_CONTROLS, &error);
+    if (error != 0)
+        NSLog(@"%04x", error);
+
+    NSString* result = [NSString stringWithCharacters:dst length:(NSUInteger)length];
+
+    ubidi_close(ubidi);
+
+	return result;
+}
+
+#endif
 
 
 
@@ -293,14 +397,131 @@ glm::vec2 stringfont::get_size(const item& item) const
 }
 
 
+/***/
 
 
 
-stringshape::stringshape()
+stringglyph::stringglyph() :
+_string(),
+_transform(),
+_alpha(1),
+_delta(0)
 {
 }
 
 
-stringshape::~stringshape()
+stringglyph::stringglyph(const char* string, glm::vec2 translate, float alpha, float delta) :
+_string(string),
+_transform(glm::translate(glm::mat4(), glm::vec3(translate, 0))),
+_alpha(alpha),
+_delta(delta)
 {
+}
+
+
+stringglyph::stringglyph(const char* string, glm::mat4x4 transform, float alpha, float delta) :
+_string(string),
+_transform(transform),
+_alpha(alpha),
+_delta(delta)
+{
+}
+
+
+vertexglyph3<glm::vec2, glm::vec2, float> stringglyph::glyph(stringfont* font)
+{
+	return vertexglyph3<glm::vec2, glm::vec2, float>([this, font](std::vector<vertex3<glm::vec2, glm::vec2, float>>& vertices) {
+		generate(font, vertices);
+	});
+}
+
+
+void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_type>& vertices)
+{
+#ifndef OPENWAR_USE_SDL
+
+	NSString* string = [NSString stringWithUTF8String:_string.c_str()];
+
+#if ENABLE_BIDIRECTIONAL_TEXT
+    string = ReorderToDisplayDirection(string);
+#endif
+
+	for (NSUInteger i = 0; i < string.length; ++i)
+	{
+		wchar_t character = [string characterAtIndex:i];
+		font->add_character(character);
+	}
+
+	glm::vec2 p(0, 0);
+	float alpha = _alpha;
+
+	for (NSUInteger i = 0; i < string.length; ++i)
+	{
+		wchar_t character = [string characterAtIndex:i];
+		stringfont::item item = font->get_character(character);
+
+		glm::vec2 s = font->get_size(item);
+		bounds2f bounds = bounds2_from_corner(p, s);
+		bounds.min = (_transform * glm::vec4(bounds.min.x, bounds.min.y, 0, 1)).xy();
+		bounds.max = (_transform * glm::vec4(bounds.max.x, bounds.max.y, 0, 1)).xy();
+
+		float next_alpha = alpha + _delta * s.x;
+
+		vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+		vertices.push_back(stringglyph::vertex_type(bounds.p12(), glm::vec2(item._u0, item._v1), alpha));
+		vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
+
+		vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
+		vertices.push_back(stringglyph::vertex_type(bounds.p21(), glm::vec2(item._u1, item._v0), next_alpha));
+		vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+
+		if (next_alpha < 0)
+			break;
+
+		p.x += s.x;
+		alpha = next_alpha;
+	}
+
+#endif
+}
+
+
+/***/
+
+
+
+stringshape::stringshape(stringfont* font) : _font(font)
+{
+	_vbo._mode = GL_TRIANGLES;
+}
+
+
+
+void stringshape::clear()
+{
+	for (stringglyph* g : _stringglyphs)
+		delete g;
+	_stringglyphs.clear();
+
+	glyphs.clear();
+}
+
+
+
+
+void stringshape::add(const char* s, glm::mat4x4 transform, float alpha, float delta)
+{
+	stringglyph* g = new stringglyph(s, transform, alpha, delta);
+	_stringglyphs.push_back(g);
+
+	glyphs.push_back(vertexglyph3<glm::vec2, glm::vec2, float>([this, g](std::vector<vertex3<glm::vec2, glm::vec2, float>>& vertices) {
+		g->generate(_font, vertices);
+	}));
+}
+
+
+void stringshape::update(GLenum usage)
+{
+	_font->update_texture();
+	update_vbo();
 }

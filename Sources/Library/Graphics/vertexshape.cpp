@@ -5,4 +5,4 @@
 #include "vertexshape.h"
 
 
-int vertexglyphversion::_highest_version = 0;
+int glyphversion::_highest_version = 0;
