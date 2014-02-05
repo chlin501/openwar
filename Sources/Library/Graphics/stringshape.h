@@ -1,9 +1,5 @@
-// Copyright (C) 2013 Felix Ungman
-//
-// This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
-
-#ifndef STRING_SHAPE_H
-#define STRING_SHAPE_H
+#ifndef STRINGSHAPE_H
+#define STRINGSHAPE_H
 
 #include <map>
 
@@ -17,17 +13,17 @@
 
 #include "../Algebra/bounds.h"
 #include "shaderprogram.h"
-#include "../Graphics/vertex.h"
-#include "../Graphics/texture.h"
+#include "vertex.h"
+#include "texture.h"
 
 
-struct string_font
+struct stringfont
 {
 	struct item
 	{
 		wchar_t _character;
-        glm::vec2 _bounds_origin;
-        glm::vec2 _bounds_size;
+		glm::vec2 _bounds_origin;
+		glm::vec2 _bounds_size;
 		float _u0, _u1;
 		float _v0, _v1;
 	};
@@ -41,19 +37,19 @@ struct string_font
 	NSFont* _font;
 #endif
 #endif
-    
+
 	shaderprogram<texture_alpha_vertex>* _renderer;
 	float _pixelDensity;
 	texture _texture;
 
 	std::map<wchar_t, item> _items;
-    glm::vec2 _next;
+	glm::vec2 _next;
 	bool _dirty;
 
 public:
-	string_font(const char* name, float size, float pixelDensity);
-	string_font(bool bold, float size, float pixelDensity);
-	~string_font();
+	stringfont(const char* name, float size, float pixelDensity);
+	stringfont(bool bold, float size, float pixelDensity);
+	~stringfont();
 
 private:
 	void initialize();
@@ -72,20 +68,13 @@ public:
 };
 
 
-class string_shape
+
+class stringshape
 {
 public:
-	vertexbuffer<texture_alpha_vertex> _vbo;
-	string_font* _font;
-
-	string_shape(string_font* font);
-
-	void clear();
-	void add(const char* string, glm::mat4x4 transform, float alpha = 1, float delta = 0);
-
-	void update(GLenum usage);
+	stringshape();
+	~stringshape();
 };
-
 
 
 #endif
