@@ -218,13 +218,18 @@ public:
 
 	void render(vertexbuffer<vertex_type>& shape)
 	{
-		if (shape.count() == 0)
+		render(shape._mode, shape);
+	}
+
+	void render(GLenum mode, vertexbuffer<vertex_type>& vbo)
+	{
+		if (vbo.count() == 0)
 			return;
 
 		glUseProgram(_program);
 		CHECK_ERROR_GL();
 
-		shape.bind(_vertex_attributes);
+		vbo.bind(_vertex_attributes);
 
 		if (_blend_sfactor != GL_ONE || _blend_dfactor != GL_ZERO)
 		{
@@ -234,7 +239,7 @@ public:
 			CHECK_ERROR_GL();
 		}
 
-		glDrawArrays(shape._mode, 0, shape.count());
+		glDrawArrays(mode, 0, vbo.count());
 		CHECK_ERROR_GL();
 
 		if (_blend_sfactor != GL_ONE || _blend_dfactor != GL_ZERO)
@@ -245,7 +250,7 @@ public:
 			CHECK_ERROR_GL();
 		}
 
-		shape.unbind(_vertex_attributes);
+		vbo.unbind(_vertex_attributes);
 	}
 };
 
