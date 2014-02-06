@@ -28,7 +28,7 @@ size(size_u, size_v)
 
 texturetile textureatlas::tile(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
 {
-	bounds2f outer = bounds2f(u0, v0, size_u, size_v) / glm::vec2(size.x, size.y);
+	bounds2f outer = bounds2f(u0, v0, u0 + size_u, v0 + size_v) / glm::vec2(size.x, size.y);
 	bounds2f inner = outer.grow(-(float)inset_u / size.x, -(float)inset_v / size.y);
 	return texturetile(outer, inner);
 }
