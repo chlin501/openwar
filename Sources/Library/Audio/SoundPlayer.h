@@ -68,6 +68,7 @@ class SoundPlayer
 	SoundSource _nextMatchlock;
 	SoundSource _nextArrows;
 	int _nextCookie;
+	bool _isPaused;
 
 public:
 	static SoundPlayer* singleton;
@@ -81,6 +82,7 @@ public:
 	void LoadSound(SoundBuffer soundBuffer, ALenum format, ALvoid* data, ALsizei size, ALsizei freq);
 #endif
 
+	bool IsPaused() const;
 	void Pause();
 	void Resume();
 

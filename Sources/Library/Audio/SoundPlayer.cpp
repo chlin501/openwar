@@ -50,7 +50,8 @@ _device(nullptr),
 _context(nullptr),
 _nextMatchlock(SoundSourceMatchlockFirst),
 _nextArrows(SoundSourceArrowsFirst),
-_nextCookie(1)
+_nextCookie(1),
+_isPaused(false)
 #endif
 {
 #ifdef OPENWAR_USE_OPENAL
@@ -115,12 +116,23 @@ void SoundPlayer::LoadSound(SoundBuffer soundBuffer, ALenum format, ALvoid* data
 #endif
 
 
+
+bool SoundPlayer::IsPaused() const
+{
+	return _isPaused;
+}
+
+
 void SoundPlayer::Pause()
 {
 #ifdef OPENWAR_USE_OPENAL
-	for (int i = 0; i < NUMBER_OF_SOUND_SOURCES; ++i)
-		if (_playing[i])
-			alSourcePause(_sources[i]);
+	if (!_isPaused)
+	{
+		_isPaused = true;
+		for (int i = 0; i < NUMBER_OF_SOUND_SOURCES; ++i)
+			if (_playing[i])
+				alSourcePause(_sources[i]);
+	}
 #endif
 }
 
@@ -128,9 +140,13 @@ void SoundPlayer::Pause()
 void SoundPlayer::Resume()
 {
 #ifdef OPENWAR_USE_OPENAL
-	for (int i = 0; i < NUMBER_OF_SOUND_SOURCES; ++i)
-		if (_playing[i])
-			alSourcePlay(_sources[i]);
+	if (_isPaused)
+	{
+		_isPaused = false;
+		for (int i = 0; i < NUMBER_OF_SOUND_SOURCES; ++i)
+			if (_playing[i])
+				alSourcePlay(_sources[i]);
+	}
 #endif
 }
 
