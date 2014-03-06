@@ -9,8 +9,7 @@
 #include "TiledGroundMap.h"
 
 
-BattleScenario::BattleScenario(const char* name) :
-_name(name),
+BattleScenario::BattleScenario() :
 _simulator(nullptr),
 _script(nullptr),
 _smoothMap(nullptr)
@@ -54,19 +53,8 @@ BattleCommander* BattleScenario::GetCommander(const char* id) const
 
 void BattleScenario::StartScript(bool master)
 {
-	if (!_name.empty())
-	{
-		_script->AddPackagePath(resource("Scripts/?.lua").path());
-		_script->AddPackagePath(resource("Maps/?.lua").path());
-		_script->SetGlobalBoolean("openwar_is_master", master);
-		_script->SetCommanders("openwar_commanders");
-
-		resource source(_name.c_str());
-		if (source.load())
-		{
-			_script->Execute((const char*)source.data(), source.size());
-		}
-	}
+	_script->SetIsMaster(master);
+	_script->Execute();
 }
 
 
@@ -85,12 +73,19 @@ void BattleScenario::SetSmoothMap(const char* name, float size)
 		return;
 
 	std::string path = std::string("Maps/") + name;
-
+    resource res(path.c_str());
+    if (!res.load())
+    {
+        res = resource("Maps/DefaultMap.tiff");
+        if (!res.load())
+            return;
+    }
+    
 	image* oldSmoothMap = _smoothMap;
 	GroundMap* oldGroundMap = _simulator->GetGroundMap();
 
 	bounds2f bounds(0, 0, size, size);
-	_smoothMap = new image(resource(path.c_str()));
+	_smoothMap = new image(res);
 	_simulator->SetGroundMap(new SmoothGroundMap(_simulator->GetHeightMap(), name, bounds, _smoothMap));
 
 	delete oldGroundMap;

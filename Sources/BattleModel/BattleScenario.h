@@ -21,7 +21,6 @@ enum class BattleOutcome
 
 class BattleScenario
 {
-	std::string _name;
 	BattleSimulator* _simulator;
 	BattleScript* _script;
 	std::vector<BattleCommander*> _commanders;
@@ -29,7 +28,7 @@ class BattleScenario
 	image* _smoothMap;
 
 public:
-	BattleScenario(const char* name);
+	BattleScenario();
 	~BattleScenario();
 
 	BattleSimulator* GetSimulator() const { return _simulator; }

@@ -152,6 +152,8 @@ bool resource::load(char const* type)
 #else
     
 	SDL_RWops* rw = SDL_RWFromFile(path(), "rb");
+    if (rw == nullptr)
+        return false;
     
 	_size = rw->size(rw);
 	void* ptr = malloc(_size);

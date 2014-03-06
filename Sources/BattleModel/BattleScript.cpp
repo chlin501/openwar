@@ -3,193 +3,177 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include <cstring>
+#include <sstream>
 #include <glm/gtc/constants.hpp>
+#include <glm/gtc/random.hpp>
+
 #include "BattleScript.h"
-#include "HeightMap.h"
 #include "SamuraiModule.h"
-#include "SmoothGroundMap.h"
-#include "TiledGroundMap.h"
 #include "BattleScenario.h"
-
-
-std::map<lua_State*, BattleScript*> BattleScript::_scripts;
-
-
-static void print_log(const char* operation, const char* message)
-{
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
-	NSLog(@"BattleScript (%s):\n%s", operation, message);
-#endif
-}
 
 
 
 BattleScript::BattleScript(BattleScenario* scenario) :
 _scenario(scenario),
 _simulator(scenario->GetSimulator()),
-_state(nullptr),
-_nextUnitId(1)
+_nextUnitId(1),
+_isMaster(true)
 {
-	_state = luaL_newstate();
-
-	luaL_openlibs(_state);
-
-	lua_pushcfunction(_state, openwar_init_groundmap);
-	lua_setglobal(_state, "openwar_init_groundmap");
-
-	lua_pushcfunction(_state, battle_message);
-	lua_setglobal(_state, "battle_message");
-
-	lua_pushcfunction(_state, battle_get_time);
-	lua_setglobal(_state, "battle_get_time");
-
-	lua_pushcfunction(_state, battle_new_unit);
-	lua_setglobal(_state, "battle_new_unit");
-
-	lua_pushcfunction(_state, battle_set_unit_movement);
-	lua_setglobal(_state, "battle_set_unit_movement");
-
-	lua_pushcfunction(_state, battle_get_unit_status);
-	lua_setglobal(_state, "battle_get_unit_status");
-
-	lua_pushcfunction(_state, battle_set_terrain_tile);
-	lua_setglobal(_state, "battle_set_terrain_tile");
-
-	lua_pushcfunction(_state, battle_set_terrain_height);
-	lua_setglobal(_state, "battle_set_terrain_height");
-
-	lua_pushcfunction(_state, battle_add_terrain_tree);
-	lua_setglobal(_state, "battle_add_terrain_tree");
-
-	_scripts[_state] = this;
-
 	_simulator->AddObserver(this);
 }
 
 
 BattleScript::~BattleScript()
 {
-	lua_close(_state);
-	_scripts.erase(_state);
 }
 
 
-void BattleScript::SetGlobalBoolean(const char* name, bool value)
+void BattleScript::SetIsMaster(bool value)
 {
-	lua_pushboolean(_state, value);
-	lua_setglobal(_state, name);
+	_isMaster = value;
 }
 
 
-void BattleScript::SetGlobalNumber(const char* name, double value)
+
+static int random_int(int min, int max)
 {
-	lua_pushnumber(_state, value);
-	lua_setglobal(_state, name);
+	return min + (int)glm::linearRand<float>(0, max - min);
 }
 
 
-void BattleScript::SetGlobalString(const char* name, const char* value)
+void BattleScript::Execute()
 {
-	lua_pushstring(_state, value);
-	lua_setglobal(_state, name);
-}
+	if (_isMaster)
+	{
+		std::string mapname = (std::ostringstream() << "Map" << random_int(1, 12) << ".tiff").str();
+		_scenario->SetSmoothMap(mapname.c_str(), 1024);
+	}
 
+	int armytype = random_int(1, 3);
+	int count1 = 0;
+	int count2 = 0;
 
-void BattleScript::SetCommanders(const char* name)
-{
 	const std::vector<BattleCommander*>& commanders = _scenario->GetCommanders();
-	int n = (int)commanders.size();
-
-	lua_createtable(_state, n, 0);
-	for (int i = 0; i < n; ++i)
+	for (int i = 0; i < (int)commanders.size(); ++i)
 	{
-		int team = commanders[i]->GetTeam();
-		int type = (int)commanders[i]->GetType();
-
-		lua_pushnumber(_state, i + 1);
-
-		lua_createtable(_state, 0, 2);
-
-		lua_pushstring(_state, "team");
-		lua_pushnumber(_state, team);
-		lua_settable(_state, -3);
-
-		lua_pushstring(_state, "type");
-		lua_pushnumber(_state, type);
-		lua_settable(_state, -3);
-
-		lua_settable(_state, -3);
-	}
-	lua_setglobal(_state, name);
-}
-
-
-void BattleScript::AddPackagePath(const char* path)
-{
-	lua_getglobal(_state, "package");
-	if (lua_isnil(_state, -1))
-	{
-		lua_pop(_state, 1);
-		return;
-	}
-
-	lua_pushstring(_state, "path");
-	lua_gettable(_state, -2);
-	if (lua_isnil(_state, -1))
-	{
-		lua_pop(_state, 2); // package & path
-		return;
-	}
-
-	std::string s(lua_tostring(_state, -1));
-	lua_pop(_state, 1);
-
-	s.append(";");
-	s.append(path);
-
-	lua_pushstring(_state, "path");
-	lua_pushstring(_state, s.c_str());
-	lua_settable(_state, -3);
-
-	lua_pop(_state, 1); // package
-}
-
-
-void BattleScript::Execute(const char* script, size_t length)
-{
-	if (script != nullptr)
-	{
-		int error = luaL_loadbuffer(_state, script, length, "line");
-		if (!error)
-            error = lua_pcall(_state, 0, 0, 0);
-
-		if (error)
+		switch (commanders[i]->GetTeam())
 		{
-			print_log("ERROR", lua_tostring(_state, -1));
-			lua_pop(_state, 1);  /* pop error message from the stack */
+			case 1: ++count1; break;
+			case 2: ++count2; break;
+			default: break;
 		}
+	}
+
+	float xpos1 = -150 * (count1 - 1);
+	float xpos2 = -150 * (count2 - 1);
+
+	int part1 = 0;
+	int part2 = 0;
+
+	if (count1 > 1)
+		part1 = 1;
+	if (count2 > 1)
+		part2 = 1;
+
+	for (int i = 0; i < (int)commanders.size(); ++i)
+	{
+		int commanderId = i + 1;
+		int team = commanders[i]->GetTeam();
+		BattleCommanderType type = commanders[i]->GetType();
+
+		if (type != BattleCommanderType::None)
+		{
+			int& part = team == 1 ? part1 : part2;
+
+			std::function<glm::vec2(float, float)> pos = team == 1
+				? std::function<glm::vec2(float, float)>([xpos1](float x, float y) { return glm::vec2(x + xpos1, y); })
+				: std::function<glm::vec2(float, float)>([xpos2](float x, float y) { return glm::vec2(x + xpos2, 1024 - y); });
+
+			float bearing = team == 1 ? 0 : 180;
+
+			if (armytype == 1)
+			{
+				if (part == 0 || part == 1)
+				{
+					NewUnit(commanderId, "CAV-BOW",  40, pos(354, 244), bearing);
+					NewUnit(commanderId, "SAM-KATA", 80, pos(371, 277), bearing);
+					NewUnit(commanderId, "ASH-YARI", 80, pos(392, 311), bearing);
+					NewUnit(commanderId, "ASH-BOW",  80, pos(400, 345), bearing);
+					NewUnit(commanderId, "GEN-KATA", 40, pos(429, 213), bearing);
+					NewUnit(commanderId, "SAM-KATA", 80, pos(452, 255), bearing);
+				}
+				if (part == 0 || part == 2)
+				{
+					NewUnit(commanderId, "SAM-NAGI", 80, pos(461, 302), bearing);
+					NewUnit(commanderId, "ASH-BOW",  80, pos(468, 339), bearing);
+					NewUnit(commanderId, "ASH-YARI", 80, pos(531, 294), bearing);
+					NewUnit(commanderId, "ASH-BOW",  80, pos(533, 332), bearing);
+					NewUnit(commanderId, "CAV-YARI", 40, pos(537, 231), bearing);
+					NewUnit(commanderId, "SAM-KATA", 80, pos(549, 262), bearing);
+					NewUnit(commanderId, "CAV-KATA", 40, pos(645, 204), bearing);
+				}
+			}
+			else if (armytype == 2)
+			{
+				if (part == 0 || part == 1)
+				{
+					NewUnit(commanderId, "CAV-KATA", 40, pos(225, 340), bearing);
+					NewUnit(commanderId, "SAM-KATA", 80, pos(294, 270), bearing);
+					NewUnit(commanderId, "SAM-BOW",  80, pos(332, 307), bearing);
+					NewUnit(commanderId, "ASH-YARI", 80, pos(342, 337), bearing);
+					NewUnit(commanderId, "SAM-NAGI", 80, pos(362, 271), bearing);
+					NewUnit(commanderId, "ASH-ARQ",  80, pos(403, 368), bearing);
+					NewUnit(commanderId, "SAM-KATA", 80, pos(465, 254), bearing);
+				}
+				if (part == 0 || part == 2)
+				{
+					NewUnit(commanderId, "GEN-KATA", 40, pos(465, 314), bearing);
+					NewUnit(commanderId, "ASH-ARQ",  80, pos(472, 366), bearing);
+					NewUnit(commanderId, "ASH-ARQ",  80, pos(529, 367), bearing);
+					NewUnit(commanderId, "SAM-NAGI", 80, pos(551, 271), bearing);
+					NewUnit(commanderId, "ASH-YARI", 80, pos(580, 342), bearing);
+					NewUnit(commanderId, "SAM-BOW",  80, pos(583, 312), bearing);
+					NewUnit(commanderId, "SAM-KATA", 80, pos(626, 276), bearing);
+					NewUnit(commanderId, "CAV-KATA", 40, pos(683, 346), bearing);
+				}
+			}
+			else
+			{
+				if (part == 0 || part == 1)
+				{
+					NewUnit(commanderId, "SAM-NAGI", 80, pos(383, 324), bearing);
+					NewUnit(commanderId, "CAV-KATA", 40, pos(359, 286), bearing);
+					NewUnit(commanderId, "SAM-KATA", 80, pos(443, 348), bearing);
+					NewUnit(commanderId, "ASH-ARQ",  80, pos(448, 419), bearing);
+					NewUnit(commanderId, "ASH-YARI", 80, pos(456, 386), bearing);
+					NewUnit(commanderId, "ASH-BOW",  80, pos(503, 359), bearing);
+					NewUnit(commanderId, "GEN-KATA", 40, pos(507, 315), bearing);
+				}
+				else if (part == 0 || part == 2)
+				{
+					NewUnit(commanderId, "SAM-NAGI", 80, pos(508, 269), bearing);
+					NewUnit(commanderId, "ASH-YARI", 80, pos(552, 387), bearing);
+					NewUnit(commanderId, "ASH-ARQ",  80, pos(558, 414), bearing);
+					NewUnit(commanderId, "SAM-KATA", 80, pos(562, 350), bearing);
+					NewUnit(commanderId, "CAV-BOW",  40, pos(679, 308), bearing);
+					NewUnit(commanderId, "CAV-YARI", 40, pos(601, 284), bearing);
+					NewUnit(commanderId, "SAM-NAGI", 80, pos(616, 333), bearing);
+				}
+			}
+
+			++part;
+		}
+
+		if (team == 1)
+			xpos1 += 300;
+		else
+			xpos2 += 300;
 	}
 }
 
 
 void BattleScript::Tick(double secondsSinceLastUpdate)
 {
-	lua_getglobal(_state, "openwar_battle_tick");
-
-	if (lua_isnil(_state, -1))
-	{
-		lua_pop(_state, 1);
-	}
-	else
-	{
-		lua_pushnumber(_state, secondsSinceLastUpdate);
-		int error = lua_pcall(_state, 1, 0, 0);
-		if (error)
-		{
-			print_log("ERROR", lua_tostring(_state, -1));
-			lua_pop(_state, 1);  /* pop error message from the stack */
-		}
-	}
 }
 
 
@@ -249,7 +233,6 @@ void BattleScript::OnRouting(Unit* unit)
 /***/
 
 
-
 int BattleScript::NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing)
 {
 	UnitStats unitStats = SamuraiModule::GetDefaultUnitStats(unitClass);
@@ -264,259 +247,4 @@ int BattleScript::NewUnit(int commanderId, const char* unitClass, int strength, 
 	_unitId[unit] = unitId;
 
 	return unitId;
-}
-
-
-void BattleScript::SetUnitMovement(int unitId, bool running, std::vector<glm::vec2> path, int chargeId, float heading)
-{
-	Unit* unit = _units[unitId];
-	if (unit != nullptr)
-	{
-		UnitCommand command;
-
-		command.path = path;
-		command.running = running;
-		command.bearing = heading;
-		command.meleeTarget = _units[chargeId];
-
-		_simulator->SetUnitCommand(unit, command, _simulator->GetTimerDelay());
-	}
-}
-
-
-/***/
-
-
-
-int BattleScript::openwar_init_groundmap(lua_State* L)
-{
-	BattleScript* script = _scripts[L];
-
-	int n = lua_gettop(L);
-	const char* s = n < 1 ? nullptr : lua_tostring(L, 1);
-
-	if (s != nullptr && std::strcmp(s, "smooth") == 0)
-	{
-		const char* name = n < 2 ? nullptr : lua_tostring(L, 2);
-		float size = n < 3 ? 1024 : (float)lua_tonumber(L, 3);
-
-		script->_scenario->SetSmoothMap(name, size);
-	}
-	else if (s != nullptr && std::strcmp(s, "tiled") == 0)
-	{
-		int nx = n < 2 ? 0 : (int)lua_tonumber(L, 2);
-		int ny = n < 3 ? 0 : (int)lua_tonumber(L, 3);
-
-		script->_scenario->SetTiledMap(nx, ny);
-	}
-
-	return 0;
-}
-
-
-int BattleScript::battle_message(lua_State* L)
-{
-	int n = lua_gettop(L);
-
-	const char* s = n < 1 ? nullptr : lua_tostring(L, 1);
-	if (s != nullptr)
-		print_log("MESSAGE", s);
-
-	return 0;
-}
-
-
-int BattleScript::battle_get_time(lua_State* L)
-{
-	lua_pushnumber(L, 47.62);
-	return 1;
-}
-
-
-int BattleScript::battle_new_unit(lua_State* L)
-{
-	BattleScript* script = _scripts[L];
-
-	int n = lua_gettop(L);
-	int commander = n < 1 ? 0 : (int)lua_tonumber(L, 1);
-	const char* platform = n < 2 ? "" : lua_tostring(L, 2);
-	const char* weapon = n < 3 ? "" : lua_tostring(L, 3);
-	int strength = n < 4 ? 40 : (int)lua_tonumber(L, 4);
-	float x = n < 5 ? 512 : (float)lua_tonumber(L, 5);
-	float y = n < 6 ? 512 : (float)lua_tonumber(L, 6);
-	float b = n < 7 ? 0 :  (float)lua_tonumber(L, 7);
-
-	std::string unitClass = std::string(platform) + "-" + weapon;
-
-	int unitId = script->NewUnit(commander, unitClass.c_str(), strength, glm::vec2(x, y), b);
-
-	lua_pushnumber(L, unitId);
-
-	return 1;
-}
-
-
-int BattleScript::battle_set_unit_movement(lua_State* L)
-{
-	BattleScript* script = _scripts[L];
-
-	int n = lua_gettop(L);
-	int unitId = n < 1 ? 0 : (int)lua_tonumber(L, 1);
-	bool running = n < 2 ? false : lua_toboolean(L, 2);
-	std::vector<glm::vec2> path;
-	if (n >= 3) ToPath(path, L, 3);
-	int chargeId = n < 4 ? 0 : (int)lua_tonumber(L, 4);
-	float heading = n < 5 ? 0 : (float)lua_tonumber(L, 5);
-
-	script->SetUnitMovement(unitId, running, path, chargeId, heading);
-
-	return 0;
-}
-
-
-int BattleScript::battle_get_unit_status(lua_State* L)
-{
-	BattleScript* script = _scripts[L];
-
-	int n = lua_gettop(L);
-	int unitId = n < 1 ? 0 : (int)lua_tonumber(L, 1);
-
-	Unit* unit = script->_units[unitId];
-	if (unit != nullptr)
-	{
-		UnitStatus status(unit);
-		lua_pushnumber(L, status.position.x);
-		lua_pushnumber(L, status.position.y);
-		lua_pushnumber(L, status.heading);
-		lua_pushnumber(L, status.state);
-		lua_pushnumber(L, status.strength);
-		lua_pushnumber(L, status.morale);
-		return 6;
-	}
-
-	return 0;
-}
-
-
-int BattleScript::battle_set_terrain_tile(lua_State* L)
-{
-	BattleScript* script = _scripts[L];
-
-	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(script->_simulator->GetGroundMap());
-	if (tiledGroundMap != nullptr)
-	{
-		int n = lua_gettop(L);
-		int x = n < 1 ? 0 : (int)lua_tonumber(L, 1);
-		int y = n < 2 ? 0 : (int)lua_tonumber(L, 2);
-		const char* texture = n < 3 ? nullptr : lua_tostring(L, 3);
-		int rotate = n < 4 ? 0 : (int)lua_tonumber(L, 4);
-		bool mirror = n < 5 ? 0 : lua_toboolean(L, 5);
-
-		tiledGroundMap->SetTile(x, y, std::string(texture), rotate, mirror);
-	}
-
-	return 0;
-}
-
-
-int BattleScript::battle_set_terrain_height(lua_State* L)
-{
-	BattleScript* script = _scripts[L];
-
-	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(script->_simulator->GetGroundMap());
-	if (tiledGroundMap != nullptr)
-	{
-		int n = lua_gettop(L);
-		int x = n < 1 ? 0 : (int)lua_tonumber(L, 1);
-		int y = n < 2 ? 0 : (int)lua_tonumber(L, 2);
-		float h = n < 3 ? 0 : (float)lua_tonumber(L, 3);
-
-		tiledGroundMap->SetHeight(x, y, h);
-	}
-
-	return 0;
-}
-
-
-int BattleScript::battle_add_terrain_tree(lua_State* L)
-{
-	/*
-	int n = lua_gettop(L);
-	float x = n < 1 ? 0 : (float)lua_tonumber(L, 1);
-	float y = n < 2 ? 0 : (float)lua_tonumber(L, 2);
-
-	_battlescript->_battleSimulator->terrainForest->AddTree(glm::vec2(x, y));
-	*/
-
-	return 0;
-}
-
-
-/***/
-
-
-
-void BattleScript::ToPath(std::vector<glm::vec2>& result, lua_State* L, int index)
-{
-	int key = 1;
-	while (true)
-	{
-		lua_rawgeti(L, index, key);
-		if (!lua_istable(L, -1))
-			break;
-
-		lua_pushstring(L, "x");
-		lua_gettable(L, -2);
-		float x = (float)lua_tonumber(L, -1);
-		lua_pop(L, 1);
-
-		lua_pushstring(L, "y");
-		lua_gettable(L, -2);
-		float y = (float)lua_tonumber(L, -1);
-		lua_pop(L, 1);
-
-		result.push_back(glm::vec2(x, y));
-
-		lua_pop(L, 1);
-
-		++key;
-	}
-}
-
-
-/***/
-
-
-
-BattleScript::UnitStatus::UnitStatus(Unit* unit)
-{
-	position = unit->state.center;
-	heading = 0;
-	state = 0;
-	strength = unit->fightersCount;
-	morale = unit->state.morale;
-
-	if (unit->state.IsRouting())
-	{
-		state = 3;
-	}
-	else if (unit->command.meleeTarget != nullptr)
-	{
-		state = 4;
-	}
-	else if (!unit->command.path.empty())
-	{
-		if (unit->command.running)
-			state = 2;
-		else
-			state = 1;
-	}
-
-	// 0 = STANDING
-	// 1 = WALKING
-	// 2 = RUNNING
-	// 3 = ROUTING
-	// 4 = CHARGING
-	// 5 = FIGHTING
-	// 6 = SHOOTING
 }
