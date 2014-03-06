@@ -145,7 +145,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 		return;
 	if (_battleView->GetCommander() == nullptr)
 		return;
-	if (_battleView->GetCommander()->GetType() != BattleCommanderType::Player)
+	if (_battleView->GetCommander()->GetType() != BattleCommanderType::Online)
 		return;
 	if (!_battleView->GetCommander()->IsActive())
 		return;
