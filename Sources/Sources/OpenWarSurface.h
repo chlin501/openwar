@@ -47,6 +47,8 @@ public:
 	OpenWarSurface(glm::vec2 size, float pixelDensity);
 	virtual ~OpenWarSurface();
 
+	BattleLayer* GetBattleLayer() const { return _battleLayer; }
+
 	// BattleSurface
 
 	virtual void ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);    
