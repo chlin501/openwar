@@ -700,6 +700,8 @@ void BattleSimulator::RemoveCasualties()
 
 		unit->fightersCount = index;
 
+		_kills[unit->commander->GetTeam()] += fighters.size();
+
 		for (BattleObserver* observer : _observers)
 			for (const Fighter& fighter : fighters)
 				observer->OnCasualty(fighter);

@@ -382,6 +382,7 @@ class BattleSimulator
 
 	std::vector<Unit*> _units;
 	std::vector<std::pair<float, Shooting>> _shootings;
+	std::map<int, int> _kills;
 
 	float _secondsSinceLastTimeStep;
 	float _timeStep;
@@ -396,6 +397,7 @@ public:
 	float GetTimerDelay() const { return 0.25f; }
 
 	void SetPractice(bool value) { _practice = value; }
+	int GetKills(int team) { return _kills[team]; }
 
 	void AddObserver(BattleObserver* observer);
 	void RemoveObserver(BattleObserver* observer);
