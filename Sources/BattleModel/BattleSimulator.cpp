@@ -128,6 +128,7 @@ _heightMap(nullptr),
 _groundMap(nullptr),
 _secondsSinceLastTimeStep(0),
 _timeStep(1.0f / 15.0f),
+_practice(false),
 _winnerTeam(0)
 {
 	_heightMap = new HeightMap(bounds2f(0, 0, 1024, 1024));
@@ -341,6 +342,9 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 				break;
 			}
 		}
+
+		if (_practice && _winnerTeam == 1)
+			_winnerTeam = 0;
 	}
 }
 
@@ -790,6 +794,11 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 					* (1 - unit->stats.trainingLevel)
 					* other->stats.trainingLevel;
 		}
+	}
+
+	if (_practice && unit->state.IsRouting() && unit->commander->GetTeam() == 2)
+	{
+		result.morale = -1;
 	}
 
 	if (_winnerTeam != 0 && unit->commander->GetTeam() != _winnerTeam)

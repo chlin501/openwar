@@ -385,6 +385,7 @@ class BattleSimulator
 
 	float _secondsSinceLastTimeStep;
 	float _timeStep;
+	bool _practice;
 	int _winnerTeam;
 
 public:
@@ -393,6 +394,8 @@ public:
 
 	float GetTimeStep() const { return _timeStep; }
 	float GetTimerDelay() const { return 0.25f; }
+
+	void SetPractice(bool value) { _practice = value; }
 
 	void AddObserver(BattleObserver* observer);
 	void RemoveObserver(BattleObserver* observer);
