@@ -53,6 +53,9 @@ glm::mat4x4 bspline_matrix_product(const glm::mat4x4& p)
 
 static bool bspline_join(glm::vec2 p0, glm::vec2 p1, glm::vec2 p2, float tolerance)
 {
+	if (glm::distance(p0, p2) > 25)
+		return false;
+
 	glm::vec2 d1 = p1 - p0;
 	glm::vec2 d2 = p2 - p0;
 	glm::vec2 x2 = d2 * glm::length(d1) / glm::length(d2);
@@ -76,7 +79,8 @@ void bspline_join(std::vector<glm::vec2>& path, float tolerance)
 
 static bool bspline_split(glm::vec2 p0, glm::vec2 p1, glm::vec2 p2, glm::vec2 p3, float tolerance)
 {
-	return !bspline_join(p0, p1, p2, tolerance) || !bspline_join(p1, p2, p3, tolerance);
+	return !bspline_join(p0, p1, p2, tolerance)
+		|| !bspline_join(p1, p2, p3, tolerance);
 }
 
 
