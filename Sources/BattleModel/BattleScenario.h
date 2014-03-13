@@ -32,7 +32,9 @@ public:
 	~BattleScenario();
 
 	BattleSimulator* GetSimulator() const { return _simulator; }
-	BattleScript* GetScript() const { return _script; }
+
+	void SetScript(BattleScript* value);
+	BattleScript* GetScript() const;
 
 	BattleCommander* AddCommander(const char* id, int team, BattleCommanderType type, const char* configuration);
 	BattleCommander* GetCommander(const char* id) const;

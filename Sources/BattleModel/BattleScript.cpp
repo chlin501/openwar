@@ -25,6 +25,7 @@ _isMaster(true)
 
 BattleScript::~BattleScript()
 {
+	_simulator->RemoveObserver(this);
 }
 
 

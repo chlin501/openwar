@@ -34,6 +34,19 @@ BattleScenario::~BattleScenario()
 }
 
 
+void BattleScenario::SetScript(BattleScript* value)
+{
+	delete _script;
+	_script = value;
+}
+
+
+BattleScript* BattleScenario::GetScript() const
+{
+	return _script;
+}
+
+
 BattleCommander* BattleScenario::AddCommander(const char* id, int team, BattleCommanderType type, const char* configuration)
 {
 	BattleCommander* commander = new BattleCommander(id, team, type, configuration);
@@ -53,8 +66,11 @@ BattleCommander* BattleScenario::GetCommander(const char* id) const
 
 void BattleScenario::StartScript(bool master)
 {
-	_script->SetIsMaster(master);
-	_script->Execute();
+	if (_script != nullptr)
+	{
+		_script->SetIsMaster(master);
+		_script->Execute();
+	}
 }
 
 
@@ -107,5 +123,6 @@ void BattleScenario::SetTiledMap(int x, int y)
 
 void BattleScenario::Tick(double secondsSinceLastTick)
 {
-	_script->Tick(secondsSinceLastTick);
+	if (_script != nullptr)
+		_script->Tick(secondsSinceLastTick);
 }

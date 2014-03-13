@@ -27,8 +27,8 @@ public:
 
 	void SetIsMaster(bool value);
 
-	void Execute();
-	void Tick(double secondsSinceLastTick);
+	virtual void Execute();
+	virtual void Tick(double secondsSinceLastTick);
 
 	// BattleObserver
 	virtual void OnSetGroundMap(GroundMap* groundMap);
