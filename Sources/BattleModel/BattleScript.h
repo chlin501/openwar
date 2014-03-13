@@ -13,6 +13,7 @@ class BattleScenario;
 
 class BattleScript : public BattleObserver
 {
+protected:
 	BattleScenario* _scenario;
 	BattleSimulator* _simulator;
 	std::map<int, Unit*> _units;
