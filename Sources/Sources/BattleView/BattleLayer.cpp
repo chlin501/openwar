@@ -133,8 +133,8 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 
 	//if (commander->GetConfiguration()[0] == '-')
 	//{
-		battleView->SetFlip(true);
-		battleView->SetCameraFacing((float)M_PI);
+	//	battleView->SetFlip(true);
+	//	battleView->SetCameraFacing((float)M_PI);
 	//}
 
 	_battleViews.push_back(battleView);
