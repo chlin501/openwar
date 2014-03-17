@@ -131,11 +131,11 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 	battleView->SetCommander(commander);
 	battleView->SetSimulator(simulator);
 
-	if (commander->GetConfiguration()[0] == '-')
-	{
+	//if (commander->GetConfiguration()[0] == '-')
+	//{
 		battleView->SetFlip(true);
 		battleView->SetCameraFacing((float)M_PI);
-	}
+	//}
 
 	_battleViews.push_back(battleView);
 	UpdateBattleViewSize();

@@ -36,7 +36,7 @@ public:
 	void SetScript(BattleScript* value);
 	BattleScript* GetScript() const;
 
-	BattleCommander* AddCommander(const char* id, int team, BattleCommanderType type, const char* configuration);
+	BattleCommander* AddCommander(const char* id, int team, BattleCommanderType type);
 	BattleCommander* GetCommander(const char* id) const;
 	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
 
