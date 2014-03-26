@@ -12,7 +12,10 @@
 BattleScenario::BattleScenario() :
 _simulator(nullptr),
 _script(nullptr),
-_smoothMap(nullptr)
+_smoothMap(nullptr),
+_teamPosition1(0),
+_teamPosition2(0)
+
 {
 	_simulator = new BattleSimulator();
 	_script = new BattleScript(this);
@@ -44,6 +47,25 @@ void BattleScenario::SetScript(BattleScript* value)
 BattleScript* BattleScenario::GetScript() const
 {
 	return _script;
+}
+
+
+void BattleScenario::SetTeamPosition(int team, int position)
+{
+	if (team == 1)
+		_teamPosition1 = position;
+	if (team == 2)
+		_teamPosition2 = position;
+}
+
+
+int BattleScenario::GetTeamPosition(int team) const
+{
+	if (team == 1)
+		return _teamPosition1;
+	if (team == 2)
+		return _teamPosition2;
+	return 0;
 }
 
 
