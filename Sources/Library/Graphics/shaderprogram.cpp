@@ -24,7 +24,7 @@ renderers* renderers::singleton = nullptr;
 static void print_log(const char* operation, const char* log)
 {
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
-	NSLog(@"RENDERER log (%s):\n%s", operation, log);
+//	NSLog(@"RENDERER log (%s):\n%s", operation, log);
 #endif
 }
 
