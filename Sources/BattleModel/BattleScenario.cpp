@@ -47,19 +47,20 @@ BattleScript* BattleScenario::GetScript() const
 }
 
 
-BattleCommander* BattleScenario::AddCommander(const char* id, int team, BattleCommanderType type)
+BattleCommander* BattleScenario::AddCommander(const char* playerId, int team, BattleCommanderType type)
 {
-	BattleCommander* commander = new BattleCommander(id, team, type);
+	BattleCommander* commander = new BattleCommander(playerId, team, type);
 	_commanders.push_back(commander);
 	return commander;
 }
 
 
-BattleCommander* BattleScenario::GetCommander(const char* id) const
+BattleCommander* BattleScenario::GetCommander(const char* playerId) const
 {
 	for (BattleCommander* commander : _commanders)
-		if (std::strcmp(commander->GetId(), id) == 0)
+		if (std::strcmp(commander->GetPlayerId(), playerId) == 0)
 			return commander;
+
 	return nullptr;
 }
 
