@@ -227,6 +227,8 @@ void BattleView::SetSimulator(BattleSimulator* simulator)
 
 	_simulator = simulator;
 	SetHeightMap(simulator->GetHeightMap());
+
+	delete _casualtyMarker;
 	_casualtyMarker = new CasualtyMarker(_simulator);
 
 	GroundMap* groundMap = simulator->GetGroundMap();
