@@ -15,13 +15,16 @@ class ButtonHotspot : public Hotspot
 {
 	std::function<void()> _action;
 	bool _highlight;
-
+	bool _immediate;
 public:
 	ButtonHotspot();
 	virtual ~ButtonHotspot();
 
 	virtual std::function<void()> GetAction() const;
 	virtual void SetAction(std::function<void()> value);
+
+	virtual bool IsImmediate() const;
+	virtual void SetImmediate(bool value);
 
 	virtual bool IsHighlight() const;
 	virtual void SetHighlight(bool value);

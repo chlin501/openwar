@@ -61,7 +61,11 @@ void ButtonGesture::TouchBegan(Touch* touch)
 	if (_hotspot != nullptr)
 	{
 		CaptureTouch(touch);
+
 		_hotspot->SetHighlight(true);
+
+		if (_hotspot->IsImmediate() && _hotspot->GetAction())
+			_hotspot->GetAction()();
 	}
 	else
 	{
@@ -105,7 +109,7 @@ void ButtonGesture::TouchEnded(Touch* touch)
 				found = true;
 		});
 
-		if (found && _hotspot->GetAction())
+		if (found && !_hotspot->IsImmediate() && _hotspot->GetAction())
 			_hotspot->GetAction()();
 
 		_hotspot->SetHighlight(false);

@@ -29,6 +29,18 @@ void ButtonHotspot::SetAction(std::function<void ()> value)
 }
 
 
+bool ButtonHotspot::IsImmediate() const
+{
+	return _immediate;
+}
+
+
+void ButtonHotspot::SetImmediate(bool value)
+{
+	_immediate = value;
+}
+
+
 bool ButtonHotspot::IsHighlight() const
 {
 	return _highlight;
