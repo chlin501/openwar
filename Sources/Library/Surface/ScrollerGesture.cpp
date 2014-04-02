@@ -27,19 +27,22 @@ void ScrollerGesture::TouchBegan(Touch* touch)
 {
 	if (touch->HasGesture() || !_touches.empty())
 		return;
+	if (_scroller != nullptr)
+		return;
 
-	_surface->FindHotspots(glm::mat4(), touch->GetPosition(), [this](std::shared_ptr<Hotspot> hotspot) {
-		std::shared_ptr<ScrollerHotspot> scrollerHotspot = std::dynamic_pointer_cast<ScrollerHotspot>(hotspot);
-		if (scrollerHotspot != nullptr && _scroller == nullptr)
-		{
-			_scroller = scrollerHotspot->GetScroller();
-			_position = scrollerHotspot->GetPosition();
-		}
+	std::shared_ptr<ScrollerHotspot> scrollerHotspot;
+
+	_surface->FindHotspots(glm::mat4(), touch->GetPosition(), [this, &scrollerHotspot](std::shared_ptr<Hotspot> hotspot) {
+		if (scrollerHotspot == nullptr)
+			scrollerHotspot = std::dynamic_pointer_cast<ScrollerHotspot>(hotspot);
 	});
 
-	if (_scroller != nullptr)
+	if (scrollerHotspot != nullptr)
 	{
 		CaptureTouch(touch);
+
+		_scroller = scrollerHotspot->GetScroller();
+		_position = scrollerHotspot->GetPosition();
 	}
 }
 
@@ -57,6 +60,11 @@ void ScrollerGesture::TouchMoved()
 		glm::vec4 p2 = glm::inverse(transform) * glm::vec4(_touches.front()->GetPosition(), 0, 1);
 
 		glm::vec2 delta = p2.xy() / p2.w - p1.xy() / p1.w;
+
+		if (!_scroller->GetHorizontalScrolling())
+			delta.x = 0;
+		if (!_scroller->GetVerticalScrolling())
+			delta.y = 0;
 
 		_scroller->SetContentOffset(_scroller->GetContentOffset() - delta);
 	}

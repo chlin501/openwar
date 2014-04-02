@@ -9,6 +9,8 @@ class Scroller : public Container
 	glm::vec2 _contentSize;
 	glm::vec2 _contentOffset;
 	float _zoomScale;
+	bool _verticalScrolling;
+	bool _horizontalScrolling;
 
 public:
 	Property<glm::vec2> contentSize;
@@ -27,6 +29,13 @@ public:
 
 	virtual float GetZoomScale() const;
 	virtual void SetZoomScale(float value);
+
+	virtual bool GetVerticalScrolling() const;
+	virtual void SetVerticalScrolling(bool value);
+
+	virtual bool GetHorizontalScrolling() const;
+	virtual void SetHorizontalScrolling(bool value);
+
 
 	// Content
 

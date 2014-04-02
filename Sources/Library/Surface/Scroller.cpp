@@ -9,7 +9,9 @@ _contentOffset(),
 _zoomScale(1),
 contentSize([this]() { return GetContentSize(); }, [this](glm::vec2 value) { SetContentSize(value); }),
 contentOffset([this]() { return GetContentOffset(); }, [this](glm::vec2 value) { SetContentOffset(value); }),
-zoomScale([this]() { return GetZoomScale(); }, [this](float value) { SetZoomScale(value); })
+zoomScale([this]() { return GetZoomScale(); }, [this](float value) { SetZoomScale(value); }),
+_verticalScrolling(true),
+_horizontalScrolling(true)
 {
 }
 
@@ -52,6 +54,30 @@ float Scroller::GetZoomScale() const
 void Scroller::SetZoomScale(float value)
 {
 	_zoomScale = value;
+}
+
+
+bool Scroller::GetVerticalScrolling() const
+{
+	return _verticalScrolling;
+}
+
+
+void Scroller::SetVerticalScrolling(bool value)
+{
+	_verticalScrolling = value;
+}
+
+
+bool Scroller::GetHorizontalScrolling() const
+{
+	return _horizontalScrolling;
+}
+
+
+void Scroller::SetHorizontalScrolling(bool value)
+{
+	_horizontalScrolling = value;
 }
 
 
