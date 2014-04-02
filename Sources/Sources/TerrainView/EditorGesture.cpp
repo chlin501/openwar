@@ -49,7 +49,7 @@ void EditorGesture::TouchBegan(Touch* touch)
 		return;
 	}
 
-	if (touch->GetGesture() != nullptr || !_touches.empty())
+	if (touch->HasGesture() || !_touches.empty())
 		return;
 
 	_editorModel->ToolBegan(TerrainPosition(touch));

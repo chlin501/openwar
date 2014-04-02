@@ -25,8 +25,9 @@ void ScrollerGesture::Update(Surface* surface, double secondsSinceLastUpdate)
 
 void ScrollerGesture::TouchBegan(Touch* touch)
 {
-	if (touch->HasGesture() || !_touches.empty())
+	if (/*touch->HasGesture() ||*/ !_touches.empty())
 		return;
+
 	if (_scroller != nullptr)
 		return;
 

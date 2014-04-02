@@ -23,12 +23,15 @@ _enabled(true)
 Gesture::~Gesture()
 {
 	for (Touch* touch : _touches)
-		if (touch->_gesture == this)
-			touch->_gesture = nullptr;
+	{
+		touch->_gestures.erase(
+			std::remove(touch->_gestures.begin(), touch->_gestures.end(), this),
+			touch->_gestures.end());
+	}
 
-	auto i = std::find(_gestures->begin(), _gestures->end(), this);
-	if (i != _gestures->end())
-		_gestures->erase(i);
+	_gestures->erase(
+		std::remove(_gestures->begin(), _gestures->end(), this),
+		_gestures->end());
 }
 
 
@@ -76,5 +79,17 @@ void Gesture::TouchWasCancelled(Touch* touch)
 void Gesture::CaptureTouch(Touch* touch)
 {
 	_touches.push_back(touch);
-	touch->_gesture = this;
+	touch->_gestures.push_back(this);
+}
+
+
+void Gesture::UncaptureTouch(Touch* touch)
+{
+	_touches.erase(
+		std::remove(_touches.begin(), _touches.end(), touch),
+		_touches.end());
+
+	touch->_gestures.erase(
+		std::remove(touch->_gestures.begin(), touch->_gestures.end(), this),
+		touch->_gestures.end());
 }

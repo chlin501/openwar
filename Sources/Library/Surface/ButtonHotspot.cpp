@@ -7,6 +7,7 @@
 
 ButtonHotspot::ButtonHotspot() :
 _action(),
+_stationary(false),
 _highlight(false)
 {
 }
@@ -32,6 +33,18 @@ void ButtonHotspot::SetAction(std::function<void ()> value)
 bool ButtonHotspot::IsImmediate() const
 {
 	return _immediate;
+}
+
+
+bool ButtonHotspot::IsStationary() const
+{
+	return _stationary;
+}
+
+
+void ButtonHotspot::SetStationary(bool value)
+{
+	_stationary = value;
 }
 
 

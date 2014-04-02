@@ -4,12 +4,13 @@
 
 #include "Touch.h"
 #include "Gesture.h"
+#include "Surface.h"
 
 
 
 Touch::Touch(Surface* surface, int tapCount, glm::vec2 position, double timestamp, MouseButtons buttons) :
 _surface(surface),
-_gesture(nullptr),
+_gestures(),
 _tapCount(tapCount),
 _hasMoved(false),
 _position(position),
@@ -26,12 +27,36 @@ _previousButtons()
 
 Touch::~Touch()
 {
-	if (_gesture != nullptr)
+	for (Gesture* gesture : _gestures)
 	{
-		auto i = std::find(_gesture->_touches.begin(), _gesture->_touches.end(), this);
-		if (i != _gesture->_touches.end())
-			_gesture->_touches.erase(i);
+		gesture->_touches.erase(
+			std::remove(gesture->_touches.begin(), gesture->_touches.end(), this),
+			gesture->_touches.end());
 	}
+}
+
+
+int Touch::GetTapCount() const
+{
+	return _tapCount;
+}
+
+
+Surface* Touch::GetSurface() const
+{
+	return _surface;
+}
+
+
+const std::vector<Gesture*>& Touch::GetGestures() const
+{
+	return _gestures;
+}
+
+
+bool Touch::HasGesture() const
+{
+	return !_gestures.empty();
 }
 
 
@@ -74,6 +99,48 @@ void Touch::Update(double timestamp)
 }
 
 
+glm::vec2 Touch::GetPosition() const
+{
+	return _position;
+}
+
+
+glm::vec2 Touch::GetPrevious() const
+{
+	return _previous;
+}
+
+
+glm::vec2 Touch::GetOriginal() const
+{
+	return _original;
+}
+
+
+double Touch::GetTimeStart() const
+{
+	return _timestart;
+}
+
+
+double Touch::GetTimestamp() const
+{
+	return _timestamp;
+}
+
+
+MouseButtons Touch::GetCurrentButtons() const
+{
+	return _currentButtons;
+}
+
+
+MouseButtons Touch::GetPreviousButtons() const
+{
+	return _previousButtons;
+}
+
+
 Motion Touch::GetMotion() const
 {
 	if (_timestamp - _sampler.time() > 0.15)
@@ -94,6 +161,12 @@ Motion Touch::GetMotion() const
 }
 
 
+bool Touch::HasMoved() const
+{
+	return _hasMoved;
+}
+
+
 void Touch::ResetHasMoved()
 {
 	_hasMoved = false;
@@ -105,6 +178,12 @@ void Touch::ResetVelocity()
 {
 	_sampler.clear();
 	_sampler.add(_timestamp, _position);
+}
+
+
+glm::vec2 Touch::GetVelocity() const
+{
+	return GetVelocity(_timestamp);
 }
 
 

@@ -5,6 +5,7 @@
 #ifndef TOUCH_H
 #define TOUCH_H
 
+#include <vector>
 #include "../Algorithms/sampler.h"
 
 class Gesture;
@@ -28,8 +29,9 @@ enum class Motion { Unknown, Stationary, Moving };
 class Touch
 {
 	friend class Gesture;
+
 	Surface* _surface;
-	Gesture* _gesture;
+	std::vector<Gesture*> _gestures;
 	int _tapCount;
 	bool _hasMoved;
 	glm::vec2 _position;
@@ -45,33 +47,33 @@ public:
 	Touch(Surface* surface, int tapCount, glm::vec2 position, double timestamp, MouseButtons buttons);
 	~Touch();
 
-	int GetTapCount() const { return _tapCount; }
+	int GetTapCount() const;
 
-	Surface* GetSurface() const { return _surface; }
-	Gesture* GetGesture() const { return _gesture; }
-	bool HasGesture() const { return _gesture != nullptr; }
+	Surface* GetSurface() const;
+	const std::vector<Gesture*>& GetGestures() const;
+	bool HasGesture() const;
 
 	void Update(glm::vec2 position, glm::vec2 previous, double timestamp);
 	void Update(glm::vec2 position, double timestamp, MouseButtons buttons);
 	void Update(double timestamp);
 
-	glm::vec2 GetPosition() const { return _position; }
-	glm::vec2 GetPrevious() const { return _previous; }
-	glm::vec2 GetOriginal() const { return _original; }
+	glm::vec2 GetPosition() const;
+	glm::vec2 GetPrevious() const;
+	glm::vec2 GetOriginal() const;
 
-	double GetTimeStart() const { return _timestart; }
-	double GetTimestamp() const { return _timestamp; }
+	double GetTimeStart() const;
+	double GetTimestamp() const;
 
-	MouseButtons GetCurrentButtons() const { return _currentButtons; }
-	MouseButtons GetPreviousButtons() const { return _previousButtons; }
+	MouseButtons GetCurrentButtons() const;
+	MouseButtons GetPreviousButtons() const;
 
 	Motion GetMotion() const;
 
-	bool HasMoved() const { return _hasMoved; }
+	bool HasMoved() const;
 	void ResetHasMoved();
 
 	void ResetVelocity();
-	glm::vec2 GetVelocity() const { return GetVelocity(_timestamp); }
+	glm::vec2 GetVelocity() const;
 	glm::vec2 GetVelocity(double timestamp) const;
 
 };
