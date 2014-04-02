@@ -36,6 +36,7 @@ _rotate(0),
 _scale(1, 1),
 _translate(),
 _flip(false),
+_dismissed(false),
 frame([this](){ return GetFrame(); }, [this](bounds2f value) { SetFrame(value); }),
 position([this](){ return GetPosition(); }, [this](glm::vec2 value) { SetPosition(value); }),
 size([this](){ return GetSize(); }, [this](glm::vec2 value) { SetSize(value); }),
@@ -55,6 +56,18 @@ translate([this](){ return GetTranslate(); }, [this](glm::vec2 value) { SetTrans
 Content::~Content()
 {
 	SetContainer(nullptr, nullptr);
+}
+
+
+void Content::Dismiss()
+{
+	_dismissed = true;
+}
+
+
+bool Content::IsDismissed() const
+{
+	return _dismissed;
 }
 
 

@@ -12,6 +12,19 @@ Container::~Container()
 }
 
 
+void Container::DeleteDismissedContent()
+{
+	std::vector<Content*> dismissed;
+
+	for (Content* content : _contents)
+		if (content->IsDismissed())
+			dismissed.push_back(content);
+
+	for (Content* content : dismissed)
+		delete content;
+}
+
+
 void Container::AddContent(Content* content, Content* belowContent)
 {
 	SetContentContainer(content, this, belowContent);

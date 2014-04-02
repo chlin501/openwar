@@ -35,6 +35,7 @@ class Content
 	glm::vec2 _translate;
 	glm::mat4 _transform;
 	bool _flip;
+	bool _dismissed;
 
 public:
 	Property<bounds2f> frame;
@@ -55,6 +56,9 @@ public:
 public:
 	Content();
 	virtual ~Content();
+
+	virtual void Dismiss();
+	virtual bool IsDismissed() const;
 
 	virtual Surface* GetSurface() const;
 
