@@ -78,20 +78,20 @@ void BattleScript::Execute()
 
 	for (int i = 0; i < (int)commanders.size(); ++i)
 	{
-		int commanderId = i + 1;
 		int team = commanders[i]->GetTeam();
-		int position = _scenario->GetTeamPosition(team);
 		BattleCommanderType type = commanders[i]->GetType();
-
 		if (type != BattleCommanderType::None)
 		{
+			int commanderId = i + 1;
+			int startPosition = _scenario->GetTeamStartPosition(team);
+			float bearing = startPosition == 1 ? 0 : 180;
+
 			int& part = team == 1 ? part1 : part2;
 
-			std::function<glm::vec2(float, float)> pos = position == 1
+			std::function<glm::vec2(float, float)> pos = startPosition == 1
 				? std::function<glm::vec2(float, float)>([xpos1](float x, float y) { return glm::vec2(x + xpos1, y); })
 				: std::function<glm::vec2(float, float)>([xpos2](float x, float y) { return glm::vec2(x + xpos2, 1024 - y); });
 
-			float bearing = team == 1 ? 0 : 180;
 
 			if (armytype == 1)
 			{
