@@ -71,7 +71,7 @@ int BattleScenario::GetTeamStartPosition(int team) const
 
 BattleCommander* BattleScenario::AddCommander(const char* playerId, int team, BattleCommanderType type)
 {
-	BattleCommander* commander = new BattleCommander(playerId, team, type);
+	BattleCommander* commander = new BattleCommander(this, playerId, team, type);
 	_commanders.push_back(commander);
 	return commander;
 }

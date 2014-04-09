@@ -221,7 +221,7 @@ glm::vec2 MovementRules::NextFighterDestination(Fighter* fighter)
 
 	if (unitState.IsRouting())
 	{
-		if (unit->commander->GetTeam() == 1)
+		if (unit->commander->GetTeamStartPosition() == 1)
 			return glm::vec2(fighterState.position.x * 3, -2000);
 		else
 			return glm::vec2(fighterState.position.x * 3, 2000);
