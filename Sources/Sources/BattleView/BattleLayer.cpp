@@ -44,6 +44,7 @@ void BattleLayer::ResetBattleViews(BattleScenario* scenario, const std::vector<B
 	while ((int)_battleViews.size() > count)
 		RemoveBattleView(_battleViews.back());
 
+
 	for (int i = 0; i < count; ++i)
 	{
 		BattleCommander* commander = _commanders[i];
