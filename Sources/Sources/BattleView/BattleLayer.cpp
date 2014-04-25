@@ -5,6 +5,8 @@
 #include "BattleView.h"
 #include "BattleLayer.h"
 #include "UnitCounter.h"
+#include "EditorGesture.h"
+#include "EditorModel.h"
 #include "../SmoothTerrain/SmoothTerrainWater.h"
 #include "../SmoothTerrain/SmoothTerrainSky.h"
 #include "../TerrainView/TerrainGesture.h"
@@ -17,7 +19,9 @@ BattleLayer::BattleLayer() :
 _renderers(nullptr),
 _playing(false),
 _editing(false),
-_scenario(nullptr)
+_scenario(nullptr),
+_editorGesture(nullptr),
+_editorModel(nullptr)
 {
 	if (renderers::singleton == nullptr)
 		renderers::singleton = new renderers();
@@ -36,6 +40,11 @@ BattleLayer::~BattleLayer()
 
 void BattleLayer::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
 {
+	delete _editorGesture;
+	_editorGesture = nullptr;
+	delete _editorModel;
+	_editorModel = nullptr;
+
 	_scenario = scenario;
 	_commanders = commanders;
 
@@ -43,7 +52,6 @@ void BattleLayer::ResetBattleViews(BattleScenario* scenario, const std::vector<B
 
 	while ((int)_battleViews.size() > count)
 		RemoveBattleView(_battleViews.back());
-
 
 	for (int i = 0; i < count; ++i)
 	{
@@ -53,6 +61,33 @@ void BattleLayer::ResetBattleViews(BattleScenario* scenario, const std::vector<B
 		else
 			CreateBattleView(commander);
 	}
+
+	UpdateBattleViewSize();
+}
+
+
+void BattleLayer::ResetEditor(BattleScenario* scenario)
+{
+	delete _editorGesture;
+	_editorGesture = nullptr;
+	delete _editorModel;
+	_editorModel = nullptr;
+
+	_scenario = scenario;
+	_commanders.clear();
+
+	while ((int)_battleViews.size() > 1)
+		RemoveBattleView(_battleViews.back());
+
+	if (_battleViews.empty())
+		CreateBattleView(nullptr);
+	else
+		ResetBattleView(_battleViews.front(), nullptr);
+
+	_editorModel = new EditorModel(_battleViews.front(), _battleViews.front()->GetSmoothTerrainRenderer());
+	_editorGesture = new EditorGesture(_battleViews.front(), _editorModel);
+
+	_editorModel->AddObserver(this);
 
 	UpdateBattleViewSize();
 }
@@ -93,6 +128,22 @@ void BattleLayer::OnFrameChanged()
 	Container::OnFrameChanged();
 	UpdateBattleViewSize();
 }
+
+
+/* EditorModelObserver */
+
+void BattleLayer::OnEditorModeChanged(EditorModel* editorModel)
+{
+	SetEditing(editorModel->GetEditorMode() != EditorMode::Hand);
+}
+
+
+void BattleLayer::OnTerrainFeatureChanged(EditorModel* editorModel)
+{
+}
+
+
+/***/
 
 
 void BattleLayer::Update(double secondsSinceLastUpdate)

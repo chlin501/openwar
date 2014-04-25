@@ -9,6 +9,12 @@
 
 
 
+EditorModelObserver::~EditorModelObserver()
+{
+
+}
+
+
 EditorModel::EditorModel(BattleView* battleView, SmoothTerrainRenderer* smoothTerrainSurface) :
 _battleView(battleView),
 _smoothTerrainSurface(smoothTerrainSurface),
@@ -18,6 +24,52 @@ _brush(nullptr)
 {
 	_brush = new image(48, 48);
 	_mixer = new image(48, 48);
+}
+
+
+void EditorModel::AddObserver(EditorModelObserver* observer)
+{
+	_observers.insert(observer);
+}
+
+
+void EditorModel::RemoveObserver(EditorModelObserver* observer)
+{
+	_observers.erase(observer);
+}
+
+
+EditorMode EditorModel::GetEditorMode() const
+{
+	return _editorMode;
+}
+
+
+void EditorModel::SetEditorMode(EditorMode value)
+{
+	if (value != _editorMode)
+	{
+		_editorMode = value;
+		for (EditorModelObserver* observer : _observers)
+			observer->OnEditorModeChanged(this);
+	}
+}
+
+
+TerrainFeature EditorModel::GetTerrainFeature() const
+{
+	return _terrainFeature;
+}
+
+
+void EditorModel::SetTerrainFeature(TerrainFeature value)
+{
+	if (value != _terrainFeature)
+	{
+		_terrainFeature = value;
+		for (EditorModelObserver* observer : _observers)
+			observer->OnTerrainFeatureChanged(this);
+	}
 }
 
 

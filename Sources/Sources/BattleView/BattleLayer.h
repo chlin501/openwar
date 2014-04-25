@@ -3,6 +3,7 @@
 
 #include "shaderprogram.h"
 #include "../../Library/Surface/Container.h"
+#include "EditorModel.h"
 
 class BattleCommander;
 class BattleGesture;
@@ -10,13 +11,14 @@ class BattleModel;
 class BattleScenario;
 class BattleScript;
 class BattleView;
+class EditorGesture;
 class TerrainGesture;
 class SmoothTerrainRenderer;
 class SmoothTerrainWater;
 class SmoothTerrainSky;
 
 
-class BattleLayer : public Container
+class BattleLayer : public Container, EditorModelObserver
 {
 protected:
 	renderers* _renderers;
@@ -32,6 +34,9 @@ protected:
 	std::vector<BattleGesture*> _battleGestures;
 	std::vector<TerrainGesture*> _terrainGestures;
 
+	EditorGesture* _editorGesture;
+	EditorModel* _editorModel;
+
 public:
 	BattleLayer();
 	~BattleLayer();
@@ -39,8 +44,10 @@ public:
 	BattleScenario* GetScenario() const { return _scenario; }
 	const std::vector<BattleView*>& GetBattleViews() const { return _battleViews; }
 	BattleView* GetPrimaryBattleView() const { return _battleViews.empty() ? nullptr : _battleViews.front(); }
+	EditorModel* GetEditorModel() const { return _editorModel; }
 
 	virtual void ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
+	void ResetEditor(BattleScenario* scenario);
 
 	void ResetCameraPosition();
 
@@ -55,6 +62,10 @@ public:
 
 	// Content
 	virtual void OnFrameChanged();
+
+	// EditorModelObserver
+	virtual void OnEditorModeChanged(EditorModel* editorModel);
+	virtual void OnTerrainFeatureChanged(EditorModel* editorModel);
 
 private:
 	void CreateBattleView(BattleCommander* commander);

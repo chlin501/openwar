@@ -5,15 +5,26 @@
 #ifndef EDITORMODEL_H
 #define EDITORMODEL_H
 
+#include <set>
 #include "../SmoothTerrain/SmoothTerrainRenderer.h"
 
 class BattleView;
+class EditorModel;
 
 enum class EditorMode { Hand, Paint, Erase, Smear };
 
 
+class EditorModelObserver
+{
+public:
+	virtual ~EditorModelObserver();
+	virtual void OnEditorModeChanged(EditorModel* editorModel) = 0;
+	virtual void OnTerrainFeatureChanged(EditorModel* editorModel) = 0;
+};
+
 class EditorModel
 {
+	std::set<EditorModelObserver*> _observers;
 	BattleView* _battleView;
 	SmoothTerrainRenderer* _smoothTerrainSurface;
 	EditorMode _editorMode;
@@ -26,11 +37,14 @@ class EditorModel
 public:
 	EditorModel(BattleView* battleView, SmoothTerrainRenderer* smoothTerrainSurface);
 
-	EditorMode GetEditorMode() const { return _editorMode; }
-	void SetEditorMode(EditorMode value) { _editorMode = value; }
+	void AddObserver(EditorModelObserver* observer);
+	void RemoveObserver(EditorModelObserver* observer);
 
-	TerrainFeature GetTerrainFeature() const { return _terrainFeature; }
-	void SetTerrainFeature(TerrainFeature value) { _terrainFeature = value; }
+	EditorMode GetEditorMode() const;
+	void SetEditorMode(EditorMode value);
+
+	TerrainFeature GetTerrainFeature() const;
+	void SetTerrainFeature(TerrainFeature value);
 
 	void ToolBegan(glm::vec2 position);
 	void ToolMoved(glm::vec2 position);
