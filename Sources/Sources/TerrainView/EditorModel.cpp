@@ -145,8 +145,12 @@ void EditorModel::Paint(TerrainFeature feature, glm::vec2 position, bool value)
 	bounds2f bounds = _smoothTerrainSurface->GetSmoothGroundMap()->Paint(feature, position, radius, value ? 0.4f : -0.4f);
 
 	_smoothTerrainSurface->UpdateChanges(bounds);
-	_battleView->UpdateTerrainTrees(bounds);
-	_battleView->GetSmoothTerrainWater()->Update();
+
+	if (feature != TerrainFeature::Fords)
+		_battleView->UpdateTerrainTrees(bounds);
+
+	if (feature != TerrainFeature::Trees)
+		_battleView->GetSmoothTerrainWater()->Update();
 }
 
 
@@ -182,6 +186,10 @@ void EditorModel::SmearPaint(TerrainFeature feature, glm::vec2 position)
 	bounds2f bounds = _smoothTerrainSurface->GetSmoothGroundMap()->Paint(feature, position, _brush, 0.5f);
 
 	_smoothTerrainSurface->UpdateChanges(bounds);
-	_battleView->UpdateTerrainTrees(bounds);
-	_battleView->GetSmoothTerrainWater()->Update();
+
+	if (feature != TerrainFeature::Fords)
+		_battleView->UpdateTerrainTrees(bounds);
+
+	if (feature != TerrainFeature::Trees)
+		_battleView->GetSmoothTerrainWater()->Update();
 }

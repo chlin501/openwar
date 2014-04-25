@@ -167,6 +167,8 @@ bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, imag
 			}
 		}
 
+	UpdateHeightMap();
+
 	return bounds2_from_center(position, radius + 1);
 }
 
@@ -208,6 +210,8 @@ bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, floa
 				_image->set_pixel(p.x, p.y, c);
 			}
 		}
+
+	UpdateHeightMap();
 
 	return bounds2_from_center(position, radius + 1);
 }
