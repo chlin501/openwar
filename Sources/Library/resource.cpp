@@ -13,13 +13,20 @@
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
 static NSString* GetPath(const char* name, const char* type)
 {
-	NSString* path = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:name], [NSString stringWithUTF8String:type]];
-    NSString* d = [path stringByDeletingLastPathComponent];
-    NSString* file = [path lastPathComponent];
- 	NSString* n = [file stringByDeletingPathExtension];
-	NSString* t = [file pathExtension];
-    
-	return [[NSBundle mainBundle] pathForResource:n ofType:t inDirectory:d];
+	if (name[0] == '/')
+	{
+		return [NSString stringWithFormat:@"%s%s", name, type];
+	}
+	else
+	{
+		NSString* path = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:name], [NSString stringWithUTF8String:type]];
+		NSString* d = [path stringByDeletingLastPathComponent];
+		NSString* file = [path lastPathComponent];
+		NSString* n = [file stringByDeletingPathExtension];
+		NSString* t = [file pathExtension];
+
+		return [[NSBundle mainBundle] pathForResource:n ofType:t inDirectory:d];
+	}
 }
 #endif
 
@@ -49,7 +56,7 @@ void resource::init(const char* argv0)
 
 
 
-resource::resource(const char* name) :
+resource:: resource(const char* name) :
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
 _nsdata(nil),
 #endif

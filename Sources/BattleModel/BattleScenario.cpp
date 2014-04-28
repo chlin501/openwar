@@ -106,31 +106,30 @@ BattleOutcome BattleScenario::GetOutcome(int team) const
 }
 
 
-void BattleScenario::SetSmoothMap(const char* name, float size)
+void BattleScenario::SetSmoothMap(const char* path, const char* hash, float size)
 {
-	if (_smoothMapName == name)
+	if (_smoothMapHash == hash)
 		return;
 
-	std::string path = std::string("Maps/") + name;
-    resource res(path.c_str());
-    if (!res.load())
-    {
-        res = resource("Maps/DefaultMap.tiff");
-        if (!res.load())
-            return;
-    }
-    
+    resource res(path);
+	if (!res.load())
+	{
+		res = resource("Maps/DefaultMap.tiff");
+		if (!res.load())
+			return;
+	}
+
 	image* oldSmoothMap = _smoothMap;
 	GroundMap* oldGroundMap = _simulator->GetGroundMap();
 
 	bounds2f bounds(0, 0, size, size);
 	_smoothMap = new image(res);
-	_simulator->SetGroundMap(new SmoothGroundMap(_simulator->GetHeightMap(), name, bounds, _smoothMap));
+	_simulator->SetGroundMap(new SmoothGroundMap(_simulator->GetHeightMap(), hash, bounds, _smoothMap));
 
 	delete oldGroundMap;
 	delete oldSmoothMap;
 
-	_smoothMapName = name;
+	_smoothMapHash = hash;
 }
 
 

@@ -6,9 +6,9 @@
 #include "HeightMap.h"
 
 
-SmoothGroundMap::SmoothGroundMap(HeightMap* heightMap, const char* name, bounds2f bounds, image* img) :
+SmoothGroundMap::SmoothGroundMap(HeightMap* heightMap, const char* hash, bounds2f bounds, image* img) :
 _heightMap(heightMap),
-_name(name),
+_hash(hash),
 _bounds(bounds),
 _image(img)
 {

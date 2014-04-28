@@ -24,7 +24,7 @@ class BattleScenario
 	BattleSimulator* _simulator;
 	BattleScript* _script;
 	std::vector<BattleCommander*> _commanders;
-	std::string _smoothMapName;
+	std::string _smoothMapHash;
 	image* _smoothMap;
 	int _teamStartPosition1;
 	int _teamStartPosition2;
@@ -50,7 +50,7 @@ public:
 
 	BattleOutcome GetOutcome(int team) const;
 
-	void SetSmoothMap(const char* name, float size);
+	void SetSmoothMap(const char* path, const char* hash, float size);
 	void SetTiledMap(int x, int y);
 
 	void Tick(double secondsSinceLastTick);

@@ -46,8 +46,8 @@ void BattleScript::Execute()
 {
 	if (_isMaster)
 	{
-		std::string mapname = (std::ostringstream() << "Map" << random_int(1, 12) << ".tiff").str();
-		_scenario->SetSmoothMap(mapname.c_str(), 1024);
+		std::string path = (std::ostringstream() << "Maps/Map" << random_int(1, 12) << ".tiff").str();
+		_scenario->SetSmoothMap(path.c_str(), path.c_str(), 1024);
 	}
 
 	int armytype = random_int(1, 3);
