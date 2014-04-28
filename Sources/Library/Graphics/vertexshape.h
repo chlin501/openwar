@@ -95,14 +95,14 @@ public:
 
 	bool needs_update() const
 	{
-		int version = 0;
+		/*int version = 0;
 		for (const vertexglyph_type& glyph : glyphs)
 		{
 			if (glyph.version == nullptr)
 				return true;
 			version += glyph.version->value;
-		}
-		return version != _version;
+		}*/
+		return true;//version != _version;
 	}
 
 	vertexbuffer<vertex_type>& update_vbo()
@@ -141,14 +141,14 @@ public:
 
 	bool needs_update() const
 	{
-		int version = 0;
+		/*int version = 0;
 		for (const vertexglyph_type& glyph : glyphs)
 		{
 			if (glyph.version == nullptr)
 				return true;
 			version += glyph.version->value;
-		}
-		return version != _version;
+		}*/
+		return true;//version != _version;
 	}
 
 	vertexbuffer<vertex_type>& update_vbo()
@@ -234,14 +234,14 @@ public:
 
 	bool needs_update() const
 	{
-		int version = 0;
+		/*int version = 0;
 		for (const vertexglyph_type& glyph : glyphs)
 		{
 			if (glyph.version == nullptr)
 				return true;
 			version += glyph.version->value;
-		}
-		return version != _version;
+		}*/
+		return true;//version != _version;
 	}
 
 	vertexbuffer<vertex_type>& update_vbo()
