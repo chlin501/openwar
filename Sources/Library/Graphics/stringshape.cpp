@@ -4,6 +4,29 @@
 
 
 
+static std::string to_utf8(unichar c)
+{
+	return std::string([NSString stringWithCharacters:&c length:1].UTF8String);
+}
+
+
+static BOOL ContainsArabic(NSString* string)
+{
+	NSUInteger length = string.length;
+	for (NSUInteger i = 0; i < length; ++i)
+	{
+		unichar c = [string characterAtIndex:i];
+		if (0x0600 <= c && c <= 0x08FF)
+			return YES;
+		if (0xFB00 <= c && c <= 0xFDFF)
+			return YES;
+	}
+
+	return NO;
+}
+
+
+
 #if !defined(ENABLE_BIDIRECTIONAL_TEXT)
 #define ENABLE_BIDIRECTIONAL_TEXT 0
 //#error ENABLE_BIDIRECTIONAL_TEXT not defined
@@ -178,7 +201,7 @@ stringfont::~stringfont()
 void stringfont::initialize()
 {
 	if (_image == nullptr)
-		_image = new image(512, 512);
+		_image = new image(1024, 512);
 
 	_renderer = new shaderprogram3<glm::vec2, glm::vec2, float>(
 		"position", "texcoord", "alpha",
@@ -247,22 +270,21 @@ float stringfont::shadow_offset() const
 
 
 
-void stringfont::add_character(wchar_t character)
+stringfont::item stringfont::add_character(const std::string& character)
 {
-	if (_items.find(character) != _items.end())
-		return;
+	auto i = _items.find(character);
+	if (i != _items.end())
+		return i->second;
 
 #ifndef OPENWAR_USE_SDL
 
-	unichar uc = (unichar)character;
-
-	NSString* text = [NSString stringWithCharacters:&uc length:1];
+	NSString* string = [NSString stringWithUTF8String:character.c_str()];
 
 #if TARGET_OS_IPHONE
-	CGSize size = [text sizeWithFont:_font];
+	CGSize size = [string sizeWithFont:_font];
 #else
 	NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:_font, NSFontAttributeName, nil];
-	CGSize size = [text sizeWithAttributes:attributes];
+	CGSize size = [string sizeWithAttributes:attributes];
 #endif
 
 	if (_next.x + size.width > _image->width())
@@ -270,11 +292,18 @@ void stringfont::add_character(wchar_t character)
 		_next.x = 0;
 		_next.y += size.height + 1;
 		if (_next.y + size.height > _image->height())
-			_next.y = 0; // TODO: handle texture resizing
+		{
+			_next.y = 0;
+
+			for (auto i : _items)
+				[i.second._string release];
+
+			_items.clear();
+		}
 	}
 
 	item item;
-	item._character = character;
+	item._string = [string retain];
 	item._bounds_origin = _next;
 	item._bounds_size = glm::vec2(size.width, size.height);
 	item._u0 = (float)item._bounds_origin.x / _image->width();
@@ -287,20 +316,10 @@ void stringfont::add_character(wchar_t character)
 	_next.x += floorf((float)item._bounds_size.x + 1) + 1;
 	_dirty = true;
 
+	return item;
+
 #endif
 }
-
-
-
-stringfont::item stringfont::get_character(wchar_t character) const
-{
-	auto i = _items.find(character);
-	if (i != _items.end())
-		return i->second;
-
-	return _items.find('.')->second;
-}
-
 
 
 void stringfont::update_texture()
@@ -322,20 +341,17 @@ void stringfont::update_texture()
 
 	CGContextClearRect(_image->CGContext(), CGRectMake(0, 0, _image->width(), _image->height()));
 
-	for (std::map<wchar_t, item>::iterator i = _items.begin(); i != _items.end(); ++i)
+	for (std::map<std::string, item>::iterator i = _items.begin(); i != _items.end(); ++i)
 	{
-		item item = (*i).second;
-
-		unichar uc = (unichar)item._character;
-		NSString *text = [NSString stringWithCharacters:&uc length:1];
+		const item& item = (*i).second;
 
 		CGContextSetRGBFillColor(_image->CGContext(), 1, 1, 1, 1);
 
 #if TARGET_OS_IPHONE
-	    [text drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withFont:_font];
+	    [item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withFont:_font];
 #else
 		NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:_font, NSFontAttributeName, nil];
-		[text drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withAttributes:attributes];
+		[item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withAttributes:attributes];
 #endif
 	}
 
@@ -354,30 +370,28 @@ void stringfont::update_texture()
 
 
 
-glm::vec2 stringfont::measure(const char* s)
+glm::vec2 stringfont::measure(const char* text)
 {
 	float w = 0;
 	float h = 0;
 
 #ifndef OPENWAR_USE_SDL
 
-	NSString* string = [NSString stringWithUTF8String:s];
+	NSString* string = [NSString stringWithUTF8String:text];
 
-	//return vector2([string sizeWithFont:_font]) * size / _font.pointSize;
-
-	for (NSUInteger i = 0; i < string.length; ++i)
+	if (ContainsArabic(string))
 	{
-		wchar_t character = [string characterAtIndex:i];
-		add_character(character);
+		stringfont::item item = add_character(text);
+		glm::vec2 size = get_size(item);
+		w = size.x;
+		h = size.y;
 	}
-
-	for (NSUInteger i = 0; i < string.length; ++i)
+	else for (NSUInteger i = 0; i < string.length; ++i)
 	{
-		wchar_t character = [string characterAtIndex:i];
-		item item = get_character(character);
-		glm::vec2 s = get_size(item);
-		w += s.x;
-		h = fmaxf(h, s.y);
+		stringfont::item item = add_character(to_utf8([string characterAtIndex:i]));
+		glm::vec2 size = get_size(item);
+		w += size.x;
+		h = fmaxf(h, size.y);
 	}
 
 #endif
@@ -446,19 +460,31 @@ void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_typ
     string = ReorderToDisplayDirection(string);
 #endif
 
-	for (NSUInteger i = 0; i < string.length; ++i)
-	{
-		wchar_t character = [string characterAtIndex:i];
-		font->add_character(character);
-	}
-
 	glm::vec2 p(0, 0);
 	float alpha = _alpha;
 
-	for (NSUInteger i = 0; i < string.length; ++i)
+	if (ContainsArabic(string))
 	{
-		wchar_t character = [string characterAtIndex:i];
-		stringfont::item item = font->get_character(character);
+		stringfont::item item = font->add_character(_string.c_str());
+
+		glm::vec2 s = font->get_size(item);
+		bounds2f bounds = bounds2_from_corner(p, s);
+		bounds.min = (_transform * glm::vec4(bounds.min.x, bounds.min.y, 0, 1)).xy();
+		bounds.max = (_transform * glm::vec4(bounds.max.x, bounds.max.y, 0, 1)).xy();
+
+		float next_alpha = alpha + _delta * s.x;
+
+		vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+		vertices.push_back(stringglyph::vertex_type(bounds.p12(), glm::vec2(item._u0, item._v1), alpha));
+		vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
+
+		vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
+		vertices.push_back(stringglyph::vertex_type(bounds.p21(), glm::vec2(item._u1, item._v0), next_alpha));
+		vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+	}
+	else for (NSUInteger i = 0; i < string.length; ++i)
+	{
+		stringfont::item item = font->add_character(to_utf8([string characterAtIndex:i]));
 
 		glm::vec2 s = font->get_size(item);
 		bounds2f bounds = bounds2_from_corner(p, s);

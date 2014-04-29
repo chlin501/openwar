@@ -25,7 +25,7 @@ struct stringfont
 
 	struct item
 	{
-		wchar_t _character;
+		NSString* _string;
 		glm::vec2 _bounds_origin;
 		glm::vec2 _bounds_size;
 		float _u0, _u1;
@@ -46,7 +46,7 @@ struct stringfont
 	float _pixelDensity;
 	texture _texture;
 
-	std::map<wchar_t, item> _items;
+	std::map<std::string, item> _items;
 	glm::vec2 _next;
 	bool _dirty;
 
@@ -62,12 +62,11 @@ public:
 	float font_size() const;
 	float shadow_offset() const;
 
-	void add_character(wchar_t character);
-	item get_character(wchar_t character) const;
+	item add_character(const std::string& character);
 
 	void update_texture();
 
-	glm::vec2 measure(const char* string);
+	glm::vec2 measure(const char* text);
 	glm::vec2 get_size(const item& item) const;
 };
 
