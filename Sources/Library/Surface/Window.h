@@ -5,6 +5,7 @@
 #ifndef Window_H
 #define Window_H
 
+#include <chrono>
 #include <map>
 #include <SDL2/SDL.h>
 #include "Touch.h"
@@ -21,7 +22,8 @@ class Window
 	SDL_Window* _window;
 	SDL_GLContext _glcontext;
 	Touch* _touch;
-	double _timestamp;
+	std::chrono::system_clock::time_point _timestart;
+	std::chrono::system_clock::time_point _timestamp;
 
 public:
 	Window();

@@ -2,8 +2,6 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include <ctime>
-
 #ifdef OPENWAR_USE_XCODE_FRAMEWORKS
 #include <OpenGL/gl.h>
 #else
@@ -26,19 +24,14 @@ bool Window::_done = false;
 std::map<Uint32, Window*> Window::_windows;
 
 
-static double current_timestamp()
-{
-	return (double)std::clock() / CLOCKS_PER_SEC;
-}
-
-
 
 Window::Window() :
 _surface(nullptr),
 _window(nullptr),
 _glcontext(0),
 _touch(nullptr),
-_timestamp(0)
+_timestart(),
+_timestamp()
 {
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
@@ -60,7 +53,8 @@ _timestamp(0)
 
 	_windows[windowID] = this;
 
-	_timestamp = current_timestamp();
+	_timestart = std::chrono::system_clock::now();
+	_timestamp = _timestart;
 }
 
 
@@ -366,8 +360,9 @@ void Window::ProcessMouseWheel(const SDL_MouseWheelEvent& event)
 
 void Window::Update()
 {
-	double timestamp = current_timestamp();
-	double secondsSinceLastUpdate = timestamp - _timestamp;
+	std::chrono::system_clock::time_point timestamp = std::chrono::system_clock::now();
+	double secondsSinceTimeStart = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(timestamp - _timestart).count();
+	double secondsSinceLastUpdate = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(timestamp - _timestamp).count();
 	_timestamp = timestamp;
 
 	_surface->Update(secondsSinceLastUpdate);
@@ -379,7 +374,7 @@ void Window::Update()
 	if (_touch != nullptr)
 	{
 		double oldTimestamp = _touch->GetTimestamp();
-		_touch->Update(timestamp);
+		_touch->Update(secondsSinceTimeStart);
 
 		if (_touch->GetTimestamp() != oldTimestamp)
 			for (Gesture* gesture : _touch->GetGestures())
@@ -408,5 +403,6 @@ glm::vec2 Window::ToVector(int x, int y)
 
 double Window::ToTimestamp(Uint32 timestamp)
 {
-	return _timestamp;//timestamp;
+	// TODO: calculate correct timestamp
+	return 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - _timestamp).count();
 }
