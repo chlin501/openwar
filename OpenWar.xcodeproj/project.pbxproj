@@ -40,6 +40,7 @@
 		41EE144A17E8A4290085D3F2 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41EE144217E8A4020085D3F2 /* SDL2_image.framework */; };
 		41EE144B17E8A4290085D3F2 /* SDL2_net.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41EE144317E8A4020085D3F2 /* SDL2_net.framework */; };
 		41EE144C17E8A4290085D3F2 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41EE144417E8A4020085D3F2 /* SDL2_ttf.framework */; };
+		41FE9BC619234E85002F6043 /* PracticeScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41FE9BC419234E85002F6043 /* PracticeScript.cpp */; };
 		63F550B662BEEAAA8D48C2A8 /* TerrainForest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F551DA89F0EC589EAF7E01 /* TerrainForest.cpp */; };
 		63F55141798EC9AE4917EA89 /* quadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55E142C87CD190699B59A /* quadtree.cpp */; };
 		63F5518E501686D27C263770 /* PlainShape3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55F76D7FC1510E7F9755B /* PlainShape3.cpp */; };
@@ -154,6 +155,8 @@
 		41EE144217E8A4020085D3F2 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
 		41EE144317E8A4020085D3F2 /* SDL2_net.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_net.framework; path = ../../../Library/Frameworks/SDL2_net.framework; sourceTree = "<group>"; };
 		41EE144417E8A4020085D3F2 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = ../../../Library/Frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
+		41FE9BC419234E85002F6043 /* PracticeScript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PracticeScript.cpp; sourceTree = "<group>"; };
+		41FE9BC519234E85002F6043 /* PracticeScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PracticeScript.h; sourceTree = "<group>"; };
 		63F5500E141C859C13F9FC93 /* SoundLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundLoader.cpp; sourceTree = "<group>"; };
 		63F5503DE69D968145B61EA6 /* UnitMarker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitMarker.cpp; sourceTree = "<group>"; };
 		63F550783E4B40F4117A4A1D /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = main.cpp; sourceTree = "<group>"; };
@@ -281,6 +284,10 @@
 		4105FB141806D3890074C855 /* BattleModel */ = {
 			isa = PBXGroup;
 			children = (
+				63F55CCD729E593A1AF60AC3 /* BattleCommander.cpp */,
+				63F5512700D8F875408129B0 /* BattleCommander.h */,
+				63F55A61E69CB52A7505E66C /* BattleScenario.cpp */,
+				63F55F8AEA7149588D5DA97F /* BattleScenario.h */,
 				4105FB171806D3890074C855 /* BattleScript.cpp */,
 				4105FB181806D3890074C855 /* BattleScript.h */,
 				4105FB191806D3890074C855 /* BattleSimulator.cpp */,
@@ -297,10 +304,8 @@
 				4105FB241806D3890074C855 /* TiledGroundMap.h */,
 				63F556B39CE20E4EF1B28141 /* SamuraiModule.cpp */,
 				63F5585E94CA07B6133B52A1 /* SamuraiModule.h */,
-				63F55CCD729E593A1AF60AC3 /* BattleCommander.cpp */,
-				63F5512700D8F875408129B0 /* BattleCommander.h */,
-				63F55A61E69CB52A7505E66C /* BattleScenario.cpp */,
-				63F55F8AEA7149588D5DA97F /* BattleScenario.h */,
+				41FE9BC419234E85002F6043 /* PracticeScript.cpp */,
+				41FE9BC519234E85002F6043 /* PracticeScript.h */,
 			);
 			path = BattleModel;
 			sourceTree = "<group>";
@@ -682,6 +687,7 @@
 				63F55211E9EC58D197413281 /* vertexbuffer.cpp in Sources */,
 				63F5567BE5C32F9B5F7D3AB7 /* BillboardTexture.cpp in Sources */,
 				41D408B11892DDDE00EAFEFA /* ButtonGrid.cpp in Sources */,
+				41FE9BC619234E85002F6043 /* PracticeScript.cpp in Sources */,
 				63F553C832A774E6970A5828 /* PathRenderer.cpp in Sources */,
 				4105FB331806D3970074C855 /* ShootingCounter.cpp in Sources */,
 				63F559BF719B416B43EFC1C6 /* TextureBillboardRenderer.cpp in Sources */,

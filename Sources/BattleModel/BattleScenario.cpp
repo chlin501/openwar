@@ -4,7 +4,7 @@
 #include "BattleScenario.h"
 #include "BattleSimulator.h"
 #include "BattleScript.h"
-#include "SamuraiModule.h"
+#include "PracticeScript.h"
 #include "SmoothGroundMap.h"
 #include "TiledGroundMap.h"
 
@@ -18,7 +18,7 @@ _teamStartPosition2(0)
 
 {
 	_simulator = new BattleSimulator();
-	_script = new BattleScript(this);
+	_script = new PracticeScript(this); // new BattleScript(this);
 }
 
 
