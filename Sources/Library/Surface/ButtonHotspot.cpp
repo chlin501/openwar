@@ -7,8 +7,8 @@
 
 ButtonHotspot::ButtonHotspot() :
 _action(),
-_stationary(false),
 _highlight(false),
+_stationary(false),
 _immediate(false)
 {
 }
