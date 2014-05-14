@@ -20,11 +20,13 @@
 #include "Library/Surface/Window.h"
 #include "BattleModel/BattleScenario.h"
 #include "BattleModel/BattleScript.h"
+#include "BattleModel/PracticeScript.h"
 
 
 static BattleScenario* CreateBattleScenario()
 {
 	BattleScenario* scenario = new BattleScenario();
+	scenario->SetScript(new PracticeScript(scenario));
 	scenario->AddCommander("1", 1, BattleCommanderType::Player)->SetActive(true);
 	scenario->AddCommander("2", 2, BattleCommanderType::Script);
 	scenario->StartScript(true);

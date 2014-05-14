@@ -18,7 +18,7 @@ _teamStartPosition2(0)
 
 {
 	_simulator = new BattleSimulator();
-	_script = new PracticeScript(this); // new BattleScript(this);
+	_script = new BattleScript(this);
 }
 
 
