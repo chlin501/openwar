@@ -202,6 +202,8 @@ void Window::ProcessWindow(const SDL_WindowEvent& event)
 	SDL_GetWindowPosition(_window, &x, &y);
 	SDL_GetWindowSize(_window, &w, &h);
 
+	x = y = 0;
+
 	_surface->SetFrame(bounds2f(x, y, x + w, y + h));
 }
 
@@ -273,8 +275,9 @@ void Window::ProcessMouseMotion(const SDL_MouseMotionEvent& event)
 
 		_touch->Update(position, timestamp, buttons);
 
-		if (_touch->GetGesture() != nullptr && _touch->GetCurrentButtons().Any())
-			_touch->GetGesture()->TouchMoved();
+        if (_touch->GetCurrentButtons().Any())
+			for (Gesture* gesture : _touch->GetGestures())
+				gesture->TouchMoved();
 	}
 }
 
@@ -330,12 +333,13 @@ void Window::ProcessMouseButtonUp(const SDL_MouseButtonEvent& event)
 
 		if (buttons.Any())
 		{
-			_touch->GetGesture()->TouchMoved();
+			for (Gesture* gesture : _touch->GetGestures())
+				gesture->TouchMoved();
 		}
 		else
 		{
-			if (_touch->GetGesture() != nullptr)
-				_touch->GetGesture()->TouchEnded(_touch);
+			for (Gesture* gesture : _touch->GetGestures())
+				gesture->TouchEnded(_touch);
 
 			delete _touch;
 			_touch = nullptr;
@@ -377,8 +381,9 @@ void Window::Update()
 		double oldTimestamp = _touch->GetTimestamp();
 		_touch->Update(timestamp);
 
-		if (_touch->GetTimestamp() != oldTimestamp && _touch->GetGesture() != nullptr)
-			_touch->GetGesture()->TouchMoved();
+		if (_touch->GetTimestamp() != oldTimestamp)
+			for (Gesture* gesture : _touch->GetGestures())
+				gesture->TouchMoved();
 	}
 }
 

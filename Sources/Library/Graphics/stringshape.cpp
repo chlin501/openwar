@@ -276,7 +276,19 @@ stringfont::item stringfont::add_character(const std::string& character)
 	if (i != _items.end())
 		return i->second;
 
-#ifndef OPENWAR_USE_SDL
+#ifdef OPENWAR_USE_SDL
+
+	// TODO: implement SDL version
+
+	item dummy;
+	dummy._string = nil;
+	dummy._u0 = 0;
+	dummy._u1 = 0;
+	dummy._v0 = 0;
+	dummy._v1 = 0;
+	return dummy;
+
+#else
 
 	NSString* string = [NSString stringWithUTF8String:character.c_str()];
 

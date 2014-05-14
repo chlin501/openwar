@@ -13,3 +13,5 @@
 
 //#define OPENWAR_USE_NSBUNDLE_RESOURCES
 //#define OPENWAR_USE_GLEW
+
+#import <AppKit/AppKit.h>
