@@ -5,8 +5,8 @@
 #ifndef LineRenderer_H
 #define LineRenderer_H
 
-#include "graphicscontext.h"
-#include "shaderprogram.h"
+#include "../Graphics/graphicscontext.h"
+#include "../Graphics/shaderprogram.h"
 
 
 class PlainShape3

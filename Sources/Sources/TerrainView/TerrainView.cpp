@@ -8,7 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../../BattleModel/HeightMap.h"
-#include "PlainShape3.h"
+#include "../../Library/Shapes/PlainShape3.h"
 #include "TerrainView.h"
 
 

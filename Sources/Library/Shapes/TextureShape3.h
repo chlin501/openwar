@@ -5,8 +5,8 @@
 #ifndef TextureRenderer_H
 #define TextureRenderer_H
 
-#include "graphicscontext.h"
-#include "shaderprogram.h"
+#include "../Graphics/graphicscontext.h"
+#include "../Graphics/shaderprogram.h"
 
 
 class TextureShape3

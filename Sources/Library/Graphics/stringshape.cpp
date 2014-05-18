@@ -4,6 +4,7 @@
 
 
 
+#ifndef OPENWAR_USE_SDL
 static std::string to_utf8(unichar c)
 {
 	return std::string([NSString stringWithCharacters:&c length:1].UTF8String);
@@ -24,7 +25,7 @@ static BOOL ContainsArabic(NSString* string)
 
 	return NO;
 }
-
+#endif
 
 
 #if !defined(ENABLE_BIDIRECTIONAL_TEXT)
@@ -281,7 +282,9 @@ stringfont::item stringfont::add_character(const std::string& character)
 	// TODO: implement SDL version
 
 	item dummy;
+#ifndef OPENWAR_USE_SDL
 	dummy._string = nil;
+#endif
 	dummy._u0 = 0;
 	dummy._u1 = 0;
 	dummy._v0 = 0;

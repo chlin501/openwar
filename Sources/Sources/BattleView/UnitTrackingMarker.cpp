@@ -7,9 +7,9 @@
 #include "../../BattleModel/BattleCommander.h"
 #include "../../Library/Shapes/TextureBillboardRenderer.h"
 #include "../../Library/Shapes/PathRenderer.h"
-#include "ColorBillboardShape.h"
-#include "GradientShape3.h"
-#include "TextureShape3.h"
+#include "../../Library/Shapes/ColorBillboardShape.h"
+#include "../../Library/Shapes/GradientShape3.h"
+#include "../../Library/Shapes/TextureShape3.h"
 #include "BattleView.h"
 #include "UnitTrackingMarker.h"
 

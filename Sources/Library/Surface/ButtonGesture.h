@@ -5,6 +5,7 @@
 #ifndef ButtonGridGesture_H
 #define ButtonGridGesture_H
 
+#include <memory>
 #include "../Surface/Gesture.h"
 
 class ButtonHotspot;

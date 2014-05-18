@@ -22,7 +22,6 @@
 #include "BattleModel/BattleScript.h"
 #include "BattleModel/PracticeScript.h"
 
-
 static BattleScenario* CreateBattleScenario()
 {
 	BattleScenario* scenario = new BattleScenario();
@@ -33,6 +32,52 @@ static BattleScenario* CreateBattleScenario()
 	return scenario;
 }
 
+
+/*
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#include <EGL/egl.h>
+
+
+extern "C" {
+	GL_APICALL void GL_APIENTRY glGenVertexArraysOES(GLsizei n, GLuint* arrays)
+	{
+		static PFNGLGENVERTEXARRAYSOESPROC _glGenVertexArraysOES = 0;
+		if (_glGenVertexArraysOES == 0)
+			_glGenVertexArraysOES = (PFNGLGENVERTEXARRAYSOESPROC)eglGetProcAddress( "glGenVertexArraysOES" );
+		if (_glGenVertexArraysOES != 0)
+			_glGenVertexArraysOES(n, arrays);
+	}
+
+	GL_APICALL void GL_APIENTRY glBindVertexArrayOES(GLuint array)
+	{
+		static PFNGLBINDVERTEXARRAYOESPROC _glBindVertexArrayOES = 0;
+		if (_glBindVertexArrayOES == 0)
+			_glBindVertexArrayOES = (PFNGLBINDVERTEXARRAYOESPROC)eglGetProcAddress ( "glBindVertexArrayOES" );
+		if (_glBindVertexArrayOES != 0)
+			_glBindVertexArrayOES(array);
+	}
+
+	GL_APICALL void GL_APIENTRY glDeleteVertexArraysOES(GLsizei n, const GLuint* arrays)
+	{
+		static PFNGLDELETEVERTEXARRAYSOESPROC _glDeleteVertexArraysOES = 0;
+		if (_glDeleteVertexArraysOES == 0)
+			_glDeleteVertexArraysOES = (PFNGLDELETEVERTEXARRAYSOESPROC)eglGetProcAddress ( "glDeleteVertexArraysOES" );
+		if (_glDeleteVertexArraysOES != 0)
+			_glDeleteVertexArraysOES(n, arrays);
+	}
+
+	GL_APICALL GLboolean GL_APIENTRY glIsVertexArrayOES(GLuint array)
+	{
+		static PFNGLISVERTEXARRAYOESPROC _glIsVertexArrayOES = 0;
+		if (_glIsVertexArrayOES == 0)
+			_glIsVertexArrayOES = (PFNGLISVERTEXARRAYOESPROC)eglGetProcAddress ( "glIsVertexArrayOES" );
+		if (_glIsVertexArrayOES != 0)
+			return _glIsVertexArrayOES(array);
+		return false;
+	}
+}
+*/
 
 int main(int argc, char *argv[])
 {

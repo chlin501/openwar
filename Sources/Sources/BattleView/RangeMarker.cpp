@@ -9,7 +9,7 @@
 #include "../../BattleModel/HeightMap.h"
 #include "../../BattleModel/SmoothGroundMap.h"
 #include "../../Library/Algebra/geometry.h"
-#include "GradientShape3.h"
+#include "../../Library/Shapes/GradientShape3.h"
 
 
 RangeMarker::RangeMarker(BattleSimulator* battleSimulator, Unit* unit) :

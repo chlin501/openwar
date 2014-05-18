@@ -25,7 +25,9 @@ struct stringfont
 
 	struct item
 	{
+#ifndef OPENWAR_USE_SDL
 		NSString* _string;
+#endif
 		glm::vec2 _bounds_origin;
 		glm::vec2 _bounds_size;
 		float _u0, _u1;

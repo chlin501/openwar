@@ -7,7 +7,7 @@
 
 #include <functional>
 #include <memory>
-#include "bounds.h"
+#include "../Algebra/bounds.h"
 #include "Property.h"
 
 class Container;

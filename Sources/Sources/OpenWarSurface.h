@@ -5,8 +5,8 @@
 #ifndef OpenWarSurface_H
 #define OpenWarSurface_H
 
-#include "Surface.h"
-#include "BattleLayer.h"
+#include "../Library/Surface/Surface.h"
+#include "BattleView/BattleLayer.h"
 #include "TerrainView/EditorModel.h"
 
 class ButtonGesture;

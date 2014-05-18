@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "../Algebra/bounds.h"
-#include "graphicscontext.h"
+#include "../Graphics/graphicscontext.h"
 #include "Container.h"
 
 class Gesture;

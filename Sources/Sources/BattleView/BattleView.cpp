@@ -9,10 +9,12 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "GradientShape3.h"
-#include "ColorBillboardShape.h"
-#include "PlainShape3.h"
-#include "TextureShape3.h"
+#include "../../Library/Shapes/GradientShape3.h"
+#include "../../Library/Shapes/ColorBillboardShape.h"
+#include "../../Library/Shapes/PlainShape3.h"
+#include "../../Library/Shapes/TextureShape3.h"
+#include "../../Library/Surface/Surface.h"
+#include "../../BattleModel/BattleCommander.h"
 #include "../SmoothTerrain/SmoothTerrainWater.h"
 #include "../SmoothTerrain/SmoothTerrainSky.h"
 #include "BattleView.h"
@@ -23,8 +25,6 @@
 #include "UnitCounter.h"
 #include "UnitMovementMarker.h"
 #include "UnitTrackingMarker.h"
-#include "BattleCommander.h"
-#include "Surface.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 

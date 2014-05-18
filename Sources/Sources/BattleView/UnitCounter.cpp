@@ -4,13 +4,13 @@
 
 #include <glm/gtc/constants.hpp>
 
-#include "../../BattleModel/BattleSimulator.h"
-#include "PlainShape3.h"
+#include "../../Library/Shapes/PlainShape3.h"
 #include "../../Library/Shapes/TextureBillboardRenderer.h"
-#include "TextureShape3.h"
+#include "../../Library/Shapes/TextureShape3.h"
+#include "../../BattleModel/BattleSimulator.h"
+#include "../../BattleModel/BattleCommander.h"
 #include "BattleView.h"
 #include "UnitCounter.h"
-#include "BattleCommander.h"
 
 
 UnitCounter::UnitCounter(BattleView* battleView, Unit* unit) :

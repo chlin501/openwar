@@ -8,7 +8,7 @@
 #include "../../Library/Graphics/framebuffer.h"
 #include "../../Library/Graphics/renderbuffer.h"
 #include "../../Library/Graphics/vertexbuffer.h"
-#include "shaderprogram.h"
+#include "../../Library/Graphics/shaderprogram.h"
 
 
 typedef vertex2<glm::vec3, glm::vec3> terrain_vertex;

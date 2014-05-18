@@ -1,8 +1,9 @@
-#include "PracticeScript.h"
+#include <algorithm>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/random.hpp>
 #include "BattleScenario.h"
-#include "geometry.h"
+#include "PracticeScript.h"
+#include "../Library/Algebra/geometry.h"
 
 
 PracticeScript::PracticeScript(BattleScenario* scenario) : BattleScript(scenario),

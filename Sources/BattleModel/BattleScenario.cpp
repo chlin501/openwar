@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <cstring>
 #include "../Library/resource.h"
 #include "GroundMap.h"
 #include "BattleScenario.h"

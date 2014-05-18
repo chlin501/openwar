@@ -3,7 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "CasualtyMarker.h"
-#include "ColorBillboardShape.h"
+#include "../../Library/Shapes/ColorBillboardShape.h"
 #include "../../Library/Shapes/TextureBillboardRenderer.h"
 #include "../../BattleModel/HeightMap.h"
 #include "../../BattleModel/SmoothGroundMap.h"

@@ -5,8 +5,8 @@
 #ifndef ColorBillboardRenderer_H
 #define ColorBillboardRenderer_H
 
-#include "graphicscontext.h"
-#include "shaderprogram.h"
+#include "../Graphics/graphicscontext.h"
+#include "../Graphics/shaderprogram.h"
 
 
 class ColorBillboardShape

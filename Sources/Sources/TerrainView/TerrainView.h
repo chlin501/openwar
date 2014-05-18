@@ -7,7 +7,7 @@
 
 #include "../../BattleModel/GroundMap.h"
 #include "../../BattleModel/HeightMap.h"
-#include "Content.h"
+#include "../../Library/Surface/Content.h"
 #include "../../Library/Algebra/geometry.h"
 
 class PlainLineShape3;

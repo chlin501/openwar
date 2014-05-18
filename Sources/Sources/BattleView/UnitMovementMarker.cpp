@@ -5,13 +5,13 @@
 #include <glm/gtc/constants.hpp>
 
 #include "../../BattleModel/BattleSimulator.h"
-#include "ColorBillboardShape.h"
+#include "../../BattleModel/BattleCommander.h"
+#include "../../Library/Shapes/ColorBillboardShape.h"
 #include "../../Library/Shapes/PathRenderer.h"
 #include "../../Library/Shapes/TextureBillboardRenderer.h"
-#include "TextureShape3.h"
+#include "../../Library/Shapes/TextureShape3.h"
 #include "BattleView.h"
 #include "UnitMovementMarker.h"
-#include "BattleCommander.h"
 
 
 

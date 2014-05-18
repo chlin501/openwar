@@ -5,8 +5,8 @@
 #ifndef ColorLineRenderer_H
 #define ColorLineRenderer_H
 
-#include "graphicscontext.h"
-#include "shaderprogram.h"
+#include "../Graphics/graphicscontext.h"
+#include "../Graphics/shaderprogram.h"
 
 
 class GradientShape3

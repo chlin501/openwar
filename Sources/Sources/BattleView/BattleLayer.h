@@ -1,9 +1,9 @@
 #ifndef BattleSurface_H
 #define BattleSurface_H
 
-#include "shaderprogram.h"
+#include "../../Library/Graphics/shaderprogram.h"
 #include "../../Library/Surface/Container.h"
-#include "EditorModel.h"
+#include "../TerrainView/EditorModel.h"
 
 class BattleCommander;
 class BattleGesture;

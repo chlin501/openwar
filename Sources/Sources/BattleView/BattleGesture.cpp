@@ -6,15 +6,15 @@
 #import <UIKit/UIKit.h>
 #endif
 
+#include "../../BattleModel/BattleCommander.h"
 #include "../../BattleModel/BattleSimulator.h"
 #include "../../Library/Audio/SoundPlayer.h"
-#include "PlainShape3.h"
+#include "../../Library/Shapes/PlainShape3.h"
 #include "BattleGesture.h"
 #include "BattleView.h"
 #include "UnitCounter.h"
 #include "UnitMovementMarker.h"
 #include "UnitTrackingMarker.h"
-#include "BattleCommander.h"
 
 
 #define SNAP_TO_UNIT_TRESHOLD 22 // meters

@@ -4,6 +4,7 @@
 
 #include <cstring>
 #include <sstream>
+#include <functional>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/random.hpp>
 
@@ -46,7 +47,9 @@ void BattleScript::Execute()
 {
 	if (_isMaster)
 	{
-		std::string path = (std::ostringstream() << "Maps/Map" << random_int(1, 12) << ".tiff").str();
+		std::ostringstream os;
+		os << "Maps/Map" << random_int(1, 12) << ".tiff";
+		std::string path = os.str();
 		_scenario->SetSmoothMap(path.c_str(), path.c_str(), 1024);
 	}
 

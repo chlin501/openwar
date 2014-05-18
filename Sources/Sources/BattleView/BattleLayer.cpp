@@ -1,16 +1,16 @@
 #include "../../BattleModel/BattleScenario.h"
 #include "../../BattleModel/BattleSimulator.h"
 #include "../../Library/Audio/SoundPlayer.h"
+#include "../../Library/Surface/Surface.h"
 #include "BattleGesture.h"
 #include "BattleView.h"
 #include "BattleLayer.h"
 #include "UnitCounter.h"
-#include "EditorGesture.h"
-#include "EditorModel.h"
 #include "../SmoothTerrain/SmoothTerrainWater.h"
 #include "../SmoothTerrain/SmoothTerrainSky.h"
+#include "../TerrainView/EditorGesture.h"
+#include "../TerrainView/EditorModel.h"
 #include "../TerrainView/TerrainGesture.h"
-#include "Surface.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
