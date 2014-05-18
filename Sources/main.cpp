@@ -81,9 +81,6 @@ extern "C" {
 
 int main(int argc, char *argv[])
 {
-	std::cout << "Hello" << std::endl;
-	std::cout << argv[0] << std::endl;
-
     resource::init(argv[0]);
 
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -106,11 +103,11 @@ int main(int argc, char *argv[])
 	BattleScenario* scenario = CreateBattleScenario();
 	std::vector<BattleCommander*> commanders(1, scenario->GetCommanders().front());
 	surface->ResetBattleViews(scenario, commanders);
-    
+
 	while (!Window::IsDone())
 		Window::ProcessEvents();
 
 	SDL_Quit();
-    
+
 	return 0;
 }

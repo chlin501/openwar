@@ -24,7 +24,6 @@ bool Window::_done = false;
 std::map<Uint32, Window*> Window::_windows;
 
 
-
 Window::Window() :
 _surface(nullptr),
 _window(nullptr),
@@ -79,15 +78,18 @@ void Window::ProcessEvents()
 
 	for (auto i : _windows)
 	{
-		i.second->Update();
-		i.second->Render();
+		if (i.second != nullptr)
+		{
+			i.second->Update();
+			i.second->Render();
+		}
 	}
 }
 
 
 Window* Window::GetWindow(Uint32 windowID)
 {
-	return windowID != 0 ? _windows[windowID] : nullptr;
+	return _windows[windowID];
 }
 
 
@@ -365,7 +367,8 @@ void Window::Update()
 	double secondsSinceLastUpdate = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(timestamp - _timestamp).count();
 	_timestamp = timestamp;
 
-	_surface->Update(secondsSinceLastUpdate);
+	if (_surface != nullptr)
+		_surface->Update(secondsSinceLastUpdate);
 
 	if (Gesture::_gestures != nullptr)
 		for (Gesture* gesture : *Gesture::_gestures)
@@ -385,7 +388,7 @@ void Window::Update()
 
 void Window::Render()
 {
-	if (_surface->NeedsRender())
+	if (_surface != nullptr && _surface->NeedsRender())
 	{
 		_surface->RenderSurface();
 		SDL_GL_SwapWindow(_window);

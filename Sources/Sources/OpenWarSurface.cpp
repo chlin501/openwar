@@ -146,7 +146,11 @@ void OpenWarSurface::RenderSurface()
 	glm::mat4 transform = glm::translate(glm::scale(glm::mat4x4(), glm::vec3(scale, 1.0f)), glm::vec3(translate, 0.0f));
 
 	glClearColor(0.9137f, 0.8666f, 0.7647f, 1.0f);
+#ifdef OPENWAR_USE_GLES2
+	glClearDepthf(1.0f);
+#else
 	glClearDepth(1.0f);
+#endif
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_BLEND);
