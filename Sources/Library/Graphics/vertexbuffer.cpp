@@ -21,11 +21,13 @@ _count(0)
 
 vertexbuffer_base::~vertexbuffer_base()
 {
+#ifdef OPENWAR_USE_VAO
 	if (_vao != 0)
 	{
 		glDeleteVertexArraysOES(1, &_vao);
 		CHECK_ERROR_GL();
 	}
+#endif
 	if (_vbo != 0)
 	{
 		glDeleteBuffers(1, &_vbo);
@@ -44,18 +46,22 @@ void vertexbuffer_base::_bind(const std::vector<renderer_vertex_attribute>& vert
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 		CHECK_ERROR_GL();
 
+#ifdef OPENWAR_USE_VAO
 		if (_vao == 0)
 		{
 			glGenVertexArraysOES(1, &_vao);
 			CHECK_ERROR_GL();
 		}
+#endif
 	}
 
+#ifdef OPENWAR_USE_VAO
 	if (_vao != 0)
 	{
 		glBindVertexArrayOES(_vao);
 		CHECK_ERROR_GL();
 	}
+#endif
 
 	if (setup)
 	{
@@ -78,12 +84,15 @@ void vertexbuffer_base::_bind(const std::vector<renderer_vertex_attribute>& vert
 
 void vertexbuffer_base::unbind(const std::vector<renderer_vertex_attribute>& vertex_attributes)
 {
+#ifdef OPENWAR_USE_VAO
 	if (_vao != 0)
 	{
 		glBindVertexArrayOES(0);
 		CHECK_ERROR_GL();
 	}
-	else
+#endif
+
+	if (_vao == 0)
 	{
 		for (GLuint index = 0; index < vertex_attributes.size(); ++index)
 		{

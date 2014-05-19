@@ -10,6 +10,8 @@
 
 #include "shaderprogram.h"
 
+//#include <android/log.h>
+
 
 #ifndef CHECK_ERROR_GL
 void CHECK_ERROR_GL()
@@ -23,8 +25,10 @@ renderers* renderers::singleton = nullptr;
 
 static void print_log(const char* operation, const char* log)
 {
+//	__android_log_print(ANDROID_LOG_INFO, "OPENWAR", "%s: %s", operation, log);
+
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
-//	NSLog(@"RENDERER log (%s):\n%s", operation, log);
+	NSLog(@"RENDERER log (%s):\n%s", operation, log);
 #endif
 }
 
@@ -114,7 +118,7 @@ GLuint shaderprogram_base::compile_shader(GLenum type, const char* source)
     if (str.size() >= 2 && str[0] == '{' && str[str.size() - 1] == '}')
         str = str.substr(1, str.size() - 2);
     
-#if TARGET_OS_IPHONE
+#ifdef OPENWAR_USE_GLES2
     str.insert(0, "precision highp float; precision lowp int; ");
 #else
     str.insert(0, "#version 120\n");
