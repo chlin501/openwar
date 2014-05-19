@@ -33,13 +33,13 @@ _timestart(),
 _timestamp()
 {
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
 	_window = SDL_CreateWindow("My Game Window",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		1024, 768,
-		/*SDL_WINDOW_FULLSCREEN |*/ SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
 	_glcontext = SDL_GL_CreateContext(_window);
 
@@ -407,5 +407,5 @@ glm::vec2 Window::ToVector(int x, int y)
 double Window::ToTimestamp(Uint32 timestamp)
 {
 	// TODO: calculate correct timestamp
-	return 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - _timestamp).count();
+	return 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - _timestart).count();
 }
