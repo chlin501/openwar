@@ -321,8 +321,10 @@
 			children = (
 				413B6E02175CE70B00AABF10 /* OpenWar-Info.plist */,
 				413B6E08175CE70B00AABF10 /* OpenWar-Prefix.pch */,
+				63F550783E4B40F4117A4A1D /* main.cpp */,
 				41B2298817EC72C400DFA0B6 /* Resources */,
-				63F55B1AFAF82F9443B94898 /* Sources */,
+				63F5583EE4EC35D3F54CFCF1 /* Library */,
+				63F5514E02B8998EDF2FC576 /* Platform */,
 				413B6DF9175CE70B00AABF10 /* Frameworks */,
 				413B6DF8175CE70B00AABF10 /* Products */,
 			);
@@ -411,9 +413,10 @@
 			path = Surface;
 			sourceTree = "<group>";
 		};
-		63F5514E02B8998EDF2FC576 /* Sources */ = {
+		63F5514E02B8998EDF2FC576 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
+				4105FB141806D3890074C855 /* BattleModel */,
 				63F55FFA5FE3E081A6015693 /* BattleView */,
 				63F55588CA4F5E074F058960 /* SmoothTerrain */,
 				63F55334853E0F5F252CE107 /* TerrainForest */,
@@ -423,7 +426,7 @@
 				63F5567B80EBBFC23C6EF38B /* OpenWarSurface.cpp */,
 				63F5509439B53C00F30EFF32 /* OpenWarSurface.h */,
 			);
-			path = Sources;
+			path = Platform;
 			sourceTree = "<group>";
 		};
 		63F55334853E0F5F252CE107 /* TerrainForest */ = {
@@ -515,17 +518,6 @@
 				63F551ADA44724A55A9AB813 /* vertexshape.h */,
 			);
 			path = Graphics;
-			sourceTree = "<group>";
-		};
-		63F55B1AFAF82F9443B94898 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				4105FB141806D3890074C855 /* BattleModel */,
-				63F5583EE4EC35D3F54CFCF1 /* Library */,
-				63F5514E02B8998EDF2FC576 /* Sources */,
-				63F550783E4B40F4117A4A1D /* main.cpp */,
-			);
-			path = Sources;
 			sourceTree = "<group>";
 		};
 		63F55C7AE6C66094DA9E0F6F /* TerrainSky */ = {
@@ -772,6 +764,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Library\" \"$(SRCROOT)/Platform\"";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -804,6 +797,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Library\" \"$(SRCROOT)/Platform\"";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
