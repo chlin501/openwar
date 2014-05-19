@@ -6,11 +6,7 @@
 #include "bounds.h"
 
 #ifdef OPENWAR_USE_SDL
-#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
 #include <SDL2_image/SDL_image.h>
-#else
-#include <SDL2/SDL_image.h>
-#endif
 #endif
 
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
