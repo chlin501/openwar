@@ -28,7 +28,7 @@ void PracticeScript::Execute()
 {
 	_simulator->SetPractice(true);
 
-	_scenario->SetSmoothMap("Maps/Practice.tiff", "Maps/Practice.tiff", 1024);
+	_scenario->SetSmoothMap("Maps/Practice.png", "Maps/Practice.png", 1024);
 
 	glm::vec2 center(512, 512);
 
