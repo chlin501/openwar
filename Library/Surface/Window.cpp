@@ -305,6 +305,11 @@ void Window::ProcessFingerUp(const SDL_TouchFingerEvent& event)
 	{
 		Touch* touch = i->second;
 
+		glm::vec2 position = ToPosition(event);
+		glm::vec2 previous = touch->GetPosition();
+		double timestamp = ToTimestamp(event.timestamp);
+		touch->Update(position, previous, timestamp);
+
 		for (Gesture* gesture : touch->GetGestures())
 			gesture->TouchEnded(touch);
 
@@ -444,7 +449,7 @@ void Window::ProcessMouseWheel(const SDL_MouseWheelEvent& event)
 
 void Window::Update()
 {
-	if (_surface->GetSize() != GetWindowSize());
+	if (_surface->GetSize() != GetWindowSize())
 		_surface->SetSize(GetWindowSize());
 
 	std::chrono::system_clock::time_point timestamp = std::chrono::system_clock::now();
@@ -506,7 +511,7 @@ glm::vec2 Window::ToPosition(const SDL_TouchFingerEvent& event)
 double Window::ToTimestamp(Uint32 timestamp)
 {
 	// TODO: calculate correct timestamp
-	return 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - _timestart).count();
+	return 0.000001 * std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - _timestart).count();
 }
 
 
