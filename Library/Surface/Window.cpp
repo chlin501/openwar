@@ -3,7 +3,12 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #ifdef OPENWAR_USE_XCODE_FRAMEWORKS
+#if TARGET_OS_IPHONE
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
+#else
 #include <OpenGL/gl.h>
+#endif
 #else
 #if OPENWAR_USE_GLEW
 #include <GL/glew.h>
@@ -22,13 +27,14 @@
 
 bool Window::_done = false;
 std::map<Uint32, Window*> Window::_windows;
+Window* Window::_touchWindow = nullptr;
 
 
 Window::Window() :
 _surface(nullptr),
 _window(nullptr),
 _glcontext(0),
-_touch(nullptr),
+_mouseTouch(nullptr),
 _timestart(),
 _timestamp()
 {
@@ -51,6 +57,7 @@ _timestamp()
 	Uint32 windowID = SDL_GetWindowID(_window);
 
 	_windows[windowID] = this;
+	_touchWindow = this;
 
 	_timestart = std::chrono::system_clock::now();
 	_timestamp = _timestart;
@@ -169,24 +176,39 @@ void Window::ProcessEvent(const SDL_Event& event)
 			if (window != nullptr) window->ProcessKeyUp(event.key);
 			break;
 
+		case SDL_FINGERDOWN:
+			window = _touchWindow;
+			if (window != nullptr) window->ProcessFingerDown(event.tfinger);
+			break;
+
+		case SDL_FINGERUP:
+			window = _touchWindow;
+			if (window != nullptr) window->ProcessFingerUp(event.tfinger);
+			break;
+
+		case SDL_FINGERMOTION:
+			window = _touchWindow;
+			if (window != nullptr) window->ProcessFingerMotion(event.tfinger);
+			break;
+
 		case SDL_MOUSEMOTION:
 			window = GetWindow(event.motion.windowID);
-			if (window != nullptr) window->ProcessMouseMotion(event.motion);
+			if (window != nullptr && event.motion.which != SDL_TOUCH_MOUSEID) window->ProcessMouseMotion(event.motion);
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
 			window = GetWindow(event.button.windowID);
-			if (window != nullptr) window->ProcessMouseButtonDown(event.button);
+			if (window != nullptr && event.button.which != SDL_TOUCH_MOUSEID) window->ProcessMouseButtonDown(event.button);
 			break;
 
 		case SDL_MOUSEBUTTONUP:
 			window = GetWindow(event.button.windowID);
-			if (window != nullptr) window->ProcessMouseButtonUp(event.button);
+			if (window != nullptr && event.button.which != SDL_TOUCH_MOUSEID) window->ProcessMouseButtonUp(event.button);
 			break;
 
 		case SDL_MOUSEWHEEL:
 			window = GetWindow(event.wheel.windowID);
-			if (window != nullptr) window->ProcessMouseWheel(event.wheel);
+			if (window != nullptr && event.wheel.which != SDL_TOUCH_MOUSEID) window->ProcessMouseWheel(event.wheel);
 			break;
 	}
 }
@@ -255,24 +277,84 @@ void Window::ProcessKeyUp(const SDL_KeyboardEvent& event)
 }
 
 
+void Window::ProcessFingerDown(const SDL_TouchFingerEvent& event)
+{
+	if (_surface == nullptr)
+		return;
+
+	glm::vec2 position = ToPosition(event);
+	double timestamp = ToTimestamp(event.timestamp);
+
+	Touch* touch = new Touch(_surface, 1, position, timestamp, MouseButtons());
+	_touches[MakeTouchKey(event)] = touch;
+
+	if (Gesture::_gestures != nullptr)
+		for (Gesture* gesture : *Gesture::_gestures)
+			if (gesture->IsEnabled())
+				gesture->TouchBegan(touch);
+}
+
+
+void Window::ProcessFingerUp(const SDL_TouchFingerEvent& event)
+{
+	if (_surface == nullptr)
+		return;
+
+	auto i = _touches.find(MakeTouchKey(event));
+	if (i != _touches.end())
+	{
+		Touch* touch = i->second;
+
+		for (Gesture* gesture : touch->GetGestures())
+			gesture->TouchEnded(touch);
+
+		_touches.erase(MakeTouchKey(event));
+		delete touch;
+	}
+}
+
+
+void Window::ProcessFingerMotion(const SDL_TouchFingerEvent& event)
+{
+	if (_surface == nullptr)
+		return;
+
+	auto i = _touches.find(MakeTouchKey(event));
+	if (i != _touches.end())
+	{
+		Touch* touch = i->second;
+
+		glm::vec2 position = ToPosition(event);
+		glm::vec2 previous = touch->GetPosition();
+		if (position != previous)
+		{
+			double timestamp = ToTimestamp(event.timestamp);
+			touch->Update(position, previous, timestamp);
+
+			for (Gesture* gesture : touch->GetGestures())
+				gesture->TouchMoved();
+		}
+	}
+}
+
+
+
 void Window::ProcessMouseMotion(const SDL_MouseMotionEvent& event)
 {
-	//NSLog(@"ProcessMouseMotion which=%d state=%d", event.which, event.state);
-
-	if (_touch != nullptr)
+	if (_mouseTouch != nullptr)
 	{
 		glm::vec2 position = ToVector(event.x, event.y);
 		double timestamp = ToTimestamp(event.timestamp);
 
-		MouseButtons buttons = _touch->GetCurrentButtons();
+		MouseButtons buttons = _mouseTouch->GetCurrentButtons();
 		buttons.left = (event.state & SDL_BUTTON_LMASK) != 0;
 		buttons.right = (event.state & SDL_BUTTON_RMASK) != 0;
 		buttons.other = (event.state & SDL_BUTTON_MMASK) != 0;
 
-		_touch->Update(position, timestamp, buttons);
+		_mouseTouch->Update(position, timestamp, buttons);
 
-        if (_touch->GetCurrentButtons().Any())
-			for (Gesture* gesture : _touch->GetGestures())
+        if (_mouseTouch->GetCurrentButtons().Any())
+			for (Gesture* gesture : _mouseTouch->GetGestures())
 				gesture->TouchMoved();
 	}
 }
@@ -286,8 +368,8 @@ void Window::ProcessMouseButtonDown(const SDL_MouseButtonEvent& event)
 	double timestamp = ToTimestamp(event.timestamp);
 
 	MouseButtons buttons;
-	if (_touch != nullptr)
-		buttons = _touch->GetCurrentButtons();
+	if (_mouseTouch != nullptr)
+		buttons = _mouseTouch->GetCurrentButtons();
 
 	switch (event.button)
 	{
@@ -296,15 +378,15 @@ void Window::ProcessMouseButtonDown(const SDL_MouseButtonEvent& event)
 		case SDL_BUTTON_MIDDLE: buttons.other = true; break;
 	}
 
-	if (_touch == nullptr)
-		_touch = new Touch(_surface, 1, position, timestamp, buttons);
+	if (_mouseTouch == nullptr)
+		_mouseTouch = new Touch(_surface, 1, position, timestamp, buttons);
 	else
-		_touch->Update(position, timestamp, buttons);
+		_mouseTouch->Update(position, timestamp, buttons);
 
 	if (Gesture::_gestures != nullptr)
 		for (Gesture* gesture : *Gesture::_gestures)
 			if (gesture->IsEnabled())
-				gesture->TouchBegan(_touch);
+				gesture->TouchBegan(_mouseTouch);
 }
 
 
@@ -312,12 +394,12 @@ void Window::ProcessMouseButtonUp(const SDL_MouseButtonEvent& event)
 {
 	//NSLog(@"ProcessMouseButtonUp button=%d state=%d", event.button, event.state);
 
-	if (_touch != nullptr)
+	if (_mouseTouch != nullptr)
 	{
 		glm::vec2 position = ToVector(event.x, event.y);
 		double timestamp = ToTimestamp(event.timestamp);
 
-		MouseButtons buttons = _touch->GetCurrentButtons();
+		MouseButtons buttons = _mouseTouch->GetCurrentButtons();
 		switch (event.button)
 		{
 			case SDL_BUTTON_LEFT: buttons.left = false; break;
@@ -325,20 +407,20 @@ void Window::ProcessMouseButtonUp(const SDL_MouseButtonEvent& event)
 			case SDL_BUTTON_MIDDLE: buttons.other = false; break;
 		}
 
-		_touch->Update(position, timestamp, buttons);
+		_mouseTouch->Update(position, timestamp, buttons);
 
 		if (buttons.Any())
 		{
-			for (Gesture* gesture : _touch->GetGestures())
+			for (Gesture* gesture : _mouseTouch->GetGestures())
 				gesture->TouchMoved();
 		}
 		else
 		{
-			for (Gesture* gesture : _touch->GetGestures())
-				gesture->TouchEnded(_touch);
+			for (Gesture* gesture : _mouseTouch->GetGestures())
+				gesture->TouchEnded(_mouseTouch);
 
-			delete _touch;
-			_touch = nullptr;
+			delete _mouseTouch;
+			_mouseTouch = nullptr;
 		}
 	}
 }
@@ -362,6 +444,9 @@ void Window::ProcessMouseWheel(const SDL_MouseWheelEvent& event)
 
 void Window::Update()
 {
+	if (_surface->GetSize() != GetWindowSize());
+		_surface->SetSize(GetWindowSize());
+
 	std::chrono::system_clock::time_point timestamp = std::chrono::system_clock::now();
 	double secondsSinceTimeStart = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(timestamp - _timestart).count();
 	double secondsSinceLastUpdate = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(timestamp - _timestamp).count();
@@ -374,13 +459,13 @@ void Window::Update()
 		for (Gesture* gesture : *Gesture::_gestures)
 			gesture->Update(_surface, secondsSinceLastUpdate);
 
-	if (_touch != nullptr)
+	if (_mouseTouch != nullptr)
 	{
-		double oldTimestamp = _touch->GetTimestamp();
-		_touch->Update(secondsSinceTimeStart);
+		double oldTimestamp = _mouseTouch->GetTimestamp();
+		_mouseTouch->Update(secondsSinceTimeStart);
 
-		if (_touch->GetTimestamp() != oldTimestamp)
-			for (Gesture* gesture : _touch->GetGestures())
+		if (_mouseTouch->GetTimestamp() != oldTimestamp)
+			for (Gesture* gesture : _mouseTouch->GetGestures())
 				gesture->TouchMoved();
 	}
 }
@@ -404,8 +489,28 @@ glm::vec2 Window::ToVector(int x, int y)
 }
 
 
+glm::vec2 Window::GetWindowSize() const
+{
+	int w, h;
+	SDL_GetWindowSize(_window, &w, &h);
+	return glm::vec2(w, h);
+}
+
+
+glm::vec2 Window::ToPosition(const SDL_TouchFingerEvent& event)
+{
+	return GetWindowSize() * glm::vec2(event.x, 1.0f - event.y);
+}
+
+
 double Window::ToTimestamp(Uint32 timestamp)
 {
 	// TODO: calculate correct timestamp
 	return 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - _timestart).count();
+}
+
+
+std::pair<SDL_TouchID, SDL_FingerID> Window::MakeTouchKey(const SDL_TouchFingerEvent& event)
+{
+	return std::pair<SDL_TouchID, SDL_FingerID>(event.touchId, event.fingerId);
 }
