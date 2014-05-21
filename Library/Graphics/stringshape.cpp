@@ -4,9 +4,11 @@
 
 
 #ifdef OPENWAR_USE_XCODE_FRAMEWORKS
-#define ANDROID_FONT "Roboto-Regular.ttf"
+#define ANDROID_FONT1 "Roboto-Regular.ttf"
+#define ANDROID_FONT2 "Roboto-Regular.ttf"
 #else
-#define ANDROID_FONT "/system/fonts/Roboto-Regular.ttf"
+#define ANDROID_FONT1 "/system/fonts/Roboto-Regular.ttf"
+#define ANDROID_FONT2 "/system/fonts/DroidSans.ttf.ttf"
 #endif
 
 
@@ -154,7 +156,14 @@ _dirty(false)
 	size *= _pixelDensity;
 
 #ifdef OPENWAR_USE_SDL
-	_font = TTF_OpenFont(ANDROID_FONT, size);
+	_font = TTF_OpenFont(ANDROID_FONT1, size);
+	if (_font  == NULL)
+		_font = TTF_OpenFont(ANDROID_FONT2, size);
+
+    TTF_SetFontStyle(_font, TTF_STYLE_NORMAL);
+    TTF_SetFontOutline(_font, 0);
+    TTF_SetFontKerning(_font, 1);
+    TTF_SetFontHinting(_font, TTF_HINTING_LIGHT);
 #endif
 
 #ifdef OPENWAR_USE_UIFONT
@@ -182,7 +191,14 @@ _dirty(false)
 	size *= _pixelDensity;
 
 #ifdef OPENWAR_USE_SDL
-	_font = TTF_OpenFont(ANDROID_FONT, size);
+	_font = TTF_OpenFont(ANDROID_FONT1, size);
+	if (_font  == NULL)
+		_font = TTF_OpenFont(ANDROID_FONT2, size);
+
+    TTF_SetFontStyle(_font, TTF_STYLE_NORMAL);
+    TTF_SetFontOutline(_font, 0);
+    TTF_SetFontKerning(_font, 1);
+    TTF_SetFontHinting(_font, TTF_HINTING_LIGHT);
 #endif
 
 #ifdef OPENWAR_USE_UIFONT
