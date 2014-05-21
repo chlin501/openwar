@@ -158,7 +158,7 @@ glm::vec2 TerrainView::GetScreenRight() const
 
 glm::vec3 TerrainView::GetCameraDirection() const
 {
-	glm::quat q = glm::angleAxis(glm::degrees(_cameraFacing), glm::vec3(0, 0, 1));
+	glm::quat q = glm::angleAxis(_cameraFacing, glm::vec3(0, 0, 1));
 	glm::vec3 v(cosf(_cameraTilt), 0, -sinf(_cameraTilt));
 	return q * v;
 }
@@ -166,7 +166,7 @@ glm::vec3 TerrainView::GetCameraDirection() const
 
 glm::vec3 TerrainView::GetCameraUpVector() const
 {
-	glm::quat q = glm::angleAxis(glm::degrees(_cameraFacing), glm::vec3(0, 0, 1));
+	glm::quat q = glm::angleAxis(_cameraFacing, glm::vec3(0, 0, 1));
 	glm::vec3 v(sinf(_cameraTilt), 0, cosf(_cameraTilt));
 	return q * v;
 }
@@ -269,7 +269,7 @@ void TerrainView::Zoom(glm::vec3 originalContentPosition1, glm::vec3 originalCon
 
 void TerrainView::Orbit(glm::vec2 originalContentPosition, float angle)
 {
-	glm::quat rotation = glm::angleAxis(glm::degrees(angle), glm::vec3(0, 0, 1));
+	glm::quat rotation = glm::angleAxis(angle, glm::vec3(0, 0, 1));
 
 	glm::vec3 center(originalContentPosition.x, originalContentPosition.y, 0);
 	glm::vec3 delta = _cameraPosition - center;
