@@ -58,6 +58,10 @@ public:
 	~image();
 
 #ifdef OPENWAR_USE_SDL
+	SDL_Surface* get_surface() { return _surface; }
+#endif
+
+#ifdef OPENWAR_USE_SDL
 	GLsizei width() const { return (GLsizei)_surface->w; }
 	GLsizei height() const { return (GLsizei)_surface->h; }
 	GLenum format() const { return _format; }

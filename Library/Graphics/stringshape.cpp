@@ -3,6 +3,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
+#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
+#define ANDROID_FONT "Roboto-Regular.ttf"
+#else
+#define ANDROID_FONT "/system/fonts/Roboto-Regular.ttf"
+#endif
+
 
 #ifndef OPENWAR_USE_SDL
 static std::string to_utf8(unichar c)
@@ -137,9 +143,7 @@ image* stringfont::_image = nullptr;
 
 
 stringfont::stringfont(const char* name, float size, float pixelDensity) :
-#ifndef OPENWAR_USE_SDL
-_font(nil),
-#endif
+_font(0),
 _pixelDensity(pixelDensity),
 _items(),
 _next(),
@@ -149,12 +153,16 @@ _dirty(false)
 
 	size *= _pixelDensity;
 
-#ifndef OPENWAR_USE_SDL
-#if TARGET_OS_IPHONE
-	_font = [[UIFont fontWithName:[NSString stringWithUTF8String:name] size:size] retain];
-#else
-	_font = [[NSFont fontWithName:[NSString stringWithUTF8String:name] size:size] retain];
+#ifdef OPENWAR_USE_SDL
+	_font = TTF_OpenFont(ANDROID_FONT, size);
 #endif
+
+#ifdef OPENWAR_USE_UIFONT
+	_font = [[UIFont fontWithName:[NSString stringWithUTF8String:name] size:size] retain];
+#endif
+
+#ifdef OPENWAR_USE_NSFONT
+	_font = [[NSFont fontWithName:[NSString stringWithUTF8String:name] size:size] retain];
 #endif
 }
 
@@ -173,18 +181,22 @@ _dirty(false)
 
 	size *= _pixelDensity;
 
-#ifndef OPENWAR_USE_SDL
-#if TARGET_OS_IPHONE
+#ifdef OPENWAR_USE_SDL
+	_font = TTF_OpenFont(ANDROID_FONT, size);
+#endif
+
+#ifdef OPENWAR_USE_UIFONT
 	if (bold)
 		_font = [[UIFont boldSystemFontOfSize:size] retain];
 	else
 		_font = [[UIFont systemFontOfSize:size] retain];
-#else
+#endif
+
+#ifdef OPENWAR_USE_NSFONT
 	if (bold)
 		_font = [[NSFont boldSystemFontOfSize:size] retain];
 	else
 		_font = [[NSFont systemFontOfSize:size] retain];
-#endif
 #endif
 }
 
@@ -192,7 +204,13 @@ _dirty(false)
 
 stringfont::~stringfont()
 {
-#ifndef OPENWAR_USE_SDL
+#ifdef OPENWAR_USE_SDL
+	TTF_CloseFont(_font);
+#endif
+#ifdef OPENWAR_USE_UIFONT
+	[_font release];
+#endif
+#ifdef OPENWAR_USE_NSFONT
 	[_font release];
 #endif
 }
@@ -277,63 +295,71 @@ stringfont::item stringfont::add_character(const std::string& character)
 	if (i != _items.end())
 		return i->second;
 
+
+	glm::vec2 glyphsize;
+
 #ifdef OPENWAR_USE_SDL
-
-	// TODO: implement SDL version
-
-	item dummy;
-#ifndef OPENWAR_USE_SDL
-	dummy._string = nil;
+	int w, h;
+	if (TTF_SizeUTF8(_font, character.c_str(), &w, &h) == 0)
+	{
+		glyphsize = glm::vec2(w, h);
+	}
 #endif
-	dummy._u0 = 0;
-	dummy._u1 = 0;
-	dummy._v0 = 0;
-	dummy._v1 = 0;
-	return dummy;
 
-#else
-
+#ifdef OPENWAR_USE_UIFONT
 	NSString* string = [NSString stringWithUTF8String:character.c_str()];
-
-#if TARGET_OS_IPHONE
 	CGSize size = [string sizeWithFont:_font];
-#else
+	glyphsize = glm::vec2(size.width, size.height);
+#endif
+
+#ifdef OPENWAR_USE_NSFONT
+	NSString* string = [NSString stringWithUTF8String:character.c_str()];
 	NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:_font, NSFontAttributeName, nil];
 	CGSize size = [string sizeWithAttributes:attributes];
+	glyphsize = glm::vec2(size.width, size.height);
 #endif
 
-	if (_next.x + size.width > _image->width())
+	if (_next.x + glyphsize.x > _image->width())
 	{
 		_next.x = 0;
-		_next.y += size.height + 1;
-		if (_next.y + size.height > _image->height())
+		_next.y += glyphsize.y + 1;
+		if (_next.y + glyphsize.y > _image->height())
 		{
 			_next.y = 0;
 
+#ifndef OPENWAR_USE_SDL
 			for (auto i : _items)
 				[i.second._string release];
+#endif
 
 			_items.clear();
 		}
 	}
 
 	item item;
+#ifdef OPENWAR_USE_SDL
+	item._string = character;
+#else
 	item._string = [string retain];
+#endif
 	item._bounds_origin = _next;
-	item._bounds_size = glm::vec2(size.width, size.height);
-	item._u0 = (float)item._bounds_origin.x / _image->width();
-	item._u1 = (float)(item._bounds_origin.x + item._bounds_size.x) / _image->width();
-	item._v0 = 1 - (float)(item._bounds_origin.y + item._bounds_size.y) / _image->height();
-	item._v1 = 1 - (float)item._bounds_origin.y / _image->height();
+	item._bounds_size = glyphsize;
+	item._u0 = item._bounds_origin.x / _image->width();
+	item._u1 = (item._bounds_origin.x + item._bounds_size.x) / _image->width();
+	item._v0 = 1 - (item._bounds_origin.y + item._bounds_size.y) / _image->height();
+	item._v1 = 1 - item._bounds_origin.y / _image->height();
+
+#ifdef OPENWAR_USE_SDL
+	item._v0 = 1 - item._v0;
+	item._v1 = 1 - item._v1;
+#endif
 
 	_items[character] = item;
 
-	_next.x += floorf((float)item._bounds_size.x + 1) + 1;
+	_next.x += floorf(item._bounds_size.x + 1) + 1;
 	_dirty = true;
 
 	return item;
-
-#endif
 }
 
 
@@ -344,15 +370,34 @@ void stringfont::update_texture()
 
 #ifdef OPENWAR_USE_SDL
 
-#else
+	SDL_Color color;
+	color.r = 255;
+	color.g = 255;
+	color.b = 255;
+	color.a = 255;
+	for (std::map<std::string, item>::iterator i = _items.begin(); i != _items.end(); ++i)
+	{
+		const item& item = (*i).second;
 
-#if TARGET_OS_IPHONE
-	UIGraphicsPushContext(_image->CGContext());
-#else
-	NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithGraphicsPort:_image->CGContext() flipped:YES];
-	[NSGraphicsContext saveGraphicsState];
-	[NSGraphicsContext setCurrentContext:gc];
+		SDL_Surface* surface = TTF_RenderUTF8_Blended(_font, item._string.c_str(), color);
+		if (surface != nullptr)
+		{
+			SDL_Rect rect;
+			rect.x = (int)item._bounds_origin.x;
+			rect.y = (int)item._bounds_origin.y;
+			rect.w = (int)item._bounds_size.x;
+			rect.h = (int)item._bounds_size.y;
+			SDL_BlitSurface(surface, NULL, _image->get_surface(), &rect);
+			SDL_FreeSurface(surface);
+		}
+	}
+
+	_texture.load(*_image);
+
 #endif
+
+#ifdef OPENWAR_USE_UIFONT
+	UIGraphicsPushContext(_image->CGContext());
 
 	CGContextClearRect(_image->CGContext(), CGRectMake(0, 0, _image->width(), _image->height()));
 
@@ -361,22 +406,33 @@ void stringfont::update_texture()
 		const item& item = (*i).second;
 
 		CGContextSetRGBFillColor(_image->CGContext(), 1, 1, 1, 1);
-
-#if TARGET_OS_IPHONE
 	    [item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withFont:_font];
-#else
-		NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:_font, NSFontAttributeName, nil];
-		[item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withAttributes:attributes];
-#endif
 	}
-
 	_texture.load(*_image);
 
-#if TARGET_OS_IPHONE
 	UIGraphicsPopContext();
-#else
-	[NSGraphicsContext restoreGraphicsState];
+
 #endif
+
+#ifdef OPENWAR_USE_NSFONT
+	NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithGraphicsPort:_image->CGContext() flipped:YES];
+	[NSGraphicsContext saveGraphicsState];
+	[NSGraphicsContext setCurrentContext:gc];
+
+	CGContextClearRect(_image->CGContext(), CGRectMake(0, 0, _image->width(), _image->height()));
+
+	for (std::map<std::string, item>::iterator i = _items.begin(); i != _items.end(); ++i)
+	{
+		const item& item = (*i).second;
+
+		CGContextSetRGBFillColor(_image->CGContext(), 1, 1, 1, 1);
+		NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:_font, NSFontAttributeName, nil];
+		[item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withAttributes:attributes];
+
+	}
+	_texture.load(*_image);
+
+	[NSGraphicsContext restoreGraphicsState];
 
 #endif
 
@@ -390,7 +446,14 @@ glm::vec2 stringfont::measure(const char* text)
 	float w = 0;
 	float h = 0;
 
-#ifndef OPENWAR_USE_SDL
+#ifdef OPENWAR_USE_SDL
+
+	stringfont::item item = add_character(text);
+	glm::vec2 size = get_size(item);
+	w = size.x;
+	h = size.y;
+
+#else
 
 	NSString* string = [NSString stringWithUTF8String:text];
 
@@ -467,7 +530,29 @@ vertexglyph3<glm::vec2, glm::vec2, float> stringglyph::glyph(stringfont* font)
 
 void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_type>& vertices)
 {
-#ifndef OPENWAR_USE_SDL
+#ifdef OPENWAR_USE_SDL
+
+	glm::vec2 p(0, 0);
+	float alpha = _alpha;
+
+	stringfont::item item = font->add_character(_string);
+
+	glm::vec2 s = font->get_size(item);
+	bounds2f bounds = bounds2_from_corner(p, s);
+	bounds.min = (_transform * glm::vec4(bounds.min.x, bounds.min.y, 0, 1)).xy();
+	bounds.max = (_transform * glm::vec4(bounds.max.x, bounds.max.y, 0, 1)).xy();
+
+	float next_alpha = alpha + _delta * s.x;
+
+	vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+	vertices.push_back(stringglyph::vertex_type(bounds.p12(), glm::vec2(item._u0, item._v1), alpha));
+	vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
+
+	vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
+	vertices.push_back(stringglyph::vertex_type(bounds.p21(), glm::vec2(item._u1, item._v0), next_alpha));
+	vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+
+#else
 
 	NSString* string = [NSString stringWithUTF8String:_string.c_str()];
 

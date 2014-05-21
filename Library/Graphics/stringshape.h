@@ -6,10 +6,22 @@
 
 #ifndef OPENWAR_USE_SDL
 #if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
+#define OPENWAR_USE_UIFONT
 #else
-#import <AppKit/AppKit.h>
+#define OPENWAR_USE_NSFONT
 #endif
+#endif
+
+#ifdef OPENWAR_USE_SDL
+#include <SDL2_ttf/SDL_ttf.h>
+#endif
+
+#ifdef OPENWAR_USE_UIFONT
+#import <UIKit/UIKit.h>
+#endif
+
+#ifdef OPENWAR_USE_NSFONT
+#import <AppKit/AppKit.h>
 #endif
 
 #include "Algebra/bounds.h"
@@ -25,7 +37,9 @@ struct stringfont
 
 	struct item
 	{
-#ifndef OPENWAR_USE_SDL
+#ifdef OPENWAR_USE_SDL
+		std::string _string;
+#else
 		NSString* _string;
 #endif
 		glm::vec2 _bounds_origin;
@@ -36,12 +50,14 @@ struct stringfont
 
 	static image* _image;
 
-#ifndef OPENWAR_USE_SDL
-#if TARGET_OS_IPHONE
-	UIFont* _font;
-#else
-	NSFont* _font;
+#ifdef OPENWAR_USE_SDL
+	TTF_Font* _font;
 #endif
+#ifdef OPENWAR_USE_UIFONT
+	UIFont* _font;
+#endif
+#ifdef OPENWAR_USE_NSFONT
+	NSFont* _font;
 #endif
 
 	shaderprogram<vertex_type>* _renderer;
