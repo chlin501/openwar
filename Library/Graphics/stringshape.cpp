@@ -160,10 +160,13 @@ _dirty(false)
 	if (_font  == NULL)
 		_font = TTF_OpenFont(ANDROID_FONT2, size);
 
-    TTF_SetFontStyle(_font, TTF_STYLE_NORMAL);
-    TTF_SetFontOutline(_font, 0);
-    TTF_SetFontKerning(_font, 1);
-    TTF_SetFontHinting(_font, TTF_HINTING_LIGHT);
+	if (_font != NULL)
+	{
+		TTF_SetFontStyle(_font, TTF_STYLE_NORMAL);
+		TTF_SetFontOutline(_font, 0);
+		TTF_SetFontKerning(_font, 1);
+		TTF_SetFontHinting(_font, TTF_HINTING_LIGHT);
+	}
 #endif
 
 #ifdef OPENWAR_USE_UIFONT
@@ -195,10 +198,13 @@ _dirty(false)
 	if (_font  == NULL)
 		_font = TTF_OpenFont(ANDROID_FONT2, size);
 
-    TTF_SetFontStyle(_font, TTF_STYLE_NORMAL);
-    TTF_SetFontOutline(_font, 0);
-    TTF_SetFontKerning(_font, 1);
-    TTF_SetFontHinting(_font, TTF_HINTING_LIGHT);
+	if (_font != NULL)
+	{
+		TTF_SetFontStyle(_font, TTF_STYLE_NORMAL);
+		TTF_SetFontOutline(_font, 0);
+		TTF_SetFontKerning(_font, 1);
+		TTF_SetFontHinting(_font, TTF_HINTING_LIGHT);
+	}
 #endif
 
 #ifdef OPENWAR_USE_UIFONT
@@ -221,7 +227,8 @@ _dirty(false)
 stringfont::~stringfont()
 {
 #ifdef OPENWAR_USE_SDL
-	TTF_CloseFont(_font);
+	if (_font != nullptr)
+		TTF_CloseFont(_font);
 #endif
 #ifdef OPENWAR_USE_UIFONT
 	[_font release];
