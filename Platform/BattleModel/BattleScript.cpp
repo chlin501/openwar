@@ -48,7 +48,7 @@ void BattleScript::Execute()
 	if (_isMaster)
 	{
 		std::ostringstream os;
-		os << "Maps/Map" << random_int(1, 12) << ".tiff";
+		os << "Maps/Map" << random_int(1, 12) << ".png";
 		std::string path = os.str();
 		_scenario->SetSmoothMap(path.c_str(), path.c_str(), 1024);
 	}

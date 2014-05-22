@@ -28,6 +28,7 @@
 		41396E0C17E7517F00EC1DA6 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B6ECF175DE18A00AABF10 /* GLKit.framework */; };
 		41396E0D17E7517F00EC1DA6 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B7022175DFEA900AABF10 /* OpenAL.framework */; };
 		41396E0E17E7517F00EC1DA6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B6ED1175DE19200AABF10 /* OpenGL.framework */; };
+		418FCC3E192DEE0700D7D476 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */; };
 		41B2298F17EC730E00DFA0B6 /* Maps in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298B17EC730E00DFA0B6 /* Maps */; };
 		41B2299117EC730E00DFA0B6 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298D17EC730E00DFA0B6 /* Sounds */; };
 		41B2299217EC730E00DFA0B6 /* Textures in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298E17EC730E00DFA0B6 /* Textures */; };
@@ -133,10 +134,11 @@
 		413B7022175DFEA900AABF10 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		413B7024175DFEB900AABF10 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		413B7026175DFEC800AABF10 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = /Library/Frameworks/SDL2_ttf.framework; sourceTree = "<absolute>"; };
 		41B2298B17EC730E00DFA0B6 /* Maps */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Maps; sourceTree = "<group>"; };
 		41B2298D17EC730E00DFA0B6 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
 		41B2298E17EC730E00DFA0B6 /* Textures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Textures; sourceTree = "<group>"; };
-		41C0B59817E63DA300C52270 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = /Users/nicke/openwar/../../../Library/Frameworks/SDL2.framework; sourceTree = "<absolute>"; };
+		41C0B59817E63DA300C52270 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = /Library/Frameworks/SDL2.framework; sourceTree = "<absolute>"; };
 		41D408451891029E00EAFEFA /* ButtonGesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ButtonGesture.cpp; sourceTree = "<group>"; };
 		41D408461891029E00EAFEFA /* ButtonGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonGesture.h; sourceTree = "<group>"; };
 		41D408471891029E00EAFEFA /* ButtonRendering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ButtonRendering.cpp; sourceTree = "<group>"; };
@@ -150,12 +152,9 @@
 		41D408AC1892DDDE00EAFEFA /* Hotspot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hotspot.cpp; sourceTree = "<group>"; };
 		41D408AD1892DDDE00EAFEFA /* Hotspot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hotspot.h; sourceTree = "<group>"; };
 		41D408AE1892DDDE00EAFEFA /* Property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Property.h; sourceTree = "<group>"; };
-		41EE144217E8A4020085D3F2 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
-		41EE144317E8A4020085D3F2 /* SDL2_net.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_net.framework; path = ../../../Library/Frameworks/SDL2_net.framework; sourceTree = "<group>"; };
-		41EE144417E8A4020085D3F2 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = ../../../Library/Frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
 		41FE9BC419234E85002F6043 /* PracticeScript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PracticeScript.cpp; sourceTree = "<group>"; };
 		41FE9BC519234E85002F6043 /* PracticeScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PracticeScript.h; sourceTree = "<group>"; };
-		41FE9BC719235641002F6043 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
+		41FE9BC719235641002F6043 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = /Library/Frameworks/SDL2_image.framework; sourceTree = "<absolute>"; };
 		63F5500E141C859C13F9FC93 /* SoundLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundLoader.cpp; sourceTree = "<group>"; };
 		63F5503DE69D968145B61EA6 /* UnitMarker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitMarker.cpp; sourceTree = "<group>"; };
 		63F550783E4B40F4117A4A1D /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = main.cpp; sourceTree = "<group>"; };
@@ -265,13 +264,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				41FE9BC819235642002F6043 /* SDL2_image.framework in Frameworks */,
-				41396E0817E7517F00EC1DA6 /* SDL2.framework in Frameworks */,
 				41396E0A17E7517F00EC1DA6 /* AudioToolbox.framework in Frameworks */,
 				41396E0B17E7517F00EC1DA6 /* Cocoa.framework in Frameworks */,
 				41396E0C17E7517F00EC1DA6 /* GLKit.framework in Frameworks */,
 				41396E0D17E7517F00EC1DA6 /* OpenAL.framework in Frameworks */,
 				41396E0E17E7517F00EC1DA6 /* OpenGL.framework in Frameworks */,
+				41396E0817E7517F00EC1DA6 /* SDL2.framework in Frameworks */,
+				41FE9BC819235642002F6043 /* SDL2_image.framework in Frameworks */,
+				418FCC3E192DEE0700D7D476 /* SDL2_ttf.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,7 +341,6 @@
 		413B6DF9175CE70B00AABF10 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				41FE9BC719235641002F6043 /* SDL2_image.framework */,
 				413B6DFD175CE70B00AABF10 /* AppKit.framework */,
 				413B7026175DFEC800AABF10 /* AudioToolbox.framework */,
 				413B6DFA175CE70B00AABF10 /* Cocoa.framework */,
@@ -351,9 +350,8 @@
 				413B7022175DFEA900AABF10 /* OpenAL.framework */,
 				413B6ED1175DE19200AABF10 /* OpenGL.framework */,
 				41C0B59817E63DA300C52270 /* SDL2.framework */,
-				41EE144217E8A4020085D3F2 /* SDL2_image.framework */,
-				41EE144317E8A4020085D3F2 /* SDL2_net.framework */,
-				41EE144417E8A4020085D3F2 /* SDL2_ttf.framework */,
+				41FE9BC719235641002F6043 /* SDL2_image.framework */,
+				418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

@@ -115,7 +115,7 @@ void BattleScenario::SetSmoothMap(const char* path, const char* hash, float size
     resource res(path);
 	if (!res.load())
 	{
-		res = resource("Maps/DefaultMap.tiff");
+		res = resource("Maps/DefaultMap.png");
 		if (!res.load())
 			return;
 	}

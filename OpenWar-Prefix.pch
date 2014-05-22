@@ -5,6 +5,7 @@
 #include <TargetConditionals.h>
 
 #define GLM_SWIZZLE
+#define GLM_FORCE_RADIANS
 
 #define ENABLE_BIDIRECTIONAL_TEXT 0
 
