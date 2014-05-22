@@ -11,14 +11,7 @@
 #define ANDROID_FONT2 "/system/fonts/DroidSans.ttf.ttf"
 #endif
 
-
 #ifndef OPENWAR_USE_SDL
-static std::string to_utf8(unichar c)
-{
-	return std::string([NSString stringWithCharacters:&c length:1].UTF8String);
-}
-
-
 static BOOL ContainsArabic(NSString* string)
 {
 	NSUInteger length = string.length;
@@ -489,7 +482,15 @@ glm::vec2 stringfont::measure(const char* text)
 	}
 	else for (NSUInteger i = 0; i < string.length; ++i)
 	{
-		stringfont::item item = add_character(to_utf8([string characterAtIndex:i]));
+		unichar c = [string characterAtIndex:i];
+		if (c == 0)
+			continue;
+
+		const char* str = [NSString stringWithCharacters:&c length:1].UTF8String;
+		if (str == nullptr)
+			continue;
+
+		stringfont::item item = add_character(str);
 		glm::vec2 size = get_size(item);
 		w += size.x;
 		h = fmaxf(h, size.y);
@@ -607,7 +608,15 @@ void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_typ
 	}
 	else for (NSUInteger i = 0; i < string.length; ++i)
 	{
-		stringfont::item item = font->add_character(to_utf8([string characterAtIndex:i]));
+		unichar c = [string characterAtIndex:i];
+		if (c == 0)
+			continue;
+
+		const char* str = [NSString stringWithCharacters:&c length:1].UTF8String;
+		if (str == nullptr)
+			continue;
+
+		stringfont::item item = font->add_character(str);
 
 		glm::vec2 s = font->get_size(item);
 		bounds2f bounds = bounds2_from_corner(p, s);
