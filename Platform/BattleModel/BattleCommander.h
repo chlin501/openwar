@@ -23,7 +23,7 @@ public:
 	int GetTeam() const { return _team; }
 	BattleCommanderType GetType() const { return _type; }
 
-	int GetTeamStartPosition() const;
+	int GetTeamPosition() const;
 
 	bool IsActive() const { return _isActive; }
 	void SetActive(bool value) { _isActive = value; }

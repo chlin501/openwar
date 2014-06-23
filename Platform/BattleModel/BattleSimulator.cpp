@@ -195,7 +195,7 @@ Unit* BattleSimulator::AddUnit(BattleCommander* commander, const char* unitClass
 {
 	Unit* unit = new Unit();
 
-	float bearing = commander->GetTeamStartPosition() == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
+	float bearing = commander->GetTeamPosition() == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
 
 	unit->commander = commander;
 	unit->unitClass = unitClass;

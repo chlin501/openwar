@@ -26,8 +26,8 @@ class BattleScenario
 	std::vector<BattleCommander*> _commanders;
 	std::string _smoothMapHash;
 	image* _smoothMap;
-	int _teamStartPosition1;
-	int _teamStartPosition2;
+	int _teamPosition1;
+	int _teamPosition2;
 
 public:
 	BattleScenario();
@@ -38,8 +38,8 @@ public:
 	void SetScript(BattleScript* value);
 	BattleScript* GetScript() const;
 
-	void SetTeamStartPosition(int team, int position);
-	int GetTeamStartPosition(int team) const;
+	void SetTeamPosition(int team, int position);
+	int GetTeamPosition(int team) const;
 
 	BattleCommander* AddCommander(const char* playerId, int team, BattleCommanderType type);
 	BattleCommander* GetCommander(const char* playerId) const;

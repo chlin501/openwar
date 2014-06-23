@@ -12,7 +12,7 @@ _isActive(false)
 }
 
 
-int BattleCommander::GetTeamStartPosition() const
+int BattleCommander::GetTeamPosition() const
 {
-	return _scenario->GetTeamStartPosition(_team);
+	return _scenario->GetTeamPosition(_team);
 }
