@@ -85,6 +85,12 @@ float Unit::GetSpeed()
 }
 
 
+bool Unit::IsOwnedBySimulator() const
+{
+	return commander->GetType() != BattleCommanderType::None;
+}
+
+
 int Unit::GetFighterRank(Fighter* fighter)
 {
 	Unit* unit = fighter->unit;
@@ -496,7 +502,7 @@ void BattleSimulator::ResolveMeleeCombat()
 		for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
 		{
 			Fighter* meleeTarget = fighter->state.meleeTarget;
-			if (meleeTarget != nullptr && meleeTarget->unit->commander->GetType() != BattleCommanderType::None)
+			if (meleeTarget != nullptr && meleeTarget->unit->IsOwnedBySimulator())
 			{
 				Unit* enemyUnit = meleeTarget->unit;
 				float killProbability = 0.5f;
@@ -536,7 +542,7 @@ void BattleSimulator::ResolveMissileCombat()
 {
 	for (Unit* unit : _units)
 	{
-		if (unit->commander->GetType() != BattleCommanderType::None && unit->state.shootingCounter > unit->shootingCounter)
+		if (unit->IsOwnedBySimulator() && unit->state.shootingCounter > unit->shootingCounter)
 		{
 			TriggerShooting(unit);
 			unit->shootingCounter = unit->state.shootingCounter;
@@ -619,7 +625,7 @@ void BattleSimulator::ResolveProjectileCasualties()
 					for (quadtree<Fighter*>::iterator j(_fighterQuadTree.find(hitpoint.x, hitpoint.y, 0.45f)); *j; ++j)
 					{
 						Fighter* fighter = **j;
-						if (fighter->unit->commander->GetType() != BattleCommanderType::None)
+						if (fighter->unit->IsOwnedBySimulator())
 						{
 							bool blocked = false;
 							if (fighter->terrainForest)
@@ -650,7 +656,7 @@ void BattleSimulator::RemoveCasualties()
 
 	for (Unit* unit : _units)
 	{
-		if (unit->commander->GetType() != BattleCommanderType::None)
+		if (unit->IsOwnedBySimulator())
 		{
 			Fighter* end = unit->fighters + unit->fightersCount;
 			for (Fighter* fighter = unit->fighters; fighter != end; ++fighter)

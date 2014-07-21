@@ -348,6 +348,8 @@ struct Unit
 	float GetSpeed();
 	const UnitCommand& GetCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
 
+	bool IsOwnedBySimulator() const;
+
 	static int GetFighterRank(Fighter* fighter);
 	static int GetFighterFile(Fighter* fighter);
 	static Fighter* GetFighter(Unit* unit, int rank, int file);
