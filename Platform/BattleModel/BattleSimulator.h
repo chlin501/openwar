@@ -325,21 +325,23 @@ struct Unit
 	UnitCommand command;
 	UnitCommand nextCommand;
 	float nextCommandTimer;
+	bool _ownedBySimulator;
 
 	Unit() :
-	commander(nullptr),
-	stats(),
-	fighters(nullptr),
-	state(),
-	fightersCount(0),
-	shootingCounter(0),
-	formation(),
-	timeUntilSwapFighters(0),
-	nextState(),
-	unitRange(),
-	command(),
-	nextCommand(),
-	nextCommandTimer(0)
+		commander(nullptr),
+		stats(),
+		fighters(nullptr),
+		state(),
+		fightersCount(0),
+		shootingCounter(0),
+		formation(),
+		timeUntilSwapFighters(0),
+		nextState(),
+		unitRange(),
+		command(),
+		nextCommand(),
+		nextCommandTimer(0),
+		_ownedBySimulator(false)
 	{
 	}
 
@@ -349,6 +351,7 @@ struct Unit
 	const UnitCommand& GetCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
 
 	bool IsOwnedBySimulator() const;
+	void SetOwnedBySimulator(bool value);
 
 	static int GetFighterRank(Fighter* fighter);
 	static int GetFighterFile(Fighter* fighter);

@@ -53,6 +53,9 @@ void BattleScript::Execute()
 		_scenario->SetSmoothMap(path.c_str(), path.c_str(), 1024);
 	}
 
+	if (!_isMaster)
+		return;
+
 	int armytype = random_int(1, 3);
 	int count1 = 0;
 	int count2 = 0;
@@ -82,8 +85,8 @@ void BattleScript::Execute()
 	for (int i = 0; i < (int)commanders.size(); ++i)
 	{
 		int team = commanders[i]->GetTeam();
-		BattleCommanderType type = commanders[i]->GetType();
-		if (type != BattleCommanderType::None)
+		//BattleCommanderType type = commanders[i]->GetType();
+		//if (type != BattleCommanderType::None)
 		{
 			int commanderId = i + 1;
 			int position = _scenario->GetTeamPosition(team);

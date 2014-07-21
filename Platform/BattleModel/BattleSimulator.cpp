@@ -87,7 +87,13 @@ float Unit::GetSpeed()
 
 bool Unit::IsOwnedBySimulator() const
 {
-	return commander->GetType() != BattleCommanderType::None;
+	return _ownedBySimulator; //commander->GetType() != BattleCommanderType::None;
+}
+
+
+void Unit::SetOwnedBySimulator(bool value)
+{
+	_ownedBySimulator = false;
 }
 
 
