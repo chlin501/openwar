@@ -20,6 +20,8 @@ _teamPosition2(0)
 {
 	_simulator = new BattleSimulator();
 	_script = new BattleScript(this);
+
+	_dummyCommander = new BattleCommander(this, "", 1, BattleCommanderType::None);
 }
 
 
@@ -35,6 +37,8 @@ BattleScenario::~BattleScenario()
 	delete groundMap;
 
 	delete _smoothMap;
+
+	delete _dummyCommander;
 }
 
 
@@ -85,6 +89,12 @@ BattleCommander* BattleScenario::GetCommander(const char* playerId) const
 			return commander;
 
 	return nullptr;
+}
+
+
+BattleCommander* BattleScenario::GetDummyCommander() const
+{
+	return _dummyCommander;
 }
 
 

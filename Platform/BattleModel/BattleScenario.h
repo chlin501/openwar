@@ -24,6 +24,7 @@ class BattleScenario
 	BattleSimulator* _simulator;
 	BattleScript* _script;
 	std::vector<BattleCommander*> _commanders;
+	BattleCommander* _dummyCommander;
 	std::string _smoothMapHash;
 	image* _smoothMap;
 	int _teamPosition1;
@@ -44,7 +45,7 @@ public:
 	BattleCommander* AddCommander(const char* playerId, int team, BattleCommanderType type);
 	BattleCommander* GetCommander(const char* playerId) const;
 	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
-
+	BattleCommander* GetDummyCommander() const;
 
 	void StartScript(bool master);
 
