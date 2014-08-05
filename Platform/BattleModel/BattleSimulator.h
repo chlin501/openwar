@@ -353,6 +353,9 @@ struct Unit
 	bool IsOwnedBySimulator() const;
 	void SetOwnedBySimulator(bool value);
 
+	bool IsFriendlyCommander(BattleCommander* battleCommander) const;
+ 	bool IsCommandableBy(BattleCommander* battleCommander) const;
+
 	static int GetFighterRank(Fighter* fighter);
 	static int GetFighterFile(Fighter* fighter);
 	static Fighter* GetFighter(Unit* unit, int rank, int file);

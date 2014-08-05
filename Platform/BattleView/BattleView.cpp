@@ -331,7 +331,7 @@ void BattleView::OnRemoveUnit(Unit* unit)
 
 void BattleView::OnCommand(Unit* unit, float timer)
 {
-	if (unit->commander == _commander && GetMovementMarker(unit) == nullptr)
+	if (unit->IsFriendlyCommander(_commander) && GetMovementMarker(unit) == nullptr)
 		AddMovementMarker(unit);
 }
 
@@ -471,7 +471,7 @@ void BattleView::InitializeCameraPosition()
 	{
 		if (!unit->state.IsRouting())
 		{
-			if (unit->commander == _commander)
+			if (unit->IsFriendlyCommander(_commander))
 			{
 				friendlyCenter += unit->state.center;
 				++friendlyCount;
@@ -582,7 +582,7 @@ void BattleView::Render(const glm::mat4& transformx)
 
 	for (Unit* unit : _simulator->GetUnits())
 	{
-		if (unit->commander == _commander)
+		if (unit->IsFriendlyCommander(_commander))
 		{
 			RangeMarker marker(_simulator, unit);
 			_gradientTriangleStripRenderer->Reset();
@@ -598,13 +598,13 @@ void BattleView::Render(const glm::mat4& transformx)
 	_textureTriangleRenderer->Reset();
 
 	for (UnitCounter* marker : _unitMarkers)
-		if (marker->GetUnit()->commander == _commander)
+		if (marker->GetUnit()->IsFriendlyCommander(_commander))
 			marker->AppendFacingMarker(_textureTriangleRenderer, this);
 	for (UnitMovementMarker* marker : _movementMarkers)
-		if (marker->GetUnit()->commander == _commander)
+		if (marker->GetUnit()->IsFriendlyCommander(_commander))
 			marker->AppendFacingMarker(_textureTriangleRenderer, this);
 	for (UnitTrackingMarker* marker : _trackingMarkers)
-		if (marker->GetUnit()->commander == _commander)
+		if (marker->GetUnit()->IsFriendlyCommander(_commander))
 			marker->AppendFacingMarker(_textureTriangleRenderer, this);
 
 	_textureTriangleRenderer->Draw(facingTransform, _textureUnitMarkers);
@@ -758,7 +758,7 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, Bat
 	for (UnitMovementMarker* marker : _movementMarkers)
 	{
 		Unit* unit = marker->GetUnit();
-		if (commander != nullptr && unit->commander != commander)
+		if (commander != nullptr && !unit->IsCommandableBy(commander))
 			continue;
 
 		const UnitCommand& command = unit->GetCommand();
@@ -992,7 +992,7 @@ UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int team, Bat
 		Unit* unit = marker->_unit;
 		if (team != 0 && unit->commander->GetTeam() != team)
 			continue;
-		if (commander != nullptr && unit->commander != commander)
+		if (commander != nullptr && !unit->IsCommandableBy(commander))
 			continue;
 
 		glm::vec2 p = unit->state.center;

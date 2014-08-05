@@ -143,16 +143,10 @@ void BattleGesture::TouchBegan(Touch* touch)
 		return;
 	if (!_battleView->GetFrame().contains(touch->GetPosition()))
 		return;
-	if (_battleView->GetCommander() == nullptr)
-		return;
-	if (_battleView->GetCommander()->GetType() != BattleCommanderType::Player)
-		return;
-	if (!_battleView->GetCommander()->IsActive())
-		return;
 
 	glm::vec2 screenPosition = touch->GetPosition();
 	glm::vec2 terrainPosition = _battleView->GetTerrainPosition3(screenPosition).xy();
-	Unit* unit = FindPlayerUnit(screenPosition, terrainPosition);
+	Unit* unit = FindCommandableUnit(screenPosition, terrainPosition);
 
 	if (_trackingTouch == nullptr)
 	{
@@ -531,14 +525,14 @@ int BattleGesture::GetFlipSign() const
 }
 
 
-Unit* BattleGesture::FindPlayerUnit(glm::vec2 screenPosition, glm::vec2 terrainPosition)
+Unit* BattleGesture::FindCommandableUnit(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	if (disableUnitTracking)
 		return nullptr;
 
-	Unit* unitByPosition = FindPlayerUnitByCurrentPosition(screenPosition, terrainPosition);
-	Unit* unitByDestination = FindPlayerUnitByFuturePosition(screenPosition, terrainPosition);
-	Unit* unitByModifier = FindPlayerUnitByModifierArea(screenPosition, terrainPosition);
+	Unit* unitByPosition = FindCommandableUnitByCurrentPosition(screenPosition, terrainPosition);
+	Unit* unitByDestination = FindCommandableUnitByFuturePosition(screenPosition, terrainPosition);
+	Unit* unitByModifier = FindCommandableUnitByModifierArea(screenPosition, terrainPosition);
 
 	if (unitByPosition != nullptr && unitByDestination == nullptr)
 	{
@@ -566,7 +560,7 @@ Unit* BattleGesture::FindPlayerUnit(glm::vec2 screenPosition, glm::vec2 terrainP
 }
 
 
-Unit* BattleGesture::FindPlayerUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition)
+Unit* BattleGesture::FindCommandableUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	Unit* result = nullptr;
 	UnitCounter* unitMarker = _battleView->GetNearestUnitCounter(terrainPosition, 0, _battleView->GetCommander());
@@ -582,7 +576,7 @@ Unit* BattleGesture::FindPlayerUnitByCurrentPosition(glm::vec2 screenPosition, g
 }
 
 
-Unit* BattleGesture::FindPlayerUnitByFuturePosition(glm::vec2 screenPosition, glm::vec2 terrainPosition)
+Unit* BattleGesture::FindCommandableUnitByFuturePosition(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	Unit* result = nullptr;
 	UnitMovementMarker* movementMarker = _battleView->GetNearestMovementMarker(terrainPosition, _battleView->GetCommander());
@@ -598,14 +592,14 @@ Unit* BattleGesture::FindPlayerUnitByFuturePosition(glm::vec2 screenPosition, gl
 }
 
 
-Unit* BattleGesture::FindPlayerUnitByModifierArea(glm::vec2 screenPosition, glm::vec2 terrainPosition)
+Unit* BattleGesture::FindCommandableUnitByModifierArea(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	Unit* result = nullptr;
 	float distance = 10000;
 
 	for (Unit* unit : _battleView->GetSimulator()->GetUnits())
 	{
-		if (unit->commander == _battleView->GetCommander())
+		if (unit->IsCommandableBy(_battleView->GetCommander()))
 		{
 			const UnitCommand& command = unit->GetCommand();
 			glm::vec2 center = !command.path.empty() ? command.path.back() : unit->state.center;

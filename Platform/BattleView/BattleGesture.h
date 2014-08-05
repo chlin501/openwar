@@ -56,10 +56,10 @@ private:
 
 	int GetFlipSign() const;
 
-	Unit* FindPlayerUnit(glm::vec2 screenPosition, glm::vec2 terrainPosition);
-	Unit* FindPlayerUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition);
-	Unit* FindPlayerUnitByFuturePosition(glm::vec2 screenPosition, glm::vec2 terrainPosition);
-	Unit* FindPlayerUnitByModifierArea(glm::vec2 screenPosition, glm::vec2 terrainPosition);
+	Unit* FindCommandableUnit(glm::vec2 screenPosition, glm::vec2 terrainPosition);
+	Unit* FindCommandableUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition);
+	Unit* FindCommandableUnitByFuturePosition(glm::vec2 screenPosition, glm::vec2 terrainPosition);
+	Unit* FindCommandableUnitByModifierArea(glm::vec2 screenPosition, glm::vec2 terrainPosition);
 
 	Unit* FindEnemyUnit(glm::vec2 touchPosition, glm::vec2 markerPosition);
 

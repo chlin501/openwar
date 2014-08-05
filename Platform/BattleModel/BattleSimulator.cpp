@@ -97,6 +97,33 @@ void Unit::SetOwnedBySimulator(bool value)
 }
 
 
+bool Unit::IsFriendlyCommander(BattleCommander* battleCommander) const
+{
+	if (battleCommander == nullptr)
+		return false;
+
+	if (commander->GetTeam() != battleCommander->GetTeam())
+		return false;
+
+	return true;
+}
+
+
+bool Unit::IsCommandableBy(BattleCommander* battleCommander) const
+{
+	if (battleCommander == nullptr)
+		return false;
+
+	if (commander == battleCommander)
+		return true;
+
+	if (commander->IsSharingCommand() && commander->GetTeam() == battleCommander->GetTeam())
+		return true;
+
+	return false;
+}
+
+
 int Unit::GetFighterRank(Fighter* fighter)
 {
 	Unit* unit = fighter->unit;

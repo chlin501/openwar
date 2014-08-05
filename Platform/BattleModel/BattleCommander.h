@@ -14,19 +14,19 @@ class BattleCommander
 	std::string _playerId;
 	int _team;
 	BattleCommanderType _type;
-	bool _isActive;
+	bool _isSharingCommand;
 
 public:
 	BattleCommander(BattleScenario* scenario, const char* playerId, int team, BattleCommanderType type);
 
-	const char* GetPlayerId() const { return _playerId.c_str(); }
-	int GetTeam() const { return _team; }
-	BattleCommanderType GetType() const { return _type; }
+	const char* GetPlayerId() const;
+	int GetTeam() const;
+	BattleCommanderType GetType() const;
 
 	int GetTeamPosition() const;
 
-	bool IsActive() const { return _isActive; }
-	void SetActive(bool value) { _isActive = value; }
+	bool IsSharingCommand() const;
+	void SetSharingCommand(bool value);
 };
 
 
