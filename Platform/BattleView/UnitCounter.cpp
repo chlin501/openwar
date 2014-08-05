@@ -93,6 +93,9 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer, bool flip
 
 void UnitCounter::AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView)
 {
+	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
+		return;
+
 	const UnitCommand& command = _unit->GetCommand();
 
 	if (_unit->state.unitMode != UnitMode_Standing

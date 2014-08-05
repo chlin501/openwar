@@ -37,6 +37,9 @@ bool UnitMovementMarker::Animate(float seconds)
 
 void UnitMovementMarker::RenderMovementMarker(TextureBillboardRenderer* renderer)
 {
+	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
+		return;
+
 	const UnitCommand& command = _unit->GetCommand();
 	glm::vec2 finalDestination = command.GetDestination();
 	if (command.path.size() > 1 || glm::length(_unit->state.center - finalDestination) > 25)
@@ -55,6 +58,8 @@ void UnitMovementMarker::RenderMovementMarker(TextureBillboardRenderer* renderer
 
 void UnitMovementMarker::AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView)
 {
+	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
+		return;
 	if (_unit->state.unitMode != UnitMode_Moving)
 		return;
 
@@ -90,6 +95,9 @@ void UnitMovementMarker::AppendFacingMarker(TextureTriangleShape3* renderer, Bat
 
 void UnitMovementMarker::RenderMovementFighters(ColorBillboardShape* renderer)
 {
+	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
+		return;
+
 	const UnitCommand& command = _unit->GetCommand();
 	if (command.meleeTarget == nullptr)
 	{
