@@ -459,6 +459,8 @@ private:
 
 	bool IsWithinLineOfFire(Unit* unit, glm::vec2 position);
 	Unit* ClosestEnemyWithinLineOfFire(Unit* unit);
+
+	bool TeamHasAbandondedBattle(int team) const;
 };
 
 

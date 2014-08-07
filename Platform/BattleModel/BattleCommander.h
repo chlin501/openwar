@@ -25,8 +25,8 @@ public:
 
 	int GetTeamPosition() const;
 
-	bool IsSharingCommand() const;
-	void SetSharingCommand(bool value);
+	bool HasAbandonedBattle() const;
+	void SetAbandonedBattle(bool value);
 };
 
 

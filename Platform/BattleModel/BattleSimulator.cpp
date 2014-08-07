@@ -117,7 +117,7 @@ bool Unit::IsCommandableBy(BattleCommander* battleCommander) const
 	if (commander == battleCommander)
 		return true;
 
-	if (commander->IsSharingCommand() && commander->GetTeam() == battleCommander->GetTeam())
+	if (commander->HasAbandonedBattle() && commander->GetTeam() == battleCommander->GetTeam())
 		return true;
 
 	return false;
@@ -825,6 +825,11 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 		result.morale += (0.1f + unit->stats.trainingLevel) / 2000;
 	}
 
+	if (result.morale > -1 && TeamHasAbandondedBattle(unit->commander->GetTeam()))
+	{
+		result.morale -= 1.0f / 250;
+	}
+
 	for (Unit* other : _units)
 	{
 		float distance = glm::length(other->state.center - unit->state.center);
@@ -1168,4 +1173,14 @@ Fighter* BattleSimulator::FindFighterStrikingTarget(Fighter* fighter)
 	}
 
 	return nullptr;
+}
+
+
+bool BattleSimulator::TeamHasAbandondedBattle(int team) const
+{
+	for (Unit* unit : _units)
+		if (unit->commander->GetTeam() == team && !unit->commander->HasAbandonedBattle())
+			return false;
+
+	return true;
 }

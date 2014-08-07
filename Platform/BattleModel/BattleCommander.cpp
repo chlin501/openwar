@@ -36,13 +36,13 @@ int BattleCommander::GetTeamPosition() const
 }
 
 
-bool BattleCommander::IsSharingCommand() const
+bool BattleCommander::HasAbandonedBattle() const
 {
 	return _isSharingCommand;
 }
 
 
-void BattleCommander::SetSharingCommand(bool value)
+void BattleCommander::SetAbandonedBattle(bool value)
 {
 	_isSharingCommand = value;
 }
