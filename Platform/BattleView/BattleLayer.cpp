@@ -180,14 +180,13 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 
 	BattleView* battleView = new BattleView(GetSurface()->GetGraphicsContext(), _renderers);
 	battleView->SetContainer(this);
-	battleView->SetCommander(commander);
-	battleView->SetSimulator(simulator);
 
 	_battleViews.push_back(battleView);
 	UpdateBattleViewSize();
 
 	battleView->SetFlip(commander != _commanders[0]);
-	battleView->SetCameraFacing(commander != _commanders[0] ? (float)M_PI : 0.0f);
+	battleView->SetCommander(commander);
+	battleView->SetSimulator(simulator);
 
 	battleView->Initialize();
 
@@ -202,8 +201,6 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 void BattleLayer::ResetBattleView(BattleView* battleView, BattleCommander* commander)
 {
 	battleView->SetFlip(commander != _commanders[0]);
-	battleView->SetCameraFacing(commander != _commanders[0] ? (float)M_PI : 0.0f);
-
 	battleView->SetCommander(commander);
 	battleView->SetSimulator(_scenario->GetSimulator());
 

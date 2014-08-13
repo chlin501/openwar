@@ -298,6 +298,8 @@ void BattleView::OnAddUnit(Unit* unit)
 	UnitCounter* marker = new UnitCounter(this, unit);
 	marker->Animate(0);
 	_unitMarkers.push_back(marker);
+
+	InitializeCameraPosition();
 }
 
 
@@ -460,13 +462,12 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 
 void BattleView::InitializeCameraPosition()
 {
-	const std::vector<Unit*>& units = _simulator->GetUnits();
-
 	glm::vec2 friendlyCenter;
 	glm::vec2 enemyCenter;
 	int friendlyCount = 0;
 	int enemyCount = 0;
 
+	const std::vector<Unit*>& units = _simulator->GetUnits();
 	for (Unit* unit : units)
 	{
 		if (!unit->state.IsRouting())
@@ -498,7 +499,7 @@ void BattleView::InitializeCameraPosition()
 		glm::vec2 friendlyScreen = ContentToSurface(glm::vec2(0, GetFlip() ? 0.15 : -0.15));
 		glm::vec2 enemyScreen = ContentToSurface(glm::vec2(0, GetFlip() ? -0.65 : 0.65));
 
-		Zoom(glm::vec3(friendlyCenter, 0), glm::vec3(enemyCenter, 0), friendlyScreen, enemyScreen, 0);
+		Zoom(GetTerrainPosition(friendlyCenter, 0), GetTerrainPosition(enemyCenter, 0), friendlyScreen, enemyScreen, 0);
 
 		ClampCameraPosition();
 	}
