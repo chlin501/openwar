@@ -42,31 +42,32 @@ static affine2 billboard_texcoords(int x, int y, bool flip)
 
 
 BattleView::BattleView(graphicscontext* gc, renderers* r) :
-_simulator(nullptr),
-_commander(nullptr),
-_renderers(r),
-_lightNormal(),
-_billboardTexture(nullptr),
-_billboardModel(nullptr),
-_textureBillboardRenderer(nullptr),
-_textureBillboardRenderer1(nullptr),
-_textureBillboardRenderer2(nullptr),
-_casualtyMarker(0),
-_movementMarkers(),
-_trackingMarkers(),
-_plainLineRenderer(nullptr),
-_plainTriangleRenderer(nullptr),
-_gradientLineRenderer(nullptr),
-_gradientTriangleRenderer(nullptr),
-_gradientTriangleStripRenderer(nullptr),
-_colorBillboardRenderer(nullptr),
-_textureTriangleRenderer(nullptr),
-_textureUnitMarkers(nullptr),
-_textureTouchMarker(nullptr),
-_smoothTerrainSurface(nullptr),
-_smoothTerrainWater(nullptr),
-_smoothTerrainSky(nullptr),
-_tiledTerrainRenderer(nullptr)
+	_simulator(nullptr),
+	_commander(nullptr),
+	_renderers(r),
+	_lightNormal(),
+	_billboardTexture(nullptr),
+	_billboardModel(nullptr),
+	_textureBillboardRenderer(nullptr),
+	_textureBillboardRenderer1(nullptr),
+	_textureBillboardRenderer2(nullptr),
+	_casualtyMarker(0),
+	_movementMarkers(),
+	_trackingMarkers(),
+	_plainLineRenderer(nullptr),
+	_plainTriangleRenderer(nullptr),
+	_gradientLineRenderer(nullptr),
+	_gradientTriangleRenderer(nullptr),
+	_gradientTriangleStripRenderer(nullptr),
+	_colorBillboardRenderer(nullptr),
+	_textureTriangleRenderer(nullptr),
+	_textureUnitMarkers(nullptr),
+	_textureTouchMarker(nullptr),
+	_smoothTerrainSurface(nullptr),
+	_smoothTerrainWater(nullptr),
+	_smoothTerrainSky(nullptr),
+	_tiledTerrainRenderer(nullptr),
+	_initializeCameraPositionOnAddUnit(false)
 {
 	SetUsingDepth(true);
 
@@ -235,6 +236,8 @@ void BattleView::SetSimulator(BattleSimulator* simulator)
 	if (groundMap != nullptr)
 		OnSetGroundMap(simulator->GetGroundMap());
 
+	_initializeCameraPositionOnAddUnit = true;
+
 	_simulator->AddObserver(this);
 }
 
@@ -299,7 +302,8 @@ void BattleView::OnAddUnit(Unit* unit)
 	marker->Animate(0);
 	_unitMarkers.push_back(marker);
 
-	InitializeCameraPosition();
+	if (_initializeCameraPositionOnAddUnit)
+		InitializeCameraPosition();
 }
 
 
@@ -351,6 +355,8 @@ void BattleView::OnRelease(const Shooting& shooting)
 
 void BattleView::OnCasualty(const Fighter& fighter)
 {
+	_initializeCameraPositionOnAddUnit = false;
+
 	AddCasualty(fighter.unit, fighter.state.position);
 }
 
@@ -496,8 +502,10 @@ void BattleView::InitializeCameraPosition()
 		friendlyCenter /= friendlyCount;
 		enemyCenter /= enemyCount;
 
-		glm::vec2 friendlyScreen = ContentToSurface(glm::vec2(0, GetFlip() ? 0.15 : -0.15));
-		glm::vec2 enemyScreen = ContentToSurface(glm::vec2(0, GetFlip() ? -0.65 : 0.65));
+		bool flip = GetFlip();
+
+		glm::vec2 friendlyScreen = ContentToSurface(glm::vec2(0, flip ? 0.4 : -0.4));
+		glm::vec2 enemyScreen = ContentToSurface(glm::vec2(0, flip ? -0.4 : 0.4));
 
 		Zoom(GetTerrainPosition(friendlyCenter, 0), GetTerrainPosition(enemyCenter, 0), friendlyScreen, enemyScreen, 0);
 

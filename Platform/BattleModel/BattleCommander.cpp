@@ -1,5 +1,5 @@
 #include "BattleCommander.h"
-#import "BattleScenario.h"
+#include "BattleScenario.h"
 
 
 BattleCommander::BattleCommander(BattleScenario* scenario, const char* playerId, int team, BattleCommanderType type) :
@@ -7,7 +7,7 @@ BattleCommander::BattleCommander(BattleScenario* scenario, const char* playerId,
 	_playerId(playerId),
 	_team(team),
 	_type(type),
-	_isSharingCommand(false)
+	_hasAbandonedBattle(false)
 {
 }
 
@@ -38,11 +38,11 @@ int BattleCommander::GetTeamPosition() const
 
 bool BattleCommander::HasAbandonedBattle() const
 {
-	return _isSharingCommand;
+	return _hasAbandonedBattle;
 }
 
 
 void BattleCommander::SetAbandonedBattle(bool value)
 {
-	_isSharingCommand = value;
+	_hasAbandonedBattle = value;
 }

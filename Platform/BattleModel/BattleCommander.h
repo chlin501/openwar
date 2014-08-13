@@ -14,7 +14,7 @@ class BattleCommander
 	std::string _playerId;
 	int _team;
 	BattleCommanderType _type;
-	bool _isSharingCommand;
+	bool _hasAbandonedBattle;
 
 public:
 	BattleCommander(BattleScenario* scenario, const char* playerId, int team, BattleCommanderType type);
