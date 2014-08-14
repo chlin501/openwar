@@ -98,13 +98,10 @@ BattleCommander* BattleScenario::GetDummyCommander() const
 }
 
 
-void BattleScenario::StartScript(bool master)
+void BattleScenario::StartScript()
 {
 	if (_script != nullptr)
-	{
-		_script->SetIsMaster(master);
 		_script->Execute();
-	}
 }
 
 

@@ -17,8 +17,7 @@
 BattleScript::BattleScript(BattleScenario* scenario) :
 _scenario(scenario),
 _simulator(scenario->GetSimulator()),
-_nextUnitId(1),
-_isMaster(true)
+_nextUnitId(1)
 {
 	_simulator->AddObserver(this);
 }
@@ -30,13 +29,6 @@ BattleScript::~BattleScript()
 }
 
 
-void BattleScript::SetIsMaster(bool value)
-{
-	_isMaster = value;
-}
-
-
-
 static int random_int(int min, int max)
 {
 	return min + (int)glm::linearRand<float>(0, max - min);
@@ -45,9 +37,6 @@ static int random_int(int min, int max)
 
 void BattleScript::Execute()
 {
-	if (!_isMaster)
-		return;
-
 	std::ostringstream os;
 	os << "Maps/Map" << random_int(1, 12) << ".png";
 	std::string path = os.str();

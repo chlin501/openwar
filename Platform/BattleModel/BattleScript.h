@@ -20,13 +20,9 @@ protected:
 	std::map<Unit*, int> _unitId;
 	int _nextUnitId;
 
-	bool _isMaster;
-
 public:
 	BattleScript(BattleScenario* scenario);
 	virtual ~BattleScript();
-
-	void SetIsMaster(bool value);
 
 	virtual void Execute();
 	virtual void Tick(double secondsSinceLastTick);
