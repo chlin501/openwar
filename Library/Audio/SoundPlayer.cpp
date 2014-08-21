@@ -8,8 +8,6 @@
 
 #include <cstdlib>
 
-#import <Foundation/Foundation.h>
-
 
 SoundPlayer* SoundPlayer::singleton = nullptr;
 
@@ -22,7 +20,7 @@ static void _LoadSound(SoundPlayer* soundPlayer, SoundBuffer soundBuffer, const 
 #endif
 
 #ifdef OPENWAR_USE_SDL_MIXER
-	std::string path = resource((name + std::string(".wav")).c_str()).path();
+	std::string path = resource((std::string("Sounds/") + name + std::string(".wav")).c_str()).path();
 	soundPlayer->LoadSound(soundBuffer, Mix_LoadWAV(path.c_str()));
 #endif
 }
@@ -103,7 +101,6 @@ SoundPlayer::SoundPlayer() :
 #ifdef OPENWAR_USE_SDL_MIXER
 	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
 	{
-		NSLog(@"Mix_OpenAudio error: %s", Mix_GetError());
 	}
 
 	Mix_AllocateChannels(NUMBER_OF_SOUND_SOURCES);
