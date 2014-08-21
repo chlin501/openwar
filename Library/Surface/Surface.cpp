@@ -33,6 +33,14 @@ bounds2f Surface::GetViewport() const
 }
 
 
+void Surface::OnFrameChanged()
+{
+	Content::OnFrameChanged();
+
+	SetBounds(GetFrame() / GetScale());
+}
+
+
 void Surface::RenderSurface()
 {
 	glClearColor(0.5f, 0.5f, 0.5f, 1);

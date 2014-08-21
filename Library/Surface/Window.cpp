@@ -490,7 +490,7 @@ glm::vec2 Window::ToVector(int x, int y)
 {
 	int w, h;
 	SDL_GetWindowSize(_window, &w, &h);
-	return glm::vec2(x, h - y);
+	return _surface->GetBounds().size() * glm::vec2(x, h - y) / glm::vec2(w, h);
 }
 
 
@@ -504,7 +504,10 @@ glm::vec2 Window::GetWindowSize() const
 
 glm::vec2 Window::ToPosition(const SDL_TouchFingerEvent& event)
 {
-	return GetWindowSize() * glm::vec2(event.x, 1.0f - event.y);
+	if (_surface == nullptr)
+		return glm::vec2();
+
+	return _surface->GetBounds().size() * glm::vec2(event.x, 1.0f - event.y);
 }
 
 

@@ -162,6 +162,8 @@ public:
 
 class shaderprogram_base
 {
+	static float _pixels_per_point;
+
 	std::map<GLint, GLenum> _uniformTexture;
 	GLenum _nextUniformTexture;
 
@@ -175,6 +177,7 @@ public:
 	virtual ~shaderprogram_base();
 
 	static float pixels_per_point();
+	static void set_pixels_per_point(float value);
 
 	static GLuint compile_shader(GLenum type, const char* source);
 

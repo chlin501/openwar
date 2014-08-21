@@ -112,14 +112,15 @@ void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vecto
 }
 
 
-void OpenWarSurface::OnFrameChanged()
+void OpenWarSurface::OnBoundsChanged()
 {
-	Surface::OnFrameChanged();
+	Surface::OnBoundsChanged();
 
-	bounds2f viewport = bounds2f(0, 0, GetSize());
-	_battleLayer->SetFrame(viewport);
-	_buttonsTopLeft->SetFrame(viewport);
-	_buttonsTopRight->SetFrame(viewport);
+	bounds2f bounds = GetBounds();
+
+	_battleLayer->SetFrame(bounds);
+	_buttonsTopLeft->SetFrame(bounds);
+	_buttonsTopRight->SetFrame(bounds);
 }
 
 
@@ -156,9 +157,6 @@ void OpenWarSurface::RenderSurface()
 	glEnable(GL_BLEND);
 
 	Surface::RenderSurface();
-
-	_buttonsTopLeft->Render(transform * _buttonsTopLeft->GetContentTransform());
-	_buttonsTopRight->Render(transform * _buttonsTopRight->GetContentTransform());
 }
 
 

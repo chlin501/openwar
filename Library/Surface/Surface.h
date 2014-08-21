@@ -32,6 +32,8 @@ public:
 	virtual Surface* GetSurface() const;
 	virtual bounds2f GetViewport() const;
 
+	virtual void OnFrameChanged();
+
 	// Surface
 
 	virtual bool NeedsRender() const = 0;

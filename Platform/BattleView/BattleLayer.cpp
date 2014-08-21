@@ -263,20 +263,26 @@ void BattleLayer::RemoveBattleView(BattleView* battleView)
 
 void BattleLayer::UpdateBattleViewSize()
 {
-	//SetFrame(bounds2f(0, 0, GetSize()));
-
 	if (!_battleViews.empty())
 	{
-		glm::vec2 size = GetSize();
-		float h = size.y / _battleViews.size();
-		float y = 0;
+		glm::vec2 localSize = GetSize();
+		glm::vec2 globalSize = GetSurface()->GetFrame().size();
+
+		float localHeight = localSize.y / _battleViews.size();
+		float localY = 0;
+		float globalHeight = globalSize.y / _battleViews.size();
+		float globalY = 0;
 
 		for (BattleView* battleView : _battleViews)
 		{
-			bounds2f frame = bounds2f(0, y, size.x, y + h);
+			bounds2f frame = bounds2f(0, localY, localSize.x, localY + localHeight);
+			bounds2f viewport = bounds2f(0, globalY, globalSize.x, globalY + globalHeight);
+
 			battleView->SetFrame(frame);
-			battleView->SetViewport(frame);
-			y += h;
+			battleView->SetViewport(viewport);
+
+			localY += localHeight;
+			globalY += globalHeight;
 		}
 	}
 }

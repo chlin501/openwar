@@ -64,7 +64,7 @@ public:
 	virtual void MouseLeave(glm::vec2 position);
 
 	// Content
-	virtual void OnFrameChanged();
+	virtual void OnBoundsChanged();
 	virtual void Update(double secondsSinceLastUpdate);
 
 protected:

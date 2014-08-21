@@ -91,10 +91,12 @@ shaderprogram_base::~shaderprogram_base()
 
 
 
+float shaderprogram_base::_pixels_per_point = 0;
+
+
 float shaderprogram_base::pixels_per_point()
 {
-	static float result = 0;
-	if (result == 0)
+	if (_pixels_per_point == 0)
 	{
 #if TARGET_OS_IPHONE
 		if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
@@ -102,13 +104,18 @@ float shaderprogram_base::pixels_per_point()
 		else
 			result = 1;
 #else
-		result = 1;
+		_pixels_per_point = 1;
 #endif
 	}
 
-	return result;
+	return _pixels_per_point;
 }
 
+
+void shaderprogram_base::set_pixels_per_point(float value)
+{
+	_pixels_per_point = value;
+}
 
 
 GLuint shaderprogram_base::compile_shader(GLenum type, const char* source)
