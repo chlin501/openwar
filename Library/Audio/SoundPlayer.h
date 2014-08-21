@@ -15,6 +15,10 @@
 #endif
 #endif
 
+#ifdef OPENWAR_USE_SDL_MIXER
+#include <SDL2_mixer/SDL_mixer.h>
+#endif
+
 
 enum SoundBuffer
 {
@@ -64,6 +68,13 @@ class SoundPlayer
 	ALuint _sources[NUMBER_OF_SOUND_SOURCES];
 	ALuint _playing[NUMBER_OF_SOUND_SOURCES];
 #endif
+
+#ifdef OPENWAR_USE_SDL_MIXER
+	Mix_Chunk* _chunks[NUMBER_OF_SOUND_BUFFERS];
+	Mix_Chunk* _playing[NUMBER_OF_SOUND_SOURCES];
+#endif
+
+
 	int _cookies[NUMBER_OF_SOUND_SOURCES];
 	SoundSource _nextMatchlock;
 	SoundSource _nextArrows;
@@ -80,6 +91,9 @@ public:
 
 #ifdef OPENWAR_USE_OPENAL
 	void LoadSound(SoundBuffer soundBuffer, ALenum format, ALvoid* data, ALsizei size, ALsizei freq);
+#endif
+#ifdef OPENWAR_USE_SDL_MIXER
+	void LoadSound(SoundBuffer soundBuffer, Mix_Chunk* chunk);
 #endif
 
 	bool IsPaused() const;

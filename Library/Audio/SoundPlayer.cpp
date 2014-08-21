@@ -4,8 +4,11 @@
 
 #include "SoundPlayer.h"
 #include "SoundLoader.h"
+#include "resource.h"
 
 #include <cstdlib>
+
+#import <Foundation/Foundation.h>
 
 
 SoundPlayer* SoundPlayer::singleton = nullptr;
@@ -16,6 +19,11 @@ static void _LoadSound(SoundPlayer* soundPlayer, SoundBuffer soundBuffer, const 
 #ifdef OPENWAR_USE_OPENAL
 	SoundLoader sound(name);
 	soundPlayer->LoadSound(soundBuffer, sound.format, sound.data, sound.size, sound.freq);
+#endif
+
+#ifdef OPENWAR_USE_SDL_MIXER
+	std::string path = resource((name + std::string(".wav")).c_str()).path();
+	soundPlayer->LoadSound(soundBuffer, Mix_LoadWAV(path.c_str()));
 #endif
 }
 
@@ -43,16 +51,15 @@ void SoundPlayer::Initialize()
 
 
 
-SoundPlayer::SoundPlayer()
+SoundPlayer::SoundPlayer() :
 #ifdef OPENWAR_USE_OPENAL
-:
-_device(nullptr),
-_context(nullptr),
-_nextMatchlock(SoundSourceMatchlockFirst),
-_nextArrows(SoundSourceArrowsFirst),
-_nextCookie(1),
-_isPaused(false)
+	_device(nullptr),
+	_context(nullptr),
+	_nextMatchlock(SoundSourceMatchlockFirst),
+	_nextArrows(SoundSourceArrowsFirst),
 #endif
+	_nextCookie(1),
+	_isPaused(false)
 {
 #ifdef OPENWAR_USE_OPENAL
 	ALenum error;
@@ -92,11 +99,24 @@ _isPaused(false)
 
 	alListenerfv(AL_ORIENTATION, orientation);
 #endif
+
+#ifdef OPENWAR_USE_SDL_MIXER
+	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
+	{
+		NSLog(@"Mix_OpenAudio error: %s", Mix_GetError());
+	}
+
+	Mix_AllocateChannels(NUMBER_OF_SOUND_SOURCES);
+#endif
 }
 
 
 SoundPlayer::~SoundPlayer()
 {
+#ifdef OPENWAR_USE_SDL_MIXER
+	Mix_CloseAudio();
+#endif
+
 	/*
 	Context=alcGetCurrentContext();
 	Device=alcGetContextsDevice(Context);
@@ -116,6 +136,14 @@ void SoundPlayer::LoadSound(SoundBuffer soundBuffer, ALenum format, ALvoid* data
 #endif
 
 
+#ifdef OPENWAR_USE_SDL_MIXER
+void SoundPlayer::LoadSound(SoundBuffer soundBuffer, Mix_Chunk* chunk)
+{
+	int index = (int)soundBuffer;
+	_chunks[index] = chunk;
+}
+#endif
+
 
 bool SoundPlayer::IsPaused() const
 {
@@ -125,29 +153,37 @@ bool SoundPlayer::IsPaused() const
 
 void SoundPlayer::Pause()
 {
-#ifdef OPENWAR_USE_OPENAL
 	if (!_isPaused)
 	{
 		_isPaused = true;
+#ifdef OPENWAR_USE_OPENAL
 		for (int i = 0; i < NUMBER_OF_SOUND_SOURCES; ++i)
 			if (_playing[i])
 				alSourcePause(_sources[i]);
-	}
 #endif
+
+#ifdef OPENWAR_USE_SDL_MIXER
+		Mix_Pause(-1);
+#endif
+	}
 }
 
 
 void SoundPlayer::Resume()
 {
-#ifdef OPENWAR_USE_OPENAL
 	if (_isPaused)
 	{
 		_isPaused = false;
+#ifdef OPENWAR_USE_OPENAL
 		for (int i = 0; i < NUMBER_OF_SOUND_SOURCES; ++i)
 			if (_playing[i])
 				alSourcePlay(_sources[i]);
-	}
 #endif
+
+#ifdef OPENWAR_USE_SDL_MIXER
+		Mix_Resume(-1);
+#endif
+	}
 }
 
 
@@ -281,6 +317,8 @@ void SoundPlayer::StopAll()
 
 int SoundPlayer::PlaySound(SoundSource soundSource, SoundBuffer soundBuffer, bool looping)
 {
+	int cookie = 0;
+
 #ifdef OPENWAR_USE_OPENAL
 	ALuint source = _sources[(int)soundSource];
 	ALuint buffer = _buffers[(int)soundBuffer];
@@ -298,15 +336,29 @@ int SoundPlayer::PlaySound(SoundSource soundSource, SoundBuffer soundBuffer, boo
 	alSourcei(source, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);
 	alSourcePlay(source);
 
-	int cookie = _nextCookie++;
+	cookie = _nextCookie++;
 
 	_playing[(int)soundSource] = buffer;
 	_cookies[(int)soundSource] = cookie;
+#endif
+
+#ifdef OPENWAR_USE_SDL_MIXER
+
+	int channel = (int)soundSource;
+	Mix_Chunk* chunk = _chunks[(int)soundBuffer];
+
+	if (looping && _playing[(int)soundSource] == chunk)
+		return _cookies[(int)soundSource];
+
+	Mix_PlayChannel(channel, chunk, looping ? -1 : 0);
+
+	cookie = _nextCookie++;
+
+	_playing[(int)soundSource] = chunk;
+	_cookies[(int)soundSource] = cookie;
+#endif
 
 	return cookie;
-#else
-	return 0;
-#endif
 }
 
 
@@ -319,5 +371,13 @@ void SoundPlayer::StopSound(SoundSource soundSource)
 
 	_playing[(int)soundSource] = AL_NONE;
 	_cookies[(int)soundSource] = 0;
+#endif
+
+#ifdef OPENWAR_USE_SDL_MIXER
+	Mix_HaltChannel((int)soundSource);
+
+	_playing[(int)soundSource] = nullptr;
+	_cookies[(int)soundSource] = 0;
+
 #endif
 }
