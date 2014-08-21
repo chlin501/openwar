@@ -28,6 +28,7 @@
 		41396E0C17E7517F00EC1DA6 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B6ECF175DE18A00AABF10 /* GLKit.framework */; };
 		41396E0D17E7517F00EC1DA6 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B7022175DFEA900AABF10 /* OpenAL.framework */; };
 		41396E0E17E7517F00EC1DA6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B6ED1175DE19200AABF10 /* OpenGL.framework */; };
+		4156F29619A5FEC300A9990D /* SDL2_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4156F29519A5FEC300A9990D /* SDL2_mixer.framework */; };
 		418FCC3E192DEE0700D7D476 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */; };
 		41B2298F17EC730E00DFA0B6 /* Maps in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298B17EC730E00DFA0B6 /* Maps */; };
 		41B2299117EC730E00DFA0B6 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298D17EC730E00DFA0B6 /* Sounds */; };
@@ -134,6 +135,7 @@
 		413B7022175DFEA900AABF10 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		413B7024175DFEB900AABF10 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		413B7026175DFEC800AABF10 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		4156F29519A5FEC300A9990D /* SDL2_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_mixer.framework; path = ../../../../Library/Frameworks/SDL2_mixer.framework; sourceTree = "<group>"; };
 		418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = /Library/Frameworks/SDL2_ttf.framework; sourceTree = "<absolute>"; };
 		41B2298B17EC730E00DFA0B6 /* Maps */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Maps; sourceTree = "<group>"; };
 		41B2298D17EC730E00DFA0B6 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
@@ -271,6 +273,7 @@
 				41396E0E17E7517F00EC1DA6 /* OpenGL.framework in Frameworks */,
 				41396E0817E7517F00EC1DA6 /* SDL2.framework in Frameworks */,
 				41FE9BC819235642002F6043 /* SDL2_image.framework in Frameworks */,
+				4156F29619A5FEC300A9990D /* SDL2_mixer.framework in Frameworks */,
 				418FCC3E192DEE0700D7D476 /* SDL2_ttf.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -351,6 +354,7 @@
 				413B6ED1175DE19200AABF10 /* OpenGL.framework */,
 				41C0B59817E63DA300C52270 /* SDL2.framework */,
 				41FE9BC719235641002F6043 /* SDL2_image.framework */,
+				4156F29519A5FEC300A9990D /* SDL2_mixer.framework */,
 				418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */,
 			);
 			name = Frameworks;

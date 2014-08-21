@@ -12,6 +12,9 @@
 #include <SDL2_image/SDL_image.h>
 #include <SDL2_ttf/SDL_ttf.h>
 #endif
+#ifdef OPENWAR_USE_SDL_MIXER
+#include <SDL2_mixer/SDL_mixer.h>
+#endif
 
 #include "OpenWarSurface.h"
 #include "Surface/Window.h"
@@ -23,9 +26,9 @@ static BattleScenario* CreateBattleScenario()
 {
 	BattleScenario* scenario = new BattleScenario();
 	scenario->SetScript(new PracticeScript(scenario));
-	scenario->AddCommander("1", 1, BattleCommanderType::Player)->SetActive(true);
+	scenario->AddCommander("1", 1, BattleCommanderType::Player);
 	scenario->AddCommander("2", 2, BattleCommanderType::Script);
-	scenario->StartScript(true);
+	scenario->StartScript();
 	return scenario;
 }
 
@@ -35,10 +38,15 @@ int main(int argc, char *argv[])
 {
     resource::init(argv[0]);
 
+#ifdef OPENWAR_USE_SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
     TTF_Init();
-    
+#endif
+#ifdef OPENWAR_USE_SDL_MIXER
+	Mix_Init(0);
+#endif
+
 	Window* window = new Window();
 
 #if OPENWAR_USE_GLEW
