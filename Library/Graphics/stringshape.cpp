@@ -386,6 +386,10 @@ void stringfont::update_texture()
 
 #ifdef OPENWAR_USE_SDL
 
+	SDL_Surface* image_surface = _image->get_surface();
+
+	SDL_FillRect(image_surface, NULL, SDL_MapRGBA(image_surface->format, 0, 0, 0, 0));
+
 	SDL_Color color;
 	color.r = 255;
 	color.g = 255;
@@ -403,7 +407,7 @@ void stringfont::update_texture()
 			rect.y = (int)item._bounds_origin.y;
 			rect.w = (int)item._bounds_size.x;
 			rect.h = (int)item._bounds_size.y;
-			SDL_BlitSurface(surface, NULL, _image->get_surface(), &rect);
+			SDL_BlitSurface(surface, NULL, image_surface, &rect);
 			SDL_FreeSurface(surface);
 		}
 	}
