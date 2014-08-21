@@ -100,9 +100,9 @@ float shaderprogram_base::pixels_per_point()
 	{
 #if TARGET_OS_IPHONE
 		if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
-			result = [[UIScreen mainScreen] scale];
+			_pixels_per_point = [[UIScreen mainScreen] scale];
 		else
-			result = 1;
+			_pixels_per_point = 1;
 #else
 		_pixels_per_point = 1;
 #endif
