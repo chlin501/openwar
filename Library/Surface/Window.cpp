@@ -458,7 +458,10 @@ void Window::Update()
 	_timestamp = timestamp;
 
 	if (_surface != nullptr)
+	{
+		_surface->DeleteDismissedContent();
 		_surface->Update(secondsSinceLastUpdate);
+	}
 
 	if (Gesture::_gestures != nullptr)
 		for (Gesture* gesture : *Gesture::_gestures)
