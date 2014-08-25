@@ -53,9 +53,9 @@ SoundPlayer::SoundPlayer() :
 #ifdef OPENWAR_USE_OPENAL
 	_device(nullptr),
 	_context(nullptr),
+#endif
 	_nextMatchlock(SoundSourceMatchlockFirst),
 	_nextArrows(SoundSourceArrowsFirst),
-#endif
 	_nextCookie(1),
 	_isPaused(false)
 {

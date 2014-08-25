@@ -74,7 +74,6 @@ class SoundPlayer
 	Mix_Chunk* _playing[NUMBER_OF_SOUND_SOURCES];
 #endif
 
-
 	int _cookies[NUMBER_OF_SOUND_SOURCES];
 	SoundSource _nextMatchlock;
 	SoundSource _nextArrows;
