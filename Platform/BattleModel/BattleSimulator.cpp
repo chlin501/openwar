@@ -117,7 +117,7 @@ bool Unit::IsCommandableBy(BattleCommander* battleCommander) const
 	if (commander == battleCommander)
 		return true;
 
-	if (commander->HasAbandonedBattle() && commander->GetTeam() == battleCommander->GetTeam())
+	if (commander->IsIncapacitated() && commander->GetTeam() == battleCommander->GetTeam())
 		return true;
 
 	return false;

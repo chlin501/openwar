@@ -7,6 +7,7 @@ BattleCommander::BattleCommander(BattleScenario* scenario, const char* playerId,
 	_playerId(playerId),
 	_team(team),
 	_type(type),
+	_isIncapacitated(false),
 	_hasAbandonedBattle(false)
 {
 }
@@ -33,6 +34,18 @@ BattleCommanderType BattleCommander::GetType() const
 int BattleCommander::GetTeamPosition() const
 {
 	return _scenario->GetTeamPosition(_team);
+}
+
+
+bool BattleCommander::IsIncapacitated() const
+{
+	return _isIncapacitated;
+}
+
+
+void BattleCommander::SetIncapacitated(bool value)
+{
+	_isIncapacitated = value;
 }
 
 

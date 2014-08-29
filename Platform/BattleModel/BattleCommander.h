@@ -14,6 +14,7 @@ class BattleCommander
 	std::string _playerId;
 	int _team;
 	BattleCommanderType _type;
+	bool _isIncapacitated;
 	bool _hasAbandonedBattle;
 
 public:
@@ -24,6 +25,9 @@ public:
 	BattleCommanderType GetType() const;
 
 	int GetTeamPosition() const;
+
+	bool IsIncapacitated() const;
+	void SetIncapacitated(bool value);
 
 	bool HasAbandonedBattle() const;
 	void SetAbandonedBattle(bool value);
