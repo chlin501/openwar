@@ -31,24 +31,29 @@ static NSString* GetPath(const char* name, const char* type)
 #endif
 
 
-std::string resource::_app_path;
 std::string resource::_resources_path;
+
+
+void resource::init_path(const char* path)
+{
+	_resources_path = path;
+}
 
 
 void resource::init(const char* argv0)
 {
-	_app_path.assign(argv0);
+	std::string app_path(argv0);
 
-	std::string::size_type i = _app_path.rfind('/');
+	std::string::size_type i = app_path.rfind('/');
 	if (i != std::string::npos)
 	{
 #if TARGET_OS_IPHONE
-		_resources_path = _app_path.substr(0, i) + "/";
+		_resources_path = app_path.substr(0, i) + "/";
 #else
-		i = _app_path.rfind('/', i - 1);
+		i = app_path.rfind('/', i - 1);
 		if (i != std::string::npos)
 		{
-			_resources_path = _app_path.substr(0, i) + "/Resources/";
+			_resources_path = app_path.substr(0, i) + "/Resources/";
 		}
 #endif
 	}

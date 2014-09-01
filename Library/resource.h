@@ -14,7 +14,6 @@
 
 class resource
 {
-	static std::string _app_path;
 	static std::string _resources_path;
 
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
@@ -27,6 +26,7 @@ class resource
 	size_t _size;
 
 public:
+	static void init_path(const char* path);
     static void init(const char* argv0);
     
 	explicit resource(const char* name);
