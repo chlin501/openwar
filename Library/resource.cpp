@@ -167,12 +167,14 @@ bool resource::load(char const* type)
     if (rw == nullptr)
         return false;
     
-	_size = rw->size(rw);
+	_size = SDL_RWsize(rw);
 	void* ptr = malloc(_size);
 	SDL_RWread(rw, ptr, _size, 1);
     
 	_data = ptr;
-    
+
+	SDL_RWclose(rw);
+
     return true;
     
 #endif
