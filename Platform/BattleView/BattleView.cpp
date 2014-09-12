@@ -66,8 +66,7 @@ BattleView::BattleView(graphicscontext* gc, renderers* r) :
 	_smoothTerrainSurface(nullptr),
 	_smoothTerrainWater(nullptr),
 	_smoothTerrainSky(nullptr),
-	_tiledTerrainRenderer(nullptr),
-	_initializeCameraPositionOnAddUnit(false)
+	_tiledTerrainRenderer(nullptr)
 {
 	SetUsingDepth(true);
 
@@ -236,8 +235,6 @@ void BattleView::SetSimulator(BattleSimulator* simulator)
 	if (groundMap != nullptr)
 		OnSetGroundMap(simulator->GetGroundMap());
 
-	_initializeCameraPositionOnAddUnit = true;
-
 	_simulator->AddObserver(this);
 }
 
@@ -301,9 +298,6 @@ void BattleView::OnAddUnit(Unit* unit)
 	UnitCounter* marker = new UnitCounter(this, unit);
 	marker->Animate(0);
 	_unitMarkers.push_back(marker);
-
-	if (_initializeCameraPositionOnAddUnit)
-		InitializeCameraPosition();
 }
 
 
@@ -355,8 +349,6 @@ void BattleView::OnRelease(const Shooting& shooting)
 
 void BattleView::OnCasualty(const Fighter& fighter)
 {
-	_initializeCameraPositionOnAddUnit = false;
-
 	AddCasualty(fighter.unit, fighter.state.position);
 }
 
@@ -470,48 +462,35 @@ void BattleView::InitializeCameraPosition()
 {
 	glm::vec2 friendlyCenter;
 	glm::vec2 enemyCenter;
-	int friendlyCount = 0;
-	int enemyCount = 0;
 
-	const std::vector<Unit*>& units = _simulator->GetUnits();
-	for (Unit* unit : units)
+	int position = _commander != nullptr && _commander->GetType() == BattleCommanderType::Player ? _commander->GetTeamPosition() : 0;
+	switch (position)
 	{
-		if (!unit->state.IsRouting())
-		{
-			if (unit->IsFriendlyCommander(_commander))
-			{
-				friendlyCenter += unit->state.center;
-				++friendlyCount;
-			}
-			else
-			{
-				enemyCenter += unit->state.center;
-				++enemyCount;
-			}
-		}
+		case 1:
+			friendlyCenter = glm::vec2(512, 512 - 400);
+			enemyCenter = glm::vec2(512, 512 + 64);
+			break;
+
+		case 2:
+			friendlyCenter = glm::vec2(512, 512 + 400);
+			enemyCenter = glm::vec2(512, 512 - 64);
+			break;
+		default:
+			friendlyCenter = glm::vec2(512 - 400, 512);
+			enemyCenter = glm::vec2(512 + 64, 512);
+			break;
 	}
 
-	if (enemyCount == 0)
-	{
-		enemyCenter = glm::vec2(512, 512);
-		enemyCount = 1;
-	}
+	bool flip = GetFlip();
 
-	if (friendlyCount != 0 && enemyCount != 0)
-	{
-		friendlyCenter /= friendlyCount;
-		enemyCenter /= enemyCount;
+	glm::vec2 friendlyScreen = ContentToSurface(glm::vec2(0, flip ? 0.4 : -0.4));
+	glm::vec2 enemyScreen = ContentToSurface(glm::vec2(0, flip ? -0.4 : 0.4));
 
-		bool flip = GetFlip();
+	Zoom(GetTerrainPosition(friendlyCenter, 0), GetTerrainPosition(enemyCenter, 0), friendlyScreen, enemyScreen, 0);
 
-		glm::vec2 friendlyScreen = ContentToSurface(glm::vec2(0, flip ? 0.4 : -0.4));
-		glm::vec2 enemyScreen = ContentToSurface(glm::vec2(0, flip ? -0.4 : 0.4));
-
-		Zoom(GetTerrainPosition(friendlyCenter, 0), GetTerrainPosition(enemyCenter, 0), friendlyScreen, enemyScreen, 0);
-
-		ClampCameraPosition();
-	}
+	//ClampCameraPosition();
 }
+
 
 void BattleView::Render(const glm::mat4& transformx)
 {

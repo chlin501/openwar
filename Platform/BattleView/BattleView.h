@@ -70,8 +70,6 @@ class BattleView : public TerrainView, public BattleObserver
 	SmoothTerrainSky* _smoothTerrainSky;
 	TiledTerrainRenderer* _tiledTerrainRenderer;
 
-	bool _initializeCameraPositionOnAddUnit;
-
 public:
 	BattleView(graphicscontext* gc, renderers* r);
 	~BattleView();
