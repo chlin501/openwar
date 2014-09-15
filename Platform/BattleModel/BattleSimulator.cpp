@@ -102,6 +102,12 @@ bool Unit::IsFriendlyCommander(BattleCommander* battleCommander) const
 	if (battleCommander == nullptr)
 		return false;
 
+	if (commander == battleCommander)
+		return true;
+
+	if (battleCommander->GetType() == BattleCommanderType::None)
+		return false;
+
 	if (commander->GetTeam() != battleCommander->GetTeam())
 		return false;
 
@@ -116,6 +122,9 @@ bool Unit::IsCommandableBy(BattleCommander* battleCommander) const
 
 	if (commander == battleCommander)
 		return true;
+
+	if (battleCommander->GetType() == BattleCommanderType::None)
+		return false;
 
 	if (commander->IsIncapacitated() && commander->GetTeam() == battleCommander->GetTeam())
 		return true;
