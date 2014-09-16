@@ -5,6 +5,7 @@
 #ifndef TOUCH_H
 #define TOUCH_H
 
+#include <memory>
 #include <vector>
 #include "Algorithms/sampler.h"
 

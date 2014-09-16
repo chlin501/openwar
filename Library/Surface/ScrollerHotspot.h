@@ -1,6 +1,7 @@
 #ifndef ScrollerHotspot_H
 #define ScrollerHotspot_H
 
+#include <functional>
 #include <glm/glm.hpp>
 #include "Hotspot.h"
 

@@ -245,10 +245,17 @@ void BattleGesture::TouchMoved()
 {
 	if (_trackingMarker != nullptr)
 	{
+		int icon_size = 0;
+
 #if TARGET_OS_IPHONE
 		static int* _icon_size = nullptr;
 		if (_icon_size == nullptr)
 			_icon_size = new int([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone ? 57 : 72);
+		icon_size = *_icon_size;
+#endif
+#ifdef __ANDROID__
+		icon_size = 96;
+#endif
 
 		glm::vec2 oldPosition = _trackingTouch->GetPrevious();//_boardView->GetTerrainPosition(_trackingTouch->_previous).xy();
 		glm::vec2 newPosition = _trackingTouch->GetPosition();//_boardView->GetTerrainPosition(_trackingTouch->_position).xy();
@@ -259,9 +266,8 @@ void BattleGesture::TouchMoved()
 		else
 			_offsetToMarker += diff;
 
-		if (_offsetToMarker > *_icon_size / 2)
-			_offsetToMarker = *_icon_size / 2;
-#endif
+		if (_offsetToMarker > icon_size / 2)
+			_offsetToMarker = icon_size / 2;
 
 		if (_trackingTouch->GetCurrentButtons() != _trackingTouch->GetPreviousButtons())
 			_trackingTouch->ResetHasMoved();
