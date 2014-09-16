@@ -141,11 +141,6 @@ bool OpenWarSurface::NeedsRender() const
 
 void OpenWarSurface::RenderSurface()
 {
-	glm::vec2 size = GetSize();
-	glm::vec2 translate = -size / 2.0f;
-	glm::vec2 scale = 2.0f / size;
-	glm::mat4 transform = glm::translate(glm::scale(glm::mat4x4(), glm::vec3(scale, 1.0f)), glm::vec3(translate, 0.0f));
-
 	glClearColor(0.9137f, 0.8666f, 0.7647f, 1.0f);
 #ifdef OPENWAR_USE_GLES2
 	glClearDepthf(1.0f);
