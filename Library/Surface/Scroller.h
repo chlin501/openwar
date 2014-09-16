@@ -42,7 +42,7 @@ public:
 	virtual glm::mat4 GetContentTransform() const;
 	virtual void Render(const glm::mat4& transform);
 	virtual void Update(double secondsSinceLastUpdate);
-	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(std::shared_ptr<Hotspot>)> action);
+	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch);
 
 };
 

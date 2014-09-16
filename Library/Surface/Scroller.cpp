@@ -2,6 +2,7 @@
 #include "Scroller.h"
 #include "ScrollerHotspot.h"
 #include "Surface.h"
+#include "Touch.h"
 
 
 Scroller::Scroller() :
@@ -106,9 +107,9 @@ void Scroller::Update(double secondsSinceLastUpdate)
 }
 
 
-void Scroller::FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(std::shared_ptr<Hotspot>)> action)
+void Scroller::FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch)
 {
-	Container::FindHotspots(transform, position, action);
+	Container::FindHotspots(transform, position, touch);
 
 	position *= GetSurface()->GetScale();
 	glm::mat4 inverse = glm::inverse(transform);
@@ -117,6 +118,6 @@ void Scroller::FindHotspots(const glm::mat4 transform, glm::vec2 position, std::
 
 	if (GetBounds().contains(pos))
 	{
-		action(std::make_shared<ScrollerHotspot>(pos, this));
+		touch->AddHotspot(std::make_shared<ScrollerHotspot>(pos, this));
 	}
 }

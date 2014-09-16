@@ -13,6 +13,7 @@
 class Container;
 class Hotspot;
 class Surface;
+class Touch;
 
 
 glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate = glm::vec2(), float rotate = 0);
@@ -144,7 +145,7 @@ public:
 
 	virtual void Update(double secondsSinceLastUpdate) = 0;
 	virtual void Render(const glm::mat4& transform) = 0;
-	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(std::shared_ptr<Hotspot>)> action) = 0;
+	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch) = 0;
 
 private:
 	void SetFrameValue(const bounds2f& value);

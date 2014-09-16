@@ -89,14 +89,14 @@ void Container::Render(const glm::mat4& transform)
 }
 
 
-void Container::FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(std::shared_ptr<Hotspot>)> action)
+void Container::FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch)
 {
 	for (auto i = _contents.rbegin(); i != _contents.rend(); ++i)
 	{
 		Content* content = *i;
 		if (content->IsVisible())
 		{
-			content->FindHotspots(content->GetContainerTransform() * content->GetContentTransform(), position, action);
+			content->FindHotspots(content->GetContainerTransform() * content->GetContentTransform(), position, touch);
 		}
 	}
 }

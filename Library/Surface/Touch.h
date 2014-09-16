@@ -50,6 +50,7 @@ public:
 	~Touch();
 
 	void UpdateHotspots();
+	void AddHotspot(std::shared_ptr<Hotspot> hotspot);
 	const std::vector<std::shared_ptr<Hotspot>>& GetHotspots() const;
 
 	int GetTapCount() const;

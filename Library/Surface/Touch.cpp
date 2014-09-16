@@ -40,9 +40,13 @@ Touch::~Touch()
 void Touch::UpdateHotspots()
 {
 	_hotspots.clear();
-	_surface->FindHotspots(glm::mat4(), _position, [this](std::shared_ptr<Hotspot> hotspot) {
-		_hotspots.push_back(hotspot);
-	});
+	_surface->FindHotspots(glm::mat4(), _position, this);
+}
+
+
+void Touch::AddHotspot(std::shared_ptr<Hotspot> hotspot)
+{
+	_hotspots.push_back(hotspot);
 }
 
 

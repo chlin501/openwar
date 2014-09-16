@@ -3,7 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "ButtonGrid.h"
-
+#include "Touch.h"
 
 
 const ButtonAlignment ButtonAlignment::TopLeft(ButtonAlignment::Vertical::Top, ButtonAlignment::Horizontal::Left);
@@ -354,7 +354,7 @@ void ButtonGrid::Render(const glm::mat4& transform)
 }
 
 
-void ButtonGrid::FindHotspots(const glm::mat4 transform, glm::vec2 position, std::function<void(std::shared_ptr<Hotspot>)> action)
+void ButtonGrid::FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch)
 {
 	for (ButtonArea* buttonArea : _buttonAreas)
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
@@ -362,6 +362,6 @@ void ButtonGrid::FindHotspots(const glm::mat4 transform, glm::vec2 position, std
 				&& !buttonItem->IsDisabled()
 				&& buttonItem->GetBounds().contains(position))
 			{
-				action(buttonItem->GetHotspot());
+				touch->AddHotspot(buttonItem->GetHotspot());
 			}
 }
