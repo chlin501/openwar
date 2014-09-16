@@ -3,14 +3,13 @@
 
 #include "Gesture.h"
 
-class Scroller;
+class ScrollerHotspot;
 
 
 class ScrollerGesture : public Gesture
 {
 	Surface* _surface;
-	Scroller* _scroller;
-	glm::vec2 _position;
+	std::shared_ptr<ScrollerHotspot> _hotspot;
 
 public:
 	ScrollerGesture(Surface* surface);

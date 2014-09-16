@@ -117,6 +117,6 @@ void Scroller::FindHotspots(const glm::mat4 transform, glm::vec2 position, std::
 
 	if (GetBounds().contains(pos))
 	{
-		action(std::make_shared<ScrollerHotspot>(this, pos));
+		action(std::make_shared<ScrollerHotspot>(pos, this));
 	}
 }

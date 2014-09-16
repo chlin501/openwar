@@ -9,15 +9,16 @@ class Scroller;
 
 class ScrollerHotspot : public Hotspot
 {
-	Scroller* _scroller;
 	glm::vec2 _position;
+	Scroller* _scroller;
 
 public:
-	ScrollerHotspot(Scroller* scroller, glm::vec2 position);
+	ScrollerHotspot(glm::vec2 position, Scroller* scroller);
 	virtual ~ScrollerHotspot();
 
-	Scroller* GetScroller() const { return _scroller; }
 	glm::vec2 GetPosition() const { return _position; }
+
+	void ScrollToPosition(glm::vec2 position);
 };
 
 
