@@ -44,6 +44,7 @@ class Touch
 	MouseButtons _currentButtons;
 	MouseButtons _previousButtons;
 	std::vector<std::shared_ptr<Hotspot>> _hotspots;
+	bool _hasBegun;
 
 public:
 	Touch(Surface* surface, int tapCount, glm::vec2 position, double timestamp, MouseButtons buttons);
@@ -74,6 +75,8 @@ public:
 	MouseButtons GetPreviousButtons() const;
 
 	Motion GetMotion() const;
+
+	bool HasBegun() const;
 
 	bool HasMoved() const;
 	void ResetHasMoved();

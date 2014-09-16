@@ -9,17 +9,18 @@
 
 
 Touch::Touch(Surface* surface, int tapCount, glm::vec2 position, double timestamp, MouseButtons buttons) :
-_surface(surface),
-_gestures(),
-_tapCount(tapCount),
-_hasMoved(false),
-_position(position),
-_previous(position),
-_original(position),
-_timestart(timestamp),
-_timestamp(timestamp),
-_currentButtons(buttons),
-_previousButtons()
+	_surface(surface),
+	_gestures(),
+	_tapCount(tapCount),
+	_hasMoved(false),
+	_position(position),
+	_previous(position),
+	_original(position),
+	_timestart(timestamp),
+	_timestamp(timestamp),
+	_currentButtons(buttons),
+	_previousButtons(),
+	_hasBegun(false)
 {
 	_sampler.add(timestamp, position);
 	UpdateHotspots();
@@ -88,6 +89,8 @@ void Touch::Update(glm::vec2 position, glm::vec2 previous, double timestamp)
 
 	_sampler.add(timestamp, position);
 
+	_hasBegun = true;
+
 	if (GetMotion() == Motion::Moving)
 		_hasMoved = true;
 
@@ -106,6 +109,8 @@ void Touch::Update(glm::vec2 position, double timestamp, MouseButtons buttons)
 
 	_sampler.add(timestamp, position);
 
+	_hasBegun = true;
+
 	if (GetMotion() == Motion::Moving)
 		_hasMoved = true;
 
@@ -120,6 +125,7 @@ void Touch::Update(double timestamp)
 		_previous = _position;
 		_timestamp = timestamp;
 	}
+	_hasBegun = true;
 }
 
 
@@ -182,6 +188,12 @@ Motion Touch::GetMotion() const
 		return Motion::Stationary;
 
 	return Motion::Unknown;
+}
+
+
+bool Touch::HasBegun() const
+{
+	return _hasBegun;
 }
 
 
