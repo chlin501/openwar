@@ -22,6 +22,7 @@ _currentButtons(buttons),
 _previousButtons()
 {
 	_sampler.add(timestamp, position);
+	UpdateHotspots();
 }
 
 
@@ -33,6 +34,21 @@ Touch::~Touch()
 			std::remove(gesture->_touches.begin(), gesture->_touches.end(), this),
 			gesture->_touches.end());
 	}
+}
+
+
+void Touch::UpdateHotspots()
+{
+	_hotspots.clear();
+	_surface->FindHotspots(glm::mat4(), _position, [this](std::shared_ptr<Hotspot> hotspot) {
+		_hotspots.push_back(hotspot);
+	});
+}
+
+
+const std::vector<std::shared_ptr<Hotspot>>& Touch::GetHotspots() const
+{
+	return _hotspots;
 }
 
 
@@ -70,6 +86,8 @@ void Touch::Update(glm::vec2 position, glm::vec2 previous, double timestamp)
 
 	if (GetMotion() == Motion::Moving)
 		_hasMoved = true;
+
+	UpdateHotspots();
 }
 
 
@@ -86,6 +104,8 @@ void Touch::Update(glm::vec2 position, double timestamp, MouseButtons buttons)
 
 	if (GetMotion() == Motion::Moving)
 		_hasMoved = true;
+
+	UpdateHotspots();
 }
 
 

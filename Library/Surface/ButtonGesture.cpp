@@ -53,10 +53,9 @@ void ButtonGesture::TouchBegan(Touch* touch)
 	if (/*touch->HasGesture() ||*/ !_touches.empty())
 		return;
 
-	_surface->FindHotspots(glm::mat4(), touch->GetPosition(), [this](std::shared_ptr<Hotspot> hotspot) {
+	for (std::shared_ptr<Hotspot> hotspot : touch->GetHotspots())
 		if (_hotspot == nullptr)
 			_hotspot = std::dynamic_pointer_cast<ButtonHotspot>(hotspot);
-	});
 
 	if (_hotspot != nullptr)
 	{
@@ -95,10 +94,9 @@ void ButtonGesture::TouchMoved()
 		}
 		else
 		{
-			_surface->FindHotspots(glm::mat4(), touch->GetPosition(), [this, &found](std::shared_ptr<Hotspot> hotspot) {
+			for (std::shared_ptr<Hotspot> hotspot : touch->GetHotspots())
 				if (hotspot == _hotspot)
 					found = true;
-			});
 
 			_hotspot->SetHighlight(found);
 		}
@@ -113,10 +111,9 @@ void ButtonGesture::TouchEnded(Touch* touch)
 	{
 		bool found = false;
 
-		_surface->FindHotspots(glm::mat4(), touch->GetPosition(), [this, &found](std::shared_ptr<Hotspot> hotspot) {
+		for (std::shared_ptr<Hotspot> hotspot : touch->GetHotspots())
 			if (hotspot == _hotspot)
 				found = true;
-		});
 
 		if (found && !_hotspot->IsImmediate() && _hotspot->GetAction())
 			_hotspot->GetAction()();

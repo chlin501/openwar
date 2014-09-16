@@ -33,10 +33,9 @@ void ScrollerGesture::TouchBegan(Touch* touch)
 
 	std::shared_ptr<ScrollerHotspot> scrollerHotspot;
 
-	_surface->FindHotspots(glm::mat4(), touch->GetPosition(), [this, &scrollerHotspot](std::shared_ptr<Hotspot> hotspot) {
+	for (std::shared_ptr<Hotspot> hotspot : touch->GetHotspots())
 		if (scrollerHotspot == nullptr)
 			scrollerHotspot = std::dynamic_pointer_cast<ScrollerHotspot>(hotspot);
-	});
 
 	if (scrollerHotspot != nullptr)
 	{
