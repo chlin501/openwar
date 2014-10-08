@@ -43,6 +43,15 @@ texture::texture(const image& image)
 }
 
 
+texture::texture(SDL_Surface* surface)
+{
+	glGenTextures(1, &id);
+	CHECK_ERROR_GL();
+	init();
+	load(surface);
+}
+
+
 texture::~texture()
 {
 	glDeleteTextures(1, &id);
@@ -155,4 +164,30 @@ void texture::load(const image& image)
 	CHECK_ERROR_GL();
 	glGenerateMipmap(GL_TEXTURE_2D);
 	CHECK_ERROR_GL();
+}
+
+
+
+void texture::load(SDL_Surface* surface)
+{
+	SDL_Surface* tmp = nullptr;
+	if (surface->format->format != SDL_PIXELFORMAT_ABGR8888)
+	{
+		tmp = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
+		surface = tmp;
+	}
+
+	SDL_LockSurface(surface);
+
+	glBindTexture(GL_TEXTURE_2D, id);
+	CHECK_ERROR_GL();
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+	CHECK_ERROR_GL();
+	glGenerateMipmap(GL_TEXTURE_2D);
+	CHECK_ERROR_GL();
+
+	SDL_UnlockSurface(surface);
+
+	if (tmp != nullptr)
+		SDL_FreeSurface(tmp);
 }
