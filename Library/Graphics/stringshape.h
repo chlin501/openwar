@@ -35,8 +35,19 @@ struct stringfont
 {
 	typedef vertex3<glm::vec2, glm::vec2, float> vertex_type;
 
+#ifdef OPENWAR_USE_SDL
+	typedef TTF_Font* font_ptr;
+#endif
+#ifdef OPENWAR_USE_UIFONT
+	typedef UIFont* font_ptr;
+#endif
+#ifdef OPENWAR_USE_NSFONT
+	typedef NSFont* font_ptr;
+#endif
+
 	struct item
 	{
+		font_ptr _font;
 #ifdef OPENWAR_USE_SDL
 		std::string _string;
 #else
@@ -51,13 +62,11 @@ struct stringfont
 	static image* _image;
 
 #ifdef OPENWAR_USE_SDL
-	TTF_Font* _font;
-#endif
-#ifdef OPENWAR_USE_UIFONT
-	UIFont* _font;
-#endif
-#ifdef OPENWAR_USE_NSFONT
-	NSFont* _font;
+	font_ptr _font1;
+	font_ptr _font2;
+	font_ptr _emoji;
+#else
+	font_ptr _font;
 #endif
 
 	shaderprogram<vertex_type>* _renderer;
@@ -80,7 +89,10 @@ public:
 	float font_size() const;
 	float shadow_offset() const;
 
-	item add_character(const std::string& character);
+	font_ptr get_font_ptr() const;
+	font_ptr get_font_ptr(wchar_t wc) const;
+
+	item add_character(font_ptr font, const std::string& character);
 
 	void update_texture();
 

@@ -9,6 +9,7 @@
 #ifdef OPENWAR_USE_XCODE_FRAMEWORKS
 #define ANDROID_FONT1 "Roboto-Regular.ttf"
 #define ANDROID_FONT2 "Roboto-Regular.ttf"
+#define ANDROID_EMOJI "Roboto-Regular.ttf"
 #else
 #define ANDROID_FONT1 "/system/fonts/Roboto-Regular.ttf"
 #define ANDROID_FONT2 "/system/fonts/DroidSansFallback.ttf"
@@ -147,7 +148,13 @@ image* stringfont::_image = nullptr;
 
 
 stringfont::stringfont(const char* name, float size, float pixelDensity) :
+#ifdef OPENWAR_USE_SDL
+_font1(nullptr),
+_font2(nullptr),
+_emoji(nullptr),
+#else
 _font(0),
+#endif
 _pixelDensity(pixelDensity),
 _items(),
 _next(),
@@ -158,16 +165,32 @@ _dirty(false)
 	size *= _pixelDensity;
 
 #ifdef OPENWAR_USE_SDL
-	_font = TTF_OpenFont(ANDROID_FONT1, size);
-	if (_font  == NULL)
-		_font = TTF_OpenFont(ANDROID_FONT2, size);
+	_font1 = TTF_OpenFont(ANDROID_FONT1, size);
+	_font2 = TTF_OpenFont(ANDROID_FONT2, size);
+	_emoji = TTF_OpenFont(ANDROID_EMOJI, size);
 
-	if (_font != NULL)
+	if (_font1 != NULL)
 	{
-		TTF_SetFontStyle(_font, TTF_STYLE_NORMAL);
-		TTF_SetFontOutline(_font, 0);
-		TTF_SetFontKerning(_font, 1);
-		TTF_SetFontHinting(_font, TTF_HINTING_LIGHT);
+		TTF_SetFontStyle(_font1, TTF_STYLE_NORMAL);
+		TTF_SetFontOutline(_font1, 0);
+		TTF_SetFontKerning(_font1, 1);
+		TTF_SetFontHinting(_font1, TTF_HINTING_LIGHT);
+	}
+
+	if (_font2 != NULL)
+	{
+		TTF_SetFontStyle(_font2, TTF_STYLE_NORMAL);
+		TTF_SetFontOutline(_font2, 0);
+		TTF_SetFontKerning(_font2, 1);
+		TTF_SetFontHinting(_font2, TTF_HINTING_LIGHT);
+	}
+
+	if (_emoji != NULL)
+	{
+		TTF_SetFontStyle(_emoji, TTF_STYLE_NORMAL);
+		TTF_SetFontOutline(_emoji, 0);
+		TTF_SetFontKerning(_emoji, 1);
+		TTF_SetFontHinting(_emoji, TTF_HINTING_LIGHT);
 	}
 #endif
 
@@ -183,7 +206,11 @@ _dirty(false)
 
 
 stringfont::stringfont(bool bold, float size, float pixelDensity) :
-#ifndef OPENWAR_USE_SDL
+#ifdef OPENWAR_USE_SDL
+_font1(nullptr),
+_font2(nullptr),
+_emoji(nullptr),
+#else
 _font(nil),
 #endif
 _pixelDensity(pixelDensity),
@@ -196,16 +223,32 @@ _dirty(false)
 	size *= _pixelDensity;
 
 #ifdef OPENWAR_USE_SDL
-	_font = TTF_OpenFont(ANDROID_FONT1, size);
-	if (_font  == NULL)
-		_font = TTF_OpenFont(ANDROID_FONT2, size);
+	_font1 = TTF_OpenFont(ANDROID_FONT1, size);
+	_font2 = TTF_OpenFont(ANDROID_FONT2, size);
+	_emoji = TTF_OpenFont(ANDROID_EMOJI, size);
 
-	if (_font != NULL)
+	if (_font1 != NULL)
 	{
-		TTF_SetFontStyle(_font, TTF_STYLE_NORMAL);
-		TTF_SetFontOutline(_font, 0);
-		TTF_SetFontKerning(_font, 1);
-		TTF_SetFontHinting(_font, TTF_HINTING_LIGHT);
+		TTF_SetFontStyle(_font1, TTF_STYLE_NORMAL);
+		TTF_SetFontOutline(_font1, 0);
+		TTF_SetFontKerning(_font1, 1);
+		TTF_SetFontHinting(_font1, TTF_HINTING_LIGHT);
+	}
+
+	if (_font2 != NULL)
+	{
+		TTF_SetFontStyle(_font2, TTF_STYLE_NORMAL);
+		TTF_SetFontOutline(_font2, 0);
+		TTF_SetFontKerning(_font2, 1);
+		TTF_SetFontHinting(_font2, TTF_HINTING_LIGHT);
+	}
+
+	if (_emoji != NULL)
+	{
+		TTF_SetFontStyle(_emoji, TTF_STYLE_NORMAL);
+		TTF_SetFontOutline(_emoji, 0);
+		TTF_SetFontKerning(_emoji, 1);
+		TTF_SetFontHinting(_emoji, TTF_HINTING_LIGHT);
 	}
 #endif
 
@@ -229,12 +272,20 @@ _dirty(false)
 stringfont::~stringfont()
 {
 #ifdef OPENWAR_USE_SDL
-	if (_font != nullptr)
-		TTF_CloseFont(_font);
+	if (_font1 != nullptr)
+		TTF_CloseFont(_font1);
+
+	if (_font2 != nullptr)
+		TTF_CloseFont(_font2);
+
+	if (_emoji != nullptr)
+		TTF_CloseFont(_emoji);
 #endif
+
 #ifdef OPENWAR_USE_UIFONT
 	[_font release];
 #endif
+
 #ifdef OPENWAR_USE_NSFONT
 	[_font release];
 #endif
@@ -312,9 +363,31 @@ float stringfont::shadow_offset() const
 }
 
 
+stringfont::font_ptr stringfont::get_font_ptr() const
+{
+#ifdef OPENWAR_USE_SDL
+	return _font2;
+#else
+	return _font;
+#endif
+}
 
 
-stringfont::item stringfont::add_character(const std::string& character)
+stringfont::font_ptr stringfont::get_font_ptr(wchar_t wc) const
+{
+#ifdef OPENWAR_USE_SDL
+	if (TTF_GlyphIsProvided(_font1, wc))
+		return _font1;
+	if (TTF_GlyphIsProvided(_emoji, wc))
+		return _emoji;
+	return _font2;
+#else
+	return _font;
+#endif
+}
+
+
+stringfont::item stringfont::add_character(font_ptr font, const std::string& character)
 {
 	auto i = _items.find(character);
 	if (i != _items.end())
@@ -325,7 +398,7 @@ stringfont::item stringfont::add_character(const std::string& character)
 
 #ifdef OPENWAR_USE_SDL
 	int w, h;
-	if (TTF_SizeUTF8(_font, character.c_str(), &w, &h) == 0)
+	if (TTF_SizeUTF8(font, character.c_str(), &w, &h) == 0)
 	{
 		glyphsize = glm::vec2(w, h);
 	}
@@ -362,6 +435,7 @@ stringfont::item stringfont::add_character(const std::string& character)
 	}
 
 	item item;
+	item._font = font;
 #ifdef OPENWAR_USE_SDL
 	item._string = character;
 #else
@@ -408,7 +482,7 @@ void stringfont::update_texture()
 	{
 		const item& item = (*i).second;
 
-		SDL_Surface* surface = TTF_RenderUTF8_Blended(_font, item._string.c_str(), color);
+		SDL_Surface* surface = TTF_RenderUTF8_Blended(item._font, item._string.c_str(), color);
 		if (surface != nullptr)
 		{
 			SDL_Rect rect;
@@ -435,7 +509,7 @@ void stringfont::update_texture()
 		const item& item = (*i).second;
 
 		CGContextSetRGBFillColor(_image->CGContext(), 1, 1, 1, 1);
-	    [item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withFont:_font];
+	    [item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withFont:item._font];
 	}
 	_texture.load(*_image);
 
@@ -475,12 +549,12 @@ glm::vec2 stringfont::measure(const char* text)
 	float w = 0;
 	float h = 0;
 
-	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv(".", L".");
 	std::wstring ws = conv.from_bytes(text);
 
 	if (ContainsArabic(ws))
 	{
-		stringfont::item item = add_character(text);
+		stringfont::item item = add_character(get_font_ptr(), text);
 		glm::vec2 size = get_size(item);
 		w = size.x;
 		h = size.y;
@@ -496,7 +570,7 @@ glm::vec2 stringfont::measure(const char* text)
 			if (character.empty())
 				continue;
 
-			stringfont::item item = add_character(character);
+			stringfont::item item = add_character(get_font_ptr(wc), character);
 			glm::vec2 size = get_size(item);
 			w += size.x;
 			h = fmaxf(h, size.y);
@@ -566,12 +640,12 @@ void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_typ
 	glm::vec2 p(0, 0);
 	float alpha = _alpha;
 
-	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv(".", L".");
 	std::wstring ws = conv.from_bytes(_string);
 
 	if (ContainsArabic(ws))
 	{
-		stringfont::item item = font->add_character(_string.c_str());
+		stringfont::item item = font->add_character(font->get_font_ptr(), _string.c_str());
 
 		glm::vec2 s = font->get_size(item);
 		bounds2f bounds = bounds2_from_corner(p, s);
@@ -599,7 +673,7 @@ void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_typ
 			if (character.empty())
 				continue;
 
-			stringfont::item item = font->add_character(character);
+			stringfont::item item = font->add_character(font->get_font_ptr(wc), character);
 
 			glm::vec2 s = font->get_size(item);
 			bounds2f bounds = bounds2_from_corner(p, s);
