@@ -1,6 +1,9 @@
 #include "stringshape.h"
 #include "Algebra/image.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <codecvt>
+#include <cstdlib>
+#include <locale>
 
 
 #ifdef OPENWAR_USE_XCODE_FRAMEWORKS
@@ -8,25 +11,31 @@
 #define ANDROID_FONT2 "Roboto-Regular.ttf"
 #else
 #define ANDROID_FONT1 "/system/fonts/Roboto-Regular.ttf"
-#define ANDROID_FONT2 "/system/fonts/DroidSans.ttf.ttf"
+#define ANDROID_FONT2 "/system/fonts/DroidSansFallback.ttf"
+#define ANDROID_EMOJI "/system/fonts/AndroidEmoji.ttf"
 #endif
 
-#ifndef OPENWAR_USE_SDL
-static BOOL ContainsArabic(NSString* string)
+
+static bool IsArabic(wchar_t wc)
 {
-	NSUInteger length = string.length;
-	for (NSUInteger i = 0; i < length; ++i)
-	{
-		unichar c = [string characterAtIndex:i];
-		if (0x0600 <= c && c <= 0x08FF)
-			return YES;
-		if (0xFB00 <= c && c <= 0xFDFF)
-			return YES;
-	}
+	if (0x0600 <= wc && wc <= 0x08FF)
+		return true;
 
-	return NO;
+	if (0xFB00 <= wc && wc <= 0xFDFF)
+		return true;
+
+	return false;
 }
-#endif
+
+
+static bool ContainsArabic(const std::wstring& ws)
+{
+	for (wchar_t wc : ws)
+		if (IsArabic(wc))
+			return true;
+
+	return false;
+}
 
 
 #if !defined(ENABLE_BIDIRECTIONAL_TEXT)
@@ -466,41 +475,33 @@ glm::vec2 stringfont::measure(const char* text)
 	float w = 0;
 	float h = 0;
 
-#ifdef OPENWAR_USE_SDL
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+	std::wstring ws = conv.from_bytes(text);
 
-	stringfont::item item = add_character(text);
-	glm::vec2 size = get_size(item);
-	w = size.x;
-	h = size.y;
-
-#else
-
-	NSString* string = [NSString stringWithUTF8String:text];
-
-	if (ContainsArabic(string))
+	if (ContainsArabic(ws))
 	{
 		stringfont::item item = add_character(text);
 		glm::vec2 size = get_size(item);
 		w = size.x;
 		h = size.y;
 	}
-	else for (NSUInteger i = 0; i < string.length; ++i)
+	else
 	{
-		unichar c = [string characterAtIndex:i];
-		if (c == 0)
-			continue;
+		for (wchar_t wc : ws)
+		{
+			if (wc == 0)
+				continue;
 
-		const char* str = [NSString stringWithCharacters:&c length:1].UTF8String;
-		if (str == nullptr)
-			continue;
+			std::string character = conv.to_bytes(&wc, &wc + 1);
+			if (character.empty())
+				continue;
 
-		stringfont::item item = add_character(str);
-		glm::vec2 size = get_size(item);
-		w += size.x;
-		h = fmaxf(h, size.y);
+			stringfont::item item = add_character(character);
+			glm::vec2 size = get_size(item);
+			w += size.x;
+			h = fmaxf(h, size.y);
+		}
 	}
-
-#endif
 
 	return glm::vec2(w, h);
 }
@@ -558,32 +559,6 @@ vertexglyph3<glm::vec2, glm::vec2, float> stringglyph::glyph(stringfont* font)
 
 void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_type>& vertices)
 {
-#ifdef OPENWAR_USE_SDL
-
-	glm::vec2 p(0, 0);
-	float alpha = _alpha;
-
-	stringfont::item item = font->add_character(_string);
-
-	glm::vec2 s = font->get_size(item);
-	bounds2f bounds = bounds2_from_corner(p, s);
-	bounds.min = (_transform * glm::vec4(bounds.min.x, bounds.min.y, 0, 1)).xy();
-	bounds.max = (_transform * glm::vec4(bounds.max.x, bounds.max.y, 0, 1)).xy();
-
-	float next_alpha = alpha + _delta * s.x;
-
-	vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
-	vertices.push_back(stringglyph::vertex_type(bounds.p12(), glm::vec2(item._u0, item._v1), alpha));
-	vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
-
-	vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
-	vertices.push_back(stringglyph::vertex_type(bounds.p21(), glm::vec2(item._u1, item._v0), next_alpha));
-	vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
-
-#else
-
-	NSString* string = [NSString stringWithUTF8String:_string.c_str()];
-
 #if ENABLE_BIDIRECTIONAL_TEXT
     string = ReorderToDisplayDirection(string);
 #endif
@@ -591,7 +566,10 @@ void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_typ
 	glm::vec2 p(0, 0);
 	float alpha = _alpha;
 
-	if (ContainsArabic(string))
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+	std::wstring ws = conv.from_bytes(_string);
+
+	if (ContainsArabic(ws))
 	{
 		stringfont::item item = font->add_character(_string.c_str());
 
@@ -610,41 +588,41 @@ void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_typ
 		vertices.push_back(stringglyph::vertex_type(bounds.p21(), glm::vec2(item._u1, item._v0), next_alpha));
 		vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
 	}
-	else for (NSUInteger i = 0; i < string.length; ++i)
+	else
 	{
-		unichar c = [string characterAtIndex:i];
-		if (c == 0)
-			continue;
+		for (wchar_t wc : ws)
+		{
+			if (wc == 0)
+				continue;
 
-		const char* str = [NSString stringWithCharacters:&c length:1].UTF8String;
-		if (str == nullptr)
-			continue;
+			std::string character = conv.to_bytes(&wc, &wc + 1);
+			if (character.empty())
+				continue;
 
-		stringfont::item item = font->add_character(str);
+			stringfont::item item = font->add_character(character);
 
-		glm::vec2 s = font->get_size(item);
-		bounds2f bounds = bounds2_from_corner(p, s);
-		bounds.min = (_transform * glm::vec4(bounds.min.x, bounds.min.y, 0, 1)).xy();
-		bounds.max = (_transform * glm::vec4(bounds.max.x, bounds.max.y, 0, 1)).xy();
+			glm::vec2 s = font->get_size(item);
+			bounds2f bounds = bounds2_from_corner(p, s);
+			bounds.min = (_transform * glm::vec4(bounds.min.x, bounds.min.y, 0, 1)).xy();
+			bounds.max = (_transform * glm::vec4(bounds.max.x, bounds.max.y, 0, 1)).xy();
 
-		float next_alpha = alpha + _delta * s.x;
+			float next_alpha = alpha + _delta * s.x;
 
-		vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
-		vertices.push_back(stringglyph::vertex_type(bounds.p12(), glm::vec2(item._u0, item._v1), alpha));
-		vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
+			vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+			vertices.push_back(stringglyph::vertex_type(bounds.p12(), glm::vec2(item._u0, item._v1), alpha));
+			vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
 
-		vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
-		vertices.push_back(stringglyph::vertex_type(bounds.p21(), glm::vec2(item._u1, item._v0), next_alpha));
-		vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+			vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
+			vertices.push_back(stringglyph::vertex_type(bounds.p21(), glm::vec2(item._u1, item._v0), next_alpha));
+			vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
 
-		if (next_alpha < 0)
-			break;
+			if (next_alpha < 0)
+				break;
 
-		p.x += s.x;
-		alpha = next_alpha;
+			p.x += s.x;
+			alpha = next_alpha;
+		}
 	}
-
-#endif
 }
 
 
