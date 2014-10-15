@@ -376,10 +376,10 @@ stringfont::font_ptr stringfont::get_font_ptr() const
 stringfont::font_ptr stringfont::get_font_ptr(wchar_t wc) const
 {
 #ifdef OPENWAR_USE_SDL
-	if (TTF_GlyphIsProvided(_font1, wc))
-		return _font1;
-	if (TTF_GlyphIsProvided(_emoji, wc))
+	if (_emoji != nullptr && TTF_GlyphIsProvided(_emoji, wc))
 		return _emoji;
+	if (_font1 != nullptr && TTF_GlyphIsProvided(_font1, wc))
+		return _font1;
 	return _font2;
 #else
 	return _font;
