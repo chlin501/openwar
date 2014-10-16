@@ -6,7 +6,7 @@
 #define ShaderProgram_H
 
 #include <map>
-#include "VertexBufferX.h"
+#include "VertexBuffer.h"
 #include "texture.h"
 
 #ifndef CHECK_ERROR_GL
@@ -209,22 +209,22 @@ public:
 
 
 template <class _Vertex>
-class ShaderProgramX : public ShaderProgramBase
+class ShaderProgram : public ShaderProgramBase
 {
 public:
 	typedef _Vertex vertex_type;
 
-	ShaderProgramX(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader) :
+	ShaderProgram(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader) :
 	ShaderProgramBase(attrs, vertexshader, fragmentshader)
 	{
 	}
 
-	void render(VertexBufferX<vertex_type>& shape)
+	void render(VertexBuffer<vertex_type>& shape)
 	{
 		render(shape._mode, shape);
 	}
 
-	void render(GLenum mode, VertexBufferX<vertex_type>& vbo)
+	void render(GLenum mode, VertexBuffer<vertex_type>& vbo)
 	{
 		if (vbo.count() == 0)
 			return;
@@ -290,11 +290,11 @@ inline std::vector<const char*> makelist(const char* a1, const char* a2, const c
 
 
 template <class T1>
-class ShaderProgram1 : public ShaderProgramX<Vertex1<T1>>
+class ShaderProgram1 : public ShaderProgram<Vertex1<T1>>
 {
 public:
 	ShaderProgram1(const char* a1, const char* vertexshader, const char* fragmentshader) :
-	ShaderProgramX<Vertex1<T1>>(makelist(a1), vertexshader, fragmentshader)
+	ShaderProgram<Vertex1<T1>>(makelist(a1), vertexshader, fragmentshader)
 	{
 		this->_vertex_attributes.push_back(renderer_vertex_attribute(
 			get_vertex_attribute_size((T1*)nullptr),
@@ -305,11 +305,11 @@ public:
 };
 
 template <class T1, class T2>
-class ShaderProgram2 : public ShaderProgramX<Vertex2<T1, T2>>
+class ShaderProgram2 : public ShaderProgram<Vertex2<T1, T2>>
 {
 public:
 	ShaderProgram2(const char* a1, const char* a2, const char* vertexshader, const char* fragmentshader) :
-	ShaderProgramX<Vertex2<T1, T2>>(makelist(a1, a2), vertexshader, fragmentshader)
+	ShaderProgram<Vertex2<T1, T2>>(makelist(a1, a2), vertexshader, fragmentshader)
 	{
 		this->_vertex_attributes.push_back(renderer_vertex_attribute(
 			get_vertex_attribute_size((T1*)nullptr),
@@ -326,11 +326,11 @@ public:
 };
 
 template <class T1, class T2, class T3>
-class ShaderProgram3 : public ShaderProgramX<Vertex3<T1, T2, T3>>
+class ShaderProgram3 : public ShaderProgram<Vertex3<T1, T2, T3>>
 {
 public:
 	ShaderProgram3(const char* a1, const char* a2, const char* a3, const char* vertexshader, const char* fragmentshader) :
-	ShaderProgramX<Vertex3<T1, T2, T3>>(makelist(a1, a2, a3), vertexshader, fragmentshader)
+	ShaderProgram<Vertex3<T1, T2, T3>>(makelist(a1, a2, a3), vertexshader, fragmentshader)
 	{
 		this->_vertex_attributes.push_back(renderer_vertex_attribute(
 			get_vertex_attribute_size((T1*)nullptr),
@@ -353,11 +353,11 @@ public:
 };
 
 template <class T1, class T2, class T3, class T4>
-class ShaderProgram4 : public ShaderProgramX<Vertex4<T1, T2, T3, T4>>
+class ShaderProgram4 : public ShaderProgram<Vertex4<T1, T2, T3, T4>>
 {
 public:
 	ShaderProgram4(const char* a1, const char* a2, const char* a3, const char* a4, const char* vertexshader, const char* fragmentshader) :
-	ShaderProgramX<Vertex4<T1, T2, T3, T4>>(makelist(a1, a2, a3, a4), vertexshader, fragmentshader)
+	ShaderProgram<Vertex4<T1, T2, T3, T4>>(makelist(a1, a2, a3, a4), vertexshader, fragmentshader)
 	{
 		this->_vertex_attributes.push_back(renderer_vertex_attribute(
 			get_vertex_attribute_size((T1*)nullptr),

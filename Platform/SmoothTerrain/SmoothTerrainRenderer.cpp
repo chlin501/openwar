@@ -172,10 +172,10 @@ void SmoothTerrainRenderer::EnableRenderEdges()
 
 	UpdateDepthTextureSize();
 
-	_framebuffer = new FrameBufferX();
+	_framebuffer = new FrameBuffer();
 
 #if !TARGET_OS_IPHONE
-	_colorbuffer = new RenderBufferX(GL_RGBA, _framebuffer_width, _framebuffer_height);
+	_colorbuffer = new RenderBuffer(GL_RGBA, _framebuffer_width, _framebuffer_height);
 	_framebuffer->AttachColor(_colorbuffer);
 #endif
 
@@ -523,7 +523,7 @@ void SmoothTerrainRenderer::BuildTriangles()
 void SmoothTerrainRenderer::PushTriangle(const terrain_vertex& v0, const terrain_vertex& v1, const terrain_vertex& v2)
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
-	VertexBufferX<terrain_vertex>* s = SelectTerrainVbo(inside_circle(bounds, v0, v1, v2));
+	VertexBuffer<terrain_vertex>* s = SelectTerrainVbo(inside_circle(bounds, v0, v1, v2));
 	if (s != nullptr)
 	{
 		s->_vertices.push_back(v0);
@@ -533,7 +533,7 @@ void SmoothTerrainRenderer::PushTriangle(const terrain_vertex& v0, const terrain
 }
 
 
-VertexBufferX<terrain_vertex>* SmoothTerrainRenderer::SelectTerrainVbo(int inside)
+VertexBuffer<terrain_vertex>* SmoothTerrainRenderer::SelectTerrainVbo(int inside)
 {
 	switch (inside)
 	{

@@ -5,8 +5,8 @@
 #ifndef ColorLineRenderer_H
 #define ColorLineRenderer_H
 
-#include "GraphicsContextX.h"
-#include "ShaderProgramX.h"
+#include "GraphicsContext.h"
+#include "ShaderProgram.h"
 
 
 class GradientShape3
@@ -16,7 +16,7 @@ protected:
 	typedef ShaderProgram2<glm::vec3, glm::vec4> shaderprogram;
 
 	shaderprogram* _shaderprogram;
-	VertexBufferX<vertex> _vbo;
+	VertexBuffer<vertex> _vbo;
 
 public:
 	GradientShape3(GraphicsContext* gc);

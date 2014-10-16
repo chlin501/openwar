@@ -23,18 +23,18 @@
 #endif
 
 
-struct RenderBufferX
+struct RenderBuffer
 {
 	GLuint id;
 
-	RenderBufferX(GLenum internalformat, GLsizei width, GLsizei height);
-	~RenderBufferX();
+	RenderBuffer(GLenum internalformat, GLsizei width, GLsizei height);
+	~RenderBuffer();
 
 	void Resize(GLenum internalformat, GLsizei width, GLsizei height);
 
 private:
-	RenderBufferX(const RenderBufferX&) {}
-	RenderBufferX& operator=(const RenderBufferX&) { return *this; }
+	RenderBuffer(const RenderBuffer&) {}
+	RenderBuffer& operator=(const RenderBuffer&) { return *this; }
 };
 
 

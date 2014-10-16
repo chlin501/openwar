@@ -25,7 +25,7 @@
 #endif
 
 #include "Algebra/bounds.h"
-#include "ShaderProgramX.h"
+#include "ShaderProgram.h"
 #include "vertex.h"
 #include "vertexshape.h"
 #include "texture.h"
@@ -69,7 +69,7 @@ struct stringfont
 	font_ptr _font;
 #endif
 
-	ShaderProgramX<vertex_type>* _renderer;
+	ShaderProgram<vertex_type>* _renderer;
 	float _pixelDensity;
 	texture _texture;
 

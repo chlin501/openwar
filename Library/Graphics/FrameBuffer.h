@@ -26,28 +26,28 @@
 extern void CHECK_ERROR_GL();
 #endif
 
-struct RenderBufferX;
+struct RenderBuffer;
 struct texture;
 
 
-struct FrameBufferX
+struct FrameBuffer
 {
 	GLuint id;
 
-	FrameBufferX();
-	~FrameBufferX();
+	FrameBuffer();
+	~FrameBuffer();
 
-	void AttachColor(RenderBufferX* value);
+	void AttachColor(RenderBuffer* value);
 	void AttachColor(texture* value);
 
-	void AttachDepth(RenderBufferX* value);
+	void AttachDepth(RenderBuffer* value);
 	void AttachDepth(texture* value);
 
-	void AttachStencil(RenderBufferX* value);
+	void AttachStencil(RenderBuffer* value);
 
 private:
-	FrameBufferX(const FrameBufferX&) {}
-	FrameBufferX& operator = (const FrameBufferX&) {return *this;}
+	FrameBuffer(const FrameBuffer&) {}
+	FrameBuffer& operator = (const FrameBuffer&) {return *this;}
 };
 
 
@@ -56,7 +56,7 @@ class bind_framebuffer
 	GLint _old;
 
 public:
-	bind_framebuffer(const FrameBufferX& fb)
+	bind_framebuffer(const FrameBuffer& fb)
 	{
 		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &_old);
 		glBindFramebuffer(GL_FRAMEBUFFER, fb.id);

@@ -123,14 +123,14 @@ private:
 
 
 template <class _Vertex>
-class VertexBufferX : public vertexbuffer_base
+class VertexBuffer : public vertexbuffer_base
 {
 public:
 	typedef _Vertex vertex_type;
 
 	std::vector<vertex_type> _vertices;
 
-	VertexBufferX()
+	VertexBuffer()
 	{
 	}
 
@@ -169,12 +169,12 @@ public:
 
 
 private:
-	VertexBufferX(const VertexBufferX& other) { }
-	VertexBufferX& operator=(const VertexBufferX&) { return *this; }
+	VertexBuffer(const VertexBuffer& other) { }
+	VertexBuffer& operator=(const VertexBuffer&) { return *this; }
 };
 
-typedef VertexBufferX<Vertex_2f> VertexBuffer_2f;
-typedef VertexBufferX<Vertex_2f_2f> VertexBuffer_2f_2f;
+typedef VertexBuffer<Vertex_2f> VertexBuffer_2f;
+typedef VertexBuffer<Vertex_2f_2f> VertexBuffer_2f_2f;
 
 
 #endif

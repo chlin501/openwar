@@ -3,8 +3,8 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "BattleModel/HeightMap.h"
-#include "ShaderProgramX.h"
-#include "VertexBufferX.h"
+#include "ShaderProgram.h"
+#include "VertexBuffer.h"
 #include "TiledTerrainRenderer.h"
 
 
@@ -44,7 +44,7 @@ void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3&
 	bounds2f bounds = _tiledGroundMap->GetBounds();
 	glm::ivec2 size = _tiledGroundMap->GetSize();
 
-	VertexBufferX<Vertex_3f_2f> shape;
+	VertexBuffer<Vertex_3f_2f> shape;
 	shape._mode = GL_TRIANGLES;
 
 	glm::vec2 delta = bounds.size() / glm::vec2(size);

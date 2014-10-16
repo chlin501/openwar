@@ -5,7 +5,7 @@
 #include "TerrainGesture.h"
 #include "TerrainView.h"
 #include "Surface/Touch.h"
-#include "ShaderProgramX.h"
+#include "ShaderProgram.h"
 
 
 TerrainGesture::TerrainGesture(TerrainView* terrainView) :

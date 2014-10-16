@@ -5,8 +5,8 @@
 #ifndef TextureRenderer_H
 #define TextureRenderer_H
 
-#include "GraphicsContextX.h"
-#include "ShaderProgramX.h"
+#include "GraphicsContext.h"
+#include "ShaderProgram.h"
 
 
 class TextureShape3
@@ -14,8 +14,8 @@ class TextureShape3
 protected:
 	typedef Vertex_3f_2f vertex;
 
-	ShaderProgramX<vertex>* _shaderprogram;
-	VertexBufferX<vertex> _vbo;
+	ShaderProgram<vertex>* _shaderprogram;
+	VertexBuffer<vertex> _vbo;
 
 public:
 	TextureShape3(GraphicsContext* gc);

@@ -99,7 +99,7 @@ static int inside_circle(bounds2f bounds, Vertex_2f v1, Vertex_2f v2, Vertex_2f 
 }
 
 
-static VertexBufferX<Vertex_2f>* choose_shape(int count, VertexBufferX<Vertex_2f>* inside, VertexBufferX<Vertex_2f>* border)
+static VertexBuffer<Vertex_2f>* choose_shape(int count, VertexBuffer<Vertex_2f>* inside, VertexBuffer<Vertex_2f>* border)
 {
 	switch (count)
 	{
@@ -138,7 +138,7 @@ void SmoothTerrainWater::Update()
 				Vertex_2f v21 = Vertex_2f(p + glm::vec2(s.x, 0));
 				Vertex_2f v22 = Vertex_2f(p + s);
 
-				VertexBufferX<Vertex_2f>* s = choose_shape(inside_circle(bounds, v11, v22, v12), &_shape_water_inside, &_shape_water_border);
+				VertexBuffer<Vertex_2f>* s = choose_shape(inside_circle(bounds, v11, v22, v12), &_shape_water_inside, &_shape_water_border);
 				if (s != nullptr)
 				{
 					s->_vertices.push_back(v11);

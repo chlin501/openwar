@@ -6,7 +6,7 @@
 #define GraphicsContext_H
 
 #include <map>
-#include "ShaderProgramX.h"
+#include "ShaderProgram.h"
 
 
 class GraphicsContext

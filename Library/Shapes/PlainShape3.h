@@ -5,8 +5,8 @@
 #ifndef LineRenderer_H
 #define LineRenderer_H
 
-#include "GraphicsContextX.h"
-#include "ShaderProgramX.h"
+#include "GraphicsContext.h"
+#include "ShaderProgram.h"
 
 
 class PlainShape3
@@ -15,7 +15,7 @@ protected:
 	typedef Vertex1<glm::vec3> vertex;
 	typedef ShaderProgram1<glm::vec3> shaderprogram;
 
-	VertexBufferX<vertex> _vbo;
+	VertexBuffer<vertex> _vbo;
 	shaderprogram* _shaderprogram;
 
 public:

@@ -2,26 +2,26 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "FrameBufferX.h"
-#include "RenderBufferX.h"
+#include "FrameBuffer.h"
+#include "RenderBuffer.h"
 #include "texture.h"
 
 
-FrameBufferX::FrameBufferX()
+FrameBuffer::FrameBuffer()
 {
 	glGenFramebuffers(1, &id);
 	CHECK_ERROR_GL();
 }
 
 
-FrameBufferX::~FrameBufferX()
+FrameBuffer::~FrameBuffer()
 {
 	glDeleteFramebuffers(1, &id);
 	CHECK_ERROR_GL();
 }
 
 
-void FrameBufferX::AttachColor(RenderBufferX* value)
+void FrameBuffer::AttachColor(RenderBuffer* value)
 {
 	bind_framebuffer binding(*this);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, value->id);
@@ -29,7 +29,7 @@ void FrameBufferX::AttachColor(RenderBufferX* value)
 }
 
 
-void FrameBufferX::AttachColor(texture* value)
+void FrameBuffer::AttachColor(texture* value)
 {
 	bind_framebuffer binding(*this);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, value->id, 0);
@@ -37,7 +37,7 @@ void FrameBufferX::AttachColor(texture* value)
 }
 
 
-void FrameBufferX::AttachDepth(RenderBufferX* value)
+void FrameBuffer::AttachDepth(RenderBuffer* value)
 {
 	bind_framebuffer binding(*this);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, value->id);
@@ -45,7 +45,7 @@ void FrameBufferX::AttachDepth(RenderBufferX* value)
 }
 
 
-void FrameBufferX::AttachDepth(texture* value)
+void FrameBuffer::AttachDepth(texture* value)
 {
 	bind_framebuffer binding(*this);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, value->id, 0);
@@ -53,7 +53,7 @@ void FrameBufferX::AttachDepth(texture* value)
 }
 
 
-void FrameBufferX::AttachStencil(RenderBufferX* value)
+void FrameBuffer::AttachStencil(RenderBuffer* value)
 {
 	bind_framebuffer binding(*this);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, value->id);

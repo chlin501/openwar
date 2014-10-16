@@ -5,8 +5,8 @@
 #ifndef TextureBillboardRenderer_H
 #define TextureBillboardRenderer_H
 
-#include "GraphicsContextX.h"
-#include "ShaderProgramX.h"
+#include "GraphicsContext.h"
+#include "ShaderProgram.h"
 #include "BillboardTexture.h"
 
 
@@ -49,7 +49,7 @@ public:
 	typedef ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2> shaderprogram;
 
 	shaderprogram* _shaderprogram;
-	VertexBufferX<vertex> _vbo;
+	VertexBuffer<vertex> _vbo;
 
 public:
 	TextureBillboardRenderer(GraphicsContext* gc);

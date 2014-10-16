@@ -4,7 +4,7 @@
 
 #include "ButtonRendering.h"
 #include "ButtonGrid.h"
-#include "VertexBufferX.h"
+#include "VertexBuffer.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 

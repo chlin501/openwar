@@ -8,7 +8,7 @@
 #endif
 #endif
 
-#include "ShaderProgramX.h"
+#include "ShaderProgram.h"
 
 //#include <android/log.h>
 

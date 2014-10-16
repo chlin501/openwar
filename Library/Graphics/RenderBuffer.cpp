@@ -2,7 +2,7 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "RenderBufferX.h"
+#include "RenderBuffer.h"
 
 
 #ifndef CHECK_ERROR_GL
@@ -11,7 +11,7 @@ extern void CHECK_ERROR_GL();
 
 
 
-RenderBufferX::RenderBufferX(GLenum internalformat, GLsizei width, GLsizei height)
+RenderBuffer::RenderBuffer(GLenum internalformat, GLsizei width, GLsizei height)
 {
 	glGenRenderbuffers(1, &id);
 	CHECK_ERROR_GL();
@@ -22,14 +22,14 @@ RenderBufferX::RenderBufferX(GLenum internalformat, GLsizei width, GLsizei heigh
 }
 
 
-void RenderBufferX::Resize(GLenum internalformat, GLsizei width, GLsizei height)
+void RenderBuffer::Resize(GLenum internalformat, GLsizei width, GLsizei height)
 {
 	glRenderbufferStorage(GL_RENDERBUFFER, internalformat, width, height);
 	CHECK_ERROR_GL();
 }
 
 
-RenderBufferX::~RenderBufferX()
+RenderBuffer::~RenderBuffer()
 {
 	glDeleteRenderbuffers(1, &id);
 	CHECK_ERROR_GL();

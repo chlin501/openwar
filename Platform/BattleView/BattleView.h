@@ -6,7 +6,7 @@
 #define BATTLEVIEW_H
 
 #include "BattleModel/BattleSimulator.h"
-#include "VertexBufferX.h"
+#include "VertexBuffer.h"
 #include "Shapes/TextureBillboardRenderer.h"
 #include "TerrainView/TerrainView.h"
 #include "TiledTerrain/TiledTerrainRenderer.h"

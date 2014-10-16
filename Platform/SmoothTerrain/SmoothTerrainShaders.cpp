@@ -33,7 +33,7 @@ SmoothTerrainShaders::~SmoothTerrainShaders()
 }
 
 
-void SmoothTerrainShaders::render_terrain_inside(VertexBufferX<terrain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_terrain_inside(VertexBuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
 {
 	if (_terrain_inside == nullptr)
 	{
@@ -107,7 +107,7 @@ void SmoothTerrainShaders::render_terrain_inside(VertexBufferX<terrain_vertex>& 
 
 
 
-void SmoothTerrainShaders::render_terrain_border(VertexBufferX<terrain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_terrain_border(VertexBuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
 {
 	if (_terrain_border == nullptr)
 	{
@@ -183,7 +183,7 @@ void SmoothTerrainShaders::render_terrain_border(VertexBufferX<terrain_vertex>& 
 
 
 
-void SmoothTerrainShaders::render_terrain_skirt(VertexBufferX<skirt_vertex>& shape, const glm::mat4& transform, const texture* texturex)
+void SmoothTerrainShaders::render_terrain_skirt(VertexBuffer<skirt_vertex>& shape, const glm::mat4& transform, const texture* texturex)
 {
 	if (_terrain_skirt == nullptr)
 	{
@@ -236,7 +236,7 @@ void SmoothTerrainShaders::render_terrain_skirt(VertexBufferX<skirt_vertex>& sha
 
 
 
-void SmoothTerrainShaders::render_depth_inside(VertexBufferX<terrain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_depth_inside(VertexBuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
 {
 	if (_depth_inside == nullptr)
 	{
@@ -273,7 +273,7 @@ void SmoothTerrainShaders::render_depth_inside(VertexBufferX<terrain_vertex>& sh
 
 
 
-void SmoothTerrainShaders::render_depth_border(VertexBufferX<terrain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_depth_border(VertexBuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
 {
 	if (_depth_border == nullptr)
 	{
@@ -320,7 +320,7 @@ void SmoothTerrainShaders::render_depth_border(VertexBufferX<terrain_vertex>& sh
 
 
 
-void SmoothTerrainShaders::render_depth_skirt(VertexBufferX<skirt_vertex>& shape, const glm::mat4& transform)
+void SmoothTerrainShaders::render_depth_skirt(VertexBuffer<skirt_vertex>& shape, const glm::mat4& transform)
 {
 	if (_depth_skirt == nullptr)
 	{
@@ -357,7 +357,7 @@ void SmoothTerrainShaders::render_depth_skirt(VertexBufferX<skirt_vertex>& shape
 }
 
 
-void SmoothTerrainShaders::render_sobel_filter(VertexBufferX<Vertex_2f_2f>& shape, const sobel_uniforms& uniforms)
+void SmoothTerrainShaders::render_sobel_filter(VertexBuffer<Vertex_2f_2f>& shape, const sobel_uniforms& uniforms)
 {
 	if (_sobel_filter == nullptr)
 	{
@@ -445,7 +445,7 @@ void SmoothTerrainShaders::render_sobel_filter(VertexBufferX<Vertex_2f_2f>& shap
 }
 
 
-void SmoothTerrainShaders::render_ground_shadow(VertexBufferX<Vertex_2f>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_ground_shadow(VertexBuffer<Vertex_2f>& shape, const terrain_uniforms& uniforms)
 {
 	if (_ground_shadow == nullptr)
 	{

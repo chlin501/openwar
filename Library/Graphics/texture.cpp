@@ -12,7 +12,7 @@
 #endif
 
 #include "texture.h"
-#include "ShaderProgramX.h"
+#include "ShaderProgram.h"
 #include "Algebra/image.h"
 
 

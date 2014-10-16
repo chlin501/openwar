@@ -8,7 +8,7 @@
 #include <functional>
 #include <vector>
 
-#include "VertexBufferX.h"
+#include "VertexBuffer.h"
 
 
 class glyphversion
@@ -85,7 +85,7 @@ class vertexshape1
 	typedef Vertex1<T1> vertex_type;
 	typedef vertexglyph1<T1> vertexglyph_type;
 
-	VertexBufferX<vertex_type> _vbo;
+	VertexBuffer<vertex_type> _vbo;
 	int _version;
 
 public:
@@ -105,7 +105,7 @@ public:
 		return true;//version != _version;
 	}
 
-	VertexBufferX<vertex_type>& update_vbo()
+	VertexBuffer<vertex_type>& update_vbo()
 	{
 		if (needs_update())
 		{
@@ -131,7 +131,7 @@ class vertexshape2
 	typedef Vertex2<T1, T2> vertex_type;
 	typedef vertexglyph2<T1, T2> vertexglyph_type;
 
-	VertexBufferX<vertex_type> _vbo;
+	VertexBuffer<vertex_type> _vbo;
 	int _version;
 
 public:
@@ -151,7 +151,7 @@ public:
 		return true;//version != _version;
 	}
 
-	VertexBufferX<vertex_type>& update_vbo()
+	VertexBuffer<vertex_type>& update_vbo()
 	{
 		if (needs_update())
 		{
@@ -178,7 +178,7 @@ public:
 	typedef Vertex3<T1, T2, T3> vertex_type;
 	typedef vertexglyph3<T1, T2, T3> vertexglyph_type;
 
-	VertexBufferX<vertex_type> _vbo;
+	VertexBuffer<vertex_type> _vbo;
 	int _version;
 
 public:
@@ -198,7 +198,7 @@ public:
 		return true; //version != _version;
 	}
 
-	VertexBufferX<vertex_type>& update_vbo()
+	VertexBuffer<vertex_type>& update_vbo()
 	{
 		if (needs_update())
 		{
@@ -224,7 +224,7 @@ class vertexshape4
 	typedef Vertex4<T1, T2, T3, T4> vertex_type;
 	typedef vertexglyph4<T1, T2, T3, T4> vertexglyph_type;
 
-	VertexBufferX<vertex_type> _vbo;
+	VertexBuffer<vertex_type> _vbo;
 	int _version;
 
 public:
@@ -244,7 +244,7 @@ public:
 		return true;//version != _version;
 	}
 
-	VertexBufferX<vertex_type>& update_vbo()
+	VertexBuffer<vertex_type>& update_vbo()
 	{
 		if (needs_update())
 		{
