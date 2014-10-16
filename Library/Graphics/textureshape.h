@@ -5,7 +5,7 @@
 #ifndef textureshape_H
 #define textureshape_H
 
-#include "vertexshape.h"
+#include "VertexBuffer.h"
 
 
 struct texturetile

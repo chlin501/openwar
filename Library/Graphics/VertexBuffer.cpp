@@ -7,6 +7,9 @@
 
 
 
+int glyphversion::_highest_version = 0;
+
+
 vertexbuffer_base::vertexbuffer_base() :
 _mode(0),
 _vbo(0),

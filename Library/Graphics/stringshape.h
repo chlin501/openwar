@@ -26,8 +26,6 @@
 
 #include "Algebra/bounds.h"
 #include "ShaderProgram.h"
-#include "vertex.h"
-#include "vertexshape.h"
 #include "texture.h"
 
 
