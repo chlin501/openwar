@@ -76,8 +76,8 @@ void GradientLineShape3::Reset()
 
 void GradientLineShape3::AddLine(const glm::vec3& p1, const glm::vec3& p2, const glm::vec4& c1, const glm::vec4& c2)
 {
-	_vbo._vertices.push_back(vertex(p1, c1));
-	_vbo._vertices.push_back(vertex(p2, c2));
+	_vbo._vertices.push_back(Vertex_3f_4f(p1, c1));
+	_vbo._vertices.push_back(Vertex_3f_4f(p2, c2));
 }
 
 
@@ -93,7 +93,7 @@ void GradientTriangleShape3::Reset()
 
 void GradientTriangleShape3::AddVertex(const glm::vec3& p, const glm::vec4& c)
 {
-	_vbo._vertices.push_back(vertex(p, c));
+	_vbo._vertices.push_back(Vertex_3f_4f(p, c));
 }
 
 
@@ -112,8 +112,8 @@ void GradientTriangleStripShape3::AddVertex(const glm::vec3& p, const glm::vec4&
 	if (separator && !_vbo._vertices.empty())
 	{
 		_vbo._vertices.push_back(_vbo._vertices.back());
-		_vbo._vertices.push_back(vertex(p, c));
+		_vbo._vertices.push_back(Vertex_3f_4f(p, c));
 	}
 
-	_vbo._vertices.push_back(vertex(p, c));
+	_vbo._vertices.push_back(Vertex_3f_4f(p, c));
 }

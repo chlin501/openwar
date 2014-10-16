@@ -46,7 +46,7 @@ public:
 };
 
 
-typedef vertexshape2<glm::vec2, glm::vec2> textureshape;
+typedef VertexBuffer_2f_2f textureshape;
 
 
 #endif

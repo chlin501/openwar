@@ -138,7 +138,7 @@ class stringshape
 	std::vector<stringglyph*> _stringglyphs;
 
 public:
-	vertexshape3<glm::vec2, glm::vec2, float> _xxx;
+	VertexBuffer<Vertex_2f_2f_1f> _xxx;
 	stringfont* _font;
 
 	stringshape(stringfont* font);

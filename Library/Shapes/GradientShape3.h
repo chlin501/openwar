@@ -12,11 +12,10 @@
 class GradientShape3
 {
 protected:
-	typedef Vertex2<glm::vec3, glm::vec4> vertex;
 	typedef ShaderProgram2<glm::vec3, glm::vec4> shaderprogram;
 
 	shaderprogram* _shaderprogram;
-	VertexBuffer<vertex> _vbo;
+	VertexBuffer_3f_4f _vbo;
 
 public:
 	GradientShape3(GraphicsContext* gc);

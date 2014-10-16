@@ -12,10 +12,9 @@
 class PlainShape3
 {
 protected:
-	typedef Vertex1<glm::vec3> vertex;
 	typedef ShaderProgram1<glm::vec3> shaderprogram;
 
-	VertexBuffer<vertex> _vbo;
+	VertexBuffer_3f _vbo;
 	shaderprogram* _shaderprogram;
 
 public:

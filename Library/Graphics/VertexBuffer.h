@@ -63,8 +63,9 @@ struct Vertex2
 typedef Vertex2<glm::vec2, glm::vec4> Vertex_2f_4f;
 typedef Vertex2<glm::vec2, glm::vec2> Vertex_2f_2f;
 typedef Vertex2<glm::vec3, glm::vec2> Vertex_3f_2f;
-typedef Vertex2<glm::vec3, glm::vec3> Vertex_3f_3f;
 typedef Vertex2<glm::vec3, float> Vertex_3f_1f;
+typedef Vertex2<glm::vec3, glm::vec3> Vertex_3f_3f;
+typedef Vertex2<glm::vec3, glm::vec4> Vertex_3f_4f;
 
 
 template <class T1, class T2, class T3>
@@ -201,22 +202,12 @@ private:
 };
 
 typedef VertexBuffer<Vertex_2f> VertexBuffer_2f;
+typedef VertexBuffer<Vertex_3f> VertexBuffer_3f;
+
 typedef VertexBuffer<Vertex_2f_2f> VertexBuffer_2f_2f;
+typedef VertexBuffer<Vertex_3f_4f> VertexBuffer_3f_4f;
 
-
-
-template <class T1, class T2>
-class vertexshape2 : public VertexBuffer<Vertex2<T1, T2>>
-{
-
-};
-
-
-template <class T1, class T2, class T3>
-class vertexshape3 : public VertexBuffer<Vertex3<T1, T2, T3>>
-{
-};
-
-
+typedef VertexBuffer<Vertex_3f_4f_1f> VertexBuffer_3f_4f_1f;
+typedef VertexBuffer<Vertex_2f_2f_2f> VertexBuffer_2f_2f_2f;
 
 #endif

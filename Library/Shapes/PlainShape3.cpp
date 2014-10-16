@@ -72,8 +72,8 @@ void PlainLineShape3::Reset()
 
 void PlainLineShape3::AddLine(const glm::vec3& p1, const glm::vec3& p2)
 {
-	_vbo._vertices.push_back(vertex(p1));
-	_vbo._vertices.push_back(vertex(p2));
+	_vbo._vertices.push_back(Vertex_3f(p1));
+	_vbo._vertices.push_back(Vertex_3f(p2));
 }
 
 
@@ -89,5 +89,5 @@ void PlainTriangleShape3::Reset()
 
 void PlainTriangleShape3::AddVertex(const glm::vec3& p)
 {
-	_vbo._vertices.push_back(vertex(p));
+	_vbo._vertices.push_back(Vertex_3f(p));
 }

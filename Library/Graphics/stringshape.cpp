@@ -728,7 +728,7 @@ void stringshape::add(const char* s, glm::mat4x4 transform, float alpha, float d
 	stringglyph* g = new stringglyph(s, transform, alpha, delta);
 	_stringglyphs.push_back(g);
 
-	_xxx._glyphs.push_back(VertexGlyph<Vertex3<glm::vec2, glm::vec2, float>>([this, g](std::vector<Vertex_2f_2f_1f>& vertices) {
+	_xxx._glyphs.push_back(VertexGlyph<Vertex_2f_2f_1f>([this, g](std::vector<Vertex_2f_2f_1f>& vertices) {
 		g->generate(_font, vertices);
 	}));
 }
