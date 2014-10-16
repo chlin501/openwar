@@ -5,17 +5,19 @@
 #include "PlainShape3.h"
 
 
-PlainShape3::PlainShape3(graphicscontext* gc)
+PlainShape3::PlainShape3(GraphicsContext* gc)
 {
-	static int shaderprogram_id = graphicscontext::generate_shaderprogram_id();
+	static int shaderprogram_id = GraphicsContext::generate_shaderprogram_id();
 
-	_shaderprogram = gc->load_shaderprogram1<glm::vec3>(
+	_shaderprogram = gc->LoadShaderProgram1<glm::vec3>(
 		shaderprogram_id,
 		"position",
 		VERTEX_SHADER
 		({
-			attribute vec3 position;
-			uniform mat4 transform;
+			attribute
+			vec3 position;
+			uniform
+			mat4 transform;
 			uniform float point_size;
 
 			void main()
@@ -28,7 +30,8 @@ PlainShape3::PlainShape3(graphicscontext* gc)
 		}),
 		FRAGMENT_SHADER
 		({
-			uniform vec4 color;
+			uniform
+			vec4 color;
 
 			void main()
 			{

@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "Algebra/bounds.h"
-#include "Graphics/graphicscontext.h"
+#include "GraphicsContextX.h"
 #include "Container.h"
 
 class Gesture;
@@ -17,7 +17,7 @@ class Touch;
 
 class Surface : public Container
 {
-	graphicscontext* _gc;
+	GraphicsContext* _gc;
 
 public:
 	std::vector<Gesture*> _gestures;
@@ -25,7 +25,7 @@ public:
 	Surface(glm::vec2 size, float pixelDensity);
 	virtual ~Surface();
 
-	graphicscontext* GetGraphicsContext() const { return _gc; }
+	GraphicsContext* GetGraphicsContext() const { return _gc; }
 
 	// Content
 

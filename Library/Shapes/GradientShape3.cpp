@@ -5,20 +5,24 @@
 #include "GradientShape3.h"
 
 
-GradientShape3::GradientShape3(graphicscontext* gc)
+GradientShape3::GradientShape3(GraphicsContext* gc)
 {
-	static int shaderprogram_id = graphicscontext::generate_shaderprogram_id();
+	static int shaderprogram_id = GraphicsContext::generate_shaderprogram_id();
 
-	_shaderprogram = gc->load_shaderprogram2<glm::vec3, glm::vec4>(
+	_shaderprogram = gc->LoadShaderProgram2<glm::vec3, glm::vec4>(
 		shaderprogram_id,
 		"position", "color",
 		VERTEX_SHADER
 		({
-			attribute vec3 position;
-			attribute vec4 color;
-			uniform mat4 transform;
+			attribute
+			vec3 position;
+			attribute
+			vec4 color;
+			uniform
+			mat4 transform;
 			uniform float point_size;
-			varying vec4 v_color;
+			varying
+			vec4 v_color;
 
 			void main()
 			{
@@ -31,7 +35,8 @@ GradientShape3::GradientShape3(graphicscontext* gc)
 		}),
 		FRAGMENT_SHADER
 		({
-			varying vec4 v_color;
+			varying
+			vec4 v_color;
 
 			void main()
 			{

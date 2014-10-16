@@ -122,7 +122,7 @@ void Content::UseViewport()
 	for (Content* c = this; c != nullptr && viewport.is_empty(); c = c->GetContainer())
 		viewport = c->GetViewport();
 
-	viewport = viewport * GetSurface()->GetGraphicsContext()->get_pixeldensity();
+	viewport = viewport * GetSurface()->GetGraphicsContext()->GetPixelDensity();
 	glViewport((GLint)viewport.min.x, (GLint)viewport.min.y, (GLsizei)viewport.size().x, (GLsizei)viewport.size().y);
 }
 
@@ -442,12 +442,12 @@ void Content::OnBoundsChanged()
 
 void Content::RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const
 {
-	vertexbuffer<plain_vertex> shape;
+	VertexBuffer_2f shape;
 	shape._mode = GL_TRIANGLE_STRIP;
-	shape._vertices.push_back(plain_vertex(bounds.p11()));
-	shape._vertices.push_back(plain_vertex(bounds.p12()));
-	shape._vertices.push_back(plain_vertex(bounds.p21()));
-	shape._vertices.push_back(plain_vertex(bounds.p22()));
+	shape._vertices.push_back(Vertex_2f(bounds.p11()));
+	shape._vertices.push_back(Vertex_2f(bounds.p12()));
+	shape._vertices.push_back(Vertex_2f(bounds.p21()));
+	shape._vertices.push_back(Vertex_2f(bounds.p22()));
 
 	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 	renderers::singleton->_plain_renderer->get_uniform<glm::vec4>("color").set_value(color);
@@ -457,12 +457,12 @@ void Content::RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4
 
 void Content::RenderOutline(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const
 {
-	vertexbuffer<plain_vertex> shape;
+	VertexBuffer_2f shape;
 	shape._mode = GL_LINE_LOOP;
-	shape._vertices.push_back(plain_vertex(bounds.p11()));
-	shape._vertices.push_back(plain_vertex(bounds.p12()));
-	shape._vertices.push_back(plain_vertex(bounds.p22()));
-	shape._vertices.push_back(plain_vertex(bounds.p21()));
+	shape._vertices.push_back(Vertex_2f(bounds.p11()));
+	shape._vertices.push_back(Vertex_2f(bounds.p12()));
+	shape._vertices.push_back(Vertex_2f(bounds.p22()));
+	shape._vertices.push_back(Vertex_2f(bounds.p21()));
 
 	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 	renderers::singleton->_plain_renderer->get_uniform<glm::vec4>("color").set_value(color);

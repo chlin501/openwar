@@ -2,8 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "vertexbuffer.h"
-#include "shaderprogram.h"
+#include "VertexBufferX.h"
+#include "ShaderProgramX.h"
 
 
 

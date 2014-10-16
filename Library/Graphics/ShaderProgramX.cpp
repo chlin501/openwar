@@ -8,7 +8,7 @@
 #endif
 #endif
 
-#include "shaderprogram.h"
+#include "ShaderProgramX.h"
 
 //#include <android/log.h>
 
@@ -35,7 +35,7 @@ static void print_log(const char* operation, const char* log)
 
 
 
-shaderprogram_base::shaderprogram_base(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader) :
+ShaderProgramBase::ShaderProgramBase(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader) :
 _nextUniformTexture(0),
 _blend_sfactor(GL_ONE),
 _blend_dfactor(GL_ZERO)
@@ -80,7 +80,7 @@ _blend_dfactor(GL_ZERO)
 
 
 
-shaderprogram_base::~shaderprogram_base()
+ShaderProgramBase::~ShaderProgramBase()
 {
     if (_program != 0)
     {
@@ -91,10 +91,10 @@ shaderprogram_base::~shaderprogram_base()
 
 
 
-float shaderprogram_base::_pixels_per_point = 0;
+float ShaderProgramBase::_pixels_per_point = 0;
 
 
-float shaderprogram_base::pixels_per_point()
+float ShaderProgramBase::pixels_per_point()
 {
 	if (_pixels_per_point == 0)
 	{
@@ -112,13 +112,13 @@ float shaderprogram_base::pixels_per_point()
 }
 
 
-void shaderprogram_base::set_pixels_per_point(float value)
+void ShaderProgramBase::set_pixels_per_point(float value)
 {
 	_pixels_per_point = value;
 }
 
 
-GLuint shaderprogram_base::compile_shader(GLenum type, const char* source)
+GLuint ShaderProgramBase::compile_shader(GLenum type, const char* source)
 {
     std::string str(source);
     
@@ -162,7 +162,7 @@ GLuint shaderprogram_base::compile_shader(GLenum type, const char* source)
 
 
 
-bool shaderprogram_base::link_program(GLuint program)
+bool ShaderProgramBase::link_program(GLuint program)
 {
     GLint status;
     glLinkProgram(program);
@@ -191,7 +191,7 @@ bool shaderprogram_base::link_program(GLuint program)
 }
 
 
-bool shaderprogram_base::validate_program(GLuint program)
+bool ShaderProgramBase::validate_program(GLuint program)
 {
 	GLint logLength, status;
 
@@ -220,7 +220,7 @@ bool shaderprogram_base::validate_program(GLuint program)
 
 renderers::renderers()
 {
-	_distance_renderer = new shaderprogram2<glm::vec2, glm::vec2>(
+	_distance_renderer = new ShaderProgram2<glm::vec2, glm::vec2>(
 		"position", "texcoord",
 		VERTEX_SHADER
 		({
@@ -314,7 +314,7 @@ renderers::renderers()
 	_distance_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
-	_gradient_renderer = new shaderprogram2<glm::vec2, glm::vec4>(
+	_gradient_renderer = new ShaderProgram2<glm::vec2, glm::vec4>(
 		"position", "color",
 		VERTEX_SHADER
 		({
@@ -348,7 +348,7 @@ renderers::renderers()
 	_gradient_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
-	_gradient_renderer3 = new shaderprogram2<glm::vec3, glm::vec4>(
+	_gradient_renderer3 = new ShaderProgram2<glm::vec3, glm::vec4>(
 		"position", "color",
 		VERTEX_SHADER
 		({
@@ -381,7 +381,7 @@ renderers::renderers()
 	_gradient_renderer3->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 
 
-	_ground_renderer = new shaderprogram2<glm::vec2, glm::vec2>(
+	_ground_renderer = new ShaderProgram2<glm::vec2, glm::vec2>(
 		"position", "texcoord",
 		VERTEX_SHADER
 		({
@@ -437,7 +437,7 @@ renderers::renderers()
 
 
 
-	_plain_renderer = new shaderprogram1<glm::vec2>(
+	_plain_renderer = new ShaderProgram1<glm::vec2>(
 		"position",
 		VERTEX_SHADER
 		({
@@ -468,7 +468,7 @@ renderers::renderers()
 
 
 
-	_plain_renderer3 = new shaderprogram1<glm::vec3>(
+	_plain_renderer3 = new ShaderProgram1<glm::vec3>(
 		"position",
 		VERTEX_SHADER
 		({
@@ -499,7 +499,7 @@ renderers::renderers()
 
 
 
-	_texture_renderer = new shaderprogram2<glm::vec2, glm::vec2>(
+	_texture_renderer = new ShaderProgram2<glm::vec2, glm::vec2>(
 		"position", "texcoord",
 		VERTEX_SHADER
 		({
@@ -534,7 +534,7 @@ renderers::renderers()
 
 
 
-	_texture_renderer3 = new shaderprogram2<glm::vec3, glm::vec2>(
+	_texture_renderer3 = new ShaderProgram2<glm::vec3, glm::vec2>(
 		"position", "texcoord",
 		VERTEX_SHADER
 		({
@@ -569,7 +569,7 @@ renderers::renderers()
 
 
 
-	_opaque_texture_renderer = new shaderprogram2<glm::vec2, glm::vec2>(
+	_opaque_texture_renderer = new ShaderProgram2<glm::vec2, glm::vec2>(
 		"position", "texcoord",
 		VERTEX_SHADER
 		({
@@ -603,7 +603,7 @@ renderers::renderers()
 	_opaque_texture_renderer->_blend_dfactor = GL_ZERO;
 
 
-	_alpha_texture_renderer = new shaderprogram2<glm::vec2, glm::vec2>(
+	_alpha_texture_renderer = new ShaderProgram2<glm::vec2, glm::vec2>(
 		"position", "texcoord",
 		VERTEX_SHADER
 		({

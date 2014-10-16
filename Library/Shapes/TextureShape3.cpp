@@ -5,19 +5,23 @@
 #include "TextureShape3.h"
 
 
-TextureShape3::TextureShape3(graphicscontext* gc)
+TextureShape3::TextureShape3(GraphicsContext* gc)
 {
-	static int shaderprogram_id = graphicscontext::generate_shaderprogram_id();
+	static int shaderprogram_id = GraphicsContext::generate_shaderprogram_id();
 
-	_shaderprogram = gc->load_shaderprogram2<glm::vec3, glm::vec2>(
+	_shaderprogram = gc->LoadShaderProgram2<glm::vec3, glm::vec2>(
 		shaderprogram_id,
 		"position", "texcoord",
 		VERTEX_SHADER
 		({
-			uniform mat4 transform;
-			attribute vec3 position;
-			attribute vec2 texcoord;
-			varying vec2 _texcoord;
+			uniform
+			mat4 transform;
+			attribute
+			vec3 position;
+			attribute
+			vec2 texcoord;
+			varying
+			vec2 _texcoord;
 
 			void main()
 			{
@@ -31,8 +35,10 @@ TextureShape3::TextureShape3(graphicscontext* gc)
 		}),
 		FRAGMENT_SHADER
 		({
-			uniform sampler2D texture;
-			varying vec2 _texcoord;
+			uniform
+			sampler2D texture;
+			varying
+			vec2 _texcoord;
 
 			void main()
 			{

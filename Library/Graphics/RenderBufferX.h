@@ -2,8 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef RENDERBUFFER_H
-#define RENDERBUFFER_H
+#ifndef RenderBuffer_H
+#define RenderBuffer_H
 
 #ifdef OPENWAR_USE_XCODE_FRAMEWORKS
 #if TARGET_OS_IPHONE
@@ -23,18 +23,18 @@
 #endif
 
 
-struct renderbuffer
+struct RenderBufferX
 {
 	GLuint id;
 
-	renderbuffer(GLenum internalformat, GLsizei width, GLsizei height);
-	~renderbuffer();
+	RenderBufferX(GLenum internalformat, GLsizei width, GLsizei height);
+	~RenderBufferX();
 
-	void resize(GLenum internalformat, GLsizei width, GLsizei height);
+	void Resize(GLenum internalformat, GLsizei width, GLsizei height);
 
 private:
-	renderbuffer(const renderbuffer&) {}
-	renderbuffer& operator=(const renderbuffer&) { return *this; }
+	RenderBufferX(const RenderBufferX&) {}
+	RenderBufferX& operator=(const RenderBufferX&) { return *this; }
 };
 
 

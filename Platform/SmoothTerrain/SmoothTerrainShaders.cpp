@@ -33,11 +33,11 @@ SmoothTerrainShaders::~SmoothTerrainShaders()
 }
 
 
-void SmoothTerrainShaders::render_terrain_inside(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_terrain_inside(VertexBufferX<terrain_vertex>& shape, const terrain_uniforms& uniforms)
 {
 	if (_terrain_inside == nullptr)
 	{
-		_terrain_inside = new shaderprogram2<glm::vec3, glm::vec3>(
+		_terrain_inside = new ShaderProgram2<glm::vec3, glm::vec3>(
 			"position", "normal",
 			VERTEX_SHADER
 			({
@@ -107,11 +107,11 @@ void SmoothTerrainShaders::render_terrain_inside(vertexbuffer<terrain_vertex>& s
 
 
 
-void SmoothTerrainShaders::render_terrain_border(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_terrain_border(VertexBufferX<terrain_vertex>& shape, const terrain_uniforms& uniforms)
 {
 	if (_terrain_border == nullptr)
 	{
-		_terrain_border = new shaderprogram2<glm::vec3, glm::vec3>(
+		_terrain_border = new ShaderProgram2<glm::vec3, glm::vec3>(
 			"position", "normal",
 			VERTEX_SHADER
 			({
@@ -183,11 +183,11 @@ void SmoothTerrainShaders::render_terrain_border(vertexbuffer<terrain_vertex>& s
 
 
 
-void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shape, const glm::mat4& transform, const texture* texturex)
+void SmoothTerrainShaders::render_terrain_skirt(VertexBufferX<skirt_vertex>& shape, const glm::mat4& transform, const texture* texturex)
 {
 	if (_terrain_skirt == nullptr)
 	{
-		_terrain_skirt = new shaderprogram2<glm::vec3, float>(
+		_terrain_skirt = new ShaderProgram2<glm::vec3, float>(
 			"position", "height",
 			VERTEX_SHADER
 			({
@@ -236,11 +236,11 @@ void SmoothTerrainShaders::render_terrain_skirt(vertexbuffer<skirt_vertex>& shap
 
 
 
-void SmoothTerrainShaders::render_depth_inside(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_depth_inside(VertexBufferX<terrain_vertex>& shape, const terrain_uniforms& uniforms)
 {
 	if (_depth_inside == nullptr)
 	{
-		_depth_inside = new shaderprogram2<glm::vec3, glm::vec3>(
+		_depth_inside = new ShaderProgram2<glm::vec3, glm::vec3>(
 			"position", "normal",
 			VERTEX_SHADER
 			({
@@ -273,11 +273,11 @@ void SmoothTerrainShaders::render_depth_inside(vertexbuffer<terrain_vertex>& sha
 
 
 
-void SmoothTerrainShaders::render_depth_border(vertexbuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_depth_border(VertexBufferX<terrain_vertex>& shape, const terrain_uniforms& uniforms)
 {
 	if (_depth_border == nullptr)
 	{
-		_depth_border = new shaderprogram2<glm::vec3, glm::vec3>(
+		_depth_border = new ShaderProgram2<glm::vec3, glm::vec3>(
 			"position", "normal",
 			VERTEX_SHADER
 			({
@@ -320,11 +320,11 @@ void SmoothTerrainShaders::render_depth_border(vertexbuffer<terrain_vertex>& sha
 
 
 
-void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape, const glm::mat4& transform)
+void SmoothTerrainShaders::render_depth_skirt(VertexBufferX<skirt_vertex>& shape, const glm::mat4& transform)
 {
 	if (_depth_skirt == nullptr)
 	{
-		_depth_skirt = new shaderprogram2<glm::vec3, float>(
+		_depth_skirt = new ShaderProgram2<glm::vec3, float>(
 			"position", "height",
 			VERTEX_SHADER
 			({
@@ -357,11 +357,11 @@ void SmoothTerrainShaders::render_depth_skirt(vertexbuffer<skirt_vertex>& shape,
 }
 
 
-void SmoothTerrainShaders::render_sobel_filter(vertexbuffer<texture_vertex>& shape, const sobel_uniforms& uniforms)
+void SmoothTerrainShaders::render_sobel_filter(VertexBufferX<Vertex_2f_2f>& shape, const sobel_uniforms& uniforms)
 {
 	if (_sobel_filter == nullptr)
 	{
-		_sobel_filter = new shaderprogram2<glm::vec2, glm::vec2>(
+		_sobel_filter = new ShaderProgram2<glm::vec2, glm::vec2>(
 			"position", "texcoord",
 			VERTEX_SHADER
 			({
@@ -445,11 +445,11 @@ void SmoothTerrainShaders::render_sobel_filter(vertexbuffer<texture_vertex>& sha
 }
 
 
-void SmoothTerrainShaders::render_ground_shadow(vertexbuffer<plain_vertex>& shape, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_ground_shadow(VertexBufferX<Vertex_2f>& shape, const terrain_uniforms& uniforms)
 {
 	if (_ground_shadow == nullptr)
 	{
-		_ground_shadow = new shaderprogram1<glm::vec2>(
+		_ground_shadow = new ShaderProgram1<glm::vec2>(
 			"position",
 			VERTEX_SHADER
 			({

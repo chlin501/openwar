@@ -9,7 +9,7 @@
 SmoothTerrainWater::SmoothTerrainWater(GroundMap* groundMap) :
 _groundMap(groundMap)
 {
-	_water_inside_renderer = new shaderprogram1<glm::vec2>(
+	_water_inside_renderer = new ShaderProgram1<glm::vec2>(
 		"position",
 		VERTEX_SHADER
 		({
@@ -38,7 +38,7 @@ _groundMap(groundMap)
 
 
 
-	_water_border_renderer = new shaderprogram1<glm::vec2>(
+	_water_border_renderer = new ShaderProgram1<glm::vec2>(
 		"position",
 		VERTEX_SHADER
 		({
@@ -90,7 +90,7 @@ static int inside_circle(bounds2f bounds, glm::vec2 p)
 }
 
 
-static int inside_circle(bounds2f bounds, plain_vertex v1, plain_vertex v2, plain_vertex v3)
+static int inside_circle(bounds2f bounds, Vertex_2f v1, Vertex_2f v2, Vertex_2f v3)
 {
 	return inside_circle(bounds, v1._1)
 		+ inside_circle(bounds, v2._1)
@@ -99,7 +99,7 @@ static int inside_circle(bounds2f bounds, plain_vertex v1, plain_vertex v2, plai
 }
 
 
-static vertexbuffer<plain_vertex>* choose_shape(int count, vertexbuffer<plain_vertex>* inside, vertexbuffer<plain_vertex>* border)
+static VertexBufferX<Vertex_2f>* choose_shape(int count, VertexBufferX<Vertex_2f>* inside, VertexBufferX<Vertex_2f>* border)
 {
 	switch (count)
 	{
@@ -133,12 +133,12 @@ void SmoothTerrainWater::Update()
 			glm::vec2 p = bounds.min + s * glm::vec2(x, y);
 			if (_groundMap->ContainsWater(bounds2f(p, p + s)))
 			{
-				plain_vertex v11 = plain_vertex(p);
-				plain_vertex v12 = plain_vertex(p + glm::vec2(0, s.y));
-				plain_vertex v21 = plain_vertex(p + glm::vec2(s.x, 0));
-				plain_vertex v22 = plain_vertex(p + s);
+				Vertex_2f v11 = Vertex_2f(p);
+				Vertex_2f v12 = Vertex_2f(p + glm::vec2(0, s.y));
+				Vertex_2f v21 = Vertex_2f(p + glm::vec2(s.x, 0));
+				Vertex_2f v22 = Vertex_2f(p + s);
 
-				vertexbuffer<plain_vertex>* s = choose_shape(inside_circle(bounds, v11, v22, v12), &_shape_water_inside, &_shape_water_border);
+				VertexBufferX<Vertex_2f>* s = choose_shape(inside_circle(bounds, v11, v22, v12), &_shape_water_inside, &_shape_water_border);
 				if (s != nullptr)
 				{
 					s->_vertices.push_back(v11);

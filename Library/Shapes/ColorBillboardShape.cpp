@@ -5,22 +5,27 @@
 #include "ColorBillboardShape.h"
 
 
-ColorBillboardShape::ColorBillboardShape(graphicscontext* gc)
+ColorBillboardShape::ColorBillboardShape(GraphicsContext* gc)
 {
-	static int _shaderprogram_id = graphicscontext::generate_shaderprogram_id();
+	static int _shaderprogram_id = GraphicsContext::generate_shaderprogram_id();
 
-	_shaderprogram = gc->load_shaderprogram3<glm::vec3, glm::vec4, float>(
+	_shaderprogram = gc->LoadShaderProgram3<glm::vec3, glm::vec4, float>(
 		_shaderprogram_id,
 		"position", "color", "height",
 		VERTEX_SHADER
 		({
-			uniform mat4 transform;
-			uniform vec3 upvector;
+			uniform
+			mat4 transform;
+			uniform
+			vec3 upvector;
 			uniform float viewport_height;
-			attribute vec3 position;
-			attribute vec4 color;
+			attribute
+			vec3 position;
+			attribute
+			vec4 color;
 			attribute float height;
-			varying vec4 _color;
+			varying
+			vec4 _color;
 
 			void main()
 			{
@@ -44,7 +49,8 @@ ColorBillboardShape::ColorBillboardShape(graphicscontext* gc)
 		}),
 		FRAGMENT_SHADER
 		({
-			varying vec4 _color;
+			varying
+			vec4 _color;
 
 			void main()
 			{
@@ -70,13 +76,13 @@ void ColorBillboardShape::Reset()
 
 void ColorBillboardShape::AddBillboard(const glm::vec3& position, const glm::vec4& color, float height)
 {
-	_vbo._vertices.push_back(vertex(position, color, height));
+	_vbo._vertices.push_back(Vertex_3f_4f_1f(position, color, height));
 }
 
 
 void ColorBillboardShape::Draw(const glm::mat4x4& transform, const glm::vec3 cameraUp, float viewportHeight)
 {
-	float viewport_height = 0.25f * shaderprogram_base::pixels_per_point() * viewportHeight;
+	float viewport_height = 0.25f * ShaderProgramBase::pixels_per_point() * viewportHeight;
 
 	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
 	_shaderprogram->get_uniform<glm::vec3>("upvector").set_value(cameraUp);

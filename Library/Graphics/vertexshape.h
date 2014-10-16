@@ -8,7 +8,7 @@
 #include <functional>
 #include <vector>
 
-#include "vertexbuffer.h"
+#include "VertexBufferX.h"
 
 
 class glyphversion
@@ -26,7 +26,7 @@ public:
 template <class T1>
 struct vertexglyph1
 {
-	typedef std::function<void(std::vector<vertex1<T1>>& vertices)> generator_type;
+	typedef std::function<void(std::vector<Vertex1<T1>>& vertices)> generator_type;
 
 	generator_type generator;
 	glyphversion* version;
@@ -40,7 +40,7 @@ struct vertexglyph1
 template <class T1, class T2>
 struct vertexglyph2
 {
-	typedef std::function<void(std::vector<vertex2<T1, T2>>& vertices)> generator_type;
+	typedef std::function<void(std::vector<Vertex2<T1, T2>>& vertices)> generator_type;
 
 	generator_type generator;
 	glyphversion* version;
@@ -54,7 +54,7 @@ struct vertexglyph2
 template <class T1, class T2, class T3>
 struct vertexglyph3
 {
-	typedef std::function<void(std::vector<vertex3<T1, T2, T3>>& vertices)> generator_type;
+	typedef std::function<void(std::vector<Vertex3<T1, T2, T3>>& vertices)> generator_type;
 
 	generator_type generator;
 	glyphversion* version;
@@ -68,7 +68,7 @@ struct vertexglyph3
 template <class T1, class T2, class T3, class T4>
 struct vertexglyph4
 {
-	typedef std::function<void(std::vector<vertex4<T1, T2, T3, T4>>& vertices)> generator_type;
+	typedef std::function<void(std::vector<Vertex4<T1, T2, T3, T4>>& vertices)> generator_type;
 
 	generator_type generator;
 	glyphversion* version;
@@ -82,10 +82,10 @@ struct vertexglyph4
 template <class T1>
 class vertexshape1
 {
-	typedef vertex1<T1> vertex_type;
+	typedef Vertex1<T1> vertex_type;
 	typedef vertexglyph1<T1> vertexglyph_type;
 
-	vertexbuffer<vertex_type> _vbo;
+	VertexBufferX<vertex_type> _vbo;
 	int _version;
 
 public:
@@ -105,7 +105,7 @@ public:
 		return true;//version != _version;
 	}
 
-	vertexbuffer<vertex_type>& update_vbo()
+	VertexBufferX<vertex_type>& update_vbo()
 	{
 		if (needs_update())
 		{
@@ -128,10 +128,10 @@ public:
 template <class T1, class T2>
 class vertexshape2
 {
-	typedef vertex2<T1, T2> vertex_type;
+	typedef Vertex2<T1, T2> vertex_type;
 	typedef vertexglyph2<T1, T2> vertexglyph_type;
 
-	vertexbuffer<vertex_type> _vbo;
+	VertexBufferX<vertex_type> _vbo;
 	int _version;
 
 public:
@@ -151,7 +151,7 @@ public:
 		return true;//version != _version;
 	}
 
-	vertexbuffer<vertex_type>& update_vbo()
+	VertexBufferX<vertex_type>& update_vbo()
 	{
 		if (needs_update())
 		{
@@ -175,10 +175,10 @@ template <class T1, class T2, class T3>
 class vertexshape3
 {
 public:
-	typedef vertex3<T1, T2, T3> vertex_type;
+	typedef Vertex3<T1, T2, T3> vertex_type;
 	typedef vertexglyph3<T1, T2, T3> vertexglyph_type;
 
-	vertexbuffer<vertex_type> _vbo;
+	VertexBufferX<vertex_type> _vbo;
 	int _version;
 
 public:
@@ -198,7 +198,7 @@ public:
 		return true; //version != _version;
 	}
 
-	vertexbuffer<vertex_type>& update_vbo()
+	VertexBufferX<vertex_type>& update_vbo()
 	{
 		if (needs_update())
 		{
@@ -221,10 +221,10 @@ public:
 template <class T1, class T2, class T3, class T4>
 class vertexshape4
 {
-	typedef vertex4<T1, T2, T3, T4> vertex_type;
+	typedef Vertex4<T1, T2, T3, T4> vertex_type;
 	typedef vertexglyph4<T1, T2, T3, T4> vertexglyph_type;
 
-	vertexbuffer<vertex_type> _vbo;
+	VertexBufferX<vertex_type> _vbo;
 	int _version;
 
 public:
@@ -244,7 +244,7 @@ public:
 		return true;//version != _version;
 	}
 
-	vertexbuffer<vertex_type>& update_vbo()
+	VertexBufferX<vertex_type>& update_vbo()
 	{
 		if (needs_update())
 		{

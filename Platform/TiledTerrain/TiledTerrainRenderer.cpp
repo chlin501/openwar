@@ -3,8 +3,8 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "BattleModel/HeightMap.h"
-#include "Graphics/shaderprogram.h"
-#include "Graphics/vertexbuffer.h"
+#include "ShaderProgramX.h"
+#include "VertexBufferX.h"
 #include "TiledTerrainRenderer.h"
 
 
@@ -44,7 +44,7 @@ void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3&
 	bounds2f bounds = _tiledGroundMap->GetBounds();
 	glm::ivec2 size = _tiledGroundMap->GetSize();
 
-	vertexbuffer<texture_vertex3> shape;
+	VertexBufferX<Vertex_3f_2f> shape;
 	shape._mode = GL_TRIANGLES;
 
 	glm::vec2 delta = bounds.size() / glm::vec2(size);
@@ -94,12 +94,12 @@ void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3&
 			}
 
 			shape._vertices.clear();
-			shape._vertices.push_back(texture_vertex3(glm::vec3(p0.x, p0.y, h00), t01));
-			shape._vertices.push_back(texture_vertex3(glm::vec3(p1.x, p0.y, h10), t11));
-			shape._vertices.push_back(texture_vertex3(glm::vec3(p1.x, p1.y, h11), t10));
-			shape._vertices.push_back(texture_vertex3(glm::vec3(p1.x, p1.y, h11), t10));
-			shape._vertices.push_back(texture_vertex3(glm::vec3(p0.x, p1.y, h01), t00));
-			shape._vertices.push_back(texture_vertex3(glm::vec3(p0.x, p0.y, h00), t01));
+			shape._vertices.push_back(Vertex_3f_2f(glm::vec3(p0.x, p0.y, h00), t01));
+			shape._vertices.push_back(Vertex_3f_2f(glm::vec3(p1.x, p0.y, h10), t11));
+			shape._vertices.push_back(Vertex_3f_2f(glm::vec3(p1.x, p1.y, h11), t10));
+			shape._vertices.push_back(Vertex_3f_2f(glm::vec3(p1.x, p1.y, h11), t10));
+			shape._vertices.push_back(Vertex_3f_2f(glm::vec3(p0.x, p1.y, h01), t00));
+			shape._vertices.push_back(Vertex_3f_2f(glm::vec3(p0.x, p0.y, h00), t01));
 
 			shape.update(GL_STATIC_DRAW);
 

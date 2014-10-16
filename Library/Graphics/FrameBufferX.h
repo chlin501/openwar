@@ -2,8 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef FRAMEBUFFER_H
-#define FRAMEBUFFER_H
+#ifndef FrameBuffer_H
+#define FrameBuffer_H
 
 #ifdef OPENWAR_USE_XCODE_FRAMEWORKS
 #if TARGET_OS_IPHONE
@@ -26,28 +26,28 @@
 extern void CHECK_ERROR_GL();
 #endif
 
-struct renderbuffer;
+struct RenderBufferX;
 struct texture;
 
 
-struct framebuffer
+struct FrameBufferX
 {
 	GLuint id;
 
-	framebuffer();
-	~framebuffer();
+	FrameBufferX();
+	~FrameBufferX();
 
-	void attach_color(renderbuffer* value);
-	void attach_color(texture* value);
+	void AttachColor(RenderBufferX* value);
+	void AttachColor(texture* value);
 
-	void attach_depth(renderbuffer* value);
-	void attach_depth(texture* value);
+	void AttachDepth(RenderBufferX* value);
+	void AttachDepth(texture* value);
 
-	void attach_stencil(renderbuffer* value);
+	void AttachStencil(RenderBufferX* value);
 
 private:
-	framebuffer(const framebuffer&) {}
-	framebuffer& operator = (const framebuffer&) {return *this;}
+	FrameBufferX(const FrameBufferX&) {}
+	FrameBufferX& operator = (const FrameBufferX&) {return *this;}
 };
 
 
@@ -56,7 +56,7 @@ class bind_framebuffer
 	GLint _old;
 
 public:
-	bind_framebuffer(const framebuffer& fb)
+	bind_framebuffer(const FrameBufferX& fb)
 	{
 		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &_old);
 		glBindFramebuffer(GL_FRAMEBUFFER, fb.id);

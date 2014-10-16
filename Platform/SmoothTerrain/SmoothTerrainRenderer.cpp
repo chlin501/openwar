@@ -117,12 +117,12 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 		glDisable(GL_DEPTH_TEST);
 		glDepthMask(false);
 
-		vertexbuffer<texture_vertex> shape;
+		VertexBuffer_2f_2f shape;
 		shape._mode = GL_TRIANGLE_STRIP;
-		shape._vertices.push_back(texture_vertex(glm::vec2(-1, 1), glm::vec2(0, 1)));
-		shape._vertices.push_back(texture_vertex(glm::vec2(-1, -1), glm::vec2(0, 0)));
-		shape._vertices.push_back(texture_vertex(glm::vec2(1, 1), glm::vec2(1, 1)));
-		shape._vertices.push_back(texture_vertex(glm::vec2(1, -1), glm::vec2(1, 0)));
+		shape._vertices.push_back(Vertex_2f_2f(glm::vec2(-1, 1), glm::vec2(0, 1)));
+		shape._vertices.push_back(Vertex_2f_2f(glm::vec2(-1, -1), glm::vec2(0, 0)));
+		shape._vertices.push_back(Vertex_2f_2f(glm::vec2(1, 1), glm::vec2(1, 1)));
+		shape._vertices.push_back(Vertex_2f_2f(glm::vec2(1, -1), glm::vec2(1, 0)));
 
 		sobel_uniforms su;
 		su._transform = glm::mat4x4();
@@ -172,14 +172,14 @@ void SmoothTerrainRenderer::EnableRenderEdges()
 
 	UpdateDepthTextureSize();
 
-	_framebuffer = new framebuffer();
+	_framebuffer = new FrameBufferX();
 
 #if !TARGET_OS_IPHONE
-	_colorbuffer = new renderbuffer(GL_RGBA, _framebuffer_width, _framebuffer_height);
-	_framebuffer->attach_color(_colorbuffer);
+	_colorbuffer = new RenderBufferX(GL_RGBA, _framebuffer_width, _framebuffer_height);
+	_framebuffer->AttachColor(_colorbuffer);
 #endif
 
-	_framebuffer->attach_depth(_depth);
+	_framebuffer->AttachDepth(_depth);
 	{
 		bind_framebuffer binding(*_framebuffer);
 		GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -211,7 +211,7 @@ void SmoothTerrainRenderer::UpdateDepthTextureSize()
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 			if (_colorbuffer != nullptr)
-				_colorbuffer->resize(GL_RGBA, _framebuffer_width, _framebuffer_height);
+				_colorbuffer->Resize(GL_RGBA, _framebuffer_width, _framebuffer_height);
 		}
 	}
 }
@@ -238,12 +238,12 @@ void SmoothTerrainRenderer::InitializeShadow()
 		glm::vec2 p3 = center + radius2 * vector2_from_angle(angle2);
 		glm::vec2 p4 = center + radius1 * vector2_from_angle(angle2);
 
-		_vboShadow._vertices.push_back(plain_vertex(p1));
-		_vboShadow._vertices.push_back(plain_vertex(p2));
-		_vboShadow._vertices.push_back(plain_vertex(p3));
-		_vboShadow._vertices.push_back(plain_vertex(p3));
-		_vboShadow._vertices.push_back(plain_vertex(p4));
-		_vboShadow._vertices.push_back(plain_vertex(p1));
+		_vboShadow._vertices.push_back(Vertex_2f(p1));
+		_vboShadow._vertices.push_back(Vertex_2f(p2));
+		_vboShadow._vertices.push_back(Vertex_2f(p3));
+		_vboShadow._vertices.push_back(Vertex_2f(p3));
+		_vboShadow._vertices.push_back(Vertex_2f(p4));
+		_vboShadow._vertices.push_back(Vertex_2f(p1));
 	}
 
 	_vboShadow.update(GL_STATIC_DRAW);
@@ -351,7 +351,7 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 	// lines
 	if (_showLines)
 	{
-		for (plain_vertex3& vertex : _vboLines._vertices)
+		for (Vertex_3f& vertex : _vboLines._vertices)
 		{
 			glm::vec2 p = vertex._1.xy();
 			if (bounds.contains(p))
@@ -402,16 +402,16 @@ void SmoothTerrainRenderer::InitializeLines()
 				{
 					x2 = corner.x + size.x * ((x + 2) / k);
 					h20 = _smoothGroundMap->GetHeightMap()->GetHeight(x + 2, y);
-					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x0, y0, h00)));
-					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x2, y0, h20)));
+					_vboLines._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x0, y0, h00)));
+					_vboLines._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x2, y0, h20)));
 				}
 				float y2, h02;
 				if (y != n)
 				{
 					y2 = corner.y + size.y * ((y + 2) / k);
 					h02 = _smoothGroundMap->GetHeightMap()->GetHeight(x, y + 2);
-					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x0, y0, h00)));
-					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x0, y2, h02)));
+					_vboLines._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x0, y0, h00)));
+					_vboLines._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x0, y2, h02)));
 				}
 
 				if (x != n && y != n)
@@ -421,17 +421,17 @@ void SmoothTerrainRenderer::InitializeLines()
 					float h11 = _smoothGroundMap->GetHeightMap()->GetHeight(x + 1, y + 1);
 					float h22 = _smoothGroundMap->GetHeightMap()->GetHeight(x + 2, y + 2);
 
-					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x0, y0, h00)));
-					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x1, y1, h11)));
+					_vboLines._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x0, y0, h00)));
+					_vboLines._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
 
-					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x2, y0, h20)));
-					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x1, y1, h11)));
+					_vboLines._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x2, y0, h20)));
+					_vboLines._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
 
-					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x0, y2, h02)));
-					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x1, y1, h11)));
+					_vboLines._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x0, y2, h02)));
+					_vboLines._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
 
-					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x2, y2, h22)));
-					_vboLines._vertices.push_back(plain_vertex3(glm::vec3(x1, y1, h11)));
+					_vboLines._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x2, y2, h22)));
+					_vboLines._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
 				}
 			}
 		}
@@ -523,7 +523,7 @@ void SmoothTerrainRenderer::BuildTriangles()
 void SmoothTerrainRenderer::PushTriangle(const terrain_vertex& v0, const terrain_vertex& v1, const terrain_vertex& v2)
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
-	vertexbuffer<terrain_vertex>* s = SelectTerrainVbo(inside_circle(bounds, v0, v1, v2));
+	VertexBufferX<terrain_vertex>* s = SelectTerrainVbo(inside_circle(bounds, v0, v1, v2));
 	if (s != nullptr)
 	{
 		s->_vertices.push_back(v0);
@@ -533,7 +533,7 @@ void SmoothTerrainRenderer::PushTriangle(const terrain_vertex& v0, const terrain
 }
 
 
-vertexbuffer<terrain_vertex>* SmoothTerrainRenderer::SelectTerrainVbo(int inside)
+VertexBufferX<terrain_vertex>* SmoothTerrainRenderer::SelectTerrainVbo(int inside)
 {
 	switch (inside)
 	{

@@ -41,7 +41,7 @@ static affine2 billboard_texcoords(int x, int y, bool flip)
 
 
 
-BattleView::BattleView(graphicscontext* gc, renderers* r) :
+BattleView::BattleView(GraphicsContext* gc, renderers* r) :
 	_simulator(nullptr),
 	_commander(nullptr),
 	_renderers(r),
@@ -276,7 +276,7 @@ void BattleView::OnSetGroundMap(GroundMap* groundMap)
 		_smoothTerrainSurface = new SmoothTerrainRenderer(smoothGroundMap);
 		_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
 
-		if (ShouldEnableRenderEdges(shaderprogram_base::pixels_per_point()))
+		if (ShouldEnableRenderEdges(ShaderProgramBase::pixels_per_point()))
 			_smoothTerrainSurface->EnableRenderEdges();
 	}
 
@@ -815,7 +815,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 	glm::mat4x4 transform = GetTerrainTransform();
 	glm::vec3 upvector = GetCameraUpVector();
 	float viewport_height = GetFrame().height();
-	bounds1f sizeLimit = GetUnitIconSizeLimit() / shaderprogram_base::pixels_per_point();
+	bounds1f sizeLimit = GetUnitIconSizeLimit() / ShaderProgramBase::pixels_per_point();
 
 	glm::vec3 position2 = position + height * 0.5f * viewport_height * upvector;
 	glm::vec4 p = transform * glm::vec4(position, 1);
@@ -878,8 +878,8 @@ bounds1f BattleView::GetUnitIconSizeLimit() const
 	float a = 1 - fabsf(atan2f(y, x) / (float)M_PI_2);
 
 	bounds1f result(0, 0);
-	result.min = (32 - 8 * a) * shaderprogram_base::pixels_per_point();
-	result.max = (32 + 16 * a) * shaderprogram_base::pixels_per_point();
+	result.min = (32 - 8 * a) * ShaderProgramBase::pixels_per_point();
+	result.max = (32 + 16 * a) * ShaderProgramBase::pixels_per_point();
 	if (is_iphone())
 	{
 		result.min *= 57.0f / 72.0f;

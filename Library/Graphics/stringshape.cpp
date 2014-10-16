@@ -298,7 +298,7 @@ void stringfont::initialize()
 	if (_image == nullptr)
 		_image = new image(1024, 512);
 
-	_renderer = new shaderprogram3<glm::vec2, glm::vec2, float>(
+	_renderer = new ShaderProgram3<glm::vec2, glm::vec2, float>(
 		"position", "texcoord", "alpha",
 		VERTEX_SHADER
 		({
@@ -625,7 +625,7 @@ _delta(delta)
 
 vertexglyph3<glm::vec2, glm::vec2, float> stringglyph::glyph(stringfont* font)
 {
-	return vertexglyph3<glm::vec2, glm::vec2, float>([this, font](std::vector<vertex3<glm::vec2, glm::vec2, float>>& vertices) {
+	return vertexglyph3<glm::vec2, glm::vec2, float>([this, font](std::vector<Vertex_2f_2f_1f>& vertices) {
 		generate(font, vertices);
 	});
 }
@@ -728,7 +728,7 @@ void stringshape::add(const char* s, glm::mat4x4 transform, float alpha, float d
 	stringglyph* g = new stringglyph(s, transform, alpha, delta);
 	_stringglyphs.push_back(g);
 
-	glyphs.push_back(vertexglyph3<glm::vec2, glm::vec2, float>([this, g](std::vector<vertex3<glm::vec2, glm::vec2, float>>& vertices) {
+	glyphs.push_back(vertexglyph3<glm::vec2, glm::vec2, float>([this, g](std::vector<Vertex_2f_2f_1f>& vertices) {
 		g->generate(_font, vertices);
 	}));
 }

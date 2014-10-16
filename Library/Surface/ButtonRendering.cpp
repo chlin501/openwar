@@ -4,7 +4,7 @@
 
 #include "ButtonRendering.h"
 #include "ButtonGrid.h"
-#include "Graphics/vertexbuffer.h"
+#include "VertexBufferX.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 
@@ -38,21 +38,21 @@ _renderers(r)
 }
 
 
-static void AddRect(vertexbuffer<texture_vertex>& shape, bounds2f bounds, bounds2f texture)
+static void AddRect(VertexBuffer_2f_2f& shape, bounds2f bounds, bounds2f texture)
 {
-	shape._vertices.push_back(texture_vertex(bounds.p11(), glm::vec2(0, 1) - texture.p11()));
-	shape._vertices.push_back(texture_vertex(bounds.p12(), glm::vec2(0, 1) - texture.p12()));
-	shape._vertices.push_back(texture_vertex(bounds.p22(), glm::vec2(0, 1) - texture.p22()));
+	shape._vertices.push_back(Vertex_2f_2f(bounds.p11(), glm::vec2(0, 1) - texture.p11()));
+	shape._vertices.push_back(Vertex_2f_2f(bounds.p12(), glm::vec2(0, 1) - texture.p12()));
+	shape._vertices.push_back(Vertex_2f_2f(bounds.p22(), glm::vec2(0, 1) - texture.p22()));
 
-	shape._vertices.push_back(texture_vertex(bounds.p22(), glm::vec2(0, 1) - texture.p22()));
-	shape._vertices.push_back(texture_vertex(bounds.p21(), glm::vec2(0, 1) - texture.p21()));
-	shape._vertices.push_back(texture_vertex(bounds.p11(), glm::vec2(0, 1) - texture.p11()));
+	shape._vertices.push_back(Vertex_2f_2f(bounds.p22(), glm::vec2(0, 1) - texture.p22()));
+	shape._vertices.push_back(Vertex_2f_2f(bounds.p21(), glm::vec2(0, 1) - texture.p21()));
+	shape._vertices.push_back(Vertex_2f_2f(bounds.p11(), glm::vec2(0, 1) - texture.p11()));
 }
 
 
 void ButtonRendering::RenderCornerButton(const glm::mat4& transform, texture* texturex, bounds2f bounds, float radius)
 {
-	vertexbuffer<texture_vertex> shape;
+	VertexBuffer_2f_2f shape;
 	shape._mode = GL_TRIANGLES;
 
 	bounds2f outer = bounds;
@@ -88,12 +88,12 @@ void ButtonRendering::RenderButtonIcon(const glm::mat4& transform, glm::vec2 pos
 
 void ButtonRendering::RenderTextureRect(const glm::mat4& transform, texture* texturex, bounds2f b, bounds2f t, float alpha)
 {
-	vertexbuffer<texture_vertex> shape;
+	VertexBuffer_2f_2f shape;
 	shape._mode = GL_TRIANGLE_STRIP;
-	shape._vertices.push_back(texture_vertex(b.p11(), t.p12()));
-	shape._vertices.push_back(texture_vertex(b.p12(), t.p11()));
-	shape._vertices.push_back(texture_vertex(b.p21(), t.p22()));
-	shape._vertices.push_back(texture_vertex(b.p22(), t.p21()));
+	shape._vertices.push_back(Vertex_2f_2f(b.p11(), t.p12()));
+	shape._vertices.push_back(Vertex_2f_2f(b.p12(), t.p11()));
+	shape._vertices.push_back(Vertex_2f_2f(b.p21(), t.p22()));
+	shape._vertices.push_back(Vertex_2f_2f(b.p22(), t.p21()));
 
 	if (alpha == 1)
 	{

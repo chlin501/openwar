@@ -6,7 +6,7 @@
 #define BATTLEVIEW_H
 
 #include "BattleModel/BattleSimulator.h"
-#include "Graphics/vertexbuffer.h"
+#include "VertexBufferX.h"
 #include "Shapes/TextureBillboardRenderer.h"
 #include "TerrainView/TerrainView.h"
 #include "TiledTerrain/TiledTerrainRenderer.h"
@@ -71,7 +71,7 @@ class BattleView : public TerrainView, public BattleObserver
 	TiledTerrainRenderer* _tiledTerrainRenderer;
 
 public:
-	BattleView(graphicscontext* gc, renderers* r);
+	BattleView(GraphicsContext* gc, renderers* r);
 	~BattleView();
 
 	BattleSimulator* GetSimulator() const { return _simulator; }

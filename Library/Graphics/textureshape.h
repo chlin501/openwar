@@ -29,7 +29,7 @@ struct textureatlas
 class textureglyph
 {
 public:
-	typedef vertex2<glm::vec2, glm::vec2> vertex_type;
+	typedef Vertex_2f_2f vertex_type;
 
 	bounds2f outer_xy;
 	bounds2f inner_xy;

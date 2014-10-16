@@ -5,20 +5,20 @@
 #ifndef TextureRenderer_H
 #define TextureRenderer_H
 
-#include "Graphics/graphicscontext.h"
-#include "Graphics/shaderprogram.h"
+#include "GraphicsContextX.h"
+#include "ShaderProgramX.h"
 
 
 class TextureShape3
 {
 protected:
-	typedef vertex2<glm::vec3, glm::vec2> vertex;
+	typedef Vertex_3f_2f vertex;
 
-	shaderprogram<vertex>* _shaderprogram;
-	vertexbuffer<vertex> _vbo;
+	ShaderProgramX<vertex>* _shaderprogram;
+	VertexBufferX<vertex> _vbo;
 
 public:
-	TextureShape3(graphicscontext* gc);
+	TextureShape3(GraphicsContext* gc);
 	virtual ~TextureShape3();
 
 	virtual void Reset() = 0;
@@ -29,7 +29,7 @@ public:
 class TextureTriangleShape3 : public TextureShape3
 {
 public:
-	TextureTriangleShape3(graphicscontext* gc) : TextureShape3(gc) { }
+	TextureTriangleShape3(GraphicsContext* gc) : TextureShape3(gc) { }
 	virtual ~TextureTriangleShape3();
 	virtual void Reset();
 

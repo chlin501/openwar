@@ -5,7 +5,7 @@
 #ifndef SmoothTerrainWater_H
 #define SmoothTerrainWater_H
 
-#include "Graphics/shaderprogram.h"
+#include "ShaderProgramX.h"
 #include "Algebra/image.h"
 
 class GroundMap;
@@ -22,11 +22,11 @@ class SmoothTerrainWater
 
 	GroundMap* _groundMap;
 
-	shaderprogram<plain_vertex>* _water_inside_renderer;
-	shaderprogram<plain_vertex>* _water_border_renderer;
+	ShaderProgramX<Vertex_2f>* _water_inside_renderer;
+	ShaderProgramX<Vertex_2f>* _water_border_renderer;
 
-	vertexbuffer<plain_vertex> _shape_water_inside;
-	vertexbuffer<plain_vertex> _shape_water_border;
+	VertexBuffer_2f _shape_water_inside;
+	VertexBuffer_2f _shape_water_border;
 
 public:
 	SmoothTerrainWater(GroundMap* groundMap);

@@ -5,21 +5,21 @@
 #ifndef ColorLineRenderer_H
 #define ColorLineRenderer_H
 
-#include "Graphics/graphicscontext.h"
-#include "Graphics/shaderprogram.h"
+#include "GraphicsContextX.h"
+#include "ShaderProgramX.h"
 
 
 class GradientShape3
 {
 protected:
-	typedef vertex2<glm::vec3, glm::vec4> vertex;
-	typedef shaderprogram2<glm::vec3, glm::vec4> shaderprogram;
+	typedef Vertex2<glm::vec3, glm::vec4> vertex;
+	typedef ShaderProgram2<glm::vec3, glm::vec4> shaderprogram;
 
 	shaderprogram* _shaderprogram;
-	vertexbuffer<vertex> _vbo;
+	VertexBufferX<vertex> _vbo;
 
 public:
-	GradientShape3(graphicscontext* gc);
+	GradientShape3(GraphicsContext* gc);
 	virtual ~GradientShape3();
 
 	virtual void Reset() = 0;
@@ -30,7 +30,7 @@ public:
 class GradientLineShape3 : public GradientShape3
 {
 public:
-	GradientLineShape3(graphicscontext* gc) : GradientShape3(gc) { }
+	GradientLineShape3(GraphicsContext* gc) : GradientShape3(gc) { }
 	virtual void Reset();
 	void AddLine(const glm::vec3& p1, const glm::vec3& p2, const glm::vec4& c1, const glm::vec4& c2);
 };
@@ -39,7 +39,7 @@ public:
 class GradientTriangleShape3 : public GradientShape3
 {
 public:
-	GradientTriangleShape3(graphicscontext* gc) : GradientShape3(gc) { }
+	GradientTriangleShape3(GraphicsContext* gc) : GradientShape3(gc) { }
 	virtual void Reset();
 	void AddVertex(const glm::vec3& p, const glm::vec4& c);
 };
@@ -48,7 +48,7 @@ public:
 class GradientTriangleStripShape3 : public GradientShape3
 {
 public:
-	GradientTriangleStripShape3(graphicscontext* gc) : GradientShape3(gc) { }
+	GradientTriangleStripShape3(GraphicsContext* gc) : GradientShape3(gc) { }
 	virtual void Reset();
 	void AddVertex(const glm::vec3& p, const glm::vec4& c, bool separator = false);
 };

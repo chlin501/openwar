@@ -1,7 +1,7 @@
 #ifndef BattleSurface_H
 #define BattleSurface_H
 
-#include "Graphics/shaderprogram.h"
+#include "ShaderProgramX.h"
 #include "Surface/Container.h"
 #include "TerrainView/EditorModel.h"
 

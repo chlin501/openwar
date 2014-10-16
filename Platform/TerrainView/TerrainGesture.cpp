@@ -5,7 +5,7 @@
 #include "TerrainGesture.h"
 #include "TerrainView.h"
 #include "Surface/Touch.h"
-#include "Graphics/shaderprogram.h"
+#include "ShaderProgramX.h"
 
 
 TerrainGesture::TerrainGesture(TerrainView* terrainView) :
@@ -38,7 +38,7 @@ void TerrainGesture::RenderHints()
 
 	//_terrainView->UseViewport();
 
-	vertexbuffer<plain_vertex> shape;
+	VertexBuffer_2f shape;
 	shape._mode = GL_LINES;
 
 	glm::vec2 left = _terrainView->GetScreenLeft();
@@ -48,28 +48,28 @@ void TerrainGesture::RenderHints()
 
 	bounds2f bounds(left.x, bottom.y, right.x, top.y);
 
-	shape._vertices.push_back(plain_vertex(bounds.p12() + glm::vec2(0, 4)));
-	shape._vertices.push_back(plain_vertex(bounds.p22() + glm::vec2(0, 4)));
+	shape._vertices.push_back(Vertex_2f(bounds.p12() + glm::vec2(0, 4)));
+	shape._vertices.push_back(Vertex_2f(bounds.p22() + glm::vec2(0, 4)));
 
-	shape._vertices.push_back(plain_vertex(bounds.p11()));
-	shape._vertices.push_back(plain_vertex(bounds.p12()));
-	shape._vertices.push_back(plain_vertex(bounds.p12()));
-	shape._vertices.push_back(plain_vertex(bounds.p22()));
-	shape._vertices.push_back(plain_vertex(bounds.p22()));
-	shape._vertices.push_back(plain_vertex(bounds.p21()));
-	shape._vertices.push_back(plain_vertex(bounds.p21()));
-	shape._vertices.push_back(plain_vertex(bounds.p11()));
+	shape._vertices.push_back(Vertex_2f(bounds.p11()));
+	shape._vertices.push_back(Vertex_2f(bounds.p12()));
+	shape._vertices.push_back(Vertex_2f(bounds.p12()));
+	shape._vertices.push_back(Vertex_2f(bounds.p22()));
+	shape._vertices.push_back(Vertex_2f(bounds.p22()));
+	shape._vertices.push_back(Vertex_2f(bounds.p21()));
+	shape._vertices.push_back(Vertex_2f(bounds.p21()));
+	shape._vertices.push_back(Vertex_2f(bounds.p11()));
 
 	if (this != nullptr)
 	{
-		shape._vertices.push_back(plain_vertex(top + glm::vec2(0, 5)));
-		shape._vertices.push_back(plain_vertex(top - glm::vec2(0, 5)));
-		shape._vertices.push_back(plain_vertex(left + glm::vec2(5, 0)));
-		shape._vertices.push_back(plain_vertex(left - glm::vec2(5, 0)));
-		shape._vertices.push_back(plain_vertex(bottom + glm::vec2(0, 5)));
-		shape._vertices.push_back(plain_vertex(bottom - glm::vec2(0, 5)));
-		shape._vertices.push_back(plain_vertex(right + glm::vec2(5, 0)));
-		shape._vertices.push_back(plain_vertex(right - glm::vec2(5, 0)));
+		shape._vertices.push_back(Vertex_2f(top + glm::vec2(0, 5)));
+		shape._vertices.push_back(Vertex_2f(top - glm::vec2(0, 5)));
+		shape._vertices.push_back(Vertex_2f(left + glm::vec2(5, 0)));
+		shape._vertices.push_back(Vertex_2f(left - glm::vec2(5, 0)));
+		shape._vertices.push_back(Vertex_2f(bottom + glm::vec2(0, 5)));
+		shape._vertices.push_back(Vertex_2f(bottom - glm::vec2(0, 5)));
+		shape._vertices.push_back(Vertex_2f(right + glm::vec2(5, 0)));
+		shape._vertices.push_back(Vertex_2f(right - glm::vec2(5, 0)));
 	}
 
 	glLineWidth(2);

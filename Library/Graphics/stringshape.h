@@ -25,7 +25,7 @@
 #endif
 
 #include "Algebra/bounds.h"
-#include "shaderprogram.h"
+#include "ShaderProgramX.h"
 #include "vertex.h"
 #include "vertexshape.h"
 #include "texture.h"
@@ -33,7 +33,7 @@
 
 struct stringfont
 {
-	typedef vertex3<glm::vec2, glm::vec2, float> vertex_type;
+	typedef Vertex_2f_2f_1f vertex_type;
 
 #ifdef OPENWAR_USE_SDL
 	typedef TTF_Font* font_ptr;
@@ -69,7 +69,7 @@ struct stringfont
 	font_ptr _font;
 #endif
 
-	shaderprogram<vertex_type>* _renderer;
+	ShaderProgramX<vertex_type>* _renderer;
 	float _pixelDensity;
 	texture _texture;
 
@@ -110,7 +110,7 @@ class stringglyph
 	float _delta;
 
 public:
-	typedef vertex3<glm::vec2, glm::vec2, float> vertex_type;
+	typedef Vertex_2f_2f_1f vertex_type;
 
 	stringglyph();
 	stringglyph(const char* string, glm::vec2 translate, float alpha = 1, float delta = 0);

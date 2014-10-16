@@ -21,7 +21,7 @@ SmoothTerrainSky::~SmoothTerrainSky()
 
 void SmoothTerrainSky::Render(const glm::mat4& transform, renderers* _renderers, bounds2f frame, float cameraDirectionZ, bool flip)
 {
-	vertexbuffer<color_vertex> shape;
+	VertexBufferX<Vertex_2f_4f> shape;
 
 	float y = cameraDirectionZ;
 	float x = sqrtf(1 - y * y);
@@ -40,12 +40,12 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, renderers* _renderers,
 	float y0 = frame.y().lerp(0.2f);
 	float y1 = frame.max.y;
 
-	shape._vertices.push_back(color_vertex(glm::vec2(x0, y0), c1));
-	shape._vertices.push_back(color_vertex(glm::vec2(x0, y1), c2));
-	shape._vertices.push_back(color_vertex(glm::vec2(x1, y1), c2));
-	shape._vertices.push_back(color_vertex(glm::vec2(x1, y1), c2));
-	shape._vertices.push_back(color_vertex(glm::vec2(x1, y0), c1));
-	shape._vertices.push_back(color_vertex(glm::vec2(x0, y0), c1));
+	shape._vertices.push_back(Vertex_2f_4f(glm::vec2(x0, y0), c1));
+	shape._vertices.push_back(Vertex_2f_4f(glm::vec2(x0, y1), c2));
+	shape._vertices.push_back(Vertex_2f_4f(glm::vec2(x1, y1), c2));
+	shape._vertices.push_back(Vertex_2f_4f(glm::vec2(x1, y1), c2));
+	shape._vertices.push_back(Vertex_2f_4f(glm::vec2(x1, y0), c1));
+	shape._vertices.push_back(Vertex_2f_4f(glm::vec2(x0, y0), c1));
 
 	glm::mat4 t = transform;
 	if (flip)
@@ -60,7 +60,7 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, renderers* _renderers,
 
 void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, renderers* _renderers, bounds2f frame, bool flip)
 {
-	vertexbuffer<texture_vertex> shape;
+	VertexBufferX<Vertex_2f_2f> shape;
 
 	shape._mode = GL_TRIANGLES;
 	shape._vertices.clear();
@@ -74,12 +74,12 @@ void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, rendere
 	float y0 = frame.min.y;
 	float y1 = frame.max.y;
 
-	shape._vertices.push_back(texture_vertex(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
-	shape._vertices.push_back(texture_vertex(glm::vec2(x0, y1), glm::vec2(vt0.x, vt1.y)));
-	shape._vertices.push_back(texture_vertex(glm::vec2(x1, y1), glm::vec2(vt1.x, vt1.y)));
-	shape._vertices.push_back(texture_vertex(glm::vec2(x1, y1), glm::vec2(vt1.x, vt1.y)));
-	shape._vertices.push_back(texture_vertex(glm::vec2(x1, y0), glm::vec2(vt1.x, vt0.y)));
-	shape._vertices.push_back(texture_vertex(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
+	shape._vertices.push_back(Vertex_2f_2f(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
+	shape._vertices.push_back(Vertex_2f_2f(glm::vec2(x0, y1), glm::vec2(vt0.x, vt1.y)));
+	shape._vertices.push_back(Vertex_2f_2f(glm::vec2(x1, y1), glm::vec2(vt1.x, vt1.y)));
+	shape._vertices.push_back(Vertex_2f_2f(glm::vec2(x1, y1), glm::vec2(vt1.x, vt1.y)));
+	shape._vertices.push_back(Vertex_2f_2f(glm::vec2(x1, y0), glm::vec2(vt1.x, vt0.y)));
+	shape._vertices.push_back(Vertex_2f_2f(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
 
 	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 	_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(_textureBackgroundLinen);

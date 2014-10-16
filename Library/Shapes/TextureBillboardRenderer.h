@@ -5,8 +5,8 @@
 #ifndef TextureBillboardRenderer_H
 #define TextureBillboardRenderer_H
 
-#include "Graphics/graphicscontext.h"
-#include "Graphics/shaderprogram.h"
+#include "GraphicsContextX.h"
+#include "ShaderProgramX.h"
 #include "BillboardTexture.h"
 
 
@@ -45,14 +45,14 @@ struct BillboardModel
 class TextureBillboardRenderer
 {
 public:
-	typedef vertex4<glm::vec3, float, glm::vec2, glm::vec2> vertex;
-	typedef shaderprogram4<glm::vec3, float, glm::vec2, glm::vec2> shaderprogram;
+	typedef Vertex_3f_1f_2f_2f vertex;
+	typedef ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2> shaderprogram;
 
 	shaderprogram* _shaderprogram;
-	vertexbuffer<vertex> _vbo;
+	VertexBufferX<vertex> _vbo;
 
 public:
-	TextureBillboardRenderer(graphicscontext* gc);
+	TextureBillboardRenderer(GraphicsContext* gc);
 	~TextureBillboardRenderer();
 
 	void Reset();

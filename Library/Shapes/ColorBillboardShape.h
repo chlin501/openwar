@@ -5,20 +5,19 @@
 #ifndef ColorBillboardRenderer_H
 #define ColorBillboardRenderer_H
 
-#include "Graphics/graphicscontext.h"
-#include "Graphics/shaderprogram.h"
+#include "GraphicsContextX.h"
+#include "ShaderProgramX.h"
 
 
 class ColorBillboardShape
 {
-	typedef vertex3<glm::vec3, glm::vec4, float> vertex;
-	typedef shaderprogram3<glm::vec3, glm::vec4, float> shaderprogram;
+	typedef ShaderProgram3<glm::vec3, glm::vec4, float> shaderprogram;
 
 	shaderprogram* _shaderprogram;
-	vertexbuffer<vertex> _vbo;
+	VertexBufferX<Vertex_3f_4f_1f> _vbo;
 
 public:
-	ColorBillboardShape(graphicscontext* gc);
+	ColorBillboardShape(GraphicsContext* gc);
 	~ColorBillboardShape();
 
 	void Reset();

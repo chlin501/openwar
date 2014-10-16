@@ -6,7 +6,7 @@
 #define SmoothTerrainSky_H
 
 #include "TerrainSky/TerrainSky.h"
-#include "Graphics/shaderprogram.h"
+#include "ShaderProgramX.h"
 
 
 class SmoothTerrainSky : public TerrainSky
