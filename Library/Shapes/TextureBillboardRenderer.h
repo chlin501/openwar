@@ -45,11 +45,10 @@ struct BillboardModel
 class TextureBillboardRenderer
 {
 public:
-	typedef Vertex_3f_1f_2f_2f vertex;
 	typedef ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2> shaderprogram;
 
 	shaderprogram* _shaderprogram;
-	VertexBuffer<vertex> _vbo;
+	VertexBuffer_3f_1f_2f_2f _vbo;
 
 public:
 	TextureBillboardRenderer(GraphicsContext* gc);

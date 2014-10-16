@@ -21,7 +21,7 @@ SmoothTerrainSky::~SmoothTerrainSky()
 
 void SmoothTerrainSky::Render(const glm::mat4& transform, renderers* _renderers, bounds2f frame, float cameraDirectionZ, bool flip)
 {
-	VertexBuffer<Vertex_2f_4f> shape;
+	VertexBuffer_2f_4f shape;
 
 	float y = cameraDirectionZ;
 	float x = sqrtf(1 - y * y);
@@ -60,7 +60,7 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, renderers* _renderers,
 
 void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, renderers* _renderers, bounds2f frame, bool flip)
 {
-	VertexBuffer<Vertex_2f_2f> shape;
+	VertexBuffer_2f_2f shape;
 
 	shape._mode = GL_TRIANGLES;
 	shape._vertices.clear();

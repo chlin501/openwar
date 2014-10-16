@@ -86,7 +86,7 @@ void TextureBillboardRenderer::AddBillboard(glm::vec3 position, float height, af
 	glm::vec2 texpos = texcoords.transform(glm::vec2(0, 0));
 	glm::vec2 texsize = texcoords.transform(glm::vec2(1, 1)) - texpos;
 
-	_vbo._vertices.push_back(vertex(position, height, texpos, texsize));
+	_vbo._vertices.push_back(Vertex_3f_1f_2f_2f(position, height, texpos, texsize));
 }
 
 
@@ -99,7 +99,7 @@ struct billboard_index
 
 void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
 {
-	static std::vector<vertex> vertices;
+	static std::vector<Vertex_3f_1f_2f_2f> vertices;
 	static std::vector<billboard_index> indices;
 
 	vertices.insert(vertices.end(), _vbo._vertices.begin(), _vbo._vertices.end());
@@ -109,7 +109,7 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 	float sin_a = sinf(a);
 
 	int index = 0;
-	for (vertex& v : _vbo._vertices)
+	for (Vertex_3f_1f_2f_2f& v : _vbo._vertices)
 	{
 		billboard_index i;
 		i.index = index++;

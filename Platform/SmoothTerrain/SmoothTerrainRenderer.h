@@ -27,11 +27,11 @@ class SmoothTerrainRenderer
 	texture* _splatmap;
 
 	SmoothTerrainShaders* _renderers;
-	VertexBuffer<Vertex_2f> _vboShadow;
-	VertexBuffer<terrain_vertex> _vboInside;
-	VertexBuffer<terrain_vertex> _vboBorder;
-	VertexBuffer<skirt_vertex> _vboSkirt;
-	VertexBuffer<Vertex_3f> _vboLines;
+	VertexBuffer_2f _vboShadow;
+	VertexBuffer_3f_3f _vboInside;
+	VertexBuffer_3f_3f _vboBorder;
+	VertexBuffer_3f_1f _vboSkirt;
+	VertexBuffer_3f _vboLines;
 
 	bool _showLines;
 	bool _editMode;
@@ -54,10 +54,10 @@ public:
 	void InitializeSkirt();
 	void InitializeLines();
 
-	VertexBuffer<terrain_vertex>* SelectTerrainVbo(int inside);
+	VertexBuffer_3f_3f* SelectTerrainVbo(int inside);
 
 	void BuildTriangles();
-	void PushTriangle(const terrain_vertex& v0, const terrain_vertex& v1, const terrain_vertex& v2);
+	void PushTriangle(const Vertex_3f_3f& v0, const Vertex_3f_3f& v1, const Vertex_3f_3f& v2);
 };
 
 

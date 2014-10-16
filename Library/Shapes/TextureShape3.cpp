@@ -81,5 +81,5 @@ TextureTriangleShape3::~TextureTriangleShape3()
 
 void TextureTriangleShape3::AddVertex(glm::vec3 p, glm::vec2 t)
 {
-	_vbo._vertices.push_back(vertex(p, t));
+	_vbo._vertices.push_back(Vertex_3f_2f(p, t));
 }

@@ -11,10 +11,6 @@
 #include "ShaderProgram.h"
 
 
-typedef Vertex_3f_3f terrain_vertex;
-typedef Vertex_3f_1f skirt_vertex;
-
-
 struct terrain_uniforms
 {
 	glm::mat4x4 _transform;
@@ -35,29 +31,29 @@ struct sobel_uniforms
 
 struct SmoothTerrainShaders
 {
-	ShaderProgram<terrain_vertex>* _terrain_inside;
-	ShaderProgram<terrain_vertex>* _terrain_border;
-	ShaderProgram<skirt_vertex>* _terrain_skirt;
-	ShaderProgram<terrain_vertex>* _depth_inside;
-	ShaderProgram<terrain_vertex>* _depth_border;
-	ShaderProgram<skirt_vertex>* _depth_skirt;
+	ShaderProgram<Vertex_3f_3f>* _terrain_inside;
+	ShaderProgram<Vertex_3f_3f>* _terrain_border;
+	ShaderProgram<Vertex_3f_1f>* _terrain_skirt;
+	ShaderProgram<Vertex_3f_3f>* _depth_inside;
+	ShaderProgram<Vertex_3f_3f>* _depth_border;
+	ShaderProgram<Vertex_3f_1f>* _depth_skirt;
 	ShaderProgram<Vertex_2f_2f>* _sobel_filter;
 	ShaderProgram<Vertex_2f>* _ground_shadow;
 
 	SmoothTerrainShaders();
 	~SmoothTerrainShaders();
 
-	void render_terrain_inside(VertexBuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms);
-	void render_terrain_border(VertexBuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms);
-	void render_terrain_skirt(VertexBuffer<skirt_vertex>& shape, const glm::mat4& transform, const texture* texture);
+	void render_terrain_inside(VertexBuffer_3f_3f& shape, const terrain_uniforms& uniforms);
+	void render_terrain_border(VertexBuffer_3f_3f& shape, const terrain_uniforms& uniforms);
+	void render_terrain_skirt(VertexBuffer_3f_1f& shape, const glm::mat4& transform, const texture* texture);
 
-	void render_depth_inside(VertexBuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms);
-	void render_depth_border(VertexBuffer<terrain_vertex>& shape, const terrain_uniforms& uniforms);
-	void render_depth_skirt(VertexBuffer<skirt_vertex>& shape, const glm::mat4& transform);
+	void render_depth_inside(VertexBuffer_3f_3f& shape, const terrain_uniforms& uniforms);
+	void render_depth_border(VertexBuffer_3f_3f& shape, const terrain_uniforms& uniforms);
+	void render_depth_skirt(VertexBuffer_3f_1f& shape, const glm::mat4& transform);
 
-	void render_sobel_filter(VertexBuffer<Vertex_2f_2f>& shape, const sobel_uniforms& uniforms);
+	void render_sobel_filter(VertexBuffer_2f_2f& shape, const sobel_uniforms& uniforms);
 
-	void render_ground_shadow(VertexBuffer<Vertex_2f>& shape, const terrain_uniforms& uniforms);
+	void render_ground_shadow(VertexBuffer_2f& shape, const terrain_uniforms& uniforms);
 
 	static texture* create_colormap();
 };

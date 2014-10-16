@@ -12,10 +12,8 @@
 class TextureShape3
 {
 protected:
-	typedef Vertex_3f_2f vertex;
-
-	ShaderProgram<vertex>* _shaderprogram;
-	VertexBuffer<vertex> _vbo;
+	ShaderProgram<Vertex_3f_2f>* _shaderprogram;
+	VertexBuffer_3f_2f _vbo;
 
 public:
 	TextureShape3(GraphicsContext* gc);

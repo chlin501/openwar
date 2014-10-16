@@ -267,8 +267,8 @@ void SmoothTerrainRenderer::InitializeSkirt()
 		glm::vec2 p = center + radius * vector2_from_angle(a);
 		float h = fmaxf(0, _smoothGroundMap->GetHeightMap()->InterpolateHeight(p));
 
-		_vboSkirt._vertices.push_back(skirt_vertex(glm::vec3(p, h + 0.5), h));
-		_vboSkirt._vertices.push_back(skirt_vertex(glm::vec3(p, -2.5), h));
+		_vboSkirt._vertices.push_back(Vertex_3f_1f(glm::vec3(p, h + 0.5), h));
+		_vboSkirt._vertices.push_back(Vertex_3f_1f(glm::vec3(p, -2.5), h));
 	}
 
 	_vboSkirt._vertices.push_back(_vboSkirt._vertices[0]);
@@ -322,7 +322,7 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 	else
 	{
 		// inside
-		for (terrain_vertex& vertex : _vboInside._vertices)
+		for (Vertex_3f_3f& vertex : _vboInside._vertices)
 		{
 			glm::vec2 p = vertex._1.xy();
 			if (bounds.contains(p))
@@ -335,7 +335,7 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 		_vboInside.update(GL_STATIC_DRAW);
 
 		// border
-		for (terrain_vertex& vertex : _vboBorder._vertices)
+		for (Vertex_3f_3f& vertex : _vboBorder._vertices)
 		{
 			glm::vec2 p = vertex._1.xy();
 			if (bounds.contains(p))
@@ -446,7 +446,7 @@ static int inside_circle(bounds2f bounds, glm::vec2 p)
 }
 
 
-static int inside_circle(bounds2f bounds, terrain_vertex v1, terrain_vertex v2, terrain_vertex v3)
+static int inside_circle(bounds2f bounds, Vertex_3f_3f v1, Vertex_3f_3f v2, Vertex_3f_3f v3)
 {
 	return inside_circle(bounds, v1._1.xy())
 		+ inside_circle(bounds, v2._1.xy())
@@ -492,11 +492,11 @@ void SmoothTerrainRenderer::BuildTriangles()
 			glm::vec3 n11 = _smoothGroundMap->GetHeightMap()->GetNormal(x + 1, y + 1);
 			glm::vec3 n22 = _smoothGroundMap->GetHeightMap()->GetNormal(x + 2, y + 2);
 
-			terrain_vertex v00 = terrain_vertex(glm::vec3(x0, y0, h00), n00);
-			terrain_vertex v02 = terrain_vertex(glm::vec3(x0, y2, h02), n02);
-			terrain_vertex v20 = terrain_vertex(glm::vec3(x2, y0, h20), n20);
-			terrain_vertex v11 = terrain_vertex(glm::vec3(x1, y1, h11), n11);
-			terrain_vertex v22 = terrain_vertex(glm::vec3(x2, y2, h22), n22);
+			Vertex_3f_3f v00 = Vertex_3f_3f(glm::vec3(x0, y0, h00), n00);
+			Vertex_3f_3f v02 = Vertex_3f_3f(glm::vec3(x0, y2, h02), n02);
+			Vertex_3f_3f v20 = Vertex_3f_3f(glm::vec3(x2, y0, h20), n20);
+			Vertex_3f_3f v11 = Vertex_3f_3f(glm::vec3(x1, y1, h11), n11);
+			Vertex_3f_3f v22 = Vertex_3f_3f(glm::vec3(x2, y2, h22), n22);
 
 			PushTriangle(v00, v20, v11);
 			PushTriangle(v20, v22, v11);
@@ -520,10 +520,10 @@ void SmoothTerrainRenderer::BuildTriangles()
 }
 
 
-void SmoothTerrainRenderer::PushTriangle(const terrain_vertex& v0, const terrain_vertex& v1, const terrain_vertex& v2)
+void SmoothTerrainRenderer::PushTriangle(const Vertex_3f_3f& v0, const Vertex_3f_3f& v1, const Vertex_3f_3f& v2)
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
-	VertexBuffer<terrain_vertex>* s = SelectTerrainVbo(inside_circle(bounds, v0, v1, v2));
+	VertexBuffer_3f_3f* s = SelectTerrainVbo(inside_circle(bounds, v0, v1, v2));
 	if (s != nullptr)
 	{
 		s->_vertices.push_back(v0);
@@ -533,7 +533,7 @@ void SmoothTerrainRenderer::PushTriangle(const terrain_vertex& v0, const terrain
 }
 
 
-VertexBuffer<terrain_vertex>* SmoothTerrainRenderer::SelectTerrainVbo(int inside)
+VertexBuffer_3f_3f* SmoothTerrainRenderer::SelectTerrainVbo(int inside)
 {
 	switch (inside)
 	{

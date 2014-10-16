@@ -195,7 +195,6 @@ public:
 		_bind(vertex_attributes, _vertices.data());
 	}
 
-
 private:
 	VertexBuffer(const VertexBuffer& other) { }
 	VertexBuffer& operator=(const VertexBuffer&) { return *this; }
@@ -205,9 +204,17 @@ typedef VertexBuffer<Vertex_2f> VertexBuffer_2f;
 typedef VertexBuffer<Vertex_3f> VertexBuffer_3f;
 
 typedef VertexBuffer<Vertex_2f_2f> VertexBuffer_2f_2f;
+typedef VertexBuffer<Vertex_2f_4f> VertexBuffer_2f_4f;
+typedef VertexBuffer<Vertex_3f_1f> VertexBuffer_3f_1f;
+typedef VertexBuffer<Vertex_3f_2f> VertexBuffer_3f_2f;
+typedef VertexBuffer<Vertex_3f_3f> VertexBuffer_3f_3f;
 typedef VertexBuffer<Vertex_3f_4f> VertexBuffer_3f_4f;
 
+typedef VertexBuffer<Vertex_2f_2f_1f> VertexBuffer_2f_2f_1f;
 typedef VertexBuffer<Vertex_3f_4f_1f> VertexBuffer_3f_4f_1f;
 typedef VertexBuffer<Vertex_2f_2f_2f> VertexBuffer_2f_2f_2f;
+
+typedef VertexBuffer<Vertex_3f_1f_2f_2f> VertexBuffer_3f_1f_2f_2f;
+
 
 #endif
