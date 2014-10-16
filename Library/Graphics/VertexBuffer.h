@@ -37,25 +37,33 @@ extern void CHECK_ERROR_GL();
 #endif
 
 
-
 template <class T1>
 struct Vertex1
 {
 	T1 _1;
-
 	Vertex1() { }
 	Vertex1(const T1& __1) : _1(__1) { }
 };
+typedef Vertex1<float> Vertex_1f;
+typedef Vertex1<glm::vec2> Vertex_2f;
+typedef Vertex1<glm::vec3> Vertex_3f;
+typedef Vertex1<glm::vec4> Vertex_4f;
+
 
 template <class T1, class T2>
 struct Vertex2
 {
 	T1 _1;
 	T2 _2;
-
 	Vertex2() { }
 	Vertex2(const T1& v1, const T2& v2) : _1(v1), _2(v2) { }
 };
+typedef Vertex2<glm::vec2, glm::vec4> Vertex_2f_4f;
+typedef Vertex2<glm::vec2, glm::vec2> Vertex_2f_2f;
+typedef Vertex2<glm::vec3, glm::vec2> Vertex_3f_2f;
+typedef Vertex2<glm::vec3, glm::vec3> Vertex_3f_3f;
+typedef Vertex2<glm::vec3, float> Vertex_3f_1f;
+
 
 template <class T1, class T2, class T3>
 struct Vertex3
@@ -63,10 +71,13 @@ struct Vertex3
 	T1 _1;
 	T2 _2;
 	T3 _3;
-
 	Vertex3() { }
 	Vertex3(const T1& v1, const T2& v2, const T3& v3) : _1(v1), _2(v2), _3(v3) { }
 };
+typedef Vertex3<glm::vec2, glm::vec2, float> Vertex_2f_2f_1f;
+typedef Vertex3<glm::vec3, glm::vec4, float> Vertex_3f_4f_1f;
+typedef Vertex3<glm::vec2, glm::vec2, glm::vec2> Vertex_2f_2f_2f;
+
 
 template <class T1, class T2, class T3, class T4>
 struct Vertex4
@@ -75,33 +86,44 @@ struct Vertex4
 	T2 _2;
 	T3 _3;
 	T4 _4;
-
 	Vertex4() { }
 	Vertex4(const T1& v1, const T2& v2, const T3& v3, const T4& v4) : _1(v1), _2(v2), _3(v3), _4(v4) { }
 };
-
-
-typedef Vertex1<glm::vec2> Vertex_2f;
-typedef Vertex1<glm::vec3> Vertex_3f;
-
-typedef Vertex2<glm::vec2, glm::vec4> Vertex_2f_4f;
-typedef Vertex2<glm::vec2, glm::vec2> Vertex_2f_2f;
-typedef Vertex2<glm::vec3, glm::vec2> Vertex_3f_2f;
-typedef Vertex2<glm::vec3, glm::vec3> Vertex_3f_3f;
-typedef Vertex2<glm::vec3, float> Vertex_3f_1f;
-
-typedef Vertex3<glm::vec2, glm::vec2, float> Vertex_2f_2f_1f;
-typedef Vertex3<glm::vec3, glm::vec4, float> Vertex_3f_4f_1f;
-typedef Vertex3<glm::vec2, glm::vec2, glm::vec2> Vertex_2f_2f_2f;
-
 typedef Vertex4<glm::vec3, float, glm::vec2, glm::vec2> Vertex_3f_1f_2f_2f;
+
+
+
+
+template <class T1, class T2>
+struct vertexglyph2
+{
+	typedef std::function<void(std::vector<Vertex2<T1, T2>>& vertices)> generator_type;
+
+	generator_type generator;
+
+	vertexglyph2() : generator() { }
+	vertexglyph2(generator_type g) : generator(g) { }
+};
+
+
+template <class T1, class T2, class T3>
+struct vertexglyph3
+{
+	typedef std::function<void(std::vector<Vertex3<T1, T2, T3>>& vertices)> generator_type;
+
+	generator_type generator;
+
+	vertexglyph3() : generator() { }
+	vertexglyph3(generator_type g) : generator(g) { }
+};
+
+
 
 
 
 struct renderer_vertex_attribute;
 
-
-class vertexbuffer_base
+class VertexBufferBase
 {
 public:
 	GLenum _mode;
@@ -109,22 +131,21 @@ public:
 	GLuint _vao;
 	GLsizei _count;
 
-	vertexbuffer_base();
-	virtual ~vertexbuffer_base();
-
+	VertexBufferBase();
+	virtual ~VertexBufferBase();
 
 	void _bind(const std::vector<renderer_vertex_attribute>& vertex_attributes, const void* data);
 	void unbind(const std::vector<renderer_vertex_attribute>& vertex_attributes);
 
 private:
-	vertexbuffer_base(const vertexbuffer_base&) {}
-	vertexbuffer_base& operator=(const vertexbuffer_base&) { return *this; }
+	VertexBufferBase(const VertexBufferBase&) {}
+	VertexBufferBase& operator=(const VertexBufferBase&) { return *this; }
 };
 
 
 
 template <class _Vertex>
-class VertexBuffer : public vertexbuffer_base
+class VertexBuffer : public VertexBufferBase
 {
 public:
 	typedef _Vertex vertex_type;
@@ -179,120 +200,6 @@ typedef VertexBuffer<Vertex_2f_2f> VertexBuffer_2f_2f;
 
 
 
-class glyphversion
-{
-	static int _highest_version;
-
-public:
-	int value;
-
-	glyphversion() : value(++_highest_version) { }
-	void increase() { value = ++_highest_version; }
-};
-
-
-template <class T1>
-struct vertexglyph1
-{
-	typedef std::function<void(std::vector<Vertex1<T1>>& vertices)> generator_type;
-
-	generator_type generator;
-	glyphversion* version;
-
-	vertexglyph1() : generator(), version(nullptr) { }
-	vertexglyph1(generator_type g) : generator(g), version(nullptr) { }
-	vertexglyph1(generator_type g, glyphversion* v) : generator(g), version(v) { }
-};
-
-
-template <class T1, class T2>
-struct vertexglyph2
-{
-	typedef std::function<void(std::vector<Vertex2<T1, T2>>& vertices)> generator_type;
-
-	generator_type generator;
-	glyphversion* version;
-
-	vertexglyph2() : generator(), version(nullptr) { }
-	vertexglyph2(generator_type g) : generator(g), version(nullptr) { }
-	vertexglyph2(generator_type g, glyphversion* v) : generator(g), version(v) { }
-};
-
-
-template <class T1, class T2, class T3>
-struct vertexglyph3
-{
-	typedef std::function<void(std::vector<Vertex3<T1, T2, T3>>& vertices)> generator_type;
-
-	generator_type generator;
-	glyphversion* version;
-
-	vertexglyph3() : generator(), version(nullptr) { }
-	vertexglyph3(generator_type g) : generator(g), version(nullptr) { }
-	vertexglyph3(generator_type g, glyphversion* v) : generator(g), version(v) { }
-};
-
-
-template <class T1, class T2, class T3, class T4>
-struct vertexglyph4
-{
-	typedef std::function<void(std::vector<Vertex4<T1, T2, T3, T4>>& vertices)> generator_type;
-
-	generator_type generator;
-	glyphversion* version;
-
-	vertexglyph4() : generator(), version(nullptr) { }
-	vertexglyph4(generator_type g) : generator(g), version(nullptr) { }
-	vertexglyph4(generator_type g, glyphversion* v) : generator(g), version(v) { }
-};
-
-
-template <class T1>
-class vertexshape1
-{
-	typedef Vertex1<T1> vertex_type;
-	typedef vertexglyph1<T1> vertexglyph_type;
-
-	VertexBuffer<vertex_type> _vbo;
-	int _version;
-
-public:
-	std::vector<vertexglyph_type> glyphs;
-
-	vertexshape1() : _vbo(), _version(0) { }
-
-	bool needs_update() const
-	{
-		/*int version = 0;
-		for (const vertexglyph_type& glyph : glyphs)
-		{
-			if (glyph.version == nullptr)
-				return true;
-			version += glyph.version->value;
-		}*/
-		return true;//version != _version;
-	}
-
-	VertexBuffer<vertex_type>& update_vbo()
-	{
-		if (needs_update())
-		{
-			_vbo._vertices.clear();
-			_version = 0;
-			for (vertexglyph_type& glyph : glyphs)
-			{
-				if (glyph.generator)
-					glyph.generator(_vbo._vertices);
-				if (glyph.version != nullptr)
-					_version += glyph.version->value;
-			}
-			_vbo.update(GL_STATIC_DRAW);
-		}
-		return _vbo;
-	}
-};
-
-
 template <class T1, class T2>
 class vertexshape2
 {
@@ -300,40 +207,21 @@ class vertexshape2
 	typedef vertexglyph2<T1, T2> vertexglyph_type;
 
 	VertexBuffer<vertex_type> _vbo;
-	int _version;
 
 public:
 	std::vector<vertexglyph_type> glyphs;
 
-	vertexshape2() : _vbo(), _version(0) { }
-
-	bool needs_update() const
-	{
-		/*int version = 0;
-		for (const vertexglyph_type& glyph : glyphs)
-		{
-			if (glyph.version == nullptr)
-				return true;
-			version += glyph.version->value;
-		}*/
-		return true;//version != _version;
-	}
+	vertexshape2() : _vbo() { }
 
 	VertexBuffer<vertex_type>& update_vbo()
 	{
-		if (needs_update())
+		_vbo._vertices.clear();
+		for (vertexglyph_type& glyph : glyphs)
 		{
-			_vbo._vertices.clear();
-			_version = 0;
-			for (vertexglyph_type& glyph : glyphs)
-			{
-				if (glyph.generator)
-					glyph.generator(_vbo._vertices);
-				if (glyph.version != nullptr)
-					_version += glyph.version->value;
-			}
-			_vbo.update(GL_STATIC_DRAW);
+			if (glyph.generator)
+				glyph.generator(_vbo._vertices);
 		}
+		_vbo.update(GL_STATIC_DRAW);
 		return _vbo;
 	}
 };
@@ -347,86 +235,21 @@ public:
 	typedef vertexglyph3<T1, T2, T3> vertexglyph_type;
 
 	VertexBuffer<vertex_type> _vbo;
-	int _version;
 
 public:
 	std::vector<vertexglyph_type> glyphs;
 
-	vertexshape3() : _vbo(), _version(0) { }
-
-	bool needs_update() const
-	{
-		/*int version = 0;
-		for (const vertexglyph_type& glyph : glyphs)
-		{
-			if (glyph.version == nullptr)
-				return true;
-			version += glyph.version->value;
-		}*/
-		return true; //version != _version;
-	}
+	vertexshape3() : _vbo() { }
 
 	VertexBuffer<vertex_type>& update_vbo()
 	{
-		if (needs_update())
+		_vbo._vertices.clear();
+		for (vertexglyph_type& glyph : glyphs)
 		{
-			_vbo._vertices.clear();
-			_version = 0;
-			for (vertexglyph_type& glyph : glyphs)
-			{
-				if (glyph.generator)
-					glyph.generator(_vbo._vertices);
-				if (glyph.version != nullptr)
-					_version += glyph.version->value;
-			}
-			_vbo.update(GL_STATIC_DRAW);
+			if (glyph.generator)
+				glyph.generator(_vbo._vertices);
 		}
-		return _vbo;
-	}
-};
-
-
-template <class T1, class T2, class T3, class T4>
-class vertexshape4
-{
-	typedef Vertex4<T1, T2, T3, T4> vertex_type;
-	typedef vertexglyph4<T1, T2, T3, T4> vertexglyph_type;
-
-	VertexBuffer<vertex_type> _vbo;
-	int _version;
-
-public:
-	std::vector<vertexglyph_type> glyphs;
-
-	vertexshape4() : _vbo(), _version(0) { }
-
-	bool needs_update() const
-	{
-		/*int version = 0;
-		for (const vertexglyph_type& glyph : glyphs)
-		{
-			if (glyph.version == nullptr)
-				return true;
-			version += glyph.version->value;
-		}*/
-		return true;//version != _version;
-	}
-
-	VertexBuffer<vertex_type>& update_vbo()
-	{
-		if (needs_update())
-		{
-			_vbo._vertices.clear();
-			_version = 0;
-			for (vertexglyph_type& glyph : glyphs)
-			{
-				if (glyph.generator)
-					glyph.generator(_vbo._vertices);
-				if (glyph.version != nullptr)
-					_version += glyph.version->value;
-			}
-			_vbo.update(GL_STATIC_DRAW);
-		}
+		_vbo.update(GL_STATIC_DRAW);
 		return _vbo;
 	}
 };

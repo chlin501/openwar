@@ -6,11 +6,7 @@
 #include "ShaderProgram.h"
 
 
-
-int glyphversion::_highest_version = 0;
-
-
-vertexbuffer_base::vertexbuffer_base() :
+VertexBufferBase::VertexBufferBase() :
 _mode(0),
 _vbo(0),
 _vao(0),
@@ -22,7 +18,7 @@ _count(0)
 
 
 
-vertexbuffer_base::~vertexbuffer_base()
+VertexBufferBase::~VertexBufferBase()
 {
 #ifdef OPENWAR_USE_VAO
 	if (_vao != 0)
@@ -40,7 +36,7 @@ vertexbuffer_base::~vertexbuffer_base()
 
 
 
-void vertexbuffer_base::_bind(const std::vector<renderer_vertex_attribute>& vertex_attributes, const void* data)
+void VertexBufferBase::_bind(const std::vector<renderer_vertex_attribute>& vertex_attributes, const void* data)
 {
 	bool setup = _vao == 0;
 
@@ -85,7 +81,7 @@ void vertexbuffer_base::_bind(const std::vector<renderer_vertex_attribute>& vert
 
 
 
-void vertexbuffer_base::unbind(const std::vector<renderer_vertex_attribute>& vertex_attributes)
+void VertexBufferBase::unbind(const std::vector<renderer_vertex_attribute>& vertex_attributes)
 {
 #ifdef OPENWAR_USE_VAO
 	if (_vao != 0)
