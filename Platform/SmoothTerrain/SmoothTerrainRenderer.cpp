@@ -119,10 +119,10 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 
 		VertexBuffer_2f_2f vertices;
 		vertices._mode = GL_TRIANGLE_STRIP;
-		vertices._vertices.push_back(Vertex_2f_2f(glm::vec2(-1, 1), glm::vec2(0, 1)));
-		vertices._vertices.push_back(Vertex_2f_2f(glm::vec2(-1, -1), glm::vec2(0, 0)));
-		vertices._vertices.push_back(Vertex_2f_2f(glm::vec2(1, 1), glm::vec2(1, 1)));
-		vertices._vertices.push_back(Vertex_2f_2f(glm::vec2(1, -1), glm::vec2(1, 0)));
+		vertices.AddVertex(Vertex_2f_2f(glm::vec2(-1, 1), glm::vec2(0, 1)));
+		vertices.AddVertex(Vertex_2f_2f(glm::vec2(-1, -1), glm::vec2(0, 0)));
+		vertices.AddVertex(Vertex_2f_2f(glm::vec2(1, 1), glm::vec2(1, 1)));
+		vertices.AddVertex(Vertex_2f_2f(glm::vec2(1, -1), glm::vec2(1, 0)));
 
 		sobel_uniforms su;
 		su._transform = glm::mat4x4();
@@ -225,7 +225,7 @@ void SmoothTerrainRenderer::InitializeShadow()
 	float radius2 = radius1 * 1.075f;
 
 	_shadowVertices._mode = GL_TRIANGLES;
-	_shadowVertices._vertices.clear();
+	_shadowVertices.Clear();
 
 	int n = 16;
 	for (int i = 0; i < n; ++i)
@@ -238,12 +238,12 @@ void SmoothTerrainRenderer::InitializeShadow()
 		glm::vec2 p3 = center + radius2 * vector2_from_angle(angle2);
 		glm::vec2 p4 = center + radius1 * vector2_from_angle(angle2);
 
-		_shadowVertices._vertices.push_back(Vertex_2f(p1));
-		_shadowVertices._vertices.push_back(Vertex_2f(p2));
-		_shadowVertices._vertices.push_back(Vertex_2f(p3));
-		_shadowVertices._vertices.push_back(Vertex_2f(p3));
-		_shadowVertices._vertices.push_back(Vertex_2f(p4));
-		_shadowVertices._vertices.push_back(Vertex_2f(p1));
+		_shadowVertices.AddVertex(Vertex_2f(p1));
+		_shadowVertices.AddVertex(Vertex_2f(p2));
+		_shadowVertices.AddVertex(Vertex_2f(p3));
+		_shadowVertices.AddVertex(Vertex_2f(p3));
+		_shadowVertices.AddVertex(Vertex_2f(p4));
+		_shadowVertices.AddVertex(Vertex_2f(p1));
 	}
 
 	_shadowVertices.UpdateVBO(GL_STATIC_DRAW);
@@ -257,7 +257,7 @@ void SmoothTerrainRenderer::InitializeSkirt()
 	float radius = bounds.width() / 2;
 
 	_skirtVertices._mode = GL_TRIANGLE_STRIP;
-	_skirtVertices._vertices.clear();
+	_skirtVertices.Clear();
 
 	int n = 1024;
 	float d = 2 * (float)M_PI / n;
@@ -267,12 +267,12 @@ void SmoothTerrainRenderer::InitializeSkirt()
 		glm::vec2 p = center + radius * vector2_from_angle(a);
 		float h = fmaxf(0, _smoothGroundMap->GetHeightMap()->InterpolateHeight(p));
 
-		_skirtVertices._vertices.push_back(Vertex_3f_1f(glm::vec3(p, h + 0.5), h));
-		_skirtVertices._vertices.push_back(Vertex_3f_1f(glm::vec3(p, -2.5), h));
+		_skirtVertices.AddVertex(Vertex_3f_1f(glm::vec3(p, h + 0.5), h));
+		_skirtVertices.AddVertex(Vertex_3f_1f(glm::vec3(p, -2.5), h));
 	}
 
-	_skirtVertices._vertices.push_back(_skirtVertices._vertices[0]);
-	_skirtVertices._vertices.push_back(_skirtVertices._vertices[1]);
+	_skirtVertices.AddVertex(_skirtVertices._vertices[0]);
+	_skirtVertices.AddVertex(_skirtVertices._vertices[1]);
 
 	_skirtVertices.UpdateVBO(GL_STATIC_DRAW);
 }
@@ -386,7 +386,7 @@ void SmoothTerrainRenderer::InitializeLines()
 		glm::vec2 size = bounds.size();
 
 		_lineVertices._mode = GL_LINES;
-		_lineVertices._vertices.clear();
+		_lineVertices.Clear();
 		int n = _smoothGroundMap->GetHeightMap()->GetMaxIndex();
 		float k = _smoothGroundMap->GetImage()->size().x;
 		for (int x = 0; x <= n; x += 2)
@@ -402,16 +402,16 @@ void SmoothTerrainRenderer::InitializeLines()
 				{
 					x2 = corner.x + size.x * ((x + 2) / k);
 					h20 = _smoothGroundMap->GetHeightMap()->GetHeight(x + 2, y);
-					_lineVertices._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x0, y0, h00)));
-					_lineVertices._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x2, y0, h20)));
+					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x0, y0, h00)));
+					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x2, y0, h20)));
 				}
 				float y2, h02;
 				if (y != n)
 				{
 					y2 = corner.y + size.y * ((y + 2) / k);
 					h02 = _smoothGroundMap->GetHeightMap()->GetHeight(x, y + 2);
-					_lineVertices._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x0, y0, h00)));
-					_lineVertices._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x0, y2, h02)));
+					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x0, y0, h00)));
+					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x0, y2, h02)));
 				}
 
 				if (x != n && y != n)
@@ -421,17 +421,17 @@ void SmoothTerrainRenderer::InitializeLines()
 					float h11 = _smoothGroundMap->GetHeightMap()->GetHeight(x + 1, y + 1);
 					float h22 = _smoothGroundMap->GetHeightMap()->GetHeight(x + 2, y + 2);
 
-					_lineVertices._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x0, y0, h00)));
-					_lineVertices._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
+					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x0, y0, h00)));
+					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
 
-					_lineVertices._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x2, y0, h20)));
-					_lineVertices._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
+					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x2, y0, h20)));
+					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
 
-					_lineVertices._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x0, y2, h02)));
-					_lineVertices._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
+					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x0, y2, h02)));
+					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
 
-					_lineVertices._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x2, y2, h22)));
-					_lineVertices._vertices.push_back(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
+					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x2, y2, h22)));
+					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
 				}
 			}
 		}
@@ -462,10 +462,10 @@ void SmoothTerrainRenderer::BuildTriangles()
 	glm::vec2 size = bounds.size();
 
 	_insideVertices._mode = GL_TRIANGLES;
-	_insideVertices._vertices.clear();
+	_insideVertices.Clear();
 
 	_borderVertices._mode = GL_TRIANGLES;
-	_borderVertices._vertices.clear();
+	_borderVertices.Clear();
 
 	int n = _smoothGroundMap->GetHeightMap()->GetMaxIndex();
 	float k = _smoothGroundMap->GetImage()->size().x;
@@ -511,10 +511,10 @@ void SmoothTerrainRenderer::BuildTriangles()
 	{
 		// be nice and free allocated memory
 
-		_insideVertices._vertices.clear();
+		_insideVertices.Clear();
 		_insideVertices._vertices.shrink_to_fit();
 
-		_borderVertices._vertices.clear();
+		_borderVertices.Clear();
 		_borderVertices._vertices.shrink_to_fit();
 	}
 }
@@ -526,9 +526,9 @@ void SmoothTerrainRenderer::PushTriangle(const Vertex_3f_3f& v0, const Vertex_3f
 	VertexBuffer_3f_3f* vertices = SelectTerrainVertexBuffer(inside_circle(bounds, v0, v1, v2));
 	if (vertices != nullptr)
 	{
-		vertices->_vertices.push_back(v0);
-		vertices->_vertices.push_back(v1);
-		vertices->_vertices.push_back(v2);
+		vertices->AddVertex(v0);
+		vertices->AddVertex(v1);
+		vertices->AddVertex(v2);
 	}
 }
 

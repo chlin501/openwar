@@ -77,7 +77,7 @@ TextureBillboardRenderer::~TextureBillboardRenderer()
 void TextureBillboardRenderer::Reset()
 {
 	_vertices._mode = GL_POINTS;
-	_vertices._vertices.clear();
+	_vertices.Clear();
 }
 
 
@@ -86,7 +86,7 @@ void TextureBillboardRenderer::AddBillboard(glm::vec3 position, float height, af
 	glm::vec2 texpos = texcoords.transform(glm::vec2(0, 0));
 	glm::vec2 texsize = texcoords.transform(glm::vec2(1, 1)) - texpos;
 
-	_vertices._vertices.push_back(Vertex_3f_1f_2f_2f(position, height, texpos, texsize));
+	_vertices.AddVertex(Vertex_3f_1f_2f_2f(position, height, texpos, texsize));
 }
 
 
@@ -122,9 +122,9 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 		return diff == 0 ? a.index < b.index : diff > 0;
 	});
 
-	_vertices._vertices.clear();
+	_vertices.Clear();
 	for (const billboard_index& i : indices)
-		_vertices._vertices.push_back(vertices[i.index]);
+		_vertices.AddVertex(vertices[i.index]);
 
 	vertices.clear();
 	indices.clear();

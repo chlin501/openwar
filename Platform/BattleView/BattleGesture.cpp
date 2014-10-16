@@ -62,39 +62,39 @@ void BattleGesture::RenderHints()
 	{
 		bounds2f bounds = GetUnitCurrentBounds(unitMarker->_unit);
 
-		vertices._vertices.push_back(Vertex_2f(bounds.p11()));
-		vertices._vertices.push_back(Vertex_2f(bounds.p12()));
-		vertices._vertices.push_back(Vertex_2f(bounds.p12()));
-		vertices._vertices.push_back(Vertex_2f(bounds.p22()));
-		vertices._vertices.push_back(Vertex_2f(bounds.p22()));
-		vertices._vertices.push_back(Vertex_2f(bounds.p21()));
-		vertices._vertices.push_back(Vertex_2f(bounds.p21()));
-		vertices._vertices.push_back(Vertex_2f(bounds.p11()));
+		vertices.AddVertex(Vertex_2f(bounds.p11()));
+		vertices.AddVertex(Vertex_2f(bounds.p12()));
+		vertices.AddVertex(Vertex_2f(bounds.p12()));
+		vertices.AddVertex(Vertex_2f(bounds.p22()));
+		vertices.AddVertex(Vertex_2f(bounds.p22()));
+		vertices.AddVertex(Vertex_2f(bounds.p21()));
+		vertices.AddVertex(Vertex_2f(bounds.p21()));
+		vertices.AddVertex(Vertex_2f(bounds.p11()));
 
 		bounds = GetUnitFutureBounds(unitMarker->_unit);
 		if (!bounds.is_empty())
 		{
-			vertices._vertices.push_back(Vertex_2f(bounds.p11()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p12()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p12()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p22()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p22()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p21()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p21()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p11()));
+			vertices.AddVertex(Vertex_2f(bounds.p11()));
+			vertices.AddVertex(Vertex_2f(bounds.p12()));
+			vertices.AddVertex(Vertex_2f(bounds.p12()));
+			vertices.AddVertex(Vertex_2f(bounds.p22()));
+			vertices.AddVertex(Vertex_2f(bounds.p22()));
+			vertices.AddVertex(Vertex_2f(bounds.p21()));
+			vertices.AddVertex(Vertex_2f(bounds.p21()));
+			vertices.AddVertex(Vertex_2f(bounds.p11()));
 		}
 
 		bounds = GetUnitModifierBounds(unitMarker->_unit);
 		if (!bounds.is_empty())
 		{
-			vertices._vertices.push_back(Vertex_2f(bounds.p11()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p12()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p12()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p22()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p22()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p21()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p21()));
-			vertices._vertices.push_back(Vertex_2f(bounds.p11()));
+			vertices.AddVertex(Vertex_2f(bounds.p11()));
+			vertices.AddVertex(Vertex_2f(bounds.p12()));
+			vertices.AddVertex(Vertex_2f(bounds.p12()));
+			vertices.AddVertex(Vertex_2f(bounds.p22()));
+			vertices.AddVertex(Vertex_2f(bounds.p22()));
+			vertices.AddVertex(Vertex_2f(bounds.p21()));
+			vertices.AddVertex(Vertex_2f(bounds.p21()));
+			vertices.AddVertex(Vertex_2f(bounds.p11()));
 		}
 	}
 

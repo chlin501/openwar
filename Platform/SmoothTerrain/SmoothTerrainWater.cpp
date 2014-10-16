@@ -122,8 +122,8 @@ void SmoothTerrainWater::Update()
 	_waterInsideVertices._mode = GL_TRIANGLES;
 	_waterBorderVertices._mode = GL_TRIANGLES;
 
-	_waterInsideVertices._vertices.clear();
-	_waterBorderVertices._vertices.clear();
+	_waterInsideVertices.Clear();
+	_waterBorderVertices.Clear();
 
 	int n = 64;
 	glm::vec2 s = bounds.size() / (float)n;
@@ -141,17 +141,17 @@ void SmoothTerrainWater::Update()
 				VertexBuffer_2f* s = choose_shape(inside_circle(bounds, v11, v22, v12), &_waterInsideVertices, &_waterBorderVertices);
 				if (s != nullptr)
 				{
-					s->_vertices.push_back(v11);
-					s->_vertices.push_back(v22);
-					s->_vertices.push_back(v12);
+					s->AddVertex(v11);
+					s->AddVertex(v22);
+					s->AddVertex(v12);
 				}
 
 				s = choose_shape(inside_circle(bounds, v22, v11, v21), &_waterInsideVertices, &_waterBorderVertices);
 				if (s != nullptr)
 				{
-					s->_vertices.push_back(v22);
-					s->_vertices.push_back(v11);
-					s->_vertices.push_back(v21);
+					s->AddVertex(v22);
+					s->AddVertex(v11);
+					s->AddVertex(v21);
 				}
 			}
 		}

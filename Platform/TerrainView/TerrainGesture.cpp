@@ -48,28 +48,28 @@ void TerrainGesture::RenderHints()
 
 	bounds2f bounds(left.x, bottom.y, right.x, top.y);
 
-	vertices._vertices.push_back(Vertex_2f(bounds.p12() + glm::vec2(0, 4)));
-	vertices._vertices.push_back(Vertex_2f(bounds.p22() + glm::vec2(0, 4)));
+	vertices.AddVertex(Vertex_2f(bounds.p12() + glm::vec2(0, 4)));
+	vertices.AddVertex(Vertex_2f(bounds.p22() + glm::vec2(0, 4)));
 
-	vertices._vertices.push_back(Vertex_2f(bounds.p11()));
-	vertices._vertices.push_back(Vertex_2f(bounds.p12()));
-	vertices._vertices.push_back(Vertex_2f(bounds.p12()));
-	vertices._vertices.push_back(Vertex_2f(bounds.p22()));
-	vertices._vertices.push_back(Vertex_2f(bounds.p22()));
-	vertices._vertices.push_back(Vertex_2f(bounds.p21()));
-	vertices._vertices.push_back(Vertex_2f(bounds.p21()));
-	vertices._vertices.push_back(Vertex_2f(bounds.p11()));
+	vertices.AddVertex(Vertex_2f(bounds.p11()));
+	vertices.AddVertex(Vertex_2f(bounds.p12()));
+	vertices.AddVertex(Vertex_2f(bounds.p12()));
+	vertices.AddVertex(Vertex_2f(bounds.p22()));
+	vertices.AddVertex(Vertex_2f(bounds.p22()));
+	vertices.AddVertex(Vertex_2f(bounds.p21()));
+	vertices.AddVertex(Vertex_2f(bounds.p21()));
+	vertices.AddVertex(Vertex_2f(bounds.p11()));
 
 	if (this != nullptr)
 	{
-		vertices._vertices.push_back(Vertex_2f(top + glm::vec2(0, 5)));
-		vertices._vertices.push_back(Vertex_2f(top - glm::vec2(0, 5)));
-		vertices._vertices.push_back(Vertex_2f(left + glm::vec2(5, 0)));
-		vertices._vertices.push_back(Vertex_2f(left - glm::vec2(5, 0)));
-		vertices._vertices.push_back(Vertex_2f(bottom + glm::vec2(0, 5)));
-		vertices._vertices.push_back(Vertex_2f(bottom - glm::vec2(0, 5)));
-		vertices._vertices.push_back(Vertex_2f(right + glm::vec2(5, 0)));
-		vertices._vertices.push_back(Vertex_2f(right - glm::vec2(5, 0)));
+		vertices.AddVertex(Vertex_2f(top + glm::vec2(0, 5)));
+		vertices.AddVertex(Vertex_2f(top - glm::vec2(0, 5)));
+		vertices.AddVertex(Vertex_2f(left + glm::vec2(5, 0)));
+		vertices.AddVertex(Vertex_2f(left - glm::vec2(5, 0)));
+		vertices.AddVertex(Vertex_2f(bottom + glm::vec2(0, 5)));
+		vertices.AddVertex(Vertex_2f(bottom - glm::vec2(0, 5)));
+		vertices.AddVertex(Vertex_2f(right + glm::vec2(5, 0)));
+		vertices.AddVertex(Vertex_2f(right - glm::vec2(5, 0)));
 	}
 
 	glLineWidth(2);

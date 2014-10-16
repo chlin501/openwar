@@ -66,14 +66,14 @@ void PlainShape3::Draw(const glm::mat4x4& transform, const glm::vec4& color)
 void PlainLineShape3::Reset()
 {
 	_vertices._mode = GL_LINES;
-	_vertices._vertices.clear();
+	_vertices.Clear();
 }
 
 
 void PlainLineShape3::AddLine(const glm::vec3& p1, const glm::vec3& p2)
 {
-	_vertices._vertices.push_back(Vertex_3f(p1));
-	_vertices._vertices.push_back(Vertex_3f(p2));
+	_vertices.AddVertex(Vertex_3f(p1));
+	_vertices.AddVertex(Vertex_3f(p2));
 }
 
 
@@ -83,11 +83,11 @@ void PlainLineShape3::AddLine(const glm::vec3& p1, const glm::vec3& p2)
 void PlainTriangleShape3::Reset()
 {
 	_vertices._mode = GL_TRIANGLES;
-	_vertices._vertices.clear();
+	_vertices.Clear();
 }
 
 
 void PlainTriangleShape3::AddVertex(const glm::vec3& p)
 {
-	_vertices._vertices.push_back(Vertex_3f(p));
+	_vertices.AddVertex(Vertex_3f(p));
 }

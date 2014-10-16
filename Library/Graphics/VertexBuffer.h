@@ -145,9 +145,19 @@ public:
 	{
 	}
 
+	void Clear()
+	{
+		_vertices.clear();
+	}
+
 	GLsizei count() const
 	{
 		return _vbo != 0 ? _count : (GLsizei)_vertices.size();
+	}
+
+	void AddVertex(const vertex_type& vertex)
+	{
+		_vertices.push_back(vertex);
 	}
 
 	virtual void UpdateVBO(GLenum usage)

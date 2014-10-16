@@ -40,13 +40,13 @@ _renderers(r)
 
 static void AddRect(VertexBuffer_2f_2f& vertices, bounds2f bounds, bounds2f texture)
 {
-	vertices._vertices.push_back(Vertex_2f_2f(bounds.p11(), glm::vec2(0, 1) - texture.p11()));
-	vertices._vertices.push_back(Vertex_2f_2f(bounds.p12(), glm::vec2(0, 1) - texture.p12()));
-	vertices._vertices.push_back(Vertex_2f_2f(bounds.p22(), glm::vec2(0, 1) - texture.p22()));
+	vertices.AddVertex(Vertex_2f_2f(bounds.p11(), glm::vec2(0, 1) - texture.p11()));
+	vertices.AddVertex(Vertex_2f_2f(bounds.p12(), glm::vec2(0, 1) - texture.p12()));
+	vertices.AddVertex(Vertex_2f_2f(bounds.p22(), glm::vec2(0, 1) - texture.p22()));
 
-	vertices._vertices.push_back(Vertex_2f_2f(bounds.p22(), glm::vec2(0, 1) - texture.p22()));
-	vertices._vertices.push_back(Vertex_2f_2f(bounds.p21(), glm::vec2(0, 1) - texture.p21()));
-	vertices._vertices.push_back(Vertex_2f_2f(bounds.p11(), glm::vec2(0, 1) - texture.p11()));
+	vertices.AddVertex(Vertex_2f_2f(bounds.p22(), glm::vec2(0, 1) - texture.p22()));
+	vertices.AddVertex(Vertex_2f_2f(bounds.p21(), glm::vec2(0, 1) - texture.p21()));
+	vertices.AddVertex(Vertex_2f_2f(bounds.p11(), glm::vec2(0, 1) - texture.p11()));
 }
 
 
@@ -90,10 +90,10 @@ void ButtonRendering::RenderTextureRect(const glm::mat4& transform, texture* tex
 {
 	VertexBuffer_2f_2f vertices;
 	vertices._mode = GL_TRIANGLE_STRIP;
-	vertices._vertices.push_back(Vertex_2f_2f(b.p11(), t.p12()));
-	vertices._vertices.push_back(Vertex_2f_2f(b.p12(), t.p11()));
-	vertices._vertices.push_back(Vertex_2f_2f(b.p21(), t.p22()));
-	vertices._vertices.push_back(Vertex_2f_2f(b.p22(), t.p21()));
+	vertices.AddVertex(Vertex_2f_2f(b.p11(), t.p12()));
+	vertices.AddVertex(Vertex_2f_2f(b.p12(), t.p11()));
+	vertices.AddVertex(Vertex_2f_2f(b.p21(), t.p22()));
+	vertices.AddVertex(Vertex_2f_2f(b.p22(), t.p21()));
 
 	if (alpha == 1)
 	{

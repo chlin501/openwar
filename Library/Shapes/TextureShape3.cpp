@@ -59,7 +59,7 @@ TextureShape3::~TextureShape3()
 void TextureTriangleShape3::Reset()
 {
 	_vertices._mode = GL_TRIANGLES;
-	_vertices._vertices.clear();
+	_vertices.Clear();
 }
 
 
@@ -81,5 +81,5 @@ TextureTriangleShape3::~TextureTriangleShape3()
 
 void TextureTriangleShape3::AddVertex(glm::vec3 p, glm::vec2 t)
 {
-	_vertices._vertices.push_back(Vertex_3f_2f(p, t));
+	_vertices.AddVertex(Vertex_3f_2f(p, t));
 }

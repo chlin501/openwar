@@ -70,14 +70,14 @@ void GradientShape3::Draw(const glm::mat4x4& transform)
 void GradientLineShape3::Reset()
 {
 	_vertices._mode = GL_LINES;
-	_vertices._vertices.clear();
+	_vertices.Clear();
 }
 
 
 void GradientLineShape3::AddLine(const glm::vec3& p1, const glm::vec3& p2, const glm::vec4& c1, const glm::vec4& c2)
 {
-	_vertices._vertices.push_back(Vertex_3f_4f(p1, c1));
-	_vertices._vertices.push_back(Vertex_3f_4f(p2, c2));
+	_vertices.AddVertex(Vertex_3f_4f(p1, c1));
+	_vertices.AddVertex(Vertex_3f_4f(p2, c2));
 }
 
 
@@ -87,13 +87,13 @@ void GradientLineShape3::AddLine(const glm::vec3& p1, const glm::vec3& p2, const
 void GradientTriangleShape3::Reset()
 {
 	_vertices._mode = GL_TRIANGLES;
-	_vertices._vertices.clear();
+	_vertices.Clear();
 }
 
 
 void GradientTriangleShape3::AddVertex(const glm::vec3& p, const glm::vec4& c)
 {
-	_vertices._vertices.push_back(Vertex_3f_4f(p, c));
+	_vertices.AddVertex(Vertex_3f_4f(p, c));
 }
 
 
@@ -103,7 +103,7 @@ void GradientTriangleShape3::AddVertex(const glm::vec3& p, const glm::vec4& c)
 void GradientTriangleStripShape3::Reset()
 {
 	_vertices._mode = GL_TRIANGLE_STRIP;
-	_vertices._vertices.clear();
+	_vertices.Clear();
 }
 
 
@@ -111,9 +111,9 @@ void GradientTriangleStripShape3::AddVertex(const glm::vec3& p, const glm::vec4&
 {
 	if (separator && !_vertices._vertices.empty())
 	{
-		_vertices._vertices.push_back(_vertices._vertices.back());
-		_vertices._vertices.push_back(Vertex_3f_4f(p, c));
+		_vertices.AddVertex(_vertices._vertices.back());
+		_vertices.AddVertex(Vertex_3f_4f(p, c));
 	}
 
-	_vertices._vertices.push_back(Vertex_3f_4f(p, c));
+	_vertices.AddVertex(Vertex_3f_4f(p, c));
 }

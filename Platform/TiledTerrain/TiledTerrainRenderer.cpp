@@ -93,13 +93,13 @@ void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3&
 				t10 = tmp;
 			}
 
-			_vertices._vertices.clear();
-			_vertices._vertices.push_back(Vertex_3f_2f(glm::vec3(p0.x, p0.y, h00), t01));
-			_vertices._vertices.push_back(Vertex_3f_2f(glm::vec3(p1.x, p0.y, h10), t11));
-			_vertices._vertices.push_back(Vertex_3f_2f(glm::vec3(p1.x, p1.y, h11), t10));
-			_vertices._vertices.push_back(Vertex_3f_2f(glm::vec3(p1.x, p1.y, h11), t10));
-			_vertices._vertices.push_back(Vertex_3f_2f(glm::vec3(p0.x, p1.y, h01), t00));
-			_vertices._vertices.push_back(Vertex_3f_2f(glm::vec3(p0.x, p0.y, h00), t01));
+			_vertices.Clear();
+			_vertices.AddVertex(Vertex_3f_2f(glm::vec3(p0.x, p0.y, h00), t01));
+			_vertices.AddVertex(Vertex_3f_2f(glm::vec3(p1.x, p0.y, h10), t11));
+			_vertices.AddVertex(Vertex_3f_2f(glm::vec3(p1.x, p1.y, h11), t10));
+			_vertices.AddVertex(Vertex_3f_2f(glm::vec3(p1.x, p1.y, h11), t10));
+			_vertices.AddVertex(Vertex_3f_2f(glm::vec3(p0.x, p1.y, h01), t00));
+			_vertices.AddVertex(Vertex_3f_2f(glm::vec3(p0.x, p0.y, h00), t01));
 
 			_vertices.UpdateVBO(GL_STATIC_DRAW);
 
