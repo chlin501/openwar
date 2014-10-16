@@ -623,9 +623,9 @@ _delta(delta)
 }
 
 
-vertexglyph3<glm::vec2, glm::vec2, float> stringglyph::glyph(stringfont* font)
+VertexGlyph<Vertex_2f_2f_1f> stringglyph::glyph(stringfont* font)
 {
-	return vertexglyph3<glm::vec2, glm::vec2, float>([this, font](std::vector<Vertex_2f_2f_1f>& vertices) {
+	return VertexGlyph<Vertex_2f_2f_1f>([this, font](std::vector<Vertex_2f_2f_1f>& vertices) {
 		generate(font, vertices);
 	});
 }
@@ -728,7 +728,7 @@ void stringshape::add(const char* s, glm::mat4x4 transform, float alpha, float d
 	stringglyph* g = new stringglyph(s, transform, alpha, delta);
 	_stringglyphs.push_back(g);
 
-	glyphs.push_back(vertexglyph3<glm::vec2, glm::vec2, float>([this, g](std::vector<Vertex_2f_2f_1f>& vertices) {
+	glyphs.push_back(VertexGlyph<Vertex3<glm::vec2, glm::vec2, float>>([this, g](std::vector<Vertex_2f_2f_1f>& vertices) {
 		g->generate(_font, vertices);
 	}));
 }

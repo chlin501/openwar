@@ -40,6 +40,7 @@ extern void CHECK_ERROR_GL();
 template <class T1>
 struct Vertex1
 {
+	typedef std::function<void(std::vector<Vertex1<T1>>&)> generator_type;
 	T1 _1;
 	Vertex1() { }
 	Vertex1(const T1& __1) : _1(__1) { }
@@ -53,6 +54,7 @@ typedef Vertex1<glm::vec4> Vertex_4f;
 template <class T1, class T2>
 struct Vertex2
 {
+	typedef std::function<void(std::vector<Vertex2<T1, T2>>&)> generator_type;
 	T1 _1;
 	T2 _2;
 	Vertex2() { }
@@ -68,6 +70,7 @@ typedef Vertex2<glm::vec3, float> Vertex_3f_1f;
 template <class T1, class T2, class T3>
 struct Vertex3
 {
+	typedef std::function<void(std::vector<Vertex3<T1, T2, T3>>&)> generator_type;
 	T1 _1;
 	T2 _2;
 	T3 _3;
@@ -82,6 +85,7 @@ typedef Vertex3<glm::vec2, glm::vec2, glm::vec2> Vertex_2f_2f_2f;
 template <class T1, class T2, class T3, class T4>
 struct Vertex4
 {
+	typedef std::function<void(std::vector<Vertex4<T1, T2, T3, T4>>&)> generator_type;
 	T1 _1;
 	T2 _2;
 	T3 _3;
@@ -94,30 +98,16 @@ typedef Vertex4<glm::vec3, float, glm::vec2, glm::vec2> Vertex_3f_1f_2f_2f;
 
 
 
-template <class T1, class T2>
-struct vertexglyph2
+template <class _VertexT>
+struct VertexGlyph
 {
-	typedef std::function<void(std::vector<Vertex2<T1, T2>>& vertices)> generator_type;
+	typedef typename _VertexT::generator_type generator_type;
 
 	generator_type generator;
 
-	vertexglyph2() : generator() { }
-	vertexglyph2(generator_type g) : generator(g) { }
+	VertexGlyph() : generator() { }
+	VertexGlyph(generator_type g) : generator(g) { }
 };
-
-
-template <class T1, class T2, class T3>
-struct vertexglyph3
-{
-	typedef std::function<void(std::vector<Vertex3<T1, T2, T3>>& vertices)> generator_type;
-
-	generator_type generator;
-
-	vertexglyph3() : generator() { }
-	vertexglyph3(generator_type g) : generator(g) { }
-};
-
-
 
 
 
@@ -204,7 +194,7 @@ template <class T1, class T2>
 class vertexshape2
 {
 	typedef Vertex2<T1, T2> vertex_type;
-	typedef vertexglyph2<T1, T2> vertexglyph_type;
+	typedef VertexGlyph<vertex_type> vertexglyph_type;
 
 	VertexBuffer<vertex_type> _vbo;
 
@@ -232,7 +222,7 @@ class vertexshape3
 {
 public:
 	typedef Vertex3<T1, T2, T3> vertex_type;
-	typedef vertexglyph3<T1, T2, T3> vertexglyph_type;
+	typedef VertexGlyph<vertex_type> vertexglyph_type;
 
 	VertexBuffer<vertex_type> _vbo;
 

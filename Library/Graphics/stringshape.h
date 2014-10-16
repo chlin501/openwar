@@ -126,7 +126,7 @@ public:
 	const float get_delta() const { return _delta; }
 	void set_delta(float value) { _delta = value; }
 
-	vertexglyph3<glm::vec2, glm::vec2, float> glyph(stringfont* font);
+	VertexGlyph<Vertex_2f_2f_1f> glyph(stringfont* font);
 
 	void generate(stringfont* font, std::vector<vertex_type>& vertices);
 };

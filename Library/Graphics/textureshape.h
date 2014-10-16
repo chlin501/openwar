@@ -39,7 +39,7 @@ public:
 	textureglyph() { }
 	textureglyph(texturetile tile, bounds2f bounds, glm::vec2 inset);
 
-	vertexglyph2<glm::vec2, glm::vec2> glyph();
+	VertexGlyph<Vertex_2f_2f> glyph();
 
 	void generate(std::vector<vertex_type>& vertices);
 	void rectangle(std::vector<vertex_type>& vertices, bounds2f xy, bounds2f uv);

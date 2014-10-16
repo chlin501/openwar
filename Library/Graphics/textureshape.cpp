@@ -43,9 +43,9 @@ textureglyph::textureglyph(texturetile tile, bounds2f bounds, glm::vec2 inset)
 }
 
 
-vertexglyph2<glm::vec2, glm::vec2> textureglyph::glyph()
+VertexGlyph<Vertex_2f_2f> textureglyph::glyph()
 {
-	return vertexglyph2<glm::vec2, glm::vec2>([this](std::vector<vertex_type>& vertices) {
+	return VertexGlyph<Vertex_2f_2f>([this](std::vector<vertex_type>& vertices) {
 		generate(vertices);
 	});
 }
