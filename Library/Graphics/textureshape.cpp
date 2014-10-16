@@ -114,13 +114,3 @@ void textureglyph::rectangle(std::vector<vertex_type>& vertices, bounds2f xy, bo
 	vertices.push_back(vertex_type(glm::vec2(xy.max.x, xy.min.y), glm::vec2(uv.max.x, uv.min.y)));
 	vertices.push_back(vertex_type(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
 }
-
-
-textureshape::textureshape()
-{
-}
-
-
-textureshape::~textureshape()
-{
-}

@@ -46,14 +46,7 @@ public:
 };
 
 
-class textureshape : public vertexshape2<glm::vec2, glm::vec2>
-{
-public:
-	textureshape();
-	~textureshape();
-
-
-};
+typedef vertexshape2<glm::vec2, glm::vec2> textureshape;
 
 
 #endif

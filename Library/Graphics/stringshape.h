@@ -133,11 +133,12 @@ public:
 
 
 
-class stringshape : public vertexshape3<glm::vec2, glm::vec2, float>
+class stringshape
 {
 	std::vector<stringglyph*> _stringglyphs;
 
 public:
+	vertexshape3<glm::vec2, glm::vec2, float> _xxx;
 	stringfont* _font;
 
 	stringshape(stringfont* font);

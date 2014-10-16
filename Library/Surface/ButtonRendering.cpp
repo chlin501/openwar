@@ -145,14 +145,14 @@ void ButtonRendering::RenderButtonText(const glm::mat4& transform, glm::vec2 pos
 			if (dx != 0 || dy != 0)
 			{
 				_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(glm::translate(transform, glm::vec3(p, 0) + glm::vec3(dx, dy, 0)));
-				_string_font->_renderer->render(_string_shape->_vbo);
+				_string_font->_renderer->render(_string_shape->_xxx._vbo);
 			}
 
 	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(glm::translate(transform, glm::vec3(p, 0) + glm::vec3(0, -1, 0)));
 	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 1));
-	_string_font->_renderer->render(_string_shape->_vbo);
+	_string_font->_renderer->render(_string_shape->_xxx._vbo);
 
 	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(glm::translate(transform, glm::vec3(p, 0)));
 	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(1, 1, 1, 1));
-	_string_font->_renderer->render(_string_shape->_vbo);
+	_string_font->_renderer->render(_string_shape->_xxx._vbo);
 }
