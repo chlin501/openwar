@@ -139,8 +139,10 @@ class VertexBuffer : public VertexBufferBase
 {
 public:
 	typedef _Vertex vertex_type;
+	typedef VertexGlyph<vertex_type> vertexglyph_type;
 
 	std::vector<vertex_type> _vertices;
+	std::vector<vertexglyph_type> _glyphs;
 
 	VertexBuffer()
 	{
@@ -174,6 +176,19 @@ public:
 		_count = (GLsizei)_vertices.size();
 	}
 
+
+	VertexBuffer<vertex_type>& update_vbo()
+	{
+		_vertices.clear();
+		for (vertexglyph_type& glyph : _glyphs)
+		{
+			if (glyph.generator)
+				glyph.generator(_vertices);
+		}
+		update(GL_STATIC_DRAW);
+		return *this;
+	}
+
 	void bind(const std::vector<renderer_vertex_attribute>& vertex_attributes)
 	{
 		_bind(vertex_attributes, _vertices.data());
@@ -191,57 +206,15 @@ typedef VertexBuffer<Vertex_2f_2f> VertexBuffer_2f_2f;
 
 
 template <class T1, class T2>
-class vertexshape2
+class vertexshape2 : public VertexBuffer<Vertex2<T1, T2>>
 {
-	typedef Vertex2<T1, T2> vertex_type;
-	typedef VertexGlyph<vertex_type> vertexglyph_type;
 
-	VertexBuffer<vertex_type> _vbo;
-
-public:
-	std::vector<vertexglyph_type> glyphs;
-
-	vertexshape2() : _vbo() { }
-
-	VertexBuffer<vertex_type>& update_vbo()
-	{
-		_vbo._vertices.clear();
-		for (vertexglyph_type& glyph : glyphs)
-		{
-			if (glyph.generator)
-				glyph.generator(_vbo._vertices);
-		}
-		_vbo.update(GL_STATIC_DRAW);
-		return _vbo;
-	}
 };
 
 
 template <class T1, class T2, class T3>
-class vertexshape3
+class vertexshape3 : public VertexBuffer<Vertex3<T1, T2, T3>>
 {
-public:
-	typedef Vertex3<T1, T2, T3> vertex_type;
-	typedef VertexGlyph<vertex_type> vertexglyph_type;
-
-	VertexBuffer<vertex_type> _vbo;
-
-public:
-	std::vector<vertexglyph_type> glyphs;
-
-	vertexshape3() : _vbo() { }
-
-	VertexBuffer<vertex_type>& update_vbo()
-	{
-		_vbo._vertices.clear();
-		for (vertexglyph_type& glyph : glyphs)
-		{
-			if (glyph.generator)
-				glyph.generator(_vbo._vertices);
-		}
-		_vbo.update(GL_STATIC_DRAW);
-		return _vbo;
-	}
 };
 
 
