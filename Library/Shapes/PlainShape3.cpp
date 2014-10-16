@@ -56,7 +56,7 @@ void PlainShape3::Draw(const glm::mat4x4& transform, const glm::vec4& color)
 	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
 	_shaderprogram->get_uniform<float>("point_size").set_value(1);
 	_shaderprogram->get_uniform<glm::vec4>("color").set_value(color);
-	_shaderprogram->render(_vbo);
+	_shaderprogram->render(_vertices);
 }
 
 
@@ -65,15 +65,15 @@ void PlainShape3::Draw(const glm::mat4x4& transform, const glm::vec4& color)
 
 void PlainLineShape3::Reset()
 {
-	_vbo._mode = GL_LINES;
-	_vbo._vertices.clear();
+	_vertices._mode = GL_LINES;
+	_vertices._vertices.clear();
 }
 
 
 void PlainLineShape3::AddLine(const glm::vec3& p1, const glm::vec3& p2)
 {
-	_vbo._vertices.push_back(Vertex_3f(p1));
-	_vbo._vertices.push_back(Vertex_3f(p2));
+	_vertices._vertices.push_back(Vertex_3f(p1));
+	_vertices._vertices.push_back(Vertex_3f(p2));
 }
 
 
@@ -82,12 +82,12 @@ void PlainLineShape3::AddLine(const glm::vec3& p1, const glm::vec3& p2)
 
 void PlainTriangleShape3::Reset()
 {
-	_vbo._mode = GL_TRIANGLES;
-	_vbo._vertices.clear();
+	_vertices._mode = GL_TRIANGLES;
+	_vertices._vertices.clear();
 }
 
 
 void PlainTriangleShape3::AddVertex(const glm::vec3& p)
 {
-	_vbo._vertices.push_back(Vertex_3f(p));
+	_vertices._vertices.push_back(Vertex_3f(p));
 }

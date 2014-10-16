@@ -38,41 +38,41 @@ _renderers(r)
 }
 
 
-static void AddRect(VertexBuffer_2f_2f& shape, bounds2f bounds, bounds2f texture)
+static void AddRect(VertexBuffer_2f_2f& vertices, bounds2f bounds, bounds2f texture)
 {
-	shape._vertices.push_back(Vertex_2f_2f(bounds.p11(), glm::vec2(0, 1) - texture.p11()));
-	shape._vertices.push_back(Vertex_2f_2f(bounds.p12(), glm::vec2(0, 1) - texture.p12()));
-	shape._vertices.push_back(Vertex_2f_2f(bounds.p22(), glm::vec2(0, 1) - texture.p22()));
+	vertices._vertices.push_back(Vertex_2f_2f(bounds.p11(), glm::vec2(0, 1) - texture.p11()));
+	vertices._vertices.push_back(Vertex_2f_2f(bounds.p12(), glm::vec2(0, 1) - texture.p12()));
+	vertices._vertices.push_back(Vertex_2f_2f(bounds.p22(), glm::vec2(0, 1) - texture.p22()));
 
-	shape._vertices.push_back(Vertex_2f_2f(bounds.p22(), glm::vec2(0, 1) - texture.p22()));
-	shape._vertices.push_back(Vertex_2f_2f(bounds.p21(), glm::vec2(0, 1) - texture.p21()));
-	shape._vertices.push_back(Vertex_2f_2f(bounds.p11(), glm::vec2(0, 1) - texture.p11()));
+	vertices._vertices.push_back(Vertex_2f_2f(bounds.p22(), glm::vec2(0, 1) - texture.p22()));
+	vertices._vertices.push_back(Vertex_2f_2f(bounds.p21(), glm::vec2(0, 1) - texture.p21()));
+	vertices._vertices.push_back(Vertex_2f_2f(bounds.p11(), glm::vec2(0, 1) - texture.p11()));
 }
 
 
 void ButtonRendering::RenderCornerButton(const glm::mat4& transform, texture* texturex, bounds2f bounds, float radius)
 {
-	VertexBuffer_2f_2f shape;
-	shape._mode = GL_TRIANGLES;
+	VertexBuffer_2f_2f vertices;
+	vertices._mode = GL_TRIANGLES;
 
 	bounds2f outer = bounds;
 	bounds2f inner = outer.grow(-radius);
 
-	AddRect(shape, bounds2f(outer.min.x, outer.min.y, inner.min.x, inner.min.y), bounds2f(0.0, 0.0, 0.5, 0.5));
-	AddRect(shape, bounds2f(inner.min.x, outer.min.y, inner.max.x, inner.min.y), bounds2f(0.5, 0.0, 0.5, 0.5));
-	AddRect(shape, bounds2f(inner.max.x, outer.min.y, outer.max.x, inner.min.y), bounds2f(0.5, 0.0, 1.0, 0.5));
+	AddRect(vertices, bounds2f(outer.min.x, outer.min.y, inner.min.x, inner.min.y), bounds2f(0.0, 0.0, 0.5, 0.5));
+	AddRect(vertices, bounds2f(inner.min.x, outer.min.y, inner.max.x, inner.min.y), bounds2f(0.5, 0.0, 0.5, 0.5));
+	AddRect(vertices, bounds2f(inner.max.x, outer.min.y, outer.max.x, inner.min.y), bounds2f(0.5, 0.0, 1.0, 0.5));
 
-	AddRect(shape, bounds2f(outer.min.x, inner.min.y, inner.min.x, inner.max.y), bounds2f(0.0, 0.5, 0.5, 0.5));
-	AddRect(shape, bounds2f(inner.min.x, inner.min.y, inner.max.x, inner.max.y), bounds2f(0.5, 0.5, 0.5, 0.5));
-	AddRect(shape, bounds2f(inner.max.x, inner.min.y, outer.max.x, inner.max.y), bounds2f(0.5, 0.5, 1.0, 0.5));
+	AddRect(vertices, bounds2f(outer.min.x, inner.min.y, inner.min.x, inner.max.y), bounds2f(0.0, 0.5, 0.5, 0.5));
+	AddRect(vertices, bounds2f(inner.min.x, inner.min.y, inner.max.x, inner.max.y), bounds2f(0.5, 0.5, 0.5, 0.5));
+	AddRect(vertices, bounds2f(inner.max.x, inner.min.y, outer.max.x, inner.max.y), bounds2f(0.5, 0.5, 1.0, 0.5));
 
-	AddRect(shape, bounds2f(outer.min.x, inner.max.y, inner.min.x, outer.max.y), bounds2f(0.0, 0.5, 0.5, 1.0));
-	AddRect(shape, bounds2f(inner.min.x, inner.max.y, inner.max.x, outer.max.y), bounds2f(0.5, 0.5, 0.5, 1.0));
-	AddRect(shape, bounds2f(inner.max.x, inner.max.y, outer.max.x, outer.max.y), bounds2f(0.5, 0.5, 1.0, 1.0));
+	AddRect(vertices, bounds2f(outer.min.x, inner.max.y, inner.min.x, outer.max.y), bounds2f(0.0, 0.5, 0.5, 1.0));
+	AddRect(vertices, bounds2f(inner.min.x, inner.max.y, inner.max.x, outer.max.y), bounds2f(0.5, 0.5, 0.5, 1.0));
+	AddRect(vertices, bounds2f(inner.max.x, inner.max.y, outer.max.x, outer.max.y), bounds2f(0.5, 0.5, 1.0, 1.0));
 
 	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 	_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
-	_renderers->_texture_renderer->render(shape);
+	_renderers->_texture_renderer->render(vertices);
 }
 
 
@@ -88,25 +88,25 @@ void ButtonRendering::RenderButtonIcon(const glm::mat4& transform, glm::vec2 pos
 
 void ButtonRendering::RenderTextureRect(const glm::mat4& transform, texture* texturex, bounds2f b, bounds2f t, float alpha)
 {
-	VertexBuffer_2f_2f shape;
-	shape._mode = GL_TRIANGLE_STRIP;
-	shape._vertices.push_back(Vertex_2f_2f(b.p11(), t.p12()));
-	shape._vertices.push_back(Vertex_2f_2f(b.p12(), t.p11()));
-	shape._vertices.push_back(Vertex_2f_2f(b.p21(), t.p22()));
-	shape._vertices.push_back(Vertex_2f_2f(b.p22(), t.p21()));
+	VertexBuffer_2f_2f vertices;
+	vertices._mode = GL_TRIANGLE_STRIP;
+	vertices._vertices.push_back(Vertex_2f_2f(b.p11(), t.p12()));
+	vertices._vertices.push_back(Vertex_2f_2f(b.p12(), t.p11()));
+	vertices._vertices.push_back(Vertex_2f_2f(b.p21(), t.p22()));
+	vertices._vertices.push_back(Vertex_2f_2f(b.p22(), t.p21()));
 
 	if (alpha == 1)
 	{
 		_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 		_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
-		_renderers->_texture_renderer->render(shape);
+		_renderers->_texture_renderer->render(vertices);
 	}
 	else
 	{
 		_renderers->_alpha_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 		_renderers->_alpha_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
 		_renderers->_alpha_texture_renderer->get_uniform<float>("alpha").set_value(alpha);
-		_renderers->_alpha_texture_renderer->render(shape);
+		_renderers->_alpha_texture_renderer->render(vertices);
 	}
 }
 
@@ -145,14 +145,14 @@ void ButtonRendering::RenderButtonText(const glm::mat4& transform, glm::vec2 pos
 			if (dx != 0 || dy != 0)
 			{
 				_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(glm::translate(transform, glm::vec3(p, 0) + glm::vec3(dx, dy, 0)));
-				_string_font->_renderer->render(_string_shape->_xxx);
+				_string_font->_renderer->render(_string_shape->_vertices);
 			}
 
 	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(glm::translate(transform, glm::vec3(p, 0) + glm::vec3(0, -1, 0)));
 	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 1));
-	_string_font->_renderer->render(_string_shape->_xxx);
+	_string_font->_renderer->render(_string_shape->_vertices);
 
 	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(glm::translate(transform, glm::vec3(p, 0)));
 	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(1, 1, 1, 1));
-	_string_font->_renderer->render(_string_shape->_xxx);
+	_string_font->_renderer->render(_string_shape->_vertices);
 }

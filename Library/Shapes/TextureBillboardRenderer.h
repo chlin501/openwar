@@ -48,7 +48,7 @@ public:
 	typedef ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2> shaderprogram;
 
 	shaderprogram* _shaderprogram;
-	VertexBuffer_3f_1f_2f_2f _vbo;
+	VertexBuffer_3f_1f_2f_2f _vertices;
 
 public:
 	TextureBillboardRenderer(GraphicsContext* gc);

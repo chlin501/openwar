@@ -14,7 +14,7 @@ class PlainShape3
 protected:
 	typedef ShaderProgram1<glm::vec3> shaderprogram;
 
-	VertexBuffer_3f _vbo;
+	VertexBuffer_3f _vertices;
 	shaderprogram* _shaderprogram;
 
 public:

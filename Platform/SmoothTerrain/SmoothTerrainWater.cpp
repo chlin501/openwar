@@ -119,11 +119,11 @@ void SmoothTerrainWater::Update()
 {
 	bounds2f bounds = _groundMap->GetBounds();
 
-	_shape_water_inside._mode = GL_TRIANGLES;
-	_shape_water_border._mode = GL_TRIANGLES;
+	_waterInsideVertices._mode = GL_TRIANGLES;
+	_waterBorderVertices._mode = GL_TRIANGLES;
 
-	_shape_water_inside._vertices.clear();
-	_shape_water_border._vertices.clear();
+	_waterInsideVertices._vertices.clear();
+	_waterBorderVertices._vertices.clear();
 
 	int n = 64;
 	glm::vec2 s = bounds.size() / (float)n;
@@ -138,7 +138,7 @@ void SmoothTerrainWater::Update()
 				Vertex_2f v21 = Vertex_2f(p + glm::vec2(s.x, 0));
 				Vertex_2f v22 = Vertex_2f(p + s);
 
-				VertexBuffer_2f* s = choose_shape(inside_circle(bounds, v11, v22, v12), &_shape_water_inside, &_shape_water_border);
+				VertexBuffer_2f* s = choose_shape(inside_circle(bounds, v11, v22, v12), &_waterInsideVertices, &_waterBorderVertices);
 				if (s != nullptr)
 				{
 					s->_vertices.push_back(v11);
@@ -146,7 +146,7 @@ void SmoothTerrainWater::Update()
 					s->_vertices.push_back(v12);
 				}
 
-				s = choose_shape(inside_circle(bounds, v22, v11, v21), &_shape_water_inside, &_shape_water_border);
+				s = choose_shape(inside_circle(bounds, v22, v11, v21), &_waterInsideVertices, &_waterBorderVertices);
 				if (s != nullptr)
 				{
 					s->_vertices.push_back(v22);
@@ -156,8 +156,8 @@ void SmoothTerrainWater::Update()
 			}
 		}
 
-	_shape_water_inside.update(GL_STATIC_DRAW);
-	_shape_water_border.update(GL_STATIC_DRAW);
+	_waterInsideVertices.UpdateVBO(GL_STATIC_DRAW);
+	_waterBorderVertices.UpdateVBO(GL_STATIC_DRAW);
 }
 
 
@@ -173,10 +173,10 @@ void SmoothTerrainWater::Render(const glm::mat4x4& transform)
 	_water_inside_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
 	_water_inside_renderer->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
 	_water_inside_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
-	_water_inside_renderer->render(_shape_water_inside);
+	_water_inside_renderer->render(_waterInsideVertices);
 
 	_water_border_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
 	_water_border_renderer->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
 	_water_border_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
-	_water_border_renderer->render(_shape_water_border);
+	_water_border_renderer->render(_waterBorderVertices);
 }

@@ -25,8 +25,8 @@ class SmoothTerrainWater
 	ShaderProgram<Vertex_2f>* _water_inside_renderer;
 	ShaderProgram<Vertex_2f>* _water_border_renderer;
 
-	VertexBuffer_2f _shape_water_inside;
-	VertexBuffer_2f _shape_water_border;
+	VertexBuffer_2f _waterInsideVertices;
+	VertexBuffer_2f _waterBorderVertices;
 
 public:
 	SmoothTerrainWater(GroundMap* groundMap);

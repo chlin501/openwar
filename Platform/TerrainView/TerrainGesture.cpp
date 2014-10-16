@@ -38,8 +38,8 @@ void TerrainGesture::RenderHints()
 
 	//_terrainView->UseViewport();
 
-	VertexBuffer_2f shape;
-	shape._mode = GL_LINES;
+	VertexBuffer_2f vertices;
+	vertices._mode = GL_LINES;
 
 	glm::vec2 left = _terrainView->GetScreenLeft();
 	glm::vec2 bottom = _terrainView->GetScreenBottom();
@@ -48,28 +48,28 @@ void TerrainGesture::RenderHints()
 
 	bounds2f bounds(left.x, bottom.y, right.x, top.y);
 
-	shape._vertices.push_back(Vertex_2f(bounds.p12() + glm::vec2(0, 4)));
-	shape._vertices.push_back(Vertex_2f(bounds.p22() + glm::vec2(0, 4)));
+	vertices._vertices.push_back(Vertex_2f(bounds.p12() + glm::vec2(0, 4)));
+	vertices._vertices.push_back(Vertex_2f(bounds.p22() + glm::vec2(0, 4)));
 
-	shape._vertices.push_back(Vertex_2f(bounds.p11()));
-	shape._vertices.push_back(Vertex_2f(bounds.p12()));
-	shape._vertices.push_back(Vertex_2f(bounds.p12()));
-	shape._vertices.push_back(Vertex_2f(bounds.p22()));
-	shape._vertices.push_back(Vertex_2f(bounds.p22()));
-	shape._vertices.push_back(Vertex_2f(bounds.p21()));
-	shape._vertices.push_back(Vertex_2f(bounds.p21()));
-	shape._vertices.push_back(Vertex_2f(bounds.p11()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p11()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p12()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p12()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p22()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p22()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p21()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p21()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p11()));
 
 	if (this != nullptr)
 	{
-		shape._vertices.push_back(Vertex_2f(top + glm::vec2(0, 5)));
-		shape._vertices.push_back(Vertex_2f(top - glm::vec2(0, 5)));
-		shape._vertices.push_back(Vertex_2f(left + glm::vec2(5, 0)));
-		shape._vertices.push_back(Vertex_2f(left - glm::vec2(5, 0)));
-		shape._vertices.push_back(Vertex_2f(bottom + glm::vec2(0, 5)));
-		shape._vertices.push_back(Vertex_2f(bottom - glm::vec2(0, 5)));
-		shape._vertices.push_back(Vertex_2f(right + glm::vec2(5, 0)));
-		shape._vertices.push_back(Vertex_2f(right - glm::vec2(5, 0)));
+		vertices._vertices.push_back(Vertex_2f(top + glm::vec2(0, 5)));
+		vertices._vertices.push_back(Vertex_2f(top - glm::vec2(0, 5)));
+		vertices._vertices.push_back(Vertex_2f(left + glm::vec2(5, 0)));
+		vertices._vertices.push_back(Vertex_2f(left - glm::vec2(5, 0)));
+		vertices._vertices.push_back(Vertex_2f(bottom + glm::vec2(0, 5)));
+		vertices._vertices.push_back(Vertex_2f(bottom - glm::vec2(0, 5)));
+		vertices._vertices.push_back(Vertex_2f(right + glm::vec2(5, 0)));
+		vertices._vertices.push_back(Vertex_2f(right - glm::vec2(5, 0)));
 	}
 
 	glLineWidth(2);
@@ -77,7 +77,7 @@ void TerrainGesture::RenderHints()
 	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(_terrainView->GetFrame()));
 	renderers::singleton->_plain_renderer->get_uniform<float>("point_size").set_value(1);
 	renderers::singleton->_plain_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 1));
-	renderers::singleton->_plain_renderer->render(shape);
+	renderers::singleton->_plain_renderer->render(vertices);
 
 	glLineWidth(1);
 }

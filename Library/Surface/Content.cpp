@@ -442,29 +442,29 @@ void Content::OnBoundsChanged()
 
 void Content::RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const
 {
-	VertexBuffer_2f shape;
-	shape._mode = GL_TRIANGLE_STRIP;
-	shape._vertices.push_back(Vertex_2f(bounds.p11()));
-	shape._vertices.push_back(Vertex_2f(bounds.p12()));
-	shape._vertices.push_back(Vertex_2f(bounds.p21()));
-	shape._vertices.push_back(Vertex_2f(bounds.p22()));
+	VertexBuffer_2f vertices;
+	vertices._mode = GL_TRIANGLE_STRIP;
+	vertices._vertices.push_back(Vertex_2f(bounds.p11()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p12()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p21()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p22()));
 
 	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 	renderers::singleton->_plain_renderer->get_uniform<glm::vec4>("color").set_value(color);
-	renderers::singleton->_plain_renderer->render(shape);
+	renderers::singleton->_plain_renderer->render(vertices);
 }
 
 
 void Content::RenderOutline(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const
 {
-	VertexBuffer_2f shape;
-	shape._mode = GL_LINE_LOOP;
-	shape._vertices.push_back(Vertex_2f(bounds.p11()));
-	shape._vertices.push_back(Vertex_2f(bounds.p12()));
-	shape._vertices.push_back(Vertex_2f(bounds.p22()));
-	shape._vertices.push_back(Vertex_2f(bounds.p21()));
+	VertexBuffer_2f vertices;
+	vertices._mode = GL_LINE_LOOP;
+	vertices._vertices.push_back(Vertex_2f(bounds.p11()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p12()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p22()));
+	vertices._vertices.push_back(Vertex_2f(bounds.p21()));
 
 	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 	renderers::singleton->_plain_renderer->get_uniform<glm::vec4>("color").set_value(color);
-	renderers::singleton->_plain_renderer->render(shape);
+	renderers::singleton->_plain_renderer->render(vertices);
 }

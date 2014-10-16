@@ -44,8 +44,8 @@ void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3&
 	bounds2f bounds = _tiledGroundMap->GetBounds();
 	glm::ivec2 size = _tiledGroundMap->GetSize();
 
-	VertexBuffer_3f_2f shape;
-	shape._mode = GL_TRIANGLES;
+	VertexBuffer_3f_2f _vertices;
+	_vertices._mode = GL_TRIANGLES;
 
 	glm::vec2 delta = bounds.size() / glm::vec2(size);
 
@@ -93,18 +93,18 @@ void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3&
 				t10 = tmp;
 			}
 
-			shape._vertices.clear();
-			shape._vertices.push_back(Vertex_3f_2f(glm::vec3(p0.x, p0.y, h00), t01));
-			shape._vertices.push_back(Vertex_3f_2f(glm::vec3(p1.x, p0.y, h10), t11));
-			shape._vertices.push_back(Vertex_3f_2f(glm::vec3(p1.x, p1.y, h11), t10));
-			shape._vertices.push_back(Vertex_3f_2f(glm::vec3(p1.x, p1.y, h11), t10));
-			shape._vertices.push_back(Vertex_3f_2f(glm::vec3(p0.x, p1.y, h01), t00));
-			shape._vertices.push_back(Vertex_3f_2f(glm::vec3(p0.x, p0.y, h00), t01));
+			_vertices._vertices.clear();
+			_vertices._vertices.push_back(Vertex_3f_2f(glm::vec3(p0.x, p0.y, h00), t01));
+			_vertices._vertices.push_back(Vertex_3f_2f(glm::vec3(p1.x, p0.y, h10), t11));
+			_vertices._vertices.push_back(Vertex_3f_2f(glm::vec3(p1.x, p1.y, h11), t10));
+			_vertices._vertices.push_back(Vertex_3f_2f(glm::vec3(p1.x, p1.y, h11), t10));
+			_vertices._vertices.push_back(Vertex_3f_2f(glm::vec3(p0.x, p1.y, h01), t00));
+			_vertices._vertices.push_back(Vertex_3f_2f(glm::vec3(p0.x, p0.y, h00), t01));
 
-			shape.update(GL_STATIC_DRAW);
+			_vertices.UpdateVBO(GL_STATIC_DRAW);
 
 			renderers::singleton->_texture_renderer3->get_uniform<glm::mat4>("transform").set_value(transform);
 			renderers::singleton->_texture_renderer3->get_uniform<const texture*>("texture").set_value(_textures[tile->texture]);
-			renderers::singleton->_texture_renderer3->render(shape);
+			renderers::singleton->_texture_renderer3->render(_vertices);
 		}
 }

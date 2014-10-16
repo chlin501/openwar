@@ -60,7 +60,7 @@ void GradientShape3::Draw(const glm::mat4x4& transform)
 
 	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
 	_shaderprogram->get_uniform<float>("point_size").set_value(1);
-	_shaderprogram->render(_vbo);
+	_shaderprogram->render(_vertices);
 }
 
 
@@ -69,15 +69,15 @@ void GradientShape3::Draw(const glm::mat4x4& transform)
 
 void GradientLineShape3::Reset()
 {
-	_vbo._mode = GL_LINES;
-	_vbo._vertices.clear();
+	_vertices._mode = GL_LINES;
+	_vertices._vertices.clear();
 }
 
 
 void GradientLineShape3::AddLine(const glm::vec3& p1, const glm::vec3& p2, const glm::vec4& c1, const glm::vec4& c2)
 {
-	_vbo._vertices.push_back(Vertex_3f_4f(p1, c1));
-	_vbo._vertices.push_back(Vertex_3f_4f(p2, c2));
+	_vertices._vertices.push_back(Vertex_3f_4f(p1, c1));
+	_vertices._vertices.push_back(Vertex_3f_4f(p2, c2));
 }
 
 
@@ -86,14 +86,14 @@ void GradientLineShape3::AddLine(const glm::vec3& p1, const glm::vec3& p2, const
 
 void GradientTriangleShape3::Reset()
 {
-	_vbo._mode = GL_TRIANGLES;
-	_vbo._vertices.clear();
+	_vertices._mode = GL_TRIANGLES;
+	_vertices._vertices.clear();
 }
 
 
 void GradientTriangleShape3::AddVertex(const glm::vec3& p, const glm::vec4& c)
 {
-	_vbo._vertices.push_back(Vertex_3f_4f(p, c));
+	_vertices._vertices.push_back(Vertex_3f_4f(p, c));
 }
 
 
@@ -102,18 +102,18 @@ void GradientTriangleShape3::AddVertex(const glm::vec3& p, const glm::vec4& c)
 
 void GradientTriangleStripShape3::Reset()
 {
-	_vbo._mode = GL_TRIANGLE_STRIP;
-	_vbo._vertices.clear();
+	_vertices._mode = GL_TRIANGLE_STRIP;
+	_vertices._vertices.clear();
 }
 
 
 void GradientTriangleStripShape3::AddVertex(const glm::vec3& p, const glm::vec4& c, bool separator)
 {
-	if (separator && !_vbo._vertices.empty())
+	if (separator && !_vertices._vertices.empty())
 	{
-		_vbo._vertices.push_back(_vbo._vertices.back());
-		_vbo._vertices.push_back(Vertex_3f_4f(p, c));
+		_vertices._vertices.push_back(_vertices._vertices.back());
+		_vertices._vertices.push_back(Vertex_3f_4f(p, c));
 	}
 
-	_vbo._vertices.push_back(Vertex_3f_4f(p, c));
+	_vertices._vertices.push_back(Vertex_3f_4f(p, c));
 }

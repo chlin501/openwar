@@ -21,15 +21,15 @@ SmoothTerrainSky::~SmoothTerrainSky()
 
 void SmoothTerrainSky::Render(const glm::mat4& transform, renderers* _renderers, bounds2f frame, float cameraDirectionZ, bool flip)
 {
-	VertexBuffer_2f_4f shape;
+	VertexBuffer_2f_4f vertices;
 
 	float y = cameraDirectionZ;
 	float x = sqrtf(1 - y * y);
 	float a = 1 - fabsf(atan2f(y, x) / (float)M_PI_2);
 	float blend = bounds1f(0, 1).clamp(3.0f * (a - 0.3f));
 
-	shape._mode = GL_TRIANGLES;
-	shape._vertices.clear();
+	vertices._mode = GL_TRIANGLES;
+	vertices._vertices.clear();
 
 	glm::vec4 c1 = glm::vec4(56, 165, 230, 0) / 255.0f;
 	glm::vec4 c2 = glm::vec4(160, 207, 243, 255) / 255.0f;
@@ -40,12 +40,12 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, renderers* _renderers,
 	float y0 = frame.y().lerp(0.2f);
 	float y1 = frame.max.y;
 
-	shape._vertices.push_back(Vertex_2f_4f(glm::vec2(x0, y0), c1));
-	shape._vertices.push_back(Vertex_2f_4f(glm::vec2(x0, y1), c2));
-	shape._vertices.push_back(Vertex_2f_4f(glm::vec2(x1, y1), c2));
-	shape._vertices.push_back(Vertex_2f_4f(glm::vec2(x1, y1), c2));
-	shape._vertices.push_back(Vertex_2f_4f(glm::vec2(x1, y0), c1));
-	shape._vertices.push_back(Vertex_2f_4f(glm::vec2(x0, y0), c1));
+	vertices._vertices.push_back(Vertex_2f_4f(glm::vec2(x0, y0), c1));
+	vertices._vertices.push_back(Vertex_2f_4f(glm::vec2(x0, y1), c2));
+	vertices._vertices.push_back(Vertex_2f_4f(glm::vec2(x1, y1), c2));
+	vertices._vertices.push_back(Vertex_2f_4f(glm::vec2(x1, y1), c2));
+	vertices._vertices.push_back(Vertex_2f_4f(glm::vec2(x1, y0), c1));
+	vertices._vertices.push_back(Vertex_2f_4f(glm::vec2(x0, y0), c1));
 
 	glm::mat4 t = transform;
 	if (flip)
@@ -53,17 +53,17 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, renderers* _renderers,
 
 	_renderers->_gradient_renderer->get_uniform<glm::mat4>("transform").set_value(t);
 	_renderers->_gradient_renderer->get_uniform<float>("pixel_size").set_value(1);
-	_renderers->_gradient_renderer->render(shape);
+	_renderers->_gradient_renderer->render(vertices);
 }
 
 
 
 void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, renderers* _renderers, bounds2f frame, bool flip)
 {
-	VertexBuffer_2f_2f shape;
+	VertexBuffer_2f_2f vertices;
 
-	shape._mode = GL_TRIANGLES;
-	shape._vertices.clear();
+	vertices._mode = GL_TRIANGLES;
+	vertices._vertices.clear();
 
 	glm::vec2 size = frame.size();
 	glm::vec2 vt0 = glm::vec2();
@@ -74,14 +74,14 @@ void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, rendere
 	float y0 = frame.min.y;
 	float y1 = frame.max.y;
 
-	shape._vertices.push_back(Vertex_2f_2f(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
-	shape._vertices.push_back(Vertex_2f_2f(glm::vec2(x0, y1), glm::vec2(vt0.x, vt1.y)));
-	shape._vertices.push_back(Vertex_2f_2f(glm::vec2(x1, y1), glm::vec2(vt1.x, vt1.y)));
-	shape._vertices.push_back(Vertex_2f_2f(glm::vec2(x1, y1), glm::vec2(vt1.x, vt1.y)));
-	shape._vertices.push_back(Vertex_2f_2f(glm::vec2(x1, y0), glm::vec2(vt1.x, vt0.y)));
-	shape._vertices.push_back(Vertex_2f_2f(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
+	vertices._vertices.push_back(Vertex_2f_2f(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
+	vertices._vertices.push_back(Vertex_2f_2f(glm::vec2(x0, y1), glm::vec2(vt0.x, vt1.y)));
+	vertices._vertices.push_back(Vertex_2f_2f(glm::vec2(x1, y1), glm::vec2(vt1.x, vt1.y)));
+	vertices._vertices.push_back(Vertex_2f_2f(glm::vec2(x1, y1), glm::vec2(vt1.x, vt1.y)));
+	vertices._vertices.push_back(Vertex_2f_2f(glm::vec2(x1, y0), glm::vec2(vt1.x, vt0.y)));
+	vertices._vertices.push_back(Vertex_2f_2f(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
 
 	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 	_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(_textureBackgroundLinen);
-	_renderers->_texture_renderer->render(shape);
+	_renderers->_texture_renderer->render(vertices);
 }

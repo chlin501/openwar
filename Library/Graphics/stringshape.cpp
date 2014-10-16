@@ -706,7 +706,7 @@ void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_typ
 
 stringshape::stringshape(stringfont* font) : _font(font)
 {
-	_xxx._mode = GL_TRIANGLES;
+	_vertices._mode = GL_TRIANGLES;
 }
 
 
@@ -717,7 +717,7 @@ void stringshape::clear()
 		delete g;
 	_stringglyphs.clear();
 
-	_xxx._glyphs.clear();
+	_vertices._glyphs.clear();
 }
 
 
@@ -728,7 +728,7 @@ void stringshape::add(const char* s, glm::mat4x4 transform, float alpha, float d
 	stringglyph* g = new stringglyph(s, transform, alpha, delta);
 	_stringglyphs.push_back(g);
 
-	_xxx._glyphs.push_back(VertexGlyph<Vertex_2f_2f_1f>([this, g](std::vector<Vertex_2f_2f_1f>& vertices) {
+	_vertices._glyphs.push_back(VertexGlyph<Vertex_2f_2f_1f>([this, g](std::vector<Vertex_2f_2f_1f>& vertices) {
 		g->generate(_font, vertices);
 	}));
 }
@@ -737,5 +737,5 @@ void stringshape::add(const char* s, glm::mat4x4 transform, float alpha, float d
 void stringshape::update(GLenum usage)
 {
 	_font->update_texture();
-	_xxx.update_vbo();
+	_vertices.UpdateVBOFromGlyphs();
 }

@@ -40,7 +40,6 @@ extern void CHECK_ERROR_GL();
 template <class T1>
 struct Vertex1
 {
-	typedef std::function<void(std::vector<Vertex1<T1>>&)> generator_type;
 	T1 _1;
 	Vertex1() { }
 	Vertex1(const T1& __1) : _1(__1) { }
@@ -54,7 +53,6 @@ typedef Vertex1<glm::vec4> Vertex_4f;
 template <class T1, class T2>
 struct Vertex2
 {
-	typedef std::function<void(std::vector<Vertex2<T1, T2>>&)> generator_type;
 	T1 _1;
 	T2 _2;
 	Vertex2() { }
@@ -71,7 +69,6 @@ typedef Vertex2<glm::vec3, glm::vec4> Vertex_3f_4f;
 template <class T1, class T2, class T3>
 struct Vertex3
 {
-	typedef std::function<void(std::vector<Vertex3<T1, T2, T3>>&)> generator_type;
 	T1 _1;
 	T2 _2;
 	T3 _3;
@@ -86,7 +83,6 @@ typedef Vertex3<glm::vec2, glm::vec2, glm::vec2> Vertex_2f_2f_2f;
 template <class T1, class T2, class T3, class T4>
 struct Vertex4
 {
-	typedef std::function<void(std::vector<Vertex4<T1, T2, T3, T4>>&)> generator_type;
 	T1 _1;
 	T2 _2;
 	T3 _3;
@@ -102,7 +98,7 @@ typedef Vertex4<glm::vec3, float, glm::vec2, glm::vec2> Vertex_3f_1f_2f_2f;
 template <class _VertexT>
 struct VertexGlyph
 {
-	typedef typename _VertexT::generator_type generator_type;
+	typedef std::function<void(std::vector<_VertexT>&)> generator_type;
 
 	generator_type generator;
 
@@ -154,7 +150,7 @@ public:
 		return _vbo != 0 ? _count : (GLsizei)_vertices.size();
 	}
 
-	virtual void update(GLenum usage)
+	virtual void UpdateVBO(GLenum usage)
 	{
 		if (_vbo == 0)
 		{
@@ -178,7 +174,7 @@ public:
 	}
 
 
-	VertexBuffer<vertex_type>& update_vbo()
+	VertexBuffer<vertex_type>& UpdateVBOFromGlyphs()
 	{
 		_vertices.clear();
 		for (vertexglyph_type& glyph : _glyphs)
@@ -186,7 +182,7 @@ public:
 			if (glyph.generator)
 				glyph.generator(_vertices);
 		}
-		update(GL_STATIC_DRAW);
+		UpdateVBO(GL_STATIC_DRAW);
 		return *this;
 	}
 
@@ -196,7 +192,7 @@ public:
 	}
 
 private:
-	VertexBuffer(const VertexBuffer& other) { }
+	VertexBuffer(const VertexBuffer&) { }
 	VertexBuffer& operator=(const VertexBuffer&) { return *this; }
 };
 

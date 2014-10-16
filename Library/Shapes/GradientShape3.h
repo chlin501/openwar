@@ -15,7 +15,7 @@ protected:
 	typedef ShaderProgram2<glm::vec3, glm::vec4> shaderprogram;
 
 	shaderprogram* _shaderprogram;
-	VertexBuffer_3f_4f _vbo;
+	VertexBuffer_3f_4f _vertices;
 
 public:
 	GradientShape3(GraphicsContext* gc);

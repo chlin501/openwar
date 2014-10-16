@@ -14,7 +14,7 @@ class ColorBillboardShape
 	typedef ShaderProgram3<glm::vec3, glm::vec4, float> shaderprogram;
 
 	shaderprogram* _shaderprogram;
-	VertexBuffer_3f_4f_1f _vbo;
+	VertexBuffer_3f_4f_1f _vertices;
 
 public:
 	ColorBillboardShape(GraphicsContext* gc);

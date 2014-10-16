@@ -69,14 +69,14 @@ ColorBillboardShape::~ColorBillboardShape()
 
 void ColorBillboardShape::Reset()
 {
-	_vbo._mode = GL_POINTS;
-	_vbo._vertices.clear();
+	_vertices._mode = GL_POINTS;
+	_vertices._vertices.clear();
 }
 
 
 void ColorBillboardShape::AddBillboard(const glm::vec3& position, const glm::vec4& color, float height)
 {
-	_vbo._vertices.push_back(Vertex_3f_4f_1f(position, color, height));
+	_vertices._vertices.push_back(Vertex_3f_4f_1f(position, color, height));
 }
 
 
@@ -87,5 +87,5 @@ void ColorBillboardShape::Draw(const glm::mat4x4& transform, const glm::vec3 cam
 	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
 	_shaderprogram->get_uniform<glm::vec3>("upvector").set_value(cameraUp);
 	_shaderprogram->get_uniform<float>("viewport_height").set_value(viewport_height);
-	_shaderprogram->render(_vbo);
+	_shaderprogram->render(_vertices);
 }

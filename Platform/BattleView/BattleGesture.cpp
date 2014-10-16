@@ -55,53 +55,53 @@ void BattleGesture::RenderHints()
 {
 	glm::mat4 transform = ViewportTransform(_battleView->GetFrame());
 
-	VertexBuffer_2f shape;
-	shape._mode = GL_LINES;
+	VertexBuffer_2f vertices;
+	vertices._mode = GL_LINES;
 
 	for (UnitCounter* unitMarker : _battleView->GetUnitCounters())
 	{
 		bounds2f bounds = GetUnitCurrentBounds(unitMarker->_unit);
 
-		shape._vertices.push_back(Vertex_2f(bounds.p11()));
-		shape._vertices.push_back(Vertex_2f(bounds.p12()));
-		shape._vertices.push_back(Vertex_2f(bounds.p12()));
-		shape._vertices.push_back(Vertex_2f(bounds.p22()));
-		shape._vertices.push_back(Vertex_2f(bounds.p22()));
-		shape._vertices.push_back(Vertex_2f(bounds.p21()));
-		shape._vertices.push_back(Vertex_2f(bounds.p21()));
-		shape._vertices.push_back(Vertex_2f(bounds.p11()));
+		vertices._vertices.push_back(Vertex_2f(bounds.p11()));
+		vertices._vertices.push_back(Vertex_2f(bounds.p12()));
+		vertices._vertices.push_back(Vertex_2f(bounds.p12()));
+		vertices._vertices.push_back(Vertex_2f(bounds.p22()));
+		vertices._vertices.push_back(Vertex_2f(bounds.p22()));
+		vertices._vertices.push_back(Vertex_2f(bounds.p21()));
+		vertices._vertices.push_back(Vertex_2f(bounds.p21()));
+		vertices._vertices.push_back(Vertex_2f(bounds.p11()));
 
 		bounds = GetUnitFutureBounds(unitMarker->_unit);
 		if (!bounds.is_empty())
 		{
-			shape._vertices.push_back(Vertex_2f(bounds.p11()));
-			shape._vertices.push_back(Vertex_2f(bounds.p12()));
-			shape._vertices.push_back(Vertex_2f(bounds.p12()));
-			shape._vertices.push_back(Vertex_2f(bounds.p22()));
-			shape._vertices.push_back(Vertex_2f(bounds.p22()));
-			shape._vertices.push_back(Vertex_2f(bounds.p21()));
-			shape._vertices.push_back(Vertex_2f(bounds.p21()));
-			shape._vertices.push_back(Vertex_2f(bounds.p11()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p11()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p12()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p12()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p22()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p22()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p21()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p21()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p11()));
 		}
 
 		bounds = GetUnitModifierBounds(unitMarker->_unit);
 		if (!bounds.is_empty())
 		{
-			shape._vertices.push_back(Vertex_2f(bounds.p11()));
-			shape._vertices.push_back(Vertex_2f(bounds.p12()));
-			shape._vertices.push_back(Vertex_2f(bounds.p12()));
-			shape._vertices.push_back(Vertex_2f(bounds.p22()));
-			shape._vertices.push_back(Vertex_2f(bounds.p22()));
-			shape._vertices.push_back(Vertex_2f(bounds.p21()));
-			shape._vertices.push_back(Vertex_2f(bounds.p21()));
-			shape._vertices.push_back(Vertex_2f(bounds.p11()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p11()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p12()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p12()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p22()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p22()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p21()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p21()));
+			vertices._vertices.push_back(Vertex_2f(bounds.p11()));
 		}
 	}
 
 	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
 	renderers::singleton->_plain_renderer->get_uniform<float>("point_size").set_value(1);
 	renderers::singleton->_plain_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 0.2f));
-	renderers::singleton->_plain_renderer->render(shape);
+	renderers::singleton->_plain_renderer->render(vertices);
 
 
 	/*PlainLineRenderer renderer;

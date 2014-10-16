@@ -58,8 +58,8 @@ TextureShape3::~TextureShape3()
 
 void TextureTriangleShape3::Reset()
 {
-	_vbo._mode = GL_TRIANGLES;
-	_vbo._vertices.clear();
+	_vertices._mode = GL_TRIANGLES;
+	_vertices._vertices.clear();
 }
 
 
@@ -67,7 +67,7 @@ void TextureShape3::Draw(const glm::mat4x4& transform, const texture* texturex)
 {
 	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
 	_shaderprogram->get_uniform<const texture*>("texture").set_value(texturex);
-	_shaderprogram->render(_vbo);
+	_shaderprogram->render(_vertices);
 }
 
 
@@ -81,5 +81,5 @@ TextureTriangleShape3::~TextureTriangleShape3()
 
 void TextureTriangleShape3::AddVertex(glm::vec3 p, glm::vec2 t)
 {
-	_vbo._vertices.push_back(Vertex_3f_2f(p, t));
+	_vertices._vertices.push_back(Vertex_3f_2f(p, t));
 }

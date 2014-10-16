@@ -138,7 +138,7 @@ class stringshape
 	std::vector<stringglyph*> _stringglyphs;
 
 public:
-	VertexBuffer_2f_2f_1f _xxx;
+	VertexBuffer_2f_2f_1f _vertices;
 	stringfont* _font;
 
 	stringshape(stringfont* font);

@@ -46,7 +46,4 @@ public:
 };
 
 
-typedef VertexBuffer_2f_2f textureshape;
-
-
 #endif

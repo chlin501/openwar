@@ -13,7 +13,7 @@ class TextureShape3
 {
 protected:
 	ShaderProgram<Vertex_3f_2f>* _shaderprogram;
-	VertexBuffer_3f_2f _vbo;
+	VertexBuffer_3f_2f _vertices;
 
 public:
 	TextureShape3(GraphicsContext* gc);

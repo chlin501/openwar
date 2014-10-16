@@ -76,8 +76,8 @@ TextureBillboardRenderer::~TextureBillboardRenderer()
 
 void TextureBillboardRenderer::Reset()
 {
-	_vbo._mode = GL_POINTS;
-	_vbo._vertices.clear();
+	_vertices._mode = GL_POINTS;
+	_vertices._vertices.clear();
 }
 
 
@@ -86,7 +86,7 @@ void TextureBillboardRenderer::AddBillboard(glm::vec3 position, float height, af
 	glm::vec2 texpos = texcoords.transform(glm::vec2(0, 0));
 	glm::vec2 texsize = texcoords.transform(glm::vec2(1, 1)) - texpos;
 
-	_vbo._vertices.push_back(Vertex_3f_1f_2f_2f(position, height, texpos, texsize));
+	_vertices._vertices.push_back(Vertex_3f_1f_2f_2f(position, height, texpos, texsize));
 }
 
 
@@ -102,14 +102,14 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 	static std::vector<Vertex_3f_1f_2f_2f> vertices;
 	static std::vector<billboard_index> indices;
 
-	vertices.insert(vertices.end(), _vbo._vertices.begin(), _vbo._vertices.end());
+	vertices.insert(vertices.end(), _vertices._vertices.begin(), _vertices._vertices.end());
 
 	float a = -glm::radians(cameraFacingDegrees);
 	float cos_a = cosf(a);
 	float sin_a = sinf(a);
 
 	int index = 0;
-	for (Vertex_3f_1f_2f_2f& v : _vbo._vertices)
+	for (Vertex_3f_1f_2f_2f& v : _vertices._vertices)
 	{
 		billboard_index i;
 		i.index = index++;
@@ -122,14 +122,14 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 		return diff == 0 ? a.index < b.index : diff > 0;
 	});
 
-	_vbo._vertices.clear();
+	_vertices._vertices.clear();
 	for (const billboard_index& i : indices)
-		_vbo._vertices.push_back(vertices[i.index]);
+		_vertices._vertices.push_back(vertices[i.index]);
 
 	vertices.clear();
 	indices.clear();
 
-	_vbo.update(GL_STATIC_DRAW);
+	_vertices.UpdateVBO(GL_STATIC_DRAW);
 
 	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
 	_shaderprogram->get_uniform<const texture*>("texture").set_value(tex);
@@ -137,7 +137,7 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 	_shaderprogram->get_uniform<float>("viewport_height").set_value(ShaderProgramBase::pixels_per_point() * viewportHeight);
 	_shaderprogram->get_uniform<float>("min_point_size").set_value(sizeLimit.min);
 	_shaderprogram->get_uniform<float>("max_point_size").set_value(sizeLimit.max);
-	_shaderprogram->render(_vbo);
+	_shaderprogram->render(_vertices);
 }
 
 
