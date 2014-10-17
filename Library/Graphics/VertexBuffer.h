@@ -40,11 +40,11 @@ template <class _Vertex>
 class VertexBuffer : public VertexBufferBase
 {
 public:
+	friend class VertexGlyph<_Vertex>;
 	typedef _Vertex VertexType;
-	typedef VertexGlyph<VertexType> VertexGlyphType;
 
 private:
-	std::vector<VertexGlyphType> _glyphs;
+	std::vector<VertexGlyph<VertexType>*> _glyphs;
 
 public:
 
@@ -66,12 +66,25 @@ public:
 
 	void ClearGlyphs()
 	{
+		for (VertexGlyph<VertexType>* glyph : _glyphs)
+			glyph->_vertexBuffer = nullptr;
 		_glyphs.clear();
 	}
 
-	void AddGlyph(VertexGlyphType* vertexGlyph)
+	void AddGlyph(VertexGlyph<VertexType>* glyph)
 	{
-		_glyphs.push_back(*vertexGlyph);
+		if (glyph->_vertexBuffer != nullptr)
+			glyph->_vertexBuffer->RemoveGlyph(glyph);
+		glyph->_vertexBuffer = this;
+		_glyphs.push_back(glyph);
+	}
+
+	void RemoveGlyph(VertexGlyph<VertexType>* glyph)
+	{
+		glyph->_vertexBuffer = nullptr;
+		_glyphs.erase(
+			std::find(_glyphs.begin(), _glyphs.end(), glyph),
+			_glyphs.end());
 	}
 
 	void AddVertex(const VertexType& vertex)
@@ -106,10 +119,10 @@ public:
 	VertexBuffer<VertexType>& UpdateVBOFromGlyphs()
 	{
 		_vertices.clear();
-		for (VertexGlyphType& glyph : _glyphs)
+		for (VertexGlyph<VertexType>* glyph : _glyphs)
 		{
-			if (glyph._rebuild)
-				glyph._rebuild(_vertices);
+			if (glyph->_rebuild)
+				glyph->_rebuild(_vertices);
 		}
 		UpdateVBO(GL_STATIC_DRAW);
 		return *this;

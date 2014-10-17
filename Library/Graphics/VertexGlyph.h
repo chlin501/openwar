@@ -5,15 +5,28 @@
 #include <vector>
 
 
-template <class _VertexT>
-struct VertexGlyph
+template <class _Vertex> class VertexBuffer;
+
+
+template <class _Vertex>
+class VertexGlyph
 {
-	typedef std::function<void(std::vector<_VertexT>&)> RebuildType;
+	friend class VertexBuffer<_Vertex>;
+	VertexBuffer<_Vertex>* _vertexBuffer;
+
+public:
+	typedef std::function<void(std::vector<_Vertex>&)> RebuildType;
 
 	RebuildType _rebuild;
 
-	VertexGlyph() : _rebuild() { }
-	VertexGlyph(RebuildType rebuild) : _rebuild(rebuild) { }
+	VertexGlyph() : _vertexBuffer(nullptr), _rebuild() { }
+	VertexGlyph(RebuildType rebuild) : _vertexBuffer(nullptr), _rebuild(rebuild) { }
+
+	~VertexGlyph()
+	{
+		if (_vertexBuffer != nullptr)
+			_vertexBuffer->RemoveGlyph(this);
+	}
 };
 
 
