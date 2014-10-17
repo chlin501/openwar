@@ -57,7 +57,7 @@ struct stringfont
 		float _v0, _v1;
 	};
 
-	static imagex* _image;
+	static Image* _image;
 
 #ifdef OPENWAR_USE_SDL
 	font_ptr _font1;

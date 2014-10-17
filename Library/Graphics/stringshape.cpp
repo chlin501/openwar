@@ -1,5 +1,5 @@
 #include "stringshape.h"
-#include "imagex.h"
+#include "Image.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <codecvt>
 #include <cstdlib>
@@ -143,7 +143,7 @@ static NSString* ReorderToDisplayDirection(NSString* string)
 
 
 
-imagex* stringfont::_image = nullptr;
+Image* stringfont::_image = nullptr;
 
 
 
@@ -296,7 +296,7 @@ stringfont::~stringfont()
 void stringfont::initialize()
 {
 	if (_image == nullptr)
-		_image = new imagex(1024, 512);
+		_image = new Image(1024, 512);
 
 	_renderer = new ShaderProgram3<glm::vec2, glm::vec2, float>(
 		"position", "texcoord", "alpha",

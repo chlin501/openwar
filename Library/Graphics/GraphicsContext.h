@@ -5,8 +5,9 @@
 #ifndef GraphicsContext_H
 #define GraphicsContext_H
 
-#include <map>
+#include "GraphicsOpenGL.h"
 #include "ShaderProgram.h"
+#include <map>
 
 
 class GraphicsContext

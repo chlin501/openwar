@@ -2,7 +2,7 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "imagex.h"
+#include "Image.h"
 #include "bounds.h"
 
 #ifdef OPENWAR_USE_SDL
@@ -22,7 +22,7 @@
 #endif
 
 
-imagex::imagex(int width, int height) :
+Image::Image(int width, int height) :
 #ifdef OPENWAR_USE_SDL
 _surface(nullptr),
 #else
@@ -107,7 +107,7 @@ static GLenum sdl_to_gl_pixel_format(Uint32 sdl_pixel_format)
 #endif
 
 
-imagex::imagex(const resource& r) :
+Image::Image(const resource& r) :
 #ifdef OPENWAR_USE_SDL
 _surface(nullptr),
 #else
@@ -214,7 +214,7 @@ _format(GL_RGBA)
 
 
 #ifndef OPENWAR_USE_SDL
-imagex::imagex(CGImageRef image) :
+Image::Image(CGImageRef image) :
 _context(nil),
 _format(GL_RGBA),
 _width(CGImageGetWidth(image)),
@@ -227,7 +227,7 @@ _data(nullptr)
 #endif
 
 
-imagex::~imagex()
+Image::~Image()
 {
 #ifdef OPENWAR_USE_SDL
 
@@ -240,7 +240,7 @@ imagex::~imagex()
 }
 
 
-glm::vec4 imagex::get_pixel(int x, int y) const
+glm::vec4 Image::get_pixel(int x, int y) const
 {
 	if (0 <= x && x < (int) width() && 0 <= y && y < (int) height())
 	{
@@ -252,7 +252,7 @@ glm::vec4 imagex::get_pixel(int x, int y) const
 }
 
 
-void imagex::set_pixel(int x, int y, glm::vec4 c)
+void Image::set_pixel(int x, int y, glm::vec4 c)
 {
 	if (0 <= x && x < (int) width() && 0 <= y && y < (int) height())
 	{
@@ -267,7 +267,7 @@ void imagex::set_pixel(int x, int y, glm::vec4 c)
 }
 
 
-void imagex::premultiply_alpha()
+void Image::premultiply_alpha()
 {
 	glm::ivec2 s = size();
 	for (int x = 0; x < s.x; ++x)
@@ -325,7 +325,7 @@ static int count_components(GLenum format)
 
 
 #ifndef OPENWAR_USE_SDL
-void imagex::init_data_context()
+void Image::init_data_context()
 {
 	int components = count_components(_format);
 	_data = (GLubyte*) calloc(_width * _height * components, sizeof(GLubyte));
@@ -338,7 +338,7 @@ void imagex::init_data_context()
 
 
 #ifndef OPENWAR_USE_SDL
-NSData* ConvertImageToTiff(imagex* map)
+NSData* ConvertImageToTiff(Image* map)
 {
 #if TARGET_OS_IPHONE
 	return nil;
@@ -363,7 +363,7 @@ NSData* ConvertImageToTiff(imagex* map)
 
 
 #ifndef OPENWAR_USE_SDL
-imagex* ConvertTiffToImage(NSData* data)
+Image* ConvertTiffToImage(NSData* data)
 {
 #if TARGET_OS_IPHONE
 	return new image([[UIImage imageWithData:data] CGImage]);
@@ -371,7 +371,7 @@ imagex* ConvertTiffToImage(NSData* data)
 	NSImage* img = [[NSImage alloc] initWithData:data];
 	NSSize size = img.size;
 	NSRect rect = NSMakeRect(0, 0, size.width, size.height);
-	imagex* result = new imagex([img CGImageForProposedRect:&rect context:nil hints:nil]);
+	Image* result = new Image([img CGImageForProposedRect:&rect context:nil hints:nil]);
 	[img release];
 	return result;
 #endif

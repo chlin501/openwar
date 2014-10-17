@@ -8,7 +8,7 @@
 #include <map>
 #include "BattleModel/TiledGroundMap.h"
 #include "Algebra/bounds.h"
-#include "imagex.h"
+#include "Image.h"
 #include "Algorithms/bspline_patch.h"
 #include "Graphics/texture.h"
 

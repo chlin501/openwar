@@ -3,7 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "SmoothTerrainShaders.h"
-#include "imagex.h"
+#include "Image.h"
 
 
 
@@ -580,7 +580,7 @@ static glm::vec3 adjust_brightness(glm::vec3 c, float brightness)
 
 texture* SmoothTerrainShaders::create_colormap()
 {
-	static imagex* img = nullptr;
+	static Image* img = nullptr;
 	if (img == nullptr)
 	{
 		static glm::vec3 r[256];
@@ -591,7 +591,7 @@ texture* SmoothTerrainShaders::create_colormap()
 			r[i].b = (rand() & 0x7fff) / (float)0x7fff;
 		}
 
-		img = new imagex(64, 256);
+		img = new Image(64, 256);
 		for (int x = 0; x < 64; ++x)
 			for (int y = 0; y < 256; ++y)
 			{

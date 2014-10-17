@@ -5,9 +5,10 @@
 #ifndef ShaderProgram_H
 #define ShaderProgram_H
 
-#include <map>
+#include "GraphicsOpenGL.h"
 #include "VertexBuffer.h"
 #include "texture.h"
+#include <map>
 
 #ifndef CHECK_ERROR_GL
 extern void CHECK_ERROR_GL();

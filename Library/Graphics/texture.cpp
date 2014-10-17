@@ -13,7 +13,7 @@
 
 #include "texture.h"
 #include "ShaderProgram.h"
-#include "imagex.h"
+#include "Image.h"
 
 
 
@@ -34,7 +34,7 @@ texture::texture(const resource& r)
 }
 
 
-texture::texture(const imagex& image)
+texture::texture(const Image& image)
 {
 	glGenTextures(1, &id);
 	CHECK_ERROR_GL();
@@ -132,7 +132,7 @@ void texture::load(const resource& r)
 
 #else
 
-    imagex img(r);
+    Image img(r);
 	load(img);
 
     /*
@@ -156,7 +156,7 @@ void texture::load(const resource& r)
 
 
 
-void texture::load(const imagex& image)
+void texture::load(const Image& image)
 {
 	glBindTexture(GL_TEXTURE_2D, id);
 	CHECK_ERROR_GL();

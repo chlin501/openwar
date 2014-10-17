@@ -6,7 +6,7 @@
 #define SmoothTerrainWater_H
 
 #include "ShaderProgram.h"
-#include "imagex.h"
+#include "Image.h"
 
 class GroundMap;
 

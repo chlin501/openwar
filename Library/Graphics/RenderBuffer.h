@@ -5,22 +5,7 @@
 #ifndef RenderBuffer_H
 #define RenderBuffer_H
 
-#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
-#if TARGET_OS_IPHONE
-#include <OpenGLES/ES2/gl.h>
-#else
-#include <OpenGL/gl.h>
-#endif
-#else
-#if OPENWAR_USE_GLEW
-#include <GL/glew.h>
-#endif
-#ifdef OPENWAR_USE_GLES2
-#include <GLES2/gl2.h>
-#else
-#include <GL/gl.h>
-#endif
-#endif
+#include "GraphicsOpenGL.h"
 
 
 struct RenderBuffer

@@ -11,7 +11,7 @@
 #include "Algebra/bounds.h"
 #include "SmoothTerrainShaders.h"
 
-class imagex;
+class Image;
 
 
 

@@ -29,8 +29,8 @@ class EditorModel
 	SmoothTerrainRenderer* _smoothTerrainSurface;
 	EditorMode _editorMode;
 	TerrainFeature _terrainFeature;
-	imagex* _brush;
-	imagex* _mixer;
+	Image* _brush;
+	Image* _mixer;
 	glm::vec2 _brushPosition;
 	float _brushDistance;
 

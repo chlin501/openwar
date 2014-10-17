@@ -75,7 +75,7 @@ BattleView::BattleView(GraphicsContext* gc, renderers* r) :
 
 	_billboardTexture = new BillboardTexture();
 
-	imagex img(resource("Textures/Billboards.png"));
+	Image img(resource("Textures/Billboards.png"));
 #ifndef OPENWAR_USE_NSBUNDLE_RESOURCES
 	img.premultiply_alpha(); // TODO: how to handle this ???
 #endif

@@ -5,27 +5,11 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
-#if TARGET_OS_IPHONE
-#include <OpenGLES/ES2/gl.h>
-#else
-#include <OpenGL/gl.h>
-#endif
-#else
-#if OPENWAR_USE_GLEW
-#include <GL/glew.h>
-#endif
-#ifdef OPENWAR_USE_GLES2
-#include <GLES2/gl2.h>
-#else
-#include <GL/gl.h>
-#endif
-#endif
-
+#include "GraphicsOpenGL.h"
 #include "resource.h"
 #include <SDL2/SDL.h>
 
-class imagex;
+class Image;
 
 
 struct texture
@@ -34,7 +18,7 @@ struct texture
 
 	texture();
 	explicit texture(const resource& r);
-	explicit texture(const imagex& image);
+	explicit texture(const Image& image);
 	explicit texture(SDL_Surface* surface);
 
 	~texture();
@@ -42,7 +26,7 @@ struct texture
 	void init();
 
 	void load(const resource& r);
-	void load(const imagex& image);
+	void load(const Image& image);
 	void load(SDL_Surface* surface);
 
 private:

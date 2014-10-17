@@ -17,7 +17,6 @@ _count(0)
 
 
 
-
 VertexBufferBase::~VertexBufferBase()
 {
 #ifdef OPENWAR_USE_VAO

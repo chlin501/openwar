@@ -2,28 +2,12 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef IMAGE_H
-#define IMAGE_H
+#ifndef Image_h
+#define Image_h
 
+#include "GraphicsOpenGL.h"
 #include <glm/glm.hpp>
 
-#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
-#if TARGET_OS_IPHONE
-#include <OpenGLES/ES2/gl.h>
-#else
-#include <OpenGL/gl.h>
-#endif
-#else
-#if OPENWAR_USE_GLEW
-#include <GL/glew.h>
-#endif
-#ifdef OPENWAR_USE_GLES2
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#else
-#include <GL/gl.h>
-#endif
-#endif
 
 #ifdef OPENWAR_USE_SDL
 #include <SDL2/SDL.h>
@@ -34,7 +18,7 @@
 #include "resource.h"
 
 
-class imagex
+class Image
 {
 #ifdef OPENWAR_USE_SDL
 	SDL_Surface* _surface;
@@ -47,15 +31,15 @@ class imagex
 	GLenum _format;
 
 public:
-	imagex(int width, int height);
-	explicit imagex(const resource& r);
+	Image(int width, int height);
+	explicit Image(const resource& r);
 
 #ifndef OPENWAR_USE_SDL
-	imagex(CGImageRef image);
+	Image(CGImageRef image);
 	CGContextRef CGContext() const { return _context; }
 #endif
 
-	~imagex();
+	~Image();
 
 #ifdef OPENWAR_USE_SDL
 	SDL_Surface* get_surface() { return _surface; }
@@ -86,8 +70,8 @@ private:
 
 
 #ifndef OPENWAR_USE_SDL
-NSData* ConvertImageToTiff(imagex* map);
-imagex* ConvertTiffToImage(NSData* data);
+NSData* ConvertImageToTiff(Image* map);
+Image* ConvertTiffToImage(NSData* data);
 #endif
 
 
