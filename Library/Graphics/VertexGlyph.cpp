@@ -1,0 +1,1 @@
+#include "VertexGlyph.h"
