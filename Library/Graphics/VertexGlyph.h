@@ -4,12 +4,22 @@
 #include <functional>
 #include <vector>
 
-
+class Shape;
 template <class _Vertex> class VertexBuffer;
 
 
+class VertexGlyphBase
+{
+	Shape* _shape;
+
+public:
+	VertexGlyphBase(Shape* shape);
+	~VertexGlyphBase();
+};
+
+
 template <class _Vertex>
-class VertexGlyph
+class VertexGlyph : public VertexGlyphBase
 {
 	friend class VertexBuffer<_Vertex>;
 	VertexBuffer<_Vertex>* _vertexBuffer;
@@ -19,8 +29,8 @@ public:
 
 	RebuildType _rebuild;
 
-	VertexGlyph() : _vertexBuffer(nullptr), _rebuild() { }
-	VertexGlyph(RebuildType rebuild) : _vertexBuffer(nullptr), _rebuild(rebuild) { }
+	VertexGlyph() : VertexGlyphBase(nullptr), _vertexBuffer(nullptr), _rebuild() { }
+	VertexGlyph(RebuildType rebuild) : VertexGlyphBase(nullptr), _vertexBuffer(nullptr), _rebuild(rebuild) { }
 
 	~VertexGlyph()
 	{
