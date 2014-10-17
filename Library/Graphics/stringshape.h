@@ -101,6 +101,7 @@ public:
 
 class stringglyph
 {
+	VertexGlyph<Vertex_2f_2f_1f> _glyph;
 	std::string _string;
 	glm::mat4x4 _transform;
 	float _alpha;
@@ -126,7 +127,7 @@ public:
 	const float get_delta() const { return _delta; }
 	void set_delta(float value) { _delta = value; }
 
-	VertexGlyph<Vertex_2f_2f_1f> glyph(stringfont* font);
+	VertexGlyph<Vertex_2f_2f_1f>* GetGlyph(stringfont* font);
 
 	void generate(stringfont* font, std::vector<vertex_type>& vertices);
 };

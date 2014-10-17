@@ -114,8 +114,12 @@ public:
 	typedef _Vertex VertexType;
 	typedef VertexGlyph<VertexType> VertexGlyphType;
 
-	std::vector<VertexType> _vertices;
+private:
 	std::vector<VertexGlyphType> _glyphs;
+
+public:
+
+	std::vector<VertexType> _vertices;
 
 	VertexBuffer()
 	{
@@ -129,6 +133,16 @@ public:
 	GLsizei count() const
 	{
 		return _vbo != 0 ? _count : (GLsizei)_vertices.size();
+	}
+
+	void ClearGlyphs()
+	{
+		_glyphs.clear();
+	}
+
+	void AddGlyph(VertexGlyphType* vertexGlyph)
+	{
+		_glyphs.push_back(*vertexGlyph);
 	}
 
 	void AddVertex(const VertexType& vertex)

@@ -43,12 +43,12 @@ PatchShape::PatchShape(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
 }
 
 
-VertexGlyph<Vertex_2f_2f> PatchShape::GetGlyph()
+VertexGlyph<Vertex_2f_2f>* PatchShape::GetGlyph()
 {
 	_glyph = VertexGlyph<Vertex_2f_2f>([this](std::vector<vertex_type>& vertices) {
 		generate(vertices);
 	});
-	return _glyph;
+	return &_glyph;
 }
 
 
