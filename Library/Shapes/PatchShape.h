@@ -40,6 +40,10 @@ public:
 	PatchShape() { }
 	PatchShape(TexturePatch tile, bounds2f bounds, glm::vec2 inset);
 
+	void Reset();
+	void Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset);
+
+
 	VertexGlyph<Vertex_2f_2f>* GetGlyph();
 
 	void generate(std::vector<vertex_type>& vertices);

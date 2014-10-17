@@ -25,6 +25,7 @@ class VertexGlyph : public VertexGlyphBase
 	VertexBuffer<_Vertex>* _vertexBuffer;
 
 public:
+	typedef _Vertex VertexType;
 	typedef std::function<void(std::vector<_Vertex>&)> RebuildType;
 
 	RebuildType _rebuild;
@@ -37,6 +38,9 @@ public:
 		if (_vertexBuffer != nullptr)
 			_vertexBuffer->RemoveGlyph(this);
 	}
+
+private:
+	VertexGlyph<VertexType>& operator=(VertexGlyph<VertexType>&) { return *this; }
 };
 
 

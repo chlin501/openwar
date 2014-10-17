@@ -625,9 +625,9 @@ _delta(delta)
 
 VertexGlyph<Vertex_2f_2f_1f>* stringglyph::GetGlyph(stringfont* font)
 {
-	_glyph = VertexGlyph<Vertex_2f_2f_1f>([this, font](std::vector<Vertex_2f_2f_1f>& vertices) {
+	_glyph._rebuild = [this, font](std::vector<Vertex_2f_2f_1f>& vertices) {
 		generate(font, vertices);
-	});
+	};
 	return &_glyph;
 }
 

@@ -43,11 +43,29 @@ PatchShape::PatchShape(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
 }
 
 
+void PatchShape::Reset()
+{
+	outer_xy = bounds2f();
+	inner_xy = bounds2f();
+	outer_uv = bounds2f();
+	inner_uv = bounds2f();
+}
+
+
+void PatchShape::Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
+{
+	outer_xy = bounds;
+	inner_xy = bounds.grow(-inset.x, -inset.y);
+	outer_uv = tile.outer;
+	inner_uv = tile.inner;
+}
+
+
 VertexGlyph<Vertex_2f_2f>* PatchShape::GetGlyph()
 {
-	_glyph = VertexGlyph<Vertex_2f_2f>([this](std::vector<vertex_type>& vertices) {
+	_glyph._rebuild = [this](std::vector<vertex_type>& vertices) {
 		generate(vertices);
-	});
+	};
 	return &_glyph;
 }
 
