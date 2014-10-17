@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "Algebra/affine2.h"
-#include "Algebra/image.h"
+#include "imagex.h"
 #include "Graphics/texture.h"
 
 
@@ -33,7 +33,7 @@ public:
 
 	texture* GetTexture() const { return _texture; }
 
-	int AddSheet(const image& img);
+	int AddSheet(const imagex& img);
 	int AddShape(int sheet);
 
 	void SetTexCoords(int shape, float facing, const affine2& texcoords);

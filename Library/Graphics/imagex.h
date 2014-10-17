@@ -34,7 +34,7 @@
 #include "resource.h"
 
 
-class image
+class imagex
 {
 #ifdef OPENWAR_USE_SDL
 	SDL_Surface* _surface;
@@ -47,15 +47,15 @@ class image
 	GLenum _format;
 
 public:
-	image(int width, int height);
-	explicit image(const resource& r);
+	imagex(int width, int height);
+	explicit imagex(const resource& r);
 
 #ifndef OPENWAR_USE_SDL
-	image(CGImageRef image);
+	imagex(CGImageRef image);
 	CGContextRef CGContext() const { return _context; }
 #endif
 
-	~image();
+	~imagex();
 
 #ifdef OPENWAR_USE_SDL
 	SDL_Surface* get_surface() { return _surface; }
@@ -86,8 +86,8 @@ private:
 
 
 #ifndef OPENWAR_USE_SDL
-NSData* ConvertImageToTiff(image* map);
-image* ConvertTiffToImage(NSData* data);
+NSData* ConvertImageToTiff(imagex* map);
+imagex* ConvertTiffToImage(NSData* data);
 #endif
 
 

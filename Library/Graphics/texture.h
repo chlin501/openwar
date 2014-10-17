@@ -25,7 +25,7 @@
 #include "resource.h"
 #include <SDL2/SDL.h>
 
-class image;
+class imagex;
 
 
 struct texture
@@ -34,7 +34,7 @@ struct texture
 
 	texture();
 	explicit texture(const resource& r);
-	explicit texture(const image& image);
+	explicit texture(const imagex& image);
 	explicit texture(SDL_Surface* surface);
 
 	~texture();
@@ -42,7 +42,7 @@ struct texture
 	void init();
 
 	void load(const resource& r);
-	void load(const image& image);
+	void load(const imagex& image);
 	void load(SDL_Surface* surface);
 
 private:

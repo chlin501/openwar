@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "Algebra/image.h"
+#include "imagex.h"
 #include "BattleCommander.h"
 
 class BattleScript;
@@ -26,7 +26,7 @@ class BattleScenario
 	std::vector<BattleCommander*> _commanders;
 	BattleCommander* _dummyCommander;
 	std::string _smoothMapHash;
-	image* _smoothMap;
+	imagex* _smoothMap;
 	int _teamPosition1;
 	int _teamPosition2;
 

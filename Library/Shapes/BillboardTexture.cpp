@@ -20,7 +20,7 @@ BillboardTexture::~BillboardTexture()
 }
 
 
-int BillboardTexture::AddSheet(const image& img)
+int BillboardTexture::AddSheet(const imagex& img)
 {
 	_texture->load(img);
 

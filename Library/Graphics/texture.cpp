@@ -13,7 +13,7 @@
 
 #include "texture.h"
 #include "ShaderProgram.h"
-#include "Algebra/image.h"
+#include "imagex.h"
 
 
 
@@ -34,7 +34,7 @@ texture::texture(const resource& r)
 }
 
 
-texture::texture(const image& image)
+texture::texture(const imagex& image)
 {
 	glGenTextures(1, &id);
 	CHECK_ERROR_GL();
@@ -132,7 +132,7 @@ void texture::load(const resource& r)
 
 #else
 
-    image img(r);
+    imagex img(r);
 	load(img);
 
     /*
@@ -156,7 +156,7 @@ void texture::load(const resource& r)
 
 
 
-void texture::load(const image& image)
+void texture::load(const imagex& image)
 {
 	glBindTexture(GL_TEXTURE_2D, id);
 	CHECK_ERROR_GL();

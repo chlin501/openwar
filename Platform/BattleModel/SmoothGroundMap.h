@@ -9,7 +9,7 @@
 #include <string>
 #include "GroundMap.h"
 #include "Algebra/bounds.h"
-#include "Algebra/image.h"
+#include "imagex.h"
 
 class HeightMap;
 
@@ -19,10 +19,10 @@ class SmoothGroundMap : public GroundMap
 	HeightMap* _heightMap;
 	std::string _hash;
 	bounds2f _bounds;
-	image* _image;
+	imagex* _image;
 
 public:
-	SmoothGroundMap(HeightMap* heightMap, const char* hash, bounds2f bounds, image* img);
+	SmoothGroundMap(HeightMap* heightMap, const char* hash, bounds2f bounds, imagex* img);
 
 	const char* GetHash() const { return _hash.c_str(); }
 
@@ -34,15 +34,15 @@ public:
 	virtual bool IsWater(glm::vec2 position) const;
 	virtual bool ContainsWater(bounds2f bounds) const;
 
-	image* GetImage() const { return _image; }
+	imagex* GetImage() const { return _image; }
 	glm::ivec2 ToGroundmapCoordinate(glm::vec2 position) const;
 	float CalculateHeight(int x, int y) const;
 
 	float GetForestValue(int x, int y) const;
 	float GetImpassableValue(int x, int y) const;
 
-	void Extract(glm::vec2 position, image* brush);
-	bounds2f Paint(TerrainFeature feature, glm::vec2 position, image* brush, float pressure);
+	void Extract(glm::vec2 position, imagex* brush);
+	bounds2f Paint(TerrainFeature feature, glm::vec2 position, imagex* brush, float pressure);
 	bounds2f Paint(TerrainFeature feature, glm::vec2 position, float radius, float pressure);
 
 private:

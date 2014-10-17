@@ -6,7 +6,7 @@
 #include "HeightMap.h"
 
 
-SmoothGroundMap::SmoothGroundMap(HeightMap* heightMap, const char* hash, bounds2f bounds, image* img) :
+SmoothGroundMap::SmoothGroundMap(HeightMap* heightMap, const char* hash, bounds2f bounds, imagex* img) :
 _heightMap(heightMap),
 _hash(hash),
 _bounds(bounds),
@@ -119,7 +119,7 @@ float SmoothGroundMap::GetImpassableValue(int x, int y) const
 }
 
 
-void SmoothGroundMap::Extract(glm::vec2 position, image* brush)
+void SmoothGroundMap::Extract(glm::vec2 position, imagex* brush)
 {
 	glm::ivec2 size = brush->size();
 	glm::ivec2 origin = ToGroundmapCoordinate(position) - size / 2;
@@ -130,7 +130,7 @@ void SmoothGroundMap::Extract(glm::vec2 position, image* brush)
 }
 
 
-bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, image* brush, float pressure)
+bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, imagex* brush, float pressure)
 {
 	glm::vec2 scale = _bounds.size() / glm::vec2(_image->size());
 	glm::ivec2 size = brush->size();
