@@ -74,12 +74,12 @@ typedef Vertex4<glm::vec3, float, glm::vec2, glm::vec2> Vertex_3f_1f_2f_2f;
 template <class _VertexT>
 struct VertexGlyph
 {
-	typedef std::function<void(std::vector<_VertexT>&)> generator_type;
+	typedef std::function<void(std::vector<_VertexT>&)> RebuildType;
 
-	generator_type generator;
+	RebuildType _rebuild;
 
-	VertexGlyph() : generator() { }
-	VertexGlyph(generator_type g) : generator(g) { }
+	VertexGlyph() : _rebuild() { }
+	VertexGlyph(RebuildType rebuild) : _rebuild(rebuild) { }
 };
 
 
@@ -111,11 +111,11 @@ template <class _Vertex>
 class VertexBuffer : public VertexBufferBase
 {
 public:
-	typedef _Vertex vertex_type;
-	typedef VertexGlyph<vertex_type> vertexglyph_type;
+	typedef _Vertex VertexType;
+	typedef VertexGlyph<VertexType> VertexGlyphType;
 
-	std::vector<vertex_type> _vertices;
-	std::vector<vertexglyph_type> _glyphs;
+	std::vector<VertexType> _vertices;
+	std::vector<VertexGlyphType> _glyphs;
 
 	VertexBuffer()
 	{
@@ -131,7 +131,7 @@ public:
 		return _vbo != 0 ? _count : (GLsizei)_vertices.size();
 	}
 
-	void AddVertex(const vertex_type& vertex)
+	void AddVertex(const VertexType& vertex)
 	{
 		_vertices.push_back(vertex);
 	}
@@ -146,7 +146,7 @@ public:
 				return;
 		}
 
-		GLsizeiptr size = sizeof(vertex_type) * _vertices.size();
+		GLsizeiptr size = sizeof(VertexType) * _vertices.size();
 		const GLvoid* data = _vertices.data();
 
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
@@ -160,13 +160,13 @@ public:
 	}
 
 
-	VertexBuffer<vertex_type>& UpdateVBOFromGlyphs()
+	VertexBuffer<VertexType>& UpdateVBOFromGlyphs()
 	{
 		_vertices.clear();
-		for (vertexglyph_type& glyph : _glyphs)
+		for (VertexGlyphType& glyph : _glyphs)
 		{
-			if (glyph.generator)
-				glyph.generator(_vertices);
+			if (glyph._rebuild)
+				glyph._rebuild(_vertices);
 		}
 		UpdateVBO(GL_STATIC_DRAW);
 		return *this;

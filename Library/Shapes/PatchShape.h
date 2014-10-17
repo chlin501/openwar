@@ -2,32 +2,33 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef textureshape_H
-#define textureshape_H
+#ifndef PatchShape_H
+#define PatchShape_H
 
 #include "VertexBuffer.h"
 
 
-struct texturetile
+struct TexturePatch
 {
 	bounds2f outer;
 	bounds2f inner;
 
-	texturetile();
-	texturetile(bounds2f o, bounds2f i);
+	TexturePatch();
+	TexturePatch(bounds2f o, bounds2f i);
 };
 
-struct textureatlas
+struct TexturePatchFactory
 {
 	glm::ivec2 size;
 
-	textureatlas(int size_u, int size_v);
-	texturetile tile(int u0, int v0, int size_u, int size_v, int insert_u, int inset_v);
+	TexturePatchFactory(int size_u, int size_v);
+	TexturePatch GetTexturePatch(int u0, int v0, int size_u, int size_v, int insert_u, int inset_v);
 };
 
 
-class textureglyph
+class PatchShape
 {
+	VertexGlyph<Vertex_2f_2f> _glyph;
 public:
 	typedef Vertex_2f_2f vertex_type;
 
@@ -36,10 +37,10 @@ public:
 	bounds2f outer_uv;
 	bounds2f inner_uv;
 
-	textureglyph() { }
-	textureglyph(texturetile tile, bounds2f bounds, glm::vec2 inset);
+	PatchShape() { }
+	PatchShape(TexturePatch tile, bounds2f bounds, glm::vec2 inset);
 
-	VertexGlyph<Vertex_2f_2f> glyph();
+	VertexGlyph<Vertex_2f_2f> GetGlyph();
 
 	void generate(std::vector<vertex_type>& vertices);
 	void rectangle(std::vector<vertex_type>& vertices, bounds2f xy, bounds2f uv);

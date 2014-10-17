@@ -2,39 +2,39 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "textureshape.h"
+#include "PatchShape.h"
 
 
 
-texturetile::texturetile() :
+TexturePatch::TexturePatch() :
 outer(0, 0, 1, 1),
 inner(0, 0, 1, 1)
 {
 }
 
 
-texturetile::texturetile(bounds2f o, bounds2f i) :
+TexturePatch::TexturePatch(bounds2f o, bounds2f i) :
 outer(o),
 inner(i)
 {
 }
 
 
-textureatlas::textureatlas(int size_u, int size_v) :
+TexturePatchFactory::TexturePatchFactory(int size_u, int size_v) :
 size(size_u, size_v)
 {
 }
 
 
-texturetile textureatlas::tile(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
+TexturePatch TexturePatchFactory::GetTexturePatch(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
 {
 	bounds2f outer = bounds2f(u0, v0, u0 + size_u, v0 + size_v) / glm::vec2(size.x, size.y);
 	bounds2f inner = outer.grow(-(float)inset_u / size.x, -(float)inset_v / size.y);
-	return texturetile(outer, inner);
+	return TexturePatch(outer, inner);
 }
 
 
-textureglyph::textureglyph(texturetile tile, bounds2f bounds, glm::vec2 inset)
+PatchShape::PatchShape(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
 {
 	outer_xy = bounds;
 	inner_xy = bounds.grow(-inset.x, -inset.y);
@@ -43,15 +43,16 @@ textureglyph::textureglyph(texturetile tile, bounds2f bounds, glm::vec2 inset)
 }
 
 
-VertexGlyph<Vertex_2f_2f> textureglyph::glyph()
+VertexGlyph<Vertex_2f_2f> PatchShape::GetGlyph()
 {
-	return VertexGlyph<Vertex_2f_2f>([this](std::vector<vertex_type>& vertices) {
+	_glyph = VertexGlyph<Vertex_2f_2f>([this](std::vector<vertex_type>& vertices) {
 		generate(vertices);
 	});
+	return _glyph;
 }
 
 
-void textureglyph::generate(std::vector<vertex_type>& vertices)
+void PatchShape::generate(std::vector<vertex_type>& vertices)
 {
 	bool min_x = outer_xy.min.x < inner_xy.min.x;
 	bool max_x = inner_xy.max.x < outer_xy.max.x;
@@ -105,7 +106,7 @@ void textureglyph::generate(std::vector<vertex_type>& vertices)
 }
 
 
-void textureglyph::rectangle(std::vector<vertex_type>& vertices, bounds2f xy, bounds2f uv)
+void PatchShape::rectangle(std::vector<vertex_type>& vertices, bounds2f xy, bounds2f uv)
 {
 	vertices.push_back(vertex_type(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
 	vertices.push_back(vertex_type(glm::vec2(xy.min.x, xy.max.y), glm::vec2(uv.min.x, uv.max.y)));
