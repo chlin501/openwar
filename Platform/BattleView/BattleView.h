@@ -11,6 +11,7 @@
 #include "TerrainView/TerrainView.h"
 #include "TiledTerrain/TiledTerrainRenderer.h"
 #include "SmoothTerrain/SmoothTerrainRenderer.h"
+#include "CommonShaders.h"
 
 class BattleCommander;
 class CasualtyMarker;

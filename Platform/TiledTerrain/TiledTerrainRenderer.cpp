@@ -6,6 +6,7 @@
 #include "ShaderProgram.h"
 #include "VertexBuffer.h"
 #include "TiledTerrainRenderer.h"
+#include "CommonShaders.h"
 
 
 TiledTerrainRenderer::TiledTerrainRenderer(TiledGroundMap* tiledGroundMap) :

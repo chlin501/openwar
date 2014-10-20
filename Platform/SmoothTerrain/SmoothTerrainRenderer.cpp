@@ -4,7 +4,7 @@
 
 #include "Image.h"
 #include "SmoothTerrainRenderer.h"
-
+#include "CommonShaders.h"
 
 
 SmoothTerrainRenderer::SmoothTerrainRenderer(SmoothGroundMap* smoothGroundMap) :

@@ -4,6 +4,7 @@
 #include "ShaderProgram.h"
 #include "Surface/Container.h"
 #include "TerrainView/EditorModel.h"
+#include "CommonShaders.h"
 
 class BattleCommander;
 class BattleGesture;

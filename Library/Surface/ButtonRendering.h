@@ -8,6 +8,7 @@
 #include "Algebra/bounds.h"
 #include "Graphics/texture.h"
 #include "StringShape.h"
+#include "CommonShaders.h"
 
 
 struct ButtonIcon;
