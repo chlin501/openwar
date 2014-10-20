@@ -15,6 +15,10 @@ class VertexGlyphBase
 public:
 	VertexGlyphBase(Shape* shape);
 	~VertexGlyphBase();
+
+protected:
+	VertexGlyphBase(const VertexGlyphBase&) { }
+	VertexGlyphBase& operator=(VertexGlyphBase&) { return *this; }
 };
 
 
@@ -40,6 +44,7 @@ public:
 	}
 
 private:
+	VertexGlyph(const VertexGlyph<VertexType>& x) : VertexGlyphBase(x) { }
 	VertexGlyph<VertexType>& operator=(VertexGlyph<VertexType>&) { return *this; }
 };
 

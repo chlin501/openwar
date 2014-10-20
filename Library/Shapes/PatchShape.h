@@ -6,6 +6,7 @@
 #define PatchShape_H
 
 #include "VertexBuffer.h"
+#include "Shape.h"
 
 
 struct TexturePatch
@@ -26,9 +27,10 @@ struct TexturePatchFactory
 };
 
 
-class PatchShape
+class PatchShape : public Shape
 {
 	VertexGlyph<Vertex_2f_2f> _glyph;
+
 public:
 	typedef Vertex_2f_2f vertex_type;
 
@@ -43,11 +45,15 @@ public:
 	void Reset();
 	void Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset);
 
-
 	VertexGlyph<Vertex_2f_2f>* GetGlyph();
 
+protected:
 	void generate(std::vector<vertex_type>& vertices);
 	void rectangle(std::vector<vertex_type>& vertices, bounds2f xy, bounds2f uv);
+
+private:
+	PatchShape(const PatchShape& x) : Shape(x) { }
+	PatchShape& operator=(const PatchShape&) { return *this; }
 };
 
 
