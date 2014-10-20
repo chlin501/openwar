@@ -1,4 +1,4 @@
-#include "StringShapeX.h"
+#include "StringShape.h"
 #include "Image.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <codecvt>
@@ -705,14 +705,14 @@ void StringGlyph::generate(StringFont* font, std::vector<StringGlyph::vertex_typ
 
 
 
-StringShapeX::StringShapeX(StringFont* font) : _font(font)
+StringShape::StringShape(StringFont* font) : _font(font)
 {
 	_vertices._mode = GL_TRIANGLES;
 }
 
 
 
-void StringShapeX::clear()
+void StringShape::clear()
 {
 	for (StringGlyph* g : _stringglyphs)
 		delete g;
@@ -724,7 +724,7 @@ void StringShapeX::clear()
 
 
 
-void StringShapeX::add(const char* s, glm::mat4x4 transform, float alpha, float delta)
+void StringShape::add(const char* s, glm::mat4x4 transform, float alpha, float delta)
 {
 	StringGlyph* g = new StringGlyph(s, transform, alpha, delta);
 	_stringglyphs.push_back(g);
@@ -737,7 +737,7 @@ void StringShapeX::add(const char* s, glm::mat4x4 transform, float alpha, float 
 }
 
 
-void StringShapeX::update(GLenum usage)
+void StringShape::update(GLenum usage)
 {
 	_font->update_texture();
 	_vertices.UpdateVBOFromGlyphs();

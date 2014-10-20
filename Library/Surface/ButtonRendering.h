@@ -7,7 +7,7 @@
 
 #include "Algebra/bounds.h"
 #include "Graphics/texture.h"
-#include "StringShapeX.h"
+#include "StringShape.h"
 
 
 struct ButtonIcon;
@@ -16,7 +16,7 @@ struct ButtonRendering
 {
 	renderers* _renderers;
 	StringFont* _string_font;
-	StringShapeX* _string_shape;
+	StringShape* _string_shape;
 
 	texture* _textureButtonBackground;
 	texture* _textureButtonHighlight;

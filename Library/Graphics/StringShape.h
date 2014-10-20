@@ -142,7 +142,7 @@ private:
 };
 
 
-class StringShapeX : public Shape
+class StringShape : public Shape
 {
 	std::vector<StringGlyph*> _stringglyphs;
 
@@ -150,7 +150,7 @@ public:
 	VertexBuffer_2f_2f_1f _vertices;
 	StringFont* _font;
 
-	explicit StringShapeX(StringFont* font);
+	explicit StringShape(StringFont* font);
 
 	void clear();
 	void add(const char* string, glm::mat4x4 transform, float alpha = 1, float delta = 0);
@@ -158,8 +158,8 @@ public:
 	void update(GLenum usage);
 
 private:
-	StringShapeX(const StringShapeX& _) : Shape(_) { }
-	StringShapeX& operator=(const StringShapeX&) { return *this; }
+	StringShape(const StringShape& _) : Shape(_) { }
+	StringShape& operator=(const StringShape&) { return *this; }
 };
 
 
