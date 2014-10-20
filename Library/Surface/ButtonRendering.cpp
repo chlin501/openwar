@@ -70,9 +70,9 @@ void ButtonRendering::RenderCornerButton(const glm::mat4& transform, texture* te
 	AddRect(vertices, bounds2f(inner.min.x, inner.max.y, inner.max.x, outer.max.y), bounds2f(0.5, 0.5, 0.5, 1.0));
 	AddRect(vertices, bounds2f(inner.max.x, inner.max.y, outer.max.x, outer.max.y), bounds2f(0.5, 0.5, 1.0, 1.0));
 
-	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
-	_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
-	_renderers->_texture_renderer->render(vertices);
+	_renderers->_texture_renderer->_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
+	_renderers->_texture_renderer->_shaderprogram->get_uniform<const texture*>("texture").set_value(texturex);
+	_renderers->_texture_renderer->_shaderprogram->render(vertices);
 }
 
 
@@ -97,16 +97,16 @@ void ButtonRendering::RenderTextureRect(const glm::mat4& transform, texture* tex
 
 	if (alpha == 1)
 	{
-		_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
-		_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
-		_renderers->_texture_renderer->render(vertices);
+		_renderers->_texture_renderer->_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
+		_renderers->_texture_renderer->_shaderprogram->get_uniform<const texture*>("texture").set_value(texturex);
+		_renderers->_texture_renderer->_shaderprogram->render(vertices);
 	}
 	else
 	{
-		_renderers->_alpha_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
-		_renderers->_alpha_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
-		_renderers->_alpha_texture_renderer->get_uniform<float>("alpha").set_value(alpha);
-		_renderers->_alpha_texture_renderer->render(vertices);
+		_renderers->_alpha_texture_renderer->_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
+		_renderers->_alpha_texture_renderer->_shaderprogram->get_uniform<const texture*>("texture").set_value(texturex);
+		_renderers->_alpha_texture_renderer->_shaderprogram->get_uniform<float>("alpha").set_value(alpha);
+		_renderers->_alpha_texture_renderer->_shaderprogram->render(vertices);
 	}
 }
 

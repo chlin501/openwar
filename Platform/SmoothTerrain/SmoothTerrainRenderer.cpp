@@ -103,10 +103,10 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 	if (_showLines)
 	{
 		glDisable(GL_DEPTH_TEST);
-		renderers::singleton->_plain_renderer3->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-		renderers::singleton->_plain_renderer3->get_uniform<float>("point_size").set_value(1);
-		renderers::singleton->_plain_renderer3->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 0.06f));
-		renderers::singleton->_plain_renderer3->render(_lineVertices);
+		renderers::singleton->_plain_renderer3->_shaderprogram->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+		renderers::singleton->_plain_renderer3->_shaderprogram->get_uniform<float>("point_size").set_value(1);
+		renderers::singleton->_plain_renderer3->_shaderprogram->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 0.06f));
+		renderers::singleton->_plain_renderer3->_shaderprogram->render(_lineVertices);
 		glEnable(GL_DEPTH_TEST);
 	}
 

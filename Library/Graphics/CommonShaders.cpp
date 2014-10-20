@@ -1,14 +1,13 @@
 #include "CommonShaders.h"
-
+#include "GraphicsContext.h"
 
 
 renderers* renderers::singleton = nullptr;
 
 
-
-renderers::renderers()
+DistanceShader2::DistanceShader2(GraphicsContext* gc)
 {
-	_distance_renderer = new ShaderProgram2<glm::vec2, glm::vec2>(
+	_shaderprogram = new ShaderProgram2<glm::vec2, glm::vec2>(
 		"position", "texcoord",
 		VERTEX_SHADER
 		({
@@ -98,11 +97,14 @@ renderers::renderers()
 			}
 		})
 	);
-	_distance_renderer->_blend_sfactor = GL_ONE;
-	_distance_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_shaderprogram->_blend_sfactor = GL_ONE;
+	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
 
 
-	_gradient_renderer = new ShaderProgram2<glm::vec2, glm::vec4>(
+GradientShader2::GradientShader2(GraphicsContext* gc)
+{
+	_shaderprogram = new ShaderProgram2<glm::vec2, glm::vec4>(
 		"position", "color",
 		VERTEX_SHADER
 		({
@@ -132,11 +134,14 @@ renderers::renderers()
 			}
 		})
 	);
-	_gradient_renderer->_blend_sfactor = GL_SRC_ALPHA;
-	_gradient_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_shaderprogram->_blend_sfactor = GL_SRC_ALPHA;
+	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
 
 
-	_gradient_renderer3 = new ShaderProgram2<glm::vec3, glm::vec4>(
+GradientShader3::GradientShader3(GraphicsContext* gc)
+{
+	_shaderprogram = new ShaderProgram2<glm::vec3, glm::vec4>(
 		"position", "color",
 		VERTEX_SHADER
 		({
@@ -165,11 +170,15 @@ renderers::renderers()
 			}
 		})
 	);
-	_gradient_renderer3->_blend_sfactor = GL_SRC_ALPHA;
-	_gradient_renderer3->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_shaderprogram->_blend_sfactor = GL_SRC_ALPHA;
+	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+
+}
 
 
-	_ground_renderer = new ShaderProgram2<glm::vec2, glm::vec2>(
+GroundShader2::GroundShader2(GraphicsContext* gc)
+{
+	_shaderprogram = new ShaderProgram2<glm::vec2, glm::vec2>(
 		"position", "texcoord",
 		VERTEX_SHADER
 		({
@@ -220,12 +229,15 @@ renderers::renderers()
 			}
 		})
 	);
-	_ground_renderer->_blend_sfactor = GL_ONE;
-	_ground_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_shaderprogram->_blend_sfactor = GL_ONE;
+	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+
+}
 
 
-
-	_plain_renderer = new ShaderProgram1<glm::vec2>(
+PlainShader2::PlainShader2(GraphicsContext* gc)
+{
+	_shaderprogram = new ShaderProgram1<glm::vec2>(
 		"position",
 		VERTEX_SHADER
 		({
@@ -251,12 +263,14 @@ renderers::renderers()
 			}
 		})
 	);
-	_plain_renderer->_blend_sfactor = GL_SRC_ALPHA;
-	_plain_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_shaderprogram->_blend_sfactor = GL_SRC_ALPHA;
+	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
 
 
-
-	_plain_renderer3 = new ShaderProgram1<glm::vec3>(
+PlainShader3::PlainShader3(GraphicsContext* gc)
+{
+	_shaderprogram = new ShaderProgram1<glm::vec3>(
 		"position",
 		VERTEX_SHADER
 		({
@@ -282,12 +296,14 @@ renderers::renderers()
 			}
 		})
 	);
-	_plain_renderer3->_blend_sfactor = GL_SRC_ALPHA;
-	_plain_renderer3->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_shaderprogram->_blend_sfactor = GL_SRC_ALPHA;
+	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
 
 
-
-	_texture_renderer = new ShaderProgram2<glm::vec2, glm::vec2>(
+TextureShader2::TextureShader2(GraphicsContext* gc)
+{
+	_shaderprogram = new ShaderProgram2<glm::vec2, glm::vec2>(
 		"position", "texcoord",
 		VERTEX_SHADER
 		({
@@ -317,12 +333,14 @@ renderers::renderers()
 			}
 		})
 	);
-	_texture_renderer->_blend_sfactor = GL_ONE;
-	_texture_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_shaderprogram->_blend_sfactor = GL_ONE;
+	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
 
 
-
-	_texture_renderer3 = new ShaderProgram2<glm::vec3, glm::vec2>(
+TextureShader3::TextureShader3(GraphicsContext* gc)
+{
+	_shaderprogram = new ShaderProgram2<glm::vec3, glm::vec2>(
 		"position", "texcoord",
 		VERTEX_SHADER
 		({
@@ -352,12 +370,14 @@ renderers::renderers()
 			}
 		})
 	);
-	_texture_renderer3->_blend_sfactor = GL_ONE;
-	_texture_renderer3->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_shaderprogram->_blend_sfactor = GL_ONE;
+	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
 
 
-
-	_opaque_texture_renderer = new ShaderProgram2<glm::vec2, glm::vec2>(
+OpaqueTextureShader2::OpaqueTextureShader2(GraphicsContext* gc)
+{
+	_shaderprogram = new ShaderProgram2<glm::vec2, glm::vec2>(
 		"position", "texcoord",
 		VERTEX_SHADER
 		({
@@ -387,11 +407,14 @@ renderers::renderers()
 			}
 		})
 	);
-	_opaque_texture_renderer->_blend_sfactor = GL_ONE;
-	_opaque_texture_renderer->_blend_dfactor = GL_ZERO;
+	_shaderprogram->_blend_sfactor = GL_ONE;
+	_shaderprogram->_blend_dfactor = GL_ZERO;
+}
 
 
-	_alpha_texture_renderer = new ShaderProgram2<glm::vec2, glm::vec2>(
+AlphaTextureShader2::AlphaTextureShader2(GraphicsContext* gc)
+{
+	_shaderprogram = new ShaderProgram2<glm::vec2, glm::vec2>(
 		"position", "texcoord",
 		VERTEX_SHADER
 		({
@@ -423,7 +446,23 @@ renderers::renderers()
 			}
 		})
 	);
-	_alpha_texture_renderer->_blend_sfactor = GL_ONE;
-	_alpha_texture_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_shaderprogram->_blend_sfactor = GL_ONE;
+	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
 
+
+
+
+renderers::renderers()
+{
+	_distance_renderer = new DistanceShader2(nullptr);
+	_gradient_renderer = new GradientShader2(nullptr);
+	_gradient_renderer3 = new GradientShader3(nullptr);
+	_ground_renderer = new GroundShader2(nullptr);
+	_plain_renderer = new PlainShader2(nullptr);
+	_plain_renderer3 = new PlainShader3(nullptr);
+	_texture_renderer = new TextureShader2(nullptr);
+	_texture_renderer3 = new TextureShader3(nullptr);
+	_opaque_texture_renderer = new OpaqueTextureShader2(nullptr);
+	_alpha_texture_renderer = new AlphaTextureShader2(nullptr);
 }
