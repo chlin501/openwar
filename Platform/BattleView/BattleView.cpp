@@ -41,10 +41,9 @@ static affine2 billboard_texcoords(int x, int y, bool flip)
 
 
 
-BattleView::BattleView(GraphicsContext* gc, renderers* r) :
+BattleView::BattleView(GraphicsContext* gc) :
 	_simulator(nullptr),
 	_commander(nullptr),
-	_renderers(r),
 	_lightNormal(),
 	_billboardTexture(nullptr),
 	_billboardModel(nullptr),
@@ -273,7 +272,7 @@ void BattleView::OnSetGroundMap(GroundMap* groundMap)
 
 	if (smoothGroundMap != nullptr)
 	{
-		_smoothTerrainSurface = new SmoothTerrainRenderer(smoothGroundMap);
+		_smoothTerrainSurface = new SmoothTerrainRenderer(GetSurface()->GetGraphicsContext(), smoothGroundMap);
 		_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
 
 		if (ShouldEnableRenderEdges(ShaderProgramBase::pixels_per_point()))
@@ -284,10 +283,10 @@ void BattleView::OnSetGroundMap(GroundMap* groundMap)
 	if (tiledGroundMap != nullptr)
 	{
 		tiledGroundMap->UpdateHeightMap();
-		_tiledTerrainRenderer = new TiledTerrainRenderer(tiledGroundMap);
+		_tiledTerrainRenderer = new TiledTerrainRenderer(GetSurface()->GetGraphicsContext(), tiledGroundMap);
 	}
 
-	_smoothTerrainSky = new SmoothTerrainSky();
+	_smoothTerrainSky = new SmoothTerrainSky(GetSurface()->GetGraphicsContext());
 
 	UpdateTerrainTrees(groundMap->GetBounds());
 }
@@ -515,8 +514,8 @@ void BattleView::Render(const glm::mat4& transformx)
 	glDisable(GL_DEPTH_TEST);
 	if (_smoothTerrainSky != nullptr)
 	{
-		_smoothTerrainSky->RenderBackgroundLinen(containerTransform, _renderers, GetFrame(), GetFlip());
-		_smoothTerrainSky->Render(containerTransform, _renderers, GetFrame(), GetCameraDirection().z, GetFlip());
+		_smoothTerrainSky->RenderBackgroundLinen(containerTransform, GetFrame(), GetFlip());
+		_smoothTerrainSky->Render(containerTransform, GetFrame(), GetCameraDirection().z, GetFlip());
 	}
 
 

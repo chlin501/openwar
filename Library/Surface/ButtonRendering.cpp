@@ -5,18 +5,19 @@
 #include "ButtonRendering.h"
 #include "ButtonGrid.h"
 #include "VertexBuffer.h"
+#import "GraphicsContext.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 
-ButtonRendering::ButtonRendering(renderers* r, float pixelDensity) :
-_renderers(r)
+ButtonRendering::ButtonRendering(GraphicsContext* gc) :
+_gc(gc)
 {
 	_textureButtonBackground = new texture(resource("Textures/ButtonNormal.png"));
 	_textureButtonHighlight = new texture(resource("Textures/ButtonHighlight.png"));
 	_textureButtonSelected = new texture(resource("Textures/ButtonSelected.png"));
 	_textureButtonIcons = new texture(resource("Textures/ButtonIcons.png"));
 
-	_string_font = new StringFont(true, 18, pixelDensity);
+	_string_font = new StringFont(true, 18, gc->GetPixelDensity());
 	_string_shape = new StringShape(_string_font);
 
 	_textureEditorTools = new texture(resource("Textures/EditorTools.png"));
@@ -70,9 +71,11 @@ void ButtonRendering::RenderCornerButton(const glm::mat4& transform, texture* te
 	AddRect(vertices, bounds2f(inner.min.x, inner.max.y, inner.max.x, outer.max.y), bounds2f(0.5, 0.5, 0.5, 1.0));
 	AddRect(vertices, bounds2f(inner.max.x, inner.max.y, outer.max.x, outer.max.y), bounds2f(0.5, 0.5, 1.0, 1.0));
 
-	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
-	_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
-	_renderers->_texture_renderer->render(vertices);
+	TextureShader2* _texture_renderer = _gc->GetShaderProgram<TextureShader2>();
+
+	_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
+	_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
+	_texture_renderer->render(vertices);
 }
 
 
@@ -97,16 +100,20 @@ void ButtonRendering::RenderTextureRect(const glm::mat4& transform, texture* tex
 
 	if (alpha == 1)
 	{
-		_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
-		_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
-		_renderers->_texture_renderer->render(vertices);
+		TextureShader2* _texture_renderer = _gc->GetShaderProgram<TextureShader2>();
+
+		_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
+		_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
+		_texture_renderer->render(vertices);
 	}
 	else
 	{
-		_renderers->_alpha_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
-		_renderers->_alpha_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
-		_renderers->_alpha_texture_renderer->get_uniform<float>("alpha").set_value(alpha);
-		_renderers->_alpha_texture_renderer->render(vertices);
+		AlphaTextureShader2* _alpha_texture_renderer = _gc->GetShaderProgram<AlphaTextureShader2>();
+
+		_alpha_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
+		_alpha_texture_renderer->get_uniform<const texture*>("texture").set_value(texturex);
+		_alpha_texture_renderer->get_uniform<float>("alpha").set_value(alpha);
+		_alpha_texture_renderer->render(vertices);
 	}
 }
 

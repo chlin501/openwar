@@ -37,8 +37,6 @@ class BattleView : public TerrainView, public BattleObserver
 	BattleSimulator* _simulator;
 	BattleCommander* _commander;
 
-	renderers* _renderers;
-
 	glm::vec3 _lightNormal;
 
 	BillboardTexture* _billboardTexture;
@@ -72,7 +70,7 @@ class BattleView : public TerrainView, public BattleObserver
 	TiledTerrainRenderer* _tiledTerrainRenderer;
 
 public:
-	BattleView(GraphicsContext* gc, renderers* r);
+	BattleView(GraphicsContext* gc);
 	~BattleView();
 
 	BattleSimulator* GetSimulator() const { return _simulator; }

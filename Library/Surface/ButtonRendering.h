@@ -15,7 +15,8 @@ struct ButtonIcon;
 
 struct ButtonRendering
 {
-	renderers* _renderers;
+	GraphicsContext* _gc;
+
 	StringFont* _string_font;
 	StringShape* _string_shape;
 
@@ -40,7 +41,7 @@ struct ButtonRendering
 	ButtonIcon* buttonEditorToolWater;
 	ButtonIcon* buttonEditorToolFords;
 
-	ButtonRendering(renderers* r, float pixelDensity);
+	ButtonRendering(GraphicsContext* gc);
 
 	void RenderBackground(const glm::mat4& transform, bounds2f bounds);
 	void RenderHighlight(const glm::mat4& transform, bounds2f bounds);

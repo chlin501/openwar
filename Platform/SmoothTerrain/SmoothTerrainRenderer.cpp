@@ -5,9 +5,11 @@
 #include "Image.h"
 #include "SmoothTerrainRenderer.h"
 #include "CommonShaders.h"
+#include "GraphicsContext.h"
 
 
-SmoothTerrainRenderer::SmoothTerrainRenderer(SmoothGroundMap* smoothGroundMap) :
+SmoothTerrainRenderer::SmoothTerrainRenderer(GraphicsContext* gc, SmoothGroundMap* smoothGroundMap) :
+_gc(gc),
 _smoothGroundMap(smoothGroundMap),
 _framebuffer_width(0),
 _framebuffer_height(0),
@@ -102,11 +104,13 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 
 	if (_showLines)
 	{
+		PlainShader3* plain_renderer3 = _gc->GetShaderProgram<PlainShader3>();
+
 		glDisable(GL_DEPTH_TEST);
-		renderers::singleton->_plain_renderer3->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-		renderers::singleton->_plain_renderer3->get_uniform<float>("point_size").set_value(1);
-		renderers::singleton->_plain_renderer3->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 0.06f));
-		renderers::singleton->_plain_renderer3->render(_lineVertices);
+		plain_renderer3->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
+		plain_renderer3->get_uniform<float>("point_size").set_value(1);
+		plain_renderer3->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 0.06f));
+		plain_renderer3->render(_lineVertices);
 		glEnable(GL_DEPTH_TEST);
 	}
 

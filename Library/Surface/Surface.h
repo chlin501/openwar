@@ -22,7 +22,7 @@ class Surface : public Container
 public:
 	std::vector<Gesture*> _gestures;
 
-	Surface(glm::vec2 size, float pixelDensity);
+	Surface(GraphicsContext* gc, glm::vec2 size);
 	virtual ~Surface();
 
 	GraphicsContext* GetGraphicsContext() const { return _gc; }

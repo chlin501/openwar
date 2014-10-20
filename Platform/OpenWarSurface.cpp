@@ -13,7 +13,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-OpenWarSurface::OpenWarSurface(glm::vec2 size, float pixelDensity) : Surface(size, pixelDensity),
+OpenWarSurface::OpenWarSurface(GraphicsContext* gc, glm::vec2 size) : Surface(gc, size),
 _buttonRendering(nullptr),
 _editorModel(nullptr),
 _editorGesture(nullptr),
@@ -31,10 +31,10 @@ _buttonItemFords(nullptr),
 _scriptHintRenderer(nullptr),
 _battleLayer(nullptr)
 {
-	_battleLayer = new BattleLayer();
+	_battleLayer = new BattleLayer(gc);
 	_battleLayer->SetContainer(this);
 
-	_buttonRendering = new ButtonRendering(renderers::singleton, pixelDensity);
+	_buttonRendering = new ButtonRendering(gc);
 
 	_buttonsTopLeft = new ButtonGrid(_buttonRendering, ButtonAlignment::TopLeft);
 	_buttonsTopRight = new ButtonGrid(_buttonRendering, ButtonAlignment::TopRight);

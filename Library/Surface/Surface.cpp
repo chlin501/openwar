@@ -8,10 +8,9 @@
 
 
 
-Surface::Surface(glm::vec2 size, float pixelDensity) :
-_gc(nullptr)
+Surface::Surface(GraphicsContext* gc, glm::vec2 size) :
+_gc(gc)
 {
-	_gc = new GraphicsContext(pixelDensity);
 	SetSize(size);
 }
 

@@ -12,14 +12,15 @@
 
 class SmoothTerrainSky : public TerrainSky
 {
+	GraphicsContext* _gc;
 	texture* _textureBackgroundLinen;
 
 public:
-	SmoothTerrainSky();
+	SmoothTerrainSky(GraphicsContext* gc);
 	virtual ~SmoothTerrainSky();
 
-	void Render(const glm::mat4& transform, renderers* _renderers, bounds2f frame, float cameraDirectionZ, bool flip);
-	void RenderBackgroundLinen(const glm::mat4& transform, renderers* _renderers, bounds2f frame, bool flip);
+	void Render(const glm::mat4& transform, bounds2f frame, float cameraDirectionZ, bool flip);
+	void RenderBackgroundLinen(const glm::mat4& transform, bounds2f frame, bool flip);
 };
 
 

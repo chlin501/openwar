@@ -17,6 +17,7 @@ class Image;
 
 class SmoothTerrainRenderer
 {
+	GraphicsContext* _gc;
 	SmoothGroundMap* _smoothGroundMap;
 	int _framebuffer_width;
 	int _framebuffer_height;
@@ -37,7 +38,7 @@ class SmoothTerrainRenderer
 	bool _editMode;
 
 public:
-	SmoothTerrainRenderer(SmoothGroundMap* smoothGroundMap);
+	SmoothTerrainRenderer(GraphicsContext* gc, SmoothGroundMap* smoothGroundMap);
 	virtual ~SmoothTerrainRenderer();
 
 	SmoothGroundMap* GetSmoothGroundMap() const { return _smoothGroundMap; }

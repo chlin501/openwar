@@ -7,9 +7,11 @@
 #include "VertexBuffer.h"
 #include "TiledTerrainRenderer.h"
 #include "CommonShaders.h"
+#include "GraphicsContext.h"
 
 
-TiledTerrainRenderer::TiledTerrainRenderer(TiledGroundMap* tiledGroundMap) :
+TiledTerrainRenderer::TiledTerrainRenderer(GraphicsContext* gc, TiledGroundMap* tiledGroundMap) :
+_gc(gc),
 _tiledGroundMap(tiledGroundMap)
 {
 	glm::ivec2 size = _tiledGroundMap->GetSize();
@@ -104,8 +106,10 @@ void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3&
 
 			_vertices.UpdateVBO(GL_STATIC_DRAW);
 
-			renderers::singleton->_texture_renderer3->get_uniform<glm::mat4>("transform").set_value(transform);
-			renderers::singleton->_texture_renderer3->get_uniform<const texture*>("texture").set_value(_textures[tile->texture]);
-			renderers::singleton->_texture_renderer3->render(_vertices);
+			TextureShader3* _texture_renderer3 = _gc->GetShaderProgram<TextureShader3>();
+
+			_texture_renderer3->get_uniform<glm::mat4>("transform").set_value(transform);
+			_texture_renderer3->get_uniform<const texture*>("texture").set_value(_textures[tile->texture]);
+			_texture_renderer3->render(_vertices);
 		}
 }

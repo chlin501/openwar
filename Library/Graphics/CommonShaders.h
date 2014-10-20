@@ -8,67 +8,50 @@ class GraphicsContext;
 
 class GradientShader2 : public ShaderProgram2<glm::vec2, glm::vec4>
 {
-public:
+	friend class GraphicsContext;
 	GradientShader2(GraphicsContext* gc);
 };
 
 
 class PlainShader2 : public ShaderProgram1<glm::vec2>
 {
-public:
+	friend class GraphicsContext;
 	PlainShader2(GraphicsContext* gc);
 };
 
 
 class PlainShader3 : public ShaderProgram1<glm::vec3>
 {
-public:
+	friend class GraphicsContext;
 	PlainShader3(GraphicsContext* gc);
 };
 
 
 class TextureShader2 : public ShaderProgram2<glm::vec2, glm::vec2>
 {
-public:
+	friend class GraphicsContext;
 	TextureShader2(GraphicsContext* gc);
 };
 
 
 class TextureShader3 : public ShaderProgram2<glm::vec3, glm::vec2>
 {
-public:
+	friend class GraphicsContext;
 	TextureShader3(GraphicsContext* gc);
 };
 
 
 class OpaqueTextureShader2 : public ShaderProgram2<glm::vec2, glm::vec2>
 {
-public:
+	friend class GraphicsContext;
 	OpaqueTextureShader2(GraphicsContext* gc);
 };
 
 
 class AlphaTextureShader2 : public ShaderProgram2<glm::vec2, glm::vec2>
 {
-public:
+	friend class GraphicsContext;
 	AlphaTextureShader2(GraphicsContext* gc);
-};
-
-
-
-struct renderers
-{
-	static renderers* singleton;
-
-	GradientShader2* _gradient_renderer;
-	PlainShader2* _plain_renderer;
-	PlainShader3* _plain_renderer3;
-	TextureShader2* _texture_renderer;
-	TextureShader3* _texture_renderer3;
-	OpaqueTextureShader2* _opaque_texture_renderer;
-	AlphaTextureShader2* _alpha_texture_renderer;
-
-	renderers();
 };
 
 

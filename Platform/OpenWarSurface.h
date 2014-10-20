@@ -44,7 +44,7 @@ public:
 	BattleLayer* _battleLayer;
 
 public:
-	OpenWarSurface(glm::vec2 size, float pixelDensity);
+	OpenWarSurface(GraphicsContext* gc, glm::vec2 size);
 	virtual ~OpenWarSurface();
 
 	BattleLayer* GetBattleLayer() const { return _battleLayer; }

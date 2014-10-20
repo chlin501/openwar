@@ -2,9 +2,6 @@
 #include "GraphicsContext.h"
 
 
-renderers* renderers::singleton = nullptr;
-
-
 GradientShader2::GradientShader2(GraphicsContext* gc) : ShaderProgram2<glm::vec2, glm::vec4>(
 	"position", "color",
 	VERTEX_SHADER
@@ -242,17 +239,4 @@ AlphaTextureShader2::AlphaTextureShader2(GraphicsContext* gc) : ShaderProgram2<g
 {
 	_blend_sfactor = GL_ONE;
 	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
-}
-
-
-
-renderers::renderers()
-{
-	_gradient_renderer = new GradientShader2(nullptr);
-	_plain_renderer = new PlainShader2(nullptr);
-	_plain_renderer3 = new PlainShader3(nullptr);
-	_texture_renderer = new TextureShader2(nullptr);
-	_texture_renderer3 = new TextureShader3(nullptr);
-	_opaque_texture_renderer = new OpaqueTextureShader2(nullptr);
-	_alpha_texture_renderer = new AlphaTextureShader2(nullptr);
 }

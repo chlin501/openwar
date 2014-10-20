@@ -5,6 +5,8 @@
 #ifndef TiledTerrainSurface_H
 #define TiledTerrainSurface_H
 
+class GraphicsContext;
+
 #include <map>
 #include "BattleModel/TiledGroundMap.h"
 #include "Algebra/bounds.h"
@@ -15,13 +17,12 @@
 
 class TiledTerrainRenderer
 {
-
-private:
+	GraphicsContext* _gc;
 	TiledGroundMap* _tiledGroundMap;
 	std::map<std::string, texture*> _textures;
 
 public:
-	TiledTerrainRenderer(TiledGroundMap* tiledGroundMap);
+	TiledTerrainRenderer(GraphicsContext* gc, TiledGroundMap* tiledGroundMap);
 	~TiledTerrainRenderer();
 
 	void Render(const glm::mat4x4& transform, const glm::vec3& lightNormal);

@@ -22,9 +22,6 @@ class SmoothTerrainSky;
 class BattleLayer : public Container, EditorModelObserver
 {
 protected:
-	renderers* _renderers;
-
-protected:
 	bool _playing;
 	bool _editing;
 
@@ -39,7 +36,7 @@ protected:
 	EditorModel* _editorModel;
 
 public:
-	BattleLayer();
+	BattleLayer(GraphicsContext* gc);
 	~BattleLayer();
 
 	BattleScenario* GetScenario() const { return _scenario; }

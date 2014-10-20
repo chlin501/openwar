@@ -15,19 +15,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-BattleLayer::BattleLayer() :
-_renderers(nullptr),
+BattleLayer::BattleLayer(GraphicsContext* gc) :
 _playing(false),
 _editing(false),
 _scenario(nullptr),
 _editorGesture(nullptr),
 _editorModel(nullptr)
 {
-	if (renderers::singleton == nullptr)
-		renderers::singleton = new renderers();
-
-	_renderers = renderers::singleton;
-
 	SoundPlayer::Initialize();
 	SoundPlayer::singleton->Pause();
 }
@@ -178,7 +172,7 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 {
 	BattleSimulator* simulator = _scenario->GetSimulator();
 
-	BattleView* battleView = new BattleView(GetSurface()->GetGraphicsContext(), _renderers);
+	BattleView* battleView = new BattleView(GetSurface()->GetGraphicsContext());
 	battleView->SetContainer(this);
 
 	_battleViews.push_back(battleView);
