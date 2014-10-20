@@ -39,16 +39,16 @@ private:
 template <class _Vertex>
 class VertexBuffer : public VertexBufferBase
 {
-public:
 	friend class VertexGlyph<_Vertex>;
-	typedef _Vertex VertexType;
+
+public:
+	typedef _Vertex VertexT;
 
 private:
-	std::vector<VertexGlyph<VertexType>*> _glyphs;
+	std::vector<VertexGlyph<VertexT>*> _glyphs;
 
 public:
-
-	std::vector<VertexType> _vertices;
+	std::vector<VertexT> _vertices;
 
 	VertexBuffer()
 	{
@@ -66,12 +66,12 @@ public:
 
 	void ClearGlyphs()
 	{
-		for (VertexGlyph<VertexType>* glyph : _glyphs)
+		for (VertexGlyph<VertexT>* glyph : _glyphs)
 			glyph->_vertexBuffer = nullptr;
 		_glyphs.clear();
 	}
 
-	void AddGlyph(VertexGlyph<VertexType>* glyph)
+	void AddGlyph(VertexGlyph<VertexT>* glyph)
 	{
 		if (glyph->_vertexBuffer != nullptr)
 			glyph->_vertexBuffer->RemoveGlyph(glyph);
@@ -79,7 +79,7 @@ public:
 		_glyphs.push_back(glyph);
 	}
 
-	void RemoveGlyph(VertexGlyph<VertexType>* glyph)
+	void RemoveGlyph(VertexGlyph<VertexT>* glyph)
 	{
 		glyph->_vertexBuffer = nullptr;
 		_glyphs.erase(
@@ -87,7 +87,7 @@ public:
 			_glyphs.end());
 	}
 
-	void AddVertex(const VertexType& vertex)
+	void AddVertex(const VertexT& vertex)
 	{
 		_vertices.push_back(vertex);
 	}
@@ -102,7 +102,7 @@ public:
 				return;
 		}
 
-		GLsizeiptr size = sizeof(VertexType) * _vertices.size();
+		GLsizeiptr size = sizeof(VertexT) * _vertices.size();
 		const GLvoid* data = _vertices.data();
 
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
@@ -116,10 +116,10 @@ public:
 	}
 
 
-	VertexBuffer<VertexType>& UpdateVBOFromGlyphs()
+	VertexBuffer<VertexT>& UpdateVBOFromGlyphs()
 	{
 		_vertices.clear();
-		for (VertexGlyph<VertexType>* glyph : _glyphs)
+		for (VertexGlyph<VertexT>* glyph : _glyphs)
 		{
 			if (glyph->_rebuild)
 				glyph->_rebuild(_vertices);

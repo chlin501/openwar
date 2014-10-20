@@ -2,6 +2,7 @@
 #define CommonShaders_H
 
 #include "ShaderProgram.h"
+#include "RenderCall.h"
 
 class GraphicsContext;
 

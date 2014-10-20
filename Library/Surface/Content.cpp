@@ -451,11 +451,10 @@ void Content::RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4
 	vertices.AddVertex(Vertex_2f(bounds.p22()));
 
 	GraphicsContext* gc = GetSurface()->GetGraphicsContext();
-	PlainShader2* plain_renderer = gc->GetShaderProgram<PlainShader2>();
-
-	plain_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
-	plain_renderer->get_uniform<glm::vec4>("color").set_value(color);
-	plain_renderer->render(vertices);
+	PlainShader2* shader = gc->GetShaderProgram<PlainShader2>();
+	shader->get_uniform<glm::mat4>("transform").set_value(transform);
+	shader->get_uniform<glm::vec4>("color").set_value(color);
+	shader->render(vertices);
 }
 
 
@@ -469,9 +468,8 @@ void Content::RenderOutline(const glm::mat4& transform, bounds2f bounds, glm::ve
 	vertices.AddVertex(Vertex_2f(bounds.p21()));
 
 	GraphicsContext* gc = GetSurface()->GetGraphicsContext();
-	PlainShader2* plain_renderer = gc->GetShaderProgram<PlainShader2>();
-
-	plain_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
-	plain_renderer->get_uniform<glm::vec4>("color").set_value(color);
-	plain_renderer->render(vertices);
+	PlainShader2* shader = gc->GetShaderProgram<PlainShader2>();
+	shader->get_uniform<glm::mat4>("transform").set_value(transform);
+	shader->get_uniform<glm::vec4>("color").set_value(color);
+	shader->render(vertices);
 }

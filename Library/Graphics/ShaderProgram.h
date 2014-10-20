@@ -217,19 +217,19 @@ template <class _Vertex>
 class ShaderProgram : public ShaderProgramBase
 {
 public:
-	typedef _Vertex vertex_type;
+	typedef _Vertex VertexT;
 
 	ShaderProgram(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader) :
 	ShaderProgramBase(attrs, vertexshader, fragmentshader)
 	{
 	}
 
-	void render(VertexBuffer<vertex_type>& vertices)
+	void render(VertexBuffer<VertexT>& vertices)
 	{
 		render(vertices._mode, vertices);
 	}
 
-	void render(GLenum mode, VertexBuffer<vertex_type>& vertices)
+	void render(GLenum mode, VertexBuffer<VertexT>& vertices)
 	{
 		if (vertices.count() == 0)
 			return;

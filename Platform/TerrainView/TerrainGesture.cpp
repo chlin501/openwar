@@ -77,12 +77,12 @@ void TerrainGesture::RenderHints()
 	glLineWidth(2);
 
 	GraphicsContext* gc = _terrainView->GetSurface()->GetGraphicsContext();
-	PlainShader2* _plain_renderer = gc->GetShaderProgram<PlainShader2>();
+	PlainShader2* shader = gc->GetShaderProgram<PlainShader2>();
 
-	_plain_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(_terrainView->GetFrame()));
-	_plain_renderer->get_uniform<float>("point_size").set_value(1);
-	_plain_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 1));
-	_plain_renderer->render(vertices);
+	shader->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(_terrainView->GetFrame()));
+	shader->get_uniform<float>("point_size").set_value(1);
+	shader->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 1));
+	shader->render(vertices);
 
 	glLineWidth(1);
 }
