@@ -6,39 +6,12 @@
 class GraphicsContext;
 
 
-class DistanceShader2
-{
-public:
-	ShaderProgram2<glm::vec2, glm::vec2>* _shaderprogram;
-public:
-	DistanceShader2(GraphicsContext* gc);
-};
-
-
 class GradientShader2
 {
 public:
 	ShaderProgram2<glm::vec2, glm::vec4>* _shaderprogram;
 public:
 	GradientShader2(GraphicsContext* gc);
-};
-
-
-class GradientShader3
-{
-public:
-	ShaderProgram2<glm::vec3, glm::vec4>* _shaderprogram;
-public:
-	GradientShader3(GraphicsContext* gc);
-};
-
-
-class GroundShader2
-{
-public:
-	ShaderProgram2<glm::vec2, glm::vec2>* _shaderprogram;
-public:
-	GroundShader2(GraphicsContext* gc);
 };
 
 
@@ -101,10 +74,7 @@ struct renderers
 {
 	static renderers* singleton;
 
-	DistanceShader2* _distance_renderer;
 	GradientShader2* _gradient_renderer;
-	GradientShader3* _gradient_renderer3;
-	GroundShader2* _ground_renderer;
 	PlainShader2* _plain_renderer;
 	PlainShader3* _plain_renderer3;
 	TextureShader2* _texture_renderer;
