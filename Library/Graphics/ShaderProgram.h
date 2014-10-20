@@ -205,6 +205,10 @@ public:
 
 		return shader_uniform<T>(_program, location, texture);
 	}
+
+protected:
+	ShaderProgramBase(const ShaderProgramBase&) { }
+	ShaderProgramBase& operator=(const ShaderProgramBase&) { return *this; }
 };
 
 
@@ -256,6 +260,10 @@ public:
 
 		vertices.unbind(_vertex_attributes);
 	}
+
+private:
+	ShaderProgram(const ShaderProgram& _) : ShaderProgramBase(_) { }
+	ShaderProgram& operator=(const ShaderProgram&) { return *this; }
 };
 
 inline std::vector<const char*> makelist(const char* a1)

@@ -1,4 +1,4 @@
-#include "stringshape.h"
+#include "StringShapeX.h"
 #include "Image.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <codecvt>
@@ -143,11 +143,11 @@ static NSString* ReorderToDisplayDirection(NSString* string)
 
 
 
-Image* stringfont::_image = nullptr;
+Image* StringFont::_image = nullptr;
 
 
 
-stringfont::stringfont(const char* name, float size, float pixelDensity) :
+StringFont::StringFont(const char* name, float size, float pixelDensity) :
 #ifdef OPENWAR_USE_SDL
 _font1(nullptr),
 _font2(nullptr),
@@ -205,7 +205,7 @@ _dirty(false)
 
 
 
-stringfont::stringfont(bool bold, float size, float pixelDensity) :
+StringFont::StringFont(bool bold, float size, float pixelDensity) :
 #ifdef OPENWAR_USE_SDL
 _font1(nullptr),
 _font2(nullptr),
@@ -269,7 +269,7 @@ _dirty(false)
 
 
 
-stringfont::~stringfont()
+StringFont::~StringFont()
 {
 #ifdef OPENWAR_USE_SDL
 	if (_font1 != nullptr)
@@ -293,7 +293,7 @@ stringfont::~stringfont()
 
 
 
-void stringfont::initialize()
+void StringFont::initialize()
 {
 	if (_image == nullptr)
 		_image = new Image(1024, 512);
@@ -342,7 +342,7 @@ void stringfont::initialize()
 
 
 
-float stringfont::font_size() const
+float StringFont::font_size() const
 {
 #ifdef OPENWAR_USE_SDL
 
@@ -357,13 +357,13 @@ float stringfont::font_size() const
 
 
 
-float stringfont::shadow_offset() const
+float StringFont::shadow_offset() const
 {
 	return 1 / _pixelDensity;
 }
 
 
-stringfont::font_ptr stringfont::get_font_ptr() const
+StringFont::font_ptr StringFont::get_font_ptr() const
 {
 #ifdef OPENWAR_USE_SDL
 	return _font2;
@@ -373,7 +373,7 @@ stringfont::font_ptr stringfont::get_font_ptr() const
 }
 
 
-stringfont::font_ptr stringfont::get_font_ptr(wchar_t wc) const
+StringFont::font_ptr StringFont::get_font_ptr(wchar_t wc) const
 {
 #ifdef OPENWAR_USE_SDL
 	if (_emoji != nullptr && TTF_GlyphIsProvided(_emoji, wc))
@@ -387,7 +387,7 @@ stringfont::font_ptr stringfont::get_font_ptr(wchar_t wc) const
 }
 
 
-stringfont::item stringfont::add_character(font_ptr font, const std::string& character)
+StringFont::item StringFont::add_character(font_ptr font, const std::string& character)
 {
 	auto i = _items.find(character);
 	if (i != _items.end())
@@ -462,7 +462,7 @@ stringfont::item stringfont::add_character(font_ptr font, const std::string& cha
 }
 
 
-void stringfont::update_texture()
+void StringFont::update_texture()
 {
 	if (!_dirty)
 		return;
@@ -544,7 +544,7 @@ void stringfont::update_texture()
 
 
 
-glm::vec2 stringfont::measure(const char* text)
+glm::vec2 StringFont::measure(const char* text)
 {
 	float w = 0;
 	float h = 0;
@@ -554,7 +554,7 @@ glm::vec2 stringfont::measure(const char* text)
 
 	if (ContainsArabic(ws))
 	{
-		stringfont::item item = add_character(get_font_ptr(), text);
+		StringFont::item item = add_character(get_font_ptr(), text);
 		glm::vec2 size = get_size(item);
 		w = size.x;
 		h = size.y;
@@ -570,7 +570,7 @@ glm::vec2 stringfont::measure(const char* text)
 			if (character.empty())
 				continue;
 
-			stringfont::item item = add_character(get_font_ptr(wc), character);
+			StringFont::item item = add_character(get_font_ptr(wc), character);
 			glm::vec2 size = get_size(item);
 			w += size.x;
 			h = fmaxf(h, size.y);
@@ -582,7 +582,7 @@ glm::vec2 stringfont::measure(const char* text)
 
 
 
-glm::vec2 stringfont::get_size(const item& item) const
+glm::vec2 StringFont::get_size(const item& item) const
 {
 	return glm::vec2(item._bounds_size.x, item._bounds_size.y) / _pixelDensity;
 
@@ -596,7 +596,7 @@ glm::vec2 stringfont::get_size(const item& item) const
 
 
 
-stringglyph::stringglyph() :
+StringGlyph::StringGlyph() :
 _string(),
 _transform(),
 _alpha(1),
@@ -605,7 +605,7 @@ _delta(0)
 }
 
 
-stringglyph::stringglyph(const char* string, glm::vec2 translate, float alpha, float delta) :
+StringGlyph::StringGlyph(const char* string, glm::vec2 translate, float alpha, float delta) :
 _string(string),
 _transform(glm::translate(glm::mat4(), glm::vec3(translate, 0))),
 _alpha(alpha),
@@ -614,7 +614,7 @@ _delta(delta)
 }
 
 
-stringglyph::stringglyph(const char* string, glm::mat4x4 transform, float alpha, float delta) :
+StringGlyph::StringGlyph(const char* string, glm::mat4x4 transform, float alpha, float delta) :
 _string(string),
 _transform(transform),
 _alpha(alpha),
@@ -623,7 +623,7 @@ _delta(delta)
 }
 
 
-VertexGlyph<Vertex_2f_2f_1f>* stringglyph::GetGlyph(stringfont* font)
+VertexGlyph<Vertex_2f_2f_1f>* StringGlyph::GetGlyph(StringFont* font)
 {
 	_glyph._rebuild = [this, font](std::vector<Vertex_2f_2f_1f>& vertices) {
 		generate(font, vertices);
@@ -632,7 +632,7 @@ VertexGlyph<Vertex_2f_2f_1f>* stringglyph::GetGlyph(stringfont* font)
 }
 
 
-void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_type>& vertices)
+void StringGlyph::generate(StringFont* font, std::vector<StringGlyph::vertex_type>& vertices)
 {
 #if ENABLE_BIDIRECTIONAL_TEXT
     string = ReorderToDisplayDirection(string);
@@ -646,7 +646,7 @@ void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_typ
 
 	if (ContainsArabic(ws))
 	{
-		stringfont::item item = font->add_character(font->get_font_ptr(), _string.c_str());
+		StringFont::item item = font->add_character(font->get_font_ptr(), _string.c_str());
 
 		glm::vec2 s = font->get_size(item);
 		bounds2f bounds = bounds2_from_corner(p, s);
@@ -655,13 +655,13 @@ void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_typ
 
 		float next_alpha = alpha + _delta * s.x;
 
-		vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
-		vertices.push_back(stringglyph::vertex_type(bounds.p12(), glm::vec2(item._u0, item._v1), alpha));
-		vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
+		vertices.push_back(StringGlyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+		vertices.push_back(StringGlyph::vertex_type(bounds.p12(), glm::vec2(item._u0, item._v1), alpha));
+		vertices.push_back(StringGlyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
 
-		vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
-		vertices.push_back(stringglyph::vertex_type(bounds.p21(), glm::vec2(item._u1, item._v0), next_alpha));
-		vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+		vertices.push_back(StringGlyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
+		vertices.push_back(StringGlyph::vertex_type(bounds.p21(), glm::vec2(item._u1, item._v0), next_alpha));
+		vertices.push_back(StringGlyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
 	}
 	else
 	{
@@ -674,7 +674,7 @@ void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_typ
 			if (character.empty())
 				continue;
 
-			stringfont::item item = font->add_character(font->get_font_ptr(wc), character);
+			StringFont::item item = font->add_character(font->get_font_ptr(wc), character);
 
 			glm::vec2 s = font->get_size(item);
 			bounds2f bounds = bounds2_from_corner(p, s);
@@ -683,13 +683,13 @@ void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_typ
 
 			float next_alpha = alpha + _delta * s.x;
 
-			vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
-			vertices.push_back(stringglyph::vertex_type(bounds.p12(), glm::vec2(item._u0, item._v1), alpha));
-			vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
+			vertices.push_back(StringGlyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+			vertices.push_back(StringGlyph::vertex_type(bounds.p12(), glm::vec2(item._u0, item._v1), alpha));
+			vertices.push_back(StringGlyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
 
-			vertices.push_back(stringglyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
-			vertices.push_back(stringglyph::vertex_type(bounds.p21(), glm::vec2(item._u1, item._v0), next_alpha));
-			vertices.push_back(stringglyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+			vertices.push_back(StringGlyph::vertex_type(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
+			vertices.push_back(StringGlyph::vertex_type(bounds.p21(), glm::vec2(item._u1, item._v0), next_alpha));
+			vertices.push_back(StringGlyph::vertex_type(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
 
 			if (next_alpha < 0)
 				break;
@@ -705,16 +705,16 @@ void stringglyph::generate(stringfont* font, std::vector<stringglyph::vertex_typ
 
 
 
-stringshape::stringshape(stringfont* font) : _font(font)
+StringShapeX::StringShapeX(StringFont* font) : _font(font)
 {
 	_vertices._mode = GL_TRIANGLES;
 }
 
 
 
-void stringshape::clear()
+void StringShapeX::clear()
 {
-	for (stringglyph* g : _stringglyphs)
+	for (StringGlyph* g : _stringglyphs)
 		delete g;
 	_stringglyphs.clear();
 
@@ -724,9 +724,9 @@ void stringshape::clear()
 
 
 
-void stringshape::add(const char* s, glm::mat4x4 transform, float alpha, float delta)
+void StringShapeX::add(const char* s, glm::mat4x4 transform, float alpha, float delta)
 {
-	stringglyph* g = new stringglyph(s, transform, alpha, delta);
+	StringGlyph* g = new StringGlyph(s, transform, alpha, delta);
 	_stringglyphs.push_back(g);
 
 	VertexGlyph<Vertex_2f_2f_1f> glyph([this, g](std::vector<Vertex_2f_2f_1f>& vertices) {
@@ -737,7 +737,7 @@ void stringshape::add(const char* s, glm::mat4x4 transform, float alpha, float d
 }
 
 
-void stringshape::update(GLenum usage)
+void StringShapeX::update(GLenum usage)
 {
 	_font->update_texture();
 	_vertices.UpdateVBOFromGlyphs();

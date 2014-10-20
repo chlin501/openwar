@@ -73,6 +73,10 @@ public:
 		_shaderprograms[id] = result;
 		return result;
 	}
+
+private:
+	GraphicsContext(const GraphicsContext&) { }
+	GraphicsContext& operator=(const GraphicsContext&) { return *this; }
 };
 
 

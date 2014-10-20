@@ -44,7 +44,7 @@ public:
 	}
 
 private:
-	VertexGlyph(const VertexGlyph<VertexType>& x) : VertexGlyphBase(x) { }
+	VertexGlyph(const VertexGlyph<VertexType>& _) : VertexGlyphBase(_) { }
 	VertexGlyph<VertexType>& operator=(VertexGlyph<VertexType>&) { return *this; }
 };
 

@@ -27,9 +27,10 @@
 #include "Algebra/bounds.h"
 #include "ShaderProgram.h"
 #include "texture.h"
+#include "Shape.h"
 
 
-struct stringfont
+struct StringFont
 {
 	typedef Vertex_2f_2f_1f vertex_type;
 
@@ -76,9 +77,9 @@ struct stringfont
 	bool _dirty;
 
 public:
-	stringfont(const char* name, float size, float pixelDensity);
-	stringfont(bool bold, float size, float pixelDensity);
-	~stringfont();
+	StringFont(const char* name, float size, float pixelDensity);
+	StringFont(bool bold, float size, float pixelDensity);
+	~StringFont();
 
 private:
 	void initialize();
@@ -96,10 +97,14 @@ public:
 
 	glm::vec2 measure(const char* text);
 	glm::vec2 get_size(const item& item) const;
+
+private:
+	StringFont(const StringFont&) { }
+	StringFont& operator=(const StringFont&) { return *this; }
 };
 
 
-class stringglyph
+class StringGlyph
 {
 	VertexGlyph<Vertex_2f_2f_1f> _glyph;
 	std::string _string;
@@ -110,9 +115,9 @@ class stringglyph
 public:
 	typedef Vertex_2f_2f_1f vertex_type;
 
-	stringglyph();
-	stringglyph(const char* string, glm::vec2 translate, float alpha = 1, float delta = 0);
-	stringglyph(const char* string, glm::mat4x4 transform, float alpha = 1, float delta = 0);
+	StringGlyph();
+	StringGlyph(const char* string, glm::vec2 translate, float alpha = 1, float delta = 0);
+	StringGlyph(const char* string, glm::mat4x4 transform, float alpha = 1, float delta = 0);
 
 	const char* get_string() const { return _string.c_str(); }
 	void set_string(const char* value) { _string = value; }
@@ -127,27 +132,34 @@ public:
 	const float get_delta() const { return _delta; }
 	void set_delta(float value) { _delta = value; }
 
-	VertexGlyph<Vertex_2f_2f_1f>* GetGlyph(stringfont* font);
+	VertexGlyph<Vertex_2f_2f_1f>* GetGlyph(StringFont* font);
 
-	void generate(stringfont* font, std::vector<vertex_type>& vertices);
+	void generate(StringFont* font, std::vector<vertex_type>& vertices);
+
+private:
+	StringGlyph(const StringGlyph&) { }
+	StringGlyph& operator=(const StringGlyph&) { return *this; }
 };
 
 
-
-class stringshape
+class StringShapeX : public Shape
 {
-	std::vector<stringglyph*> _stringglyphs;
+	std::vector<StringGlyph*> _stringglyphs;
 
 public:
 	VertexBuffer_2f_2f_1f _vertices;
-	stringfont* _font;
+	StringFont* _font;
 
-	stringshape(stringfont* font);
+	explicit StringShapeX(StringFont* font);
 
 	void clear();
 	void add(const char* string, glm::mat4x4 transform, float alpha = 1, float delta = 0);
 
 	void update(GLenum usage);
+
+private:
+	StringShapeX(const StringShapeX& _) : Shape(_) { }
+	StringShapeX& operator=(const StringShapeX&) { return *this; }
 };
 
 

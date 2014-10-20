@@ -32,7 +32,7 @@ struct FrameBuffer
 
 private:
 	FrameBuffer(const FrameBuffer&) {}
-	FrameBuffer& operator = (const FrameBuffer&) {return *this;}
+	FrameBuffer& operator=(const FrameBuffer&) { return *this; }
 };
 
 
