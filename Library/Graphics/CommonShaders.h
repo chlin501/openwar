@@ -6,64 +6,50 @@
 class GraphicsContext;
 
 
-class GradientShader2
+class GradientShader2 : public ShaderProgram2<glm::vec2, glm::vec4>
 {
-public:
-	ShaderProgram2<glm::vec2, glm::vec4>* _shaderprogram;
 public:
 	GradientShader2(GraphicsContext* gc);
 };
 
 
-class PlainShader2
+class PlainShader2 : public ShaderProgram1<glm::vec2>
 {
-public:
-	ShaderProgram1<glm::vec2>* _shaderprogram;
 public:
 	PlainShader2(GraphicsContext* gc);
 };
 
 
-class PlainShader3
+class PlainShader3 : public ShaderProgram1<glm::vec3>
 {
-public:
-	ShaderProgram1<glm::vec3>* _shaderprogram;
 public:
 	PlainShader3(GraphicsContext* gc);
 };
 
 
-class TextureShader2
+class TextureShader2 : public ShaderProgram2<glm::vec2, glm::vec2>
 {
-public:
-	ShaderProgram2<glm::vec2, glm::vec2>* _shaderprogram;
 public:
 	TextureShader2(GraphicsContext* gc);
 };
 
 
-class TextureShader3
+class TextureShader3 : public ShaderProgram2<glm::vec3, glm::vec2>
 {
-public:
-	ShaderProgram2<glm::vec3, glm::vec2>* _shaderprogram;
 public:
 	TextureShader3(GraphicsContext* gc);
 };
 
 
-class OpaqueTextureShader2
+class OpaqueTextureShader2 : public ShaderProgram2<glm::vec2, glm::vec2>
 {
-public:
-	ShaderProgram2<glm::vec2, glm::vec2>* _shaderprogram;
 public:
 	OpaqueTextureShader2(GraphicsContext* gc);
 };
 
 
-class AlphaTextureShader2
+class AlphaTextureShader2 : public ShaderProgram2<glm::vec2, glm::vec2>
 {
-public:
-	ShaderProgram2<glm::vec2, glm::vec2>* _shaderprogram;
 public:
 	AlphaTextureShader2(GraphicsContext* gc);
 };

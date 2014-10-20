@@ -51,9 +51,9 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, renderers* _renderers,
 	if (flip)
 		t = glm::scale(t, glm::vec3(-1.0f, -1.0f, 1.0f));
 
-	_renderers->_gradient_renderer->_shaderprogram->get_uniform<glm::mat4>("transform").set_value(t);
-	_renderers->_gradient_renderer->_shaderprogram->get_uniform<float>("pixel_size").set_value(1);
-	_renderers->_gradient_renderer->_shaderprogram->render(vertices);
+	_renderers->_gradient_renderer->get_uniform<glm::mat4>("transform").set_value(t);
+	_renderers->_gradient_renderer->get_uniform<float>("pixel_size").set_value(1);
+	_renderers->_gradient_renderer->render(vertices);
 }
 
 
@@ -81,7 +81,7 @@ void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, rendere
 	vertices.AddVertex(Vertex_2f_2f(glm::vec2(x1, y0), glm::vec2(vt1.x, vt0.y)));
 	vertices.AddVertex(Vertex_2f_2f(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
 
-	_renderers->_texture_renderer->_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
-	_renderers->_texture_renderer->_shaderprogram->get_uniform<const texture*>("texture").set_value(_textureBackgroundLinen);
-	_renderers->_texture_renderer->_shaderprogram->render(vertices);
+	_renderers->_texture_renderer->get_uniform<glm::mat4>("transform").set_value(transform);
+	_renderers->_texture_renderer->get_uniform<const texture*>("texture").set_value(_textureBackgroundLinen);
+	_renderers->_texture_renderer->render(vertices);
 }

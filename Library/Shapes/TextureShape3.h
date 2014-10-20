@@ -9,10 +9,8 @@
 #include "ShaderProgram.h"
 
 
-class TextureShader
+class TextureShader : public ShaderProgram2<glm::vec3, glm::vec2>
 {
-	ShaderProgram<Vertex_3f_2f>* _shaderprogram;
-
 public:
 	TextureShader(GraphicsContext* gc);
 

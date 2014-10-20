@@ -42,11 +42,8 @@ struct BillboardModel
 };
 
 
-class TextureBillboardShader
+class TextureBillboardShader : public ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2>
 {
-	friend class TextureBillboardRenderer;
-	ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2>* _shaderprogram;
-
 public:
 	TextureBillboardShader(GraphicsContext* gc);
 };

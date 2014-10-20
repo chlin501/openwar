@@ -9,10 +9,8 @@
 #include "ShaderProgram.h"
 
 
-class ColorBillboardShader
+class ColorBillboardShader : public ShaderProgram3<glm::vec3, glm::vec4, float>
 {
-	ShaderProgram3<glm::vec3, glm::vec4, float>* _shaderprogram;
-
 public:
 	ColorBillboardShader(GraphicsContext* gc);
 

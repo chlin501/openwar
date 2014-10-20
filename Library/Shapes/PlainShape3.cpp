@@ -6,64 +6,58 @@
 
 
 
-PlainShader::PlainShader(GraphicsContext* gc)
+PlainShader::PlainShader(GraphicsContext* gc) : ShaderProgram1<glm::vec3>(
+	"position",
+	VERTEX_SHADER
+	({
+		attribute
+		vec3 position;
+		uniform
+		mat4 transform;
+		uniform float point_size;
+
+		void main()
+		{
+			vec4 p = transform * vec4(position, 1);
+
+			gl_Position = p;
+			gl_PointSize = point_size;
+		}
+	}),
+	FRAGMENT_SHADER
+	({
+		uniform
+		vec4 color;
+
+		void main()
+		{
+			gl_FragColor = color;
+		}
+	}))
 {
-	static int shaderprogram_id = GraphicsContext::generate_shaderprogram_id();
-
-	_shaderprogram = gc->LoadShaderProgram1<glm::vec3>(
-		shaderprogram_id,
-		"position",
-		VERTEX_SHADER
-		({
-			attribute
-			vec3 position;
-			uniform
-			mat4 transform;
-			uniform float point_size;
-
-			void main()
-			{
-				vec4 p = transform * vec4(position, 1);
-
-				gl_Position = p;
-				gl_PointSize = point_size;
-			}
-		}),
-		FRAGMENT_SHADER
-		({
-			uniform
-			vec4 color;
-
-			void main()
-			{
-				gl_FragColor = color;
-			}
-		})
-	);
-	_shaderprogram->_blend_sfactor = GL_SRC_ALPHA;
-	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
-
+	_blend_sfactor = GL_SRC_ALPHA;
+	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }
 
 
 void PlainShader::SetTransform(const glm::mat4x4& value)
 {
-	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(value);
+	get_uniform<glm::mat4>("transform").set_value(value);
 
 }
 
 
 void PlainShader::SetColor(const glm::vec4& value)
 {
-	_shaderprogram->get_uniform<glm::vec4>("color").set_value(value);
+	get_uniform<glm::vec4>("color").set_value(value);
 }
 
 
 void PlainShader::Render(VertexBuffer_3f* vertices)
 {
 	glLineWidth(1);
-	_shaderprogram->get_uniform<float>("point_size").set_value(1);
-	_shaderprogram->render(*vertices);
+	get_uniform<float>("point_size").set_value(1);
+	render(*vertices);
 }
 
 

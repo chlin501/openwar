@@ -9,10 +9,8 @@
 #include "ShaderProgram.h"
 
 
-class PlainShader
+class PlainShader : public ShaderProgram1<glm::vec3>
 {
-	ShaderProgram1<glm::vec3>* _shaderprogram;
-
 public:
 	PlainShader(GraphicsContext* gc);
 	void SetTransform(const glm::mat4x4& value);

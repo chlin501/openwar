@@ -9,10 +9,8 @@
 #include "ShaderProgram.h"
 
 
-class GradientShader
+class GradientShader : public ShaderProgram2<glm::vec3, glm::vec4>
 {
-	ShaderProgram2<glm::vec3, glm::vec4>* _shaderprogram;
-
 public:
 	GradientShader(GraphicsContext* gc);
 

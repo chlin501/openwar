@@ -6,66 +6,62 @@
 #include "TextureBillboardRenderer.h"
 
 
-TextureBillboardShader::TextureBillboardShader(GraphicsContext* gc)
+TextureBillboardShader::TextureBillboardShader(GraphicsContext* gc) : ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2>(
+	"position", "height", "texcoord", "texsize",
+	VERTEX_SHADER
+	({
+		uniform
+		mat4 transform;
+		uniform
+		vec3 upvector;
+		uniform float viewport_height;
+		uniform float min_point_size;
+		uniform float max_point_size;
+		attribute
+		vec3 position;
+		attribute float height;
+		attribute
+		vec2 texcoord;
+		attribute
+		vec2 texsize;
+		varying
+		vec2 _texcoord;
+		varying
+		vec2 _texsize;
+
+		void main()
+		{
+			vec3 position2 = position + height * 0.5 * viewport_height * upvector;
+			vec4 p = transform * vec4(position, 1);
+			vec4 q = transform * vec4(position2, 1);
+			float s = clamp(abs(q.y / q.w - p.y / p.w), min_point_size, max_point_size);
+
+			_texcoord = texcoord;
+			_texsize = texsize;
+
+			gl_Position = p;
+			gl_PointSize = s;
+		}
+	}),
+	FRAGMENT_SHADER
+	({
+		uniform
+		sampler2D texture;
+		varying
+		vec2 _texcoord;
+		varying
+		vec2 _texsize;
+
+		void main()
+		{
+			vec4 color = texture2D(texture, _texcoord + gl_PointCoord * _texsize);
+
+			gl_FragColor = color;
+		}
+	}))
 {
-	static int shaderprogram_id = GraphicsContext::generate_shaderprogram_id();
-
-	_shaderprogram = gc->LoadShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2>(
-		shaderprogram_id,
-		"position", "height", "texcoord", "texsize",
-		VERTEX_SHADER
-		({
-			uniform
-			mat4 transform;
-			uniform
-			vec3 upvector;
-			uniform float viewport_height;
-			uniform float min_point_size;
-			uniform float max_point_size;
-			attribute
-			vec3 position;
-			attribute float height;
-			attribute
-			vec2 texcoord;
-			attribute
-			vec2 texsize;
-			varying
-			vec2 _texcoord;
-			varying
-			vec2 _texsize;
-
-			void main()
-			{
-				vec3 position2 = position + height * 0.5 * viewport_height * upvector;
-				vec4 p = transform * vec4(position, 1);
-				vec4 q = transform * vec4(position2, 1);
-				float s = clamp(abs(q.y / q.w - p.y / p.w), min_point_size, max_point_size);
-
-				_texcoord = texcoord;
-				_texsize = texsize;
-
-				gl_Position = p;
-				gl_PointSize = s;
-			}
-		}),
-		FRAGMENT_SHADER
-		({
-			uniform
-			sampler2D texture;
-			varying
-			vec2 _texcoord;
-			varying
-			vec2 _texsize;
-
-			void main()
-			{
-				vec4 color = texture2D(texture, _texcoord + gl_PointCoord * _texsize);
-
-				gl_FragColor = color;
-			}
-		}));
-	_shaderprogram->_blend_sfactor = GL_ONE;
-	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_blend_sfactor = GL_ONE;
+	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }
 
 
@@ -138,13 +134,13 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 
 	_vertices.UpdateVBO(GL_STATIC_DRAW);
 
-	_shader->_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
-	_shader->_shaderprogram->get_uniform<const texture*>("texture").set_value(tex);
-	_shader->_shaderprogram->get_uniform<glm::vec3>("upvector").set_value(cameraUp);
-	_shader->_shaderprogram->get_uniform<float>("viewport_height").set_value(ShaderProgramBase::pixels_per_point() * viewportHeight);
-	_shader->_shaderprogram->get_uniform<float>("min_point_size").set_value(sizeLimit.min);
-	_shader->_shaderprogram->get_uniform<float>("max_point_size").set_value(sizeLimit.max);
-	_shader->_shaderprogram->render(_vertices);
+	_shader->get_uniform<glm::mat4>("transform").set_value(transform);
+	_shader->get_uniform<const texture*>("texture").set_value(tex);
+	_shader->get_uniform<glm::vec3>("upvector").set_value(cameraUp);
+	_shader->get_uniform<float>("viewport_height").set_value(ShaderProgramBase::pixels_per_point() * viewportHeight);
+	_shader->get_uniform<float>("min_point_size").set_value(sizeLimit.min);
+	_shader->get_uniform<float>("max_point_size").set_value(sizeLimit.max);
+	_shader->render(_vertices);
 }
 
 

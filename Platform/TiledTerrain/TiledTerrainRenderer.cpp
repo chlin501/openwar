@@ -104,8 +104,8 @@ void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3&
 
 			_vertices.UpdateVBO(GL_STATIC_DRAW);
 
-			renderers::singleton->_texture_renderer3->_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
-			renderers::singleton->_texture_renderer3->_shaderprogram->get_uniform<const texture*>("texture").set_value(_textures[tile->texture]);
-			renderers::singleton->_texture_renderer3->_shaderprogram->render(_vertices);
+			renderers::singleton->_texture_renderer3->get_uniform<glm::mat4>("transform").set_value(transform);
+			renderers::singleton->_texture_renderer3->get_uniform<const texture*>("texture").set_value(_textures[tile->texture]);
+			renderers::singleton->_texture_renderer3->render(_vertices);
 		}
 }

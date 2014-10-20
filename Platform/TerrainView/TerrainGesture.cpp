@@ -75,10 +75,10 @@ void TerrainGesture::RenderHints()
 
 	glLineWidth(2);
 
-	renderers::singleton->_plain_renderer->_shaderprogram->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(_terrainView->GetFrame()));
-	renderers::singleton->_plain_renderer->_shaderprogram->get_uniform<float>("point_size").set_value(1);
-	renderers::singleton->_plain_renderer->_shaderprogram->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 1));
-	renderers::singleton->_plain_renderer->_shaderprogram->render(vertices);
+	renderers::singleton->_plain_renderer->get_uniform<glm::mat4>("transform").set_value(ViewportTransform(_terrainView->GetFrame()));
+	renderers::singleton->_plain_renderer->get_uniform<float>("point_size").set_value(1);
+	renderers::singleton->_plain_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 1));
+	renderers::singleton->_plain_renderer->render(vertices);
 
 	glLineWidth(1);
 }
