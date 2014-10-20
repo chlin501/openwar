@@ -9,12 +9,22 @@
 #include "ShaderProgram.h"
 
 
+class GradientShader
+{
+	ShaderProgram2<glm::vec3, glm::vec4>* _shaderprogram;
+
+public:
+	GradientShader(GraphicsContext* gc);
+
+	void SetTransform(const glm::mat4x4& transform);
+	void Render(VertexBuffer_3f_4f* vertices);
+};
+
+
 class GradientShape3
 {
 protected:
-	typedef ShaderProgram2<glm::vec3, glm::vec4> shaderprogram;
-
-	shaderprogram* _shaderprogram;
+	GradientShader* _shader;
 	VertexBuffer_3f_4f _vertices;
 
 public:

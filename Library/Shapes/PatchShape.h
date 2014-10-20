@@ -32,8 +32,6 @@ class PatchShape : public Shape
 	VertexGlyph<Vertex_2f_2f> _glyph;
 
 public:
-	typedef Vertex_2f_2f vertex_type;
-
 	bounds2f outer_xy;
 	bounds2f inner_xy;
 	bounds2f outer_uv;
@@ -48,8 +46,8 @@ public:
 	VertexGlyph<Vertex_2f_2f>* GetGlyph();
 
 protected:
-	void generate(std::vector<vertex_type>& vertices);
-	void rectangle(std::vector<vertex_type>& vertices, bounds2f xy, bounds2f uv);
+	void generate(std::vector<Vertex_2f_2f>& vertices);
+	void rectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bounds2f uv);
 
 private:
 	PatchShape(const PatchShape& x) : Shape(x) { }

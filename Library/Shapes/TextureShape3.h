@@ -9,29 +9,31 @@
 #include "ShaderProgram.h"
 
 
-class TextureShape3
+class TextureShader
 {
-protected:
 	ShaderProgram<Vertex_3f_2f>* _shaderprogram;
-	VertexBuffer_3f_2f _vertices;
 
 public:
-	TextureShape3(GraphicsContext* gc);
-	virtual ~TextureShape3();
+	TextureShader(GraphicsContext* gc);
 
-	virtual void Reset() = 0;
-	void Draw(const glm::mat4x4& transform, const texture* texture);
+	void SetTransform(const glm::mat4x4& value);
+	void SetTexture(const texture* value);
+	void Render(VertexBuffer_3f_2f* vertices);
 };
 
 
-class TextureTriangleShape3 : public TextureShape3
+class TextureTriangleShape3
 {
 public:
-	TextureTriangleShape3(GraphicsContext* gc) : TextureShape3(gc) { }
-	virtual ~TextureTriangleShape3();
-	virtual void Reset();
+	TextureShader* _shader;
+	VertexBuffer_3f_2f _vertices;
 
+	TextureTriangleShape3(GraphicsContext* gc);
+	~TextureTriangleShape3();
+
+	void Reset();
 	void AddVertex(glm::vec3 p, glm::vec2 t);
+	void Draw(const glm::mat4x4& transform, const texture* texture);
 };
 
 

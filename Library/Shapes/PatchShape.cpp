@@ -63,14 +63,14 @@ void PatchShape::Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
 
 VertexGlyph<Vertex_2f_2f>* PatchShape::GetGlyph()
 {
-	_glyph._rebuild = [this](std::vector<vertex_type>& vertices) {
+	_glyph._rebuild = [this](std::vector<Vertex_2f_2f>& vertices) {
 		generate(vertices);
 	};
 	return &_glyph;
 }
 
 
-void PatchShape::generate(std::vector<vertex_type>& vertices)
+void PatchShape::generate(std::vector<Vertex_2f_2f>& vertices)
 {
 	bool min_x = outer_xy.min.x < inner_xy.min.x;
 	bool max_x = inner_xy.max.x < outer_xy.max.x;
@@ -120,16 +120,15 @@ void PatchShape::generate(std::vector<vertex_type>& vertices)
 		rectangle(vertices,
 			bounds2f(inner_xy.max.x, inner_xy.max.y, outer_xy.max.x, outer_xy.max.y),
 			bounds2f(inner_uv.max.x, inner_uv.min.y, outer_uv.max.x, outer_uv.min.y));
-
 }
 
 
-void PatchShape::rectangle(std::vector<vertex_type>& vertices, bounds2f xy, bounds2f uv)
+void PatchShape::rectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bounds2f uv)
 {
-	vertices.push_back(vertex_type(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
-	vertices.push_back(vertex_type(glm::vec2(xy.min.x, xy.max.y), glm::vec2(uv.min.x, uv.max.y)));
-	vertices.push_back(vertex_type(glm::vec2(xy.max.x, xy.max.y), glm::vec2(uv.max.x, uv.max.y)));
-	vertices.push_back(vertex_type(glm::vec2(xy.max.x, xy.max.y), glm::vec2(uv.max.x, uv.max.y)));
-	vertices.push_back(vertex_type(glm::vec2(xy.max.x, xy.min.y), glm::vec2(uv.max.x, uv.min.y)));
-	vertices.push_back(vertex_type(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
+	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
+	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.max.y), glm::vec2(uv.min.x, uv.max.y)));
+	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.max.x, xy.max.y), glm::vec2(uv.max.x, uv.max.y)));
+	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.max.x, xy.max.y), glm::vec2(uv.max.x, uv.max.y)));
+	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.max.x, xy.min.y), glm::vec2(uv.max.x, uv.min.y)));
+	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
 }

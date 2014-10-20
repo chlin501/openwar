@@ -6,7 +6,7 @@
 #include "TextureBillboardRenderer.h"
 
 
-TextureBillboardRenderer::TextureBillboardRenderer(GraphicsContext* gc)
+TextureBillboardShader::TextureBillboardShader(GraphicsContext* gc)
 {
 	static int shaderprogram_id = GraphicsContext::generate_shaderprogram_id();
 
@@ -69,8 +69,15 @@ TextureBillboardRenderer::TextureBillboardRenderer(GraphicsContext* gc)
 }
 
 
+TextureBillboardRenderer::TextureBillboardRenderer(GraphicsContext* gc)
+{
+	_shader = new TextureBillboardShader(gc);
+}
+
+
 TextureBillboardRenderer::~TextureBillboardRenderer()
 {
+	delete _shader;
 }
 
 
@@ -131,13 +138,13 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 
 	_vertices.UpdateVBO(GL_STATIC_DRAW);
 
-	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
-	_shaderprogram->get_uniform<const texture*>("texture").set_value(tex);
-	_shaderprogram->get_uniform<glm::vec3>("upvector").set_value(cameraUp);
-	_shaderprogram->get_uniform<float>("viewport_height").set_value(ShaderProgramBase::pixels_per_point() * viewportHeight);
-	_shaderprogram->get_uniform<float>("min_point_size").set_value(sizeLimit.min);
-	_shaderprogram->get_uniform<float>("max_point_size").set_value(sizeLimit.max);
-	_shaderprogram->render(_vertices);
+	_shader->_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
+	_shader->_shaderprogram->get_uniform<const texture*>("texture").set_value(tex);
+	_shader->_shaderprogram->get_uniform<glm::vec3>("upvector").set_value(cameraUp);
+	_shader->_shaderprogram->get_uniform<float>("viewport_height").set_value(ShaderProgramBase::pixels_per_point() * viewportHeight);
+	_shader->_shaderprogram->get_uniform<float>("min_point_size").set_value(sizeLimit.min);
+	_shader->_shaderprogram->get_uniform<float>("max_point_size").set_value(sizeLimit.max);
+	_shader->_shaderprogram->render(_vertices);
 }
 
 

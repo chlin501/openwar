@@ -5,7 +5,8 @@
 #include "PlainShape3.h"
 
 
-PlainShape3::PlainShape3(GraphicsContext* gc)
+
+PlainShader::PlainShader(GraphicsContext* gc)
 {
 	static int shaderprogram_id = GraphicsContext::generate_shaderprogram_id();
 
@@ -41,22 +42,51 @@ PlainShape3::PlainShape3(GraphicsContext* gc)
 	);
 	_shaderprogram->_blend_sfactor = GL_SRC_ALPHA;
 	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+
+}
+
+
+void PlainShader::SetTransform(const glm::mat4x4& value)
+{
+	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(value);
+
+}
+
+
+void PlainShader::SetColor(const glm::vec4& value)
+{
+	_shaderprogram->get_uniform<glm::vec4>("color").set_value(value);
+}
+
+
+void PlainShader::Render(VertexBuffer_3f* vertices)
+{
+	glLineWidth(1);
+	_shaderprogram->get_uniform<float>("point_size").set_value(1);
+	_shaderprogram->render(*vertices);
+}
+
+
+/***/
+
+
+PlainShape3::PlainShape3(GraphicsContext* gc)
+{
+	_shader = new PlainShader(gc);
 }
 
 
 PlainShape3::~PlainShape3()
 {
+	delete _shader;
 }
 
 
 void PlainShape3::Draw(const glm::mat4x4& transform, const glm::vec4& color)
 {
-	glLineWidth(1);
-
-	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
-	_shaderprogram->get_uniform<float>("point_size").set_value(1);
-	_shaderprogram->get_uniform<glm::vec4>("color").set_value(color);
-	_shaderprogram->render(_vertices);
+	_shader->SetTransform(transform);
+	_shader->SetColor(color);
+	_shader->Render(&_vertices);
 }
 
 

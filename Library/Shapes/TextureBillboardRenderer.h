@@ -42,12 +42,20 @@ struct BillboardModel
 };
 
 
+class TextureBillboardShader
+{
+	friend class TextureBillboardRenderer;
+	ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2>* _shaderprogram;
+
+public:
+	TextureBillboardShader(GraphicsContext* gc);
+};
+
+
 class TextureBillboardRenderer
 {
 public:
-	typedef ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2> shaderprogram;
-
-	shaderprogram* _shaderprogram;
+	TextureBillboardShader* _shader;
 	VertexBuffer_3f_1f_2f_2f _vertices;
 
 public:
@@ -60,7 +68,6 @@ public:
 
 	void Render(BillboardModel* billboardModel, const glm::mat4x4& transform, const glm::vec3& cameraUp, float viewportHeight, float cameraFacingDegrees, bool flip);
 };
-
 
 
 #endif

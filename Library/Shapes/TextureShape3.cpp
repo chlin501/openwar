@@ -5,7 +5,8 @@
 #include "TextureShape3.h"
 
 
-TextureShape3::TextureShape3(GraphicsContext* gc)
+
+TextureShader::TextureShader(GraphicsContext* gc)
 {
 	static int shaderprogram_id = GraphicsContext::generate_shaderprogram_id();
 
@@ -48,11 +49,39 @@ TextureShape3::TextureShape3(GraphicsContext* gc)
 	);
 	_shaderprogram->_blend_sfactor = GL_ONE;
 	_shaderprogram->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+
 }
 
 
-TextureShape3::~TextureShape3()
+void TextureShader::SetTransform(const glm::mat4x4& value)
 {
+	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(value);
+
+}
+
+
+void TextureShader::SetTexture(const texture* value)
+{
+	_shaderprogram->get_uniform<const texture*>("texture").set_value(value);
+
+}
+
+
+void TextureShader::Render(VertexBuffer_3f_2f* vertices)
+{
+	_shaderprogram->render(*vertices);
+}
+
+
+TextureTriangleShape3::TextureTriangleShape3(GraphicsContext* gc)
+{
+	_shader = new TextureShader(gc);
+}
+
+
+TextureTriangleShape3::~TextureTriangleShape3()
+{
+	delete _shader;
 }
 
 
@@ -63,19 +92,11 @@ void TextureTriangleShape3::Reset()
 }
 
 
-void TextureShape3::Draw(const glm::mat4x4& transform, const texture* texturex)
+void TextureTriangleShape3::Draw(const glm::mat4x4& transform, const texture* texturex)
 {
-	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
-	_shaderprogram->get_uniform<const texture*>("texture").set_value(texturex);
-	_shaderprogram->render(_vertices);
-}
-
-
-/***/
-
-
-TextureTriangleShape3::~TextureTriangleShape3()
-{
+	_shader->SetTransform(transform);
+	_shader->SetTexture(texturex);
+	_shader->Render(&_vertices);
 }
 
 

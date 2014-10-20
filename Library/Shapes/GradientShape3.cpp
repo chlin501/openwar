@@ -5,7 +5,8 @@
 #include "GradientShape3.h"
 
 
-GradientShape3::GradientShape3(GraphicsContext* gc)
+
+GradientShader::GradientShader(GraphicsContext* gc)
 {
 	static int shaderprogram_id = GraphicsContext::generate_shaderprogram_id();
 
@@ -49,18 +50,36 @@ GradientShape3::GradientShape3(GraphicsContext* gc)
 }
 
 
+void GradientShader::SetTransform(const glm::mat4x4& transform)
+{
+	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
+}
+
+
+void GradientShader::Render(VertexBuffer_3f_4f* vertices)
+{
+	glLineWidth(1);
+	_shaderprogram->get_uniform<float>("point_size").set_value(1);
+	_shaderprogram->render(*vertices);
+}
+
+
+GradientShape3::GradientShape3(GraphicsContext* gc)
+{
+	_shader = new GradientShader(gc);
+}
+
+
 GradientShape3::~GradientShape3()
 {
+	delete _shader;
 }
 
 
 void GradientShape3::Draw(const glm::mat4x4& transform)
 {
-	glLineWidth(1);
-
-	_shaderprogram->get_uniform<glm::mat4>("transform").set_value(transform);
-	_shaderprogram->get_uniform<float>("point_size").set_value(1);
-	_shaderprogram->render(_vertices);
+	_shader->SetTransform(transform);
+	_shader->Render(&_vertices);
 }
 
 
