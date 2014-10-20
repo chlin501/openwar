@@ -6,72 +6,78 @@
 #include "SmoothTerrainWater.h"
 
 
+
+WaterInsideShader::WaterInsideShader() : ShaderProgram1<glm::vec2>(
+	"position",
+	VERTEX_SHADER
+	({
+		uniform mat4 transform;
+		uniform vec4 map_bounds;
+		attribute vec2 position;
+
+		void main()
+		{
+			vec4 p = transform * vec4(position, 0, 1);
+
+			gl_Position = p;
+			gl_PointSize = 1.0;
+		}
+	}),
+	FRAGMENT_SHADER
+	({
+		void main()
+		{
+			gl_FragColor = vec4(0.44 * 0.5, 0.72 * 0.5, 0.91 * 0.5, 0.5);
+		}
+	}))
+{
+	_blend_sfactor = GL_ONE;
+	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
+
+
+WaterBorderShader::WaterBorderShader() : ShaderProgram1<glm::vec2>(
+	"position",
+	VERTEX_SHADER
+	({
+		uniform mat4 transform;
+		uniform vec4 map_bounds;
+		attribute vec2 position;
+		varying vec2 _groundpos;
+
+		void main()
+		{
+			vec4 p = transform * vec4(position, 0, 1);
+
+			_groundpos = (position - map_bounds.xy) / map_bounds.zw;
+
+			gl_Position = p;
+			gl_PointSize = 1.0;
+		}
+	}),
+	FRAGMENT_SHADER
+	({
+		varying vec2 _groundpos;
+
+		void main()
+		{
+			if (distance(_groundpos, vec2(0.5, 0.5)) > 0.5)
+				discard;
+
+			gl_FragColor = vec4(0.44 * 0.5, 0.72 * 0.5, 0.91 * 0.5, 0.5);
+		}
+	}))
+{
+	_blend_sfactor = GL_ONE;
+	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
+
+
 SmoothTerrainWater::SmoothTerrainWater(GroundMap* groundMap) :
 _groundMap(groundMap)
 {
-	_water_inside_renderer = new ShaderProgram1<glm::vec2>(
-		"position",
-		VERTEX_SHADER
-		({
-			uniform mat4 transform;
-			uniform vec4 map_bounds;
-			attribute vec2 position;
-
-			void main()
-			{
-				vec4 p = transform * vec4(position, 0, 1);
-
-				gl_Position = p;
-				gl_PointSize = 1.0;
-			}
-		}),
-		FRAGMENT_SHADER
-		({
-			void main()
-			{
-				gl_FragColor = vec4(0.44 * 0.5, 0.72 * 0.5, 0.91 * 0.5, 0.5);
-				}
-			})
-	);
-	_water_inside_renderer->_blend_sfactor = GL_ONE;
-	_water_inside_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
-
-
-
-	_water_border_renderer = new ShaderProgram1<glm::vec2>(
-		"position",
-		VERTEX_SHADER
-		({
-			uniform mat4 transform;
-			uniform vec4 map_bounds;
-			attribute vec2 position;
-			varying vec2 _groundpos;
-
-			void main()
-			{
-				vec4 p = transform * vec4(position, 0, 1);
-
-				_groundpos = (position - map_bounds.xy) / map_bounds.zw;
-
-				gl_Position = p;
-				gl_PointSize = 1.0;
-			}
-		}),
-		FRAGMENT_SHADER
-		({
-			varying vec2 _groundpos;
-
-			void main()
-			{
-				if (distance(_groundpos, vec2(0.5, 0.5)) > 0.5)
-					discard;
-
-				gl_FragColor = vec4(0.44 * 0.5, 0.72 * 0.5, 0.91 * 0.5, 0.5);
-			}
-		})
-	);
-	_water_border_renderer->_blend_sfactor = GL_ONE;
-	_water_border_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+	_water_inside_renderer = new WaterInsideShader();
+	_water_border_renderer = new WaterBorderShader();
 
 	Update();
 }

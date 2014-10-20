@@ -10,6 +10,8 @@
 #include "VertexBuffer.h"
 #include "ShaderProgram.h"
 
+class GraphicsContext;
+
 
 struct terrain_uniforms
 {
@@ -28,17 +30,75 @@ struct sobel_uniforms
 };
 
 
+class TerrainInsideShader : public ShaderProgram2<glm::vec3, glm::vec3>
+{
+public:
+	TerrainInsideShader(GraphicsContext* gc);
+};
+
+
+class TerrainBorderShader : public ShaderProgram2<glm::vec3, glm::vec3>
+{
+public:
+	TerrainBorderShader(GraphicsContext* gc);
+};
+
+
+class TerrainSkirtShader : public ShaderProgram2<glm::vec3, float>
+{
+public:
+	TerrainSkirtShader(GraphicsContext* gc);
+};
+
+
+
+class DepthInsideShader : public ShaderProgram2<glm::vec3, glm::vec3>
+{
+public:
+	DepthInsideShader(GraphicsContext* gc);
+};
+
+
+class DepthBorderShader : public ShaderProgram2<glm::vec3, glm::vec3>
+{
+public:
+	DepthBorderShader(GraphicsContext* gc);
+};
+
+
+class DepthSkirtShader : public ShaderProgram2<glm::vec3, float>
+{
+public:
+	DepthSkirtShader(GraphicsContext* gc);
+};
+
+
+
+class SobelFilterShader : public ShaderProgram2<glm::vec2, glm::vec2>
+{
+public:
+	SobelFilterShader(GraphicsContext* gc);
+};
+
+
+class GroundShadowShader : public ShaderProgram1<glm::vec2>
+{
+public:
+	GroundShadowShader(GraphicsContext* gc);
+};
+
+
 
 struct SmoothTerrainShaders
 {
-	ShaderProgram<Vertex_3f_3f>* _terrain_inside;
-	ShaderProgram<Vertex_3f_3f>* _terrain_border;
-	ShaderProgram<Vertex_3f_1f>* _terrain_skirt;
-	ShaderProgram<Vertex_3f_3f>* _depth_inside;
-	ShaderProgram<Vertex_3f_3f>* _depth_border;
-	ShaderProgram<Vertex_3f_1f>* _depth_skirt;
-	ShaderProgram<Vertex_2f_2f>* _sobel_filter;
-	ShaderProgram<Vertex_2f>* _ground_shadow;
+	TerrainInsideShader* _terrain_inside;
+	TerrainBorderShader* _terrain_border;
+	TerrainSkirtShader* _terrain_skirt;
+	DepthInsideShader* _depth_inside;
+	DepthBorderShader* _depth_border;
+	DepthSkirtShader* _depth_skirt;
+	SobelFilterShader* _sobel_filter;
+	GroundShadowShader* _ground_shadow;
 
 	SmoothTerrainShaders();
 	~SmoothTerrainShaders();
@@ -57,7 +117,6 @@ struct SmoothTerrainShaders
 
 	static texture* create_colormap();
 };
-
 
 
 #endif

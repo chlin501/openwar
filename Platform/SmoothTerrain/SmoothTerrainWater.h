@@ -11,6 +11,21 @@
 class GroundMap;
 
 
+class WaterInsideShader : public ShaderProgram1<glm::vec2>
+{
+public:
+	WaterInsideShader();
+};
+
+
+class WaterBorderShader : public ShaderProgram1<glm::vec2>
+{
+public:
+	WaterBorderShader();
+};
+
+
+
 class SmoothTerrainWater
 {
 	struct ground_texture_uniforms
@@ -22,8 +37,8 @@ class SmoothTerrainWater
 
 	GroundMap* _groundMap;
 
-	ShaderProgram<Vertex_2f>* _water_inside_renderer;
-	ShaderProgram<Vertex_2f>* _water_border_renderer;
+	WaterInsideShader* _water_inside_renderer;
+	WaterBorderShader* _water_border_renderer;
 
 	VertexBuffer_2f _waterInsideVertices;
 	VertexBuffer_2f _waterBorderVertices;
