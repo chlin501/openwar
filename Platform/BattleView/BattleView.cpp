@@ -9,7 +9,6 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Shapes/GradientShape3.h"
 #include "Shapes/ColorBillboardShape.h"
 #include "Shapes/PlainShape3.h"
 #include "Shapes/TextureShape3.h"
@@ -55,9 +54,9 @@ BattleView::BattleView(GraphicsContext* gc) :
 	_trackingMarkers(),
 	_plainLineRenderer(nullptr),
 	_plainTriangleRenderer(nullptr),
-	_gradientLineRenderer(nullptr),
-	_gradientTriangleRenderer(nullptr),
-	_gradientTriangleStripRenderer(nullptr),
+	_gradientLineVertices(nullptr),
+	_gradientTriangleVertices(nullptr),
+	_gradientTriangleStripVertices(nullptr),
 	_colorBillboardRenderer(nullptr),
 	_textureTriangleRenderer(nullptr),
 	_textureUnitMarkers(nullptr),
@@ -159,9 +158,9 @@ BattleView::BattleView(GraphicsContext* gc) :
 
 	_plainLineRenderer = new PlainLineShape3();
 	_plainTriangleRenderer = new PlainTriangleShape3();
-	_gradientLineRenderer = new GradientLineShape3();
-	_gradientTriangleRenderer = new GradientTriangleShape3();
-	_gradientTriangleStripRenderer = new GradientTriangleStripShape3();
+	_gradientLineVertices = new VertexBuffer_3f_4f();
+	_gradientTriangleVertices = new VertexBuffer_3f_4f();
+	_gradientTriangleStripVertices = new VertexBuffer_3f_4f();
 	_colorBillboardRenderer = new ColorBillboardShape();
 	_textureTriangleRenderer = new TextureTriangleShape3();
 }
@@ -190,9 +189,9 @@ BattleView::~BattleView()
 
 	delete _plainLineRenderer;
 	delete _plainTriangleRenderer;
-	delete _gradientLineRenderer;
-	delete _gradientTriangleRenderer ;
-	delete _gradientTriangleStripRenderer;
+	delete _gradientLineVertices;
+	delete _gradientTriangleVertices;
+	delete _gradientTriangleStripVertices;
 	delete _colorBillboardRenderer;
 	delete _textureTriangleRenderer;
 
@@ -585,11 +584,11 @@ void BattleView::Render(const glm::mat4& transformx)
 		if (unit->IsFriendlyCommander(_commander))
 		{
 			RangeMarker marker(_simulator, unit);
-			_gradientTriangleStripRenderer->Reset();
-			marker.Render(_gradientTriangleStripRenderer);
+			_gradientTriangleStripVertices->Reset(GL_TRIANGLE_STRIP);
+			marker.Render(_gradientTriangleStripVertices);
 
 			RenderCall<GradientShader>(GetSurface()->GetGraphicsContext())
-				.SetVertices(&_gradientTriangleStripRenderer->_vertices)
+				.SetVertices(_gradientTriangleStripVertices)
 				.SetUniform("transform", contentTransform)
 				.SetUniform("point_size", 1)
 				.Render();
@@ -651,12 +650,12 @@ void BattleView::Render(const glm::mat4& transformx)
 	// Movement Paths
 
 	glEnable(GL_DEPTH_TEST);
-	_gradientTriangleRenderer->Reset();
+	_gradientTriangleVertices->Reset(GL_TRIANGLES);
 	for (UnitMovementMarker* marker : _movementMarkers)
-		marker->RenderMovementPath(_gradientTriangleRenderer);
+		marker->RenderMovementPath(_gradientTriangleVertices);
 
 	RenderCall<GradientShader>(GetSurface()->GetGraphicsContext())
-		.SetVertices(&_gradientTriangleRenderer->_vertices)
+		.SetVertices(_gradientTriangleVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("point_size", 1)
 		.Render();
@@ -667,12 +666,12 @@ void BattleView::Render(const glm::mat4& transformx)
 	glDisable(GL_DEPTH_TEST);
 	for (UnitTrackingMarker* marker : _trackingMarkers)
 	{
-		_gradientTriangleRenderer->Reset();
-		marker->RenderTrackingPath(_gradientTriangleRenderer);
-		marker->RenderOrientation(_gradientTriangleRenderer);
+		_gradientTriangleVertices->Reset(GL_TRIANGLES);
+		marker->RenderTrackingPath(_gradientTriangleVertices);
+		marker->RenderOrientation(_gradientTriangleVertices);
 
 		RenderCall<GradientShader>(GetSurface()->GetGraphicsContext())
-			.SetVertices(&_gradientTriangleRenderer->_vertices)
+			.SetVertices(_gradientTriangleVertices)
 			.SetUniform("transform", contentTransform)
 			.SetUniform("point_size", 1)
 			.Render();
@@ -710,12 +709,12 @@ void BattleView::Render(const glm::mat4& transformx)
 
 	// Shooting Counters
 
-	_gradientLineRenderer->Reset();
+	_gradientLineVertices->Reset(GL_LINES);
 	for (ShootingCounter* shootingCounter : _shootingCounters)
-		shootingCounter->Render(_gradientLineRenderer);
+		shootingCounter->Render(_gradientLineVertices);
 
 	RenderCall<GradientShader>(GetSurface()->GetGraphicsContext())
-		.SetVertices(&_gradientLineRenderer->_vertices)
+		.SetVertices(_gradientLineVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("point_size", 1)
 		.Render();

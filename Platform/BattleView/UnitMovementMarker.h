@@ -6,10 +6,10 @@
 #define UnitMovementMarker_H
 
 #include "UnitMarker.h"
+#include "VertexBuffer.h"
 
 class BattleView;
 class ColorBillboardShape;
-class GradientTriangleShape3;
 class TextureBillboardRenderer;
 class TextureTriangleShape3;
 
@@ -25,7 +25,7 @@ public:
 	void RenderMovementMarker(TextureBillboardRenderer* renderer);
 	void AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView);
 	void RenderMovementFighters(ColorBillboardShape* renderer);
-	void RenderMovementPath(GradientTriangleShape3* renderer);
+	void RenderMovementPath(VertexBuffer_3f_4f* vertices);
 };
 
 

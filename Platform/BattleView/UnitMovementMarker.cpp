@@ -122,7 +122,7 @@ void UnitMovementMarker::RenderMovementFighters(ColorBillboardShape* renderer)
 }
 
 
-void UnitMovementMarker::RenderMovementPath(GradientTriangleShape3* renderer)
+void UnitMovementMarker::RenderMovementPath(VertexBuffer_3f_4f* vertices)
 {
 	const UnitCommand& command = _unit->GetCommand();
 	if (!command.path.empty())
@@ -135,6 +135,6 @@ void UnitMovementMarker::RenderMovementPath(GradientTriangleShape3* renderer)
 
 		HeightMap* heightMap = _battleView->GetSimulator()->GetHeightMap();
 		PathRenderer pathRenderer([heightMap](glm::vec2 p) { return heightMap->GetPosition(p, 1); });
-		pathRenderer.Path(renderer, command.path, mode);
+		pathRenderer.Path(vertices, command.path, mode);
 	}
 }

@@ -16,9 +16,6 @@
 class BattleCommander;
 class CasualtyMarker;
 class ColorBillboardShape;
-class GradientLineShape3;
-class GradientTriangleShape3;
-class GradientTriangleStripShape3;
 class UnitMovementMarker;
 class PlainLineShape3;
 class PlainTriangleShape3;
@@ -51,9 +48,9 @@ class BattleView : public TerrainView, public BattleObserver
 
 	PlainLineShape3* _plainLineRenderer;
 	PlainTriangleShape3* _plainTriangleRenderer;
-	GradientLineShape3* _gradientLineRenderer;
-	GradientTriangleShape3* _gradientTriangleRenderer;
-	GradientTriangleStripShape3* _gradientTriangleStripRenderer;
+	VertexBuffer_3f_4f* _gradientLineVertices;
+	VertexBuffer_3f_4f* _gradientTriangleVertices;
+	VertexBuffer_3f_4f* _gradientTriangleStripVertices;
 	ColorBillboardShape* _colorBillboardRenderer;
 	TextureTriangleShape3* _textureTriangleRenderer;
 

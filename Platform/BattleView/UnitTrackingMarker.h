@@ -7,10 +7,10 @@
 
 #include "UnitMarker.h"
 #include "BattleModel/BattleSimulator.h"
+#include "VertexBuffer.h"
 
 class BattleView;
 class ColorBillboardShape;
-class GradientTriangleShape3;
 class TextureBillboardRenderer;
 class TextureTriangleShape3;
 
@@ -83,8 +83,8 @@ public:
 	void RenderTrackingMarker(TextureBillboardRenderer* renderer);
 	void AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView);
 	void RenderTrackingShadow(TextureBillboardRenderer* renderer);
-	void RenderTrackingPath(GradientTriangleShape3* renderer);
-	void RenderOrientation(GradientTriangleShape3* renderer);
+	void RenderTrackingPath(VertexBuffer_3f_4f* vertices);
+	void RenderOrientation(VertexBuffer_3f_4f* vertices);
 };
 
 

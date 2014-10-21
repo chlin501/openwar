@@ -5,7 +5,6 @@
 #include "BattleModel/BattleScenario.h"
 #include "Surface/ButtonGrid.h"
 #include "Surface/ButtonGesture.h"
-#include "Shapes/GradientShape3.h"
 #include "BattleView/BattleGesture.h"
 #include "BattleView/BattleView.h"
 #include "TerrainView/EditorGesture.h"
@@ -28,7 +27,6 @@ _buttonItemHills(nullptr),
 _buttonItemTrees(nullptr),
 _buttonItemWater(nullptr),
 _buttonItemFords(nullptr),
-_scriptHintRenderer(nullptr),
 _battleLayer(nullptr)
 {
 	_battleLayer = new BattleLayer(gc);
@@ -78,8 +76,6 @@ _battleLayer(nullptr)
 
 	OnFrameChanged();
 	UpdateButtonsAndGestures();
-
-	_scriptHintRenderer = new GradientLineShape3();
 }
 
 

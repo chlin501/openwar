@@ -53,6 +53,12 @@ public:
 	{
 	}
 
+	void Reset(GLenum mode)
+	{
+		_mode = mode;
+		_vertices.clear();
+	}
+
 	void Clear()
 	{
 		_vertices.clear();

@@ -8,7 +8,6 @@
 #include "Shapes/TextureBillboardRenderer.h"
 #include "Shapes/PathRenderer.h"
 #include "Shapes/ColorBillboardShape.h"
-#include "Shapes/GradientShape3.h"
 #include "Shapes/TextureShape3.h"
 #include "BattleView.h"
 #include "UnitTrackingMarker.h"
@@ -126,7 +125,7 @@ void UnitTrackingMarker::RenderTrackingShadow(TextureBillboardRenderer* renderer
 
 
 
-void UnitTrackingMarker::RenderTrackingPath(GradientTriangleShape3* renderer)
+void UnitTrackingMarker::RenderTrackingPath(VertexBuffer_3f_4f* vertices)
 {
 	if (!_path.empty())
 	{
@@ -138,12 +137,12 @@ void UnitTrackingMarker::RenderTrackingPath(GradientTriangleShape3* renderer)
 
 		HeightMap* heightMap = _battleView->GetSimulator()->GetHeightMap();
 		PathRenderer pathRenderer([heightMap](glm::vec2 p) { return heightMap->GetPosition(p, 1); });
-		pathRenderer.Path(renderer, _path, mode);
+		pathRenderer.Path(vertices, _path, mode);
 	}
 }
 
 
-void UnitTrackingMarker::RenderOrientation(GradientTriangleShape3* renderer)
+void UnitTrackingMarker::RenderOrientation(VertexBuffer_3f_4f* vertices)
 {
 	if (_renderOrientation && _hasOrientation && !_path.empty())
 	{
@@ -158,8 +157,8 @@ void UnitTrackingMarker::RenderOrientation(GradientTriangleShape3* renderer)
 		glm::vec2 left = glm::vec2(dir.y, -dir.x);
 
 
-		renderer->AddVertex(_battleView->GetSimulator()->GetHeightMap()->GetPosition(center + 10.0f * left, 0), glm::vec4(0, 0, 0, 0));
-		renderer->AddVertex(_battleView->GetSimulator()->GetHeightMap()->GetPosition(tip + overshoot * dir, 0), glm::vec4(0, 0, 0, 0.1f));
-		renderer->AddVertex(_battleView->GetSimulator()->GetHeightMap()->GetPosition(center - 10.0f * left, 0), glm::vec4(0, 0, 0, 0));
+		vertices->AddVertex(Vertex_3f_4f(_battleView->GetSimulator()->GetHeightMap()->GetPosition(center + 10.0f * left, 0), glm::vec4(0, 0, 0, 0)));
+		vertices->AddVertex(Vertex_3f_4f(_battleView->GetSimulator()->GetHeightMap()->GetPosition(tip + overshoot * dir, 0), glm::vec4(0, 0, 0, 0.1f)));
+		vertices->AddVertex(Vertex_3f_4f(_battleView->GetSimulator()->GetHeightMap()->GetPosition(center - 10.0f * left, 0), glm::vec4(0, 0, 0, 0)));
 	}
 }

@@ -14,7 +14,6 @@ class ButtonItem;
 class ButtonRendering;
 class ButtonGrid;
 class EditorGesture;
-class GradientLineShape3;
 //class SmoothTerrainSurfaceRenderer;
 //class TiledTerrainSurfaceRenderer;
 
@@ -38,8 +37,6 @@ public:
 	ButtonItem* _buttonItemTrees;
 	ButtonItem* _buttonItemWater;
 	ButtonItem* _buttonItemFords;
-
-	GradientLineShape3* _scriptHintRenderer;
 
 	BattleLayer* _battleLayer;
 

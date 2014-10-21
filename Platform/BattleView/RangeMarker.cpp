@@ -9,7 +9,6 @@
 #include "BattleModel/HeightMap.h"
 #include "BattleModel/SmoothGroundMap.h"
 #include "Algebra/geometry.h"
-#include "Shapes/GradientShape3.h"
 
 
 RangeMarker::RangeMarker(BattleSimulator* battleSimulator, Unit* unit) :
@@ -19,21 +18,21 @@ _unit(unit)
 }
 
 
-void RangeMarker::Render(GradientTriangleStripShape3* renderer)
+void RangeMarker::Render(VertexBuffer_3f_4f* vertices)
 {
 	const UnitCommand& command = _unit->GetCommand();
 	if (command.missileTarget != nullptr)
 	{
-		RenderMissileTarget(renderer, command.missileTarget->state.center);
+		RenderMissileTarget(vertices, command.missileTarget->state.center);
 	}
 	else if (_unit->unitRange.maximumRange > 0 && _unit->state.unitMode != UnitMode_Moving && !_unit->state.IsRouting())
 	{
-		RenderMissileRange(renderer, _unit->unitRange);
+		RenderMissileRange(vertices, _unit->unitRange);
 	}
 }
 
 
-void RangeMarker::RenderMissileRange(GradientTriangleStripShape3* renderer, const UnitRange& unitRange)
+void RangeMarker::RenderMissileRange(VertexBuffer_3f_4f* vertices, const UnitRange& unitRange)
 {
 	glm::vec2 center = unitRange.center;
 	const float thickness = 8;
@@ -57,13 +56,13 @@ void RangeMarker::RenderMissileRange(GradientTriangleStripShape3* renderer, cons
 	for (int i = 0; i <= 8; ++i)
 	{
 		float t = i / 8.0f;
-		renderer->AddVertex(GetPosition(center + glm::mix(p3, p5, t)), c0);
-		renderer->AddVertex(GetPosition(center + glm::mix(p1, p2, t)), c1);
+		vertices->AddVertex(Vertex_3f_4f(GetPosition(center + glm::mix(p3, p5, t)), c0));
+		vertices->AddVertex(Vertex_3f_4f(GetPosition(center + glm::mix(p1, p2, t)), c1));
 	}
 
-	renderer->AddVertex(GetPosition(center + p4), c1);
-	renderer->AddVertex(GetPosition(center + p4), c1);
-	renderer->AddVertex(GetPosition(center + p5), c0);
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(center + p4), c1));
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(center + p4), c1));
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(center + p5), c0));
 
 	int n = (int)unitRange.actualRanges.size();
 	float angleDelta = (angleMaxInner - angleMinInner) / (n - 1);
@@ -71,8 +70,8 @@ void RangeMarker::RenderMissileRange(GradientTriangleStripShape3* renderer, cons
 	{
 		range = unitRange.actualRanges[i];
 		float angle = angleMinInner + i * angleDelta;
-		renderer->AddVertex(GetPosition(center + (range - thickness) * vector2_from_angle(angle)), c0);
-		renderer->AddVertex(GetPosition(center + range * vector2_from_angle(angle)), c1);
+		vertices->AddVertex(Vertex_3f_4f(GetPosition(center + (range - thickness) * vector2_from_angle(angle)), c0));
+		vertices->AddVertex(Vertex_3f_4f(GetPosition(center + range * vector2_from_angle(angle)), c1));
 	}
 
 	range = unitRange.actualRanges.back();
@@ -82,18 +81,18 @@ void RangeMarker::RenderMissileRange(GradientTriangleStripShape3* renderer, cons
 	p1 = unitRange.minimumRange * vector2_from_angle(angleMaxOuter);
 	p3 = p1 + (p4 - p2);
 
-	renderer->AddVertex(GetPosition(center + p4), c1);
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(center + p4), c1));
 	for (int i = 0; i <= 8; ++i)
 	{
 		float t = i / 8.0f;
-		renderer->AddVertex(GetPosition(center + glm::mix(p2, p1, t)), c1);
-		renderer->AddVertex(GetPosition(center + glm::mix(p5, p3, t)), c0);
+		vertices->AddVertex(Vertex_3f_4f(GetPosition(center + glm::mix(p2, p1, t)), c1));
+		vertices->AddVertex(Vertex_3f_4f(GetPosition(center + glm::mix(p5, p3, t)), c0));
 	}
 }
 
 
 
-void RangeMarker::RenderMissileTarget(GradientTriangleStripShape3* renderer, glm::vec2 target)
+void RangeMarker::RenderMissileTarget(VertexBuffer_3f_4f* vertices, glm::vec2 target)
 {
 	glm::vec4 c0 = glm::vec4(255, 64, 64, 0) / 255.0f;
 	glm::vec4 c1 = glm::vec4(255, 64, 64, 24) / 255.0f;
@@ -114,8 +113,15 @@ void RangeMarker::RenderMissileTarget(GradientTriangleStripShape3* renderer, glm
 		angle_left += 2 * glm::pi<float>();
 
 	glm::vec2 delta = thickness * vector2_from_angle(angle_left + glm::half_pi<float>());
-	renderer->AddVertex(GetPosition(left + delta), c0, true);
-	renderer->AddVertex(GetPosition(left), c1);
+
+	if (!vertices->_vertices.empty())
+	{
+		vertices->AddVertex(vertices->_vertices.back());
+		vertices->AddVertex(Vertex_3f_4f(GetPosition(left + delta), c0));
+	}
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(left + delta), c0));
+
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(left), c1));
 
 	for (int i = 7; i >= 1; --i)
 	{
@@ -123,34 +129,39 @@ void RangeMarker::RenderMissileTarget(GradientTriangleStripShape3* renderer, glm
 		if (r > radius_outer)
 		{
 			p = target + r * vector2_from_angle(angle_left);
-			renderer->AddVertex(GetPosition(p + delta), c0);
-			renderer->AddVertex(GetPosition(p), c1);
+			vertices->AddVertex(Vertex_3f_4f(GetPosition(p + delta), c0));
+			vertices->AddVertex(Vertex_3f_4f(GetPosition(p), c1));
 		}
 	}
 
 	p = target + radius_outer * vector2_from_angle(angle_left);
-	renderer->AddVertex(GetPosition(p + delta), c0);
-	renderer->AddVertex(GetPosition(p), c1);
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(p + delta), c0));
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(p), c1));
 
 	p = target + radius_inner * vector2_from_angle(angle_left);
-	renderer->AddVertex(GetPosition(p + delta), c0);
-	renderer->AddVertex(GetPosition(p), c0);
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(p + delta), c0));
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(p), c0));
 
 	for (int i = 0; i <= 24; ++i)
 	{
 		float a = angle_left - i * (angle_left - angle_right) / 24;
-		renderer->AddVertex(GetPosition(target + radius_outer * vector2_from_angle(a)), c1, i == 0);
-		renderer->AddVertex(GetPosition(target + radius_inner * vector2_from_angle(a)), c0);
+		if (i == 0)
+		{
+			vertices->AddVertex(vertices->_vertices.back());
+			vertices->AddVertex(Vertex_3f_4f(GetPosition(target + radius_outer * vector2_from_angle(a)), c1));
+		}
+		vertices->AddVertex(Vertex_3f_4f(GetPosition(target + radius_outer * vector2_from_angle(a)), c1));
+		vertices->AddVertex(Vertex_3f_4f(GetPosition(target + radius_inner * vector2_from_angle(a)), c0));
 	}
 
 	delta = thickness * vector2_from_angle(angle_right - glm::half_pi<float>());
 	p = target + radius_inner * vector2_from_angle(angle_right);
-	renderer->AddVertex(GetPosition(p + delta), c0);
-	renderer->AddVertex(GetPosition(p + delta), c0);
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(p + delta), c0));
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(p + delta), c0));
 
 	p = target + radius_outer * vector2_from_angle(angle_right);
-	renderer->AddVertex(GetPosition(p), c1);
-	renderer->AddVertex(GetPosition(p + delta), c0);
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(p), c1));
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(p + delta), c0));
 
 	for (int i = 1; i <= 7; ++i)
 	{
@@ -158,13 +169,13 @@ void RangeMarker::RenderMissileTarget(GradientTriangleStripShape3* renderer, glm
 		if (r > radius_outer)
 		{
 			p = target + r * vector2_from_angle(angle_right);
-			renderer->AddVertex(GetPosition(p), c1);
-			renderer->AddVertex(GetPosition(p + delta), c0);
+			vertices->AddVertex(Vertex_3f_4f(GetPosition(p), c1));
+			vertices->AddVertex(Vertex_3f_4f(GetPosition(p + delta), c0));
 		}
 	}
 
-	renderer->AddVertex(GetPosition(right), c1);
-	renderer->AddVertex(GetPosition(right + delta), c0);
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(right), c1));
+	vertices->AddVertex(Vertex_3f_4f(GetPosition(right + delta), c0));
 }
 
 

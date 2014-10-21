@@ -9,7 +9,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-class GradientTriangleShape3;
+#include "VertexBuffer.h"
 
 
 class PathRenderer
@@ -28,10 +28,10 @@ public:
 	float GetOffset() const { return _offset; }
 	void SetOffset(float value) { _offset = value; }
 
-	void Path(GradientTriangleShape3* renderer, const std::vector<glm::vec2>& path, int mode);
+	void Path(VertexBuffer_3f_4f* vertices, const std::vector<glm::vec2>& path, int mode);
 
 private:
-	void RenderPath(GradientTriangleShape3* renderer, const std::vector<glm::vec2>& path);
+	void RenderPath(VertexBuffer_3f_4f* vertices, const std::vector<glm::vec2>& path);
 };
 
 

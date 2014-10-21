@@ -6,9 +6,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include "PathRenderer.h"
-#include "GradientShape3.h"
 #include "TextureShape3.h"
-#include "GradientShape3.h"
 #include "Algorithms/bspline.h"
 #include "Algebra/geometry.h"
 
@@ -50,7 +48,7 @@ static glm::vec2 safe_normalize(glm::vec2 v)
 }
 
 
-void PathRenderer::RenderPath(GradientTriangleShape3* renderer, const std::vector<glm::vec2>& path)
+void PathRenderer::RenderPath(VertexBuffer_3f_4f* vertices, const std::vector<glm::vec2>& path)
 {
 	if (path.size() < 2)
 		return;
@@ -83,13 +81,13 @@ void PathRenderer::RenderPath(GradientTriangleShape3* renderer, const std::vecto
 		glm::vec3 p3 = _getPosition(currR);
 		glm::vec3 p4 = _getPosition(lastR);
 
-		renderer->AddVertex(p1, cleft);
-		renderer->AddVertex(p2, cleft);
-		renderer->AddVertex(p3, cright);
+		vertices->AddVertex(Vertex_3f_4f(p1, cleft));
+		vertices->AddVertex(Vertex_3f_4f(p2, cleft));
+		vertices->AddVertex(Vertex_3f_4f(p3, cright));
 
-		renderer->AddVertex(p3, cright);
-		renderer->AddVertex(p4, cright);
-		renderer->AddVertex(p1, cleft);
+		vertices->AddVertex(Vertex_3f_4f(p3, cright));
+		vertices->AddVertex(Vertex_3f_4f(p4, cright));
+		vertices->AddVertex(Vertex_3f_4f(p1, cleft));
 
 		lastL = currL;
 		lastR = currR;
@@ -104,13 +102,13 @@ void PathRenderer::RenderPath(GradientTriangleShape3* renderer, const std::vecto
 	glm::vec3 p3 = _getPosition(currR);
 	glm::vec3 p4 = _getPosition(lastR);
 
-	renderer->AddVertex(p1, cleft);
-	renderer->AddVertex(p2, cleft);
-	renderer->AddVertex(p3, cright);
+	vertices->AddVertex(Vertex_3f_4f(p1, cleft));
+	vertices->AddVertex(Vertex_3f_4f(p2, cleft));
+	vertices->AddVertex(Vertex_3f_4f(p3, cright));
 
-	renderer->AddVertex(p3, cright);
-	renderer->AddVertex(p4, cright);
-	renderer->AddVertex(p1, cleft);
+	vertices->AddVertex(Vertex_3f_4f(p3, cright));
+	vertices->AddVertex(Vertex_3f_4f(p4, cright));
+	vertices->AddVertex(Vertex_3f_4f(p1, cleft));
 }
 
 
@@ -225,7 +223,7 @@ static void bspline_split_segments(std::vector<std::vector<glm::vec2>>& segments
 }
 
 
-void PathRenderer::Path(GradientTriangleShape3* renderer, const std::vector<glm::vec2>& path, int mode)
+void PathRenderer::Path(VertexBuffer_3f_4f* vertices, const std::vector<glm::vec2>& path, int mode)
 {
 	if (path.size() == 0)
 		return;
@@ -289,6 +287,6 @@ void PathRenderer::Path(GradientTriangleShape3* renderer, const std::vector<glm:
 	//std::function<glm::vec3(glm::vec2)> getPosition = [terrainSurface](glm::vec2 p) { return terrainSurface->GetPosition(p, 1); };
 	for (const std::vector<glm::vec2>& segment : segments)
 	{
-		RenderPath(renderer, segment);
+		RenderPath(vertices, segment);
 	}
 }

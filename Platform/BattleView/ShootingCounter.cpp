@@ -4,7 +4,6 @@
 
 #include "ShootingCounter.h"
 #include "Audio/SoundPlayer.h"
-#include "Shapes/GradientShape3.h"
 
 
 
@@ -83,7 +82,7 @@ bool ShootingCounter::Animate(float seconds)
 }
 
 
-void ShootingCounter::Render(GradientLineShape3* renderer)
+void ShootingCounter::Render(VertexBuffer_3f_4f* renderer)
 {
 	for (ShootingCounter::Projectile& projectile : _projectiles)
 	{
@@ -99,7 +98,7 @@ void ShootingCounter::Render(GradientLineShape3* renderer)
 }
 
 
-void ShootingCounter::RenderArrow(GradientLineShape3* renderer, glm::vec3 p1, glm::vec3 p2, float t)
+void ShootingCounter::RenderArrow(VertexBuffer_3f_4f* vertices, glm::vec3 p1, glm::vec3 p2, float t)
 {
 	float size = 4;
 	glm::vec3 diff = p2 - p1;
@@ -118,11 +117,13 @@ void ShootingCounter::RenderArrow(GradientLineShape3* renderer, glm::vec3 p1, gl
 	pp1.z += h1;
 	pp2.z += h2;
 
-	renderer->AddLine(pp1, pp2, glm::vec4(0, 0, 0, 0.2), glm::vec4(0, 0, 0, 0.2));
+
+	vertices->AddVertex(Vertex_3f_4f(pp1, glm::vec4(0, 0, 0, 0.2)));
+	vertices->AddVertex(Vertex_3f_4f(pp2, glm::vec4(0, 0, 0, 0.2)));
 }
 
 
-void ShootingCounter::RenderBullet(GradientLineShape3* renderer, glm::vec3 p1, glm::vec3 p2, float t)
+void ShootingCounter::RenderBullet(VertexBuffer_3f_4f* vertices, glm::vec3 p1, glm::vec3 p2, float t)
 {
 	float size = 50;
 	glm::vec3 diff = p2 - p1;
@@ -131,6 +132,7 @@ void ShootingCounter::RenderBullet(GradientLineShape3* renderer, glm::vec3 p1, g
 	glm::vec3 pp1 = p1 + t * (glm::length(diff) - size) * dir;
 	glm::vec3 pp2 = pp1 + size * dir;
 
-	renderer->AddLine(pp1, pp2, glm::vec4(1, 1, 0, 0.2), glm::vec4(1, 1, 1, 0.2));
+	vertices->AddVertex(Vertex_3f_4f(pp1, glm::vec4(1, 1, 0, 0.2)));
+	vertices->AddVertex(Vertex_3f_4f(pp2, glm::vec4(1, 1, 1, 0.2)));
 }
 

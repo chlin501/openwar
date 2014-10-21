@@ -37,6 +37,40 @@ GradientShader_2f::GradientShader_2f(GraphicsContext* gc) : ShaderProgram2<glm::
 }
 
 
+GradientShader::GradientShader(GraphicsContext* gc) : ShaderProgram2<glm::vec3, glm::vec4>(
+	"position", "color",
+	VERTEX_SHADER
+	({
+		attribute vec3 position;
+		attribute vec4 color;
+		uniform mat4 transform;
+		uniform float point_size;
+		varying vec4 v_color;
+
+		void main()
+		{
+			vec4 p = transform * vec4(position.x, position.y, position.z, 1);
+
+			gl_Position = p;
+			gl_PointSize = point_size;
+			v_color = color;
+		}
+	}),
+	FRAGMENT_SHADER
+	({
+		varying vec4 v_color;
+
+		void main()
+		{
+			gl_FragColor = v_color;
+		}
+	}))
+{
+	_blend_sfactor = GL_SRC_ALPHA;
+	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
+
+
 PlainShader_2f::PlainShader_2f(GraphicsContext* gc) : ShaderProgram1<glm::vec2>(
 	"position",
 	VERTEX_SHADER

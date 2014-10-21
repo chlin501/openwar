@@ -21,6 +21,19 @@ class GradientShader_2f : public ShaderProgram2<glm::vec2, glm::vec4>
 };
 
 
+class GradientShader : public ShaderProgram2<glm::vec3, glm::vec4>
+{
+	friend class GraphicsContext;
+/*
+	attribute vec3 position;
+	attribute vec4 color;
+	uniform mat4 transform;
+	uniform float point_size;
+ */
+	GradientShader(GraphicsContext* gc);
+};
+
+
 class PlainShader_2f : public ShaderProgram1<glm::vec2>
 {
 	friend class GraphicsContext;
