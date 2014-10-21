@@ -9,7 +9,6 @@
 #include "Shapes/ColorBillboardShape.h"
 #include "Shapes/PathRenderer.h"
 #include "Shapes/TextureBillboardRenderer.h"
-#include "Shapes/TextureShape3.h"
 #include "BattleView.h"
 #include "UnitMovementMarker.h"
 
@@ -56,7 +55,7 @@ void UnitMovementMarker::RenderMovementMarker(TextureBillboardRenderer* renderer
 }
 
 
-void UnitMovementMarker::AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView)
+void UnitMovementMarker::AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* battleView)
 {
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
@@ -83,13 +82,13 @@ void UnitMovementMarker::AppendFacingMarker(TextureTriangleShape3* renderer, Bat
 	float ty1 = 0.75f;
 	float ty2 = 0.75f + 0.125f;
 
-	renderer->AddVertex(glm::vec3(p + d1, 0), glm::vec2(tx1, ty1));
-	renderer->AddVertex(glm::vec3(p + d2, 0), glm::vec2(tx1, ty2));
-	renderer->AddVertex(glm::vec3(p + d3, 0), glm::vec2(tx2, ty2));
+	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d1, 0), glm::vec2(tx1, ty1)));
+	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d2, 0), glm::vec2(tx1, ty2)));
+	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d3, 0), glm::vec2(tx2, ty2)));
 
-	renderer->AddVertex(glm::vec3(p + d3, 0), glm::vec2(tx2, ty2));
-	renderer->AddVertex(glm::vec3(p + d4, 0), glm::vec2(tx2, ty1));
-	renderer->AddVertex(glm::vec3(p + d1, 0), glm::vec2(tx1, ty1));
+	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d3, 0), glm::vec2(tx2, ty2)));
+	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d4, 0), glm::vec2(tx2, ty1)));
+	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d1, 0), glm::vec2(tx1, ty1)));
 }
 
 

@@ -104,6 +104,19 @@ class TextureShader_3f : public ShaderProgram2<glm::vec3, glm::vec2>
 };
 
 
+class TextureShader : public ShaderProgram2<glm::vec3, glm::vec2>
+{
+	friend class GraphicsContext;
+/*
+	attribute vec3 position;
+	attribute vec2 texcoord;
+	uniform mat4 transform;
+	uniform sampler2D texture;
+ */
+	TextureShader(GraphicsContext* gc);
+};
+
+
 class OpaqueTextureShader_2f : public ShaderProgram2<glm::vec2, glm::vec2>
 {
 	friend class GraphicsContext;

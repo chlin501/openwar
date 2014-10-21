@@ -19,7 +19,6 @@ class ColorBillboardShape;
 class UnitMovementMarker;
 class RangeMarker;
 class ShootingCounter;
-class TextureTriangleShape3;
 class UnitTrackingMarker;
 class UnitCounter;
 class SmoothTerrainWater;
@@ -49,7 +48,7 @@ class BattleView : public TerrainView, public BattleObserver
 	VertexBuffer_3f_4f* _gradientTriangleVertices;
 	VertexBuffer_3f_4f* _gradientTriangleStripVertices;
 	ColorBillboardShape* _colorBillboardRenderer;
-	TextureTriangleShape3* _textureTriangleRenderer;
+	VertexBuffer_3f_2f* _textureTriangleVertices;
 
 	texture* _textureUnitMarkers;
 	texture* _textureTouchMarker;

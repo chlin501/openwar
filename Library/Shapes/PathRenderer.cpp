@@ -6,7 +6,6 @@
 #include <glm/gtc/constants.hpp>
 
 #include "PathRenderer.h"
-#include "TextureShape3.h"
 #include "Algorithms/bspline.h"
 #include "Algebra/geometry.h"
 

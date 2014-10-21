@@ -10,7 +10,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Shapes/ColorBillboardShape.h"
-#include "Shapes/TextureShape3.h"
 #include "Surface/Surface.h"
 #include "BattleModel/BattleCommander.h"
 #include "SmoothTerrain/SmoothTerrainWater.h"
@@ -56,7 +55,7 @@ BattleView::BattleView(GraphicsContext* gc) :
 	_gradientTriangleVertices(nullptr),
 	_gradientTriangleStripVertices(nullptr),
 	_colorBillboardRenderer(nullptr),
-	_textureTriangleRenderer(nullptr),
+	_textureTriangleVertices(nullptr),
 	_textureUnitMarkers(nullptr),
 	_textureTouchMarker(nullptr),
 	_smoothTerrainSurface(nullptr),
@@ -159,7 +158,7 @@ BattleView::BattleView(GraphicsContext* gc) :
 	_gradientTriangleVertices = new VertexBuffer_3f_4f();
 	_gradientTriangleStripVertices = new VertexBuffer_3f_4f();
 	_colorBillboardRenderer = new ColorBillboardShape();
-	_textureTriangleRenderer = new TextureTriangleShape3();
+	_textureTriangleVertices = new VertexBuffer_3f_2f();
 }
 
 
@@ -189,7 +188,7 @@ BattleView::~BattleView()
 	delete _gradientTriangleVertices;
 	delete _gradientTriangleStripVertices;
 	delete _colorBillboardRenderer;
-	delete _textureTriangleRenderer;
+	delete _textureTriangleVertices;
 
 	delete _smoothTerrainSurface;
 	delete _smoothTerrainWater;
@@ -595,20 +594,20 @@ void BattleView::Render(const glm::mat4& transformx)
 	// Unit Facing Markers
 
 	glDisable(GL_DEPTH_TEST);
-	_textureTriangleRenderer->Reset();
+	_textureTriangleVertices->Reset(GL_TRIANGLES);
 
 	for (UnitCounter* marker : _unitMarkers)
 		if (marker->GetUnit()->IsFriendlyCommander(_commander))
-			marker->AppendFacingMarker(_textureTriangleRenderer, this);
+			marker->AppendFacingMarker(_textureTriangleVertices, this);
 	for (UnitMovementMarker* marker : _movementMarkers)
 		if (marker->GetUnit()->IsFriendlyCommander(_commander))
-			marker->AppendFacingMarker(_textureTriangleRenderer, this);
+			marker->AppendFacingMarker(_textureTriangleVertices, this);
 	for (UnitTrackingMarker* marker : _trackingMarkers)
 		if (marker->GetUnit()->IsFriendlyCommander(_commander))
-			marker->AppendFacingMarker(_textureTriangleRenderer, this);
+			marker->AppendFacingMarker(_textureTriangleVertices, this);
 
 	RenderCall<TextureShader>(GetSurface()->GetGraphicsContext())
-		.SetVertices(&_textureTriangleRenderer->_vertices)
+		.SetVertices(_textureTriangleVertices)
 		.SetUniform("transform", facingTransform)
 		.SetUniform("texture", _textureUnitMarkers)
 		.Render();

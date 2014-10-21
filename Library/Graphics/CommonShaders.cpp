@@ -234,6 +234,42 @@ TextureShader_3f::TextureShader_3f(GraphicsContext* gc) : ShaderProgram2<glm::ve
 }
 
 
+TextureShader::TextureShader(GraphicsContext* gc) : ShaderProgram2<glm::vec3, glm::vec2>(
+	"position", "texcoord",
+	VERTEX_SHADER
+	({
+		uniform mat4 transform;
+		attribute vec3 position;
+		attribute vec2 texcoord;
+		varying vec2 _texcoord;
+
+		void main()
+		{
+			vec4 p = transform * vec4(position, 1);
+
+			_texcoord = texcoord;
+
+			gl_Position = p;
+			gl_PointSize = 1.0;
+		}
+	}),
+	FRAGMENT_SHADER
+	({
+		uniform sampler2D texture;
+		varying vec2 _texcoord;
+
+		void main()
+		{
+			gl_FragColor = texture2D(texture, _texcoord);
+		}
+	}))
+{
+	_blend_sfactor = GL_ONE;
+	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
+
+
+
 OpaqueTextureShader_2f::OpaqueTextureShader_2f(GraphicsContext* gc) : ShaderProgram2<glm::vec2, glm::vec2>(
 	"position", "texcoord",
 	VERTEX_SHADER

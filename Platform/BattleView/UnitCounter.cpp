@@ -5,7 +5,6 @@
 #include <glm/gtc/constants.hpp>
 
 #include "Shapes/TextureBillboardRenderer.h"
-#include "Shapes/TextureShape3.h"
 #include "BattleModel/BattleSimulator.h"
 #include "BattleModel/BattleCommander.h"
 #include "BattleView.h"
@@ -90,7 +89,7 @@ void UnitCounter::AppendUnitMarker(TextureBillboardRenderer* renderer, bool flip
 }
 
 
-void UnitCounter::AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView)
+void UnitCounter::AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* battleView)
 {
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
@@ -139,13 +138,13 @@ void UnitCounter::AppendFacingMarker(TextureTriangleShape3* renderer, BattleView
 	glm::vec2 d3 = glm::vec2(d2.y, -d2.x);
 	glm::vec2 d4 = glm::vec2(d3.y, -d3.x);
 
-	renderer->AddVertex(glm::vec3(p + d1, 0), glm::vec2(tx1, ty2));
-	renderer->AddVertex(glm::vec3(p + d2, 0), glm::vec2(tx1, ty1));
-	renderer->AddVertex(glm::vec3(p + d3, 0), glm::vec2(tx2, ty1));
+	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d1, 0), glm::vec2(tx1, ty2)));
+	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d2, 0), glm::vec2(tx1, ty1)));
+	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d3, 0), glm::vec2(tx2, ty1)));
 
-	renderer->AddVertex(glm::vec3(p + d3, 0), glm::vec2(tx2, ty1));
-	renderer->AddVertex(glm::vec3(p + d4, 0), glm::vec2(tx2, ty2));
-	renderer->AddVertex(glm::vec3(p + d1, 0), glm::vec2(tx1, ty2));
+	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d3, 0), glm::vec2(tx2, ty1)));
+	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d4, 0), glm::vec2(tx2, ty2)));
+	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d1, 0), glm::vec2(tx1, ty2)));
 }
 
 

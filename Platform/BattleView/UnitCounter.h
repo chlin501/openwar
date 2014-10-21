@@ -14,7 +14,6 @@ class BattleSimulator;
 class BattleView;
 class BillboardModel;
 class TextureBillboardRenderer;
-class TextureTriangleShape3;
 class Unit;
 
 
@@ -37,7 +36,7 @@ public:
 	bool Animate(float seconds);
 
 	void AppendUnitMarker(TextureBillboardRenderer* renderer, bool flip);
-	void AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView);
+	void AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* battleView);
 
 	void AppendFighterWeapons(VertexBuffer_3f* vertices);
 	void AppendFighterBillboards(BillboardModel* billboardModel);

@@ -11,7 +11,6 @@
 class BattleView;
 class ColorBillboardShape;
 class TextureBillboardRenderer;
-class TextureTriangleShape3;
 
 
 class UnitMovementMarker : public UnitMarker
@@ -23,7 +22,7 @@ public:
 	bool Animate(float seconds);
 
 	void RenderMovementMarker(TextureBillboardRenderer* renderer);
-	void AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView);
+	void AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* battleView);
 	void RenderMovementFighters(ColorBillboardShape* renderer);
 	void RenderMovementPath(VertexBuffer_3f_4f* vertices);
 };

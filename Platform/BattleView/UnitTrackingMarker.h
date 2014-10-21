@@ -12,7 +12,6 @@
 class BattleView;
 class ColorBillboardShape;
 class TextureBillboardRenderer;
-class TextureTriangleShape3;
 
 
 class UnitTrackingMarker : public UnitMarker
@@ -81,7 +80,7 @@ public:
 
 	void RenderTrackingFighters(ColorBillboardShape* renderer);
 	void RenderTrackingMarker(TextureBillboardRenderer* renderer);
-	void AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView);
+	void AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* battleView);
 	void RenderTrackingShadow(TextureBillboardRenderer* renderer);
 	void RenderTrackingPath(VertexBuffer_3f_4f* vertices);
 	void RenderOrientation(VertexBuffer_3f_4f* vertices);
