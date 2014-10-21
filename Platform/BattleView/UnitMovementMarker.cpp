@@ -8,7 +8,7 @@
 #include "BattleModel/BattleCommander.h"
 #include "ColorBillboardShader.h"
 #include "Shapes/PathRenderer.h"
-#include "Shapes/TextureBillboardRenderer.h"
+#include "TextureBillboardShape.h"
 #include "BattleView.h"
 #include "UnitMovementMarker.h"
 
@@ -34,7 +34,7 @@ bool UnitMovementMarker::Animate(float seconds)
 }
 
 
-void UnitMovementMarker::RenderMovementMarker(TextureBillboardRenderer* renderer)
+void UnitMovementMarker::RenderMovementMarker(TextureBillboardShape* renderer)
 {
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;

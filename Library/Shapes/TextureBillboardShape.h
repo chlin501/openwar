@@ -49,17 +49,17 @@ class TextureBillboardShader : public ShaderProgram4<glm::vec3, float, glm::vec2
 };
 
 
-class TextureBillboardRenderer
+class TextureBillboardShape
 {
 public:
 	VertexBuffer_3f_1f_2f_2f _vertices;
 
-public:
-	TextureBillboardRenderer();
-	~TextureBillboardRenderer();
+	TextureBillboardShape();
+	~TextureBillboardShape();
 
 	void Reset();
 	void AddBillboard(glm::vec3 position, float height, affine2 texcoords);
+
 	void Draw(GraphicsContext* gc, texture* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit = bounds1f(0, 1024));
 
 	void Render(GraphicsContext* gc, BillboardModel* billboardModel, const glm::mat4x4& transform, const glm::vec3& cameraUp, float viewportHeight, float cameraFacingDegrees, bool flip);

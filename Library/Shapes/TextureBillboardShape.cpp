@@ -3,7 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include <algorithm>
-#include "TextureBillboardRenderer.h"
+#include "TextureBillboardShape.h"
 #import "RenderCall.h"
 
 
@@ -11,24 +11,17 @@ TextureBillboardShader::TextureBillboardShader(GraphicsContext* gc) : ShaderProg
 	"position", "height", "texcoord", "texsize",
 	VERTEX_SHADER
 	({
-		uniform
-		mat4 transform;
-		uniform
-		vec3 upvector;
+		uniform mat4 transform;
+		uniform vec3 upvector;
 		uniform float viewport_height;
 		uniform float min_point_size;
 		uniform float max_point_size;
-		attribute
-		vec3 position;
+		attribute vec3 position;
 		attribute float height;
-		attribute
-		vec2 texcoord;
-		attribute
-		vec2 texsize;
-		varying
-		vec2 _texcoord;
-		varying
-		vec2 _texsize;
+		attribute vec2 texcoord;
+		attribute vec2 texsize;
+		varying vec2 _texcoord;
+		varying vec2 _texsize;
 
 		void main()
 		{
@@ -46,12 +39,9 @@ TextureBillboardShader::TextureBillboardShader(GraphicsContext* gc) : ShaderProg
 	}),
 	FRAGMENT_SHADER
 	({
-		uniform
-		sampler2D texture;
-		varying
-		vec2 _texcoord;
-		varying
-		vec2 _texsize;
+		uniform sampler2D texture;
+		varying vec2 _texcoord;
+		varying vec2 _texsize;
 
 		void main()
 		{
@@ -66,24 +56,24 @@ TextureBillboardShader::TextureBillboardShader(GraphicsContext* gc) : ShaderProg
 }
 
 
-TextureBillboardRenderer::TextureBillboardRenderer()
+TextureBillboardShape::TextureBillboardShape()
 {
 }
 
 
-TextureBillboardRenderer::~TextureBillboardRenderer()
+TextureBillboardShape::~TextureBillboardShape()
 {
 }
 
 
-void TextureBillboardRenderer::Reset()
+void TextureBillboardShape::Reset()
 {
 	_vertices._mode = GL_POINTS;
 	_vertices.Clear();
 }
 
 
-void TextureBillboardRenderer::AddBillboard(glm::vec3 position, float height, affine2 texcoords)
+void TextureBillboardShape::AddBillboard(glm::vec3 position, float height, affine2 texcoords)
 {
 	glm::vec2 texpos = texcoords.transform(glm::vec2(0, 0));
 	glm::vec2 texsize = texcoords.transform(glm::vec2(1, 1)) - texpos;
@@ -99,7 +89,7 @@ struct billboard_index
 	float order;
 };
 
-void TextureBillboardRenderer::Draw(GraphicsContext* gc, texture* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
+void TextureBillboardShape::Draw(GraphicsContext* gc, texture* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
 {
 	static std::vector<Vertex_3f_1f_2f_2f> vertices;
 	static std::vector<billboard_index> indices;
@@ -154,7 +144,7 @@ static affine2 FlipY(const affine2& texcoords)
 }
 
 
-void TextureBillboardRenderer::Render(GraphicsContext* gc, BillboardModel* billboardModel, glm::mat4x4 const & transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bool flip)
+void TextureBillboardShape::Render(GraphicsContext* gc, BillboardModel* billboardModel, glm::mat4x4 const & transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bool flip)
 {
 	Reset();
 

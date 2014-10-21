@@ -9,7 +9,7 @@
 #include "VertexBuffer.h"
 
 class BattleView;
-class TextureBillboardRenderer;
+class TextureBillboardShape;
 
 
 class UnitMovementMarker : public UnitMarker
@@ -20,7 +20,7 @@ public:
 
 	bool Animate(float seconds);
 
-	void RenderMovementMarker(TextureBillboardRenderer* renderer);
+	void RenderMovementMarker(TextureBillboardShape* renderer);
 	void AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* battleView);
 	void RenderMovementFighters(VertexBuffer_3f_4f_1f* vertices);
 	void RenderMovementPath(VertexBuffer_3f_4f* vertices);

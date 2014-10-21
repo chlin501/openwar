@@ -44,9 +44,9 @@ BattleView::BattleView(GraphicsContext* gc) :
 	_lightNormal(),
 	_billboardTexture(nullptr),
 	_billboardModel(nullptr),
-	_textureBillboardRenderer(nullptr),
-	_textureBillboardRenderer1(nullptr),
-	_textureBillboardRenderer2(nullptr),
+	_textureBillboardShape(nullptr),
+	_textureBillboardShape1(nullptr),
+	_textureBillboardShape2(nullptr),
 	_casualtyMarker(0),
 	_movementMarkers(),
 	_trackingMarkers(),
@@ -149,9 +149,9 @@ BattleView::BattleView(GraphicsContext* gc) :
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeSmoke[i], 0, billboard_texcoords(i, 7, false));
 	}
 
-	_textureBillboardRenderer = new TextureBillboardRenderer();
-	_textureBillboardRenderer1 = new TextureBillboardRenderer();
-	_textureBillboardRenderer2 = new TextureBillboardRenderer();
+	_textureBillboardShape = new TextureBillboardShape();
+	_textureBillboardShape1 = new TextureBillboardShape();
+	_textureBillboardShape2 = new TextureBillboardShape();
 
 	_plainLineVertices = new VertexBuffer_3f();
 	_gradientLineVertices = new VertexBuffer_3f_4f();
@@ -179,9 +179,9 @@ BattleView::~BattleView()
 	delete _billboardTexture;
 	delete _billboardModel;
 
-	delete _textureBillboardRenderer;
-	delete _textureBillboardRenderer1;
-	delete _textureBillboardRenderer2;
+	delete _textureBillboardShape;
+	delete _textureBillboardShape1;
+	delete _textureBillboardShape2;
 
 	delete _plainLineVertices;
 	delete _gradientLineVertices;
@@ -569,7 +569,7 @@ void BattleView::Render(const glm::mat4& transformx)
 		marker->AppendFighterBillboards(_billboardModel);
 	for (SmokeCounter* marker : _smokeMarkers)
 		marker->AppendSmokeBillboards(_billboardModel);
-	_textureBillboardRenderer->Render(GetSurface()->GetGraphicsContext(), _billboardModel, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), GetFlip());
+	_textureBillboardShape->Render(GetSurface()->GetGraphicsContext(), _billboardModel, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), GetFlip());
 
 
 	// Range Markers
@@ -616,19 +616,19 @@ void BattleView::Render(const glm::mat4& transformx)
 
 	// Unit Markers
 
-	_textureBillboardRenderer1->Reset();
-	_textureBillboardRenderer2->Reset();
+	_textureBillboardShape1->Reset();
+	_textureBillboardShape2->Reset();
 
 	for (UnitCounter* marker : _unitMarkers)
-		marker->AppendUnitMarker(_textureBillboardRenderer2, GetFlip());
+		marker->AppendUnitMarker(_textureBillboardShape2, GetFlip());
 	for (UnitMovementMarker* marker : _movementMarkers)
-		marker->RenderMovementMarker(_textureBillboardRenderer1);
+		marker->RenderMovementMarker(_textureBillboardShape1);
 	for (UnitTrackingMarker* marker : _trackingMarkers)
-		marker->RenderTrackingMarker(_textureBillboardRenderer1);
+		marker->RenderTrackingMarker(_textureBillboardShape1);
 
 	bounds1f sizeLimit = GetUnitIconSizeLimit();
-	_textureBillboardRenderer1->Draw(GetSurface()->GetGraphicsContext(), _textureUnitMarkers, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), sizeLimit);
-	_textureBillboardRenderer2->Draw(GetSurface()->GetGraphicsContext(), _textureUnitMarkers, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), sizeLimit);
+	_textureBillboardShape1->Draw(GetSurface()->GetGraphicsContext(), _textureUnitMarkers, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), sizeLimit);
+	_textureBillboardShape2->Draw(GetSurface()->GetGraphicsContext(), _textureUnitMarkers, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), sizeLimit);
 
 
 	// Tracking Markers
@@ -636,9 +636,9 @@ void BattleView::Render(const glm::mat4& transformx)
 	glDisable(GL_DEPTH_TEST);
 	for (UnitTrackingMarker* marker : _trackingMarkers)
 	{
-		_textureBillboardRenderer1->Reset();
-		marker->RenderTrackingShadow(_textureBillboardRenderer1);
-		_textureBillboardRenderer1->Draw(GetSurface()->GetGraphicsContext(), _textureTouchMarker, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), bounds1f(64, 64));
+		_textureBillboardShape1->Reset();
+		marker->RenderTrackingShadow(_textureBillboardShape1);
+		_textureBillboardShape1->Draw(GetSurface()->GetGraphicsContext(), _textureTouchMarker, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), bounds1f(64, 64));
 	}
 
 

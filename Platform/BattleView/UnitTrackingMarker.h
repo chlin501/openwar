@@ -10,7 +10,7 @@
 #include "VertexBuffer.h"
 
 class BattleView;
-class TextureBillboardRenderer;
+class TextureBillboardShape;
 
 
 class UnitTrackingMarker : public UnitMarker
@@ -78,9 +78,9 @@ public:
 	float GetFacing() const;
 
 	void RenderTrackingFighters(VertexBuffer_3f_4f_1f* vertices);
-	void RenderTrackingMarker(TextureBillboardRenderer* renderer);
+	void RenderTrackingMarker(TextureBillboardShape* renderer);
 	void AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* battleView);
-	void RenderTrackingShadow(TextureBillboardRenderer* renderer);
+	void RenderTrackingShadow(TextureBillboardShape* renderer);
 	void RenderTrackingPath(VertexBuffer_3f_4f* vertices);
 	void RenderOrientation(VertexBuffer_3f_4f* vertices);
 };
