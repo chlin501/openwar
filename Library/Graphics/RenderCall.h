@@ -61,6 +61,16 @@ public:
 	virtual ~RenderCallBase();
 
 	template <class T>
+	RenderCallBase& SetUniform(const char* name, const T& value)
+	{
+		GetUniform<T>(name)->_value = value;
+		return *this;
+	}
+
+	void Render();
+
+private:
+	template <class T>
 	Uniform<T>* GetUniform(const char* name)
 	{
 		Uniform<T>* result = 0;
@@ -81,16 +91,7 @@ public:
 		return result;
 	}
 
-	template <class T>
-	RenderCallBase& SetUniform(const char* name, const T& value)
-	{
-		GetUniform<T>(name)->_value = value;
-		return *this;
-	}
-
-	void PreRender();
-
-	virtual void Render() = 0;
+	virtual VertexBufferBase* GetVertexBufferBase() = 0;
 };
 
 
@@ -113,14 +114,13 @@ public:
 		return *this;
 	}
 
-	virtual void Render()
+private:
+
+	virtual VertexBufferBase* GetVertexBufferBase()
 	{
-		if (_vertices != nullptr)
-		{
-			PreRender();
-			dynamic_cast<_ShaderProgram*>(_shaderprogram)->render(_vertices->_mode, *_vertices);
-		}
+		return _vertices;
 	}
+
 };
 
 

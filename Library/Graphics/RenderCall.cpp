@@ -98,9 +98,66 @@ RenderCallBase::~RenderCallBase()
 }
 
 
-void RenderCallBase::PreRender()
+void RenderCallBase::Render()
 {
-	glUseProgram(_shaderprogram->_program);
-	for (UniformBase* uniform : _uniforms)
-		uniform->Assign();
+	VertexBufferBase* vertices = GetVertexBufferBase();
+	if (vertices != nullptr && vertices->count() != 0)
+	{
+		glUseProgram(_shaderprogram->_program);
+		for (UniformBase* uniform : _uniforms)
+			uniform->Assign();
+
+		glUseProgram(_shaderprogram->_program);
+		CHECK_ERROR_GL();
+
+		if (vertices->_vbo != 0)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, vertices->_vbo);
+			CHECK_ERROR_GL();
+		}
+
+		const char* ptr = vertices->_vbo != 0 ? nullptr : reinterpret_cast<const char*>(vertices->data());
+		for (GLuint index = 0; index < _shaderprogram->_vertex_attributes.size(); ++index)
+		{
+			glEnableVertexAttribArray(index);
+			CHECK_ERROR_GL();
+
+			const renderer_vertex_attribute& item = _shaderprogram->_vertex_attributes[index];
+			const GLvoid* offset = reinterpret_cast<const GLvoid*>(ptr + item._offset);
+
+			glVertexAttribPointer(index, item._size, item._type, GL_FALSE, item._stride, offset);
+			CHECK_ERROR_GL();
+		}
+
+		if (_shaderprogram->_blend_sfactor != GL_ONE || _shaderprogram->_blend_dfactor != GL_ZERO)
+		{
+			glEnable(GL_BLEND);
+			CHECK_ERROR_GL();
+			glBlendFunc(_shaderprogram->_blend_sfactor, _shaderprogram->_blend_dfactor);
+			CHECK_ERROR_GL();
+		}
+
+		glDrawArrays(vertices->_mode, 0, vertices->count());
+		CHECK_ERROR_GL();
+
+		if (_shaderprogram->_blend_sfactor != GL_ONE || _shaderprogram->_blend_dfactor != GL_ZERO)
+		{
+			glDisable(GL_BLEND);
+			CHECK_ERROR_GL();
+			glBlendFunc(GL_ONE, GL_ZERO);
+			CHECK_ERROR_GL();
+		}
+
+		for (GLuint index = 0; index < _shaderprogram->_vertex_attributes.size(); ++index)
+		{
+			glDisableVertexAttribArray(index);
+			CHECK_ERROR_GL();
+		}
+
+		if (vertices->_vbo != 0)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			CHECK_ERROR_GL();
+		}
+	}
 }

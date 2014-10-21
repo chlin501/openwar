@@ -20,14 +20,13 @@ class VertexBufferBase
 public:
 	GLenum _mode;
 	GLuint _vbo;
-	GLuint _vao;
 	GLsizei _count;
 
 	VertexBufferBase();
 	virtual ~VertexBufferBase();
 
-	void _bind(const std::vector<renderer_vertex_attribute>& vertex_attributes, const void* data);
-	void unbind(const std::vector<renderer_vertex_attribute>& vertex_attributes);
+	virtual const void* data() const = 0;
+	virtual GLsizei count() const = 0;
 
 private:
 	VertexBufferBase(const VertexBufferBase&) {}
@@ -59,7 +58,12 @@ public:
 		_vertices.clear();
 	}
 
-	GLsizei count() const
+	virtual const void* data() const
+	{
+		return _vertices.data();
+	}
+
+	virtual GLsizei count() const
 	{
 		return _vbo != 0 ? _count : (GLsizei)_vertices.size();
 	}
@@ -126,11 +130,6 @@ public:
 		}
 		UpdateVBO(GL_STATIC_DRAW);
 		return *this;
-	}
-
-	void bind(const std::vector<renderer_vertex_attribute>& vertex_attributes)
-	{
-		_bind(vertex_attributes, _vertices.data());
 	}
 
 private:

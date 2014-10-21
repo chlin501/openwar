@@ -88,38 +88,6 @@ public:
 	{
 	}
 
-	void render(GLenum mode, VertexBuffer<VertexT>& vertices)
-	{
-		if (vertices.count() == 0)
-			return;
-
-		glUseProgram(_program);
-		CHECK_ERROR_GL();
-
-		vertices.bind(_vertex_attributes);
-
-		if (_blend_sfactor != GL_ONE || _blend_dfactor != GL_ZERO)
-		{
-			glEnable(GL_BLEND);
-			CHECK_ERROR_GL();
-			glBlendFunc(_blend_sfactor, _blend_dfactor);
-			CHECK_ERROR_GL();
-		}
-
-		glDrawArrays(mode, 0, vertices.count());
-		CHECK_ERROR_GL();
-
-		if (_blend_sfactor != GL_ONE || _blend_dfactor != GL_ZERO)
-		{
-			glDisable(GL_BLEND);
-			CHECK_ERROR_GL();
-			glBlendFunc(GL_ONE, GL_ZERO);
-			CHECK_ERROR_GL();
-		}
-
-		vertices.unbind(_vertex_attributes);
-	}
-
 private:
 	ShaderProgram(const ShaderProgram& _) : ShaderProgramBase(_) { }
 	ShaderProgram& operator=(const ShaderProgram&) { return *this; }
