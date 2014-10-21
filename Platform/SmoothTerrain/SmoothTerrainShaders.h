@@ -32,21 +32,21 @@ struct sobel_uniforms
 
 class TerrainInsideShader : public ShaderProgram2<glm::vec3, glm::vec3>
 {
-public:
+	friend class GraphicsContext;
 	TerrainInsideShader(GraphicsContext* gc);
 };
 
 
 class TerrainBorderShader : public ShaderProgram2<glm::vec3, glm::vec3>
 {
-public:
+	friend class GraphicsContext;
 	TerrainBorderShader(GraphicsContext* gc);
 };
 
 
 class TerrainSkirtShader : public ShaderProgram2<glm::vec3, float>
 {
-public:
+	friend class GraphicsContext;
 	TerrainSkirtShader(GraphicsContext* gc);
 };
 
@@ -54,21 +54,21 @@ public:
 
 class DepthInsideShader : public ShaderProgram2<glm::vec3, glm::vec3>
 {
-public:
+	friend class GraphicsContext;
 	DepthInsideShader(GraphicsContext* gc);
 };
 
 
 class DepthBorderShader : public ShaderProgram2<glm::vec3, glm::vec3>
 {
-public:
+	friend class GraphicsContext;
 	DepthBorderShader(GraphicsContext* gc);
 };
 
 
 class DepthSkirtShader : public ShaderProgram2<glm::vec3, float>
 {
-public:
+	friend class GraphicsContext;
 	DepthSkirtShader(GraphicsContext* gc);
 };
 
@@ -76,14 +76,14 @@ public:
 
 class SobelFilterShader : public ShaderProgram2<glm::vec2, glm::vec2>
 {
-public:
+	friend class GraphicsContext;
 	SobelFilterShader(GraphicsContext* gc);
 };
 
 
 class GroundShadowShader : public ShaderProgram1<glm::vec2>
 {
-public:
+	friend class GraphicsContext;
 	GroundShadowShader(GraphicsContext* gc);
 };
 
@@ -91,29 +91,17 @@ public:
 
 struct SmoothTerrainShaders
 {
-	TerrainInsideShader* _terrain_inside;
-	TerrainBorderShader* _terrain_border;
-	TerrainSkirtShader* _terrain_skirt;
-	DepthInsideShader* _depth_inside;
-	DepthBorderShader* _depth_border;
-	DepthSkirtShader* _depth_skirt;
-	SobelFilterShader* _sobel_filter;
-	GroundShadowShader* _ground_shadow;
+	void render_terrain_inside(GraphicsContext* gc, VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms);
+	void render_terrain_border(GraphicsContext* gc, VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms);
+	void render_terrain_skirt(GraphicsContext* gc, VertexBuffer_3f_1f& vertices, const glm::mat4& transform, const texture* texture);
 
-	SmoothTerrainShaders();
-	~SmoothTerrainShaders();
+	void render_depth_inside(GraphicsContext* gc, VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms);
+	void render_depth_border(GraphicsContext* gc, VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms);
+	void render_depth_skirt(GraphicsContext* gc, VertexBuffer_3f_1f& vertices, const glm::mat4& transform);
 
-	void render_terrain_inside(VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms);
-	void render_terrain_border(VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms);
-	void render_terrain_skirt(VertexBuffer_3f_1f& vertices, const glm::mat4& transform, const texture* texture);
+	void render_sobel_filter(GraphicsContext* gc, VertexBuffer_2f_2f& vertices, const sobel_uniforms& uniforms);
 
-	void render_depth_inside(VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms);
-	void render_depth_border(VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms);
-	void render_depth_skirt(VertexBuffer_3f_1f& vertices, const glm::mat4& transform);
-
-	void render_sobel_filter(VertexBuffer_2f_2f& vertices, const sobel_uniforms& uniforms);
-
-	void render_ground_shadow(VertexBuffer_2f& vertices, const terrain_uniforms& uniforms);
+	void render_ground_shadow(GraphicsContext* gc, VertexBuffer_2f& vertices, const terrain_uniforms& uniforms);
 
 	static texture* create_colormap();
 };

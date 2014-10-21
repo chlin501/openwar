@@ -4,7 +4,8 @@
 
 #include "SmoothTerrainShaders.h"
 #include "Image.h"
-#import "GraphicsContext.h"
+#include "GraphicsContext.h"
+#include "RenderCall.h"
 
 
 
@@ -387,126 +388,92 @@ GroundShadowShader::GroundShadowShader(GraphicsContext* gc) : ShaderProgram1<glm
 }
 
 
-SmoothTerrainShaders::SmoothTerrainShaders() :
-_terrain_inside(nullptr),
-_terrain_border(nullptr),
-_terrain_skirt(nullptr),
-_depth_inside(nullptr),
-_depth_border(nullptr),
-_depth_skirt(nullptr),
-_sobel_filter(nullptr),
-_ground_shadow(nullptr)
+void SmoothTerrainShaders::render_terrain_inside(GraphicsContext* gc, VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms)
 {
-}
-
-
-SmoothTerrainShaders::~SmoothTerrainShaders()
-{
-	delete _terrain_inside;
-	delete _terrain_border;
-	delete _terrain_skirt;
-	delete _depth_inside;
-	delete _depth_border;
-	delete _depth_skirt;
-	delete _sobel_filter;
-	delete _ground_shadow;
-}
-
-
-void SmoothTerrainShaders::render_terrain_inside(VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms)
-{
-	if (_terrain_inside == nullptr)
-		_terrain_inside = new TerrainInsideShader(nullptr);
-
-	_terrain_inside->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_terrain_inside->get_uniform<glm::vec3>("light_normal").set_value(uniforms._light_normal);
-	_terrain_inside->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
-	_terrain_inside->get_uniform<const texture*>("colormap").set_value(uniforms._colormap);
-	_terrain_inside->get_uniform<const texture*>("splatmap").set_value(uniforms._splatmap);
-	_terrain_inside->render(vertices);
+	RenderCall<TerrainInsideShader>(gc)
+		.SetVertices(&vertices)
+		.SetUniform("transform", uniforms._transform)
+		.SetUniform("light_normal", uniforms._light_normal)
+		.SetUniform("map_bounds", uniforms._map_bounds)
+		.SetUniform("colormap", uniforms._colormap)
+		.SetUniform("splatmap", uniforms._splatmap)
+		.Render();
 }
 
 
 
-void SmoothTerrainShaders::render_terrain_border(VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_terrain_border(GraphicsContext* gc, VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms)
 {
-	if (_terrain_border == nullptr)
-		_terrain_border = new TerrainBorderShader(nullptr);
-
-	_terrain_border->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_terrain_border->get_uniform<glm::vec3>("light_normal").set_value(uniforms._light_normal);
-	_terrain_border->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
-	_terrain_border->get_uniform<const texture*>("colormap").set_value(uniforms._colormap);
-	_terrain_border->get_uniform<const texture*>("splatmap").set_value(uniforms._splatmap);
-	_terrain_border->render(vertices);
+	RenderCall<TerrainBorderShader>(gc)
+		.SetVertices(&vertices)
+		.SetUniform("transform", uniforms._transform)
+		.SetUniform("light_normal", uniforms._light_normal)
+		.SetUniform("map_bounds", uniforms._map_bounds)
+		.SetUniform("colormap", uniforms._colormap)
+		.SetUniform("splatmap", uniforms._splatmap)
+		.Render();
 }
 
 
 
-void SmoothTerrainShaders::render_terrain_skirt(VertexBuffer_3f_1f& vertices, const glm::mat4& transform, const texture* texturex)
+void SmoothTerrainShaders::render_terrain_skirt(GraphicsContext* gc, VertexBuffer_3f_1f& vertices, const glm::mat4& transform, const texture* texturex)
 {
-	if (_terrain_skirt == nullptr)
-		_terrain_skirt = new TerrainSkirtShader(nullptr);
-
-	_terrain_skirt->get_uniform<glm::mat4>("transform").set_value(transform);
-	_terrain_skirt->get_uniform<const texture*>("texture").set_value(texturex);
-	_terrain_skirt->render(vertices);
+	RenderCall<TerrainSkirtShader>(gc)
+		.SetVertices(&vertices)
+		.SetUniform("transform", transform)
+		.SetUniform("texture", texturex)
+		.Render();
 }
 
 
 
-void SmoothTerrainShaders::render_depth_inside(VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_depth_inside(GraphicsContext* gc, VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms)
 {
-	if (_depth_inside == nullptr)
-		_depth_inside = new DepthInsideShader(nullptr);
-
-	_depth_inside->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_depth_inside->render(vertices);
+	RenderCall<DepthInsideShader>(gc)
+		.SetVertices(&vertices)
+		.SetUniform("transform", uniforms._transform)
+		.Render();
 }
 
 
 
-void SmoothTerrainShaders::render_depth_border(VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_depth_border(GraphicsContext* gc, VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms)
 {
-	if (_depth_border == nullptr)
-		_depth_border = new DepthBorderShader(nullptr);
-
-	_depth_border->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_depth_border->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
-	_depth_border->render(vertices);
+	RenderCall<DepthBorderShader>(gc)
+		.SetVertices(&vertices)
+		.SetUniform("transform", uniforms._transform)
+		.SetUniform("map_bounds", uniforms._map_bounds)
+		.Render();
 }
 
 
 
-void SmoothTerrainShaders::render_depth_skirt(VertexBuffer_3f_1f& vertices, const glm::mat4& transform)
+void SmoothTerrainShaders::render_depth_skirt(GraphicsContext* gc, VertexBuffer_3f_1f& vertices, const glm::mat4& transform)
 {
-	if (_depth_skirt == nullptr)
-		_depth_skirt = new DepthSkirtShader(nullptr);
-
-	_depth_skirt->get_uniform<glm::mat4>("transform").set_value(transform);
-	_depth_skirt->render(vertices);
+	RenderCall<DepthSkirtShader>(gc)
+		.SetVertices(&vertices)
+		.SetUniform("transform", transform)
+		.Render();
 }
 
 
-void SmoothTerrainShaders::render_sobel_filter(VertexBuffer_2f_2f& vertices, const sobel_uniforms& uniforms)
+void SmoothTerrainShaders::render_sobel_filter(GraphicsContext* gc, VertexBuffer_2f_2f& vertices, const sobel_uniforms& uniforms)
 {
-	if (_sobel_filter == nullptr)
-		_sobel_filter = new SobelFilterShader(nullptr);
-
-	_depth_skirt->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_depth_skirt->get_uniform<const texture*>("depth").set_value(uniforms._depth);
-	_sobel_filter->render(vertices);
+	RenderCall<SobelFilterShader>(gc)
+		.SetVertices(&vertices)
+		.SetUniform("transform", uniforms._transform)
+		.SetUniform("depth", uniforms._depth)
+		.Render();
 }
 
 
-void SmoothTerrainShaders::render_ground_shadow(VertexBuffer_2f& vertices, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_ground_shadow(GraphicsContext* gc, VertexBuffer_2f& vertices, const terrain_uniforms& uniforms)
 {
-	if (_ground_shadow == nullptr)
-		_ground_shadow = new GroundShadowShader(nullptr);
-
-	_ground_shadow->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_ground_shadow->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
-	_ground_shadow->render(vertices);
+	RenderCall<GroundShadowShader>(gc)
+		.SetVertices(&vertices)
+		.SetUniform("transform", uniforms._transform)
+		.SetUniform("map_bounds", uniforms._map_bounds)
+		.Render();
 }
 
 

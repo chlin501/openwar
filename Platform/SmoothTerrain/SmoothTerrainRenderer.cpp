@@ -69,7 +69,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 	shadow_uniforms._transform = transform;
 	shadow_uniforms._map_bounds = map_bounds;
 
-	_renderers->render_ground_shadow(_shadowVertices, shadow_uniforms);
+	_renderers->render_ground_shadow(_gc, _shadowVertices, shadow_uniforms);
 
 	glDepthMask(true);
 
@@ -93,14 +93,14 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 		du._transform = uniforms._transform;
 		du._map_bounds = map_bounds;
 
-		_renderers->render_depth_inside(_insideVertices, du);
-		_renderers->render_depth_border(_borderVertices, du);
+		_renderers->render_depth_inside(_gc, _insideVertices, du);
+		_renderers->render_depth_border(_gc, _borderVertices, du);
 
-		_renderers->render_depth_skirt(_skirtVertices, uniforms._transform);
+		_renderers->render_depth_skirt(_gc, _skirtVertices, uniforms._transform);
 	}
 
-	_renderers->render_terrain_inside(_insideVertices, uniforms);
-	_renderers->render_terrain_border(_borderVertices, uniforms);
+	_renderers->render_terrain_inside(_gc, _insideVertices, uniforms);
+	_renderers->render_terrain_border(_gc, _borderVertices, uniforms);
 
 	if (_showLines)
 	{
@@ -114,7 +114,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	_renderers->render_terrain_skirt(_skirtVertices, uniforms._transform, _colormap);
+	_renderers->render_terrain_skirt(_gc, _skirtVertices, uniforms._transform, _colormap);
 
 	if (_depth != nullptr)
 	{
@@ -131,7 +131,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 		sobel_uniforms su;
 		su._transform = glm::mat4x4();
 		su._depth = _depth;
-		_renderers->render_sobel_filter(vertices, su);
+		_renderers->render_sobel_filter(_gc, vertices, su);
 
 		glDepthMask(true);
 		glEnable(GL_DEPTH_TEST);
