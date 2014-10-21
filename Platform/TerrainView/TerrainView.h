@@ -9,8 +9,7 @@
 #include "BattleModel/HeightMap.h"
 #include "Surface/Content.h"
 #include "Algebra/geometry.h"
-
-class PlainLineShape3;
+#include "VertexBuffer.h"
 
 
 class TerrainView : public Content
@@ -33,7 +32,7 @@ public:
 
 	void ShowMouseHint(glm::vec2 position);
 	void HideMouseHint();
-	void RenderMouseHint(PlainLineShape3* renderer);
+	void RenderMouseHint(VertexBuffer_3f* vertices);
 
 	void SetHeightMap(HeightMap* heightMap);
 

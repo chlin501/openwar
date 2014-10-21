@@ -48,6 +48,20 @@ class PlainShader_2f : public ShaderProgram1<glm::vec2>
 };
 
 
+class PlainShader : public ShaderProgram1<glm::vec3>
+{
+	friend class GraphicsContext;
+/*
+	attribute vec3 position;
+
+	uniform mat4 transform;
+	uniform float point_size;
+	uniform vec4 color;
+ */
+	PlainShader(GraphicsContext* gc);
+};
+
+
 class PlainShader_3f : public ShaderProgram1<glm::vec3>
 {
 	friend class GraphicsContext;

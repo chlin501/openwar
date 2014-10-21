@@ -17,8 +17,6 @@ class BattleCommander;
 class CasualtyMarker;
 class ColorBillboardShape;
 class UnitMovementMarker;
-class PlainLineShape3;
-class PlainTriangleShape3;
 class RangeMarker;
 class ShootingCounter;
 class TextureTriangleShape3;
@@ -46,8 +44,7 @@ class BattleView : public TerrainView, public BattleObserver
 	std::vector<UnitMovementMarker*> _movementMarkers;
 	std::vector<UnitTrackingMarker*> _trackingMarkers;
 
-	PlainLineShape3* _plainLineRenderer;
-	PlainTriangleShape3* _plainTriangleRenderer;
+	VertexBuffer_3f* _plainLineVertices;
 	VertexBuffer_3f_4f* _gradientLineVertices;
 	VertexBuffer_3f_4f* _gradientTriangleVertices;
 	VertexBuffer_3f_4f* _gradientTriangleStripVertices;

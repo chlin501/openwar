@@ -9,7 +9,6 @@
 #include "BattleModel/BattleCommander.h"
 #include "BattleModel/BattleSimulator.h"
 #include "Audio/SoundPlayer.h"
-#include "Shapes/PlainShape3.h"
 #include "BattleGesture.h"
 #include "BattleView.h"
 #include "UnitCounter.h"

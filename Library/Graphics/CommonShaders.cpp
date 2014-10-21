@@ -102,6 +102,37 @@ PlainShader_2f::PlainShader_2f(GraphicsContext* gc) : ShaderProgram1<glm::vec2>(
 }
 
 
+PlainShader::PlainShader(GraphicsContext* gc) : ShaderProgram1<glm::vec3>(
+	"position",
+	VERTEX_SHADER
+	({
+		attribute vec3 position;
+		uniform mat4 transform;
+		uniform float point_size;
+
+		void main()
+		{
+			vec4 p = transform * vec4(position, 1);
+
+			gl_Position = p;
+			gl_PointSize = point_size;
+		}
+	}),
+	FRAGMENT_SHADER
+	({
+		uniform vec4 color;
+
+		void main()
+		{
+			gl_FragColor = color;
+		}
+	}))
+{
+	_blend_sfactor = GL_SRC_ALPHA;
+	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
+
+
 PlainShader_3f::PlainShader_3f(GraphicsContext* gc) : ShaderProgram1<glm::vec3>(
 	"position",
 	VERTEX_SHADER

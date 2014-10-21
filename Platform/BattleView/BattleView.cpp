@@ -10,7 +10,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Shapes/ColorBillboardShape.h"
-#include "Shapes/PlainShape3.h"
 #include "Shapes/TextureShape3.h"
 #include "Surface/Surface.h"
 #include "BattleModel/BattleCommander.h"
@@ -52,8 +51,7 @@ BattleView::BattleView(GraphicsContext* gc) :
 	_casualtyMarker(0),
 	_movementMarkers(),
 	_trackingMarkers(),
-	_plainLineRenderer(nullptr),
-	_plainTriangleRenderer(nullptr),
+	_plainLineVertices(nullptr),
 	_gradientLineVertices(nullptr),
 	_gradientTriangleVertices(nullptr),
 	_gradientTriangleStripVertices(nullptr),
@@ -156,8 +154,7 @@ BattleView::BattleView(GraphicsContext* gc) :
 	_textureBillboardRenderer1 = new TextureBillboardRenderer();
 	_textureBillboardRenderer2 = new TextureBillboardRenderer();
 
-	_plainLineRenderer = new PlainLineShape3();
-	_plainTriangleRenderer = new PlainTriangleShape3();
+	_plainLineVertices = new VertexBuffer_3f();
 	_gradientLineVertices = new VertexBuffer_3f_4f();
 	_gradientTriangleVertices = new VertexBuffer_3f_4f();
 	_gradientTriangleStripVertices = new VertexBuffer_3f_4f();
@@ -187,8 +184,7 @@ BattleView::~BattleView()
 	delete _textureBillboardRenderer1;
 	delete _textureBillboardRenderer2;
 
-	delete _plainLineRenderer;
-	delete _plainTriangleRenderer;
+	delete _plainLineVertices;
 	delete _gradientLineVertices;
 	delete _gradientTriangleVertices;
 	delete _gradientTriangleStripVertices;
@@ -540,13 +536,13 @@ void BattleView::Render(const glm::mat4& transformx)
 	// Fighter Weapons
 
 	glDepthMask(false);
-	_plainLineRenderer->Reset();
+	_plainLineVertices->Reset(GL_LINES);
 	for (UnitCounter* marker : _unitMarkers)
-		marker->AppendFighterWeapons(_plainLineRenderer);
+		marker->AppendFighterWeapons(_plainLineVertices);
 
 	glLineWidth(1);
 	RenderCall<PlainShader>(GetSurface()->GetGraphicsContext())
-		.SetVertices(&_plainLineRenderer->_vertices)
+		.SetVertices(_plainLineVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("point_size", 1)
 		.SetUniform("color", glm::vec4(0.4, 0.4, 0.4, 0.6))
@@ -722,12 +718,12 @@ void BattleView::Render(const glm::mat4& transformx)
 
 	// Mouse Hint
 
-	_plainLineRenderer->Reset();
-	RenderMouseHint(_plainLineRenderer);
+	_plainLineVertices->Reset(GL_LINES);
+	RenderMouseHint(_plainLineVertices);
 
 	glLineWidth(1);
 	RenderCall<PlainShader>(GetSurface()->GetGraphicsContext())
-		.SetVertices(&_plainLineRenderer->_vertices)
+		.SetVertices(_plainLineVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("point_size", 1)
 		.SetUniform("color", glm::vec4(0, 0, 0, 0.5f))

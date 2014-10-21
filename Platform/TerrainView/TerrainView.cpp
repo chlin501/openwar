@@ -8,7 +8,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "BattleModel/HeightMap.h"
-#include "Shapes/PlainShape3.h"
 #include "TerrainView.h"
 
 
@@ -40,7 +39,7 @@ void TerrainView::HideMouseHint()
 }
 
 
-void TerrainView::RenderMouseHint(PlainLineShape3* renderer)
+void TerrainView::RenderMouseHint(VertexBuffer_3f* vertices)
 {
 	if (_mouseHintVisible)
 	{
@@ -49,11 +48,20 @@ void TerrainView::RenderMouseHint(PlainLineShape3* renderer)
 			p.z = 0;
 		float d = 5;
 
-		renderer->AddLine(p + glm::vec3(0, 0, -d), p + glm::vec3(0, 0, d));
-		renderer->AddLine(p + glm::vec3(-d, 0, -d), p + glm::vec3(d, 0, d));
-		renderer->AddLine(p + glm::vec3(d, 0, -d), p + glm::vec3(-d, 0, d));
-		renderer->AddLine(p + glm::vec3(0, d, -d), p + glm::vec3(0, -d, d));
-		renderer->AddLine(p + glm::vec3(0, -d, -d), p + glm::vec3(0, d, d));
+		vertices->AddVertex(Vertex_3f(p + glm::vec3(0, 0, -d)));
+		vertices->AddVertex(Vertex_3f(p + glm::vec3(0, 0, d)));
+
+		vertices->AddVertex(Vertex_3f(p + glm::vec3(-d, 0, -d)));
+		vertices->AddVertex(Vertex_3f(p + glm::vec3(d, 0, d)));
+
+		vertices->AddVertex(Vertex_3f(p + glm::vec3(d, 0, -d)));
+		vertices->AddVertex(Vertex_3f(p + glm::vec3(-d, 0, d)));
+
+		vertices->AddVertex(Vertex_3f(p + glm::vec3(0, d, -d)));
+		vertices->AddVertex(Vertex_3f(p + glm::vec3(0, -d, d)));
+
+		vertices->AddVertex(Vertex_3f(p + glm::vec3(0, -d, -d)));
+		vertices->AddVertex(Vertex_3f(p + glm::vec3(0, d, d)));
 	}
 }
 

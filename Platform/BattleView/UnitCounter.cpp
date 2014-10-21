@@ -4,7 +4,6 @@
 
 #include <glm/gtc/constants.hpp>
 
-#include "Shapes/PlainShape3.h"
 #include "Shapes/TextureBillboardRenderer.h"
 #include "Shapes/TextureShape3.h"
 #include "BattleModel/BattleSimulator.h"
@@ -150,7 +149,7 @@ void UnitCounter::AppendFacingMarker(TextureTriangleShape3* renderer, BattleView
 }
 
 
-void UnitCounter::AppendFighterWeapons(PlainLineShape3* renderer)
+void UnitCounter::AppendFighterWeapons(VertexBuffer_3f* vertices)
 {
 	if (_unit->stats.weaponReach > 0)
 	{
@@ -159,9 +158,8 @@ void UnitCounter::AppendFighterWeapons(PlainLineShape3* renderer)
 			glm::vec2 p1 = fighter->state.position;
 			glm::vec2 p2 = p1 + _unit->stats.weaponReach * vector2_from_angle(fighter->state.bearing);
 
-			renderer->AddLine(
-				_battleView->GetSimulator()->GetHeightMap()->GetPosition(p1, 1),
-				_battleView->GetSimulator()->GetHeightMap()->GetPosition(p2, 1));
+			vertices->AddVertex(Vertex_3f(_battleView->GetSimulator()->GetHeightMap()->GetPosition(p1, 1)));
+			vertices->AddVertex(Vertex_3f(_battleView->GetSimulator()->GetHeightMap()->GetPosition(p2, 1)));
 		}
 	}
 }

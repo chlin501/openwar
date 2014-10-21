@@ -8,11 +8,11 @@
 #include "BattleModel/BattleSimulator.h"
 #include "BattleModel/SamuraiModule.h"
 #include "Algebra/bounds.h"
+#include "VertexBuffer.h"
 
 class BattleSimulator;
 class BattleView;
 class BillboardModel;
-class PlainLineShape3;
 class TextureBillboardRenderer;
 class TextureTriangleShape3;
 class Unit;
@@ -39,7 +39,7 @@ public:
 	void AppendUnitMarker(TextureBillboardRenderer* renderer, bool flip);
 	void AppendFacingMarker(TextureTriangleShape3* renderer, BattleView* battleView);
 
-	void AppendFighterWeapons(PlainLineShape3* renderer);
+	void AppendFighterWeapons(VertexBuffer_3f* vertices);
 	void AppendFighterBillboards(BillboardModel* billboardModel);
 };
 
