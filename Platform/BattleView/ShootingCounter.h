@@ -38,7 +38,7 @@ public:
 	bool Animate(float seconds);
 	void AddProjectile(glm::vec3 position1, glm::vec3 position2, float delay, float duration);
 
-	void Render(VertexBuffer_3f_4f* renderer);
+	void Render(VertexBuffer_3f_4f* vertices);
 
 private:
 	void RenderArrow(VertexBuffer_3f_4f* vertices, glm::vec3 p1, glm::vec3 p2, float t);

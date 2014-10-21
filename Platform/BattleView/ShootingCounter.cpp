@@ -82,7 +82,7 @@ bool ShootingCounter::Animate(float seconds)
 }
 
 
-void ShootingCounter::Render(VertexBuffer_3f_4f* renderer)
+void ShootingCounter::Render(VertexBuffer_3f_4f* vertices)
 {
 	for (ShootingCounter::Projectile& projectile : _projectiles)
 	{
@@ -90,9 +90,9 @@ void ShootingCounter::Render(VertexBuffer_3f_4f* renderer)
 		if (0 <= t && t <= 1)
 		{
 			if (_missileType == MissileType::Bow)
-				RenderArrow(renderer, projectile.position1, projectile.position2, t);
+				RenderArrow(vertices, projectile.position1, projectile.position2, t);
 			else
-				RenderBullet(renderer, projectile.position1, projectile.position2, t);
+				RenderBullet(vertices, projectile.position1, projectile.position2, t);
 		}
 	}
 }
