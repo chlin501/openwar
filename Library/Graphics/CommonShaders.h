@@ -21,7 +21,7 @@ class GradientShader_2f : public ShaderProgram2<glm::vec2, glm::vec4>
 };
 
 
-class GradientShader : public ShaderProgram2<glm::vec3, glm::vec4>
+class GradientShader_3f : public ShaderProgram2<glm::vec3, glm::vec4>
 {
 	friend class GraphicsContext;
 /*
@@ -30,7 +30,7 @@ class GradientShader : public ShaderProgram2<glm::vec3, glm::vec4>
 	uniform mat4 transform;
 	uniform float point_size;
  */
-	GradientShader(GraphicsContext* gc);
+	GradientShader_3f(GraphicsContext* gc);
 };
 
 
@@ -45,20 +45,6 @@ class PlainShader_2f : public ShaderProgram1<glm::vec2>
 	uniform vec4 color;
  */
 	PlainShader_2f(GraphicsContext* gc);
-};
-
-
-class PlainShader : public ShaderProgram1<glm::vec3>
-{
-	friend class GraphicsContext;
-/*
-	attribute vec3 position;
-
-	uniform mat4 transform;
-	uniform float point_size;
-	uniform vec4 color;
- */
-	PlainShader(GraphicsContext* gc);
 };
 
 
@@ -101,19 +87,6 @@ class TextureShader_3f : public ShaderProgram2<glm::vec3, glm::vec2>
 	uniform sampler2D texture;
  */
 	TextureShader_3f(GraphicsContext* gc);
-};
-
-
-class TextureShader : public ShaderProgram2<glm::vec3, glm::vec2>
-{
-	friend class GraphicsContext;
-/*
-	attribute vec3 position;
-	attribute vec2 texcoord;
-	uniform mat4 transform;
-	uniform sampler2D texture;
- */
-	TextureShader(GraphicsContext* gc);
 };
 
 

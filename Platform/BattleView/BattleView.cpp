@@ -540,7 +540,7 @@ void BattleView::Render(const glm::mat4& transformx)
 		marker->AppendFighterWeapons(_plainLineVertices);
 
 	glLineWidth(1);
-	RenderCall<PlainShader>(GetSurface()->GetGraphicsContext())
+	RenderCall<PlainShader_3f>(GetSurface()->GetGraphicsContext())
 		.SetVertices(_plainLineVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("point_size", 1)
@@ -582,7 +582,7 @@ void BattleView::Render(const glm::mat4& transformx)
 			_gradientTriangleStripVertices->Reset(GL_TRIANGLE_STRIP);
 			marker.Render(_gradientTriangleStripVertices);
 
-			RenderCall<GradientShader>(GetSurface()->GetGraphicsContext())
+			RenderCall<GradientShader_3f>(GetSurface()->GetGraphicsContext())
 				.SetVertices(_gradientTriangleStripVertices)
 				.SetUniform("transform", contentTransform)
 				.SetUniform("point_size", 1)
@@ -606,7 +606,7 @@ void BattleView::Render(const glm::mat4& transformx)
 		if (marker->GetUnit()->IsFriendlyCommander(_commander))
 			marker->AppendFacingMarker(_textureTriangleVertices, this);
 
-	RenderCall<TextureShader>(GetSurface()->GetGraphicsContext())
+	RenderCall<TextureShader_3f>(GetSurface()->GetGraphicsContext())
 		.SetVertices(_textureTriangleVertices)
 		.SetUniform("transform", facingTransform)
 		.SetUniform("texture", _textureUnitMarkers)
@@ -649,7 +649,7 @@ void BattleView::Render(const glm::mat4& transformx)
 	for (UnitMovementMarker* marker : _movementMarkers)
 		marker->RenderMovementPath(_gradientTriangleVertices);
 
-	RenderCall<GradientShader>(GetSurface()->GetGraphicsContext())
+	RenderCall<GradientShader_3f>(GetSurface()->GetGraphicsContext())
 		.SetVertices(_gradientTriangleVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("point_size", 1)
@@ -665,7 +665,7 @@ void BattleView::Render(const glm::mat4& transformx)
 		marker->RenderTrackingPath(_gradientTriangleVertices);
 		marker->RenderOrientation(_gradientTriangleVertices);
 
-		RenderCall<GradientShader>(GetSurface()->GetGraphicsContext())
+		RenderCall<GradientShader_3f>(GetSurface()->GetGraphicsContext())
 			.SetVertices(_gradientTriangleVertices)
 			.SetUniform("transform", contentTransform)
 			.SetUniform("point_size", 1)
@@ -708,7 +708,7 @@ void BattleView::Render(const glm::mat4& transformx)
 	for (ShootingCounter* shootingCounter : _shootingCounters)
 		shootingCounter->Render(_gradientLineVertices);
 
-	RenderCall<GradientShader>(GetSurface()->GetGraphicsContext())
+	RenderCall<GradientShader_3f>(GetSurface()->GetGraphicsContext())
 		.SetVertices(_gradientLineVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("point_size", 1)
@@ -721,7 +721,7 @@ void BattleView::Render(const glm::mat4& transformx)
 	RenderMouseHint(_plainLineVertices);
 
 	glLineWidth(1);
-	RenderCall<PlainShader>(GetSurface()->GetGraphicsContext())
+	RenderCall<PlainShader_3f>(GetSurface()->GetGraphicsContext())
 		.SetVertices(_plainLineVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("point_size", 1)

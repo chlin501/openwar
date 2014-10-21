@@ -37,7 +37,7 @@ GradientShader_2f::GradientShader_2f(GraphicsContext* gc) : ShaderProgram2<glm::
 }
 
 
-GradientShader::GradientShader(GraphicsContext* gc) : ShaderProgram2<glm::vec3, glm::vec4>(
+GradientShader_3f::GradientShader_3f(GraphicsContext* gc) : ShaderProgram2<glm::vec3, glm::vec4>(
 	"position", "color",
 	VERTEX_SHADER
 	({
@@ -82,37 +82,6 @@ PlainShader_2f::PlainShader_2f(GraphicsContext* gc) : ShaderProgram1<glm::vec2>(
 		void main()
 		{
 			vec4 p = transform * vec4(position.x, position.y, 0, 1);
-
-			gl_Position = p;
-			gl_PointSize = point_size;
-		}
-	}),
-	FRAGMENT_SHADER
-	({
-		uniform vec4 color;
-
-		void main()
-		{
-			gl_FragColor = color;
-		}
-	}))
-{
-	_blend_sfactor = GL_SRC_ALPHA;
-	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
-}
-
-
-PlainShader::PlainShader(GraphicsContext* gc) : ShaderProgram1<glm::vec3>(
-	"position",
-	VERTEX_SHADER
-	({
-		attribute vec3 position;
-		uniform mat4 transform;
-		uniform float point_size;
-
-		void main()
-		{
-			vec4 p = transform * vec4(position, 1);
 
 			gl_Position = p;
 			gl_PointSize = point_size;
@@ -232,42 +201,6 @@ TextureShader_3f::TextureShader_3f(GraphicsContext* gc) : ShaderProgram2<glm::ve
 	_blend_sfactor = GL_ONE;
 	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }
-
-
-TextureShader::TextureShader(GraphicsContext* gc) : ShaderProgram2<glm::vec3, glm::vec2>(
-	"position", "texcoord",
-	VERTEX_SHADER
-	({
-		uniform mat4 transform;
-		attribute vec3 position;
-		attribute vec2 texcoord;
-		varying vec2 _texcoord;
-
-		void main()
-		{
-			vec4 p = transform * vec4(position, 1);
-
-			_texcoord = texcoord;
-
-			gl_Position = p;
-			gl_PointSize = 1.0;
-		}
-	}),
-	FRAGMENT_SHADER
-	({
-		uniform sampler2D texture;
-		varying vec2 _texcoord;
-
-		void main()
-		{
-			gl_FragColor = texture2D(texture, _texcoord);
-		}
-	}))
-{
-	_blend_sfactor = GL_ONE;
-	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
-}
-
 
 
 OpaqueTextureShader_2f::OpaqueTextureShader_2f(GraphicsContext* gc) : ShaderProgram2<glm::vec2, glm::vec2>(
