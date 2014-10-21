@@ -79,7 +79,7 @@ _battleLayer(nullptr)
 	OnFrameChanged();
 	UpdateButtonsAndGestures();
 
-	_scriptHintRenderer = new GradientLineShape3(GetGraphicsContext());
+	_scriptHintRenderer = new GradientLineShape3();
 }
 
 

@@ -71,10 +71,11 @@ void ButtonRendering::RenderCornerButton(const glm::mat4& transform, texture* te
 	AddRect(vertices, bounds2f(inner.min.x, inner.max.y, inner.max.x, outer.max.y), bounds2f(0.5, 0.5, 0.5, 1.0));
 	AddRect(vertices, bounds2f(inner.max.x, inner.max.y, outer.max.x, outer.max.y), bounds2f(0.5, 0.5, 1.0, 1.0));
 
-	TextureShader_2f* shader = _gc->GetShaderProgram<TextureShader_2f>();
-	shader->get_uniform<glm::mat4>("transform").set_value(transform);
-	shader->get_uniform<const texture*>("texture").set_value(texturex);
-	shader->render(vertices);
+	RenderCall<TextureShader_2f>(_gc)
+		.SetVertices(&vertices)
+		.SetUniform("transform", transform)
+		.SetUniform("texture", texturex)
+		.Render();
 }
 
 
@@ -99,18 +100,20 @@ void ButtonRendering::RenderTextureRect(const glm::mat4& transform, texture* tex
 
 	if (alpha == 1)
 	{
-		TextureShader_2f* shader = _gc->GetShaderProgram<TextureShader_2f>();
-		shader->get_uniform<glm::mat4>("transform").set_value(transform);
-		shader->get_uniform<const texture*>("texture").set_value(texturex);
-		shader->render(vertices);
+		RenderCall<TextureShader_2f>(_gc)
+			.SetVertices(&vertices)
+			.SetUniform("transform", transform)
+			.SetUniform("texture", texturex)
+			.Render();
 	}
 	else
 	{
-		AlphaTextureShader_2f* shader = _gc->GetShaderProgram<AlphaTextureShader_2f>();
-		shader->get_uniform<glm::mat4>("transform").set_value(transform);
-		shader->get_uniform<const texture*>("texture").set_value(texturex);
-		shader->get_uniform<float>("alpha").set_value(alpha);
-		shader->render(vertices);
+		RenderCall<AlphaTextureShader_2f>(_gc)
+			.SetVertices(&vertices)
+			.SetUniform("transform", transform)
+			.SetUniform("texture", texturex)
+			.SetUniform("alpha", alpha)
+			.Render();
 	}
 }
 

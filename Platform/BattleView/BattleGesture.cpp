@@ -102,7 +102,7 @@ void BattleGesture::RenderHints()
 	GraphicsContext* gc = _battleView->GetSurface()->GetGraphicsContext();
 
 	RenderCall<PlainShader_2f>(gc)
-		.UseVertices(&vertices)
+		.SetVertices(&vertices)
 		.SetUniform("transform", transform)
 		.SetUniform("point_size", 1)
 		.SetUniform("color", glm::vec4(0, 0, 0, 0.2f))

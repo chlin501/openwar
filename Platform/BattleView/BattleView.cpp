@@ -157,11 +157,11 @@ BattleView::BattleView(GraphicsContext* gc) :
 	_textureBillboardRenderer1 = new TextureBillboardRenderer(gc);
 	_textureBillboardRenderer2 = new TextureBillboardRenderer(gc);
 
-	_plainLineRenderer = new PlainLineShape3(gc);
-	_plainTriangleRenderer = new PlainTriangleShape3(gc);
-	_gradientLineRenderer = new GradientLineShape3(gc);
-	_gradientTriangleRenderer = new GradientTriangleShape3(gc);
-	_gradientTriangleStripRenderer = new GradientTriangleStripShape3(gc);
+	_plainLineRenderer = new PlainLineShape3();
+	_plainTriangleRenderer = new PlainTriangleShape3();
+	_gradientLineRenderer = new GradientLineShape3();
+	_gradientTriangleRenderer = new GradientTriangleShape3();
+	_gradientTriangleStripRenderer = new GradientTriangleStripShape3();
 	_colorBillboardRenderer = new ColorBillboardShape(gc);
 	_textureTriangleRenderer = new TextureTriangleShape3(gc);
 }
@@ -544,7 +544,14 @@ void BattleView::Render(const glm::mat4& transformx)
 	_plainLineRenderer->Reset();
 	for (UnitCounter* marker : _unitMarkers)
 		marker->AppendFighterWeapons(_plainLineRenderer);
-	_plainLineRenderer->Draw(contentTransform, glm::vec4(0.4, 0.4, 0.4, 0.6));
+
+	glLineWidth(1);
+	RenderCall<PlainShader>(GetSurface()->GetGraphicsContext())
+		.SetVertices(&_plainLineRenderer->_vertices)
+		.SetUniform("transform", contentTransform)
+		.SetUniform("point_size", 1)
+		.SetUniform("color", glm::vec4(0.4, 0.4, 0.4, 0.6))
+		.Render();
 
 
 	// Color Billboards
@@ -574,7 +581,12 @@ void BattleView::Render(const glm::mat4& transformx)
 			RangeMarker marker(_simulator, unit);
 			_gradientTriangleStripRenderer->Reset();
 			marker.Render(_gradientTriangleStripRenderer);
-			_gradientTriangleStripRenderer->Draw(contentTransform);
+
+			RenderCall<GradientShader>(GetSurface()->GetGraphicsContext())
+				.SetVertices(&_gradientTriangleStripRenderer->_vertices)
+				.SetUniform("transform", contentTransform)
+				.SetUniform("point_size", 1)
+				.Render();
 		}
 	}
 
@@ -632,7 +644,12 @@ void BattleView::Render(const glm::mat4& transformx)
 	_gradientTriangleRenderer->Reset();
 	for (UnitMovementMarker* marker : _movementMarkers)
 		marker->RenderMovementPath(_gradientTriangleRenderer);
-	_gradientTriangleRenderer->Draw(contentTransform);//, glm::vec4(0.5, 0.5, 1, 0.25));
+
+	RenderCall<GradientShader>(GetSurface()->GetGraphicsContext())
+		.SetVertices(&_gradientTriangleRenderer->_vertices)
+		.SetUniform("transform", contentTransform)
+		.SetUniform("point_size", 1)
+		.Render();
 
 
 	// Tracking Path
@@ -643,7 +660,12 @@ void BattleView::Render(const glm::mat4& transformx)
 		_gradientTriangleRenderer->Reset();
 		marker->RenderTrackingPath(_gradientTriangleRenderer);
 		marker->RenderOrientation(_gradientTriangleRenderer);
-		_gradientTriangleRenderer->Draw(contentTransform);
+
+		RenderCall<GradientShader>(GetSurface()->GetGraphicsContext())
+			.SetVertices(&_gradientTriangleRenderer->_vertices)
+			.SetUniform("transform", contentTransform)
+			.SetUniform("point_size", 1)
+			.Render();
 	}
 
 
@@ -669,14 +691,26 @@ void BattleView::Render(const glm::mat4& transformx)
 	_gradientLineRenderer->Reset();
 	for (ShootingCounter* shootingCounter : _shootingCounters)
 		shootingCounter->Render(_gradientLineRenderer);
-	_gradientLineRenderer->Draw(contentTransform);
+
+	RenderCall<GradientShader>(GetSurface()->GetGraphicsContext())
+		.SetVertices(&_gradientLineRenderer->_vertices)
+		.SetUniform("transform", contentTransform)
+		.SetUniform("point_size", 1)
+		.Render();
 
 
 	// Mouse Hint
 
 	_plainLineRenderer->Reset();
 	RenderMouseHint(_plainLineRenderer);
-	_plainLineRenderer->Draw(contentTransform, glm::vec4(0, 0, 0, 0.5f));
+
+	glLineWidth(1);
+	RenderCall<PlainShader>(GetSurface()->GetGraphicsContext())
+		.SetVertices(&_plainLineRenderer->_vertices)
+		.SetUniform("transform", contentTransform)
+		.SetUniform("point_size", 1)
+		.SetUniform("color", glm::vec4(0, 0, 0, 0.5f))
+		.Render();
 
 
 	glDepthMask(true);

@@ -11,33 +11,29 @@
 
 class GradientShader : public ShaderProgram2<glm::vec3, glm::vec4>
 {
-public:
+	friend class GraphicsContext;
+/*
+	attribute vec3 position;
+	attribute vec4 color;
+	uniform mat4 transform;
+	uniform float point_size;
+ */
 	GradientShader(GraphicsContext* gc);
-
-	void SetTransform(const glm::mat4x4& transform);
-	void Render(VertexBuffer_3f_4f* vertices);
 };
 
 
 class GradientShape3
 {
-protected:
-	GradientShader* _shader;
+public:
 	VertexBuffer_3f_4f _vertices;
 
-public:
-	GradientShape3(GraphicsContext* gc);
-	virtual ~GradientShape3();
-
 	virtual void Reset() = 0;
-	void Draw(const glm::mat4x4& transform);
 };
 
 
 class GradientLineShape3 : public GradientShape3
 {
 public:
-	GradientLineShape3(GraphicsContext* gc) : GradientShape3(gc) { }
 	virtual void Reset();
 	void AddLine(const glm::vec3& p1, const glm::vec3& p2, const glm::vec4& c1, const glm::vec4& c2);
 };
@@ -46,7 +42,6 @@ public:
 class GradientTriangleShape3 : public GradientShape3
 {
 public:
-	GradientTriangleShape3(GraphicsContext* gc) : GradientShape3(gc) { }
 	virtual void Reset();
 	void AddVertex(const glm::vec3& p, const glm::vec4& c);
 };
@@ -55,7 +50,6 @@ public:
 class GradientTriangleStripShape3 : public GradientShape3
 {
 public:
-	GradientTriangleStripShape3(GraphicsContext* gc) : GradientShape3(gc) { }
 	virtual void Reset();
 	void AddVertex(const glm::vec3& p, const glm::vec4& c, bool separator = false);
 };

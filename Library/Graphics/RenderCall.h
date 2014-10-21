@@ -11,6 +11,7 @@ class UniformBase
 	friend class RenderCallBase;
 
 	GLint _location;
+	GLenum _texture;
 
 protected:
 	UniformBase(GLint location);
@@ -26,6 +27,7 @@ protected:
 	void Assign(const glm::mat2& value);
 	void Assign(const glm::mat3& value);
 	void Assign(const glm::mat4& value);
+	void Assign(const texture* value);
 };
 
 
@@ -52,6 +54,7 @@ class RenderCallBase
 protected:
 	ShaderProgramBase* _shaderprogram;
 	std::vector<UniformBase*> _uniforms;
+	int _textures;
 
 public:
 	RenderCallBase(ShaderProgramBase* shaderprogram);
@@ -71,6 +74,8 @@ public:
 		if (result == nullptr)
 		{
 			result = new Uniform<T>(location);
+			if (typeid(T) == typeid(texture*))
+				result->_texture = (GLenum)_textures++;
 			_uniforms.push_back(result);
 		}
 		return result;
@@ -102,7 +107,7 @@ public:
 	{
 	}
 
-	RenderCall<_ShaderProgram>& UseVertices(VertexBuffer<VertexT>* vertices)
+	RenderCall<_ShaderProgram>& SetVertices(VertexBuffer<VertexT>* vertices)
 	{
 		_vertices = vertices;
 		return *this;

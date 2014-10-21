@@ -10,15 +10,11 @@ GradientShader::GradientShader(GraphicsContext* gc) : ShaderProgram2<glm::vec3, 
 	"position", "color",
 	VERTEX_SHADER
 	({
-		attribute
-		vec3 position;
-		attribute
-		vec4 color;
-		uniform
-		mat4 transform;
+		attribute vec3 position;
+		attribute vec4 color;
+		uniform mat4 transform;
 		uniform float point_size;
-		varying
-		vec4 v_color;
+		varying vec4 v_color;
 
 		void main()
 		{
@@ -31,8 +27,7 @@ GradientShader::GradientShader(GraphicsContext* gc) : ShaderProgram2<glm::vec3, 
 	}),
 	FRAGMENT_SHADER
 	({
-		varying
-		vec4 v_color;
+		varying vec4 v_color;
 
 		void main()
 		{
@@ -42,39 +37,6 @@ GradientShader::GradientShader(GraphicsContext* gc) : ShaderProgram2<glm::vec3, 
 {
 	_blend_sfactor = GL_SRC_ALPHA;
 	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
-}
-
-
-void GradientShader::SetTransform(const glm::mat4x4& transform)
-{
-	get_uniform<glm::mat4>("transform").set_value(transform);
-}
-
-
-void GradientShader::Render(VertexBuffer_3f_4f* vertices)
-{
-	glLineWidth(1);
-	get_uniform<float>("point_size").set_value(1);
-	render(*vertices);
-}
-
-
-GradientShape3::GradientShape3(GraphicsContext* gc)
-{
-	_shader = new GradientShader(gc);
-}
-
-
-GradientShape3::~GradientShape3()
-{
-	delete _shader;
-}
-
-
-void GradientShape3::Draw(const glm::mat4x4& transform)
-{
-	_shader->SetTransform(transform);
-	_shader->Render(&_vertices);
 }
 
 

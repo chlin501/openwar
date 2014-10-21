@@ -11,33 +11,28 @@
 
 class PlainShader : public ShaderProgram1<glm::vec3>
 {
-public:
+	friend class GraphicsContext;
+/*
+	attribute vec3 position;
+
+	uniform mat4 transform;
+	uniform float point_size;
+	uniform vec4 color;
+ */
 	PlainShader(GraphicsContext* gc);
-	void SetTransform(const glm::mat4x4& value);
-	void SetColor(const glm::vec4& color);
-	void Render(VertexBuffer_3f* vertices);
 };
 
 
 class PlainShape3
 {
-protected:
-	VertexBuffer_3f _vertices;
-	PlainShader* _shader;
-
 public:
-	PlainShape3(GraphicsContext* gc);
-	virtual ~PlainShape3();
-
-	void Draw(const glm::mat4x4& transform, const glm::vec4& color);
+	VertexBuffer_3f _vertices;
 };
 
 
 class PlainLineShape3 : public PlainShape3
 {
 public:
-	PlainLineShape3(GraphicsContext* gc) : PlainShape3(gc) { }
-
 	void Reset();
 	void AddLine(const glm::vec3& p1, const glm::vec3& p2);
 };
@@ -46,8 +41,6 @@ public:
 class PlainTriangleShape3 : public PlainShape3
 {
 public:
-	PlainTriangleShape3(GraphicsContext* gc) : PlainShape3(gc) { }
-
 	void Reset();
 	void AddVertex(const glm::vec3& p);
 };

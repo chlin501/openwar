@@ -452,7 +452,7 @@ void Content::RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4
 
 	GraphicsContext* gc = GetSurface()->GetGraphicsContext();
 	RenderCall<PlainShader_2f>(gc)
-		.UseVertices(&vertices)
+		.SetVertices(&vertices)
 		.SetUniform("transform", transform)
 		.SetUniform("point_size", 1)
 		.SetUniform("color", color)
@@ -471,7 +471,7 @@ void Content::RenderOutline(const glm::mat4& transform, bounds2f bounds, glm::ve
 
 	GraphicsContext* gc = GetSurface()->GetGraphicsContext();
 	RenderCall<PlainShader_2f>(gc)
-		.UseVertices(&vertices)
+		.SetVertices(&vertices)
 		.SetUniform("transform", transform)
 		.SetUniform("point_size", 1)
 		.SetUniform("color", color)
