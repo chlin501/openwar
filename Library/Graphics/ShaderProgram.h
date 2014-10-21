@@ -163,6 +163,7 @@ public:
 
 class ShaderProgramBase
 {
+	friend class RenderCallBase;
 	static float _pixels_per_point;
 
 	std::map<GLint, GLenum> _uniformTexture;

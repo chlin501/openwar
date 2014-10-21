@@ -54,10 +54,23 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f frame, float 
 		t = glm::scale(t, glm::vec3(-1.0f, -1.0f, 1.0f));
 
 
+	RenderCall<GradientShader_2f>(_gc)
+		.UseVertices(&vertices)
+		.SetUniform("transform", t)
+		.SetUniform("point_size", 1)
+		.Render();
+
+	/*renderCall._vertices = &vertices;
+	renderCall.transform = t;
+	renderCall.point_size = 1;
+	renderCall.Render();*/
+
+	/*
 	GradientShader2* shader = _gc->GetShaderProgram<GradientShader2>();
 	shader->get_uniform<glm::mat4>("transform").set_value(t);
 	shader->get_uniform<float>("pixel_size").set_value(1);
 	shader->render(vertices);
+	*/
 }
 
 
@@ -85,7 +98,7 @@ void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, bounds2
 	vertices.AddVertex(Vertex_2f_2f(glm::vec2(x1, y0), glm::vec2(vt1.x, vt0.y)));
 	vertices.AddVertex(Vertex_2f_2f(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
 
-	TextureShader2* shader = _gc->GetShaderProgram<TextureShader2>();
+	TextureShader_2f* shader = _gc->GetShaderProgram<TextureShader_2f>();
 	shader->get_uniform<glm::mat4>("transform").set_value(transform);
 	shader->get_uniform<const texture*>("texture").set_value(_textureBackgroundLinen);
 	shader->render(vertices);

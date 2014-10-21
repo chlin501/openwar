@@ -2,7 +2,7 @@
 #include "GraphicsContext.h"
 
 
-GradientShader2::GradientShader2(GraphicsContext* gc) : ShaderProgram2<glm::vec2, glm::vec4>(
+GradientShader_2f::GradientShader_2f(GraphicsContext* gc) : ShaderProgram2<glm::vec2, glm::vec4>(
 	"position", "color",
 	VERTEX_SHADER
 	({
@@ -37,8 +37,7 @@ GradientShader2::GradientShader2(GraphicsContext* gc) : ShaderProgram2<glm::vec2
 }
 
 
-
-PlainShader2::PlainShader2(GraphicsContext* gc) : ShaderProgram1<glm::vec2>(
+PlainShader_2f::PlainShader_2f(GraphicsContext* gc) : ShaderProgram1<glm::vec2>(
 	"position",
 	VERTEX_SHADER
 	({
@@ -69,7 +68,7 @@ PlainShader2::PlainShader2(GraphicsContext* gc) : ShaderProgram1<glm::vec2>(
 }
 
 
-PlainShader3::PlainShader3(GraphicsContext* gc) : ShaderProgram1<glm::vec3>(
+PlainShader_3f::PlainShader_3f(GraphicsContext* gc) : ShaderProgram1<glm::vec3>(
 	"position",
 	VERTEX_SHADER
 	({
@@ -100,7 +99,7 @@ PlainShader3::PlainShader3(GraphicsContext* gc) : ShaderProgram1<glm::vec3>(
 }
 
 
-TextureShader2::TextureShader2(GraphicsContext* gc) : ShaderProgram2<glm::vec2, glm::vec2>(
+TextureShader_2f::TextureShader_2f(GraphicsContext* gc) : ShaderProgram2<glm::vec2, glm::vec2>(
 	"position", "texcoord",
 	VERTEX_SHADER
 	({
@@ -135,7 +134,7 @@ TextureShader2::TextureShader2(GraphicsContext* gc) : ShaderProgram2<glm::vec2, 
 }
 
 
-TextureShader3::TextureShader3(GraphicsContext* gc) : ShaderProgram2<glm::vec3, glm::vec2>(
+TextureShader_3f::TextureShader_3f(GraphicsContext* gc) : ShaderProgram2<glm::vec3, glm::vec2>(
 	"position", "texcoord",
 	VERTEX_SHADER
 	({
@@ -170,7 +169,7 @@ TextureShader3::TextureShader3(GraphicsContext* gc) : ShaderProgram2<glm::vec3, 
 }
 
 
-OpaqueTextureShader2::OpaqueTextureShader2(GraphicsContext* gc) : ShaderProgram2<glm::vec2, glm::vec2>(
+OpaqueTextureShader_2f::OpaqueTextureShader_2f(GraphicsContext* gc) : ShaderProgram2<glm::vec2, glm::vec2>(
 	"position", "texcoord",
 	VERTEX_SHADER
 	({
@@ -205,7 +204,7 @@ OpaqueTextureShader2::OpaqueTextureShader2(GraphicsContext* gc) : ShaderProgram2
 }
 
 
-AlphaTextureShader2::AlphaTextureShader2(GraphicsContext* gc) : ShaderProgram2<glm::vec2, glm::vec2>(
+AlphaTextureShader_2f::AlphaTextureShader_2f(GraphicsContext* gc) : ShaderProgram2<glm::vec2, glm::vec2>(
 	"position", "texcoord",
 	VERTEX_SHADER
 	({

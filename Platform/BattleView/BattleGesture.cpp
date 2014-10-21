@@ -100,11 +100,13 @@ void BattleGesture::RenderHints()
 	}
 
 	GraphicsContext* gc = _battleView->GetSurface()->GetGraphicsContext();
-	PlainShader2* shader = gc->GetShaderProgram<PlainShader2>();
-	shader->get_uniform<glm::mat4>("transform").set_value(transform);
-	shader->get_uniform<float>("point_size").set_value(1);
-	shader->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 0.2f));
-	shader->render(vertices);
+
+	RenderCall<PlainShader_2f>(gc)
+		.UseVertices(&vertices)
+		.SetUniform("transform", transform)
+		.SetUniform("point_size", 1)
+		.SetUniform("color", glm::vec4(0, 0, 0, 0.2f))
+		.Render();
 
 
 	/*PlainLineRenderer renderer;

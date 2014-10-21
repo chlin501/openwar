@@ -104,12 +104,13 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 
 	if (_showLines)
 	{
-		PlainShader3* shader = _gc->GetShaderProgram<PlainShader3>();
 		glDisable(GL_DEPTH_TEST);
-		shader->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-		shader->get_uniform<float>("point_size").set_value(1);
-		shader->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 0.06f));
-		shader->render(_lineVertices);
+		RenderCall<PlainShader_3f>(_gc)
+			.UseVertices(&_lineVertices)
+			.SetUniform("transform", uniforms._transform)
+			.SetUniform("point_size", 1)
+			.SetUniform("color", glm::vec4(0, 0, 0, 0.06f))
+			.Render();
 		glEnable(GL_DEPTH_TEST);
 	}
 
