@@ -5,7 +5,7 @@
 #include "ButtonRendering.h"
 #include "ButtonGrid.h"
 #include "VertexBuffer.h"
-#import "GraphicsContext.h"
+#include "GraphicsContext.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 
@@ -144,22 +144,25 @@ void ButtonRendering::RenderButtonText(const glm::mat4& transform, glm::vec2 pos
 
 	glm::vec2 p = position - 0.5f * _string_font->measure(text) - glm::vec2(0, 1);
 
-	_string_font->_renderer->get_uniform<const texture*>("texture").set_value(&_string_font->_texture);
-	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 0.15f));
+	RenderCall<StringShader> renderCall(_gc);
+
+	renderCall.SetVertices(&_string_shape->_vertices);
+	renderCall.SetUniform("texture", &_string_font->_texture);
+	renderCall.SetUniform("color", glm::vec4(0, 0, 0, 0.15f));
 
 	for (int dx = -1; dx <= 1; ++dx)
 		for (int dy = -1; dy <= 1; ++dy)
 			if (dx != 0 || dy != 0)
 			{
-				_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(glm::translate(transform, glm::vec3(p, 0) + glm::vec3(dx, dy, 0)));
-				_string_font->_renderer->render(_string_shape->_vertices);
+				renderCall.SetUniform("transform", glm::translate(transform, glm::vec3(p, 0) + glm::vec3(dx, dy, 0)));
+				renderCall.Render();
 			}
 
-	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(glm::translate(transform, glm::vec3(p, 0) + glm::vec3(0, -1, 0)));
-	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(0, 0, 0, 1));
-	_string_font->_renderer->render(_string_shape->_vertices);
+	renderCall.SetUniform("transform", glm::translate(transform, glm::vec3(p, 0) + glm::vec3(0, -1, 0)));
+	renderCall.SetUniform("color", glm::vec4(0, 0, 0, 1));
+	renderCall.Render();
 
-	_string_font->_renderer->get_uniform<glm::mat4>("transform").set_value(glm::translate(transform, glm::vec3(p, 0)));
-	_string_font->_renderer->get_uniform<glm::vec4>("color").set_value(glm::vec4(1, 1, 1, 1));
-	_string_font->_renderer->render(_string_shape->_vertices);
+	renderCall.SetUniform("transform", glm::translate(transform, glm::vec3(p, 0)));
+	renderCall.SetUniform("color", glm::vec4(1, 1, 1, 1));
+	renderCall.Render();
 }

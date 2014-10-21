@@ -74,7 +74,7 @@ public:
 		if (result == nullptr)
 		{
 			result = new Uniform<T>(location);
-			if (typeid(T) == typeid(texture*))
+			if (typeid(T) == typeid(texture*) || typeid(T) == typeid(const texture*))
 				result->_texture = (GLenum)_textures++;
 			_uniforms.push_back(result);
 		}

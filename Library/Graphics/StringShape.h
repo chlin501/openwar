@@ -29,11 +29,26 @@
 #include "texture.h"
 #include "Shape.h"
 
+class GraphicsContext;
+
+
+class StringShader : public ShaderProgram3<glm::vec2, glm::vec2, float>
+{
+	friend class GraphicsContext;
+	/*
+		attribute vec2 position;
+		attribute vec2 texcoord;
+		attribute float alpha;
+		uniform mat4 transform;
+		uniform sampler2D texture;
+		uniform vec4 color;
+	 */
+	StringShader(GraphicsContext* gc);
+};
+
 
 struct StringFont
 {
-	typedef Vertex_2f_2f_1f vertex_type;
-
 #ifdef OPENWAR_USE_SDL
 	typedef TTF_Font* font_ptr;
 #endif
@@ -68,7 +83,7 @@ struct StringFont
 	font_ptr _font;
 #endif
 
-	ShaderProgram<vertex_type>* _renderer;
+	ShaderProgram<Vertex_2f_2f_1f>* _renderer;
 	float _pixelDensity;
 	texture _texture;
 

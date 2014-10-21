@@ -17,6 +17,50 @@
 #endif
 
 
+
+StringShader::StringShader(GraphicsContext* gc) : ShaderProgram3<glm::vec2, glm::vec2, float>(
+	"position", "texcoord", "alpha",
+	VERTEX_SHADER
+	({
+		attribute vec2 position;
+		attribute vec2 texcoord;
+		attribute float alpha;
+		uniform mat4 transform;
+		varying vec2 _texcoord;
+		varying float _alpha;
+
+		void main()
+		{
+			vec4 p = transform * vec4(position.x, position.y, 0, 1);
+
+			_texcoord = texcoord;
+			_alpha = alpha;
+
+			gl_Position = vec4(p.x, p.y, 0.5, 1.0);
+		}
+	}),
+	FRAGMENT_SHADER
+	({
+		uniform sampler2D texture;
+		uniform vec4 color;
+		varying vec2 _texcoord;
+		varying float _alpha;
+
+		void main()
+		{
+			vec4 result;
+			result.rgb = color.rgb;
+			result.a = texture2D(texture, _texcoord).a * color.a * clamp(_alpha, 0.0, 1.0);
+
+			gl_FragColor = result;
+		}
+	}))
+{
+	_blend_sfactor = GL_SRC_ALPHA;
+	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
+
+
 static bool IsArabic(wchar_t wc)
 {
 	if (0x0600 <= wc && wc <= 0x08FF)
@@ -297,47 +341,6 @@ void StringFont::initialize()
 {
 	if (_image == nullptr)
 		_image = new Image(1024, 512);
-
-	_renderer = new ShaderProgram3<glm::vec2, glm::vec2, float>(
-		"position", "texcoord", "alpha",
-		VERTEX_SHADER
-		({
-			attribute vec2 position;
-			attribute vec2 texcoord;
-			attribute float alpha;
-			uniform mat4 transform;
-			varying vec2 _texcoord;
-			varying float _alpha;
-
-			void main()
-			{
-				vec4 p = transform * vec4(position.x, position.y, 0, 1);
-
-				_texcoord = texcoord;
-				_alpha = alpha;
-
-				gl_Position = vec4(p.x, p.y, 0.5, 1.0);
-			}
-		}),
-		FRAGMENT_SHADER
-		({
-			uniform sampler2D texture;
-			uniform vec4 color;
-			varying vec2 _texcoord;
-			varying float _alpha;
-
-			void main()
-			{
-				vec4 result;
-				result.rgb = color.rgb;
-				result.a = texture2D(texture, _texcoord).a * color.a * clamp(_alpha, 0.0, 1.0);
-
-				gl_FragColor = result;
-			}
-		})
-	);
-	_renderer->_blend_sfactor = GL_SRC_ALPHA;
-	_renderer->_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }
 
 
