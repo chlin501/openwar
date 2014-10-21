@@ -11,27 +11,24 @@
 
 class TextureShader : public ShaderProgram2<glm::vec3, glm::vec2>
 {
-public:
+	friend class GraphicsContext;
+/*
+	attribute vec3 position;
+	attribute vec2 texcoord;
+	uniform mat4 transform;
+	uniform sampler2D texture;
+ */
 	TextureShader(GraphicsContext* gc);
-
-	void SetTransform(const glm::mat4x4& value);
-	void SetTexture(const texture* value);
-	void Render(VertexBuffer_3f_2f* vertices);
 };
 
 
 class TextureTriangleShape3
 {
 public:
-	TextureShader* _shader;
 	VertexBuffer_3f_2f _vertices;
-
-	TextureTriangleShape3(GraphicsContext* gc);
-	~TextureTriangleShape3();
 
 	void Reset();
 	void AddVertex(glm::vec3 p, glm::vec2 t);
-	void Draw(const glm::mat4x4& transform, const texture* texture);
 };
 
 

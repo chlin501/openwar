@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include "TextureBillboardRenderer.h"
+#import "RenderCall.h"
 
 
 TextureBillboardShader::TextureBillboardShader(GraphicsContext* gc) : ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2>(
@@ -65,15 +66,13 @@ TextureBillboardShader::TextureBillboardShader(GraphicsContext* gc) : ShaderProg
 }
 
 
-TextureBillboardRenderer::TextureBillboardRenderer(GraphicsContext* gc)
+TextureBillboardRenderer::TextureBillboardRenderer()
 {
-	_shader = new TextureBillboardShader(gc);
 }
 
 
 TextureBillboardRenderer::~TextureBillboardRenderer()
 {
-	delete _shader;
 }
 
 
@@ -100,7 +99,7 @@ struct billboard_index
 	float order;
 };
 
-void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
+void TextureBillboardRenderer::Draw(GraphicsContext* gc, texture* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
 {
 	static std::vector<Vertex_3f_1f_2f_2f> vertices;
 	static std::vector<billboard_index> indices;
@@ -134,13 +133,16 @@ void TextureBillboardRenderer::Draw(texture* tex, const glm::mat4x4& transform, 
 
 	_vertices.UpdateVBO(GL_STATIC_DRAW);
 
-	_shader->get_uniform<glm::mat4>("transform").set_value(transform);
-	_shader->get_uniform<const texture*>("texture").set_value(tex);
-	_shader->get_uniform<glm::vec3>("upvector").set_value(cameraUp);
-	_shader->get_uniform<float>("viewport_height").set_value(ShaderProgramBase::pixels_per_point() * viewportHeight);
-	_shader->get_uniform<float>("min_point_size").set_value(sizeLimit.min);
-	_shader->get_uniform<float>("max_point_size").set_value(sizeLimit.max);
-	_shader->render(_vertices);
+
+	RenderCall<TextureBillboardShader>(gc)
+		.SetVertices(&_vertices)
+		.SetUniform("transform", transform)
+		.SetUniform("texture", tex)
+		.SetUniform("upvector", cameraUp)
+		.SetUniform("viewport_height", gc->GetPixelDensity() * viewportHeight)
+		.SetUniform("min_point_size", sizeLimit.min)
+		.SetUniform("max_point_size", sizeLimit.max)
+		.Render();
 }
 
 
@@ -152,7 +154,7 @@ static affine2 FlipY(const affine2& texcoords)
 }
 
 
-void TextureBillboardRenderer::Render(BillboardModel* billboardModel, glm::mat4x4 const & transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bool flip)
+void TextureBillboardRenderer::Render(GraphicsContext* gc, BillboardModel* billboardModel, glm::mat4x4 const & transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bool flip)
 {
 	Reset();
 
@@ -174,5 +176,5 @@ void TextureBillboardRenderer::Render(BillboardModel* billboardModel, glm::mat4x
 		AddBillboard(billboard.position, billboard.height, texcoords);
 	}
 
-	Draw(billboardModel->texture->GetTexture(), transform, cameraUp, cameraFacingDegrees, viewportHeight);
+	Draw(gc, billboardModel->texture->GetTexture(), transform, cameraUp, cameraFacingDegrees, viewportHeight);
 }

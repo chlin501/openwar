@@ -8,37 +8,28 @@
 #include "ShaderProgram.h"
 #include "Image.h"
 
+class GraphicsContext;
 class GroundMap;
 
 
 class WaterInsideShader : public ShaderProgram1<glm::vec2>
 {
-public:
-	WaterInsideShader();
+	friend class GraphicsContext;
+	WaterInsideShader(GraphicsContext* gc);
 };
 
 
 class WaterBorderShader : public ShaderProgram1<glm::vec2>
 {
-public:
-	WaterBorderShader();
+	friend class GraphicsContext;
+	WaterBorderShader(GraphicsContext* gc);
 };
 
 
 
 class SmoothTerrainWater
 {
-	struct ground_texture_uniforms
-	{
-		glm::mat4x4 _transform;
-		glm::vec4 _map_bounds;
-		const texture* _texture;
-	};
-
 	GroundMap* _groundMap;
-
-	WaterInsideShader* _water_inside_renderer;
-	WaterBorderShader* _water_border_renderer;
 
 	VertexBuffer_2f _waterInsideVertices;
 	VertexBuffer_2f _waterBorderVertices;
@@ -48,7 +39,7 @@ public:
 	virtual ~SmoothTerrainWater();
 
 	void Update();
-	void Render(const glm::mat4x4& transform);
+	void Render(GraphicsContext* gc, const glm::mat4x4& transform);
 };
 
 

@@ -11,28 +11,26 @@
 
 class ColorBillboardShader : public ShaderProgram3<glm::vec3, glm::vec4, float>
 {
-public:
+	friend class GraphicsContext;
+/*
+	attribute vec3 position;
+	attribute vec4 color;
+	attribute float height;
+	uniform mat4 transform;
+	uniform vec3 upvector;
+	uniform float viewport_height;
+ */
 	ColorBillboardShader(GraphicsContext* gc);
-
-	void SetTransform(const glm::mat4x4& value);
-	void SetCameraUp(const glm::vec3 cameraUp);
-	void SetViewportHeight(float viewportHeight);
-	void Render(VertexBuffer_3f_4f_1f* vertices);
 };
 
 
 class ColorBillboardShape
 {
-	ColorBillboardShader* _shader;
-	VertexBuffer_3f_4f_1f _vertices;
-
 public:
-	ColorBillboardShape(GraphicsContext* gc);
-	~ColorBillboardShape();
+	VertexBuffer_3f_4f_1f _vertices;
 
 	void Reset();
 	void AddBillboard(const glm::vec3& position, const glm::vec4& color, float height);
-	void Draw(const glm::mat4x4& transform, const glm::vec3 cameraUp, float viewportHeight);
 };
 
 

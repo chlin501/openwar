@@ -153,17 +153,17 @@ BattleView::BattleView(GraphicsContext* gc) :
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeSmoke[i], 0, billboard_texcoords(i, 7, false));
 	}
 
-	_textureBillboardRenderer = new TextureBillboardRenderer(gc);
-	_textureBillboardRenderer1 = new TextureBillboardRenderer(gc);
-	_textureBillboardRenderer2 = new TextureBillboardRenderer(gc);
+	_textureBillboardRenderer = new TextureBillboardRenderer();
+	_textureBillboardRenderer1 = new TextureBillboardRenderer();
+	_textureBillboardRenderer2 = new TextureBillboardRenderer();
 
 	_plainLineRenderer = new PlainLineShape3();
 	_plainTriangleRenderer = new PlainTriangleShape3();
 	_gradientLineRenderer = new GradientLineShape3();
 	_gradientTriangleRenderer = new GradientTriangleShape3();
 	_gradientTriangleStripRenderer = new GradientTriangleStripShape3();
-	_colorBillboardRenderer = new ColorBillboardShape(gc);
-	_textureTriangleRenderer = new TextureTriangleShape3(gc);
+	_colorBillboardRenderer = new ColorBillboardShape();
+	_textureTriangleRenderer = new TextureTriangleShape3();
 }
 
 
@@ -535,7 +535,7 @@ void BattleView::Render(const glm::mat4& transformx)
 
 	glDisable(GL_CULL_FACE);
 	if (_smoothTerrainWater != nullptr)
-		_smoothTerrainWater->Render(contentTransform);
+		_smoothTerrainWater->Render(GetSurface()->GetGraphicsContext(), contentTransform);
 
 
 	// Fighter Weapons
@@ -558,7 +558,13 @@ void BattleView::Render(const glm::mat4& transformx)
 
 	_colorBillboardRenderer->Reset();
 	_casualtyMarker->RenderCasualtyColorBillboards(_colorBillboardRenderer);
-	_colorBillboardRenderer->Draw(contentTransform, GetCameraUpVector(), GetFrame().height());
+
+	RenderCall<ColorBillboardShader>(GetSurface()->GetGraphicsContext())
+		.SetVertices(&_colorBillboardRenderer->_vertices)
+		.SetUniform("transform", contentTransform)
+		.SetUniform("upvector", GetCameraUpVector())
+		.SetUniform("viewport_height", 0.25f * GetSurface()->GetGraphicsContext()->GetPixelDensity() * GetFrame().height())
+		.Render();
 
 
 	// Texture Billboards
@@ -569,7 +575,7 @@ void BattleView::Render(const glm::mat4& transformx)
 		marker->AppendFighterBillboards(_billboardModel);
 	for (SmokeCounter* marker : _smokeMarkers)
 		marker->AppendSmokeBillboards(_billboardModel);
-	_textureBillboardRenderer->Render(_billboardModel, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), GetFlip());
+	_textureBillboardRenderer->Render(GetSurface()->GetGraphicsContext(), _billboardModel, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), GetFlip());
 
 
 	// Range Markers
@@ -606,7 +612,11 @@ void BattleView::Render(const glm::mat4& transformx)
 		if (marker->GetUnit()->IsFriendlyCommander(_commander))
 			marker->AppendFacingMarker(_textureTriangleRenderer, this);
 
-	_textureTriangleRenderer->Draw(facingTransform, _textureUnitMarkers);
+	RenderCall<TextureShader>(GetSurface()->GetGraphicsContext())
+		.SetVertices(&_textureTriangleRenderer->_vertices)
+		.SetUniform("transform", facingTransform)
+		.SetUniform("texture", _textureUnitMarkers)
+		.Render();
 
 
 
@@ -623,8 +633,8 @@ void BattleView::Render(const glm::mat4& transformx)
 		marker->RenderTrackingMarker(_textureBillboardRenderer1);
 
 	bounds1f sizeLimit = GetUnitIconSizeLimit();
-	_textureBillboardRenderer1->Draw(_textureUnitMarkers, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), sizeLimit);
-	_textureBillboardRenderer2->Draw(_textureUnitMarkers, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), sizeLimit);
+	_textureBillboardRenderer1->Draw(GetSurface()->GetGraphicsContext(), _textureUnitMarkers, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), sizeLimit);
+	_textureBillboardRenderer2->Draw(GetSurface()->GetGraphicsContext(), _textureUnitMarkers, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), sizeLimit);
 
 
 	// Tracking Markers
@@ -634,7 +644,7 @@ void BattleView::Render(const glm::mat4& transformx)
 	{
 		_textureBillboardRenderer1->Reset();
 		marker->RenderTrackingShadow(_textureBillboardRenderer1);
-		_textureBillboardRenderer1->Draw(_textureTouchMarker, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), bounds1f(64, 64));
+		_textureBillboardRenderer1->Draw(GetSurface()->GetGraphicsContext(), _textureTouchMarker, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetFrame().height(), bounds1f(64, 64));
 	}
 
 
@@ -675,7 +685,13 @@ void BattleView::Render(const glm::mat4& transformx)
 	_colorBillboardRenderer->Reset();
 	for (UnitTrackingMarker* marker : _trackingMarkers)
 		marker->RenderTrackingFighters(_colorBillboardRenderer);
-	_colorBillboardRenderer->Draw(contentTransform, GetCameraUpVector(), GetFrame().height());
+
+	RenderCall<ColorBillboardShader>(GetSurface()->GetGraphicsContext())
+		.SetVertices(&_colorBillboardRenderer->_vertices)
+		.SetUniform("transform", contentTransform)
+		.SetUniform("upvector", GetCameraUpVector())
+		.SetUniform("viewport_height", 0.25f * GetSurface()->GetGraphicsContext()->GetPixelDensity() * GetFrame().height())
+		.Render();
 
 
 	// Movement Fighters
@@ -683,7 +699,13 @@ void BattleView::Render(const glm::mat4& transformx)
 	_colorBillboardRenderer->Reset();
 	for (UnitMovementMarker* marker : _movementMarkers)
 		marker->RenderMovementFighters(_colorBillboardRenderer);
-	_colorBillboardRenderer->Draw(contentTransform, GetCameraUpVector(), GetFrame().height());
+
+	RenderCall<ColorBillboardShader>(GetSurface()->GetGraphicsContext())
+		.SetVertices(&_colorBillboardRenderer->_vertices)
+		.SetUniform("transform", contentTransform)
+		.SetUniform("upvector", GetCameraUpVector())
+		.SetUniform("viewport_height", 0.25f * GetSurface()->GetGraphicsContext()->GetPixelDensity() * GetFrame().height())
+		.Render();
 
 
 	// Shooting Counters

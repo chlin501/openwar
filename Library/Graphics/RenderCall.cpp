@@ -93,6 +93,8 @@ RenderCallBase::RenderCallBase(ShaderProgramBase* shaderprogram) :
 
 RenderCallBase::~RenderCallBase()
 {
+	for (UniformBase* uniform : _uniforms)
+		delete uniform;
 }
 
 

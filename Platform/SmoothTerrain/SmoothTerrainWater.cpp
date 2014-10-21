@@ -4,10 +4,11 @@
 
 #include "BattleModel/GroundMap.h"
 #include "SmoothTerrainWater.h"
+#include "RenderCall.h"
 
 
 
-WaterInsideShader::WaterInsideShader() : ShaderProgram1<glm::vec2>(
+WaterInsideShader::WaterInsideShader(GraphicsContext* gc) : ShaderProgram1<glm::vec2>(
 	"position",
 	VERTEX_SHADER
 	({
@@ -36,7 +37,7 @@ WaterInsideShader::WaterInsideShader() : ShaderProgram1<glm::vec2>(
 }
 
 
-WaterBorderShader::WaterBorderShader() : ShaderProgram1<glm::vec2>(
+WaterBorderShader::WaterBorderShader(GraphicsContext* gc) : ShaderProgram1<glm::vec2>(
 	"position",
 	VERTEX_SHADER
 	({
@@ -76,17 +77,12 @@ WaterBorderShader::WaterBorderShader() : ShaderProgram1<glm::vec2>(
 SmoothTerrainWater::SmoothTerrainWater(GroundMap* groundMap) :
 _groundMap(groundMap)
 {
-	_water_inside_renderer = new WaterInsideShader();
-	_water_border_renderer = new WaterBorderShader();
-
 	Update();
 }
 
 
 SmoothTerrainWater::~SmoothTerrainWater()
 {
-	delete _water_inside_renderer;
-	delete _water_border_renderer;
 }
 
 
@@ -167,22 +163,21 @@ void SmoothTerrainWater::Update()
 }
 
 
-void SmoothTerrainWater::Render(const glm::mat4x4& transform)
+void SmoothTerrainWater::Render(GraphicsContext* gc, const glm::mat4x4& transform)
 {
 	bounds2f bounds = _groundMap->GetBounds();
 
-	ground_texture_uniforms uniforms;
-	uniforms._transform = transform;
-	uniforms._map_bounds = glm::vec4(bounds.min, bounds.size());
-	uniforms._texture = nullptr;
+	RenderCall<WaterInsideShader>(gc)
+		.SetVertices(&_waterInsideVertices)
+		.SetUniform("transform", transform)
+		.SetUniform("map_bounds", glm::vec4(bounds.min, bounds.size()))
+		.SetUniform("texture", nullptr)
+		.Render();
 
-	_water_inside_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_water_inside_renderer->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
-	_water_inside_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
-	_water_inside_renderer->render(_waterInsideVertices);
-
-	_water_border_renderer->get_uniform<glm::mat4>("transform").set_value(uniforms._transform);
-	_water_border_renderer->get_uniform<glm::vec4>("map_bounds").set_value(uniforms._map_bounds);
-	_water_border_renderer->get_uniform<const texture*>("texture").set_value(uniforms._texture);
-	_water_border_renderer->render(_waterBorderVertices);
+	RenderCall<WaterBorderShader>(gc)
+		.SetVertices(&_waterBorderVertices)
+		.SetUniform("transform", transform)
+		.SetUniform("map_bounds", glm::vec4(bounds.min, bounds.size()))
+		.SetUniform("texture", nullptr)
+		.Render();
 }
