@@ -15,40 +15,6 @@ extern void CHECK_ERROR_GL();
 #endif
 
 
-enum shader_uniform_type
-{
-	shader_uniform_type_int,
-	shader_uniform_type_float,
-	shader_uniform_type_vector2,
-	shader_uniform_type_vector3,
-	shader_uniform_type_vector4,
-	shader_uniform_type_matrix2,
-	shader_uniform_type_matrix3,
-	shader_uniform_type_matrix4,
-	shader_uniform_type_texture
-};
-
-inline shader_uniform_type get_shader_uniform_type(int*) { return shader_uniform_type_int; }
-inline shader_uniform_type get_shader_uniform_type(float*) { return shader_uniform_type_float; }
-inline shader_uniform_type get_shader_uniform_type(glm::vec2*) { return shader_uniform_type_vector2; }
-inline shader_uniform_type get_shader_uniform_type(glm::vec3*) { return shader_uniform_type_vector3; }
-inline shader_uniform_type get_shader_uniform_type(glm::vec4*) { return shader_uniform_type_vector4; }
-inline shader_uniform_type get_shader_uniform_type(glm::mat2x2*) { return shader_uniform_type_matrix2; }
-inline shader_uniform_type get_shader_uniform_type(glm::mat3x3*) { return shader_uniform_type_matrix3; }
-inline shader_uniform_type get_shader_uniform_type(glm::mat4x4*) { return shader_uniform_type_matrix4; }
-inline shader_uniform_type get_shader_uniform_type(const texture**) { return shader_uniform_type_texture; }
-
-inline shader_uniform_type get_shader_uniform_type(const int*) { return shader_uniform_type_int; }
-inline shader_uniform_type get_shader_uniform_type(const float*) { return shader_uniform_type_float; }
-inline shader_uniform_type get_shader_uniform_type(const glm::vec2*) { return shader_uniform_type_vector2; }
-inline shader_uniform_type get_shader_uniform_type(const glm::vec3*) { return shader_uniform_type_vector3; }
-inline shader_uniform_type get_shader_uniform_type(const glm::vec4*) { return shader_uniform_type_vector4; }
-inline shader_uniform_type get_shader_uniform_type(const glm::mat2x2*) { return shader_uniform_type_matrix2; }
-inline shader_uniform_type get_shader_uniform_type(const glm::mat3x3*) { return shader_uniform_type_matrix3; }
-inline shader_uniform_type get_shader_uniform_type(const glm::mat4x4*) { return shader_uniform_type_matrix4; }
-inline shader_uniform_type get_shader_uniform_type(const texture* const*) { return shader_uniform_type_texture; }
-
-
 inline GLint get_vertex_attribute_size(float*) { return 1; }
 inline GLenum get_vertex_attribute_type(float*) { return GL_FLOAT; }
 
@@ -76,85 +42,6 @@ struct renderer_vertex_attribute
 };
 
 
-template <class T>
-class shader_uniform
-{
-	GLuint _program;
-	GLint _location;
-	GLenum _texture;
-
-public:
-	shader_uniform(GLuint program, GLint location, GLenum texture) :
-	_program(program), _location(location), _texture(texture)
-	{
-	}
-
-	void set_value(const T& value)
-	{
-		glUseProgram(_program);
-		const void* v = (const char*)&value;
-		switch (get_shader_uniform_type(&value))
-		{
-			case shader_uniform_type_int:
-				glUniform1iv(_location, 1, (const GLint*)v);
-				CHECK_ERROR_GL();
-				break;
-
-			case shader_uniform_type_float:
-				glUniform1fv(_location, 1, (const GLfloat*)v);
-				CHECK_ERROR_GL();
-				break;
-
-			case shader_uniform_type_vector2:
-				glUniform2fv(_location, 1, (const GLfloat*)v);
-				CHECK_ERROR_GL();
-				break;
-
-			case shader_uniform_type_vector3:
-				glUniform3fv(_location, 1, (const GLfloat*)v);
-				CHECK_ERROR_GL();
-				break;
-
-			case shader_uniform_type_vector4:
-				glUniform4fv(_location, 1, (const GLfloat*)v);
-				CHECK_ERROR_GL();
-				break;
-
-			case shader_uniform_type_matrix2:
-				glUniformMatrix2fv(_location, 1, GL_FALSE, (const GLfloat*)v);
-				CHECK_ERROR_GL();
-				break;
-
-			case shader_uniform_type_matrix3:
-				glUniformMatrix3fv(_location, 1, GL_FALSE, (const GLfloat*)v);
-				CHECK_ERROR_GL();
-				break;
-
-			case shader_uniform_type_matrix4:
-				glUniformMatrix4fv(_location, 1, GL_FALSE, (const GLfloat*)v);
-				CHECK_ERROR_GL();
-				break;
-
-			case shader_uniform_type_texture: {
-				texture**t = (texture**)v;
-				glActiveTexture(GL_TEXTURE0 + _texture);
-				CHECK_ERROR_GL();
-				if (*t != nullptr)
-				{
-					glBindTexture(GL_TEXTURE_2D, (*t)->id);
-					CHECK_ERROR_GL();
-				}
-				glUniform1i(_location, _texture);
-				CHECK_ERROR_GL();
-				break;
-			}
-			default:
-				break;
-		}
-	}
-};
-
-
 
 #define VERTEX_SHADER(source) (#source)
 #define FRAGMENT_SHADER(source) (#source)
@@ -165,9 +52,6 @@ class ShaderProgramBase
 {
 	friend class RenderCallBase;
 	static float _pixels_per_point;
-
-	std::map<GLint, GLenum> _uniformTexture;
-	GLenum _nextUniformTexture;
 
 public:
 	std::vector<renderer_vertex_attribute> _vertex_attributes;
@@ -186,27 +70,6 @@ public:
 	static bool link_program(GLuint program);
 	static bool validate_program(GLuint program);
 
-	template <class T>
-	shader_uniform<T> get_uniform(const char* name)
-	{
-		GLint location = glGetUniformLocation(_program, name);
-		GLenum texture = 0;
-		auto i = _uniformTexture.find(location);
-		if (i != _uniformTexture.end())
-		{
-			texture = i->second;
-		}
-		else
-		{
-			shader_uniform_type type = get_shader_uniform_type((const T*)nullptr);
-			if (type == shader_uniform_type_texture)
-				texture =  _nextUniformTexture++;
-			_uniformTexture[location] = texture;
-		}
-
-		return shader_uniform<T>(_program, location, texture);
-	}
-
 protected:
 	ShaderProgramBase(const ShaderProgramBase&) { }
 	ShaderProgramBase& operator=(const ShaderProgramBase&) { return *this; }
@@ -223,11 +86,6 @@ public:
 	ShaderProgram(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader) :
 	ShaderProgramBase(attrs, vertexshader, fragmentshader)
 	{
-	}
-
-	void render(VertexBuffer<VertexT>& vertices)
-	{
-		render(vertices._mode, vertices);
 	}
 
 	void render(GLenum mode, VertexBuffer<VertexT>& vertices)

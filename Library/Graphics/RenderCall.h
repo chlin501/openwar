@@ -118,7 +118,7 @@ public:
 		if (_vertices != nullptr)
 		{
 			PreRender();
-			dynamic_cast<_ShaderProgram*>(_shaderprogram)->render(*_vertices);
+			dynamic_cast<_ShaderProgram*>(_shaderprogram)->render(_vertices->_mode, *_vertices);
 		}
 	}
 };

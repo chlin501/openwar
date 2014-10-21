@@ -34,7 +34,6 @@ static void print_log(const char* operation, const char* log)
 
 
 ShaderProgramBase::ShaderProgramBase(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader) :
-_nextUniformTexture(0),
 _blend_sfactor(GL_ONE),
 _blend_dfactor(GL_ZERO)
 {
