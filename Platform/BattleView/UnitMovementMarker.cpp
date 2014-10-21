@@ -6,7 +6,7 @@
 
 #include "BattleModel/BattleSimulator.h"
 #include "BattleModel/BattleCommander.h"
-#include "Shapes/ColorBillboardShape.h"
+#include "ColorBillboardShader.h"
 #include "Shapes/PathRenderer.h"
 #include "Shapes/TextureBillboardRenderer.h"
 #include "BattleView.h"
@@ -92,7 +92,7 @@ void UnitMovementMarker::AppendFacingMarker(VertexBuffer_3f_2f* vertices, Battle
 }
 
 
-void UnitMovementMarker::RenderMovementFighters(ColorBillboardShape* renderer)
+void UnitMovementMarker::RenderMovementFighters(VertexBuffer_3f_4f_1f* vertices)
 {
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
@@ -114,8 +114,8 @@ void UnitMovementMarker::RenderMovementFighters(ColorBillboardShape* renderer)
 		{
 			glm::vec2 offsetRight = formation.towardRight * (float)Unit::GetFighterFile(fighter);
 			glm::vec2 offsetBack = formation.towardBack * (float)Unit::GetFighterRank(fighter);
-
-			renderer->AddBillboard(_battleView->GetSimulator()->GetHeightMap()->GetPosition(frontLeft + offsetRight + offsetBack, 0.5), color, 3.0);
+			glm::vec3 p = _battleView->GetSimulator()->GetHeightMap()->GetPosition(frontLeft + offsetRight + offsetBack, 0.5);
+			vertices->AddVertex(Vertex_3f_4f_1f(p, color, 3.0));
 		}
 	}
 }

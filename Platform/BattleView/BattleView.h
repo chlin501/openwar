@@ -15,7 +15,6 @@
 
 class BattleCommander;
 class CasualtyMarker;
-class ColorBillboardShape;
 class UnitMovementMarker;
 class RangeMarker;
 class ShootingCounter;
@@ -47,7 +46,7 @@ class BattleView : public TerrainView, public BattleObserver
 	VertexBuffer_3f_4f* _gradientLineVertices;
 	VertexBuffer_3f_4f* _gradientTriangleVertices;
 	VertexBuffer_3f_4f* _gradientTriangleStripVertices;
-	ColorBillboardShape* _colorBillboardRenderer;
+	VertexBuffer_3f_4f_1f* _colorBillboardVertices;
 	VertexBuffer_3f_2f* _textureTriangleVertices;
 
 	texture* _textureUnitMarkers;

@@ -3,7 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "CasualtyMarker.h"
-#include "Shapes/ColorBillboardShape.h"
+#include "ColorBillboardShader.h"
 #include "Shapes/TextureBillboardRenderer.h"
 #include "BattleModel/HeightMap.h"
 #include "BattleModel/SmoothGroundMap.h"
@@ -37,7 +37,7 @@ bool CasualtyMarker::Animate(float seconds)
 
 
 
-void CasualtyMarker::RenderCasualtyColorBillboards(ColorBillboardShape* renderer)
+void CasualtyMarker::RenderCasualtyColorBillboards(VertexBuffer_3f_4f_1f* vertices)
 {
 	if (casualties.empty())
 		return;
@@ -51,7 +51,7 @@ void CasualtyMarker::RenderCasualtyColorBillboards(ColorBillboardShape* renderer
 		if (casualty.time <= 1)
 		{
 			glm::vec4 c = glm::mix(c1, casualty.team == 1 ? cb : cr, casualty.time);
-			renderer->AddBillboard(casualty.position, c, 6.0);
+			vertices->AddVertex(Vertex_3f_4f_1f(casualty.position, c, 6.0));
 		}
 	}
 }

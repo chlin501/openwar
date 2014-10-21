@@ -9,7 +9,7 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Shapes/ColorBillboardShape.h"
+#include "ColorBillboardShader.h"
 #include "Surface/Surface.h"
 #include "BattleModel/BattleCommander.h"
 #include "SmoothTerrain/SmoothTerrainWater.h"
@@ -54,7 +54,7 @@ BattleView::BattleView(GraphicsContext* gc) :
 	_gradientLineVertices(nullptr),
 	_gradientTriangleVertices(nullptr),
 	_gradientTriangleStripVertices(nullptr),
-	_colorBillboardRenderer(nullptr),
+	_colorBillboardVertices(nullptr),
 	_textureTriangleVertices(nullptr),
 	_textureUnitMarkers(nullptr),
 	_textureTouchMarker(nullptr),
@@ -157,7 +157,7 @@ BattleView::BattleView(GraphicsContext* gc) :
 	_gradientLineVertices = new VertexBuffer_3f_4f();
 	_gradientTriangleVertices = new VertexBuffer_3f_4f();
 	_gradientTriangleStripVertices = new VertexBuffer_3f_4f();
-	_colorBillboardRenderer = new ColorBillboardShape();
+	_colorBillboardVertices = new VertexBuffer_3f_4f_1f();
 	_textureTriangleVertices = new VertexBuffer_3f_2f();
 }
 
@@ -187,7 +187,7 @@ BattleView::~BattleView()
 	delete _gradientLineVertices;
 	delete _gradientTriangleVertices;
 	delete _gradientTriangleStripVertices;
-	delete _colorBillboardRenderer;
+	delete _colorBillboardVertices;
 	delete _textureTriangleVertices;
 
 	delete _smoothTerrainSurface;
@@ -550,11 +550,11 @@ void BattleView::Render(const glm::mat4& transformx)
 
 	// Color Billboards
 
-	_colorBillboardRenderer->Reset();
-	_casualtyMarker->RenderCasualtyColorBillboards(_colorBillboardRenderer);
+	_colorBillboardVertices->Reset(GL_POINTS);
+	_casualtyMarker->RenderCasualtyColorBillboards(_colorBillboardVertices);
 
 	RenderCall<ColorBillboardShader>(GetSurface()->GetGraphicsContext())
-		.SetVertices(&_colorBillboardRenderer->_vertices)
+		.SetVertices(_colorBillboardVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("upvector", GetCameraUpVector())
 		.SetUniform("viewport_height", 0.25f * GetSurface()->GetGraphicsContext()->GetPixelDensity() * GetFrame().height())
@@ -676,12 +676,12 @@ void BattleView::Render(const glm::mat4& transformx)
 	// Tracking Fighters
 
 	glEnable(GL_DEPTH_TEST);
-	_colorBillboardRenderer->Reset();
+	_colorBillboardVertices->Reset(GL_POINTS);
 	for (UnitTrackingMarker* marker : _trackingMarkers)
-		marker->RenderTrackingFighters(_colorBillboardRenderer);
+		marker->RenderTrackingFighters(_colorBillboardVertices);
 
 	RenderCall<ColorBillboardShader>(GetSurface()->GetGraphicsContext())
-		.SetVertices(&_colorBillboardRenderer->_vertices)
+		.SetVertices(_colorBillboardVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("upvector", GetCameraUpVector())
 		.SetUniform("viewport_height", 0.25f * GetSurface()->GetGraphicsContext()->GetPixelDensity() * GetFrame().height())
@@ -690,12 +690,12 @@ void BattleView::Render(const glm::mat4& transformx)
 
 	// Movement Fighters
 
-	_colorBillboardRenderer->Reset();
+	_colorBillboardVertices->Reset(GL_POINTS);
 	for (UnitMovementMarker* marker : _movementMarkers)
-		marker->RenderMovementFighters(_colorBillboardRenderer);
+		marker->RenderMovementFighters(_colorBillboardVertices);
 
 	RenderCall<ColorBillboardShader>(GetSurface()->GetGraphicsContext())
-		.SetVertices(&_colorBillboardRenderer->_vertices)
+		.SetVertices(_colorBillboardVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("upvector", GetCameraUpVector())
 		.SetUniform("viewport_height", 0.25f * GetSurface()->GetGraphicsContext()->GetPixelDensity() * GetFrame().height())

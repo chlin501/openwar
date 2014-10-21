@@ -24,14 +24,4 @@ class ColorBillboardShader : public ShaderProgram3<glm::vec3, glm::vec4, float>
 };
 
 
-class ColorBillboardShape
-{
-public:
-	VertexBuffer_3f_4f_1f _vertices;
-
-	void Reset();
-	void AddBillboard(const glm::vec3& position, const glm::vec4& color, float height);
-};
-
-
 #endif

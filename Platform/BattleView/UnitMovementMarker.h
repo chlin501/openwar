@@ -9,7 +9,6 @@
 #include "VertexBuffer.h"
 
 class BattleView;
-class ColorBillboardShape;
 class TextureBillboardRenderer;
 
 
@@ -23,7 +22,7 @@ public:
 
 	void RenderMovementMarker(TextureBillboardRenderer* renderer);
 	void AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* battleView);
-	void RenderMovementFighters(ColorBillboardShape* renderer);
+	void RenderMovementFighters(VertexBuffer_3f_4f_1f* vertices);
 	void RenderMovementPath(VertexBuffer_3f_4f* vertices);
 };
 

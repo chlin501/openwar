@@ -2,7 +2,7 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "ColorBillboardShape.h"
+#include "ColorBillboardShader.h"
 
 
 
@@ -50,17 +50,4 @@ ColorBillboardShader::ColorBillboardShader(GraphicsContext* gc) : ShaderProgram3
 {
 	_blend_sfactor = GL_SRC_ALPHA;
 	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
-}
-
-
-void ColorBillboardShape::Reset()
-{
-	_vertices._mode = GL_POINTS;
-	_vertices.Clear();
-}
-
-
-void ColorBillboardShape::AddBillboard(const glm::vec3& position, const glm::vec4& color, float height)
-{
-	_vertices.AddVertex(Vertex_3f_4f_1f(position, color, height));
 }
