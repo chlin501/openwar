@@ -28,7 +28,7 @@ class BillboardTexture
 	int _shapeCount;
 
 public:
-	BillboardTexture();
+	BillboardTexture(GraphicsContext* gc);
 	~BillboardTexture();
 
 	texture* GetTexture() const { return _texture; }

@@ -60,4 +60,5 @@ struct Vertex4
 typedef Vertex4<glm::vec3, float, glm::vec2, glm::vec2> Vertex_3f_1f_2f_2f;
 
 
+
 #endif

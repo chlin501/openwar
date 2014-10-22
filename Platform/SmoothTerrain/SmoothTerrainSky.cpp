@@ -11,7 +11,7 @@
 SmoothTerrainSky::SmoothTerrainSky(GraphicsContext* gc) :
 _gc(gc)
 {
-	_textureBackgroundLinen = new texture(resource("Textures/Linen128x128.png"));
+	_textureBackgroundLinen = new texture(gc, resource("Textures/Linen128x128.png"));
 }
 
 

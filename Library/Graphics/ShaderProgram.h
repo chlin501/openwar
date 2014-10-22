@@ -51,7 +51,6 @@ struct renderer_vertex_attribute
 class ShaderProgramBase
 {
 	friend class RenderCallBase;
-	static float _pixels_per_point;
 
 public:
 	std::vector<renderer_vertex_attribute> _vertex_attributes;
@@ -61,9 +60,6 @@ public:
 
 	ShaderProgramBase(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader);
 	virtual ~ShaderProgramBase();
-
-	static float pixels_per_point();
-	static void set_pixels_per_point(float value);
 
 	static GLuint compile_shader(GLenum type, const char* source);
 

@@ -103,7 +103,7 @@ struct SmoothTerrainShaders
 
 	void render_ground_shadow(GraphicsContext* gc, VertexBuffer_2f& vertices, const terrain_uniforms& uniforms);
 
-	static texture* create_colormap();
+	static texture* create_colormap(GraphicsContext* gc);
 };
 
 

@@ -92,8 +92,8 @@ struct StringFont
 	bool _dirty;
 
 public:
-	StringFont(const char* name, float size, float pixelDensity);
-	StringFont(bool bold, float size, float pixelDensity);
+	StringFont(GraphicsContext* gc, const char* name, float size, float pixelDensity);
+	StringFont(GraphicsContext* gc, bool bold, float size, float pixelDensity);
 	~StringFont();
 
 private:
@@ -114,7 +114,7 @@ public:
 	glm::vec2 get_size(const item& item) const;
 
 private:
-	StringFont(const StringFont&) { }
+	StringFont(const StringFont&) : _texture(nullptr) { }
 	StringFont& operator=(const StringFont&) { return *this; }
 };
 

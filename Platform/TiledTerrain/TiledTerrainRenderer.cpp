@@ -22,7 +22,7 @@ _tiledGroundMap(tiledGroundMap)
 
 			if (_textures.find(tile->texture) == _textures.end())
 			{
-				::texture* t = new ::texture(Image(resource(tile->texture.c_str())));
+				::texture* t = new ::texture(gc, Image(gc, resource(tile->texture.c_str())));
 
 				glBindTexture(GL_TEXTURE_2D, t->id);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

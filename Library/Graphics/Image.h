@@ -17,6 +17,8 @@
 
 #include "resource.h"
 
+class GraphicsContext;
+
 
 class Image
 {
@@ -32,7 +34,7 @@ class Image
 
 public:
 	Image(int width, int height);
-	explicit Image(const resource& r);
+	Image(GraphicsContext* gc, const resource& r);
 
 #ifndef OPENWAR_USE_SDL
 	Image(CGImageRef image);

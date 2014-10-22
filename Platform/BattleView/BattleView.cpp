@@ -65,12 +65,12 @@ BattleView::BattleView(GraphicsContext* gc) :
 {
 	SetUsingDepth(true);
 
-	_textureUnitMarkers = new texture(resource("Textures/UnitMarkers.png"));
-	_textureTouchMarker = new texture(resource("Textures/TouchMarker.png"));
+	_textureUnitMarkers = new texture(gc, resource("Textures/UnitMarkers.png"));
+	_textureTouchMarker = new texture(gc, resource("Textures/TouchMarker.png"));
 
-	_billboardTexture = new BillboardTexture();
+	_billboardTexture = new BillboardTexture(gc);
 
-	Image img(resource("Textures/Billboards.png"));
+	Image img(gc, resource("Textures/Billboards.png"));
 #ifndef OPENWAR_USE_NSBUNDLE_RESOURCES
 	img.premultiply_alpha(); // TODO: how to handle this ???
 #endif
@@ -232,10 +232,10 @@ void BattleView::SetSimulator(BattleSimulator* simulator)
 }
 
 
-static bool ShouldEnableRenderEdges(float pixels_per_point)
+static bool ShouldEnableRenderEdges(GraphicsContext* gc)
 {
 #if TARGET_OS_IPHONE
-	return pixels_per_point > 1;
+	return gc->GetPixelDensity() > 1;
 #else
 	return true;
 #endif
@@ -269,7 +269,7 @@ void BattleView::OnSetGroundMap(GroundMap* groundMap)
 		_smoothTerrainSurface = new SmoothTerrainRenderer(GetSurface()->GetGraphicsContext(), smoothGroundMap);
 		_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
 
-		if (ShouldEnableRenderEdges(ShaderProgramBase::pixels_per_point()))
+		if (ShouldEnableRenderEdges(GetSurface()->GetGraphicsContext()))
 			_smoothTerrainSurface->EnableRenderEdges();
 	}
 
@@ -864,7 +864,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 	glm::mat4x4 transform = GetTerrainTransform();
 	glm::vec3 upvector = GetCameraUpVector();
 	float viewport_height = GetFrame().height();
-	bounds1f sizeLimit = GetUnitIconSizeLimit() / ShaderProgramBase::pixels_per_point();
+	bounds1f sizeLimit = GetUnitIconSizeLimit() / GetSurface()->GetGraphicsContext()->GetPixelDensity();
 
 	glm::vec3 position2 = position + height * 0.5f * viewport_height * upvector;
 	glm::vec4 p = transform * glm::vec4(position, 1);
@@ -926,9 +926,11 @@ bounds1f BattleView::GetUnitIconSizeLimit() const
 	float x = sqrtf(1 - y * y);
 	float a = 1 - fabsf(atan2f(y, x) / (float)M_PI_2);
 
+	float pixelsPerPoint = GetSurface()->GetGraphicsContext()->GetPixelDensity();
+
 	bounds1f result(0, 0);
-	result.min = (32 - 8 * a) * ShaderProgramBase::pixels_per_point();
-	result.max = (32 + 16 * a) * ShaderProgramBase::pixels_per_point();
+	result.min = (32 - 8 * a) * pixelsPerPoint;
+	result.max = (32 + 16 * a) * pixelsPerPoint;
 	if (is_iphone())
 	{
 		result.min *= 57.0f / 72.0f;

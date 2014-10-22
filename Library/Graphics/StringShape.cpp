@@ -191,18 +191,19 @@ Image* StringFont::_image = nullptr;
 
 
 
-StringFont::StringFont(const char* name, float size, float pixelDensity) :
-#ifdef OPENWAR_USE_SDL
-_font1(nullptr),
-_font2(nullptr),
-_emoji(nullptr),
-#else
-_font(0),
-#endif
-_pixelDensity(pixelDensity),
-_items(),
-_next(),
-_dirty(false)
+StringFont::StringFont(GraphicsContext* gc, const char* name, float size, float pixelDensity) :
+	#ifdef OPENWAR_USE_SDL
+	_font1(nullptr),
+	_font2(nullptr),
+	_emoji(nullptr),
+	#else
+	_font(0),
+	#endif
+	_pixelDensity(pixelDensity),
+	_items(),
+	_next(),
+	_texture(gc),
+	_dirty(false)
 {
 	initialize();
 
@@ -249,18 +250,19 @@ _dirty(false)
 
 
 
-StringFont::StringFont(bool bold, float size, float pixelDensity) :
-#ifdef OPENWAR_USE_SDL
-_font1(nullptr),
-_font2(nullptr),
-_emoji(nullptr),
-#else
-_font(nil),
-#endif
-_pixelDensity(pixelDensity),
-_items(),
-_next(),
-_dirty(false)
+StringFont::StringFont(GraphicsContext* gc, bool bold, float size, float pixelDensity) :
+	#ifdef OPENWAR_USE_SDL
+	_font1(nullptr),
+	_font2(nullptr),
+	_emoji(nullptr),
+	#else
+	_font(nil),
+	#endif
+	_pixelDensity(pixelDensity),
+	_items(),
+	_next(),
+	_texture(gc),
+	_dirty(false)
 {
 	initialize();
 

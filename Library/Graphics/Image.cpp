@@ -4,6 +4,7 @@
 
 #include "Image.h"
 #include "bounds.h"
+#include "GraphicsContext.h"
 
 #ifdef OPENWAR_USE_SDL
 #include <SDL2_image/SDL_image.h>
@@ -107,7 +108,7 @@ static GLenum sdl_to_gl_pixel_format(Uint32 sdl_pixel_format)
 #endif
 
 
-Image::Image(const resource& r) :
+Image::Image(GraphicsContext* gc, const resource& r) :
 #ifdef OPENWAR_USE_SDL
 _surface(nullptr),
 #else
@@ -149,7 +150,7 @@ _format(GL_RGBA)
     
 	NSString* name = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:r.name()], [NSString stringWithUTF8String:r.type()]];
 	UIImage* img = nil;
-	if (ShaderProgramBase::pixels_per_point() > 1 && [name hasSuffix:@".png"])
+	if (gc != nullptr && gc->GetPixelDensity() > 1 && [name hasSuffix:@".png"])
 	{
 		NSString* stem = [name substringToIndex:name.length - 4];
 		NSString* name2x = [NSString stringWithFormat:@"%@@2x.png", stem];

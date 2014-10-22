@@ -9,6 +9,7 @@
 #include "resource.h"
 #include <SDL2/SDL.h>
 
+class GraphicsContext;
 class Image;
 
 
@@ -16,16 +17,16 @@ struct texture
 {
 	GLuint id;
 
-	texture();
-	explicit texture(const resource& r);
-	explicit texture(const Image& image);
-	explicit texture(SDL_Surface* surface);
+	explicit texture(GraphicsContext* gc);
+	texture(GraphicsContext* gc, const resource& r);
+	texture(GraphicsContext* gc, const Image& image);
+	texture(GraphicsContext* gc, SDL_Surface* surface);
 
 	~texture();
 
 	void init();
 
-	void load(const resource& r);
+	void load(GraphicsContext* gc, const resource& r);
 	void load(const Image& image);
 	void load(SDL_Surface* surface);
 

@@ -20,17 +20,13 @@ void CHECK_ERROR_GL()
 #endif
 
 
-
 static void print_log(const char* operation, const char* log)
 {
 //	__android_log_print(ANDROID_LOG_INFO, "OPENWAR", "%s: %s", operation, log);
-
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
 	NSLog(@"RENDERER log (%s):\n%s", operation, log);
 #endif
 }
-
-
 
 
 ShaderProgramBase::ShaderProgramBase(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader) :
@@ -76,7 +72,6 @@ _blend_dfactor(GL_ZERO)
 }
 
 
-
 ShaderProgramBase::~ShaderProgramBase()
 {
     if (_program != 0)
@@ -84,34 +79,6 @@ ShaderProgramBase::~ShaderProgramBase()
         glDeleteProgram(_program);
 	    CHECK_ERROR_GL();
     }
-}
-
-
-
-float ShaderProgramBase::_pixels_per_point = 0;
-
-
-float ShaderProgramBase::pixels_per_point()
-{
-	if (_pixels_per_point == 0)
-	{
-#if TARGET_OS_IPHONE
-		if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
-			_pixels_per_point = [[UIScreen mainScreen] scale];
-		else
-			_pixels_per_point = 1;
-#else
-		_pixels_per_point = 1;
-#endif
-	}
-
-	return _pixels_per_point;
-}
-
-
-void ShaderProgramBase::set_pixels_per_point(float value)
-{
-	_pixels_per_point = value;
 }
 
 
@@ -156,7 +123,6 @@ GLuint ShaderProgramBase::compile_shader(GLenum type, const char* source)
 
 	return result;
 }
-
 
 
 bool ShaderProgramBase::link_program(GLuint program)

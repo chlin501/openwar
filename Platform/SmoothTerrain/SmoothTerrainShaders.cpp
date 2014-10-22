@@ -562,7 +562,7 @@ static glm::vec3 adjust_brightness(glm::vec3 c, float brightness)
 }
 
 
-texture* SmoothTerrainShaders::create_colormap()
+texture* SmoothTerrainShaders::create_colormap(GraphicsContext* gc)
 {
 	static Image* img = nullptr;
 	if (img == nullptr)
@@ -590,7 +590,7 @@ texture* SmoothTerrainShaders::create_colormap()
 			}
 	}
 
-	texture* result = new texture(*img);
+	texture* result = new texture(gc, *img);
 
 	glBindTexture(GL_TEXTURE_2D, result->id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

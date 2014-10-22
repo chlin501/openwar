@@ -6,11 +6,11 @@
 #include "Algebra/geometry.h"
 
 
-BillboardTexture::BillboardTexture() :
+BillboardTexture::BillboardTexture(GraphicsContext* gc) :
 _texture(nullptr),
 _shapeCount(0)
 {
-	_texture = new texture();
+	_texture = new texture(gc);
 }
 
 

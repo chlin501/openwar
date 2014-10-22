@@ -22,9 +22,9 @@ _showLines(false),
 _editMode(false)
 {
 	_renderers = new SmoothTerrainShaders();
-	_colormap = SmoothTerrainShaders::create_colormap();
+	_colormap = SmoothTerrainShaders::create_colormap(gc);
 
-	_splatmap = new texture();
+	_splatmap = new texture(gc);
 	UpdateSplatmap();
 
 	InitializeSkirt();
@@ -166,7 +166,7 @@ static NSString* FramebufferStatusString(GLenum status)
 
 void SmoothTerrainRenderer::EnableRenderEdges()
 {
-	_depth = new texture();
+	_depth = new texture(_gc);
 	glBindTexture(GL_TEXTURE_2D, _depth->id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

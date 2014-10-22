@@ -14,10 +14,11 @@
 #include "texture.h"
 #include "ShaderProgram.h"
 #include "Image.h"
+#import "GraphicsContext.h"
 
 
 
-texture::texture()
+texture::texture(GraphicsContext* gc)
 {
 	glGenTextures(1, &id);
 	CHECK_ERROR_GL();
@@ -25,16 +26,16 @@ texture::texture()
 }
 
 
-texture::texture(const resource& r)
+texture::texture(GraphicsContext* gc, const resource& r)
 {
 	glGenTextures(1, &id);
 	CHECK_ERROR_GL();
 	init();
-	load(r);
+	load(gc, r);
 }
 
 
-texture::texture(const Image& image)
+texture::texture(GraphicsContext* gc, const Image& image)
 {
 	glGenTextures(1, &id);
 	CHECK_ERROR_GL();
@@ -43,7 +44,7 @@ texture::texture(const Image& image)
 }
 
 
-texture::texture(SDL_Surface* surface)
+texture::texture(GraphicsContext* gc, SDL_Surface* surface)
 {
 	glGenTextures(1, &id);
 	CHECK_ERROR_GL();
@@ -86,7 +87,7 @@ static bool CheckForExtension(NSString *searchName)
 
 
 
-void texture::load(const resource& r)
+void texture::load(GraphicsContext* gc, const resource& r)
 {
 #ifdef OPENWAR_USE_SDL
 
@@ -118,7 +119,7 @@ void texture::load(const resource& r)
 			}
 		}
 
-		if (ShaderProgramBase::pixels_per_point() > 1)
+		if (gc->GetPixelDensity() > 1)
 		{
 			NSString* name2x = [NSString stringWithFormat:@"%@@2x.png", stem];
 			image = [UIImage imageNamed:name2x];
