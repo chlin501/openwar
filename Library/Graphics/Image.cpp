@@ -149,7 +149,7 @@ _format(GL_RGBA)
     
 	NSString* name = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:r.name()], [NSString stringWithUTF8String:r.type()]];
 	UIImage* img = nil;
-	if (shaderprogram_base::pixels_per_point() > 1 && [name hasSuffix:@".png"])
+	if (ShaderProgramBase::pixels_per_point() > 1 && [name hasSuffix:@".png"])
 	{
 		NSString* stem = [name substringToIndex:name.length - 4];
 		NSString* name2x = [NSString stringWithFormat:@"%@@2x.png", stem];
@@ -366,7 +366,7 @@ NSData* ConvertImageToTiff(Image* map)
 Image* ConvertTiffToImage(NSData* data)
 {
 #if TARGET_OS_IPHONE
-	return new image([[UIImage imageWithData:data] CGImage]);
+	return new Image([[UIImage imageWithData:data] CGImage]);
 #else
 	NSImage* img = [[NSImage alloc] initWithData:data];
 	NSSize size = img.size;

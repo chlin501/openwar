@@ -118,7 +118,7 @@ void texture::load(const resource& r)
 			}
 		}
 
-		if (shaderprogram_base::pixels_per_point() > 1)
+		if (ShaderProgramBase::pixels_per_point() > 1)
 		{
 			NSString* name2x = [NSString stringWithFormat:@"%@@2x.png", stem];
 			image = [UIImage imageNamed:name2x];
@@ -128,7 +128,7 @@ void texture::load(const resource& r)
 	if (image == nil)
 		image = [UIImage imageNamed:name];
 
-	load(image::image(image.CGImage));
+	load(Image::Image(image.CGImage));
 
 #else
 
