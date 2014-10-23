@@ -734,11 +734,7 @@ void StringShape::add(const char* s, glm::mat4x4 transform, float alpha, float d
 	StringGlyph* g = new StringGlyph(s, transform, alpha, delta);
 	_stringglyphs.push_back(g);
 
-	VertexGlyph<Vertex_2f_2f_1f> glyph([this, g](std::vector<Vertex_2f_2f_1f>& vertices) {
-		g->generate(_font, vertices);
-	});
-
-	_vertices.AddGlyph(&glyph);
+	_vertices.AddGlyph(g->GetGlyph(_font));
 }
 
 
