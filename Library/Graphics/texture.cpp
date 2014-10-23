@@ -133,7 +133,7 @@ void texture::load(GraphicsContext* gc, const resource& r)
 
 #else
 
-    Image img(r);
+    Image img(gc, r);
 	load(img);
 
     /*
