@@ -58,7 +58,8 @@ int main(int argc, char *argv[])
 	}
 #endif
     
-	OpenWarSurface* surface = new OpenWarSurface(glm::vec2(640, 480), 1);
+    GraphicsContext* gc = new GraphicsContext(1);
+	OpenWarSurface* surface = new OpenWarSurface(gc, glm::vec2(640, 480));
 	window->SetSurface(surface);
 
 	BattleScenario* scenario = CreateBattleScenario();

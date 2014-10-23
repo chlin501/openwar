@@ -91,7 +91,7 @@ void texture::load(GraphicsContext* gc, const resource& r)
 {
 #ifdef OPENWAR_USE_SDL
 
-	image img(r);
+	Image img(gc, r);
 	img.premultiply_alpha();
 	load(img);
 
