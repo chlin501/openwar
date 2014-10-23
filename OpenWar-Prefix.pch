@@ -4,6 +4,7 @@
 
 #include <TargetConditionals.h>
 
+#define GLM_COMPILER 0
 #define GLM_SWIZZLE
 #define GLM_FORCE_RADIANS
 
