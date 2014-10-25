@@ -8,7 +8,7 @@
 #include "BattleModel/BattleSimulator.h"
 #include "BattleModel/SamuraiModule.h"
 #include "Algebra/bounds.h"
-#include "VertexBuffer.h"
+#include "Shapes/VertexShape.h"
 
 class BattleSimulator;
 class BattleView;
@@ -36,9 +36,9 @@ public:
 	bool Animate(float seconds);
 
 	void AppendUnitMarker(TextureBillboardShape* renderer, bool flip);
-	void AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* battleView);
+	void AppendFacingMarker(VertexShape_3f_2f* vertices, BattleView* battleView);
 
-	void AppendFighterWeapons(VertexBuffer_3f* vertices);
+	void AppendFighterWeapons(VertexShape_3f* vertices);
 	void AppendFighterBillboards(BillboardModel* billboardModel);
 };
 

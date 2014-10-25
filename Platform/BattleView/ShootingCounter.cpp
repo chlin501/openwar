@@ -82,7 +82,7 @@ bool ShootingCounter::Animate(float seconds)
 }
 
 
-void ShootingCounter::Render(VertexBuffer_3f_4f* vertices)
+void ShootingCounter::Render(VertexShape_3f_4f* vertices)
 {
 	for (ShootingCounter::Projectile& projectile : _projectiles)
 	{
@@ -98,7 +98,7 @@ void ShootingCounter::Render(VertexBuffer_3f_4f* vertices)
 }
 
 
-void ShootingCounter::RenderArrow(VertexBuffer_3f_4f* vertices, glm::vec3 p1, glm::vec3 p2, float t)
+void ShootingCounter::RenderArrow(VertexShape_3f_4f* vertices, glm::vec3 p1, glm::vec3 p2, float t)
 {
 	float size = 4;
 	glm::vec3 diff = p2 - p1;
@@ -123,7 +123,7 @@ void ShootingCounter::RenderArrow(VertexBuffer_3f_4f* vertices, glm::vec3 p1, gl
 }
 
 
-void ShootingCounter::RenderBullet(VertexBuffer_3f_4f* vertices, glm::vec3 p1, glm::vec3 p2, float t)
+void ShootingCounter::RenderBullet(VertexShape_3f_4f* vertices, glm::vec3 p1, glm::vec3 p2, float t)
 {
 	float size = 50;
 	glm::vec3 diff = p2 - p1;

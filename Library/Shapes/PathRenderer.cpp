@@ -47,7 +47,7 @@ static glm::vec2 safe_normalize(glm::vec2 v)
 }
 
 
-void PathRenderer::RenderPath(VertexBuffer_3f_4f* vertices, const std::vector<glm::vec2>& path)
+void PathRenderer::RenderPath(VertexShape_3f_4f* vertices, const std::vector<glm::vec2>& path)
 {
 	if (path.size() < 2)
 		return;
@@ -222,7 +222,7 @@ static void bspline_split_segments(std::vector<std::vector<glm::vec2>>& segments
 }
 
 
-void PathRenderer::Path(VertexBuffer_3f_4f* vertices, const std::vector<glm::vec2>& path, int mode)
+void PathRenderer::Path(VertexShape_3f_4f* vertices, const std::vector<glm::vec2>& path, int mode)
 {
 	if (path.size() == 0)
 		return;

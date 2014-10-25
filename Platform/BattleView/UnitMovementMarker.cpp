@@ -55,7 +55,7 @@ void UnitMovementMarker::RenderMovementMarker(TextureBillboardShape* renderer)
 }
 
 
-void UnitMovementMarker::AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* battleView)
+void UnitMovementMarker::AppendFacingMarker(VertexShape_3f_2f* vertices, BattleView* battleView)
 {
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
@@ -92,7 +92,7 @@ void UnitMovementMarker::AppendFacingMarker(VertexBuffer_3f_2f* vertices, Battle
 }
 
 
-void UnitMovementMarker::RenderMovementFighters(VertexBuffer_3f_4f_1f* vertices)
+void UnitMovementMarker::RenderMovementFighters(VertexShape_3f_4f_1f* vertices)
 {
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
@@ -121,7 +121,7 @@ void UnitMovementMarker::RenderMovementFighters(VertexBuffer_3f_4f_1f* vertices)
 }
 
 
-void UnitMovementMarker::RenderMovementPath(VertexBuffer_3f_4f* vertices)
+void UnitMovementMarker::RenderMovementPath(VertexShape_3f_4f* vertices)
 {
 	const UnitCommand& command = _unit->GetCommand();
 	if (!command.path.empty())

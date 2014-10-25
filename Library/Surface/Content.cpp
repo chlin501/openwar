@@ -6,6 +6,7 @@
 #include "Content.h"
 #include "Surface.h"
 #include "CommonShaders.h"
+#include "Shapes/VertexShape.h"
 
 
 
@@ -443,7 +444,7 @@ void Content::OnBoundsChanged()
 
 void Content::RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const
 {
-	VertexBuffer_2f vertices;
+	VertexShape_2f vertices;
 	vertices._mode = GL_TRIANGLE_STRIP;
 	vertices.AddVertex(Vertex_2f(bounds.p11()));
 	vertices.AddVertex(Vertex_2f(bounds.p12()));
@@ -462,7 +463,7 @@ void Content::RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4
 
 void Content::RenderOutline(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const
 {
-	VertexBuffer_2f vertices;
+	VertexShape_2f vertices;
 	vertices._mode = GL_LINE_LOOP;
 	vertices.AddVertex(Vertex_2f(bounds.p11()));
 	vertices.AddVertex(Vertex_2f(bounds.p12()));

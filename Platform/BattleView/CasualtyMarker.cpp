@@ -37,7 +37,7 @@ bool CasualtyMarker::Animate(float seconds)
 
 
 
-void CasualtyMarker::RenderCasualtyColorBillboards(VertexBuffer_3f_4f_1f* vertices)
+void CasualtyMarker::RenderCasualtyColorBillboards(VertexShape_3f_4f_1f* vertices)
 {
 	if (casualties.empty())
 		return;

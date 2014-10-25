@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include "BattleModel/BattleSimulator.h"
 #include "BattleModel/SamuraiModule.h"
-#include "VertexBuffer.h"
+#include "Shapes/VertexShape.h"
 
 class BillboardModel;
 
@@ -43,7 +43,7 @@ public:
 	void AddCasualty(glm::vec3 position, int team, SamuraiPlatform platform);
 	bool Animate(float seconds);
 
-	void RenderCasualtyColorBillboards(VertexBuffer_3f_4f_1f* vertices);
+	void RenderCasualtyColorBillboards(VertexShape_3f_4f_1f* vertices);
 	void AppendCasualtyBillboards(BillboardModel* billboardModel);
 };
 

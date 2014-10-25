@@ -9,7 +9,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-#include "VertexBuffer.h"
+#include "Shapes/VertexShape.h"
 
 
 class PathRenderer
@@ -28,10 +28,10 @@ public:
 	float GetOffset() const { return _offset; }
 	void SetOffset(float value) { _offset = value; }
 
-	void Path(VertexBuffer_3f_4f* vertices, const std::vector<glm::vec2>& path, int mode);
+	void Path(VertexShape_3f_4f* vertices, const std::vector<glm::vec2>& path, int mode);
 
 private:
-	void RenderPath(VertexBuffer_3f_4f* vertices, const std::vector<glm::vec2>& path);
+	void RenderPath(VertexShape_3f_4f* vertices, const std::vector<glm::vec2>& path);
 };
 
 

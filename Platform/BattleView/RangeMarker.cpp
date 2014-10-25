@@ -18,7 +18,7 @@ _unit(unit)
 }
 
 
-void RangeMarker::Render(VertexBuffer_3f_4f* vertices)
+void RangeMarker::Render(VertexShape_3f_4f* vertices)
 {
 	const UnitCommand& command = _unit->GetCommand();
 	if (command.missileTarget != nullptr)
@@ -32,7 +32,7 @@ void RangeMarker::Render(VertexBuffer_3f_4f* vertices)
 }
 
 
-void RangeMarker::RenderMissileRange(VertexBuffer_3f_4f* vertices, const UnitRange& unitRange)
+void RangeMarker::RenderMissileRange(VertexShape_3f_4f* vertices, const UnitRange& unitRange)
 {
 	glm::vec2 center = unitRange.center;
 	const float thickness = 8;
@@ -92,7 +92,7 @@ void RangeMarker::RenderMissileRange(VertexBuffer_3f_4f* vertices, const UnitRan
 
 
 
-void RangeMarker::RenderMissileTarget(VertexBuffer_3f_4f* vertices, glm::vec2 target)
+void RangeMarker::RenderMissileTarget(VertexShape_3f_4f* vertices, glm::vec2 target)
 {
 	glm::vec4 c0 = glm::vec4(255, 64, 64, 0) / 255.0f;
 	glm::vec4 c1 = glm::vec4(255, 64, 64, 24) / 255.0f;

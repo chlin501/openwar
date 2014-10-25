@@ -153,12 +153,12 @@ BattleView::BattleView(GraphicsContext* gc) :
 	_textureBillboardShape1 = new TextureBillboardShape();
 	_textureBillboardShape2 = new TextureBillboardShape();
 
-	_plainLineVertices = new VertexBuffer_3f();
-	_gradientLineVertices = new VertexBuffer_3f_4f();
-	_gradientTriangleVertices = new VertexBuffer_3f_4f();
-	_gradientTriangleStripVertices = new VertexBuffer_3f_4f();
-	_colorBillboardVertices = new VertexBuffer_3f_4f_1f();
-	_textureTriangleVertices = new VertexBuffer_3f_2f();
+	_plainLineVertices = new VertexShape_3f();
+	_gradientLineVertices = new VertexShape_3f_4f();
+	_gradientTriangleVertices = new VertexShape_3f_4f();
+	_gradientTriangleStripVertices = new VertexShape_3f_4f();
+	_colorBillboardVertices = new VertexShape_3f_4f_1f();
+	_textureTriangleVertices = new VertexShape_3f_2f();
 }
 
 

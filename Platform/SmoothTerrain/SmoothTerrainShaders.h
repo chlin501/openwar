@@ -7,8 +7,8 @@
 
 #include "FrameBuffer.h"
 #include "RenderBuffer.h"
-#include "VertexBuffer.h"
 #include "ShaderProgram.h"
+#include "Shapes/VertexShape.h"
 
 class GraphicsContext;
 
@@ -91,17 +91,17 @@ class GroundShadowShader : public ShaderProgram1<glm::vec2>
 
 struct SmoothTerrainShaders
 {
-	void render_terrain_inside(GraphicsContext* gc, VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms);
-	void render_terrain_border(GraphicsContext* gc, VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms);
-	void render_terrain_skirt(GraphicsContext* gc, VertexBuffer_3f_1f& vertices, const glm::mat4& transform, const texture* texture);
+	void render_terrain_inside(GraphicsContext* gc, VertexShape_3f_3f& vertices, const terrain_uniforms& uniforms);
+	void render_terrain_border(GraphicsContext* gc, VertexShape_3f_3f& vertices, const terrain_uniforms& uniforms);
+	void render_terrain_skirt(GraphicsContext* gc, VertexShape_3f_1f& vertices, const glm::mat4& transform, const texture* texture);
 
-	void render_depth_inside(GraphicsContext* gc, VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms);
-	void render_depth_border(GraphicsContext* gc, VertexBuffer_3f_3f& vertices, const terrain_uniforms& uniforms);
-	void render_depth_skirt(GraphicsContext* gc, VertexBuffer_3f_1f& vertices, const glm::mat4& transform);
+	void render_depth_inside(GraphicsContext* gc, VertexShape_3f_3f& vertices, const terrain_uniforms& uniforms);
+	void render_depth_border(GraphicsContext* gc, VertexShape_3f_3f& vertices, const terrain_uniforms& uniforms);
+	void render_depth_skirt(GraphicsContext* gc, VertexShape_3f_1f& vertices, const glm::mat4& transform);
 
-	void render_sobel_filter(GraphicsContext* gc, VertexBuffer_2f_2f& vertices, const sobel_uniforms& uniforms);
+	void render_sobel_filter(GraphicsContext* gc, VertexShape_2f_2f& vertices, const sobel_uniforms& uniforms);
 
-	void render_ground_shadow(GraphicsContext* gc, VertexBuffer_2f& vertices, const terrain_uniforms& uniforms);
+	void render_ground_shadow(GraphicsContext* gc, VertexShape_2f& vertices, const terrain_uniforms& uniforms);
 
 	static texture* create_colormap(GraphicsContext* gc);
 };

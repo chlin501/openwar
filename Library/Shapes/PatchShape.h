@@ -5,7 +5,7 @@
 #ifndef PatchShape_H
 #define PatchShape_H
 
-#include "VertexBuffer.h"
+#include "Shapes/VertexShape.h"
 #include "Shape.h"
 
 

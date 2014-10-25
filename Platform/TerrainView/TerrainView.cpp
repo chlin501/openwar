@@ -39,7 +39,7 @@ void TerrainView::HideMouseHint()
 }
 
 
-void TerrainView::RenderMouseHint(VertexBuffer_3f* vertices)
+void TerrainView::RenderMouseHint(VertexShape_3f* vertices)
 {
 	if (_mouseHintVisible)
 	{

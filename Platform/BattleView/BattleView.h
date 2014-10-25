@@ -6,7 +6,7 @@
 #define BATTLEVIEW_H
 
 #include "BattleModel/BattleSimulator.h"
-#include "VertexBuffer.h"
+#include "Shapes/VertexShape.h"
 #include "TextureBillboardShape.h"
 #include "TerrainView/TerrainView.h"
 #include "TiledTerrain/TiledTerrainRenderer.h"
@@ -42,12 +42,12 @@ class BattleView : public TerrainView, public BattleObserver
 	std::vector<UnitMovementMarker*> _movementMarkers;
 	std::vector<UnitTrackingMarker*> _trackingMarkers;
 
-	VertexBuffer_3f* _plainLineVertices;
-	VertexBuffer_3f_4f* _gradientLineVertices;
-	VertexBuffer_3f_4f* _gradientTriangleVertices;
-	VertexBuffer_3f_4f* _gradientTriangleStripVertices;
-	VertexBuffer_3f_4f_1f* _colorBillboardVertices;
-	VertexBuffer_3f_2f* _textureTriangleVertices;
+	VertexShape_3f* _plainLineVertices;
+	VertexShape_3f_4f* _gradientLineVertices;
+	VertexShape_3f_4f* _gradientTriangleVertices;
+	VertexShape_3f_4f* _gradientTriangleStripVertices;
+	VertexShape_3f_4f_1f* _colorBillboardVertices;
+	VertexShape_3f_2f* _textureTriangleVertices;
 
 	texture* _textureUnitMarkers;
 	texture* _textureTouchMarker;

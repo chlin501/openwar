@@ -8,6 +8,7 @@
 #include "GraphicsContext.h"
 #include "ShaderProgram.h"
 #include "BillboardTexture.h"
+#include "Shapes/VertexShape.h"
 
 
 struct Billboard
@@ -52,7 +53,7 @@ class TextureBillboardShader : public ShaderProgram4<glm::vec3, float, glm::vec2
 class TextureBillboardShape
 {
 public:
-	VertexBuffer_3f_1f_2f_2f _vertices;
+	VertexShape_3f_1f_2f_2f _vertices;
 
 	TextureBillboardShape();
 	~TextureBillboardShape();

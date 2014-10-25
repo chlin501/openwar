@@ -4,7 +4,7 @@
 
 #include "ButtonRendering.h"
 #include "ButtonGrid.h"
-#include "VertexBuffer.h"
+#include "Shapes/VertexShape.h"
 #include "GraphicsContext.h"
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -39,7 +39,7 @@ _gc(gc)
 }
 
 
-static void AddRect(VertexBuffer_2f_2f& vertices, bounds2f bounds, bounds2f texture)
+static void AddRect(VertexShape_2f_2f& vertices, bounds2f bounds, bounds2f texture)
 {
 	vertices.AddVertex(Vertex_2f_2f(bounds.p11(), glm::vec2(0, 1) - texture.p11()));
 	vertices.AddVertex(Vertex_2f_2f(bounds.p12(), glm::vec2(0, 1) - texture.p12()));
@@ -53,7 +53,7 @@ static void AddRect(VertexBuffer_2f_2f& vertices, bounds2f bounds, bounds2f text
 
 void ButtonRendering::RenderCornerButton(const glm::mat4& transform, texture* texturex, bounds2f bounds, float radius)
 {
-	VertexBuffer_2f_2f vertices;
+	VertexShape_2f_2f vertices;
 	vertices._mode = GL_TRIANGLES;
 
 	bounds2f outer = bounds;
@@ -91,7 +91,7 @@ void ButtonRendering::RenderButtonIcon(const glm::mat4& transform, glm::vec2 pos
 
 void ButtonRendering::RenderTextureRect(const glm::mat4& transform, texture* texturex, bounds2f b, bounds2f t, float alpha)
 {
-	VertexBuffer_2f_2f vertices;
+	VertexShape_2f_2f vertices;
 	vertices._mode = GL_TRIANGLE_STRIP;
 	vertices.AddVertex(Vertex_2f_2f(b.p11(), t.p12()));
 	vertices.AddVertex(Vertex_2f_2f(b.p12(), t.p11()));

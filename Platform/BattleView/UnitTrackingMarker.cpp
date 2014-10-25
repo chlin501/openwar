@@ -38,7 +38,7 @@ float UnitTrackingMarker::GetFacing() const
 }
 
 
-void UnitTrackingMarker::RenderTrackingFighters(VertexBuffer_3f_4f_1f* vertices)
+void UnitTrackingMarker::RenderTrackingFighters(VertexShape_3f_4f_1f* vertices)
 {
 	if (!_meleeTarget && !_missileTarget)
 	{
@@ -79,7 +79,7 @@ void UnitTrackingMarker::RenderTrackingMarker(TextureBillboardShape* renderer)
 }
 
 
-void UnitTrackingMarker::AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* battleView)
+void UnitTrackingMarker::AppendFacingMarker(VertexShape_3f_2f* vertices, BattleView* battleView)
 {
 	if (_path.empty())
 		return;
@@ -124,7 +124,7 @@ void UnitTrackingMarker::RenderTrackingShadow(TextureBillboardShape* renderer)
 
 
 
-void UnitTrackingMarker::RenderTrackingPath(VertexBuffer_3f_4f* vertices)
+void UnitTrackingMarker::RenderTrackingPath(VertexShape_3f_4f* vertices)
 {
 	if (!_path.empty())
 	{
@@ -141,7 +141,7 @@ void UnitTrackingMarker::RenderTrackingPath(VertexBuffer_3f_4f* vertices)
 }
 
 
-void UnitTrackingMarker::RenderOrientation(VertexBuffer_3f_4f* vertices)
+void UnitTrackingMarker::RenderOrientation(VertexShape_3f_4f* vertices)
 {
 	if (_renderOrientation && _hasOrientation && !_path.empty())
 	{

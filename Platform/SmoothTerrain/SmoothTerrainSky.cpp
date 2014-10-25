@@ -6,6 +6,7 @@
 
 #include "SmoothTerrainSky.h"
 #include "GraphicsContext.h"
+#include "Shapes/VertexShape.h"
 
 
 SmoothTerrainSky::SmoothTerrainSky(GraphicsContext* gc) :
@@ -23,7 +24,7 @@ SmoothTerrainSky::~SmoothTerrainSky()
 
 void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f frame, float cameraDirectionZ, bool flip)
 {
-	VertexBuffer_2f_4f vertices;
+	VertexShape_2f_4f vertices;
 
 	float y = cameraDirectionZ;
 	float x = sqrtf(1 - y * y);
@@ -77,7 +78,7 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f frame, float 
 
 void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, bounds2f frame, bool flip)
 {
-	VertexBuffer_2f_2f vertices;
+	VertexShape_2f_2f vertices;
 
 	vertices._mode = GL_TRIANGLES;
 	vertices.Clear();

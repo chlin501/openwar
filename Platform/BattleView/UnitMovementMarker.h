@@ -6,7 +6,7 @@
 #define UnitMovementMarker_H
 
 #include "UnitMarker.h"
-#include "VertexBuffer.h"
+#include "Shapes/VertexShape.h"
 
 class BattleView;
 class TextureBillboardShape;
@@ -21,9 +21,9 @@ public:
 	bool Animate(float seconds);
 
 	void RenderMovementMarker(TextureBillboardShape* renderer);
-	void AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* battleView);
-	void RenderMovementFighters(VertexBuffer_3f_4f_1f* vertices);
-	void RenderMovementPath(VertexBuffer_3f_4f* vertices);
+	void AppendFacingMarker(VertexShape_3f_2f* vertices, BattleView* battleView);
+	void RenderMovementFighters(VertexShape_3f_4f_1f* vertices);
+	void RenderMovementPath(VertexShape_3f_4f* vertices);
 };
 
 

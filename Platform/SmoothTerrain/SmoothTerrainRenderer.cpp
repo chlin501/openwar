@@ -121,7 +121,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 		glDisable(GL_DEPTH_TEST);
 		glDepthMask(false);
 
-		VertexBuffer_2f_2f vertices;
+		VertexShape_2f_2f vertices;
 		vertices._mode = GL_TRIANGLE_STRIP;
 		vertices.AddVertex(Vertex_2f_2f(glm::vec2(-1, 1), glm::vec2(0, 1)));
 		vertices.AddVertex(Vertex_2f_2f(glm::vec2(-1, -1), glm::vec2(0, 0)));
@@ -527,7 +527,7 @@ void SmoothTerrainRenderer::BuildTriangles()
 void SmoothTerrainRenderer::PushTriangle(const Vertex_3f_3f& v0, const Vertex_3f_3f& v1, const Vertex_3f_3f& v2)
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
-	VertexBuffer_3f_3f* vertices = SelectTerrainVertexBuffer(inside_circle(bounds, v0, v1, v2));
+	VertexShape_3f_3f* vertices = SelectTerrainVertexBuffer(inside_circle(bounds, v0, v1, v2));
 	if (vertices != nullptr)
 	{
 		vertices->AddVertex(v0);
@@ -537,7 +537,7 @@ void SmoothTerrainRenderer::PushTriangle(const Vertex_3f_3f& v0, const Vertex_3f
 }
 
 
-VertexBuffer_3f_3f* SmoothTerrainRenderer::SelectTerrainVertexBuffer(int inside)
+VertexShape_3f_3f* SmoothTerrainRenderer::SelectTerrainVertexBuffer(int inside)
 {
 	switch (inside)
 	{

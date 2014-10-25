@@ -4,7 +4,7 @@
 
 #include "BattleModel/HeightMap.h"
 #include "ShaderProgram.h"
-#include "VertexBuffer.h"
+#include "Shapes/VertexShape.h"
 #include "TiledTerrainRenderer.h"
 #include "CommonShaders.h"
 #include "GraphicsContext.h"
@@ -47,7 +47,7 @@ void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3&
 	bounds2f bounds = _tiledGroundMap->GetBounds();
 	glm::ivec2 size = _tiledGroundMap->GetSize();
 
-	VertexBuffer_3f_2f _vertices;
+	VertexShape_3f_2f _vertices;
 	_vertices._mode = GL_TRIANGLES;
 
 	glm::vec2 delta = bounds.size() / glm::vec2(size);

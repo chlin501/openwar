@@ -89,7 +89,7 @@ void UnitCounter::AppendUnitMarker(TextureBillboardShape* renderer, bool flip)
 }
 
 
-void UnitCounter::AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* battleView)
+void UnitCounter::AppendFacingMarker(VertexShape_3f_2f* vertices, BattleView* battleView)
 {
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
@@ -148,7 +148,7 @@ void UnitCounter::AppendFacingMarker(VertexBuffer_3f_2f* vertices, BattleView* b
 }
 
 
-void UnitCounter::AppendFighterWeapons(VertexBuffer_3f* vertices)
+void UnitCounter::AppendFighterWeapons(VertexShape_3f* vertices)
 {
 	if (_unit->stats.weaponReach > 0)
 	{

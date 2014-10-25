@@ -6,7 +6,7 @@
 #define ShootingMarker_H
 
 #include "BattleModel/BattleSimulator.h"
-#include "VertexBuffer.h"
+#include "VertexShape.h"
 
 
 class ShootingCounter
@@ -38,11 +38,11 @@ public:
 	bool Animate(float seconds);
 	void AddProjectile(glm::vec3 position1, glm::vec3 position2, float delay, float duration);
 
-	void Render(VertexBuffer_3f_4f* vertices);
+	void Render(VertexShape_3f_4f* vertices);
 
 private:
-	void RenderArrow(VertexBuffer_3f_4f* vertices, glm::vec3 p1, glm::vec3 p2, float t);
-	void RenderBullet(VertexBuffer_3f_4f* vertices, glm::vec3 p1, glm::vec3 p2, float t);
+	void RenderArrow(VertexShape_3f_4f* vertices, glm::vec3 p1, glm::vec3 p2, float t);
+	void RenderBullet(VertexShape_3f_4f* vertices, glm::vec3 p1, glm::vec3 p2, float t);
 };
 
 

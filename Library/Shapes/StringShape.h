@@ -28,6 +28,7 @@
 #include "ShaderProgram.h"
 #include "texture.h"
 #include "Shape.h"
+#include "VertexShape.h"
 
 class GraphicsContext;
 
@@ -162,7 +163,7 @@ class StringShape : public Shape
 	std::vector<StringGlyph*> _stringglyphs;
 
 public:
-	VertexBuffer_2f_2f_1f _vertices;
+	VertexShape_2f_2f_1f _vertices;
 	StringFont* _font;
 
 	explicit StringShape(StringFont* font);

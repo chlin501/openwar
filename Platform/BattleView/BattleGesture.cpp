@@ -55,7 +55,7 @@ void BattleGesture::RenderHints()
 {
 	glm::mat4 transform = ViewportTransform(_battleView->GetFrame());
 
-	VertexBuffer_2f vertices;
+	VertexShape_2f vertices;
 	vertices._mode = GL_LINES;
 
 	for (UnitCounter* unitMarker : _battleView->GetUnitCounters())

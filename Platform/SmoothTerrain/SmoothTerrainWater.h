@@ -7,6 +7,7 @@
 
 #include "ShaderProgram.h"
 #include "Image.h"
+#include "Shapes/VertexShape.h"
 
 class GraphicsContext;
 class GroundMap;
@@ -31,8 +32,8 @@ class SmoothTerrainWater
 {
 	GroundMap* _groundMap;
 
-	VertexBuffer_2f _waterInsideVertices;
-	VertexBuffer_2f _waterBorderVertices;
+	VertexShape_2f _waterInsideVertices;
+	VertexShape_2f _waterBorderVertices;
 
 public:
 	SmoothTerrainWater(GroundMap* groundMap);

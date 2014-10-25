@@ -40,7 +40,7 @@ void TerrainGesture::RenderHints()
 
 	//_terrainView->UseViewport();
 
-	VertexBuffer_2f vertices;
+	VertexShape_2f vertices;
 	vertices._mode = GL_LINES;
 
 	glm::vec2 left = _terrainView->GetScreenLeft();
