@@ -164,21 +164,21 @@ public:
 };
 
 
-typedef VertexShape<Vertex_2f> VertexShape_2f;
-typedef VertexShape<Vertex_3f> VertexShape_3f;
+typedef VertexShapeBase<Vertex_2f> VertexShape_2f;
+typedef VertexShapeBase<Vertex_3f> VertexShape_3f;
 
-typedef VertexShape<Vertex_2f_2f> VertexShape_2f_2f;
-typedef VertexShape<Vertex_2f_4f> VertexShape_2f_4f;
-typedef VertexShape<Vertex_3f_1f> VertexShape_3f_1f;
-typedef VertexShape<Vertex_3f_2f> VertexShape_3f_2f;
-typedef VertexShape<Vertex_3f_3f> VertexShape_3f_3f;
-typedef VertexShape<Vertex_3f_4f> VertexShape_3f_4f;
+typedef VertexShapeBase<Vertex_2f_2f> VertexShape_2f_2f;
+typedef VertexShapeBase<Vertex_2f_4f> VertexShape_2f_4f;
+typedef VertexShapeBase<Vertex_3f_1f> VertexShape_3f_1f;
+typedef VertexShapeBase<Vertex_3f_2f> VertexShape_3f_2f;
+typedef VertexShapeBase<Vertex_3f_3f> VertexShape_3f_3f;
+typedef VertexShapeBase<Vertex_3f_4f> VertexShape_3f_4f;
 
-typedef VertexShape<Vertex_2f_2f_1f> VertexShape_2f_2f_1f;
-typedef VertexShape<Vertex_3f_4f_1f> VertexShape_3f_4f_1f;
-typedef VertexShape<Vertex_2f_2f_2f> VertexShape_2f_2f_2f;
+typedef VertexShapeBase<Vertex_2f_2f_1f> VertexShape_2f_2f_1f;
+typedef VertexShapeBase<Vertex_3f_4f_1f> VertexShape_3f_4f_1f;
+typedef VertexShapeBase<Vertex_2f_2f_2f> VertexShape_2f_2f_2f;
 
-typedef VertexShape<Vertex_3f_1f_2f_2f> VertexShape_3f_1f_2f_2f;
+typedef VertexShapeBase<Vertex_3f_1f_2f_2f> VertexShape_3f_1f_2f_2f;
 
 
 #endif

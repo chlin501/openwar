@@ -163,7 +163,7 @@ class StringShape : public Shape
 	std::vector<StringGlyph*> _stringglyphs;
 
 public:
-	VertexShape_2f_2f_1f _vertices;
+	VertexShape<Vertex_2f_2f_1f> _vertices;
 	StringFont* _font;
 
 	explicit StringShape(StringFont* font);
