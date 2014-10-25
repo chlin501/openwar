@@ -52,19 +52,15 @@ private:
 
 
 
-
 template <class _Vertex>
-class VertexShape : public VertexBuffer<_Vertex>
+class VertexShapeBase : public VertexBuffer<_Vertex>
 {
-	friend class VertexGlyph<_Vertex>;
-	std::vector<VertexGlyph<_Vertex>*> _glyphs;
-
 public:
 	typedef _Vertex VertexT;
 
-	VertexShape() { }
-
 	std::vector<VertexT> _vertices;
+
+	VertexShapeBase() { }
 
 	void Reset(GLenum mode)
 	{
@@ -75,39 +71,6 @@ public:
 	void Clear()
 	{
 		_vertices.clear();
-	}
-
-	virtual const void* data() const
-	{
-		return _vertices.data();
-	}
-
-	virtual GLsizei count() const
-	{
-		return VertexBufferBase::_vbo != 0 ? VertexBufferBase::_count : (GLsizei)_vertices.size();
-	}
-
-	void ClearGlyphs()
-	{
-		for (VertexGlyph<VertexT>* glyph : _glyphs)
-			glyph->_vertexBuffer = nullptr;
-		_glyphs.clear();
-	}
-
-	void AddGlyph(VertexGlyph<VertexT>* glyph)
-	{
-		if (glyph->_vertexBuffer != nullptr)
-			glyph->_vertexBuffer->RemoveGlyph(glyph);
-		glyph->_vertexBuffer = this;
-		_glyphs.push_back(glyph);
-	}
-
-	void RemoveGlyph(VertexGlyph<VertexT>* glyph)
-	{
-		glyph->_vertexBuffer = nullptr;
-		_glyphs.erase(
-			std::find(_glyphs.begin(), _glyphs.end(), glyph),
-			_glyphs.end());
 	}
 
 	void AddVertex(const VertexT& vertex)
@@ -138,15 +101,64 @@ public:
 		VertexBufferBase::_count = (GLsizei)_vertices.size();
 	}
 
-	VertexShape<VertexT>& UpdateVBOFromGlyphs()
+
+	virtual const void* data() const
 	{
-		_vertices.clear();
+		return _vertices.data();
+	}
+
+	virtual GLsizei count() const
+	{
+		return VertexBufferBase::_vbo != 0 ? VertexBufferBase::_count : (GLsizei)_vertices.size();
+	}
+
+
+};
+
+
+template <class _Vertex>
+class VertexShape : public VertexShapeBase<_Vertex>
+{
+	friend class VertexGlyph<_Vertex>;
+	std::vector<VertexGlyph<_Vertex>*> _glyphs;
+
+public:
+	typedef _Vertex VertexT;
+
+	VertexShape() { }
+
+	void ClearGlyphs()
+	{
+		for (VertexGlyph<VertexT>* glyph : _glyphs)
+			glyph->_vertexBuffer = nullptr;
+		_glyphs.clear();
+	}
+
+	void AddGlyph(VertexGlyph<VertexT>* glyph)
+	{
+		if (glyph->_vertexBuffer != nullptr)
+			glyph->_vertexBuffer->RemoveGlyph(glyph);
+		glyph->_vertexBuffer = this;
+		_glyphs.push_back(glyph);
+	}
+
+	void RemoveGlyph(VertexGlyph<VertexT>* glyph)
+	{
+		glyph->_vertexBuffer = nullptr;
+		_glyphs.erase(
+			std::find(_glyphs.begin(), _glyphs.end(), glyph),
+			_glyphs.end());
+	}
+
+	VertexBuffer<VertexT>& UpdateVBOFromGlyphs()
+	{
+		VertexShapeBase<VertexT>::_vertices.clear();
 		for (VertexGlyph<VertexT>* glyph : _glyphs)
 		{
 			if (glyph->_rebuild)
-				glyph->_rebuild(_vertices);
+				glyph->_rebuild(VertexShapeBase<VertexT>::_vertices);
 		}
-		UpdateVBO(GL_STATIC_DRAW);
+		this->UpdateVBO(GL_STATIC_DRAW);
 		return *this;
 	}
 };
