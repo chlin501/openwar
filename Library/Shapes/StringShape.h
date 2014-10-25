@@ -158,7 +158,7 @@ private:
 };
 
 
-class StringShape : public Shape
+class StringShape
 {
 	std::vector<StringGlyph*> _stringglyphs;
 
@@ -174,7 +174,7 @@ public:
 	void update(GLenum usage);
 
 private:
-	StringShape(const StringShape& _) : Shape(_) { }
+	StringShape(const StringShape&) { }
 	StringShape& operator=(const StringShape&) { return *this; }
 };
 

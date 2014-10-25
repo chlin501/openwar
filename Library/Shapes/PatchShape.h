@@ -27,7 +27,7 @@ struct TexturePatchFactory
 };
 
 
-class PatchShape : public Shape
+class PatchShape
 {
 	VertexGlyph<Vertex_2f_2f> _glyph;
 
@@ -50,7 +50,7 @@ protected:
 	void rectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bounds2f uv);
 
 private:
-	PatchShape(const PatchShape& x) : Shape(x) { }
+	PatchShape(const PatchShape&) { }
 	PatchShape& operator=(const PatchShape&) { return *this; }
 };
 
