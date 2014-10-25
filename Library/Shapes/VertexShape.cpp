@@ -1,11 +1,14 @@
 #include "VertexShape.h"
 
 
-VertexShape::VertexShape()
+
+
+VertexGlyphBase::VertexGlyphBase(Shape* shape) :
+	_shape(shape)
 {
 }
 
 
-VertexShape::~VertexShape()
+VertexGlyphBase::~VertexGlyphBase()
 {
 }
