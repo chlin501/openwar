@@ -5,20 +5,18 @@
 #include <functional>
 #include <vector>
 
-//class Shape;
 template <class _Vertex> class VertexBuffer;
-template <class _Vertex> class VertexShape;
 
 
 template <class _Vertex>
-class VertexShapeBase : public VertexBuffer<_Vertex>
+class VertexShape : public VertexBuffer<_Vertex>
 {
 public:
 	typedef _Vertex VertexT;
 
 	std::vector<VertexT> _vertices;
 
-	VertexShapeBase() { }
+	VertexShape() { }
 
 	void Reset(GLenum mode)
 	{
@@ -69,103 +67,22 @@ public:
 	{
 		return VertexBufferBase::_vbo != 0 ? VertexBufferBase::_count : (GLsizei)_vertices.size();
 	}
-
-
 };
 
+typedef VertexShape<Vertex_2f> VertexShape_2f;
+typedef VertexShape<Vertex_3f> VertexShape_3f;
 
+typedef VertexShape<Vertex_2f_2f> VertexShape_2f_2f;
+typedef VertexShape<Vertex_2f_4f> VertexShape_2f_4f;
+typedef VertexShape<Vertex_3f_1f> VertexShape_3f_1f;
+typedef VertexShape<Vertex_3f_2f> VertexShape_3f_2f;
+typedef VertexShape<Vertex_3f_3f> VertexShape_3f_3f;
+typedef VertexShape<Vertex_3f_4f> VertexShape_3f_4f;
 
-template <class _Vertex>
-class VertexGlyph
-{
-	friend class VertexShape<_Vertex>;
-	VertexShape<_Vertex>* _vertexBuffer;
+typedef VertexShape<Vertex_3f_4f_1f> VertexShape_3f_4f_1f;
+typedef VertexShape<Vertex_2f_2f_2f> VertexShape_2f_2f_2f;
 
-public:
-	typedef _Vertex VertexType;
-	typedef std::function<void(std::vector<_Vertex>&)> RebuildType;
-
-	RebuildType _rebuild;
-
-	VertexGlyph() : _vertexBuffer(nullptr), _rebuild() { }
-	VertexGlyph(RebuildType rebuild) : _vertexBuffer(nullptr), _rebuild(rebuild) { }
-
-	~VertexGlyph()
-	{
-		if (_vertexBuffer != nullptr)
-			_vertexBuffer->RemoveGlyph(this);
-	}
-
-private:
-	VertexGlyph(const VertexGlyph<VertexType>&) { }
-	VertexGlyph<VertexType>& operator=(VertexGlyph<VertexType>&) { return *this; }
-};
-
-
-
-template <class _Vertex>
-class VertexShape : public VertexShapeBase<_Vertex>
-{
-	friend class VertexGlyph<_Vertex>;
-	std::vector<VertexGlyph<_Vertex>*> _glyphs;
-
-public:
-	typedef _Vertex VertexT;
-
-	VertexShape() { }
-
-	void ClearGlyphs()
-	{
-		for (VertexGlyph<VertexT>* glyph : _glyphs)
-			glyph->_vertexBuffer = nullptr;
-		_glyphs.clear();
-	}
-
-	void AddGlyph(VertexGlyph<VertexT>* glyph)
-	{
-		if (glyph->_vertexBuffer != nullptr)
-			glyph->_vertexBuffer->RemoveGlyph(glyph);
-		glyph->_vertexBuffer = this;
-		_glyphs.push_back(glyph);
-	}
-
-	void RemoveGlyph(VertexGlyph<VertexT>* glyph)
-	{
-		glyph->_vertexBuffer = nullptr;
-		_glyphs.erase(
-			std::find(_glyphs.begin(), _glyphs.end(), glyph),
-			_glyphs.end());
-	}
-
-	VertexBuffer<VertexT>& UpdateVBOFromGlyphs()
-	{
-		VertexShapeBase<VertexT>::_vertices.clear();
-		for (VertexGlyph<VertexT>* glyph : _glyphs)
-		{
-			if (glyph->_rebuild)
-				glyph->_rebuild(VertexShapeBase<VertexT>::_vertices);
-		}
-		this->UpdateVBO(GL_STATIC_DRAW);
-		return *this;
-	}
-};
-
-
-typedef VertexShapeBase<Vertex_2f> VertexShape_2f;
-typedef VertexShapeBase<Vertex_3f> VertexShape_3f;
-
-typedef VertexShapeBase<Vertex_2f_2f> VertexShape_2f_2f;
-typedef VertexShapeBase<Vertex_2f_4f> VertexShape_2f_4f;
-typedef VertexShapeBase<Vertex_3f_1f> VertexShape_3f_1f;
-typedef VertexShapeBase<Vertex_3f_2f> VertexShape_3f_2f;
-typedef VertexShapeBase<Vertex_3f_3f> VertexShape_3f_3f;
-typedef VertexShapeBase<Vertex_3f_4f> VertexShape_3f_4f;
-
-typedef VertexShapeBase<Vertex_2f_2f_1f> VertexShape_2f_2f_1f;
-typedef VertexShapeBase<Vertex_3f_4f_1f> VertexShape_3f_4f_1f;
-typedef VertexShapeBase<Vertex_2f_2f_2f> VertexShape_2f_2f_2f;
-
-typedef VertexShapeBase<Vertex_3f_1f_2f_2f> VertexShape_3f_1f_2f_2f;
+typedef VertexShape<Vertex_3f_1f_2f_2f> VertexShape_3f_1f_2f_2f;
 
 
 #endif

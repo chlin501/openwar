@@ -34,7 +34,7 @@ TexturePatch TexturePatchFactory::GetTexturePatch(int u0, int v0, int size_u, in
 }
 
 
-PatchShape::PatchShape(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
+PatchGlyphX::PatchGlyphX(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
 {
 	outer_xy = bounds;
 	inner_xy = bounds.grow(-inset.x, -inset.y);
@@ -43,7 +43,7 @@ PatchShape::PatchShape(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
 }
 
 
-void PatchShape::Reset()
+void PatchGlyphX::Reset()
 {
 	outer_xy = bounds2f();
 	inner_xy = bounds2f();
@@ -52,7 +52,7 @@ void PatchShape::Reset()
 }
 
 
-void PatchShape::Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
+void PatchGlyphX::Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
 {
 	outer_xy = bounds;
 	inner_xy = bounds.grow(-inset.x, -inset.y);
@@ -61,7 +61,7 @@ void PatchShape::Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
 }
 
 
-VertexGlyph<Vertex_2f_2f>* PatchShape::GetGlyph()
+PatchGlyphXX<Vertex_2f_2f>* PatchGlyphX::GetGlyph()
 {
 	_glyph._rebuild = [this](std::vector<Vertex_2f_2f>& vertices) {
 		generate(vertices);
@@ -70,7 +70,7 @@ VertexGlyph<Vertex_2f_2f>* PatchShape::GetGlyph()
 }
 
 
-void PatchShape::generate(std::vector<Vertex_2f_2f>& vertices)
+void PatchGlyphX::generate(std::vector<Vertex_2f_2f>& vertices)
 {
 	bool min_x = outer_xy.min.x < inner_xy.min.x;
 	bool max_x = inner_xy.max.x < outer_xy.max.x;
@@ -123,7 +123,7 @@ void PatchShape::generate(std::vector<Vertex_2f_2f>& vertices)
 }
 
 
-void PatchShape::rectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bounds2f uv)
+void PatchGlyphX::rectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bounds2f uv)
 {
 	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
 	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.max.y), glm::vec2(uv.min.x, uv.max.y)));
