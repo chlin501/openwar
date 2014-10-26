@@ -581,36 +581,39 @@ glm::vec2 StringFont::get_size(const item& item) const
 
 
 StringGlyph::StringGlyph() :
-_string(),
-_transform(),
-_alpha(1),
-_delta(0)
+	_shape(nullptr),
+	_string(),
+	_transform(),
+	_alpha(1),
+	_delta(0)
 {
 }
 
 
 StringGlyph::StringGlyph(const char* string, glm::vec2 translate, float alpha, float delta) :
-_string(string),
-_transform(glm::translate(glm::mat4(), glm::vec3(translate, 0))),
-_alpha(alpha),
-_delta(delta)
+	_shape(nullptr),
+	_string(string),
+	_transform(glm::translate(glm::mat4(), glm::vec3(translate, 0))),
+	_alpha(alpha),
+	_delta(delta)
 {
 }
 
 
 StringGlyph::StringGlyph(const char* string, glm::mat4x4 transform, float alpha, float delta) :
-_string(string),
-_transform(transform),
-_alpha(alpha),
-_delta(delta)
+	_shape(nullptr),
+	_string(string),
+	_transform(transform),
+	_alpha(alpha),
+	_delta(delta)
 {
 }
 
 
-StringGlyphX* StringGlyph::GetGlyph()
+StringGlyph::~StringGlyph()
 {
-	_glyph._rebuild = this;
-	return &_glyph;
+	if (_shape != nullptr)
+		_shape->RemoveGlyph(this);
 }
 
 
@@ -683,6 +686,23 @@ void StringGlyph::generate(StringFont* font, std::vector<StringGlyph::vertex_typ
 }
 
 
+
+/***/
+
+
+
+StringShape::StringVertexBuffer::StringVertexBuffer(StringShape* shape) :
+	_shape(shape)
+{
+}
+
+
+void StringShape::StringVertexBuffer::Update()
+{
+	_shape->UpdateVertexBuffer();
+}
+
+
 /***/
 
 
@@ -697,25 +717,55 @@ StringShape::StringShape(StringFont* font) :
 
 StringShape::~StringShape()
 {
-	for (StringGlyphX* glyph : _vertices._glyphs)
+	for (StringGlyph* glyph : _glyphs)
 		glyph->_shape = nullptr;
 }
 
 
-void StringVertexBuffer::Update()
+VertexBuffer<Vertex_2f_2f_1f>* StringShape::GetVertices()
 {
-	_shape->UpdateVertexBuffer();
+	return &_vertices;
+}
+
+
+void StringShape::ClearGlyphs()
+{
+	for (StringGlyph* glyph : _glyphs)
+		glyph->_shape = nullptr;
+	_glyphs.clear();
+}
+
+
+void StringShape::AddGlyph(StringGlyph* glyph)
+{
+	if (glyph->_shape != nullptr)
+		glyph->_shape->RemoveGlyph(glyph);
+
+	glyph->_shape = this;
+	_glyphs.push_back(glyph);
+}
+
+
+void StringShape::RemoveGlyph(StringGlyph* glyph)
+{
+	glyph->_shape = nullptr;
+	_glyphs.erase(
+		std::remove(_glyphs.begin(), _glyphs.end(), glyph),
+		_glyphs.end());
 }
 
 
 void StringShape::UpdateVertexBuffer()
 {
-	_vertices._vertices.clear();
+	static std::vector<Vertex_2f_2f_1f> vertices;
 
-	for (StringGlyphX* glyph : _vertices._glyphs)
-		if (glyph->_rebuild != nullptr)
-			glyph->_rebuild->generate(_font, _vertices._vertices);
+	for (StringGlyph* glyph : _glyphs)
+	{
+		glyph->generate(_font, vertices);
+	}
 
-	_vertices.UpdateVBO(GL_TRIANGLES, _vertices._vertices.data(), _vertices._vertices.size());
+	_vertices.UpdateVBO(GL_TRIANGLES, vertices.data(), vertices.size());
+	vertices.clear();
+
 	_font->update_texture();
 }

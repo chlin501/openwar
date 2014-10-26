@@ -120,34 +120,11 @@ class StringShape;
 class StringGlyph;
 
 
-class StringGlyphX
-{
-	friend class StringVertexBuffer;
-	friend class StringShape;
-	StringShape* _shape;
-
-public:
-	typedef std::function<void(std::vector<Vertex_2f_2f_1f>&)> RebuildType;
-
-	StringGlyph* _rebuild;
-
-	StringGlyphX() : _shape(nullptr), _rebuild() { }
-	StringGlyphX(StringGlyph* rebuild) : _shape(nullptr), _rebuild(rebuild) { }
-
-	~StringGlyphX();
-
-private:
-	StringGlyphX(const StringGlyphX&) { }
-	StringGlyphX& operator=(StringGlyphX&) { return *this; }
-};
-
-
-
 class StringGlyph
 {
 	friend class StringShape;
 
-	StringGlyphX _glyph;
+	StringShape* _shape;
 	std::string _string;
 	glm::mat4x4 _transform;
 	float _alpha;
@@ -159,6 +136,7 @@ public:
 	StringGlyph();
 	StringGlyph(const char* string, glm::vec2 translate, float alpha = 1, float delta = 0);
 	StringGlyph(const char* string, glm::mat4x4 transform, float alpha = 1, float delta = 0);
+	~StringGlyph();
 
 	const char* get_string() const { return _string.c_str(); }
 	void set_string(const char* value) { _string = value; }
@@ -173,8 +151,6 @@ public:
 	const float get_delta() const { return _delta; }
 	void set_delta(float value) { _delta = value; }
 
-	StringGlyphX* GetGlyph();
-
 	void generate(StringFont* font, std::vector<vertex_type>& vertices);
 
 private:
@@ -183,57 +159,30 @@ private:
 };
 
 
-class StringVertexBuffer : public VertexBuffer<Vertex_2f_2f_1f>
-{
-	friend class StringGlyphX;
-	StringShape* _shape;
-
-public:
-	typedef Vertex_2f_2f_1f VertexT;
-
-	std::vector<StringGlyphX*> _glyphs;
-	std::vector<VertexT> _vertices;
-
-	StringVertexBuffer(StringShape* shape) : _shape(shape) { }
-
-	virtual void Update();
-};
-
-
 class StringShape
 {
-	friend class StringVertexBuffer;
+	class StringVertexBuffer : public VertexBuffer<Vertex_2f_2f_1f>
+	{
+		StringShape* _shape;
+	public:
+		StringVertexBuffer(StringShape* shape);
+		virtual void Update();
+	};
+
+	StringVertexBuffer _vertices;
+	std::vector<StringGlyph*> _glyphs;
 
 public:
-	StringVertexBuffer _vertices;
 	StringFont* _font;
 
 	explicit StringShape(StringFont* font);
 	~StringShape();
 
-	void ClearGlyphs()
-	{
-		for (StringGlyphX* glyph : _vertices._glyphs)
-			glyph->_shape = nullptr;
-		_vertices._glyphs.clear();
-	}
+	VertexBuffer<Vertex_2f_2f_1f>* GetVertices();
 
-	void AddGlyph(StringGlyphX* glyph)
-	{
-		if (glyph->_shape != nullptr)
-			glyph->_shape->RemoveGlyph(glyph);
-
-		glyph->_shape = this;
-		_vertices._glyphs.push_back(glyph);
-	}
-
-	void RemoveGlyph(StringGlyphX* glyph)
-	{
-		glyph->_shape = nullptr;
-		_vertices._glyphs.erase(
-			std::remove(_vertices._glyphs.begin(), _vertices._glyphs.end(), glyph),
-			_vertices._glyphs.end());
-	}
+	void ClearGlyphs();
+	void AddGlyph(StringGlyph* glyph);
+	void RemoveGlyph(StringGlyph* glyph);
 
 private:
 	void UpdateVertexBuffer();
@@ -241,13 +190,6 @@ private:
 	StringShape(const StringShape&) : _vertices(nullptr) { }
 	StringShape& operator=(const StringShape&) { return *this; }
 };
-
-
-inline StringGlyphX::~StringGlyphX()
-{
-	if (_shape != nullptr)
-		_shape->RemoveGlyph(this);
-}
 
 
 #endif

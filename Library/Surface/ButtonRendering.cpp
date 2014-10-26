@@ -139,13 +139,13 @@ void ButtonRendering::RenderSelected(const glm::mat4& transform, bounds2f bounds
 void ButtonRendering::RenderButtonText(const glm::mat4& transform, glm::vec2 position, const char* text)
 {
 	StringGlyph glyph(text, glm::mat4x4());
-	_string_shape->AddGlyph(glyph.GetGlyph());
+	_string_shape->AddGlyph(&glyph);
 
 	glm::vec2 p = position - 0.5f * _string_font->measure(text) - glm::vec2(0, 1);
 
 	RenderCall<StringShader> renderCall(_gc);
 
-	renderCall.SetVertices(&_string_shape->_vertices);
+	renderCall.SetVertices(_string_shape->GetVertices());
 	renderCall.SetUniform("texture", &_string_font->_texture);
 	renderCall.SetUniform("color", glm::vec4(0, 0, 0, 0.15f));
 
