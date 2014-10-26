@@ -84,7 +84,6 @@ struct StringFont
 	font_ptr _font;
 #endif
 
-	ShaderProgram<Vertex_2f_2f_1f>* _renderer;
 	float _pixelDensity;
 	texture _texture;
 
@@ -101,9 +100,6 @@ private:
 	void initialize();
 
 public:
-	float font_size() const;
-	float shadow_offset() const;
-
 	font_ptr get_font_ptr() const;
 	font_ptr get_font_ptr(wchar_t wc) const;
 

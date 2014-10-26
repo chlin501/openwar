@@ -347,27 +347,6 @@ void StringFont::initialize()
 
 
 
-float StringFont::font_size() const
-{
-#ifdef OPENWAR_USE_SDL
-
-	return 14;
-
-#else
-
-	return (float)_font.pointSize / _pixelDensity;
-
-#endif
-}
-
-
-
-float StringFont::shadow_offset() const
-{
-	return 1 / _pixelDensity;
-}
-
-
 StringFont::font_ptr StringFont::get_font_ptr() const
 {
 #ifdef OPENWAR_USE_SDL

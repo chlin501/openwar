@@ -74,21 +74,9 @@ public:
 };
 
 
-class VertexGlyphBase
-{
-public:
-	VertexGlyphBase();
-	~VertexGlyphBase();
-
-protected:
-	VertexGlyphBase(const VertexGlyphBase&) { }
-	VertexGlyphBase& operator=(VertexGlyphBase&) { return *this; }
-};
-
-
 
 template <class _Vertex>
-class VertexGlyph : public VertexGlyphBase
+class VertexGlyph
 {
 	friend class VertexShape<_Vertex>;
 	VertexShape<_Vertex>* _vertexBuffer;
@@ -109,7 +97,7 @@ public:
 	}
 
 private:
-	VertexGlyph(const VertexGlyph<VertexType>& _) : VertexGlyphBase(_) { }
+	VertexGlyph(const VertexGlyph<VertexType>&) { }
 	VertexGlyph<VertexType>& operator=(VertexGlyph<VertexType>&) { return *this; }
 };
 
