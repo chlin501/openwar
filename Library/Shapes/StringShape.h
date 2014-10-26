@@ -30,6 +30,7 @@
 #include "Shape.h"
 
 class GraphicsContext;
+class StringShape;
 
 
 class StringShader : public ShaderProgram3<glm::vec2, glm::vec2, float>
@@ -115,11 +116,6 @@ private:
 };
 
 
-class StringVertexBuffer;
-class StringShape;
-class StringGlyph;
-
-
 class StringGlyph
 {
 	friend class StringShape;
@@ -131,27 +127,23 @@ class StringGlyph
 	float _delta;
 
 public:
-	typedef Vertex_2f_2f_1f vertex_type;
-
 	StringGlyph();
 	StringGlyph(const char* string, glm::vec2 translate, float alpha = 1, float delta = 0);
 	StringGlyph(const char* string, glm::mat4x4 transform, float alpha = 1, float delta = 0);
 	~StringGlyph();
 
-	const char* get_string() const { return _string.c_str(); }
-	void set_string(const char* value) { _string = value; }
+	const char* GetString() const { return _string.c_str(); }
+	void SetString(const char* value) { _string = value; }
 
-	const glm::mat4x4 get_transform() const { return _transform; }
-	void set_transform(glm::mat4x4 value) { _transform = value; }
-	void set_translate(glm::vec2 value) { _transform = glm::translate(glm::mat4(), glm::vec3(value, 0)); }
+	const glm::mat4x4 GetTransform() const { return _transform; }
+	void SetTransform(glm::mat4x4 value) { _transform = value; }
+	void SetTranslate(glm::vec2 value) { _transform = glm::translate(glm::mat4(), glm::vec3(value, 0)); }
 
-	const float get_alpha() const { return _alpha; }
-	void set_alpha(float value) { _alpha = value; }
+	const float GetAlpha() const { return _alpha; }
+	void SetAlpha(float value) { _alpha = value; }
 
-	const float get_delta() const { return _delta; }
-	void set_delta(float value) { _delta = value; }
-
-	void generate(StringFont* font, std::vector<vertex_type>& vertices);
+	const float GetDelta() const { return _delta; }
+	void SetDelta(float value) { _delta = value; }
 
 private:
 	StringGlyph(const StringGlyph&) { }
@@ -186,6 +178,7 @@ public:
 
 private:
 	void UpdateVertexBuffer();
+	void AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, StringGlyph* glyph);
 
 	StringShape(const StringShape&) : _vertices(nullptr) { }
 	StringShape& operator=(const StringShape&) { return *this; }
