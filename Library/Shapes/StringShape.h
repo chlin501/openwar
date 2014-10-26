@@ -203,13 +203,13 @@ public:
 class StringShape
 {
 	friend class StringVertexBuffer;
-	std::vector<StringGlyph*> _stringglyphs;
 
 public:
 	StringVertexBuffer _vertices;
 	StringFont* _font;
 
 	explicit StringShape(StringFont* font);
+	~StringShape();
 
 	void ClearGlyphs()
 	{
@@ -231,12 +231,9 @@ public:
 	{
 		glyph->_shape = nullptr;
 		_vertices._glyphs.erase(
-			std::find(_vertices._glyphs.begin(), _vertices._glyphs.end(), glyph),
+			std::remove(_vertices._glyphs.begin(), _vertices._glyphs.end(), glyph),
 			_vertices._glyphs.end());
 	}
-
-	void clear();
-	void add(const char* string, glm::mat4x4 transform, float alpha = 1, float delta = 0);
 
 private:
 	void UpdateVertexBuffer();

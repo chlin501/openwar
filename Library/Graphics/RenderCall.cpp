@@ -106,7 +106,7 @@ void RenderCallBase::Render()
 
 	vertices->Update();
 
-	if (vertices->_vbo == 0)
+	if (vertices->_vbo == 0 || vertices->_count == 0)
 		return;
 
 	glUseProgram(_shaderprogram->_program);

@@ -695,25 +695,10 @@ StringShape::StringShape(StringFont* font) :
 }
 
 
-
-void StringShape::clear()
+StringShape::~StringShape()
 {
-	for (StringGlyph* g : _stringglyphs)
-		delete g;
-	_stringglyphs.clear();
-
-	ClearGlyphs();
-}
-
-
-
-
-void StringShape::add(const char* s, glm::mat4x4 transform, float alpha, float delta)
-{
-	StringGlyph* g = new StringGlyph(s, transform, alpha, delta);
-	_stringglyphs.push_back(g);
-
-	AddGlyph(g->GetGlyph());
+	for (StringGlyphX* glyph : _vertices._glyphs)
+		glyph->_shape = nullptr;
 }
 
 
@@ -726,11 +711,11 @@ void StringVertexBuffer::Update()
 void StringShape::UpdateVertexBuffer()
 {
 	_vertices._vertices.clear();
+
 	for (StringGlyphX* glyph : _vertices._glyphs)
-	{
 		if (glyph->_rebuild != nullptr)
 			glyph->_rebuild->generate(_font, _vertices._vertices);
-	}
+
 	_vertices.UpdateVBO(GL_TRIANGLES, _vertices._vertices.data(), _vertices._vertices.size());
 	_font->update_texture();
 }
