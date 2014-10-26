@@ -173,7 +173,7 @@ public:
 	const float get_delta() const { return _delta; }
 	void set_delta(float value) { _delta = value; }
 
-	StringGlyphX* GetGlyph(StringFont* font);
+	StringGlyphX* GetGlyph();
 
 	void generate(StringFont* font, std::vector<vertex_type>& vertices);
 

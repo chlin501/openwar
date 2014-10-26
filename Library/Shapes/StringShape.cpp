@@ -607,7 +607,7 @@ _delta(delta)
 }
 
 
-StringGlyphX* StringGlyph::GetGlyph(StringFont* font)
+StringGlyphX* StringGlyph::GetGlyph()
 {
 	_glyph._rebuild = this;
 	return &_glyph;
@@ -713,7 +713,7 @@ void StringShape::add(const char* s, glm::mat4x4 transform, float alpha, float d
 	StringGlyph* g = new StringGlyph(s, transform, alpha, delta);
 	_stringglyphs.push_back(g);
 
-	AddGlyph(g->GetGlyph(_font));
+	AddGlyph(g->GetGlyph());
 }
 
 

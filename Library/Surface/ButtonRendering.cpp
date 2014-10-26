@@ -138,8 +138,8 @@ void ButtonRendering::RenderSelected(const glm::mat4& transform, bounds2f bounds
 
 void ButtonRendering::RenderButtonText(const glm::mat4& transform, glm::vec2 position, const char* text)
 {
-	_string_shape->clear();
-	_string_shape->add(text, glm::mat4x4());
+	StringGlyph glyph(text, glm::mat4x4());
+	_string_shape->AddGlyph(glyph.GetGlyph());
 
 	glm::vec2 p = position - 0.5f * _string_font->measure(text) - glm::vec2(0, 1);
 
