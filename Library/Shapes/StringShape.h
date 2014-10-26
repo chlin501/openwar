@@ -115,39 +115,35 @@ private:
 };
 
 
-template <class _Vertex> class VertexShapeX;
+class VertexShapeX;
 
 
-template <class _Vertex>
 class VertexGlyphX
 {
-	friend class VertexShapeX<_Vertex>;
-	VertexShapeX<_Vertex>* _vertexBuffer;
+	friend class VertexShapeX;
+	VertexShapeX* _vertexBuffer;
 
 public:
-	typedef _Vertex VertexType;
-	typedef std::function<void(std::vector<_Vertex>&)> RebuildType;
+	typedef Vertex_2f_2f_1f VertexType;
+	typedef std::function<void(std::vector<Vertex_2f_2f_1f>&)> RebuildType;
 
 	RebuildType _rebuild;
 
 	VertexGlyphX() : _vertexBuffer(nullptr), _rebuild() { }
 	VertexGlyphX(RebuildType rebuild) : _vertexBuffer(nullptr), _rebuild(rebuild) { }
 
-	~VertexGlyphX()
-	{
-		if (_vertexBuffer != nullptr)
-			_vertexBuffer->RemoveGlyph(this);
-	}
+	~VertexGlyphX();
 
 private:
-	VertexGlyphX(const VertexGlyphX<VertexType>&) { }
-	VertexGlyphX<VertexType>& operator=(VertexGlyphX<VertexType>&) { return *this; }
+	VertexGlyphX(const VertexGlyphX&) { }
+	VertexGlyphX& operator=(VertexGlyphX&) { return *this; }
 };
+
 
 
 class StringGlyph
 {
-	VertexGlyphX<Vertex_2f_2f_1f> _glyph;
+	VertexGlyphX _glyph;
 	std::string _string;
 	glm::mat4x4 _transform;
 	float _alpha;
@@ -173,7 +169,7 @@ public:
 	const float get_delta() const { return _delta; }
 	void set_delta(float value) { _delta = value; }
 
-	VertexGlyphX<Vertex_2f_2f_1f>* GetGlyph(StringFont* font);
+	VertexGlyphX* GetGlyph(StringFont* font);
 
 	void generate(StringFont* font, std::vector<vertex_type>& vertices);
 
@@ -183,23 +179,24 @@ private:
 };
 
 
-
-template <class _Vertex>
-class VertexShapeBaseX : public VertexBuffer<_Vertex>
+class VertexShapeX : public VertexBuffer<Vertex_2f_2f_1f>
 {
+	friend class VertexGlyphX;
+	std::vector<VertexGlyphX*> _glyphs;
+
 public:
-	typedef _Vertex VertexT;
+	typedef Vertex_2f_2f_1f VertexT;
 
 	std::vector<VertexT> _vertices;
 
-	VertexShapeBaseX() { }
+	VertexShapeX() { }
 
-
-	virtual void Update()
+	void ClearGlyphs()
 	{
-		VertexBuffer<_Vertex>::UpdateVBO(GL_TRIANGLES, _vertices.data(), _vertices.size());
+		for (VertexGlyphX* glyph : _glyphs)
+			glyph->_vertexBuffer = nullptr;
+		_glyphs.clear();
 	}
-
 
 	void Clear()
 	{
@@ -211,28 +208,7 @@ public:
 		_vertices.push_back(vertex);
 	}
 
-};
-
-
-template <class _Vertex>
-class VertexShapeX : public VertexShapeBaseX<_Vertex>
-{
-	friend class VertexGlyphX<_Vertex>;
-	std::vector<VertexGlyphX<_Vertex>*> _glyphs;
-
-public:
-	typedef _Vertex VertexT;
-
-	VertexShapeX() { }
-
-	void ClearGlyphs()
-	{
-		for (VertexGlyphX<VertexT>* glyph : _glyphs)
-			glyph->_vertexBuffer = nullptr;
-		_glyphs.clear();
-	}
-
-	void AddGlyph(VertexGlyphX<VertexT>* glyph)
+	void AddGlyph(VertexGlyphX* glyph)
 	{
 		if (glyph->_vertexBuffer != nullptr)
 			glyph->_vertexBuffer->RemoveGlyph(glyph);
@@ -240,7 +216,7 @@ public:
 		_glyphs.push_back(glyph);
 	}
 
-	void RemoveGlyph(VertexGlyphX<VertexT>* glyph)
+	void RemoveGlyph(VertexGlyphX* glyph)
 	{
 		glyph->_vertexBuffer = nullptr;
 		_glyphs.erase(
@@ -250,16 +226,23 @@ public:
 
 	virtual void Update()
 	{
-		VertexShapeBaseX<VertexT>::_vertices.clear();
-		for (VertexGlyphX<VertexT>* glyph : _glyphs)
+		_vertices.clear();
+		for (VertexGlyphX* glyph : _glyphs)
 		{
 			if (glyph->_rebuild)
-				glyph->_rebuild(VertexShapeBaseX<VertexT>::_vertices);
+				glyph->_rebuild(_vertices);
 		}
-		VertexShapeBaseX<_Vertex>::Update();
+		VertexBuffer<Vertex_2f_2f_1f>::UpdateVBO(GL_TRIANGLES, _vertices.data(), _vertices.size());
 	}
-
 };
+
+
+inline VertexGlyphX::~VertexGlyphX()
+{
+	if (_vertexBuffer != nullptr)
+		_vertexBuffer->RemoveGlyph(this);
+}
+
 
 
 class StringShape
@@ -267,7 +250,7 @@ class StringShape
 	std::vector<StringGlyph*> _stringglyphs;
 
 public:
-	VertexShapeX<Vertex_2f_2f_1f> _vertices;
+	VertexShapeX _vertices;
 	StringFont* _font;
 
 	explicit StringShape(StringFont* font);

@@ -607,7 +607,7 @@ _delta(delta)
 }
 
 
-VertexGlyphX<Vertex_2f_2f_1f>* StringGlyph::GetGlyph(StringFont* font)
+VertexGlyphX* StringGlyph::GetGlyph(StringFont* font)
 {
 	_glyph._rebuild = [this, font](std::vector<Vertex_2f_2f_1f>& vertices) {
 		generate(font, vertices);

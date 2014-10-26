@@ -249,8 +249,6 @@ void SmoothTerrainRenderer::InitializeShadow()
 		_shadowVertices.AddVertex(Vertex_2f(p4));
 		_shadowVertices.AddVertex(Vertex_2f(p1));
 	}
-
-	_shadowVertices.UpdateVBO(GL_STATIC_DRAW);
 }
 
 
@@ -277,8 +275,6 @@ void SmoothTerrainRenderer::InitializeSkirt()
 
 	_skirtVertices.AddVertex(_skirtVertices._vertices[0]);
 	_skirtVertices.AddVertex(_skirtVertices._vertices[1]);
-
-	_skirtVertices.UpdateVBO(GL_STATIC_DRAW);
 }
 
 
@@ -336,7 +332,6 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 				vertex._2 = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
 			}
 		}
-		_insideVertices.UpdateVBO(GL_STATIC_DRAW);
 
 		// border
 		for (Vertex_3f_3f& vertex : _borderVertices._vertices)
@@ -349,7 +344,6 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 				vertex._2 = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
 			}
 		}
-		_borderVertices.UpdateVBO(GL_STATIC_DRAW);
 	}
 
 	// lines
@@ -363,7 +357,6 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 				vertex._1.z = _smoothGroundMap->GetHeightMap()->InterpolateHeight(p);
 			}
 		}
-		_lineVertices.UpdateVBO(GL_STATIC_DRAW);
 	}
 
 	// skirt
@@ -377,7 +370,6 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 			_skirtVertices._vertices[i]._1.z = h;
 		}
 	}
-	_skirtVertices.UpdateVBO(GL_STATIC_DRAW);
 }
 
 
@@ -439,7 +431,6 @@ void SmoothTerrainRenderer::InitializeLines()
 				}
 			}
 		}
-		_lineVertices.UpdateVBO(GL_STATIC_DRAW);
 	}
 }
 
@@ -508,10 +499,7 @@ void SmoothTerrainRenderer::BuildTriangles()
 			PushTriangle(v02, v00, v11);
 		}
 
-	_insideVertices.UpdateVBO(GL_STATIC_DRAW);
-	_borderVertices.UpdateVBO(GL_STATIC_DRAW);
-
-	if (!_editMode)
+	/*if (!_editMode)
 	{
 		// be nice and free allocated memory
 
@@ -520,7 +508,7 @@ void SmoothTerrainRenderer::BuildTriangles()
 
 		_borderVertices.Clear();
 		_borderVertices._vertices.shrink_to_fit();
-	}
+	}*/
 }
 
 
