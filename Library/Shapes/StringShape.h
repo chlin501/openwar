@@ -28,7 +28,6 @@
 #include "ShaderProgram.h"
 #include "texture.h"
 #include "Shape.h"
-#include "VertexShape.h"
 
 class GraphicsContext;
 
@@ -116,9 +115,39 @@ private:
 };
 
 
+template <class _Vertex> class VertexShapeX;
+
+
+template <class _Vertex>
+class VertexGlyphX
+{
+	friend class VertexShapeX<_Vertex>;
+	VertexShapeX<_Vertex>* _vertexBuffer;
+
+public:
+	typedef _Vertex VertexType;
+	typedef std::function<void(std::vector<_Vertex>&)> RebuildType;
+
+	RebuildType _rebuild;
+
+	VertexGlyphX() : _vertexBuffer(nullptr), _rebuild() { }
+	VertexGlyphX(RebuildType rebuild) : _vertexBuffer(nullptr), _rebuild(rebuild) { }
+
+	~VertexGlyphX()
+	{
+		if (_vertexBuffer != nullptr)
+			_vertexBuffer->RemoveGlyph(this);
+	}
+
+private:
+	VertexGlyphX(const VertexGlyphX<VertexType>&) { }
+	VertexGlyphX<VertexType>& operator=(VertexGlyphX<VertexType>&) { return *this; }
+};
+
+
 class StringGlyph
 {
-	VertexGlyph<Vertex_2f_2f_1f> _glyph;
+	VertexGlyphX<Vertex_2f_2f_1f> _glyph;
 	std::string _string;
 	glm::mat4x4 _transform;
 	float _alpha;
@@ -144,7 +173,7 @@ public:
 	const float get_delta() const { return _delta; }
 	void set_delta(float value) { _delta = value; }
 
-	VertexGlyph<Vertex_2f_2f_1f>* GetGlyph(StringFont* font);
+	VertexGlyphX<Vertex_2f_2f_1f>* GetGlyph(StringFont* font);
 
 	void generate(StringFont* font, std::vector<vertex_type>& vertices);
 
@@ -154,12 +183,125 @@ private:
 };
 
 
+
+template <class _Vertex>
+class VertexShapeBaseX : public VertexBuffer<_Vertex>
+{
+public:
+	typedef _Vertex VertexT;
+
+	std::vector<VertexT> _vertices;
+
+	VertexShapeBaseX() { }
+
+	void Reset(GLenum mode)
+	{
+		VertexBufferBase::_mode = mode;
+		_vertices.clear();
+	}
+
+	void Clear()
+	{
+		_vertices.clear();
+	}
+
+	void AddVertex(const VertexT& vertex)
+	{
+		_vertices.push_back(vertex);
+	}
+
+	virtual void UpdateVBO(GLenum usage)
+	{
+		if (VertexBufferBase::_vbo == 0)
+		{
+			glGenBuffers(1, &this->_vbo);
+			CHECK_ERROR_GL();
+			if (VertexBufferBase::_vbo == 0)
+				return;
+		}
+
+		GLsizeiptr size = sizeof(VertexT) * _vertices.size();
+		const GLvoid* data = _vertices.data();
+
+		glBindBuffer(GL_ARRAY_BUFFER, VertexBufferBase::_vbo);
+		CHECK_ERROR_GL();
+		glBufferData(GL_ARRAY_BUFFER, size, data, usage);
+		CHECK_ERROR_GL();
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		CHECK_ERROR_GL();
+
+		VertexBufferBase::_count = (GLsizei)_vertices.size();
+	}
+
+
+	virtual const void* data() const
+	{
+		return _vertices.data();
+	}
+
+	virtual GLsizei count() const
+	{
+		return VertexBufferBase::_vbo != 0 ? VertexBufferBase::_count : (GLsizei)_vertices.size();
+	}
+
+
+};
+
+
+template <class _Vertex>
+class VertexShapeX : public VertexShapeBaseX<_Vertex>
+{
+	friend class VertexGlyphX<_Vertex>;
+	std::vector<VertexGlyphX<_Vertex>*> _glyphs;
+
+public:
+	typedef _Vertex VertexT;
+
+	VertexShapeX() { }
+
+	void ClearGlyphs()
+	{
+		for (VertexGlyphX<VertexT>* glyph : _glyphs)
+			glyph->_vertexBuffer = nullptr;
+		_glyphs.clear();
+	}
+
+	void AddGlyph(VertexGlyphX<VertexT>* glyph)
+	{
+		if (glyph->_vertexBuffer != nullptr)
+			glyph->_vertexBuffer->RemoveGlyph(glyph);
+		glyph->_vertexBuffer = this;
+		_glyphs.push_back(glyph);
+	}
+
+	void RemoveGlyph(VertexGlyphX<VertexT>* glyph)
+	{
+		glyph->_vertexBuffer = nullptr;
+		_glyphs.erase(
+			std::find(_glyphs.begin(), _glyphs.end(), glyph),
+			_glyphs.end());
+	}
+
+	VertexBuffer<VertexT>& UpdateVBOFromGlyphs()
+	{
+		VertexShapeBaseX<VertexT>::_vertices.clear();
+		for (VertexGlyphX<VertexT>* glyph : _glyphs)
+		{
+			if (glyph->_rebuild)
+				glyph->_rebuild(VertexShapeBaseX<VertexT>::_vertices);
+		}
+		this->UpdateVBO(GL_STATIC_DRAW);
+		return *this;
+	}
+};
+
+
 class StringShape
 {
 	std::vector<StringGlyph*> _stringglyphs;
 
 public:
-	VertexShape<Vertex_2f_2f_1f> _vertices;
+	VertexShapeX<Vertex_2f_2f_1f> _vertices;
 	StringFont* _font;
 
 	explicit StringShape(StringFont* font);
