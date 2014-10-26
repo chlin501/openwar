@@ -117,6 +117,7 @@ private:
 
 class StringVertexBuffer;
 class StringShape;
+class StringGlyph;
 
 
 class StringGlyphX
@@ -128,10 +129,10 @@ class StringGlyphX
 public:
 	typedef std::function<void(std::vector<Vertex_2f_2f_1f>&)> RebuildType;
 
-	RebuildType _rebuild;
+	StringGlyph* _rebuild;
 
 	StringGlyphX() : _shape(nullptr), _rebuild() { }
-	StringGlyphX(RebuildType rebuild) : _shape(nullptr), _rebuild(rebuild) { }
+	StringGlyphX(StringGlyph* rebuild) : _shape(nullptr), _rebuild(rebuild) { }
 
 	~StringGlyphX();
 
@@ -185,6 +186,7 @@ private:
 class StringVertexBuffer : public VertexBuffer<Vertex_2f_2f_1f>
 {
 	friend class StringGlyphX;
+	StringShape* _shape;
 
 public:
 	typedef Vertex_2f_2f_1f VertexT;
@@ -192,23 +194,15 @@ public:
 	std::vector<StringGlyphX*> _glyphs;
 	std::vector<VertexT> _vertices;
 
-	StringVertexBuffer() { }
+	StringVertexBuffer(StringShape* shape) : _shape(shape) { }
 
-	virtual void Update()
-	{
-		_vertices.clear();
-		for (StringGlyphX* glyph : _glyphs)
-		{
-			if (glyph->_rebuild)
-				glyph->_rebuild(_vertices);
-		}
-		VertexBuffer<Vertex_2f_2f_1f>::UpdateVBO(GL_TRIANGLES, _vertices.data(), _vertices.size());
-	}
+	virtual void Update();
 };
 
 
 class StringShape
 {
+	friend class StringVertexBuffer;
 	std::vector<StringGlyph*> _stringglyphs;
 
 public:
@@ -241,14 +235,13 @@ public:
 			_vertices._glyphs.end());
 	}
 
-
 	void clear();
 	void add(const char* string, glm::mat4x4 transform, float alpha = 1, float delta = 0);
 
-	void update(GLenum usage);
-
 private:
-	StringShape(const StringShape&) { }
+	void UpdateVertexBuffer();
+
+	StringShape(const StringShape&) : _vertices(nullptr) { }
 	StringShape& operator=(const StringShape&) { return *this; }
 };
 

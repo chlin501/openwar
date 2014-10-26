@@ -609,9 +609,7 @@ _delta(delta)
 
 StringGlyphX* StringGlyph::GetGlyph(StringFont* font)
 {
-	_glyph._rebuild = [this, font](std::vector<Vertex_2f_2f_1f>& vertices) {
-		generate(font, vertices);
-	};
+	_glyph._rebuild = this;
 	return &_glyph;
 }
 
@@ -689,7 +687,9 @@ void StringGlyph::generate(StringFont* font, std::vector<StringGlyph::vertex_typ
 
 
 
-StringShape::StringShape(StringFont* font) : _font(font)
+StringShape::StringShape(StringFont* font) :
+	_vertices(this),
+	_font(font)
 {
 	_vertices._mode = GL_TRIANGLES;
 }
@@ -717,7 +717,20 @@ void StringShape::add(const char* s, glm::mat4x4 transform, float alpha, float d
 }
 
 
-void StringShape::update(GLenum usage)
+void StringVertexBuffer::Update()
 {
+	_shape->UpdateVertexBuffer();
+}
+
+
+void StringShape::UpdateVertexBuffer()
+{
+	_vertices._vertices.clear();
+	for (StringGlyphX* glyph : _vertices._glyphs)
+	{
+		if (glyph->_rebuild != nullptr)
+			glyph->_rebuild->generate(_font, _vertices._vertices);
+	}
+	_vertices.UpdateVBO(GL_TRIANGLES, _vertices._vertices.data(), _vertices._vertices.size());
 	_font->update_texture();
 }
