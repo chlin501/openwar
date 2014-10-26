@@ -607,7 +607,7 @@ _delta(delta)
 }
 
 
-VertexGlyphX* StringGlyph::GetGlyph(StringFont* font)
+StringGlyphX* StringGlyph::GetGlyph(StringFont* font)
 {
 	_glyph._rebuild = [this, font](std::vector<Vertex_2f_2f_1f>& vertices) {
 		generate(font, vertices);
@@ -702,7 +702,7 @@ void StringShape::clear()
 		delete g;
 	_stringglyphs.clear();
 
-	_vertices.ClearGlyphs();
+	ClearGlyphs();
 }
 
 
@@ -713,7 +713,7 @@ void StringShape::add(const char* s, glm::mat4x4 transform, float alpha, float d
 	StringGlyph* g = new StringGlyph(s, transform, alpha, delta);
 	_stringglyphs.push_back(g);
 
-	_vertices.AddGlyph(g->GetGlyph(_font));
+	AddGlyph(g->GetGlyph(_font));
 }
 
 
