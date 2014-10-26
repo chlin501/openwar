@@ -121,9 +121,6 @@ void TextureBillboardShape::Draw(GraphicsContext* gc, texture* tex, const glm::m
 	vertices.clear();
 	indices.clear();
 
-	_vertices.UpdateVBO(GL_STATIC_DRAW);
-
-
 	RenderCall<TextureBillboardShader>(gc)
 		.SetVertices(&_vertices)
 		.SetUniform("transform", transform)

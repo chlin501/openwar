@@ -157,9 +157,6 @@ void SmoothTerrainWater::Update()
 				}
 			}
 		}
-
-	_waterInsideVertices.UpdateVBO(GL_STATIC_DRAW);
-	_waterBorderVertices.UpdateVBO(GL_STATIC_DRAW);
 }
 
 

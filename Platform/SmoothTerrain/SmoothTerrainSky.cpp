@@ -60,18 +60,6 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f frame, float 
 		.SetUniform("transform", t)
 		.SetUniform("point_size", 1)
 		.Render();
-
-	/*renderCall._vertices = &vertices;
-	renderCall.transform = t;
-	renderCall.point_size = 1;
-	renderCall.Render();*/
-
-	/*
-	GradientShader2* shader = _gc->GetShaderProgram<GradientShader2>();
-	shader->get_uniform<glm::mat4>("transform").set_value(t);
-	shader->get_uniform<float>("pixel_size").set_value(1);
-	shader->render(vertices);
-	*/
 }
 
 

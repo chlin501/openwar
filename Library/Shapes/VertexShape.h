@@ -18,6 +18,13 @@ public:
 
 	VertexShape() { }
 
+
+	virtual void Update()
+	{
+		VertexBuffer<_Vertex>::UpdateVBO(VertexBufferBase::_mode, _vertices.data(), _vertices.size());
+	}
+
+
 	void Reset(GLenum mode)
 	{
 		VertexBufferBase::_mode = mode;
@@ -32,40 +39,6 @@ public:
 	void AddVertex(const VertexT& vertex)
 	{
 		_vertices.push_back(vertex);
-	}
-
-	virtual void UpdateVBO(GLenum usage)
-	{
-		if (VertexBufferBase::_vbo == 0)
-		{
-			glGenBuffers(1, &this->_vbo);
-			CHECK_ERROR_GL();
-			if (VertexBufferBase::_vbo == 0)
-				return;
-		}
-
-		GLsizeiptr size = sizeof(VertexT) * _vertices.size();
-		const GLvoid* data = _vertices.data();
-
-		glBindBuffer(GL_ARRAY_BUFFER, VertexBufferBase::_vbo);
-		CHECK_ERROR_GL();
-		glBufferData(GL_ARRAY_BUFFER, size, data, usage);
-		CHECK_ERROR_GL();
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		CHECK_ERROR_GL();
-
-		VertexBufferBase::_count = (GLsizei)_vertices.size();
-	}
-
-
-	virtual const void* data() const
-	{
-		return _vertices.data();
-	}
-
-	virtual GLsizei count() const
-	{
-		return VertexBufferBase::_vbo != 0 ? VertexBufferBase::_count : (GLsizei)_vertices.size();
 	}
 };
 

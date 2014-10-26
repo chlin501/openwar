@@ -720,5 +720,4 @@ void StringShape::add(const char* s, glm::mat4x4 transform, float alpha, float d
 void StringShape::update(GLenum usage)
 {
 	_font->update_texture();
-	_vertices.UpdateVBOFromGlyphs();
 }

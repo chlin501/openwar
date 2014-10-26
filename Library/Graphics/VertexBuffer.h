@@ -22,8 +22,7 @@ public:
 	VertexBufferBase();
 	virtual ~VertexBufferBase();
 
-	virtual const void* data() const = 0;
-	virtual GLsizei count() const = 0;
+	virtual void Update() = 0;
 
 private:
 	VertexBufferBase(const VertexBufferBase&) {}
@@ -39,6 +38,31 @@ public:
 	typedef _Vertex VertexT;
 
 	VertexBuffer() { }
+
+	void UpdateVBO(GLenum mode, const VertexT* vertices, size_t count)
+	{
+		_mode = mode;
+
+		if (VertexBufferBase::_vbo == 0)
+		{
+			glGenBuffers(1, &this->_vbo);
+			CHECK_ERROR_GL();
+			if (VertexBufferBase::_vbo == 0)
+				return;
+		}
+
+		GLsizeiptr size = sizeof(VertexT) * count;
+		const GLvoid* data = static_cast<const GLvoid*>(vertices);
+
+		glBindBuffer(GL_ARRAY_BUFFER, VertexBufferBase::_vbo);
+		CHECK_ERROR_GL();
+		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+		CHECK_ERROR_GL();
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		CHECK_ERROR_GL();
+
+		VertexBufferBase::_count = count;
+	}
 
 private:
 	VertexBuffer(const VertexBuffer&) { }
