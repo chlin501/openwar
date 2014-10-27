@@ -76,71 +76,6 @@ void PatchGlyph::Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
 }
 
 
-void PatchGlyph::generate(std::vector<Vertex_2f_2f>& vertices)
-{
-	bool min_x = outer_xy.min.x < inner_xy.min.x;
-	bool max_x = inner_xy.max.x < outer_xy.max.x;
-	bool min_y = outer_xy.min.y < inner_xy.min.y;
-	bool max_y = inner_xy.max.y < outer_xy.max.y;
-
-	if (min_x && min_y)
-		rectangle(vertices,
-			bounds2f(outer_xy.min.x, outer_xy.min.y, inner_xy.min.x, inner_xy.min.y),
-			bounds2f(outer_uv.min.x, outer_uv.max.y, inner_uv.min.x, inner_uv.max.y));
-
-	if (min_x)
-		rectangle(vertices,
-			bounds2f(outer_xy.min.x, inner_xy.min.y, inner_xy.min.x, inner_xy.max.y),
-			bounds2f(outer_uv.min.x, inner_uv.max.y, inner_uv.min.x, inner_uv.min.y));
-
-	if (min_x && max_y)
-		rectangle(vertices,
-			bounds2f(outer_xy.min.x, inner_xy.max.y, inner_xy.min.x, outer_xy.max.y),
-			bounds2f(outer_uv.min.x, inner_uv.min.y, inner_uv.min.x, outer_uv.min.y));
-
-	if (min_y)
-		rectangle(vertices,
-			bounds2f(inner_xy.min.x, outer_xy.min.y, inner_xy.max.x, inner_xy.min.y),
-			bounds2f(inner_uv.min.x, outer_uv.max.y, inner_uv.max.x, inner_uv.max.y));
-
-	rectangle(vertices,
-		bounds2f(inner_xy.min.x, inner_xy.min.y, inner_xy.max.x, inner_xy.max.y),
-		bounds2f(inner_uv.min.x, inner_uv.max.y, inner_uv.max.x, inner_uv.min.y));
-
-	if (max_y)
-		rectangle(vertices,
-			bounds2f(inner_xy.min.x, inner_xy.max.y, inner_xy.max.x, outer_xy.max.y),
-			bounds2f(inner_uv.min.x, inner_uv.min.y, inner_uv.max.x, outer_uv.min.y));
-
-	if (max_x && min_y)
-		rectangle(vertices,
-			bounds2f(inner_xy.max.x, outer_xy.min.y, outer_xy.max.x, inner_xy.min.y),
-			bounds2f(inner_uv.max.x, outer_uv.max.y, outer_uv.max.x, inner_uv.max.y));
-
-	if (max_x)
-		rectangle(vertices,
-			bounds2f(inner_xy.max.x, inner_xy.min.y, outer_xy.max.x, inner_xy.max.y),
-			bounds2f(inner_uv.max.x, inner_uv.max.y, outer_uv.max.x, inner_uv.min.y));
-
-	if (max_x && max_y)
-		rectangle(vertices,
-			bounds2f(inner_xy.max.x, inner_xy.max.y, outer_xy.max.x, outer_xy.max.y),
-			bounds2f(inner_uv.max.x, inner_uv.min.y, outer_uv.max.x, outer_uv.min.y));
-}
-
-
-void PatchGlyph::rectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bounds2f uv)
-{
-	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
-	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.max.y), glm::vec2(uv.min.x, uv.max.y)));
-	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.max.x, xy.max.y), glm::vec2(uv.max.x, uv.max.y)));
-	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.max.x, xy.max.y), glm::vec2(uv.max.x, uv.max.y)));
-	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.max.x, xy.min.y), glm::vec2(uv.max.x, uv.min.y)));
-	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
-}
-
-
-
 PatchShape::PatchVertexBuffer::PatchVertexBuffer(PatchShape* shape) :
 	_shape(shape)
 {
@@ -197,8 +132,78 @@ void PatchShape::UpdateVertexBuffer()
 	static std::vector<Vertex_2f_2f> vertices;
 
 	for (PatchGlyph* glyph : _glyphs)
-			glyph->generate(vertices);
+		AppendShapeGlyph(vertices, glyph);
 
 	_vertices.UpdateVBO(GL_TRIANGLES, vertices.data(), vertices.size());
 	vertices.clear();
 }
+
+
+void PatchShape::AppendShapeGlyph(std::vector<Vertex_2f_2f>& vertices, PatchGlyph* patchGlyph)
+{
+	bounds2f ixy = patchGlyph->inner_xy;
+	bounds2f oxy = patchGlyph->outer_xy;
+	bounds2f iuv = patchGlyph->inner_uv;
+	bounds2f ouv = patchGlyph->outer_uv;
+
+	bool min_x = oxy.min.x < ixy.min.x;
+	bool max_x = ixy.max.x < oxy.max.x;
+	bool min_y = oxy.min.y < ixy.min.y;
+	bool max_y = ixy.max.y < oxy.max.y;
+
+	if (min_x && min_y)
+		AppendRectangle(vertices,
+			bounds2f(oxy.min.x, oxy.min.y, ixy.min.x, ixy.min.y),
+			bounds2f(ouv.min.x, ouv.max.y, iuv.min.x, iuv.max.y));
+
+	if (min_x)
+		AppendRectangle(vertices,
+			bounds2f(oxy.min.x, ixy.min.y, ixy.min.x, ixy.max.y),
+			bounds2f(ouv.min.x, iuv.max.y, iuv.min.x, iuv.min.y));
+
+	if (min_x && max_y)
+		AppendRectangle(vertices,
+			bounds2f(oxy.min.x, ixy.max.y, ixy.min.x, oxy.max.y),
+			bounds2f(ouv.min.x, iuv.min.y, iuv.min.x, ouv.min.y));
+
+	if (min_y)
+		AppendRectangle(vertices,
+			bounds2f(ixy.min.x, oxy.min.y, ixy.max.x, ixy.min.y),
+			bounds2f(iuv.min.x, ouv.max.y, iuv.max.x, iuv.max.y));
+
+	AppendRectangle(vertices,
+		bounds2f(ixy.min.x, ixy.min.y, ixy.max.x, ixy.max.y),
+		bounds2f(iuv.min.x, iuv.max.y, iuv.max.x, iuv.min.y));
+
+	if (max_y)
+		AppendRectangle(vertices,
+			bounds2f(ixy.min.x, ixy.max.y, ixy.max.x, oxy.max.y),
+			bounds2f(iuv.min.x, iuv.min.y, iuv.max.x, ouv.min.y));
+
+	if (max_x && min_y)
+		AppendRectangle(vertices,
+			bounds2f(ixy.max.x, oxy.min.y, oxy.max.x, ixy.min.y),
+			bounds2f(iuv.max.x, ouv.max.y, ouv.max.x, iuv.max.y));
+
+	if (max_x)
+		AppendRectangle(vertices,
+			bounds2f(ixy.max.x, ixy.min.y, oxy.max.x, ixy.max.y),
+			bounds2f(iuv.max.x, iuv.max.y, ouv.max.x, iuv.min.y));
+
+	if (max_x && max_y)
+		AppendRectangle(vertices,
+			bounds2f(ixy.max.x, ixy.max.y, oxy.max.x, oxy.max.y),
+			bounds2f(iuv.max.x, iuv.min.y, ouv.max.x, ouv.min.y));
+}
+
+
+void PatchShape::AppendRectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bounds2f uv)
+{
+	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
+	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.max.y), glm::vec2(uv.min.x, uv.max.y)));
+	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.max.x, xy.max.y), glm::vec2(uv.max.x, uv.max.y)));
+	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.max.x, xy.max.y), glm::vec2(uv.max.x, uv.max.y)));
+	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.max.x, xy.min.y), glm::vec2(uv.max.x, uv.min.y)));
+	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
+}
+

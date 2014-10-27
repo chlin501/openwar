@@ -47,9 +47,6 @@ public:
 	void Reset();
 	void Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset);
 
-	void generate(std::vector<Vertex_2f_2f>& vertices);
-	void rectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bounds2f uv);
-
 private:
 	PatchGlyph(const PatchGlyph&) { }
 	PatchGlyph& operator=(const PatchGlyph&) { return *this; }
@@ -82,6 +79,8 @@ public:
 
 private:
 	void UpdateVertexBuffer();
+	void AppendShapeGlyph(std::vector<Vertex_2f_2f>& vertices, PatchGlyph* shapeGlyph);
+	void AppendRectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bounds2f uv);
 };
 
 
