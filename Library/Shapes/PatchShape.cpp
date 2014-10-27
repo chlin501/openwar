@@ -61,7 +61,7 @@ void PatchGlyphX::Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
 }
 
 
-PatchGlyphXX<Vertex_2f_2f>* PatchGlyphX::GetGlyph()
+PatchGlyphXX* PatchGlyphX::GetGlyph()
 {
 	_glyph._rebuild = [this](std::vector<Vertex_2f_2f>& vertices) {
 		generate(vertices);
@@ -131,4 +131,11 @@ void PatchGlyphX::rectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bo
 	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.max.x, xy.max.y), glm::vec2(uv.max.x, uv.max.y)));
 	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.max.x, xy.min.y), glm::vec2(uv.max.x, uv.min.y)));
 	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
+}
+
+
+PatchGlyphXX::~PatchGlyphXX()
+{
+	if (_vertexBuffer != nullptr)
+		_vertexBuffer->RemoveGlyph(this);
 }

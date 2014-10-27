@@ -8,7 +8,7 @@
 #include "VertexShape.h"
 #include "Shape.h"
 
-template <class _Vertex> class PatchShape;
+class PatchShape;
 
 
 struct TexturePatch
@@ -30,36 +30,30 @@ struct TexturePatchFactory
 
 
 
-template <class _Vertex>
 class PatchGlyphXX
 {
-	friend class PatchShape<_Vertex>;
-	PatchShape<_Vertex>* _vertexBuffer;
+	friend class PatchShape;
+	PatchShape* _vertexBuffer;
 
 public:
-	typedef _Vertex VertexType;
-	typedef std::function<void(std::vector<_Vertex>&)> RebuildType;
+	typedef std::function<void(std::vector<Vertex_2f_2f>&)> RebuildType;
 
 	RebuildType _rebuild;
 
 	PatchGlyphXX() : _vertexBuffer(nullptr), _rebuild() { }
 	PatchGlyphXX(RebuildType rebuild) : _vertexBuffer(nullptr), _rebuild(rebuild) { }
 
-	~PatchGlyphXX()
-	{
-		if (_vertexBuffer != nullptr)
-			_vertexBuffer->RemoveGlyph(this);
-	}
+	~PatchGlyphXX();
 
 private:
-	PatchGlyphXX(const PatchGlyphXX<VertexType>&) { }
-	PatchGlyphXX<VertexType>& operator=(PatchGlyphXX<VertexType>&) { return *this; }
+	PatchGlyphXX(const PatchGlyphXX&) { }
+	PatchGlyphXX& operator=(PatchGlyphXX&) { return *this; }
 };
 
 
 class PatchGlyphX
 {
-	PatchGlyphXX<Vertex_2f_2f> _glyph;
+	PatchGlyphXX _glyph;
 
 public:
 	bounds2f outer_xy;
@@ -73,7 +67,7 @@ public:
 	void Reset();
 	void Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset);
 
-	PatchGlyphXX<Vertex_2f_2f>* GetGlyph();
+	PatchGlyphXX* GetGlyph();
 
 protected:
 	void generate(std::vector<Vertex_2f_2f>& vertices);
@@ -85,38 +79,35 @@ private:
 };
 
 
-template <class _Vertex>
-class PatchShape : public VertexShape<_Vertex>
+class PatchShape : public VertexShape<Vertex_2f_2f>
 {
-	friend class PatchGlyphXX<_Vertex>;
-	std::vector<PatchGlyphXX<_Vertex>*> _glyphs;
+	friend class PatchGlyphXX;
+	std::vector<PatchGlyphXX*> _glyphs;
 
 public:
-	typedef _Vertex VertexT;
-
 	PatchShape() { }
 
 	virtual void Update()
 	{
-		VertexShape<VertexT>::_vertices.clear();
-		for (PatchGlyphXX<VertexT>* glyph : _glyphs)
+		VertexShape<Vertex_2f_2f>::_vertices.clear();
+		for (PatchGlyphXX* glyph : _glyphs)
 		{
 			if (glyph->_rebuild)
-				glyph->_rebuild(VertexShape<VertexT>::_vertices);
+				glyph->_rebuild(VertexShape<Vertex_2f_2f>::_vertices);
 		}
-		VertexBuffer<_Vertex>::UpdateVBO(GL_TRIANGLES, VertexShape<_Vertex>::_vertices.data(), VertexShape<_Vertex>::_vertices.size());
+		VertexBuffer<Vertex_2f_2f>::UpdateVBO(GL_TRIANGLES, VertexShape<Vertex_2f_2f>::_vertices.data(), VertexShape<Vertex_2f_2f>::_vertices.size());
 	}
 
 
 
 	void ClearGlyphs()
 	{
-		for (PatchGlyphXX<VertexT>* glyph : _glyphs)
+		for (PatchGlyphXX* glyph : _glyphs)
 			glyph->_vertexBuffer = nullptr;
 		_glyphs.clear();
 	}
 
-	void AddGlyph(PatchGlyphXX<VertexT>* glyph)
+	void AddGlyph(PatchGlyphXX* glyph)
 	{
 		if (glyph->_vertexBuffer != nullptr)
 			glyph->_vertexBuffer->RemoveGlyph(glyph);
@@ -124,7 +115,7 @@ public:
 		_glyphs.push_back(glyph);
 	}
 
-	void RemoveGlyph(PatchGlyphXX<VertexT>* glyph)
+	void RemoveGlyph(PatchGlyphXX* glyph)
 	{
 		glyph->_vertexBuffer = nullptr;
 		_glyphs.erase(
