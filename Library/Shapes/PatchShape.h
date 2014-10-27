@@ -79,50 +79,31 @@ private:
 };
 
 
-class PatchShape : public VertexShape<Vertex_2f_2f>
+class PatchShape
 {
+	class PatchVertexBuffer : public VertexBuffer<Vertex_2f_2f>
+	{
+		PatchShape* _shape;
+	public:
+		PatchVertexBuffer(PatchShape* shape);
+		virtual void Update();
+	};
+
 	friend class PatchGlyphXX;
 	std::vector<PatchGlyphXX*> _glyphs;
+	PatchVertexBuffer _vertices;
 
 public:
-	PatchShape() { }
+	PatchShape();
 
-	virtual void Update()
-	{
-		VertexShape<Vertex_2f_2f>::_vertices.clear();
-		for (PatchGlyphXX* glyph : _glyphs)
-		{
-			if (glyph->_rebuild)
-				glyph->_rebuild(VertexShape<Vertex_2f_2f>::_vertices);
-		}
-		VertexBuffer<Vertex_2f_2f>::UpdateVBO(GL_TRIANGLES, VertexShape<Vertex_2f_2f>::_vertices.data(), VertexShape<Vertex_2f_2f>::_vertices.size());
-	}
+	VertexBuffer<Vertex_2f_2f>* GetVertices();
 
+	void ClearGlyphs();
+	void AddGlyph(PatchGlyphXX* glyph);
+	void RemoveGlyph(PatchGlyphXX* glyph);
 
-
-	void ClearGlyphs()
-	{
-		for (PatchGlyphXX* glyph : _glyphs)
-			glyph->_vertexBuffer = nullptr;
-		_glyphs.clear();
-	}
-
-	void AddGlyph(PatchGlyphXX* glyph)
-	{
-		if (glyph->_vertexBuffer != nullptr)
-			glyph->_vertexBuffer->RemoveGlyph(glyph);
-		glyph->_vertexBuffer = this;
-		_glyphs.push_back(glyph);
-	}
-
-	void RemoveGlyph(PatchGlyphXX* glyph)
-	{
-		glyph->_vertexBuffer = nullptr;
-		_glyphs.erase(
-			std::find(_glyphs.begin(), _glyphs.end(), glyph),
-			_glyphs.end());
-	}
-
+private:
+	void UpdateVertexBuffer();
 };
 
 

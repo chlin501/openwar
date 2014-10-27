@@ -139,3 +139,67 @@ PatchGlyphXX::~PatchGlyphXX()
 	if (_vertexBuffer != nullptr)
 		_vertexBuffer->RemoveGlyph(this);
 }
+
+
+PatchShape::PatchVertexBuffer::PatchVertexBuffer(PatchShape* shape) :
+	_shape(shape)
+{
+	_mode = GL_TRIANGLES;
+}
+
+
+void PatchShape::PatchVertexBuffer::Update()
+{
+	_shape->UpdateVertexBuffer();
+}
+
+
+PatchShape::PatchShape() :
+	_vertices(this)
+{
+}
+
+
+VertexBuffer<Vertex_2f_2f>* PatchShape::GetVertices()
+{
+	return &_vertices;
+}
+
+
+void PatchShape::ClearGlyphs()
+{
+	for (PatchGlyphXX* glyph : _glyphs)
+		glyph->_vertexBuffer = nullptr;
+	_glyphs.clear();
+}
+
+
+void PatchShape::AddGlyph(PatchGlyphXX* glyph)
+{
+	if (glyph->_vertexBuffer != nullptr)
+		glyph->_vertexBuffer->RemoveGlyph(glyph);
+	glyph->_vertexBuffer = this;
+	_glyphs.push_back(glyph);
+}
+
+
+void PatchShape::RemoveGlyph(PatchGlyphXX* glyph)
+{
+	glyph->_vertexBuffer = nullptr;
+	_glyphs.erase(
+		std::find(_glyphs.begin(), _glyphs.end(), glyph),
+		_glyphs.end());
+}
+
+
+void PatchShape::UpdateVertexBuffer()
+{
+	static std::vector<Vertex_2f_2f> vertices;
+
+	for (PatchGlyphXX* glyph : _glyphs)
+		if (glyph->_rebuild)
+			glyph->_rebuild(vertices);
+
+	_vertices.UpdateVBO(GL_TRIANGLES, vertices.data(), vertices.size());
+	vertices.clear();
+}
