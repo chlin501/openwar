@@ -7,7 +7,7 @@
 
 #include "BattleModel/BattleSimulator.h"
 #include "Shapes/VertexShape.h"
-#include "TextureBillboardShape.h"
+#include "BillboardTextureShape.h"
 #include "TerrainView/TerrainView.h"
 #include "TiledTerrain/TiledTerrainRenderer.h"
 #include "SmoothTerrain/SmoothTerrainRenderer.h"
@@ -34,9 +34,9 @@ class BattleView : public TerrainView, public BattleObserver
 
 	BillboardTexture* _billboardTexture;
 	BillboardModel* _billboardModel;
-	TextureBillboardShape* _textureBillboardShape;
-	TextureBillboardShape* _textureBillboardShape1;
-	TextureBillboardShape* _textureBillboardShape2;
+	BillboardTextureShape* _textureBillboardShape;
+	BillboardTextureShape* _textureBillboardShape1;
+	BillboardTextureShape* _textureBillboardShape2;
 
 	CasualtyMarker* _casualtyMarker;
 	std::vector<UnitMovementMarker*> _movementMarkers;

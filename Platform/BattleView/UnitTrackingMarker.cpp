@@ -5,9 +5,9 @@
 #include <glm/gtc/constants.hpp>
 
 #include "BattleModel/BattleCommander.h"
-#include "TextureBillboardShape.h"
+#include "BillboardTextureShape.h"
 #include "Shapes/PathRenderer.h"
-#include "ColorBillboardShader.h"
+#include "BillboardColorShader.h"
 #include "BattleView.h"
 #include "UnitTrackingMarker.h"
 
@@ -65,7 +65,7 @@ void UnitTrackingMarker::RenderTrackingFighters(VertexShape_3f_4f_1f* vertices)
 
 
 
-void UnitTrackingMarker::RenderTrackingMarker(TextureBillboardShape* renderer)
+void UnitTrackingMarker::RenderTrackingMarker(BillboardTextureShape* renderer)
 {
 	if (_meleeTarget == nullptr)
 	{
@@ -114,7 +114,7 @@ void UnitTrackingMarker::AppendFacingMarker(VertexShape_3f_2f* vertices, BattleV
 }
 
 
-void UnitTrackingMarker::RenderTrackingShadow(TextureBillboardShape* renderer)
+void UnitTrackingMarker::RenderTrackingShadow(BillboardTextureShape* renderer)
 {
 	glm::vec2 destination = DestinationXXX();
 	glm::vec3 position = _battleView->GetSimulator()->GetHeightMap()->GetPosition(destination, 0);

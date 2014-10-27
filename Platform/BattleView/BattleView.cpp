@@ -9,7 +9,7 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "ColorBillboardShader.h"
+#include "BillboardColorShader.h"
 #include "Surface/Surface.h"
 #include "BattleModel/BattleCommander.h"
 #include "SmoothTerrain/SmoothTerrainWater.h"
@@ -149,9 +149,9 @@ BattleView::BattleView(GraphicsContext* gc) :
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeSmoke[i], 0, billboard_texcoords(i, 7, false));
 	}
 
-	_textureBillboardShape = new TextureBillboardShape();
-	_textureBillboardShape1 = new TextureBillboardShape();
-	_textureBillboardShape2 = new TextureBillboardShape();
+	_textureBillboardShape = new BillboardTextureShape();
+	_textureBillboardShape1 = new BillboardTextureShape();
+	_textureBillboardShape2 = new BillboardTextureShape();
 
 	_plainLineVertices = new VertexShape_3f();
 	_gradientLineVertices = new VertexShape_3f_4f();
@@ -553,7 +553,7 @@ void BattleView::Render(const glm::mat4& transformx)
 	_colorBillboardVertices->Reset(GL_POINTS);
 	_casualtyMarker->RenderCasualtyColorBillboards(_colorBillboardVertices);
 
-	RenderCall<ColorBillboardShader>(GetSurface()->GetGraphicsContext())
+	RenderCall<BillboardColorShader>(GetSurface()->GetGraphicsContext())
 		.SetVertices(_colorBillboardVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("upvector", GetCameraUpVector())
@@ -680,7 +680,7 @@ void BattleView::Render(const glm::mat4& transformx)
 	for (UnitTrackingMarker* marker : _trackingMarkers)
 		marker->RenderTrackingFighters(_colorBillboardVertices);
 
-	RenderCall<ColorBillboardShader>(GetSurface()->GetGraphicsContext())
+	RenderCall<BillboardColorShader>(GetSurface()->GetGraphicsContext())
 		.SetVertices(_colorBillboardVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("upvector", GetCameraUpVector())
@@ -694,7 +694,7 @@ void BattleView::Render(const glm::mat4& transformx)
 	for (UnitMovementMarker* marker : _movementMarkers)
 		marker->RenderMovementFighters(_colorBillboardVertices);
 
-	RenderCall<ColorBillboardShader>(GetSurface()->GetGraphicsContext())
+	RenderCall<BillboardColorShader>(GetSurface()->GetGraphicsContext())
 		.SetVertices(_colorBillboardVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("upvector", GetCameraUpVector())

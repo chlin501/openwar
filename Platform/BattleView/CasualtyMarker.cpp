@@ -3,8 +3,8 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "CasualtyMarker.h"
-#include "ColorBillboardShader.h"
-#include "TextureBillboardShape.h"
+#include "BillboardColorShader.h"
+#include "BillboardTextureShape.h"
 #include "BattleModel/HeightMap.h"
 #include "BattleModel/SmoothGroundMap.h"
 

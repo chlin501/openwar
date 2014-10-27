@@ -10,7 +10,7 @@
 #include "Shapes/VertexShape.h"
 
 class BattleView;
-class TextureBillboardShape;
+class BillboardTextureShape;
 
 
 class UnitTrackingMarker : public UnitMarker
@@ -78,9 +78,9 @@ public:
 	float GetFacing() const;
 
 	void RenderTrackingFighters(VertexShape_3f_4f_1f* vertices);
-	void RenderTrackingMarker(TextureBillboardShape* renderer);
+	void RenderTrackingMarker(BillboardTextureShape* renderer);
 	void AppendFacingMarker(VertexShape_3f_2f* vertices, BattleView* battleView);
-	void RenderTrackingShadow(TextureBillboardShape* renderer);
+	void RenderTrackingShadow(BillboardTextureShape* renderer);
 	void RenderTrackingPath(VertexShape_3f_4f* vertices);
 	void RenderOrientation(VertexShape_3f_4f* vertices);
 };

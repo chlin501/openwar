@@ -2,11 +2,11 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "ColorBillboardShader.h"
+#include "BillboardColorShader.h"
 
 
 
-ColorBillboardShader::ColorBillboardShader(GraphicsContext* gc) : ShaderProgram3<glm::vec3, glm::vec4, float>(
+BillboardColorShader::BillboardColorShader(GraphicsContext* gc) : ShaderProgram3<glm::vec3, glm::vec4, float>(
 	"position", "color", "height",
 	VERTEX_SHADER
 	({

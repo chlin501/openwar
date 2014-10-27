@@ -5,10 +5,44 @@
 #ifndef TextureBillboardRenderer_H
 #define TextureBillboardRenderer_H
 
-#include "GraphicsContext.h"
-#include "ShaderProgram.h"
-#include "BillboardTexture.h"
-#include "Shapes/VertexShape.h"
+#include <map>
+#include <vector>
+
+#include "Algebra/affine2.h"
+#include "Graphics/GraphicsContext.h"
+#include "Graphics/ShaderProgram.h"
+#include "Graphics/texture.h"
+#include "Graphics/Image.h"
+#include "VertexShape.h"
+
+
+class BillboardTexture
+{
+	struct item
+	{
+		int shape;
+		float facing; // degrees
+		affine2 texcoords;
+		item(int s, float f, affine2 t) : shape(s), facing(f), texcoords(t) { }
+	};
+
+	texture* _texture;
+	std::map<int, std::vector<item>> _items;
+	int _shapeCount;
+
+public:
+	BillboardTexture(GraphicsContext* gc);
+	~BillboardTexture();
+
+	texture* GetTexture() const { return _texture; }
+
+	int AddSheet(const Image& img);
+	int AddShape(int sheet);
+
+	void SetTexCoords(int shape, float facing, const affine2& texcoords);
+
+	affine2 GetTexCoords(int shape, float facing);
+};
 
 
 struct Billboard
@@ -43,20 +77,20 @@ struct BillboardModel
 };
 
 
-class TextureBillboardShader : public ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2>
+class BillboardTextureShader : public ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2>
 {
 	friend class GraphicsContext;
-	TextureBillboardShader(GraphicsContext* gc);
+	BillboardTextureShader(GraphicsContext* gc);
 };
 
 
-class TextureBillboardShape
+class BillboardTextureShape
 {
 public:
 	VertexShape_3f_1f_2f_2f _vertices;
 
-	TextureBillboardShape();
-	~TextureBillboardShape();
+	BillboardTextureShape();
+	~BillboardTextureShape();
 
 	void Reset();
 	void AddBillboard(glm::vec3 position, float height, affine2 texcoords);

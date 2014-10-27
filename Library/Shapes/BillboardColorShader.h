@@ -9,7 +9,7 @@
 #include "ShaderProgram.h"
 
 
-class ColorBillboardShader : public ShaderProgram3<glm::vec3, glm::vec4, float>
+class BillboardColorShader : public ShaderProgram3<glm::vec3, glm::vec4, float>
 {
 	friend class GraphicsContext;
 /*
@@ -20,7 +20,7 @@ class ColorBillboardShader : public ShaderProgram3<glm::vec3, glm::vec4, float>
 	uniform vec3 upvector;
 	uniform float viewport_height;
  */
-	ColorBillboardShader(GraphicsContext* gc);
+	BillboardColorShader(GraphicsContext* gc);
 };
 
 

@@ -3,11 +3,77 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include <algorithm>
-#include "TextureBillboardShape.h"
-#import "RenderCall.h"
+#include "BillboardTextureShape.h"
+#include "Graphics/RenderCall.h"
+#include "Algebra/geometry.h"
 
 
-TextureBillboardShader::TextureBillboardShader(GraphicsContext* gc) : ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2>(
+
+BillboardTexture::BillboardTexture(GraphicsContext* gc) :
+	_texture(nullptr),
+	_shapeCount(0)
+{
+	_texture = new texture(gc);
+}
+
+
+BillboardTexture::~BillboardTexture()
+{
+	delete _texture;
+}
+
+
+int BillboardTexture::AddSheet(const Image& img)
+{
+	_texture->load(img);
+
+	return 1;
+}
+
+
+int BillboardTexture::AddShape(int sheet)
+{
+	return ++_shapeCount;
+}
+
+
+void BillboardTexture::SetTexCoords(int shape, float facing, affine2 const & texcoords)
+{
+	if (_items.find(shape) != _items.end())
+		_items[shape].push_back(item(shape, facing, texcoords));
+	else
+		_items[shape] = std::vector<item>(1, item(shape, facing, texcoords));
+}
+
+
+affine2 BillboardTexture::GetTexCoords(int shape, float facing)
+{
+	affine2 result;
+	float diff = 360;
+
+	auto i = _items.find(shape);
+	if (i != _items.end())
+	{
+		const std::vector<item>& items = (*i).second;
+		for (auto j = items.begin(); j != items.end(); ++j)
+		{
+			if ((*j).shape == shape)
+			{
+				float d = glm::abs(diff_degrees((*j).facing, facing));
+				if (d < diff)
+				{
+					diff = d;
+					result = (*j).texcoords;
+				}
+			}
+		}
+	}
+
+	return result;
+}
+
+
+BillboardTextureShader::BillboardTextureShader(GraphicsContext* gc) : ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2>(
 	"position", "height", "texcoord", "texsize",
 	VERTEX_SHADER
 	({
@@ -56,24 +122,24 @@ TextureBillboardShader::TextureBillboardShader(GraphicsContext* gc) : ShaderProg
 }
 
 
-TextureBillboardShape::TextureBillboardShape()
+BillboardTextureShape::BillboardTextureShape()
 {
 }
 
 
-TextureBillboardShape::~TextureBillboardShape()
+BillboardTextureShape::~BillboardTextureShape()
 {
 }
 
 
-void TextureBillboardShape::Reset()
+void BillboardTextureShape::Reset()
 {
 	_vertices._mode = GL_POINTS;
 	_vertices.Clear();
 }
 
 
-void TextureBillboardShape::AddBillboard(glm::vec3 position, float height, affine2 texcoords)
+void BillboardTextureShape::AddBillboard(glm::vec3 position, float height, affine2 texcoords)
 {
 	glm::vec2 texpos = texcoords.transform(glm::vec2(0, 0));
 	glm::vec2 texsize = texcoords.transform(glm::vec2(1, 1)) - texpos;
@@ -89,7 +155,7 @@ struct billboard_index
 	float order;
 };
 
-void TextureBillboardShape::Draw(GraphicsContext* gc, texture* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
+void BillboardTextureShape::Draw(GraphicsContext* gc, texture* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
 {
 	static std::vector<Vertex_3f_1f_2f_2f> vertices;
 	static std::vector<billboard_index> indices;
@@ -121,7 +187,7 @@ void TextureBillboardShape::Draw(GraphicsContext* gc, texture* tex, const glm::m
 	vertices.clear();
 	indices.clear();
 
-	RenderCall<TextureBillboardShader>(gc)
+	RenderCall<BillboardTextureShader>(gc)
 		.SetVertices(&_vertices)
 		.SetUniform("transform", transform)
 		.SetUniform("texture", tex)
@@ -141,7 +207,7 @@ static affine2 FlipY(const affine2& texcoords)
 }
 
 
-void TextureBillboardShape::Render(GraphicsContext* gc, BillboardModel* billboardModel, glm::mat4x4 const & transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bool flip)
+void BillboardTextureShape::Render(GraphicsContext* gc, BillboardModel* billboardModel, glm::mat4x4 const & transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bool flip)
 {
 	Reset();
 

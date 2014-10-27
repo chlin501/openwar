@@ -9,7 +9,7 @@
 #include "Shapes/VertexShape.h"
 
 class BattleView;
-class TextureBillboardShape;
+class BillboardTextureShape;
 
 
 class UnitMovementMarker : public UnitMarker
@@ -20,7 +20,7 @@ public:
 
 	bool Animate(float seconds);
 
-	void RenderMovementMarker(TextureBillboardShape* renderer);
+	void RenderMovementMarker(BillboardTextureShape* renderer);
 	void AppendFacingMarker(VertexShape_3f_2f* vertices, BattleView* battleView);
 	void RenderMovementFighters(VertexShape_3f_4f_1f* vertices);
 	void RenderMovementPath(VertexShape_3f_4f* vertices);

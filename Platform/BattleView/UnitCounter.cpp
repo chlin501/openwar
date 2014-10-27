@@ -4,7 +4,7 @@
 
 #include <glm/gtc/constants.hpp>
 
-#include "TextureBillboardShape.h"
+#include "BillboardTextureShape.h"
 #include "BattleModel/BattleSimulator.h"
 #include "BattleModel/BattleCommander.h"
 #include "BattleView.h"
@@ -42,7 +42,7 @@ bool UnitCounter::Animate(float seconds)
 }
 
 
-void UnitCounter::AppendUnitMarker(TextureBillboardShape* renderer, bool flip)
+void UnitCounter::AppendUnitMarker(BillboardTextureShape* renderer, bool flip)
 {
 	bool routingIndicator = false;
 	float routingBlinkTime = _unit->state.GetRoutingBlinkTime();
