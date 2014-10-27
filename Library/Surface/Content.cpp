@@ -38,19 +38,7 @@ _rotate(0),
 _scale(1, 1),
 _translate(),
 _flip(false),
-_dismissed(false),
-frame([this](){ return GetFrame(); }, [this](bounds2f value) { SetFrame(value); }),
-position([this](){ return GetPosition(); }, [this](glm::vec2 value) { SetPosition(value); }),
-size([this](){ return GetSize(); }, [this](glm::vec2 value) { SetSize(value); }),
-left([this](){ return GetLeft(); }, [this](float value) { SetLeft(value); }),
-right([this](){ return GetRight(); }, [this](float value) { SetRight(value); }),
-bottom([this](){ return GetBottom(); }, [this](float value) { SetBottom(value); }),
-top([this](){ return GetTop(); }, [this](float value) { SetTop(value); }),
-width([this](){ return GetWidth(); }, [this](float value) { SetWidth(value); }),
-height([this](){ return GetHeight(); }, [this](float value) { SetHeight(value); }),
-rotate([this](){ return GetRotate(); }, [this](float value) { SetRotate(value); }),
-scale([this](){ return GetScale(); }, [this](glm::vec2 value) { SetScale(value); }),
-translate([this](){ return GetTranslate(); }, [this](glm::vec2 value) { SetTranslate(value); })
+_dismissed(false)
 {
 }
 
@@ -147,18 +135,6 @@ void Content::OnFrameChanged()
 }
 
 
-glm::vec2 Content::GetAnchor() const
-{
-	return _anchor;
-}
-
-
-void Content::SetAnchor(glm::vec2 value)
-{
-	_anchor = value;
-}
-
-
 glm::vec2 Content::GetPosition() const
 {
 	return glm::mix(_frame.min, _frame.max, _anchor);
@@ -182,82 +158,6 @@ void Content::SetSize(glm::vec2 value)
 {
 	glm::vec2 p = GetPosition();
 	SetFrameValue(bounds2f(p - value * _anchor,  p + value * (glm::vec2(1, 1) - _anchor)));
-}
-
-
-float Content::GetLeft() const
-{
-	return _frame.min.x;
-}
-
-
-void Content::SetLeft(float value)
-{
-	SetFrameValue(bounds2f(value, _frame.min.y, _frame.max.x, _frame.max.y));
-}
-
-
-float Content::GetRight() const
-{
-	return _frame.max.x;
-}
-
-
-void Content::SetRight(float value)
-{
-	SetFrameValue(bounds2f(_frame.min.x, _frame.min.y, value, _frame.max.y));
-}
-
-
-float Content::GetBottom() const
-{
-	return _frame.min.y;
-}
-
-
-void Content::SetBottom(float value)
-{
-	SetFrameValue(bounds2f(_frame.min.x, value, _frame.max.x, _frame.max.y));
-}
-
-
-float Content::GetTop() const
-{
-	return _frame.max.y;
-}
-
-
-void Content::SetTop(float value)
-{
-	SetFrameValue(bounds2f(_frame.min.x, _frame.min.y, _frame.max.x, value));
-}
-
-
-float Content::GetWidth() const
-{
-	return _frame.max.x - _frame.min.x;
-}
-
-
-void Content::SetWidth(float value)
-{
-	float a = _anchor.x;
-	float p = glm::mix(_frame.min.x, _frame.max.x, a);
-	SetFrameValue(bounds2f(p - value * a, p + value * (1 - a), _frame.y()));
-}
-
-
-float Content::GetHeight() const
-{
-	return _frame.max.y - _frame.min.y;
-}
-
-
-void Content::SetHeight(float value)
-{
-	float a = _anchor.y;
-	float p = glm::mix(_frame.min.y, _frame.max.y, a);
-	SetFrameValue(bounds2f(_frame.x(), p - value * a, p + value * (1 - a)));
 }
 
 
@@ -286,18 +186,6 @@ void Content::SetUsingDepth(bool value)
 }
 
 
-float Content::GetRotate() const
-{
-	return _rotate;
-}
-
-
-void Content::SetRotate(float value)
-{
-	_rotate = value;
-}
-
-
 glm::vec2 Content::GetScale() const
 {
 	return _scale;
@@ -321,17 +209,6 @@ void Content::SetTranslate(glm::vec2 value)
 	_translate = value;
 }
 
-
-glm::mat4 Content::GetTransform() const
-{
-	return _transform;
-}
-
-
-void Content::SetTransform(const glm::mat4& value)
-{
-	_transform = value;
-}
 
 
 glm::mat4 Content::GetViewportTransform() const
@@ -404,35 +281,9 @@ glm::vec2 Content::ContentToSurface(glm::vec2 value) const
 
 void Content::SetFrameValue(const bounds2f& value)
 {
-	glm::vec2 oldPosition = GetPosition();
-	glm::vec2 oldSize = GetSize();
-	float oldLeft = GetLeft();
-	float oldRight = GetRight();
-	float oldBottom = GetBottom();
-	float oldTop = GetTop();
-	float oldWidth = GetWidth();
-	float oldHeight = GetHeight();
-
 	_frame = value;
 
 	OnFrameChanged();
-
-	if (oldPosition != GetPosition())
-		position.CallObserver();
-	if (oldSize != GetSize())
-		size.CallObserver();
-	if (oldLeft != GetLeft())
-		left.CallObserver();
-	if (oldRight != GetRight())
-		right.CallObserver();
-	if (oldBottom != GetBottom())
-		bottom.CallObserver();
-	if (oldTop != GetTop())
-		top.CallObserver();
-	if (oldWidth != GetWidth())
-		width.CallObserver();
-	if (oldHeight != GetHeight())
-		height.CallObserver();
 }
 
 
@@ -450,25 +301,6 @@ void Content::RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4
 	vertices.AddVertex(Vertex_2f(bounds.p12()));
 	vertices.AddVertex(Vertex_2f(bounds.p21()));
 	vertices.AddVertex(Vertex_2f(bounds.p22()));
-
-	GraphicsContext* gc = GetSurface()->GetGraphicsContext();
-	RenderCall<PlainShader_2f>(gc)
-		.SetVertices(&vertices)
-		.SetUniform("transform", transform)
-		.SetUniform("point_size", 1)
-		.SetUniform("color", color)
-		.Render();
-}
-
-
-void Content::RenderOutline(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const
-{
-	VertexShape_2f vertices;
-	vertices._mode = GL_LINE_LOOP;
-	vertices.AddVertex(Vertex_2f(bounds.p11()));
-	vertices.AddVertex(Vertex_2f(bounds.p12()));
-	vertices.AddVertex(Vertex_2f(bounds.p22()));
-	vertices.AddVertex(Vertex_2f(bounds.p21()));
 
 	GraphicsContext* gc = GetSurface()->GetGraphicsContext();
 	RenderCall<PlainShader_2f>(gc)

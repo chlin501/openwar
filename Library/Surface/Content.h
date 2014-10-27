@@ -39,22 +39,6 @@ class Content
 	bool _dismissed;
 
 public:
-	Property<bounds2f> frame;
-	Property<glm::vec2> position;
-	Property<glm::vec2> size;
-
-	Property<float> left;
-	Property<float> right;
-	Property<float> bottom;
-	Property<float> top;
-	Property<float> width;
-	Property<float> height;
-
-	Property<float> rotate;
-	Property<glm::vec2> scale;
-	Property<glm::vec2> translate;
-
-public:
 	Content();
 	virtual ~Content();
 
@@ -81,32 +65,11 @@ public:
 	virtual void SetFrame(bounds2f value);
 	virtual void OnFrameChanged();
 
-	virtual glm::vec2 GetAnchor() const;
-	virtual void SetAnchor(glm::vec2 value);
-
 	virtual glm::vec2 GetPosition() const;
 	virtual void SetPosition(glm::vec2 value);
 
 	virtual glm::vec2 GetSize() const;
 	virtual void SetSize(glm::vec2 value);
-
-	virtual float GetLeft() const;
-	virtual void SetLeft(float value);
-
-	virtual float GetRight() const;
-	virtual void SetRight(float value);
-
-	virtual float GetBottom() const;
-	virtual void SetBottom(float value);
-
-	virtual float GetTop() const;
-	virtual void SetTop(float value);
-
-	virtual float GetWidth() const;
-	virtual void SetWidth(float value);
-
-	virtual float GetHeight() const;
-	virtual void SetHeight(float value);
 
 	//
 
@@ -118,17 +81,11 @@ public:
 
 	//
 
-	virtual float GetRotate() const;
-	virtual void SetRotate(float value);
-
 	virtual glm::vec2 GetScale() const;
 	virtual void SetScale(glm::vec2 value);
 
 	virtual glm::vec2 GetTranslate() const;
 	virtual void SetTranslate(glm::vec2 value);
-
-	virtual glm::mat4 GetTransform() const;
-	virtual void SetTransform(const glm::mat4& value);
 
 	//
 
@@ -154,7 +111,6 @@ protected:
 	virtual void OnBoundsChanged();
 
 	void RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const;
-	void RenderOutline(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const;
 };
 
 
