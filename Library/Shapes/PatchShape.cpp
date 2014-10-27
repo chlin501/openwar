@@ -34,7 +34,15 @@ TexturePatch TexturePatchFactory::GetTexturePatch(int u0, int v0, int size_u, in
 }
 
 
-PatchGlyphX::PatchGlyphX(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
+PatchGlyph::PatchGlyph() :
+	_patchShape(nullptr)
+{
+
+}
+
+
+PatchGlyph::PatchGlyph(TexturePatch tile, bounds2f bounds, glm::vec2 inset) :
+	_patchShape(nullptr)
 {
 	outer_xy = bounds;
 	inner_xy = bounds.grow(-inset.x, -inset.y);
@@ -43,7 +51,14 @@ PatchGlyphX::PatchGlyphX(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
 }
 
 
-void PatchGlyphX::Reset()
+PatchGlyph::~PatchGlyph()
+{
+	if (_patchShape != nullptr)
+		_patchShape->RemoveGlyph(this);
+}
+
+
+void PatchGlyph::Reset()
 {
 	outer_xy = bounds2f();
 	inner_xy = bounds2f();
@@ -52,7 +67,7 @@ void PatchGlyphX::Reset()
 }
 
 
-void PatchGlyphX::Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
+void PatchGlyph::Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
 {
 	outer_xy = bounds;
 	inner_xy = bounds.grow(-inset.x, -inset.y);
@@ -61,16 +76,7 @@ void PatchGlyphX::Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
 }
 
 
-PatchGlyphXX* PatchGlyphX::GetGlyph()
-{
-	_glyph._rebuild = [this](std::vector<Vertex_2f_2f>& vertices) {
-		generate(vertices);
-	};
-	return &_glyph;
-}
-
-
-void PatchGlyphX::generate(std::vector<Vertex_2f_2f>& vertices)
+void PatchGlyph::generate(std::vector<Vertex_2f_2f>& vertices)
 {
 	bool min_x = outer_xy.min.x < inner_xy.min.x;
 	bool max_x = inner_xy.max.x < outer_xy.max.x;
@@ -123,7 +129,7 @@ void PatchGlyphX::generate(std::vector<Vertex_2f_2f>& vertices)
 }
 
 
-void PatchGlyphX::rectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bounds2f uv)
+void PatchGlyph::rectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bounds2f uv)
 {
 	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
 	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.max.y), glm::vec2(uv.min.x, uv.max.y)));
@@ -133,12 +139,6 @@ void PatchGlyphX::rectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bo
 	vertices.push_back(Vertex_2f_2f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y)));
 }
 
-
-PatchGlyphXX::~PatchGlyphXX()
-{
-	if (_vertexBuffer != nullptr)
-		_vertexBuffer->RemoveGlyph(this);
-}
 
 
 PatchShape::PatchVertexBuffer::PatchVertexBuffer(PatchShape* shape) :
@@ -168,24 +168,24 @@ VertexBuffer<Vertex_2f_2f>* PatchShape::GetVertices()
 
 void PatchShape::ClearGlyphs()
 {
-	for (PatchGlyphXX* glyph : _glyphs)
-		glyph->_vertexBuffer = nullptr;
+	for (PatchGlyph* glyph : _glyphs)
+		glyph->_patchShape = nullptr;
 	_glyphs.clear();
 }
 
 
-void PatchShape::AddGlyph(PatchGlyphXX* glyph)
+void PatchShape::AddGlyph(PatchGlyph* glyph)
 {
-	if (glyph->_vertexBuffer != nullptr)
-		glyph->_vertexBuffer->RemoveGlyph(glyph);
-	glyph->_vertexBuffer = this;
+	if (glyph->_patchShape != nullptr)
+		glyph->_patchShape->RemoveGlyph(glyph);
+	glyph->_patchShape = this;
 	_glyphs.push_back(glyph);
 }
 
 
-void PatchShape::RemoveGlyph(PatchGlyphXX* glyph)
+void PatchShape::RemoveGlyph(PatchGlyph* glyph)
 {
-	glyph->_vertexBuffer = nullptr;
+	glyph->_patchShape = nullptr;
 	_glyphs.erase(
 		std::find(_glyphs.begin(), _glyphs.end(), glyph),
 		_glyphs.end());
@@ -196,9 +196,8 @@ void PatchShape::UpdateVertexBuffer()
 {
 	static std::vector<Vertex_2f_2f> vertices;
 
-	for (PatchGlyphXX* glyph : _glyphs)
-		if (glyph->_rebuild)
-			glyph->_rebuild(vertices);
+	for (PatchGlyph* glyph : _glyphs)
+			glyph->generate(vertices);
 
 	_vertices.UpdateVBO(GL_TRIANGLES, vertices.data(), vertices.size());
 	vertices.clear();

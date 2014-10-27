@@ -29,31 +29,10 @@ struct TexturePatchFactory
 };
 
 
-
-class PatchGlyphXX
+class PatchGlyph
 {
 	friend class PatchShape;
-	PatchShape* _vertexBuffer;
-
-public:
-	typedef std::function<void(std::vector<Vertex_2f_2f>&)> RebuildType;
-
-	RebuildType _rebuild;
-
-	PatchGlyphXX() : _vertexBuffer(nullptr), _rebuild() { }
-	PatchGlyphXX(RebuildType rebuild) : _vertexBuffer(nullptr), _rebuild(rebuild) { }
-
-	~PatchGlyphXX();
-
-private:
-	PatchGlyphXX(const PatchGlyphXX&) { }
-	PatchGlyphXX& operator=(PatchGlyphXX&) { return *this; }
-};
-
-
-class PatchGlyphX
-{
-	PatchGlyphXX _glyph;
+	PatchShape* _patchShape;
 
 public:
 	bounds2f outer_xy;
@@ -61,26 +40,26 @@ public:
 	bounds2f outer_uv;
 	bounds2f inner_uv;
 
-	PatchGlyphX() { }
-	PatchGlyphX(TexturePatch tile, bounds2f bounds, glm::vec2 inset);
+	PatchGlyph();
+	PatchGlyph(TexturePatch tile, bounds2f bounds, glm::vec2 inset);
+	~PatchGlyph();
 
 	void Reset();
 	void Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset);
 
-	PatchGlyphXX* GetGlyph();
-
-protected:
 	void generate(std::vector<Vertex_2f_2f>& vertices);
 	void rectangle(std::vector<Vertex_2f_2f>& vertices, bounds2f xy, bounds2f uv);
 
 private:
-	PatchGlyphX(const PatchGlyphX&) { }
-	PatchGlyphX& operator=(const PatchGlyphX&) { return *this; }
+	PatchGlyph(const PatchGlyph&) { }
+	PatchGlyph& operator=(const PatchGlyph&) { return *this; }
 };
 
 
 class PatchShape
 {
+	friend class PatchGlyph;
+
 	class PatchVertexBuffer : public VertexBuffer<Vertex_2f_2f>
 	{
 		PatchShape* _shape;
@@ -89,9 +68,8 @@ class PatchShape
 		virtual void Update();
 	};
 
-	friend class PatchGlyphXX;
-	std::vector<PatchGlyphXX*> _glyphs;
 	PatchVertexBuffer _vertices;
+	std::vector<PatchGlyph*> _glyphs;
 
 public:
 	PatchShape();
@@ -99,8 +77,8 @@ public:
 	VertexBuffer<Vertex_2f_2f>* GetVertices();
 
 	void ClearGlyphs();
-	void AddGlyph(PatchGlyphXX* glyph);
-	void RemoveGlyph(PatchGlyphXX* glyph);
+	void AddGlyph(PatchGlyph* glyph);
+	void RemoveGlyph(PatchGlyph* glyph);
 
 private:
 	void UpdateVertexBuffer();
