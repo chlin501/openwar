@@ -31,11 +31,8 @@ _surface(nullptr),
 _container(nullptr),
 _visible(true),
 _frame(),
-_anchor(),
 _bounds(),
 _isUsingDepth(false),
-_rotate(0),
-_scale(1, 1),
 _translate(),
 _flip(false),
 _dismissed(false)
@@ -135,9 +132,11 @@ void Content::OnFrameChanged()
 }
 
 
+
+
 glm::vec2 Content::GetPosition() const
 {
-	return glm::mix(_frame.min, _frame.max, _anchor);
+	return _frame.min;
 }
 
 
@@ -157,7 +156,7 @@ glm::vec2 Content::GetSize() const
 void Content::SetSize(glm::vec2 value)
 {
 	glm::vec2 p = GetPosition();
-	SetFrameValue(bounds2f(p - value * _anchor,  p + value * (glm::vec2(1, 1) - _anchor)));
+	SetFrameValue(bounds2f(p,  p + value));
 }
 
 
@@ -183,18 +182,6 @@ bool Content::IsUsingDepth() const
 void Content::SetUsingDepth(bool value)
 {
 	_isUsingDepth = value;
-}
-
-
-glm::vec2 Content::GetScale() const
-{
-	return _scale;
-}
-
-
-void Content::SetScale(glm::vec2 value)
-{
-	_scale = value;
 }
 
 
@@ -253,13 +240,7 @@ glm::mat4 Content::GetContentTransform() const
 	glm::mat4 result;
 
 	result = glm::translate(result, glm::vec3(frame.min, 0));
-
-	glm::vec3 offset = glm::vec3(frame.size() * _anchor, 0);
-	result = glm::translate(result, offset);
 	result = glm::translate(result, glm::vec3(_translate, 0));
-	result = glm::rotate(result, _rotate, glm::vec3(0, 0, 1));
-	result = glm::scale(result, glm::vec3(_scale, 1));
-	result = glm::translate(result, -offset);
 
 	return result;
 }

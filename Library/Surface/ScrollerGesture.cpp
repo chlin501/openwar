@@ -49,7 +49,7 @@ void ScrollerGesture::TouchMoved()
 {
 	if (_hotspot != nullptr && !_touches.empty())
 	{
-		glm::vec2 position = _touches.front()->GetPosition() * _surface->GetScale(); // fulhack
+		glm::vec2 position = _touches.front()->GetPosition();
 
 		_hotspot->ScrollToPosition(position);
 	}

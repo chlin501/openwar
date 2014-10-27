@@ -36,7 +36,7 @@ void Surface::OnFrameChanged()
 {
 	Content::OnFrameChanged();
 
-	SetBounds(GetFrame() / GetScale());
+	SetBounds(GetFrame());
 }
 
 

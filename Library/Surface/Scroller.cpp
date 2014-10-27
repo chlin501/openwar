@@ -111,7 +111,6 @@ void Scroller::FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch
 {
 	Container::FindHotspots(transform, position, touch);
 
-	position *= GetSurface()->GetScale();
 	glm::mat4 inverse = glm::inverse(transform);
 	glm::vec4 p = inverse * glm::vec4(position, 0, 1);
 	glm::vec2 pos = p.xy() / p.w;

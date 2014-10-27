@@ -28,13 +28,9 @@ class Content
 	bool _visible;
 	bounds2f _viewport;
 	bounds2f _frame;
-	glm::vec2 _anchor;
 	bounds2f _bounds;
 	bool _isUsingDepth;
-	float _rotate;
-	glm::vec2 _scale;
 	glm::vec2 _translate;
-	glm::mat4 _transform;
 	bool _flip;
 	bool _dismissed;
 
@@ -80,9 +76,6 @@ public:
 	virtual void SetUsingDepth(bool value);
 
 	//
-
-	virtual glm::vec2 GetScale() const;
-	virtual void SetScale(glm::vec2 value);
 
 	virtual glm::vec2 GetTranslate() const;
 	virtual void SetTranslate(glm::vec2 value);
