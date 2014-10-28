@@ -29,6 +29,7 @@
 #include "Texture.h"
 
 class GraphicsContext;
+class MutableImage;
 class StringShape;
 
 
@@ -73,7 +74,7 @@ struct StringFont
 		float _v0, _v1;
 	};
 
-	static Image* _image;
+	static MutableImage* _image;
 
 #ifdef OPENWAR_USE_SDL
 	font_ptr _font1;

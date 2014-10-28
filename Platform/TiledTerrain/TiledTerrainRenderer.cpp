@@ -8,6 +8,7 @@
 #include "TiledTerrainRenderer.h"
 #include "CommonShaders.h"
 #include "GraphicsContext.h"
+#include "Image.h"
 
 
 TiledTerrainRenderer::TiledTerrainRenderer(GraphicsContext* gc, TiledGroundMap* tiledGroundMap) :
@@ -22,7 +23,7 @@ _tiledGroundMap(tiledGroundMap)
 
 			if (_textures.find(tile->texture) == _textures.end())
 			{
-				::Texture* t = new ::Texture(gc, Image(gc, resource(tile->texture.c_str())));
+				::Texture* t = new ::Texture(gc, ResourceImage(gc, resource(tile->texture.c_str())));
 
 				glBindTexture(GL_TEXTURE_2D, t->id);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

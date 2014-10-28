@@ -70,9 +70,9 @@ BattleView::BattleView(GraphicsContext* gc) :
 
 	_billboardTexture = new BillboardTexture(gc);
 
-	Image img(gc, resource("Textures/Billboards.png"));
+	ResourceImage img(gc, resource("Textures/Billboards.png"));
 #ifndef OPENWAR_USE_NSBUNDLE_RESOURCES
-	img.premultiply_alpha(); // TODO: how to handle this ???
+	img.PremultiplyAlpha(); // TODO: how to handle this ???
 #endif
 	_billboardTexture->AddSheet(img);
 

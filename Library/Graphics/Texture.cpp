@@ -91,8 +91,8 @@ void Texture::load(GraphicsContext* gc, const resource& r)
 {
 #ifdef OPENWAR_USE_SDL
 
-	Image img(gc, r);
-	img.premultiply_alpha();
+	ImageResource img(gc, r);
+	img.PremultiplyAlpha();
 	load(img);
 
 #else
@@ -129,11 +129,11 @@ void Texture::load(GraphicsContext* gc, const resource& r)
 	if (image == nil)
 		image = [UIImage imageNamed:name];
 
-	load(Image::Image(image.CGImage));
+	load(ImageCG(image.CGImage));
 
 #else
 
-    Image img(gc, r);
+    ResourceImage img(gc, r);
 	load(img);
 
     /*

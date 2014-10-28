@@ -12,6 +12,7 @@
 #ifdef OPENWAR_USE_SDL
 #include <SDL2/SDL.h>
 #else
+#define OPENWAR_USE_COREGRAPHICS
 #import <CoreGraphics/CoreGraphics.h>
 #endif
 
@@ -22,56 +23,94 @@ class GraphicsContext;
 
 class Image
 {
-#ifdef OPENWAR_USE_SDL
-	SDL_Surface* _surface;
-#else
+public:
+	virtual ~Image();
+
+	virtual GLsizei width() const = 0;
+	virtual GLsizei height() const = 0;
+	virtual GLenum format() const = 0;
+	virtual const GLvoid* pixels() const = 0;
+
+	glm::ivec2 size() const { return glm::ivec2(width(), height()); }
+	glm::vec4 GetPixel(int x, int y) const;
+	void SetPixel(int x, int y, glm::vec4 c);
+	void PremultiplyAlpha();
+};
+
+
+#ifdef OPENWAR_USE_COREGRAPHICS
+class ImageCG : public Image
+{
 	CGContextRef _context;
 	size_t _width;
 	size_t _height;
 	GLubyte* _data;
-#endif
 	GLenum _format;
 
 public:
-	Image(int width, int height);
-	Image(GraphicsContext* gc, const resource& r);
+	ImageCG(int width, int height);
+	ImageCG(GraphicsContext* gc, const resource& r);
+	explicit ImageCG(CGImageRef image);
+	virtual ~ImageCG();
 
-#ifndef OPENWAR_USE_SDL
-	Image(CGImageRef image);
-	CGContextRef CGContext() const { return _context; }
+	CGContextRef CGContext() const;
+
+	virtual GLsizei width() const;
+	virtual GLsizei height() const;
+	virtual GLenum format() const;
+	virtual const GLvoid* pixels() const;
+
+private:
+	void InitCGContext();
+};
 #endif
 
-	~Image();
 
 #ifdef OPENWAR_USE_SDL
+class ImageSDL : public Image
+{
+	SDL_Surface* _surface;
+	GLenum _format;
+
+public:
+	ImageSDL(int width, int height);
+	ImageSDL(GraphicsContext* gc, const resource& r);
+	virtual ~ImageSDL();
+
 	SDL_Surface* get_surface() { return _surface; }
-#endif
 
-#ifdef OPENWAR_USE_SDL
 	GLsizei width() const { return (GLsizei)_surface->w; }
 	GLsizei height() const { return (GLsizei)_surface->h; }
 	GLenum format() const { return _format; }
 	const GLvoid* pixels() const { return _surface->pixels; }
-	glm::ivec2 size() const { return glm::ivec2(_surface->w, _surface->h); }
-#else
-	GLsizei width() const { return (GLsizei)_width; }
-	GLsizei height() const { return (GLsizei)_height; }
-	GLenum format() const { return _format; }
-	const GLvoid* pixels() const { return _data; }
-	glm::ivec2 size() const { return glm::ivec2(_width, _height); }
+};
 #endif
 
-	glm::vec4 get_pixel(int x, int y) const;
-	void set_pixel(int x, int y, glm::vec4 c);
 
-	void premultiply_alpha();
+#ifdef OPENWAR_USE_COREGRAPHICS
+typedef ImageCG MutableImageBase;
+typedef ImageCG ResourceImageBase;
+#else
+typedef ImageSDL MutableImageBase;
+typedef ImageSDL ResourceImageBase;
+#endif
 
-private:
-	void init_data_context();
+
+class MutableImage : public MutableImageBase
+{
+public:
+	MutableImage(int width, int height) : MutableImageBase(width, height) { }
 };
 
 
-#ifndef OPENWAR_USE_SDL
+class ResourceImage : public ResourceImageBase
+{
+public:
+	ResourceImage(GraphicsContext* gc, const resource& r) : MutableImageBase(gc, r) { }
+};
+
+
+#ifdef OPENWAR_USE_COREGRAPHICS
 NSData* ConvertImageToTiff(Image* map);
 Image* ConvertTiffToImage(NSData* data);
 #endif

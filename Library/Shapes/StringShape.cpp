@@ -187,7 +187,7 @@ static NSString* ReorderToDisplayDirection(NSString* string)
 
 
 
-Image* StringFont::_image = nullptr;
+MutableImage* StringFont::_image = nullptr;
 
 
 
@@ -342,7 +342,7 @@ StringFont::~StringFont()
 void StringFont::initialize()
 {
 	if (_image == nullptr)
-		_image = new Image(1024, 512);
+		_image = new MutableImage(1024, 512);
 }
 
 

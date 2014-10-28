@@ -22,8 +22,8 @@ _editorMode(EditorMode::Hand),
 _terrainFeature(TerrainFeature::Hills),
 _brush(nullptr)
 {
-	_brush = new Image(48, 48);
-	_mixer = new Image(48, 48);
+	_brush = new MutableImage(48, 48);
+	_mixer = new MutableImage(48, 48);
 }
 
 
@@ -174,10 +174,10 @@ void EditorModel::SmearPaint(TerrainFeature feature, glm::vec2 position)
 		for (int x = 0; x < size.x; ++x)
 			for (int y = 0; y < size.y; ++y)
 			{
-				glm::vec4 c = _brush->get_pixel(x, y);
-				glm::vec4 m = _mixer->get_pixel(x, y);
+				glm::vec4 c = _brush->GetPixel(x, y);
+				glm::vec4 m = _mixer->GetPixel(x, y);
 				c = glm::mix(c, m, 0.1f);
-				_brush->set_pixel(x, y, c);
+				_brush->SetPixel(x, y, c);
 			}
 
 		_brushDistance -= 2.0f;

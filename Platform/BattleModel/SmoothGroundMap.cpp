@@ -29,11 +29,11 @@ float SmoothGroundMap::CalculateHeight(int x, int y) const
 	if (x < 1) x = 1; else if (x > _image->size().x - 1) x = _image->size().x - 1;
 	if (y < 1) y = 1; else if (y > _image->size().y - 1) y = _image->size().y - 1;
 
-	glm::vec4 color = _image->get_pixel(x, y);
-	glm::vec4 color_xn = _image->get_pixel(x - 1, y);
-	glm::vec4 color_xp = _image->get_pixel(x + 1, y);
-	glm::vec4 color_yn = _image->get_pixel(x, y - 1);
-	glm::vec4 color_yp = _image->get_pixel(x, y + 1);
+	glm::vec4 color = _image->GetPixel(x, y);
+	glm::vec4 color_xn = _image->GetPixel(x - 1, y);
+	glm::vec4 color_xp = _image->GetPixel(x + 1, y);
+	glm::vec4 color_yn = _image->GetPixel(x, y - 1);
+	glm::vec4 color_yp = _image->GetPixel(x, y + 1);
 
 	float alpha = 0.5f * color.a + 0.125f * (color_xn.a + color_xp.a + color_yn.a + color_yp.a);
 
@@ -69,7 +69,7 @@ bool SmoothGroundMap::IsWater(glm::vec2 position) const
 	glm::vec2 p = (position - _bounds.min) / _bounds.size();
 	int x = (int)(mapsize.x * glm::floor(p.x));
 	int y = (int)(mapsize.y * glm::floor(p.y));
-	glm::vec4 c = _image->get_pixel(x, y);
+	glm::vec4 c = _image->GetPixel(x, y);
 	return c.b >= 0.5;
 }
 
@@ -87,7 +87,7 @@ bool SmoothGroundMap::ContainsWater(bounds2f bounds) const
 	for (int x = xmin; x <= xmax; ++x)
 		for (int y = ymin; y <= ymax; ++y)
 		{
-			glm::vec4 c = _image->get_pixel(x, y);
+			glm::vec4 c = _image->GetPixel(x, y);
 			if (c.b >= 0.5)
 				return true;
 		}
@@ -98,7 +98,7 @@ bool SmoothGroundMap::ContainsWater(bounds2f bounds) const
 
 float SmoothGroundMap::GetForestValue(int x, int y) const
 {
-	glm::vec4 c = _image->get_pixel(x, y);
+	glm::vec4 c = _image->GetPixel(x, y);
 	return c.g;
 }
 
@@ -107,7 +107,7 @@ float SmoothGroundMap::GetImpassableValue(int x, int y) const
 {
 	if (0 <= x && x < 255 && 0 <= y && y < 255)
 	{
-		glm::vec4 c = _image->get_pixel(x, y);
+		glm::vec4 c = _image->GetPixel(x, y);
 		if (c.b >= 0.5f && c.r < 0.5f)
 			return 1.0f;
 
@@ -126,7 +126,7 @@ void SmoothGroundMap::Extract(glm::vec2 position, Image* brush)
 
 	for (int x = 0; x < size.x; ++x)
 		for (int y = 0; y < size.y; ++y)
-			brush->set_pixel(x, y, _image->get_pixel(origin.x + x, origin.y + y));
+			brush->SetPixel(x, y, _image->GetPixel(origin.x + x, origin.y + y));
 }
 
 
@@ -146,8 +146,8 @@ bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, Imag
 			float k = 1.0f - d * d;
 			if (k > 0)
 			{
-				glm::vec4 b = brush->get_pixel(x, y);
-				glm::vec4 c = _image->get_pixel(p.x, p.y);
+				glm::vec4 b = brush->GetPixel(x, y);
+				glm::vec4 c = _image->GetPixel(p.x, p.y);
 				switch (feature)
 				{
 					case TerrainFeature::Hills:
@@ -163,7 +163,7 @@ bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, Imag
 						c.r = glm::mix(c.r, b.r, k * pressure);
 						break;
 				}
-				_image->set_pixel(p.x, p.y, c);
+				_image->SetPixel(p.x, p.y, c);
 			}
 		}
 
@@ -191,7 +191,7 @@ bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, floa
 			float k = 1.0f - d * d;
 			if (k > 0)
 			{
-				glm::vec4 c = _image->get_pixel(p.x, p.y);
+				glm::vec4 c = _image->GetPixel(p.x, p.y);
 				switch (feature)
 				{
 					case TerrainFeature::Hills:
@@ -207,7 +207,7 @@ bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, floa
 						c.r = glm::mix(c.r, value, k * abs_pressure);
 						break;
 				}
-				_image->set_pixel(p.x, p.y, c);
+				_image->SetPixel(p.x, p.y, c);
 			}
 		}
 

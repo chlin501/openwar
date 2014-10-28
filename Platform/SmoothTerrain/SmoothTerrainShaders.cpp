@@ -575,7 +575,7 @@ Texture* SmoothTerrainShaders::create_colormap(GraphicsContext* gc)
 			r[i].b = (rand() & 0x7fff) / (float)0x7fff;
 		}
 
-		img = new Image(64, 256);
+		img = new MutableImage(64, 256);
 		for (int x = 0; x < 64; ++x)
 			for (int y = 0; y < 256; ++y)
 			{
@@ -586,7 +586,7 @@ Texture* SmoothTerrainShaders::create_colormap(GraphicsContext* gc)
 				if (h > 0)
 					c = glm::mix(c, r[y], 0.015f);
 
-				img->set_pixel(x, 255 - y, glm::vec4(c, 1));
+				img->SetPixel(x, 255 - y, glm::vec4(c, 1));
 			}
 	}
 
