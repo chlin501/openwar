@@ -61,7 +61,7 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		CHECK_ERROR_GL();
 
-		VertexBufferBase::_count = count;
+		VertexBufferBase::_count = (GLsizei)count;
 	}
 
 private:

@@ -9,6 +9,7 @@
 #include "VertexBuffer.h"
 #include "Texture.h"
 #include <map>
+#include <vector>
 
 #ifndef CHECK_ERROR_GL
 extern void CHECK_ERROR_GL();

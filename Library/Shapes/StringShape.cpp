@@ -200,9 +200,9 @@ StringFont::StringFont(GraphicsContext* gc, const char* name, float size, float 
 	_font(0),
 	#endif
 	_pixelDensity(pixelDensity),
-	_items(),
-	_next(),
 	_texture(gc),
+    _items(),
+    _next(),
 	_dirty(false)
 {
 	initialize();
@@ -210,9 +210,9 @@ StringFont::StringFont(GraphicsContext* gc, const char* name, float size, float 
 	size *= _pixelDensity;
 
 #ifdef OPENWAR_USE_SDL
-	_font1 = TTF_OpenFont(ANDROID_FONT1, size);
-	_font2 = TTF_OpenFont(ANDROID_FONT2, size);
-	_emoji = TTF_OpenFont(ANDROID_EMOJI, size);
+	_font1 = TTF_OpenFont(ANDROID_FONT1, (int)size);
+	_font2 = TTF_OpenFont(ANDROID_FONT2, (int)size);
+	_emoji = TTF_OpenFont(ANDROID_EMOJI, (int)size);
 
 	if (_font1 != NULL)
 	{
@@ -259,9 +259,9 @@ StringFont::StringFont(GraphicsContext* gc, bool bold, float size, float pixelDe
 	_font(nil),
 	#endif
 	_pixelDensity(pixelDensity),
-	_items(),
-	_next(),
 	_texture(gc),
+    _items(),
+    _next(),
 	_dirty(false)
 {
 	initialize();
@@ -269,9 +269,9 @@ StringFont::StringFont(GraphicsContext* gc, bool bold, float size, float pixelDe
 	size *= _pixelDensity;
 
 #ifdef OPENWAR_USE_SDL
-	_font1 = TTF_OpenFont(ANDROID_FONT1, size);
-	_font2 = TTF_OpenFont(ANDROID_FONT2, size);
-	_emoji = TTF_OpenFont(ANDROID_EMOJI, size);
+	_font1 = TTF_OpenFont(ANDROID_FONT1, (int)size);
+	_font2 = TTF_OpenFont(ANDROID_FONT2, (int)size);
+	_emoji = TTF_OpenFont(ANDROID_EMOJI, (int)size);
 
 	if (_font1 != NULL)
 	{
@@ -360,9 +360,9 @@ StringFont::font_ptr StringFont::get_font_ptr() const
 StringFont::font_ptr StringFont::get_font_ptr(wchar_t wc) const
 {
 #ifdef OPENWAR_USE_SDL
-	if (_emoji != nullptr && TTF_GlyphIsProvided(_emoji, wc))
+	if (_emoji != nullptr && TTF_GlyphIsProvided(_emoji, (Uint16)wc))
 		return _emoji;
-	if (_font1 != nullptr && TTF_GlyphIsProvided(_font1, wc))
+	if (_font1 != nullptr && TTF_GlyphIsProvided(_font1, (Uint16)wc))
 		return _font1;
 	return _font2;
 #else
