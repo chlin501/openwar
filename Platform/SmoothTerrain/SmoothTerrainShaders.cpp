@@ -416,7 +416,7 @@ void SmoothTerrainShaders::render_terrain_border(GraphicsContext* gc, VertexShap
 
 
 
-void SmoothTerrainShaders::render_terrain_skirt(GraphicsContext* gc, VertexShape_3f_1f& vertices, const glm::mat4& transform, const texturex* texturex)
+void SmoothTerrainShaders::render_terrain_skirt(GraphicsContext* gc, VertexShape_3f_1f& vertices, const glm::mat4& transform, const Texture* texturex)
 {
 	RenderCall<TerrainSkirtShader>(gc)
 		.SetVertices(&vertices)
@@ -562,7 +562,7 @@ static glm::vec3 adjust_brightness(glm::vec3 c, float brightness)
 }
 
 
-texturex* SmoothTerrainShaders::create_colormap(GraphicsContext* gc)
+Texture* SmoothTerrainShaders::create_colormap(GraphicsContext* gc)
 {
 	static Image* img = nullptr;
 	if (img == nullptr)
@@ -590,7 +590,7 @@ texturex* SmoothTerrainShaders::create_colormap(GraphicsContext* gc)
 			}
 	}
 
-	texturex* result = new texturex(gc, *img);
+	Texture* result = new Texture(gc, *img);
 
 	glBindTexture(GL_TEXTURE_2D, result->id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

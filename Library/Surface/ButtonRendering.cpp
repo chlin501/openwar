@@ -12,15 +12,15 @@
 ButtonRendering::ButtonRendering(GraphicsContext* gc) :
 _gc(gc)
 {
-	_textureButtonBackground = new texturex(gc, resource("Textures/ButtonNormal.png"));
-	_textureButtonHighlight = new texturex(gc, resource("Textures/ButtonHighlight.png"));
-	_textureButtonSelected = new texturex(gc, resource("Textures/ButtonSelected.png"));
-	_textureButtonIcons = new texturex(gc, resource("Textures/ButtonIcons.png"));
+	_textureButtonBackground = new Texture(gc, resource("Textures/ButtonNormal.png"));
+	_textureButtonHighlight = new Texture(gc, resource("Textures/ButtonHighlight.png"));
+	_textureButtonSelected = new Texture(gc, resource("Textures/ButtonSelected.png"));
+	_textureButtonIcons = new Texture(gc, resource("Textures/ButtonIcons.png"));
 
 	_string_font = new StringFont(gc, true, 18, gc->GetPixelDensity());
 	_string_shape = new StringShape(_string_font);
 
-	_textureEditorTools = new texturex(gc, resource("Textures/EditorTools.png"));
+	_textureEditorTools = new Texture(gc, resource("Textures/EditorTools.png"));
 
 	buttonIconPlay = new ButtonIcon(_textureButtonIcons, glm::vec2(25, 32), bounds2f(0, 0, 25, 32) / glm::vec2(128, 32));
 	buttonIconPause = new ButtonIcon(_textureButtonIcons, glm::vec2(25, 32), bounds2f(25, 0, 50, 32) / glm::vec2(128, 32));
@@ -51,7 +51,7 @@ static void AddRect(VertexShape_2f_2f& vertices, bounds2f bounds, bounds2f textu
 }
 
 
-void ButtonRendering::RenderCornerButton(const glm::mat4& transform, texturex* texturex, bounds2f bounds, float radius)
+void ButtonRendering::RenderCornerButton(const glm::mat4& transform, Texture* texturex, bounds2f bounds, float radius)
 {
 	VertexShape_2f_2f vertices;
 	vertices._mode = GL_TRIANGLES;
@@ -89,7 +89,7 @@ void ButtonRendering::RenderButtonIcon(const glm::mat4& transform, glm::vec2 pos
 }
 
 
-void ButtonRendering::RenderTextureRect(const glm::mat4& transform, texturex* texturex, bounds2f b, bounds2f t, float alpha)
+void ButtonRendering::RenderTextureRect(const glm::mat4& transform, Texture* texturex, bounds2f b, bounds2f t, float alpha)
 {
 	VertexShape_2f_2f vertices;
 	vertices._mode = GL_TRIANGLE_STRIP;

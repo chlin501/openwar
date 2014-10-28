@@ -26,7 +26,7 @@
 
 #include "Algebra/bounds.h"
 #include "ShaderProgram.h"
-#include "texturex.h"
+#include "Texture.h"
 
 class GraphicsContext;
 class StringShape;
@@ -84,7 +84,7 @@ struct StringFont
 #endif
 
 	float _pixelDensity;
-	texturex _texture;
+	Texture _texture;
 
 	std::map<std::string, item> _items;
 	glm::vec2 _next;

@@ -11,14 +11,14 @@
 #endif
 #endif
 
-#include "texturex.h"
+#include "Texture.h"
 #include "ShaderProgram.h"
 #include "Image.h"
 #import "GraphicsContext.h"
 
 
 
-texturex::texturex(GraphicsContext* gc)
+Texture::Texture(GraphicsContext* gc)
 {
 	glGenTextures(1, &id);
 	CHECK_ERROR_GL();
@@ -26,7 +26,7 @@ texturex::texturex(GraphicsContext* gc)
 }
 
 
-texturex::texturex(GraphicsContext* gc, const resource& r)
+Texture::Texture(GraphicsContext* gc, const resource& r)
 {
 	glGenTextures(1, &id);
 	CHECK_ERROR_GL();
@@ -35,7 +35,7 @@ texturex::texturex(GraphicsContext* gc, const resource& r)
 }
 
 
-texturex::texturex(GraphicsContext* gc, const Image& image)
+Texture::Texture(GraphicsContext* gc, const Image& image)
 {
 	glGenTextures(1, &id);
 	CHECK_ERROR_GL();
@@ -44,7 +44,7 @@ texturex::texturex(GraphicsContext* gc, const Image& image)
 }
 
 
-texturex::texturex(GraphicsContext* gc, SDL_Surface* surface)
+Texture::Texture(GraphicsContext* gc, SDL_Surface* surface)
 {
 	glGenTextures(1, &id);
 	CHECK_ERROR_GL();
@@ -53,14 +53,14 @@ texturex::texturex(GraphicsContext* gc, SDL_Surface* surface)
 }
 
 
-texturex::~texturex()
+Texture::~Texture()
 {
 	glDeleteTextures(1, &id);
 	CHECK_ERROR_GL();
 }
 
 
-void texturex::init()
+void Texture::init()
 {
 	glBindTexture(GL_TEXTURE_2D, id);
 	CHECK_ERROR_GL();
@@ -87,7 +87,7 @@ static bool CheckForExtension(NSString *searchName)
 
 
 
-void texturex::load(GraphicsContext* gc, const resource& r)
+void Texture::load(GraphicsContext* gc, const resource& r)
 {
 #ifdef OPENWAR_USE_SDL
 
@@ -157,7 +157,7 @@ void texturex::load(GraphicsContext* gc, const resource& r)
 
 
 
-void texturex::load(const Image& image)
+void Texture::load(const Image& image)
 {
 	glBindTexture(GL_TEXTURE_2D, id);
 	CHECK_ERROR_GL();
@@ -169,7 +169,7 @@ void texturex::load(const Image& image)
 
 
 
-void texturex::load(SDL_Surface* surface)
+void Texture::load(SDL_Surface* surface)
 {
 	SDL_Surface* tmp = nullptr;
 	if (surface->format->format != SDL_PIXELFORMAT_ABGR8888)

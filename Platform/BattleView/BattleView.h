@@ -49,8 +49,8 @@ class BattleView : public TerrainView, public BattleObserver
 	VertexShape_3f_4f_1f* _colorBillboardVertices;
 	VertexShape_3f_2f* _textureTriangleVertices;
 
-	texturex* _textureUnitMarkers;
-	texturex* _textureTouchMarker;
+	Texture* _textureUnitMarkers;
+	Texture* _textureTouchMarker;
 
 	std::vector<SmokeCounter*> _smokeMarkers;
 	std::vector<ShootingCounter*> _shootingCounters;

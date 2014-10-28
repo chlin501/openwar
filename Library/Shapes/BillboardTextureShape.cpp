@@ -13,7 +13,7 @@ BillboardTexture::BillboardTexture(GraphicsContext* gc) :
 	_texture(nullptr),
 	_shapeCount(0)
 {
-	_texture = new texturex(gc);
+	_texture = new Texture(gc);
 }
 
 
@@ -155,7 +155,7 @@ struct billboard_index
 	float order;
 };
 
-void BillboardTextureShape::Draw(GraphicsContext* gc, texturex* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
+void BillboardTextureShape::Draw(GraphicsContext* gc, Texture* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
 {
 	static std::vector<Vertex_3f_1f_2f_2f> vertices;
 	static std::vector<billboard_index> indices;

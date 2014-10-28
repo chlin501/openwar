@@ -7,7 +7,7 @@
 
 #include <string>
 #include "Algebra/bounds.h"
-#include "texturex.h"
+#include "Texture.h"
 #include "Content.h"
 #include "ButtonRendering.h"
 #include "ButtonHotspot.h"
@@ -45,13 +45,13 @@ struct ButtonAlignment
 
 struct ButtonIcon
 {
-	texturex* _texture;
+	Texture* _texture;
 	bounds2f bounds;
 	glm::vec2 size;
 	float scale;
 
 	ButtonIcon() : _texture(nullptr), scale(1) { }
-	ButtonIcon(texturex* t, glm::vec2 s, bounds2f b) : _texture(t), bounds(b), size(s), scale(1) { }
+	ButtonIcon(Texture* t, glm::vec2 s, bounds2f b) : _texture(t), bounds(b), size(s), scale(1) { }
 };
 
 
