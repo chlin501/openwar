@@ -23,9 +23,9 @@ class SmoothTerrainRenderer
 	int _framebuffer_height;
 	FrameBuffer* _framebuffer;
 	RenderBuffer* _colorbuffer;
-	texture* _depth;
-	texture* _colormap;
-	texture* _splatmap;
+	texturex* _depth;
+	texturex* _colormap;
+	texturex* _splatmap;
 
 	SmoothTerrainShaders* _renderers;
 	VertexShape_2f _shadowVertices;

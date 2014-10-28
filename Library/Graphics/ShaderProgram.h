@@ -7,7 +7,7 @@
 
 #include "GraphicsOpenGL.h"
 #include "VertexBuffer.h"
-#include "texture.h"
+#include "texturex.h"
 #include <map>
 
 #ifndef CHECK_ERROR_GL

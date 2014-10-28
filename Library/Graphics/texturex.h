@@ -13,16 +13,16 @@ class GraphicsContext;
 class Image;
 
 
-struct texture
+struct texturex
 {
 	GLuint id;
 
-	explicit texture(GraphicsContext* gc);
-	texture(GraphicsContext* gc, const resource& r);
-	texture(GraphicsContext* gc, const Image& image);
-	texture(GraphicsContext* gc, SDL_Surface* surface);
+	explicit texturex(GraphicsContext* gc);
+	texturex(GraphicsContext* gc, const resource& r);
+	texturex(GraphicsContext* gc, const Image& image);
+	texturex(GraphicsContext* gc, SDL_Surface* surface);
 
-	~texture();
+	~texturex();
 
 	void init();
 
@@ -31,8 +31,8 @@ struct texture
 	void load(SDL_Surface* surface);
 
 private:
-	texture(const texture&) {}
-	texture& operator=(const texture&) { return *this; }
+	texturex(const texturex&) {}
+	texturex& operator=(const texturex&) { return *this; }
 };
 
 

@@ -4,7 +4,7 @@
 
 #include "FrameBuffer.h"
 #include "RenderBuffer.h"
-#include "texture.h"
+#include "texturex.h"
 
 
 FrameBuffer::FrameBuffer()
@@ -29,7 +29,7 @@ void FrameBuffer::AttachColor(RenderBuffer* value)
 }
 
 
-void FrameBuffer::AttachColor(texture* value)
+void FrameBuffer::AttachColor(texturex* value)
 {
 	bind_framebuffer binding(*this);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, value->id, 0);
@@ -45,7 +45,7 @@ void FrameBuffer::AttachDepth(RenderBuffer* value)
 }
 
 
-void FrameBuffer::AttachDepth(texture* value)
+void FrameBuffer::AttachDepth(texturex* value)
 {
 	bind_framebuffer binding(*this);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, value->id, 0);

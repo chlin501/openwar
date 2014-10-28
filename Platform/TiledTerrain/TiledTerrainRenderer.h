@@ -12,14 +12,14 @@ class GraphicsContext;
 #include "Algebra/bounds.h"
 #include "Image.h"
 #include "Algorithms/bspline_patch.h"
-#include "Graphics/texture.h"
+#include "texturex.h"
 
 
 class TiledTerrainRenderer
 {
 	GraphicsContext* _gc;
 	TiledGroundMap* _tiledGroundMap;
-	std::map<std::string, texture*> _textures;
+	std::map<std::string, texturex*> _textures;
 
 public:
 	TiledTerrainRenderer(GraphicsContext* gc, TiledGroundMap* tiledGroundMap);

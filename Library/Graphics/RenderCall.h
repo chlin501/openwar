@@ -27,7 +27,7 @@ protected:
 	void Assign(const glm::mat2& value);
 	void Assign(const glm::mat3& value);
 	void Assign(const glm::mat4& value);
-	void Assign(const texture* value);
+	void Assign(const texturex* value);
 };
 
 
@@ -84,7 +84,7 @@ private:
 		if (result == nullptr)
 		{
 			result = new Uniform<T>(location);
-			if (typeid(T) == typeid(texture*) || typeid(T) == typeid(const texture*))
+			if (typeid(T) == typeid(texturex*) || typeid(T) == typeid(const texturex*))
 				result->_texture = (GLenum)_textures++;
 			_uniforms.push_back(result);
 		}

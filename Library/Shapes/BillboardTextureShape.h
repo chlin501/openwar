@@ -11,7 +11,7 @@
 #include "Algebra/affine2.h"
 #include "Graphics/GraphicsContext.h"
 #include "Graphics/ShaderProgram.h"
-#include "Graphics/texture.h"
+#include "texturex.h"
 #include "Graphics/Image.h"
 #include "VertexShape.h"
 
@@ -26,7 +26,7 @@ class BillboardTexture
 		item(int s, float f, affine2 t) : shape(s), facing(f), texcoords(t) { }
 	};
 
-	texture* _texture;
+	texturex* _texture;
 	std::map<int, std::vector<item>> _items;
 	int _shapeCount;
 
@@ -34,7 +34,7 @@ public:
 	BillboardTexture(GraphicsContext* gc);
 	~BillboardTexture();
 
-	texture* GetTexture() const { return _texture; }
+	texturex* GetTexture() const { return _texture; }
 
 	int AddSheet(const Image& img);
 	int AddShape(int sheet);
@@ -95,7 +95,7 @@ public:
 	void Reset();
 	void AddBillboard(glm::vec3 position, float height, affine2 texcoords);
 
-	void Draw(GraphicsContext* gc, texture* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit = bounds1f(0, 1024));
+	void Draw(GraphicsContext* gc, texturex* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit = bounds1f(0, 1024));
 
 	void Render(GraphicsContext* gc, BillboardModel* billboardModel, const glm::mat4x4& transform, const glm::vec3& cameraUp, float viewportHeight, float cameraFacingDegrees, bool flip);
 };

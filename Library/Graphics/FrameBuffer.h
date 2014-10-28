@@ -12,7 +12,7 @@ extern void CHECK_ERROR_GL();
 #endif
 
 struct RenderBuffer;
-struct texture;
+struct texturex;
 
 
 struct FrameBuffer
@@ -23,10 +23,10 @@ struct FrameBuffer
 	~FrameBuffer();
 
 	void AttachColor(RenderBuffer* value);
-	void AttachColor(texture* value);
+	void AttachColor(texturex* value);
 
 	void AttachDepth(RenderBuffer* value);
-	void AttachDepth(texture* value);
+	void AttachDepth(texturex* value);
 
 	void AttachStencil(RenderBuffer* value);
 

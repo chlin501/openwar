@@ -13,7 +13,7 @@
 class SmoothTerrainSky : public TerrainSky
 {
 	GraphicsContext* _gc;
-	texture* _textureBackgroundLinen;
+	texturex* _textureBackgroundLinen;
 
 public:
 	SmoothTerrainSky(GraphicsContext* gc);

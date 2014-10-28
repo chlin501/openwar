@@ -70,7 +70,7 @@ void UniformBase::Assign(const glm::mat4& value)
 }
 
 
-void UniformBase::Assign(const texture* value)
+void UniformBase::Assign(const texturex* value)
 {
 	if (value != nullptr)
 	{

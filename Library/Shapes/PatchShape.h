@@ -6,7 +6,6 @@
 #define PatchShape_H
 
 #include "VertexShape.h"
-#include "Shape.h"
 
 class PatchShape;
 

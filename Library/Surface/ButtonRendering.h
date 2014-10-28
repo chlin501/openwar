@@ -6,7 +6,7 @@
 #define ButtonRendering_H
 
 #include "Algebra/bounds.h"
-#include "Graphics/texture.h"
+#include "texturex.h"
 #include "StringShape.h"
 #include "CommonShaders.h"
 
@@ -20,11 +20,11 @@ struct ButtonRendering
 	StringFont* _string_font;
 	StringShape* _string_shape;
 
-	texture* _textureButtonBackground;
-	texture* _textureButtonHighlight;
-	texture* _textureButtonSelected;
-	texture* _textureButtonIcons;
-	texture* _textureEditorTools;
+	texturex* _textureButtonBackground;
+	texturex* _textureButtonHighlight;
+	texturex* _textureButtonSelected;
+	texturex* _textureButtonIcons;
+	texturex* _textureEditorTools;
 
 	ButtonIcon* buttonIconPlay;
 	ButtonIcon* buttonIconPause;
@@ -48,9 +48,9 @@ struct ButtonRendering
 	void RenderSelected(const glm::mat4& transform, bounds2f bounds);
 	void RenderButtonText(const glm::mat4& transform, glm::vec2 position, const char* text);
 
-	void RenderCornerButton(const glm::mat4& transform, texture* texture, bounds2f bounds, float radius);
+	void RenderCornerButton(const glm::mat4& transform, texturex* texture, bounds2f bounds, float radius);
 	void RenderButtonIcon(const glm::mat4& transform, glm::vec2 position, ButtonIcon* buttonIcon, bool disabled);
-	void RenderTextureRect(const glm::mat4& transform, texture* texture, bounds2f b, bounds2f t, float alpha = 1);
+	void RenderTextureRect(const glm::mat4& transform, texturex* texture, bounds2f b, bounds2f t, float alpha = 1);
 
 };
 
