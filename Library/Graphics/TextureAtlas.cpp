@@ -15,7 +15,7 @@ TextureAtlas::TextureAtlas(GraphicsContext* gc) : Texture(gc),
 
 void TextureAtlas::LoadTextureFromImage(const Image& image)
 {
-	glBindTexture(GL_TEXTURE_2D, id);
+	glBindTexture(GL_TEXTURE_2D, _id);
 	CHECK_ERROR_GL();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.GetWidth(), image.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.GetPixels());
 	CHECK_ERROR_GL();
@@ -25,6 +25,7 @@ void TextureAtlas::LoadTextureFromImage(const Image& image)
 
 
 
+#ifdef OPENWAR_IMAGE_USE_SDL
 void TextureAtlas::LoadTextureFromSurface(SDL_Surface* surface)
 {
 	SDL_Surface* tmp = nullptr;
@@ -48,6 +49,7 @@ void TextureAtlas::LoadTextureFromSurface(SDL_Surface* surface)
 	if (tmp != nullptr)
 		SDL_FreeSurface(tmp);
 }
+#endif
 
 
 TextureImage* TextureAtlas::AddTextureImage(Image* image)

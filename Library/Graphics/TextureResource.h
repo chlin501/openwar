@@ -2,6 +2,7 @@
 #define TextureResource_H
 
 #include "Texture.h"
+#include "resource.h"
 
 
 class TextureResource : public Texture

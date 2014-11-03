@@ -76,7 +76,7 @@ void UniformBase::Assign(const Texture* value)
 	{
 		glActiveTexture(GL_TEXTURE0 + _texture);
 		CHECK_ERROR_GL();
-		glBindTexture(GL_TEXTURE_2D, value->id);
+		glBindTexture(GL_TEXTURE_2D, value->_id);
 		CHECK_ERROR_GL();
 	}
 	glUniform1i(_location, _texture);

@@ -9,8 +9,8 @@
 #include <glm/glm.hpp>
 #include "resource.h"
 
-#define OPENWAR_IMAGE_USE_SDL
-//#define OPENWAR_IMAGE_USE_COREGRAPHICS
+//#define OPENWAR_IMAGE_USE_SDL
+#define OPENWAR_IMAGE_USE_COREGRAPHICS
 
 #ifdef OPENWAR_IMAGE_USE_SDL
 #include <SDL2/SDL.h>

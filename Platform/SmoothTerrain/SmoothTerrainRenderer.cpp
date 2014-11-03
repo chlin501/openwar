@@ -167,7 +167,7 @@ static NSString* FramebufferStatusString(GLenum status)
 void SmoothTerrainRenderer::EnableRenderEdges()
 {
 	_depth = new Texture(_gc);
-	glBindTexture(GL_TEXTURE_2D, _depth->id);
+	glBindTexture(GL_TEXTURE_2D, _depth->_id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -210,7 +210,7 @@ void SmoothTerrainRenderer::UpdateDepthTextureSize()
 			_framebuffer_width = viewport[2];
 			_framebuffer_height = viewport[3];
 
-			glBindTexture(GL_TEXTURE_2D, _depth->id);
+			glBindTexture(GL_TEXTURE_2D, _depth->_id);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, _framebuffer_width, _framebuffer_height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
 			glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -298,7 +298,7 @@ void SmoothTerrainRenderer::UpdateSplatmap()
 				*p++ = (GLubyte)(255.0f * forest);
 			}
 
-		glBindTexture(GL_TEXTURE_2D, _splatmap->id);
+		glBindTexture(GL_TEXTURE_2D, _splatmap->_id);
 		CHECK_ERROR_GL();
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		CHECK_ERROR_GL();

@@ -5,8 +5,8 @@
 #include <glm/glm.hpp>
 #include "Algebra/bounds.h"
 #include "Texture.h"
+#include "Image.h"
 
-class Image;
 class TextureImage;
 
 
@@ -23,7 +23,9 @@ public:
 	explicit TextureAtlas(GraphicsContext* gc);
 
 	void LoadTextureFromImage(const Image& image);
+#ifdef OPENWAR_IMAGE_USE_SDL
 	void LoadTextureFromSurface(SDL_Surface* surface);
+#endif
 
 	TextureImage* AddTextureImage(Image* image);
 

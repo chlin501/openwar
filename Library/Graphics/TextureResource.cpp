@@ -76,7 +76,7 @@ void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const resourc
 	Image image;
 	image.LoadFromResource(r);
 
-	glBindTexture(GL_TEXTURE_2D, id);
+	glBindTexture(GL_TEXTURE_2D, _id);
 	CHECK_ERROR_GL();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.GetWidth(), image.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.GetPixels());
 	CHECK_ERROR_GL();

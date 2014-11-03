@@ -10,6 +10,10 @@
 
 #include "ShaderProgram.h"
 
+#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
+#import <Foundation/Foundation.h>
+#endif
+
 //#include <android/log.h>
 
 

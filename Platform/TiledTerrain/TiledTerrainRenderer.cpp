@@ -26,7 +26,7 @@ _tiledGroundMap(tiledGroundMap)
 			{
 				Texture* t = nullptr;//new TextureAtlas(gc, Image(gc, resource(tile->texture.c_str())));
 
-				glBindTexture(GL_TEXTURE_2D, t->id);
+				glBindTexture(GL_TEXTURE_2D, t->_id);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
