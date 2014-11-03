@@ -187,7 +187,7 @@ static NSString* ReorderToDisplayDirection(NSString* string)
 
 
 
-MutableImage* StringFont::_image = nullptr;
+Image* StringFont::_image = nullptr;
 
 
 
@@ -342,7 +342,7 @@ StringFont::~StringFont()
 void StringFont::initialize()
 {
 	if (_image == nullptr)
-		_image = new MutableImage(1024, 512);
+		_image = new Image(1024, 512);
 }
 
 
@@ -401,11 +401,11 @@ StringFont::item StringFont::add_character(font_ptr font, const std::string& cha
 	glyphsize = glm::vec2(size.width, size.height);
 #endif
 
-	if (_next.x + glyphsize.x > _image->width())
+	if (_next.x + glyphsize.x > _image->GetWidth())
 	{
 		_next.x = 0;
 		_next.y += glyphsize.y + 1;
-		if (_next.y + glyphsize.y > _image->height())
+		if (_next.y + glyphsize.y > _image->GetHeight())
 		{
 			_next.y = 0;
 
@@ -427,10 +427,10 @@ StringFont::item StringFont::add_character(font_ptr font, const std::string& cha
 #endif
 	item._bounds_origin = _next;
 	item._bounds_size = glyphsize;
-	item._u0 = item._bounds_origin.x / _image->width();
-	item._u1 = (item._bounds_origin.x + item._bounds_size.x) / _image->width();
-	item._v0 = 1 - (item._bounds_origin.y + item._bounds_size.y) / _image->height();
-	item._v1 = 1 - item._bounds_origin.y / _image->height();
+	item._u0 = item._bounds_origin.x / _image->GetWidth();
+	item._u1 = (item._bounds_origin.x + item._bounds_size.x) / _image->GetWidth();
+	item._v0 = 1 - (item._bounds_origin.y + item._bounds_size.y) / _image->GetHeight();
+	item._v1 = 1 - item._bounds_origin.y / _image->GetHeight();
 
 #ifdef OPENWAR_USE_SDL
 	item._v0 = 1 - item._v0;
@@ -453,7 +453,7 @@ void StringFont::update_texture()
 
 #ifdef OPENWAR_USE_SDL
 
-	SDL_Surface* image_surface = _image->get_surface();
+	SDL_Surface* image_surface = _image->GetSurface();
 
 	SDL_FillRect(image_surface, NULL, SDL_MapRGBA(image_surface->format, 0, 0, 0, 0));
 
@@ -479,40 +479,40 @@ void StringFont::update_texture()
 		}
 	}
 
-	_texture.load(*_image);
+	_texture.LoadTextureFromImage(*_image);
 
 #endif
 
 #ifdef OPENWAR_USE_UIFONT
-	UIGraphicsPushContext(_image->CGContext());
+	UIGraphicsPushContext(_image->GetCGContext());
 
-	CGContextClearRect(_image->CGContext(), CGRectMake(0, 0, _image->width(), _image->height()));
+	CGContextClearRect(_image->GetCGContext(), CGRectMake(0, 0, _image->GetWidth(), _image->GetHeight()));
 
 	for (std::map<std::string, item>::iterator i = _items.begin(); i != _items.end(); ++i)
 	{
 		const item& item = (*i).second;
 
-		CGContextSetRGBFillColor(_image->CGContext(), 1, 1, 1, 1);
+		CGContextSetRGBFillColor(_image->GetCGContext(), 1, 1, 1, 1);
 	    [item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withFont:item._font];
 	}
-	_texture.load(*_image);
+	_texture.LoadTextureFromImage(*_image);
 
 	UIGraphicsPopContext();
 
 #endif
 
 #ifdef OPENWAR_USE_NSFONT
-	NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithGraphicsPort:_image->CGContext() flipped:YES];
+	NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithGraphicsPort:_image->GetCGContext() flipped:YES];
 	[NSGraphicsContext saveGraphicsState];
 	[NSGraphicsContext setCurrentContext:gc];
 
-	CGContextClearRect(_image->CGContext(), CGRectMake(0, 0, _image->width(), _image->height()));
+	CGContextClearRect(_image->GetCGContext(), CGRectMake(0, 0, _image->GetWidth(), _image->GetHeight()));
 
 	for (std::map<std::string, item>::iterator i = _items.begin(); i != _items.end(); ++i)
 	{
 		const item& item = (*i).second;
 
-		CGContextSetRGBFillColor(_image->CGContext(), 1, 1, 1, 1);
+		CGContextSetRGBFillColor(_image->GetCGContext(), 1, 1, 1, 1);
 		NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:_font, NSFontAttributeName, nil];
 		[item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withAttributes:attributes];
 

@@ -280,14 +280,15 @@ void SmoothTerrainRenderer::InitializeSkirt()
 
 void SmoothTerrainRenderer::UpdateSplatmap()
 {
-	glm::ivec2 size = _smoothGroundMap->GetImage()->size();
+	int width = _smoothGroundMap->GetImage()->GetWidth();
+	int height = _smoothGroundMap->GetImage()->GetHeight();
 
-	GLubyte* data = new GLubyte[4 * size.x * size.y];
+	GLubyte* data = new GLubyte[4 * width * height];
 	if (data != nullptr)
 	{
 		GLubyte* p = data;
-		for (int y = 0; y < size.y; ++y)
-			for (int x = 0; x < size.x; ++x)
+		for (int y = 0; y < height; ++y)
+			for (int x = 0; x < width; ++x)
 			{
 				float forest = _smoothGroundMap->GetForestValue(x, y);
 				float block = _smoothGroundMap->GetImpassableValue(x, y);
@@ -299,7 +300,7 @@ void SmoothTerrainRenderer::UpdateSplatmap()
 
 		glBindTexture(GL_TEXTURE_2D, _splatmap->id);
 		CHECK_ERROR_GL();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		CHECK_ERROR_GL();
 		glGenerateMipmap(GL_TEXTURE_2D);
 		CHECK_ERROR_GL();
@@ -384,7 +385,7 @@ void SmoothTerrainRenderer::InitializeLines()
 		_lineVertices._mode = GL_LINES;
 		_lineVertices.Clear();
 		int n = _smoothGroundMap->GetHeightMap()->GetMaxIndex();
-		float k = _smoothGroundMap->GetImage()->size().x;
+		float k = _smoothGroundMap->GetImage()->GetWidth();
 		for (int x = 0; x <= n; x += 2)
 		{
 			for (int y = 0; y <= n; y += 2)
@@ -463,7 +464,7 @@ void SmoothTerrainRenderer::BuildTriangles()
 	_borderVertices.Clear();
 
 	int n = _smoothGroundMap->GetHeightMap()->GetMaxIndex();
-	float k = _smoothGroundMap->GetImage()->size().x;
+	float k = _smoothGroundMap->GetImage()->GetWidth();
 
 	for (int x = 0; x < n; x += 2)
 		for (int y = 0; y < n; y += 2)

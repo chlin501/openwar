@@ -19,7 +19,7 @@ void TextureAtlas::LoadTextureFromImage(const Image& image)
 {
 	glBindTexture(GL_TEXTURE_2D, id);
 	CHECK_ERROR_GL();
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, image.format(), GL_UNSIGNED_BYTE, image.pixels());
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.GetWidth(), image.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.GetPixels());
 	CHECK_ERROR_GL();
 	glGenerateMipmap(GL_TEXTURE_2D);
 	CHECK_ERROR_GL();

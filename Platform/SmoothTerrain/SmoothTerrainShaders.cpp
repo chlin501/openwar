@@ -564,8 +564,8 @@ static glm::vec3 adjust_brightness(glm::vec3 c, float brightness)
 
 Texture* SmoothTerrainShaders::create_colormap(GraphicsContext* gc)
 {
-	static Image* img = nullptr;
-	if (img == nullptr)
+	static Image* image = nullptr;
+	if (image == nullptr)
 	{
 		static glm::vec3 r[256];
 		for (int i = 0; i < 256; ++i)
@@ -575,9 +575,9 @@ Texture* SmoothTerrainShaders::create_colormap(GraphicsContext* gc)
 			r[i].b = (rand() & 0x7fff) / (float)0x7fff;
 		}
 
-		img = new MutableImage(64, 256);
-		for (int x = 0; x < 64; ++x)
-			for (int y = 0; y < 256; ++y)
+		image = new Image(64, 256);
+		for (int y = 0; y < 256; ++y)
+			for (int x = 0; x < 64; ++x)
 			{
 				float brightness = x / 63.0f;
 				float h = -2.5f + 0.5f * y;
@@ -586,11 +586,11 @@ Texture* SmoothTerrainShaders::create_colormap(GraphicsContext* gc)
 				if (h > 0)
 					c = glm::mix(c, r[y], 0.015f);
 
-				img->SetPixel(x, 255 - y, glm::vec4(c, 1));
+				image->SetPixel(x, 255 - y, glm::vec4(c, 1));
 			}
 	}
 
-	Texture* result = new TextureAtlas(gc, *img);
+	Texture* result = new TextureAtlas(gc, *image);
 
 	glBindTexture(GL_TEXTURE_2D, result->id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

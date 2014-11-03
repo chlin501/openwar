@@ -36,7 +36,7 @@ public:
 
 	Texture* GetTexture() const { return _texture; }
 
-	int AddSheet(const Image& img);
+	int AddSheet(const Image& image);
 	int AddShape(int sheet);
 
 	void SetTexCoords(int shape, float facing, const affine2& texcoords);

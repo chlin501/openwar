@@ -6,7 +6,7 @@
 #include "bounds.h"
 #include "GraphicsContext.h"
 
-#ifdef OPENWAR_USE_SDL
+#ifdef OPENWAR_IMAGE_USE_SDL
 #include <SDL2_image/SDL_image.h>
 #endif
 
@@ -19,17 +19,179 @@
 #endif
 
 
+
+Image::Image() :
+#ifdef OPENWAR_IMAGE_USE_SDL
+	_surface(nullptr),
+#endif
+#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+	_context(nil),
+#endif
+	_width(0),
+	_height(0),
+	_pixels(nullptr),
+	_owner(false)
+{
+}
+
+
+Image::Image(int width, int height) :
+#ifdef OPENWAR_IMAGE_USE_SDL
+	_surface(nullptr),
+#endif
+#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+	_context(nil),
+#endif
+	_width(width),
+	_height(height),
+	_pixels(nullptr),
+	_owner(false)
+{
+	_pixels = (unsigned char*) calloc(_width * _height * 4, sizeof(unsigned char));
+	_owner = true;
+
+#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+	_context = CGBitmapContextCreate(_pixels, _width, _height, 8, _width * 4, colorSpace, kCGImageAlphaPremultipliedLast);
+	CGColorSpaceRelease(colorSpace);
+#endif
+
+#ifdef OPENWAR_IMAGE_USE_SDL
+	_surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+#endif
+}
+
+
+void Image::LoadFromResource(const resource& r)
+{
+#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#if TARGET_OS_IPHONE
+
+	NSString* name = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:r.name()], [NSString stringWithUTF8String:r.type()]];
+	UIImage* image = [UIImage imageNamed:name];
+	if (image != nil)
+	{
+		LoadFromCGImage(image.CGImage);
+	}
+	else
+	{
+		NSLog(@"image not found: %@", name);
+	}
+
+#else
+
+	NSImage* image = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:r.path()]];
+	if (image != nil)
+	{
+		LoadFromCGImage([image CGImageForProposedRect:nil context:nil hints:nil]);
+		[image release];
+	}
+	else
+	{
+		NSString* name = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:r.name()], [NSString stringWithUTF8String:r.type()]];
+		NSLog(@"image not found: %@", name);
+	}
+
+	return;
+
+#endif
+
+
+#endif
+
+#ifdef OPENWAR_IMAGE_USE_SDL
+
+	_surface = IMG_Load(r.path());
+	if (_surface->format->format != SDL_PIXELFORMAT_ABGR8888)
+	{
+		SDL_Surface* surface = SDL_ConvertSurfaceFormat(_surface, SDL_PIXELFORMAT_ABGR8888, 0);
+		SDL_FreeSurface(_surface);
+		_surface = surface;
+	}
+
+	_width = _surface->w;
+	_height = _surface->h;
+	_pixels = (char*)_surface->pixels;
+	_owner = false;
+
+	PremultiplyAlpha();
+
+#endif
+}
+
+
 Image::~Image()
 {
+#ifdef OPENWAR_IMAGE_USE_SDL
+	SDL_FreeSurface(_surface);
+#endif
+
+#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+	CGContextRelease(_context);
+#endif
+
+	if (_owner)
+		free(_pixels);
+}
+
+
+#ifdef OPENWAR_IMAGE_USE_SDL
+SDL_Surface* Image::GetSurface()
+{
+	return _surface;
+}
+#endif
+
+
+#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+void Image::LoadFromCGImage(CGImageRef image)
+{
+	_width = CGImageGetWidth(image);
+	_height = CGImageGetHeight(image);
+	_pixels = (unsigned char*)calloc((size_t)(_width * _height * 4), sizeof(unsigned char));
+	_owner = true;
+
+	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+	_context = CGBitmapContextCreate(_pixels, (size_t)_width, (size_t)_height, 8, (size_t)_width * 4, colorSpace, kCGImageAlphaPremultipliedLast);
+	CGColorSpaceRelease(colorSpace);
+
+	CGContextDrawImage(_context, CGRectMake(0.0f, 0.0f, (CGFloat)_width, (CGFloat)_height), image);
+}
+#endif
+
+
+
+#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+CGContextRef Image::GetCGContext() const
+{
+	return _context;
+}
+#endif
+
+
+int Image::GetWidth() const
+{
+	return _width;
+}
+
+
+int Image::GetHeight() const
+{
+	return _height;
+}
+
+
+const void* Image::GetPixels() const
+{
+	return _pixels;
 }
 
 
 glm::vec4 Image::GetPixel(int x, int y) const
 {
-	if (0 <= x && x < (int) width() && 0 <= y && y < (int) height())
+	if (0 <= x && x < _width && 0 <= y && y < _height)
 	{
-		const GLubyte* data = reinterpret_cast<const GLubyte*>(pixels());
-		const GLubyte* p = data + 4 * (x + width() * y);
+		const unsigned char* p = _pixels + 4 * (x + _width * y);
 		return glm::vec4(p[0], p[1], p[2], p[3]) / 255.0f;
 	}
 	return glm::vec4();
@@ -38,354 +200,49 @@ glm::vec4 Image::GetPixel(int x, int y) const
 
 void Image::SetPixel(int x, int y, glm::vec4 c)
 {
-	if (0 <= x && x < (int) width() && 0 <= y && y < (int) height())
+	if (0 <= x && x < _width && 0 <= y && y < _height)
 	{
 		bounds1f bounds(0, 255);
-		const GLubyte* data = reinterpret_cast<const GLubyte*>(pixels());
-		GLubyte* p = const_cast<GLubyte*>(data) + 4 * (x + width() * y);
-		p[0] = (GLubyte)glm::round(bounds.clamp(c.r * 255));
-		p[1] = (GLubyte)glm::round(bounds.clamp(c.g * 255));
-		p[2] = (GLubyte)glm::round(bounds.clamp(c.b * 255));
-		p[3] = (GLubyte)glm::round(bounds.clamp(c.a * 255));
+		unsigned char* p = _pixels + 4 * (x + _width * y);
+		p[0] = (unsigned char)glm::round(bounds.clamp(c.r * 255));
+		p[1] = (unsigned char)glm::round(bounds.clamp(c.g * 255));
+		p[2] = (unsigned char)glm::round(bounds.clamp(c.b * 255));
+		p[3] = (unsigned char)glm::round(bounds.clamp(c.a * 255));
 	}
 }
 
 
 void Image::PremultiplyAlpha()
 {
-	glm::ivec2 s = size();
-	for (int x = 0; x < s.x; ++x)
-		for (int y = 0; y < s.y; ++y)
-		{
-			glm::vec4 c = GetPixel(x, y);
-			c.r *= c.a;
-			c.g *= c.a;
-			c.b *= c.a;
-			SetPixel(x, y, c);
-		}
+	for (int y = 0; y < _height; ++y)
+		for (int x = 0; x < _width; ++x)
+			{
+				glm::vec4 c = GetPixel(x, y);
+				c.r *= c.a;
+				c.g *= c.a;
+				c.b *= c.a;
+				SetPixel(x, y, c);
+			}
 }
 
 
 
-/***/
-
-
-#ifdef OPENWAR_USE_COREGRAPHICS
-ImageCG::ImageCG(int width, int height) :
-	_context(nil),
-	_width(width),
-	_height(height),
-	_data(nullptr),
-	_format(GL_RGBA)
-{
-	InitCGContext();
-}
-#endif
-
-
-#ifdef OPENWAR_USE_COREGRAPHICS
-ImageCG::ImageCG(GraphicsContext* gc, const resource& r) :
-	_context(nil),
-	_width(0),
-	_height(0),
-	_data(nullptr),
-	_format(GL_RGBA)
-{
-#if TARGET_OS_IPHONE
-
-	NSString* name = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:r.name()], [NSString stringWithUTF8String:r.type()]];
-	UIImage* img = nil;
-	if (gc != nullptr && gc->GetPixelDensity() > 1 && [name hasSuffix:@".png"])
-	{
-		NSString* stem = [name substringToIndex:name.length - 4];
-		NSString* name2x = [NSString stringWithFormat:@"%@@2x.png", stem];
-		img = [UIImage imageNamed:name2x];
-	}
-
-	if (img == nil)
-		img = [UIImage imageNamed:name];
-
-	if (img == nil)
-		NSLog(@"image not found: %@", name);
-
-	_format = GL_RGBA;
-	_width = CGImageGetWidth(img.CGImage);
-	_height = CGImageGetHeight(img.CGImage);
-
-	InitCGContext();
-    CGContextDrawImage(_context, CGRectMake(0.0f, 0.0f, (CGFloat)_width, (CGFloat)_height), img.CGImage);
-
-#else
-
-	NSImage* image = [[[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:r.path()]] autorelease];
-	if (image != nil)
-	{
-		_format = GL_RGBA;
-		_width = (int)image.size.width;
-		_height = (int)image.size.height;
-		InitCGContext();
-		CGContextDrawImage(_context, CGRectMake(0.0f, 0.0f, (CGFloat) _width, (CGFloat) _height), [image CGImageForProposedRect:nil
-																										 context:nil
-																										 hints:nil]);
-	}
-	else
-	{
-		NSString* name = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:r.name()], [NSString stringWithUTF8String:r.type()]];
-		NSLog(@"image not found: %@", name);
-	}
-
-#endif
-}
-#endif
-
-
-#ifdef OPENWAR_USE_COREGRAPHICS
-ImageCG::ImageCG(CGImageRef image) :
-	_context(nil),
-	_format(GL_RGBA),
-	_width(CGImageGetWidth(image)),
-	_height(CGImageGetHeight(image)),
-	_data(nullptr)
-{
-	InitCGContext();
-	CGContextDrawImage(_context, CGRectMake(0.0f, 0.0f, (CGFloat) _width, (CGFloat) _height), image);
-}
-#endif
-
-
-#ifdef OPENWAR_USE_COREGRAPHICS
-ImageCG::~ImageCG()
-{
-	CGContextRelease(_context);
-	free(_data);
-}
-#endif
-
-
-#ifdef OPENWAR_USE_COREGRAPHICS
-CGContextRef ImageCG::CGContext() const
-{
-	return _context;
-}
-#endif
-
-
-#ifdef OPENWAR_USE_COREGRAPHICS
-GLsizei ImageCG::width() const
-{
-	return _width;
-}
-#endif
-
-
-#ifdef OPENWAR_USE_COREGRAPHICS
-GLsizei ImageCG::height() const
-{
-	return _height;
-}
-#endif
-
-
-#ifdef OPENWAR_USE_COREGRAPHICS
-GLenum ImageCG::format() const
-{
-	return _format;
-}
-#endif
-
-
-#ifdef OPENWAR_USE_COREGRAPHICS
-const GLvoid* ImageCG::pixels() const
-{
-	return _data;
-}
-#endif
-
-
-#ifdef OPENWAR_USE_COREGRAPHICS
-static int count_components(GLenum format)
-{
-	switch (format)
-	{
-		case GL_ALPHA:
-			return 1;
-		case GL_RGB:
-			return 3;
-		case GL_RGBA:
-			return 4;
-		case GL_LUMINANCE:
-			return 1;
-		case GL_LUMINANCE_ALPHA:
-			return 2;
-		default:
-			return 0;
-	}
-}
-#endif
-
-
-#ifdef OPENWAR_USE_COREGRAPHICS
-static CGImageAlphaInfo GetAlphaInfo(GLenum format)
-{
-	switch (format)
-	{
-		case GL_RGBA:
-		case GL_ALPHA:
-		case GL_LUMINANCE_ALPHA:
-			return kCGImageAlphaPremultipliedLast;
-
-		default:
-			return kCGImageAlphaNone;
-	}
-}
-#endif
-
-
-
-#ifdef OPENWAR_USE_COREGRAPHICS
-void ImageCG::InitCGContext()
-{
-	int components = count_components(_format);
-	_data = (GLubyte*) calloc(_width * _height * components, sizeof(GLubyte));
-
-	CGColorSpaceRef colorSpace = components < 3 ? CGColorSpaceCreateDeviceGray() : CGColorSpaceCreateDeviceRGB();
-	_context = CGBitmapContextCreate(_data, _width, _height, 8, _width * components, colorSpace, GetAlphaInfo(_format));
-	CGColorSpaceRelease(colorSpace);
-}
-#endif
-
-
-/***/
-
-
-#ifdef OPENWAR_USE_SDL
-ImageSDL::ImageSDL(int width, int height) :
-	_surface(nullptr),
-	_format(GL_RGBA)
-{
-	_surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
-}
-#endif
-
-
-#ifdef OPENWAR_USE_SDL
-static GLenum sdl_to_gl_pixel_format(Uint32 sdl_pixel_format)
-{
-	switch (sdl_pixel_format)
-	{
-		case SDL_PIXELFORMAT_RGB24: return GL_BGR;
-		case SDL_PIXELFORMAT_RGB888: return GL_BGRA;
-
-		case SDL_PIXELFORMAT_ABGR8888: return GL_RGBA;
-		case SDL_PIXELFORMAT_ARGB8888: return GL_BGRA;
-		default: break;
-	}
-
-	switch (sdl_pixel_format)
-	{
-		case SDL_PIXELFORMAT_RGB24: return 0;
-
-		case SDL_PIXELFORMAT_RGBA8888: return 0;
-		case SDL_PIXELFORMAT_ABGR8888: return GL_RGBA;
-		case SDL_PIXELFORMAT_ARGB8888: return 0;
-
-		case SDL_PIXELFORMAT_RGB888: return 0;
-
-		case SDL_PIXELFORMAT_UNKNOWN: return 0;
-		case SDL_PIXELFORMAT_INDEX1LSB: return 0;
-		case SDL_PIXELFORMAT_INDEX1MSB: return 0;
-		case SDL_PIXELFORMAT_INDEX4LSB: return 0;
-		case SDL_PIXELFORMAT_INDEX4MSB: return 0;
-		case SDL_PIXELFORMAT_INDEX8: return 0;
-		case SDL_PIXELFORMAT_RGB332: return 0;
-		case SDL_PIXELFORMAT_RGB444: return 0;
-		case SDL_PIXELFORMAT_RGB555: return 0;
-		case SDL_PIXELFORMAT_BGR555: return 0;
-		case SDL_PIXELFORMAT_ARGB4444: return 0;
-		case SDL_PIXELFORMAT_RGBA4444: return 0;
-		case SDL_PIXELFORMAT_ABGR4444: return 0;
-		case SDL_PIXELFORMAT_BGRA4444: return 0;
-		case SDL_PIXELFORMAT_ARGB1555: return 0;
-		case SDL_PIXELFORMAT_RGBA5551: return 0;
-		case SDL_PIXELFORMAT_ABGR1555: return 0;
-		case SDL_PIXELFORMAT_BGRA5551: return 0;
-		case SDL_PIXELFORMAT_RGB565: return 0;
-		case SDL_PIXELFORMAT_BGR565: return 0;
-		case SDL_PIXELFORMAT_BGR24: return 0;
-		case SDL_PIXELFORMAT_RGBX8888: return 0;
-		case SDL_PIXELFORMAT_BGR888: return 0;
-		case SDL_PIXELFORMAT_BGRX8888: return 0;
-		case SDL_PIXELFORMAT_BGRA8888: return 0;
-
-		case SDL_PIXELFORMAT_ARGB2101010: return 0;
-		case SDL_PIXELFORMAT_YV12: return 0;
-		case SDL_PIXELFORMAT_IYUV: return 0;
-		case SDL_PIXELFORMAT_YUY2: return 0;
-		case SDL_PIXELFORMAT_UYVY: return 0;
-		case SDL_PIXELFORMAT_YVYU: return 0;
-
-		default: return 0;
-	}
-}
-#endif
-
-
-#ifdef OPENWAR_USE_SDL
-ImageSDL::ImageSDL(GraphicsContext* gc, const resource& r) :
-	_surface(nullptr),
-	_format(GL_RGBA)
-{
-	_surface = IMG_Load(r.path());
-
-	Uint32 format = _surface->format->format;
-	if (false) //format == SDL_PIXELFORMAT_RGB888)
-	{
-		format = SDL_PIXELFORMAT_BGR24;
-		_format = GL_RGB;
-	}
-	else
-	{
-		format = SDL_PIXELFORMAT_ABGR8888;
-		_format = GL_RGBA;
-	}
-
-	if (format != _surface->format->format)
-	{
-		SDL_Surface* surface = SDL_ConvertSurfaceFormat(_surface, format, 0);
-		SDL_FreeSurface(_surface);
-		_surface = surface;
-	}
-
-	_format = sdl_to_gl_pixel_format(_surface->format->format);
-}
-#endif
-
-
-
-#ifdef OPENWAR_USE_SDL
-ImageSDL::~ImageSDL()
-{
-	SDL_FreeSurface(_surface);
-}
-#endif
-
-
-#ifdef OPENWAR_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
 NSData* ConvertImageToTiff(Image* map)
 {
 #if TARGET_OS_IPHONE
 	return nil;
 #else
-	unsigned char* pixels = reinterpret_cast<unsigned char*>(const_cast<GLvoid*>(map->pixels()));
+	unsigned char* pixels = reinterpret_cast<unsigned char*>(const_cast<GLvoid*>(map->GetPixels()));
 	NSBitmapImageRep* imageRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:&pixels
-														   pixelsWide:map->width()
-														   pixelsHigh:map->height()
+														   pixelsWide:map->GetWidth()
+														   pixelsHigh:map->GetHeight()
 														   bitsPerSample:8
 														   samplesPerPixel:4
 														   hasAlpha:YES
 														   isPlanar:NO
 														   colorSpaceName:NSDeviceRGBColorSpace
-														   bytesPerRow:4 * map->width()
+														   bytesPerRow:4 * map->GetWidth()
 														   bitsPerPixel:32];
 	NSData* result = [imageRep TIFFRepresentationUsingCompression:NSTIFFCompressionLZW factor:0.5];
 	[imageRep release];
@@ -395,16 +252,19 @@ NSData* ConvertImageToTiff(Image* map)
 #endif
 
 
-#ifdef OPENWAR_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
 Image* ConvertTiffToImage(NSData* data)
 {
 #if TARGET_OS_IPHONE
-	return new ImageCG([[UIImage imageWithData:data] CGImage]);
+	Image* result = new Image();
+	result->LoadFromCGImage([[UIImage imageWithData:data] CGImage]);
+	return result;
 #else
 	NSImage* img = [[NSImage alloc] initWithData:data];
 	NSSize size = img.size;
 	NSRect rect = NSMakeRect(0, 0, size.width, size.height);
-	Image* result = new ImageCG([img CGImageForProposedRect:&rect context:nil hints:nil]);
+	Image* result = new Image();
+	result->LoadFromCGImage([img CGImageForProposedRect:&rect context:nil hints:nil]);
 	[img release];
 	return result;
 #endif

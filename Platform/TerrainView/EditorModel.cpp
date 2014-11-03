@@ -22,8 +22,8 @@ _editorMode(EditorMode::Hand),
 _terrainFeature(TerrainFeature::Hills),
 _brush(nullptr)
 {
-	_brush = new MutableImage(48, 48);
-	_mixer = new MutableImage(48, 48);
+	_brush = new Image(48, 48);
+	_mixer = new Image(48, 48);
 }
 
 

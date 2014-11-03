@@ -1,6 +1,10 @@
 #include "TextureResource.h"
+#include "GraphicsContext.h"
 #include "Image.h"
 
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#endif
 
 
 TextureResource::TextureResource(GraphicsContext* gc, const resource& r) : Texture(gc)
@@ -12,11 +16,11 @@ TextureResource::TextureResource(GraphicsContext* gc, const resource& r) : Textu
 
 
 #if TARGET_OS_IPHONE
-static bool CheckForExtension(NSString *searchName)
+static bool HasSupportForTextureCompressionPvrtc()
 {
     NSString *extensionsString = [NSString stringWithCString:(const char*)glGetString(GL_EXTENSIONS) encoding:NSASCIIStringEncoding];
     NSArray *extensionsNames = [extensionsString componentsSeparatedByString:@" "];
-    return [extensionsNames containsObject: searchName];
+    return [extensionsNames containsObject: @"GL_IMG_texture_compression_pvrtc"];
 }
 #endif
 
@@ -24,15 +28,8 @@ static bool CheckForExtension(NSString *searchName)
 
 void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const resource& r)
 {
-#ifdef OPENWAR_USE_SDL
-
-	ImageResource img(gc, r);
-	img.PremultiplyAlpha();
-	load(img);
-
-#else
-
 #if TARGET_OS_IPHONE
+
 	UIImage* image = nil;
 
 	NSString* name = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:r.name()], [NSString stringWithUTF8String:r.type()]];
@@ -40,7 +37,7 @@ void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const resourc
 	{
 		NSString* stem = [name substringToIndex:name.length - 4];
 
-		if (CheckForExtension(@"GL_IMG_texture_compression_pvrtc"))
+		if (HasSupportForTextureCompressionPvrtc())
 		{
 			NSString* path = [[NSBundle mainBundle] pathForResource:stem ofType:@"pvrtc" inDirectory:@""];
 			NSData* pvrtc = [NSData dataWithContentsOfFile:path];
@@ -64,34 +61,27 @@ void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const resourc
 	if (image == nil)
 		image = [UIImage imageNamed:name];
 
-	load(ImageCG(image.CGImage));
-
-#else
-
-	ResourceImage img(gc, r);
+	Image img;
+	img.LoadFromCGImage(image.CGImage);
 
 	glBindTexture(GL_TEXTURE_2D, id);
 	CHECK_ERROR_GL();
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width(), img.height(), 0, img.format(), GL_UNSIGNED_BYTE, img.pixels());
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.GetWidth(), img.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, img.GetPixels());
 	CHECK_ERROR_GL();
 	glGenerateMipmap(GL_TEXTURE_2D);
 	CHECK_ERROR_GL();
 
-	/*
-	NSImage* image = nil;
-	if ([name hasSuffix:@".png"])
-	{
-		NSString* stem = [name substringToIndex:name.length - 4];
-		image = [NSImage imageNamed:stem];
-	}
+#else
 
-	if (image == nil)
-		image = [NSImage imageNamed:name];
+	Image image;
+	image.LoadFromResource(r);
 
-	load(image::image([image CGImageForProposedRect:nil context:nil hints:nil]));
-	 */
-
-#endif
+	glBindTexture(GL_TEXTURE_2D, id);
+	CHECK_ERROR_GL();
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.GetWidth(), image.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.GetPixels());
+	CHECK_ERROR_GL();
+	glGenerateMipmap(GL_TEXTURE_2D);
+	CHECK_ERROR_GL();
 
 #endif
 }

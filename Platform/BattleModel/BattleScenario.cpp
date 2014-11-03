@@ -131,7 +131,9 @@ void BattleScenario::SetSmoothMap(const char* path, const char* hash, float size
 	GroundMap* oldGroundMap = _simulator->GetGroundMap();
 
 	bounds2f bounds(0, 0, size, size);
-	_smoothMap = new ResourceImage(nullptr, res);
+	_smoothMap = new Image();
+	_smoothMap->LoadFromResource(res);
+
 	_simulator->SetGroundMap(new SmoothGroundMap(_simulator->GetHeightMap(), hash, bounds, _smoothMap));
 
 	delete oldGroundMap;

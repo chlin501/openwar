@@ -6,11 +6,11 @@
 #include "HeightMap.h"
 
 
-SmoothGroundMap::SmoothGroundMap(HeightMap* heightMap, const char* hash, bounds2f bounds, Image* img) :
+SmoothGroundMap::SmoothGroundMap(HeightMap* heightMap, const char* hash, bounds2f bounds, Image* image) :
 _heightMap(heightMap),
 _hash(hash),
 _bounds(bounds),
-_image(img)
+_image(image)
 {
 	UpdateHeightMap();
 }
