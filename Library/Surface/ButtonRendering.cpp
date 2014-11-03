@@ -12,15 +12,15 @@
 ButtonRendering::ButtonRendering(GraphicsContext* gc) :
 _gc(gc)
 {
-	_textureButtonBackground = new Texture(gc, resource("Textures/ButtonNormal.png"));
-	_textureButtonHighlight = new Texture(gc, resource("Textures/ButtonHighlight.png"));
-	_textureButtonSelected = new Texture(gc, resource("Textures/ButtonSelected.png"));
-	_textureButtonIcons = new Texture(gc, resource("Textures/ButtonIcons.png"));
+	_textureButtonBackground = new TextureResource(gc, resource("Textures/ButtonNormal.png"));
+	_textureButtonHighlight = new TextureResource(gc, resource("Textures/ButtonHighlight.png"));
+	_textureButtonSelected = new TextureResource(gc, resource("Textures/ButtonSelected.png"));
+	_textureButtonIcons = new TextureResource(gc, resource("Textures/ButtonIcons.png"));
 
 	_string_font = new StringFont(gc, true, 18, gc->GetPixelDensity());
 	_string_shape = new StringShape(_string_font);
 
-	_textureEditorTools = new Texture(gc, resource("Textures/EditorTools.png"));
+	_textureEditorTools = new TextureResource(gc, resource("Textures/EditorTools.png"));
 
 	buttonIconPlay = new ButtonIcon(_textureButtonIcons, glm::vec2(25, 32), bounds2f(0, 0, 25, 32) / glm::vec2(128, 32));
 	buttonIconPause = new ButtonIcon(_textureButtonIcons, glm::vec2(25, 32), bounds2f(25, 0, 50, 32) / glm::vec2(128, 32));

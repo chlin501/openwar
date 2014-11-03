@@ -26,7 +26,7 @@ class BillboardTexture
 		item(int s, float f, affine2 t) : shape(s), facing(f), texcoords(t) { }
 	};
 
-	Texture* _texture;
+	TextureXXX* _texture;
 	std::map<int, std::vector<item>> _items;
 	int _shapeCount;
 

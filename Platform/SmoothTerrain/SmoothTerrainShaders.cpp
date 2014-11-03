@@ -590,7 +590,7 @@ Texture* SmoothTerrainShaders::create_colormap(GraphicsContext* gc)
 			}
 	}
 
-	Texture* result = new Texture(gc, *img);
+	Texture* result = new TextureXXX(gc, *img);
 
 	glBindTexture(GL_TEXTURE_2D, result->id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

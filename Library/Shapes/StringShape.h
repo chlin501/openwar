@@ -85,7 +85,7 @@ struct StringFont
 #endif
 
 	float _pixelDensity;
-	Texture _texture;
+	TextureXXX _texture;
 
 	std::map<std::string, item> _items;
 	glm::vec2 _next;

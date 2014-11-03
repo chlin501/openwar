@@ -65,8 +65,8 @@ BattleView::BattleView(GraphicsContext* gc) :
 {
 	SetUsingDepth(true);
 
-	_textureUnitMarkers = new Texture(gc, resource("Textures/UnitMarkers.png"));
-	_textureTouchMarker = new Texture(gc, resource("Textures/TouchMarker.png"));
+	_textureUnitMarkers = new TextureResource(gc, resource("Textures/UnitMarkers.png"));
+	_textureTouchMarker = new TextureResource(gc, resource("Textures/TouchMarker.png"));
 
 	_billboardTexture = new BillboardTexture(gc);
 

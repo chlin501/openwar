@@ -26,33 +26,6 @@ Texture::Texture(GraphicsContext* gc)
 }
 
 
-Texture::Texture(GraphicsContext* gc, const resource& r)
-{
-	glGenTextures(1, &id);
-	CHECK_ERROR_GL();
-	init();
-	load(gc, r);
-}
-
-
-Texture::Texture(GraphicsContext* gc, const Image& image)
-{
-	glGenTextures(1, &id);
-	CHECK_ERROR_GL();
-	init();
-	load(image);
-}
-
-
-Texture::Texture(GraphicsContext* gc, SDL_Surface* surface)
-{
-	glGenTextures(1, &id);
-	CHECK_ERROR_GL();
-	init();
-	load(surface);
-}
-
-
 Texture::~Texture()
 {
 	glDeleteTextures(1, &id);
@@ -75,6 +48,68 @@ void Texture::init()
 }
 
 
+/***/
+
+
+TextureXXX::TextureXXX(GraphicsContext* gc, const Image& image) : Texture(gc)
+{
+	load(image);
+}
+
+
+TextureXXX::TextureXXX(GraphicsContext* gc, SDL_Surface* surface) : Texture(gc)
+{
+	load(surface);
+}
+
+
+void TextureXXX::load(const Image& image)
+{
+	glBindTexture(GL_TEXTURE_2D, id);
+	CHECK_ERROR_GL();
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, image.format(), GL_UNSIGNED_BYTE, image.pixels());
+	CHECK_ERROR_GL();
+	glGenerateMipmap(GL_TEXTURE_2D);
+	CHECK_ERROR_GL();
+}
+
+
+
+void TextureXXX::load(SDL_Surface* surface)
+{
+	SDL_Surface* tmp = nullptr;
+	if (surface->format->format != SDL_PIXELFORMAT_ABGR8888)
+	{
+		tmp = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
+		surface = tmp;
+	}
+
+	SDL_LockSurface(surface);
+
+	glBindTexture(GL_TEXTURE_2D, id);
+	CHECK_ERROR_GL();
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+	CHECK_ERROR_GL();
+	glGenerateMipmap(GL_TEXTURE_2D);
+	CHECK_ERROR_GL();
+
+	SDL_UnlockSurface(surface);
+
+	if (tmp != nullptr)
+		SDL_FreeSurface(tmp);
+}
+
+
+/***/
+
+
+TextureResource::TextureResource(GraphicsContext* gc, const resource& r) : Texture(gc)
+{
+	load(gc, r);
+}
+
+
+
 
 #if TARGET_OS_IPHONE
 static bool CheckForExtension(NSString *searchName)
@@ -87,7 +122,7 @@ static bool CheckForExtension(NSString *searchName)
 
 
 
-void Texture::load(GraphicsContext* gc, const resource& r)
+void TextureResource::load(GraphicsContext* gc, const resource& r)
 {
 #ifdef OPENWAR_USE_SDL
 
@@ -134,10 +169,16 @@ void Texture::load(GraphicsContext* gc, const resource& r)
 #else
 
     ResourceImage img(gc, r);
-	load(img);
 
-    /*
-    NSImage* image = nil;
+	glBindTexture(GL_TEXTURE_2D, id);
+	CHECK_ERROR_GL();
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width(), img.height(), 0, img.format(), GL_UNSIGNED_BYTE, img.pixels());
+	CHECK_ERROR_GL();
+	glGenerateMipmap(GL_TEXTURE_2D);
+	CHECK_ERROR_GL();
+
+	/*
+	NSImage* image = nil;
 	if ([name hasSuffix:@".png"])
 	{
 		NSString* stem = [name substringToIndex:name.length - 4];
@@ -148,47 +189,10 @@ void Texture::load(GraphicsContext* gc, const resource& r)
 		image = [NSImage imageNamed:name];
 
 	load(image::image([image CGImageForProposedRect:nil context:nil hints:nil]));
-     */
-    
-#endif
+	 */
 
 #endif
+
+#endif
 }
 
-
-
-void Texture::load(const Image& image)
-{
-	glBindTexture(GL_TEXTURE_2D, id);
-	CHECK_ERROR_GL();
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, image.format(), GL_UNSIGNED_BYTE, image.pixels());
-	CHECK_ERROR_GL();
-	glGenerateMipmap(GL_TEXTURE_2D);
-	CHECK_ERROR_GL();
-}
-
-
-
-void Texture::load(SDL_Surface* surface)
-{
-	SDL_Surface* tmp = nullptr;
-	if (surface->format->format != SDL_PIXELFORMAT_ABGR8888)
-	{
-		tmp = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
-		surface = tmp;
-	}
-
-	SDL_LockSurface(surface);
-
-	glBindTexture(GL_TEXTURE_2D, id);
-	CHECK_ERROR_GL();
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
-	CHECK_ERROR_GL();
-	glGenerateMipmap(GL_TEXTURE_2D);
-	CHECK_ERROR_GL();
-
-	SDL_UnlockSurface(surface);
-
-	if (tmp != nullptr)
-		SDL_FreeSurface(tmp);
-}

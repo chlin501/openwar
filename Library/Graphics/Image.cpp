@@ -117,28 +117,7 @@ ImageCG::ImageCG(GraphicsContext* gc, const resource& r) :
 
 #else
 
-	NSString* name = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:r.name()], [NSString stringWithUTF8String:r.type()]];
-	NSImage* image = nil;
-	if ([name hasSuffix:@".png"])
-	{
-		NSString* stem = [name substringToIndex:name.length - 4];
-		image = [NSImage imageNamed:stem];
-	}
-
-	if (image == nil)
-		image = [NSImage imageNamed:name];
-
-	if (image == nil)
-		image = [[[NSImage alloc] initWithContentsOfFile:name] autorelease];
-
-	if (image == nil)
-		image = [[[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:r.path()]] autorelease];
-
-	if (image == nil)
-	{
-		image = [[[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:r.path()]] autorelease];
-	}
-
+	NSImage* image = [[[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:r.path()]] autorelease];
 	if (image != nil)
 	{
 		_format = GL_RGBA;
@@ -151,6 +130,7 @@ ImageCG::ImageCG(GraphicsContext* gc, const resource& r) :
 	}
 	else
 	{
+		NSString* name = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:r.name()], [NSString stringWithUTF8String:r.type()]];
 		NSLog(@"image not found: %@", name);
 	}
 

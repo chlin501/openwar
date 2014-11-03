@@ -13,26 +13,38 @@ class GraphicsContext;
 class Image;
 
 
-struct Texture
+class Texture
 {
+public:
 	GLuint id;
 
 	explicit Texture(GraphicsContext* gc);
-	Texture(GraphicsContext* gc, const resource& r);
-	Texture(GraphicsContext* gc, const Image& image);
-	Texture(GraphicsContext* gc, SDL_Surface* surface);
-
-	~Texture();
+	virtual ~Texture();
 
 	void init();
-
-	void load(GraphicsContext* gc, const resource& r);
-	void load(const Image& image);
-	void load(SDL_Surface* surface);
 
 private:
 	Texture(const Texture&) {}
 	Texture& operator=(const Texture&) { return *this; }
+};
+
+
+class TextureResource : public Texture
+{
+public:
+	TextureResource(GraphicsContext* gc, const resource& r);
+	void load(GraphicsContext* gc, const resource& r);
+};
+
+
+class TextureXXX : public Texture
+{
+public:
+	explicit TextureXXX(GraphicsContext* gc) : Texture(gc) { }
+	TextureXXX(GraphicsContext* gc, const Image& image);
+	TextureXXX(GraphicsContext* gc, SDL_Surface* surface);
+	void load(const Image& image);
+	void load(SDL_Surface* surface);
 };
 
 

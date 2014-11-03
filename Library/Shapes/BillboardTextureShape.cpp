@@ -13,7 +13,7 @@ BillboardTexture::BillboardTexture(GraphicsContext* gc) :
 	_texture(nullptr),
 	_shapeCount(0)
 {
-	_texture = new Texture(gc);
+	_texture = new TextureXXX(gc);
 }
 
 
