@@ -10,13 +10,13 @@
 class PatchShape;
 
 
-struct TexturePatch
+struct TexturePatchXXX
 {
 	bounds2f outer;
 	bounds2f inner;
 
-	TexturePatch();
-	TexturePatch(bounds2f o, bounds2f i);
+	TexturePatchXXX();
+	TexturePatchXXX(bounds2f o, bounds2f i);
 };
 
 struct TexturePatchFactory
@@ -24,7 +24,7 @@ struct TexturePatchFactory
 	glm::ivec2 size;
 
 	TexturePatchFactory(int size_u, int size_v);
-	TexturePatch GetTexturePatch(int u0, int v0, int size_u, int size_v, int insert_u, int inset_v);
+	TexturePatchXXX GetTexturePatch(int u0, int v0, int size_u, int size_v, int insert_u, int inset_v);
 };
 
 
@@ -40,11 +40,11 @@ public:
 	bounds2f inner_uv;
 
 	PatchGlyph();
-	PatchGlyph(TexturePatch tile, bounds2f bounds, glm::vec2 inset);
+	PatchGlyph(TexturePatchXXX tile, bounds2f bounds, glm::vec2 inset);
 	~PatchGlyph();
 
 	void Reset();
-	void Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset);
+	void Reset(TexturePatchXXX tile, bounds2f bounds, glm::vec2 inset);
 
 private:
 	PatchGlyph(const PatchGlyph&) { }

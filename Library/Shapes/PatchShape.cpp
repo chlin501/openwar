@@ -6,14 +6,14 @@
 
 
 
-TexturePatch::TexturePatch() :
+TexturePatchXXX::TexturePatchXXX() :
 outer(0, 0, 1, 1),
 inner(0, 0, 1, 1)
 {
 }
 
 
-TexturePatch::TexturePatch(bounds2f o, bounds2f i) :
+TexturePatchXXX::TexturePatchXXX(bounds2f o, bounds2f i) :
 outer(o),
 inner(i)
 {
@@ -26,11 +26,11 @@ size(size_u, size_v)
 }
 
 
-TexturePatch TexturePatchFactory::GetTexturePatch(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
+TexturePatchXXX TexturePatchFactory::GetTexturePatch(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
 {
 	bounds2f outer = bounds2f(u0, v0, u0 + size_u, v0 + size_v) / glm::vec2(size.x, size.y);
 	bounds2f inner = outer.grow(-(float)inset_u / size.x, -(float)inset_v / size.y);
-	return TexturePatch(outer, inner);
+	return TexturePatchXXX(outer, inner);
 }
 
 
@@ -41,7 +41,7 @@ PatchGlyph::PatchGlyph() :
 }
 
 
-PatchGlyph::PatchGlyph(TexturePatch tile, bounds2f bounds, glm::vec2 inset) :
+PatchGlyph::PatchGlyph(TexturePatchXXX tile, bounds2f bounds, glm::vec2 inset) :
 	_patchShape(nullptr)
 {
 	outer_xy = bounds;
@@ -67,7 +67,7 @@ void PatchGlyph::Reset()
 }
 
 
-void PatchGlyph::Reset(TexturePatch tile, bounds2f bounds, glm::vec2 inset)
+void PatchGlyph::Reset(TexturePatchXXX tile, bounds2f bounds, glm::vec2 inset)
 {
 	outer_xy = bounds;
 	inner_xy = bounds.grow(-inset.x, -inset.y);

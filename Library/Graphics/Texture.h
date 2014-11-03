@@ -21,8 +21,6 @@ public:
 	explicit Texture(GraphicsContext* gc);
 	virtual ~Texture();
 
-	void init();
-
 private:
 	Texture(const Texture&) {}
 	Texture& operator=(const Texture&) { return *this; }

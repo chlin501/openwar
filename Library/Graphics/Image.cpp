@@ -25,7 +25,8 @@ Image::Image() :
 	_surface(nullptr),
 #endif
 #ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
-	_context(nil),
+	_context(NULL),
+	_image(NULL),
 #endif
 	_width(0),
 	_height(0),
@@ -40,25 +41,40 @@ Image::Image(int width, int height) :
 	_surface(nullptr),
 #endif
 #ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
-	_context(nil),
+	_context(NULL),
+	_image(NULL),
 #endif
 	_width(width),
 	_height(height),
 	_pixels(nullptr),
 	_owner(false)
 {
-	_pixels = (unsigned char*) calloc(_width * _height * 4, sizeof(unsigned char));
+	_pixels = (unsigned char*) calloc((size_t)(_width * _height), 4);
 	_owner = true;
+}
+
+
+Image::~Image()
+{
+#ifdef OPENWAR_IMAGE_USE_SDL
+
+	if (_surface != nullptr)
+		SDL_FreeSurface(_surface);
+
+#endif
 
 #ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
-	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-	_context = CGBitmapContextCreate(_pixels, _width, _height, 8, _width * 4, colorSpace, kCGImageAlphaPremultipliedLast);
-	CGColorSpaceRelease(colorSpace);
+
+	if (_context != NULL)
+		CGContextRelease(_context);
+
+	if (_image != NULL)
+		CGImageRelease(_image);
+
 #endif
 
-#ifdef OPENWAR_IMAGE_USE_SDL
-	_surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
-#endif
+	if (_owner)
+		free(_pixels);
 }
 
 
@@ -111,7 +127,7 @@ void Image::LoadFromResource(const resource& r)
 
 	_width = _surface->w;
 	_height = _surface->h;
-	_pixels = (char*)_surface->pixels;
+	_pixels = (unsigned char*)_surface->pixels;
 	_owner = false;
 
 	PremultiplyAlpha();
@@ -120,24 +136,14 @@ void Image::LoadFromResource(const resource& r)
 }
 
 
-Image::~Image()
-{
 #ifdef OPENWAR_IMAGE_USE_SDL
-	SDL_FreeSurface(_surface);
-#endif
-
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
-	CGContextRelease(_context);
-#endif
-
-	if (_owner)
-		free(_pixels);
-}
-
-
-#ifdef OPENWAR_IMAGE_USE_SDL
-SDL_Surface* Image::GetSurface()
+SDL_Surface* Image::GetSurface() const
 {
+	if (_surface == nullptr)
+	{
+		_surface = SDL_CreateRGBSurface(0, _width, _height, 32, 0, 0, 0, 0);
+	}
+
 	return _surface;
 }
 #endif
@@ -148,14 +154,12 @@ void Image::LoadFromCGImage(CGImageRef image)
 {
 	_width = CGImageGetWidth(image);
 	_height = CGImageGetHeight(image);
-	_pixels = (unsigned char*)calloc((size_t)(_width * _height * 4), sizeof(unsigned char));
+	_pixels = (unsigned char*)calloc((size_t)(_width * _height), 4);
 	_owner = true;
 
-	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-	_context = CGBitmapContextCreate(_pixels, (size_t)_width, (size_t)_height, 8, (size_t)_width * 4, colorSpace, kCGImageAlphaPremultipliedLast);
-	CGColorSpaceRelease(colorSpace);
+	CGRect rect = CGRectMake(0.0f, 0.0f, (CGFloat)_width, (CGFloat)_height);
 
-	CGContextDrawImage(_context, CGRectMake(0.0f, 0.0f, (CGFloat)_width, (CGFloat)_height), image);
+	CGContextDrawImage(GetCGContext(), rect, image);
 }
 #endif
 
@@ -164,7 +168,44 @@ void Image::LoadFromCGImage(CGImageRef image)
 #ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
 CGContextRef Image::GetCGContext() const
 {
+	if (_context == NULL)
+	{
+		CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+
+		size_t width = (size_t)_width;
+		size_t height = (size_t)_height;
+		size_t bitsPerComponent = 8;
+		size_t bytesPerRow = width * 4;
+		_context = CGBitmapContextCreate(_pixels, width, height, bitsPerComponent, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast);
+
+		CGColorSpaceRelease(colorSpace);
+	}
 	return _context;
+}
+#endif
+
+
+#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+CGImageRef Image::GetCGImage() const
+{
+	if (_image == NULL)
+	{
+		size_t width = (size_t)_width;
+		size_t height = (size_t)_height;
+		size_t bitsPerComponent = 8;
+		size_t bitsPerPixel = bitsPerComponent * 4;
+		size_t bytesPerRow = width * 4;
+
+		CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+		CGDataProviderRef dataProvider = CGDataProviderCreateWithData(NULL, _pixels, bytesPerRow * height, NULL);
+
+		_image = CGImageCreate(width, height, bitsPerComponent, bitsPerPixel, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst, dataProvider, NULL, false, kCGRenderingIntentDefault);
+
+		CGDataProviderRelease(dataProvider);
+		CGColorSpaceRelease(colorSpace);
+	}
+
+	return _image;
 }
 #endif
 
@@ -225,6 +266,19 @@ void Image::PremultiplyAlpha()
 			}
 }
 
+
+void Image::Copy(const Image& image, int x, int y)
+{
+#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+	CGRect rect = CGRectMake(x, y, image.GetWidth(), image.GetHeight());
+	CGContextDrawImage(_context, rect, image.GetCGImage());
+#endif
+}
+
+
+void Image::Fill(const glm::vec4& color, int x, int y, int w, int h)
+{
+}
 
 
 #ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
