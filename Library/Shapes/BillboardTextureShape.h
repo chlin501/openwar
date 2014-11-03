@@ -11,7 +11,7 @@
 #include "Algebra/affine2.h"
 #include "Graphics/GraphicsContext.h"
 #include "Graphics/ShaderProgram.h"
-#include "Texture.h"
+#include "TextureAtlas.h"
 #include "Graphics/Image.h"
 #include "VertexShape.h"
 
@@ -26,7 +26,7 @@ class BillboardTexture
 		item(int s, float f, affine2 t) : shape(s), facing(f), texcoords(t) { }
 	};
 
-	TextureXXX* _texture;
+	TextureAtlas* _texture;
 	std::map<int, std::vector<item>> _items;
 	int _shapeCount;
 

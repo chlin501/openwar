@@ -29,23 +29,5 @@ private:
 };
 
 
-class TextureResource : public Texture
-{
-public:
-	TextureResource(GraphicsContext* gc, const resource& r);
-	void load(GraphicsContext* gc, const resource& r);
-};
-
-
-class TextureXXX : public Texture
-{
-public:
-	explicit TextureXXX(GraphicsContext* gc) : Texture(gc) { }
-	TextureXXX(GraphicsContext* gc, const Image& image);
-	TextureXXX(GraphicsContext* gc, SDL_Surface* surface);
-	void load(const Image& image);
-	void load(SDL_Surface* surface);
-};
-
 
 #endif

@@ -22,6 +22,7 @@
 #include "UnitCounter.h"
 #include "UnitMovementMarker.h"
 #include "UnitTrackingMarker.h"
+#include "TextureResource.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 

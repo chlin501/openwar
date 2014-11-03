@@ -517,7 +517,7 @@ void StringFont::update_texture()
 		[item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withAttributes:attributes];
 
 	}
-	_texture.load(*_image);
+	_texture.LoadTextureFromImage(*_image);
 
 	[NSGraphicsContext restoreGraphicsState];
 

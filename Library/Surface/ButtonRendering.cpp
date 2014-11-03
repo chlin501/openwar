@@ -6,6 +6,7 @@
 #include "ButtonGrid.h"
 #include "Shapes/VertexShape.h"
 #include "GraphicsContext.h"
+#include "TextureResource.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 

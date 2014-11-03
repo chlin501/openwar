@@ -13,7 +13,7 @@ BillboardTexture::BillboardTexture(GraphicsContext* gc) :
 	_texture(nullptr),
 	_shapeCount(0)
 {
-	_texture = new TextureXXX(gc);
+	_texture = new TextureAtlas(gc);
 }
 
 
@@ -25,7 +25,7 @@ BillboardTexture::~BillboardTexture()
 
 int BillboardTexture::AddSheet(const Image& img)
 {
-	_texture->load(img);
+	_texture->LoadTextureFromImage(img);
 
 	return 1;
 }

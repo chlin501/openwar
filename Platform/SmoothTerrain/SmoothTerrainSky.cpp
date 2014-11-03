@@ -7,6 +7,7 @@
 #include "SmoothTerrainSky.h"
 #include "GraphicsContext.h"
 #include "Shapes/VertexShape.h"
+#include "TextureResource.h"
 
 
 SmoothTerrainSky::SmoothTerrainSky(GraphicsContext* gc) :

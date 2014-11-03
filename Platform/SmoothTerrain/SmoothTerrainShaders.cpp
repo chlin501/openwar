@@ -6,7 +6,7 @@
 #include "Image.h"
 #include "GraphicsContext.h"
 #include "RenderCall.h"
-
+#include "TextureAtlas.h"
 
 
 TerrainInsideShader::TerrainInsideShader(GraphicsContext* gc) : ShaderProgram2<glm::vec3, glm::vec3>(
@@ -590,7 +590,7 @@ Texture* SmoothTerrainShaders::create_colormap(GraphicsContext* gc)
 			}
 	}
 
-	Texture* result = new TextureXXX(gc, *img);
+	Texture* result = new TextureAtlas(gc, *img);
 
 	glBindTexture(GL_TEXTURE_2D, result->id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
