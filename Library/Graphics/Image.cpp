@@ -78,7 +78,7 @@ Image::~Image()
 }
 
 
-void Image::LoadFromResource(const resource& r)
+Image& Image::LoadFromResource(const resource& r)
 {
 #ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
 #if TARGET_OS_IPHONE
@@ -108,10 +108,9 @@ void Image::LoadFromResource(const resource& r)
 		NSLog(@"image not found: %@", name);
 	}
 
-	return;
-
 #endif
 
+	return *this;
 
 #endif
 
@@ -131,6 +130,8 @@ void Image::LoadFromResource(const resource& r)
 	_owner = false;
 
 	PremultiplyAlpha();
+
+	return *this;
 
 #endif
 }

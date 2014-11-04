@@ -43,7 +43,7 @@ struct ButtonAlignment
 };
 
 
-struct TextureImageX
+/*struct TextureImageX
 {
 	TextureAtlas* _textureAtlas;
 	bounds2f _outer_uv;
@@ -54,7 +54,7 @@ struct TextureImageX
 
 	bounds2f GetOuterBounds() const { return _outer_bounds; }
 	bounds2f GetOuterUV() const { return _outer_uv; }
-};
+};*/
 
 
 
@@ -63,7 +63,7 @@ class ButtonItem
 	std::shared_ptr<ButtonHotspot> _hotspot;
 	ButtonArea* _buttonArea;
 	std::string _buttonText;
-	TextureImageX* _buttonIcon;
+	TextureImage* _buttonIcon;
 	char _keyboardShortcut;
 	bounds2f _bounds;
 	bool _selected;
@@ -71,7 +71,7 @@ class ButtonItem
 
 public:
 	ButtonItem(ButtonArea* buttonArea, const char* text);
-	ButtonItem(ButtonArea* buttonArea, TextureImageX* icon);
+	ButtonItem(ButtonArea* buttonArea, TextureImage* icon);
 	~ButtonItem();
 
 	std::shared_ptr<ButtonHotspot> GetHotspot() const { return _hotspot; }
@@ -80,8 +80,8 @@ public:
 	const char* GetButtonText() const { return _buttonText.empty() ? nullptr : _buttonText.c_str(); }
 	void SetButtonText(const char* value);
 
-	TextureImageX* GetButtonIcon() const { return _buttonIcon; }
-	void SetButtonIcon(TextureImageX* value) { _buttonIcon = value; }
+	TextureImage* GetButtonIcon() const { return _buttonIcon; }
+	void SetButtonIcon(TextureImage* value) { _buttonIcon = value; }
 
 	ButtonItem* SetAction(std::function<void()> action) { _hotspot->SetAction(action); return this; }
 	bool HasAction() const { return (bool)_hotspot->GetAction(); }
@@ -127,7 +127,7 @@ public:
 	ButtonGrid* GetButtonView() const { return _buttonView; }
 
 	ButtonItem* AddButtonItem(const char* buttonText);
-	ButtonItem* AddButtonItem(TextureImageX* buttonIcon);
+	ButtonItem* AddButtonItem(TextureImage* buttonIcon);
 
 	glm::vec2 CalculateSize() const;
 

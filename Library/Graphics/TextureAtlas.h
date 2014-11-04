@@ -62,9 +62,9 @@ public:
 
 	virtual void UpdateTexture();
 
-	TextureImage* AddTextureImage(Image* image);
+	TextureImage* AddTextureImage(const Image& image);
 	TextureImage* GetTextureImage(const bounds2f& inner, const bounds2f& outer);
-	TextureSheet AddTextureSheet(Image* image);
+	TextureSheet AddTextureSheet(const Image& image);
 
 private:
 	TextureAtlas(const TextureAtlas&) : Texture(nullptr) { }
@@ -84,6 +84,8 @@ public:
 
 	TextureImage();
 	~TextureImage();
+
+	TextureAtlas* GetTextureAtlas() const;
 
 	bounds2f GetInnerBounds() const;
 	bounds2f GetOuterBounds() const;

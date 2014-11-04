@@ -42,7 +42,7 @@ public:
 	Image(int width, int height);
 	~Image();
 
-	void LoadFromResource(const resource& r);
+	Image& LoadFromResource(const resource& r);
 
 #ifdef OPENWAR_IMAGE_USE_SDL
 	SDL_Surface* GetSurface() const;

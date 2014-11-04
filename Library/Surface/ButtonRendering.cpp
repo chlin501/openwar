@@ -4,99 +4,97 @@
 
 #include "ButtonRendering.h"
 #include "ButtonGrid.h"
-#include "Shapes/VertexShape.h"
-#include "GraphicsContext.h"
-#include "TextureResource.h"
-#include <glm/gtc/matrix_transform.hpp>
-#include "WidgetShape.h"
 
 
 ButtonRendering::ButtonRendering(GraphicsContext* gc) :
 _gc(gc)
 {
-	_textureButtonBackground = new TextureAtlas(gc);
-	_textureButtonBackground->LoadAtlasFromResource(resource("Textures/ButtonNormal.png"));
-
-	_textureButtonHighlight = new TextureAtlas(gc);
-	_textureButtonHighlight->LoadAtlasFromResource(resource("Textures/ButtonHighlight.png"));
-
-	_textureButtonSelected = new TextureAtlas(gc);
-	_textureButtonSelected->LoadAtlasFromResource(resource("Textures/ButtonSelected.png"));
-
-	_textureButtonIcons = new TextureAtlas(gc);
-	_textureButtonIcons->LoadAtlasFromResource(resource("Textures/ButtonIcons.png"));
-
-	_textureEditorTools = new TextureAtlas(gc);
-	_textureEditorTools->LoadAtlasFromResource(resource("Textures/EditorTools.png"));
-
 	_string_font = new TextureFont(gc->GetWidgetTextureAtlas(), FontDescriptor(true, 18));
 	_string_shape = new WidgetShape(gc->GetWidgetTextureAtlas());
 
-	buttonIconPlay = new TextureImageX(_textureButtonIcons, glm::vec2(25, 32), bounds2f(0, 0, 25, 32) / glm::vec2(128, 32));
-	buttonIconPause = new TextureImageX(_textureButtonIcons, glm::vec2(25, 32), bounds2f(25, 0, 50, 32) / glm::vec2(128, 32));
+	_textureAtlas = new TextureAtlas(gc);
 
-	buttonEditorToolHand = new TextureImageX(_textureEditorTools, glm::vec2(32, 32), bounds2f(0.00, 0.0, 0.25, 0.5));
-	buttonEditorToolPaint = new TextureImageX(_textureEditorTools, glm::vec2(32, 32), bounds2f(0.25, 0.0, 0.50, 0.5));
-	buttonEditorToolErase = new TextureImageX(_textureEditorTools, glm::vec2(32, 32), bounds2f(0.50, 0.0, 0.75, 0.5));
-	buttonEditorToolSmear = new TextureImageX(_textureEditorTools, glm::vec2(32, 32), bounds2f(0.75, 0.0, 1.00, 0.5));
-	buttonEditorToolHills = new TextureImageX(_textureEditorTools, glm::vec2(32, 32), bounds2f(0.00, 0.5, 0.25, 1.0));
-	buttonEditorToolTrees = new TextureImageX(_textureEditorTools, glm::vec2(32, 32), bounds2f(0.25, 0.5, 0.50, 1.0));
-	buttonEditorToolWater = new TextureImageX(_textureEditorTools, glm::vec2(32, 32), bounds2f(0.50, 0.5, 0.75, 1.0));
-	buttonEditorToolFords = new TextureImageX(_textureEditorTools, glm::vec2(32, 32), bounds2f(0.75, 0.5, 1.00, 1.0));
+	TextureSheet buttonBackgroundSheet = _textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonNormal.png")));
+	TextureSheet buttonHighlightSheet = _textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonHighlight.png")));
+	TextureSheet buttonSelectedSheet = _textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonSelected.png")));
+	TextureSheet buttonIcons = _textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonIcons.png")));
+	TextureSheet editorTools = _textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/EditorTools.png")));
+
+	buttonBackground = buttonBackgroundSheet.GetTextureImage(0, 0, 64, 64);
+	buttonBackground->_inner = bounds2f(buttonBackground->_inner.center());
+
+	buttonHighlight = buttonHighlightSheet.GetTextureImage(0, 0, 64, 64);
+	buttonHighlight->_inner = bounds2f(buttonHighlight->_inner.center());
+
+	buttonSelected = buttonSelectedSheet.GetTextureImage(0, 0, 64, 64);
+	buttonSelected->_inner = bounds2f(buttonSelected->_inner.center());
+
+	buttonIconPlay = buttonIcons.GetTextureImage(0, 0, 25, 32);
+	buttonIconPause = buttonIcons.GetTextureImage(25, 0, 25, 32);
+
+	buttonEditorToolHand  = editorTools.GetTextureImage(  0,  0, 64, 64);
+	buttonEditorToolPaint = editorTools.GetTextureImage( 64,  0, 64, 64);
+	buttonEditorToolErase = editorTools.GetTextureImage(128,  0, 64, 64);
+	buttonEditorToolSmear = editorTools.GetTextureImage(196,  0, 64, 64);
+	buttonEditorToolHills = editorTools.GetTextureImage(  0, 64, 64, 64);
+	buttonEditorToolTrees = editorTools.GetTextureImage( 64, 64, 64, 64);
+	buttonEditorToolWater = editorTools.GetTextureImage(128, 64, 64, 64);
+	buttonEditorToolFords = editorTools.GetTextureImage(196, 64, 64, 64);
 }
 
 
-void ButtonRendering::RenderTexturePatch(const glm::mat4& transform, TextureAtlas* textureAtlas, bounds2f outer_xy, float radius)
+void ButtonRendering::RenderTexturePatch(const glm::mat4& transform, TextureImage* textureImage, bounds2f outer_xy, bounds2f inner_xy)
 {
 	PatchGlyph patchGlyph;
 
 	patchGlyph.outer_xy = outer_xy;
-	patchGlyph.inner_xy = outer_xy.grow(-radius);
-	patchGlyph.outer_uv = bounds2f(0, 0, 1, 1);
-	patchGlyph.inner_uv = bounds2f(0.5f, 0.5f, 0.5f, 0.5f);
+	patchGlyph.inner_xy = inner_xy;
+	patchGlyph.outer_uv = textureImage->GetOuterUV();
+	patchGlyph.inner_uv = textureImage->GetInnerUV();
 
-	WidgetShape widgetShape(textureAtlas);
+	WidgetShape widgetShape(textureImage->GetTextureAtlas());
 	widgetShape.AddGlyph(&patchGlyph);
 
 	RenderCall<WidgetShader> renderCall(_gc);
 
 	renderCall.SetVertices(widgetShape.GetVertices());
-	renderCall.SetTexture("texture", textureAtlas);
+	renderCall.SetTexture("texture", textureImage->GetTextureAtlas());
 	renderCall.SetUniform("transform", transform);
 	renderCall.SetUniform("color", glm::vec4(1, 1, 1, 1));
 	renderCall.Render();
 }
 
 
-void ButtonRendering::RenderButtonIcon(const glm::mat4& transform, glm::vec2 position, TextureImageX* buttonIcon, bool disabled)
+void ButtonRendering::RenderButtonIcon(const glm::mat4& transform, glm::vec2 position, TextureImage* buttonIcon, bool disabled)
 {
 	if (buttonIcon != nullptr)
 	{
 		bounds2f bounds = buttonIcon->GetOuterBounds();
-		bounds += position - bounds.center();
+		bounds -= bounds.center();
+		bounds += position;
 
-		RenderTextureImage(transform, buttonIcon->_textureAtlas, bounds, buttonIcon->GetOuterUV(), disabled ? 0.5f : 1.0f);
+		RenderTextureImage(transform, buttonIcon, bounds, disabled ? 0.5f : 1.0f);
 	}
 }
 
 
-void ButtonRendering::RenderTextureImage(const glm::mat4& transform, TextureAtlas* textureAtlas, bounds2f bounds_xy, bounds2f bounds_uv, float alpha)
+void ButtonRendering::RenderTextureImage(const glm::mat4& transform, TextureImage* textureImage, bounds2f bounds_xy, float alpha)
 {
 	PatchGlyph patchGlyph;
 
 	patchGlyph.outer_xy = bounds_xy;
 	patchGlyph.inner_xy = bounds_xy;
-	patchGlyph.outer_uv = bounds_uv;
-	patchGlyph.inner_uv = bounds_uv;
+	patchGlyph.outer_uv = textureImage->GetOuterUV();
+	patchGlyph.inner_uv = textureImage->GetInnerUV();
 	patchGlyph._alpha = alpha;
 
-	WidgetShape widgetShape(textureAtlas);
+	WidgetShape widgetShape(textureImage->GetTextureAtlas());
 	widgetShape.AddGlyph(&patchGlyph);
 
 	RenderCall<WidgetShader> renderCall(_gc);
 
 	renderCall.SetVertices(widgetShape.GetVertices());
-	renderCall.SetTexture("texture", textureAtlas);
+	renderCall.SetTexture("texture", textureImage->GetTextureAtlas());
 	renderCall.SetUniform("transform", transform);
 	renderCall.SetUniform("color", glm::vec4(1, 1, 1, 1));
 	renderCall.Render();

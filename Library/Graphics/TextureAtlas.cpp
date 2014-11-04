@@ -91,13 +91,13 @@ void TextureAtlas::UpdateTexture()
 }
 
 
-TextureImage* TextureAtlas::AddTextureImage(Image* image)
+TextureImage* TextureAtlas::AddTextureImage(const Image& image)
 {
 	if (_image == nullptr)
 		_image = new Image(512, 512);
 
-	int width = image->GetWidth();
-	int height = image->GetHeight();
+	int width = image.GetWidth();
+	int height = image.GetHeight();
 
 	if (_currentX + width > _image->GetWidth())
 	{
@@ -105,7 +105,7 @@ TextureImage* TextureAtlas::AddTextureImage(Image* image)
 		_currentY = _nextY;
 	}
 
-	_image->Copy(*image, _currentX, _currentY);
+	_image->Copy(image, _currentX, _currentY);
 
 	bounds2f bounds(_currentX, _currentY, _currentX + width, _currentY + height);
 
@@ -132,7 +132,7 @@ TextureImage* TextureAtlas::GetTextureImage(const bounds2f& inner, const bounds2
 }
 
 
-TextureSheet TextureAtlas::AddTextureSheet(Image* image)
+TextureSheet TextureAtlas::AddTextureSheet(const Image& image)
 {
 	TextureImage* textureImage = AddTextureImage(image);
 	return TextureSheet(this, textureImage->GetOuterBounds());
@@ -151,6 +151,12 @@ TextureImage::TextureImage() :
 TextureImage::~TextureImage()
 {
 
+}
+
+
+TextureAtlas* TextureImage::GetTextureAtlas() const
+{
+	return _textureAtlas;
 }
 
 

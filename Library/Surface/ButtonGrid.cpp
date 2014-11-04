@@ -34,7 +34,7 @@ _disabled(false)
 
 
 
-ButtonItem::ButtonItem(ButtonArea* buttonArea, TextureImageX* icon) :
+ButtonItem::ButtonItem(ButtonArea* buttonArea, TextureImage* icon) :
 _hotspot(),
 _buttonArea(buttonArea),
 _buttonText(),
@@ -115,7 +115,7 @@ ButtonItem* ButtonArea::AddButtonItem(const char* buttonText)
 
 
 
-ButtonItem* ButtonArea::AddButtonItem(TextureImageX* buttonIcon)
+ButtonItem* ButtonArea::AddButtonItem(TextureImage* buttonIcon)
 {
 	ButtonItem* buttonItem = new ButtonItem(this, buttonIcon);
 	buttonItems.push_back(buttonItem);
@@ -337,18 +337,18 @@ void ButtonGrid::Render(const glm::mat4& transform)
 {
 	for (ButtonArea* buttonArea : _buttonAreas)
 	{
-		_buttonRendering->RenderTexturePatch(transform, _buttonRendering->_textureButtonBackground, buttonArea->_bounds.grow(10), 32);
+		_buttonRendering->RenderTexturePatch(transform, _buttonRendering->buttonBackground, buttonArea->_bounds.grow(10), buttonArea->_bounds.grow(-22));
 
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
 		{
 			if (buttonItem->IsSelected())
-				_buttonRendering->RenderTexturePatch(transform, _buttonRendering->_textureButtonSelected, buttonItem->GetBounds().grow(10), 32);
+				_buttonRendering->RenderTexturePatch(transform, _buttonRendering->buttonSelected, buttonItem->GetBounds().grow(10), buttonItem->GetBounds().grow(-22));
 
 			if (buttonItem->GetButtonIcon() != nullptr)
 				_buttonRendering->RenderButtonIcon(transform, buttonItem->GetBounds().center(), buttonItem->GetButtonIcon(), buttonItem->IsDisabled());
 
 			if (buttonItem->IsHighlight())
-				_buttonRendering->RenderTextureImage(transform, _buttonRendering->_textureButtonHighlight, buttonItem->GetBounds(), bounds2f(0, 0, 1, 1));
+				_buttonRendering->RenderTexturePatch(transform, _buttonRendering->buttonHighlight, buttonItem->GetBounds(), bounds2f(buttonItem->GetBounds().center()));
 
 			if (buttonItem->GetButtonText() != nullptr)
 				_buttonRendering->RenderStringGlyph(transform, buttonItem->GetBounds().center(), buttonItem->GetButtonText());
