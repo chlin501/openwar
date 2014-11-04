@@ -30,6 +30,8 @@
 
 class GraphicsContext;
 class StringShape;
+class TextureChar;
+class TextureFont;
 
 
 class StringShader : public ShaderProgram3<glm::vec2, glm::vec2, float>
@@ -61,19 +63,21 @@ struct StringFont
 
 	struct item
 	{
-		font_ptr _font;
+		TextureChar* _textureChar;
+
+		//font_ptr _font;
 #ifdef OPENWAR_USE_SDL
-		std::string _string;
+		//std::string _string;
 #else
-		NSString* _string;
+		//NSString* _string;
 #endif
-		glm::vec2 _bounds_origin;
-		glm::vec2 _bounds_size;
-		float _u0, _u1;
-		float _v0, _v1;
+		//glm::vec2 _bounds_origin;
+		//glm::vec2 _bounds_size;
+		//float _u0, _u1;
+		//float _v0, _v1;
 	};
 
-	static Image* _image;
+	//static Image* _image;
 
 #ifdef OPENWAR_USE_SDL
 	font_ptr _font1;
@@ -84,10 +88,11 @@ struct StringFont
 #endif
 
 	float _pixelDensity;
-	TextureAtlas _texture;
+	TextureAtlas _textureAtlas;
+	TextureFont* _textureFont;
 
 	std::map<std::string, item> _items;
-	glm::vec2 _next;
+	//glm::vec2 _next;
 	bool _dirty;
 
 public:
@@ -110,7 +115,7 @@ public:
 	glm::vec2 get_size(const item& item) const;
 
 private:
-	StringFont(const StringFont&) : _texture(nullptr) { }
+	StringFont(const StringFont&) : _textureAtlas(nullptr) { }
 	StringFont& operator=(const StringFont&) { return *this; }
 };
 

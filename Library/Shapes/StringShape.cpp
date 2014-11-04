@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <locale>
 
+#include "TextureFont.h"
+
 
 #ifdef OPENWAR_USE_XCODE_FRAMEWORKS
 #define ANDROID_FONT1 "Roboto-Regular.ttf"
@@ -49,8 +51,9 @@ StringShader::StringShader(GraphicsContext* gc) : ShaderProgram3<glm::vec2, glm:
 		void main()
 		{
 			vec4 result;
-			result.rgb = color.rgb;
-			result.a = texture2D(texture, _texcoord).a * color.a * clamp(_alpha, 0.0, 1.0);
+			//result.rgb = color.rgb;
+			//result.a = texture2D(texture, _texcoord).a * color.a * clamp(_alpha, 0.0, 1.0);
+			result = texture2D(texture, _texcoord);
 
 			gl_FragColor = result;
 		}
@@ -187,7 +190,7 @@ static NSString* ReorderToDisplayDirection(NSString* string)
 
 
 
-Image* StringFont::_image = nullptr;
+//Image* StringFont::_image = nullptr;
 
 
 
@@ -200,9 +203,10 @@ StringFont::StringFont(GraphicsContext* gc, const char* name, float size, float 
 	_font(0),
 	#endif
 	_pixelDensity(pixelDensity),
-	_texture(gc),
+	_textureAtlas(gc),
+	_textureFont(nullptr),
     _items(),
-    _next(),
+    //_next(),
 	_dirty(false)
 {
 	initialize();
@@ -259,9 +263,10 @@ StringFont::StringFont(GraphicsContext* gc, bool bold, float size, float pixelDe
 	_font(nil),
 	#endif
 	_pixelDensity(pixelDensity),
-	_texture(gc),
+	_textureAtlas(gc),
+	_textureFont(nullptr),
     _items(),
-    _next(),
+    //_next(),
 	_dirty(false)
 {
 	initialize();
@@ -310,6 +315,8 @@ StringFont::StringFont(GraphicsContext* gc, bool bold, float size, float pixelDe
 		_font = [[NSFont boldSystemFontOfSize:size] retain];
 	else
 		_font = [[NSFont systemFontOfSize:size] retain];
+
+	_textureFont = new TextureFont(&_textureAtlas, _font);
 #endif
 }
 
@@ -341,8 +348,8 @@ StringFont::~StringFont()
 
 void StringFont::initialize()
 {
-	if (_image == nullptr)
-		_image = new Image(1024, 512);
+	//if (_image == nullptr)
+	//	_image = new Image(1024, 512);
 }
 
 
@@ -378,30 +385,32 @@ StringFont::item StringFont::add_character(font_ptr font, const std::string& cha
 		return i->second;
 
 
-	glm::vec2 glyphsize;
+	//glm::vec2 glyphsize;
 
-#ifdef OPENWAR_USE_SDL
+
+/*#ifdef OPENWAR_USE_SDL
 	int w, h;
 	if (TTF_SizeUTF8(font, character.c_str(), &w, &h) == 0)
 	{
 		glyphsize = glm::vec2(w, h);
 	}
-#endif
+#endif*/
 
-#ifdef OPENWAR_USE_UIFONT
+/*#ifdef OPENWAR_USE_UIFONT
 	NSString* string = [NSString stringWithUTF8String:character.c_str()];
 	CGSize size = [string sizeWithFont:_font];
 	glyphsize = glm::vec2(size.width, size.height);
-#endif
+#endif*/
 
-#ifdef OPENWAR_USE_NSFONT
+/*#ifdef OPENWAR_USE_NSFONT
 	NSString* string = [NSString stringWithUTF8String:character.c_str()];
 	NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:_font, NSFontAttributeName, nil];
 	CGSize size = [string sizeWithAttributes:attributes];
 	glyphsize = glm::vec2(size.width, size.height);
-#endif
+#endif*/
 
-	if (_next.x + glyphsize.x > _image->GetWidth())
+
+/*	if (_next.x + glyphsize.x > _image->GetWidth())
 	{
 		_next.x = 0;
 		_next.y += glyphsize.y + 1;
@@ -416,30 +425,41 @@ StringFont::item StringFont::add_character(font_ptr font, const std::string& cha
 
 			_items.clear();
 		}
-	}
+	}*/
+
 
 	item item;
+
+
+	item._textureChar = _textureFont->GetTextureChar(character);
+
+	//bounds2f bounds_uv = item._textureChar->GetTextureImage()->GetBoundsUV();
+
+/*
 	item._font = font;
 #ifdef OPENWAR_USE_SDL
 	item._string = character;
 #else
 	item._string = [string retain];
 #endif
-	item._bounds_origin = _next;
+	//item._bounds_origin = _next;
 	item._bounds_size = glyphsize;
-	item._u0 = item._bounds_origin.x / _image->GetWidth();
-	item._u1 = (item._bounds_origin.x + item._bounds_size.x) / _image->GetWidth();
-	item._v0 = 1 - (item._bounds_origin.y + item._bounds_size.y) / _image->GetHeight();
-	item._v1 = 1 - item._bounds_origin.y / _image->GetHeight();
+	item._u0 = bounds_uv.min.x;//item._bounds_origin.x / _image->GetWidth();
+	item._u1 = bounds_uv.max.x;//(item._bounds_origin.x + item._bounds_size.x) / _image->GetWidth();
+	item._v0 = bounds_uv.min.y;//1 - (item._bounds_origin.y + item._bounds_size.y) / _image->GetHeight();
+	item._v1 = bounds_uv.max.y;//1 - item._bounds_origin.y / _image->GetHeight();
 
 #ifdef OPENWAR_USE_SDL
 	item._v0 = 1 - item._v0;
 	item._v1 = 1 - item._v1;
 #endif
 
-	_items[character] = item;
 
 	_next.x += floorf(item._bounds_size.x + 1) + 1;
+*/
+
+	_items[character] = item;
+
 	_dirty = true;
 
 	return item;
@@ -448,9 +468,13 @@ StringFont::item StringFont::add_character(font_ptr font, const std::string& cha
 
 void StringFont::update_texture()
 {
-	if (!_dirty)
-		return;
+	if (_dirty)
+	{
+		_textureAtlas.UpdateTextureAtlas();
+		_dirty = false;
+	}
 
+/*
 #ifdef OPENWAR_USE_SDL
 
 	SDL_Surface* image_surface = _image->GetSurface();
@@ -502,6 +526,7 @@ void StringFont::update_texture()
 #endif
 
 #ifdef OPENWAR_USE_NSFONT
+
 	NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithGraphicsPort:_image->GetCGContext() flipped:YES];
 	[NSGraphicsContext saveGraphicsState];
 	[NSGraphicsContext setCurrentContext:gc];
@@ -517,13 +542,12 @@ void StringFont::update_texture()
 		[item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withAttributes:attributes];
 
 	}
-	_texture.LoadTextureFromImage(*_image);
+	_textureAtlas.LoadTextureFromImage(*_image);
 
 	[NSGraphicsContext restoreGraphicsState];
 
 #endif
-
-	_dirty = false;
+*/
 }
 
 
@@ -568,7 +592,9 @@ glm::vec2 StringFont::measure(const char* text)
 
 glm::vec2 StringFont::get_size(const item& item) const
 {
-	return glm::vec2(item._bounds_size.x, item._bounds_size.y) / _pixelDensity;
+	return item._textureChar->GetInnerSize();
+
+	//return glm::vec2(item._bounds_size.x, item._bounds_size.y) / _pixelDensity;
 
 	/*float h = size;
 	float w = item._bounds_size.x * size / item._bounds_size.y;
@@ -716,20 +742,26 @@ void StringShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, Stri
 	{
 		StringFont::item item = _font->add_character(_font->get_font_ptr(), glyph->_string.c_str());
 
+		bounds2f item_xy = item._textureChar->GetOuterXY(p);
+		bounds2f item_uv = item._textureChar->GetOuterUV();
+		float item_u0 = item_uv.min.x;
+		float item_u1 = item_uv.max.x;
+		float item_v0 = item_uv.min.y;
+		float item_v1 = item_uv.max.y;
+
 		glm::vec2 s = _font->get_size(item);
-		bounds2f bounds = bounds2_from_corner(p, s);
-		bounds.min = (glyph->_transform * glm::vec4(bounds.min.x, bounds.min.y, 0, 1)).xy();
-		bounds.max = (glyph->_transform * glm::vec4(bounds.max.x, bounds.max.y, 0, 1)).xy();
+		bounds2f bounds;
+		bounds.min = (glyph->_transform * glm::vec4(item_xy.min.x, item_xy.min.y, 0, 1)).xy();
+		bounds.max = (glyph->_transform * glm::vec4(item_xy.max.x, item_xy.max.y, 0, 1)).xy();
 
 		float next_alpha = alpha + glyph->_delta * s.x;
 
-		vertices.push_back(Vertex_2f_2f_1f(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.p12(), glm::vec2(item._u0, item._v1), alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
-
-		vertices.push_back(Vertex_2f_2f_1f(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.p21(), glm::vec2(item._u1, item._v0), next_alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+		vertices.push_back(Vertex_2f_2f_1f(bounds.p11(), glm::vec2(item_u0, item_v1), alpha));
+		vertices.push_back(Vertex_2f_2f_1f(bounds.p12(), glm::vec2(item_u0, item_v0), alpha));
+		vertices.push_back(Vertex_2f_2f_1f(bounds.p22(), glm::vec2(item_u1, item_v0), next_alpha));
+		vertices.push_back(Vertex_2f_2f_1f(bounds.p22(), glm::vec2(item_u1, item_v0), next_alpha));
+		vertices.push_back(Vertex_2f_2f_1f(bounds.p21(), glm::vec2(item_u1, item_v1), next_alpha));
+		vertices.push_back(Vertex_2f_2f_1f(bounds.p11(), glm::vec2(item_u0, item_v1), alpha));
 	}
 	else
 	{
@@ -744,25 +776,33 @@ void StringShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, Stri
 
 			StringFont::item item = _font->add_character(_font->get_font_ptr(wc), character);
 
+			bounds2f item_xy = item._textureChar->GetOuterXY(p);
+			bounds2f item_uv = item._textureChar->GetOuterUV();
+			float item_u0 = item_uv.min.x;
+			float item_u1 = item_uv.max.x;
+			float item_v0 = item_uv.min.y;
+			float item_v1 = item_uv.max.y;
+
 			glm::vec2 s = _font->get_size(item);
-			bounds2f bounds = bounds2_from_corner(p, s);
-			bounds.min = (glyph->_transform * glm::vec4(bounds.min.x, bounds.min.y, 0, 1)).xy();
-			bounds.max = (glyph->_transform * glm::vec4(bounds.max.x, bounds.max.y, 0, 1)).xy();
+			bounds2f bounds;
+			bounds.min = (glyph->_transform * glm::vec4(item_xy.min.x, item_xy.min.y, 0, 1)).xy();
+			bounds.max = (glyph->_transform * glm::vec4(item_xy.max.x, item_xy.max.y, 0, 1)).xy();
 
 			float next_alpha = alpha + glyph->_delta * s.x;
 
-			vertices.push_back(Vertex_2f_2f_1f(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.p12(), glm::vec2(item._u0, item._v1), alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
-
-			vertices.push_back(Vertex_2f_2f_1f(bounds.p22(), glm::vec2(item._u1, item._v1), next_alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.p21(), glm::vec2(item._u1, item._v0), next_alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.p11(), glm::vec2(item._u0, item._v0), alpha));
+			vertices.push_back(Vertex_2f_2f_1f(bounds.p11(), glm::vec2(item_u0, item_v1), alpha));
+			vertices.push_back(Vertex_2f_2f_1f(bounds.p12(), glm::vec2(item_u0, item_v0), alpha));
+			vertices.push_back(Vertex_2f_2f_1f(bounds.p22(), glm::vec2(item_u1, item_v0), next_alpha));
+			vertices.push_back(Vertex_2f_2f_1f(bounds.p22(), glm::vec2(item_u1, item_v0), next_alpha));
+			vertices.push_back(Vertex_2f_2f_1f(bounds.p21(), glm::vec2(item_u1, item_v1), next_alpha));
+			vertices.push_back(Vertex_2f_2f_1f(bounds.p11(), glm::vec2(item_u0, item_v1), alpha));
 
 			if (next_alpha < 0)
 				break;
 
 			p.x += s.x;
+			p.x = std::ceilf(p.x);
+
 			alpha = next_alpha;
 		}
 	}

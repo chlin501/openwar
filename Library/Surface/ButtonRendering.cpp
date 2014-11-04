@@ -147,7 +147,7 @@ void ButtonRendering::RenderButtonText(const glm::mat4& transform, glm::vec2 pos
 	RenderCall<StringShader> renderCall(_gc);
 
 	renderCall.SetVertices(_string_shape->GetVertices());
-	renderCall.SetUniform("texture", &_string_font->_texture);
+	renderCall.SetUniform("texture", &_string_font->_textureAtlas);
 	renderCall.SetUniform("color", glm::vec4(0, 0, 0, 0.15f));
 
 	for (int dx = -1; dx <= 1; ++dx)

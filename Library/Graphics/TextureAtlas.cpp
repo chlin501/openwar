@@ -1,6 +1,5 @@
 #include "TextureAtlas.h"
-#include "Image.h"
-#import "GraphicsContext.h"
+#include "GraphicsContext.h"
 
 
 
@@ -52,14 +51,22 @@ void TextureAtlas::LoadTextureFromSurface(SDL_Surface* surface)
 #endif
 
 
+void TextureAtlas::UpdateTextureAtlas()
+{
+	if (_image != nullptr)
+		LoadTextureFromImage(*_image);
+}
+
+
 TextureImage* TextureAtlas::AddTextureImage(Image* image)
 {
 	if (_image == nullptr)
-	{
-		image = new Image(1024, 1204);
-	}
+		_image = new Image(512, 512);
 
-	if (_currentX + image->GetWidth() > _image->GetWidth())
+	int width = image->GetWidth();
+	int height = image->GetHeight();
+
+	if (_currentX + width > _image->GetWidth())
 	{
 		_currentX = 0;
 		_currentY = _nextY;
@@ -67,17 +74,17 @@ TextureImage* TextureAtlas::AddTextureImage(Image* image)
 
 	_image->Copy(*image, _currentX, _currentY);
 
+	bounds2f bounds(_currentX, _currentY, _currentX + width, _currentY + height);
+
 	TextureImage* result = new TextureImage();
 	result->_textureAtlas = this;
-	result->_x = _currentX;
-	result->_y = _currentY;
-	result->_w = image->GetWidth();
-	result->_h = image->GetHeight();
+	result->_inner = bounds;
+	result->_outer = bounds;
 
 	_images.push_back(result);
 
-	_currentX += result->_w;
-	_nextY = glm::max(_nextY, _currentY + result->_h);
+	_currentX += width;
+	_nextY = glm::max(_nextY, _currentY + height);
 
 	return result;
 }
@@ -86,9 +93,9 @@ TextureImage* TextureAtlas::AddTextureImage(Image* image)
 /***/
 
 
-TextureImage::TextureImage()
+TextureImage::TextureImage() :
+	_textureAtlas(nullptr)
 {
-
 }
 
 
@@ -98,8 +105,25 @@ TextureImage::~TextureImage()
 }
 
 
-bounds2f TextureImage::GetBoundsUV() const
+bounds2f TextureImage::GetInnerBounds() const
 {
-	glm::vec2 s = glm::vec2(_textureAtlas->_image->GetWidth(), _textureAtlas->_image->GetHeight());
-	return bounds2f(_x, _y, _x + _w, _y + _h) / s;
+	return _inner;
+}
+
+
+bounds2f TextureImage::GetOuterBounds() const
+{
+	return _outer;
+}
+
+
+bounds2f TextureImage::GetInnerUV() const
+{
+	return _inner / glm::vec2(_textureAtlas->_image->GetWidth(), _textureAtlas->_image->GetHeight());
+}
+
+
+bounds2f TextureImage::GetOuterUV() const
+{
+	return _outer / glm::vec2(_textureAtlas->_image->GetWidth(), _textureAtlas->_image->GetHeight());
 }

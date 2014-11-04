@@ -8,6 +8,7 @@
 #include "GraphicsOpenGL.h"
 #include <glm/glm.hpp>
 #include "resource.h"
+#include "bounds.h"
 
 //#define OPENWAR_IMAGE_USE_SDL
 #define OPENWAR_IMAGE_USE_COREGRAPHICS
@@ -64,7 +65,7 @@ public:
 	void PremultiplyAlpha();
 
 	void Copy(const Image& image, int x, int y);
-	void Fill(const glm::vec4& color, int x, int y, int w, int h);
+	void Fill(const glm::vec4& color, const bounds2f& bounds);
 };
 
 

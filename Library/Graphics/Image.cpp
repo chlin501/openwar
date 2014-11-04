@@ -199,7 +199,7 @@ CGImageRef Image::GetCGImage() const
 		CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 		CGDataProviderRef dataProvider = CGDataProviderCreateWithData(NULL, _pixels, bytesPerRow * height, NULL);
 
-		_image = CGImageCreate(width, height, bitsPerComponent, bitsPerPixel, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst, dataProvider, NULL, false, kCGRenderingIntentDefault);
+		_image = CGImageCreate(width, height, bitsPerComponent, bitsPerPixel, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast, dataProvider, NULL, false, kCGRenderingIntentDefault);
 
 		CGDataProviderRelease(dataProvider);
 		CGColorSpaceRelease(colorSpace);
@@ -270,14 +270,32 @@ void Image::PremultiplyAlpha()
 void Image::Copy(const Image& image, int x, int y)
 {
 #ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
-	CGRect rect = CGRectMake(x, y, image.GetWidth(), image.GetHeight());
-	CGContextDrawImage(_context, rect, image.GetCGImage());
+	CGContextRef context = GetCGContext();
+	int width = image.GetWidth();
+	int height = image.GetHeight();
+	CGRect rect = CGRectMake(x, _height - y - height, width, height);
+	CGContextClearRect(context, rect);
+	CGContextDrawImage(context, rect, image.GetCGImage());
 #endif
 }
 
 
-void Image::Fill(const glm::vec4& color, int x, int y, int w, int h)
+void Image::Fill(const glm::vec4& color, const bounds2f& bounds)
 {
+#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+	CGContextRef context = GetCGContext();
+
+	NSGraphicsContext* gc = [NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:YES];
+	[NSGraphicsContext saveGraphicsState];
+	[NSGraphicsContext setCurrentContext:gc];
+
+	CGContextSetRGBFillColor(context, color.r, color.g, color.b, color.a);
+	CGRect rect = CGRectMake(bounds.min.x, bounds.min.y, bounds.width(), bounds.height());
+	CGContextClearRect(context, rect);
+	CGContextFillRect(context, rect);
+
+	[NSGraphicsContext restoreGraphicsState];
+#endif
 }
 
 
