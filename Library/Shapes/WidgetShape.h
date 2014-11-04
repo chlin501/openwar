@@ -32,7 +32,6 @@ class WidgetShader : public ShaderProgram3<glm::vec2, glm::vec2, float>
 };
 
 
-
 class WidgetShape
 {
 	class WidgetVertexBuffer : public VertexBuffer<Vertex_2f_2f_1f>
@@ -74,13 +73,17 @@ class WidgetGlyph
 	friend class WidgetShape;
 
 	WidgetShape* _widgetShape;
+	glm::mat4x4 _transform;
 
 public:
 	WidgetGlyph();
 	virtual ~WidgetGlyph();
 
-protected:
 	WidgetShape* GetWidgetShape() const;
+
+	const glm::mat4x4& GetTransform() const { return _transform; }
+	void SetTransform(glm::mat4x4 value) { _transform = value; }
+	void SetTranslate(glm::vec2 value) { _transform = glm::translate(glm::mat4(), glm::vec3(value, 0)); }
 
 private:
 	virtual void AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices) = 0;

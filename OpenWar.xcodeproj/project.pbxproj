@@ -29,6 +29,14 @@
 		41396E0D17E7517F00EC1DA6 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B7022175DFEA900AABF10 /* OpenAL.framework */; };
 		41396E0E17E7517F00EC1DA6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B6ED1175DE19200AABF10 /* OpenGL.framework */; };
 		4156F29619A5FEC300A9990D /* SDL2_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4156F29519A5FEC300A9990D /* SDL2_mixer.framework */; };
+		4180D0981A091B650037238F /* BillboardColorShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4180D08A1A091B650037238F /* BillboardColorShader.cpp */; };
+		4180D0991A091B650037238F /* BillboardTextureShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4180D08C1A091B650037238F /* BillboardTextureShape.cpp */; };
+		4180D09A1A091B650037238F /* PatchGlyph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4180D08E1A091B650037238F /* PatchGlyph.cpp */; };
+		4180D09B1A091B650037238F /* PathRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4180D0901A091B650037238F /* PathRenderer.cpp */; };
+		4180D09C1A091B650037238F /* StringGlyph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4180D0921A091B650037238F /* StringGlyph.cpp */; };
+		4180D09D1A091B650037238F /* VertexShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4180D0941A091B650037238F /* VertexShape.cpp */; };
+		4180D09E1A091B650037238F /* WidgetShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4180D0961A091B650037238F /* WidgetShape.cpp */; };
+		4180D0A11A091B710037238F /* TextureFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4180D09F1A091B710037238F /* TextureFont.cpp */; };
 		418FCC3E192DEE0700D7D476 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */; };
 		41B2298F17EC730E00DFA0B6 /* Maps in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298B17EC730E00DFA0B6 /* Maps */; };
 		41B2299117EC730E00DFA0B6 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298D17EC730E00DFA0B6 /* Sounds */; };
@@ -43,12 +51,6 @@
 		41C719B319FFE3C2004F5466 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41C719A619FFE3C2004F5466 /* Texture.cpp */; };
 		41C719B419FFE3C2004F5466 /* Vertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41C719A819FFE3C2004F5466 /* Vertex.cpp */; };
 		41C719B519FFE3C2004F5466 /* VertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41C719AA19FFE3C2004F5466 /* VertexBuffer.cpp */; };
-		41C719C219FFE3D1004F5466 /* BillboardColorShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41C719B619FFE3D1004F5466 /* BillboardColorShader.cpp */; };
-		41C719C319FFE3D1004F5466 /* BillboardTextureShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41C719B819FFE3D1004F5466 /* BillboardTextureShape.cpp */; };
-		41C719C419FFE3D1004F5466 /* PatchShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41C719BA19FFE3D1004F5466 /* PatchShape.cpp */; };
-		41C719C519FFE3D1004F5466 /* PathRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41C719BC19FFE3D1004F5466 /* PathRenderer.cpp */; };
-		41C719C619FFE3D1004F5466 /* StringShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41C719BE19FFE3D1004F5466 /* StringShape.cpp */; };
-		41C719C719FFE3D1004F5466 /* VertexShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41C719C019FFE3D1004F5466 /* VertexShape.cpp */; };
 		41D4084B1891029E00EAFEFA /* ButtonGesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408451891029E00EAFEFA /* ButtonGesture.cpp */; };
 		41D4084C1891029E00EAFEFA /* ButtonRendering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408471891029E00EAFEFA /* ButtonRendering.cpp */; };
 		41D408AF1892DDDE00EAFEFA /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408A21892DDDE00EAFEFA /* Animation.cpp */; };
@@ -138,6 +140,22 @@
 		413B7024175DFEB900AABF10 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		413B7026175DFEC800AABF10 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		4156F29519A5FEC300A9990D /* SDL2_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_mixer.framework; path = ../../../../Library/Frameworks/SDL2_mixer.framework; sourceTree = "<group>"; };
+		4180D08A1A091B650037238F /* BillboardColorShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BillboardColorShader.cpp; sourceTree = "<group>"; };
+		4180D08B1A091B650037238F /* BillboardColorShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BillboardColorShader.h; sourceTree = "<group>"; };
+		4180D08C1A091B650037238F /* BillboardTextureShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BillboardTextureShape.cpp; sourceTree = "<group>"; };
+		4180D08D1A091B650037238F /* BillboardTextureShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BillboardTextureShape.h; sourceTree = "<group>"; };
+		4180D08E1A091B650037238F /* PatchGlyph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatchGlyph.cpp; sourceTree = "<group>"; };
+		4180D08F1A091B650037238F /* PatchGlyph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatchGlyph.h; sourceTree = "<group>"; };
+		4180D0901A091B650037238F /* PathRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PathRenderer.cpp; sourceTree = "<group>"; };
+		4180D0911A091B650037238F /* PathRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathRenderer.h; sourceTree = "<group>"; };
+		4180D0921A091B650037238F /* StringGlyph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StringGlyph.cpp; sourceTree = "<group>"; };
+		4180D0931A091B650037238F /* StringGlyph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringGlyph.h; sourceTree = "<group>"; };
+		4180D0941A091B650037238F /* VertexShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexShape.cpp; sourceTree = "<group>"; };
+		4180D0951A091B650037238F /* VertexShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexShape.h; sourceTree = "<group>"; };
+		4180D0961A091B650037238F /* WidgetShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WidgetShape.cpp; sourceTree = "<group>"; };
+		4180D0971A091B650037238F /* WidgetShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WidgetShape.h; sourceTree = "<group>"; };
+		4180D09F1A091B710037238F /* TextureFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureFont.cpp; sourceTree = "<group>"; };
+		4180D0A01A091B710037238F /* TextureFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureFont.h; sourceTree = "<group>"; };
 		418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = /Library/Frameworks/SDL2_ttf.framework; sourceTree = "<absolute>"; };
 		41B2298B17EC730E00DFA0B6 /* Maps */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Maps; sourceTree = "<group>"; };
 		41B2298D17EC730E00DFA0B6 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
@@ -164,18 +182,6 @@
 		41C719A919FFE3C2004F5466 /* Vertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vertex.h; sourceTree = "<group>"; };
 		41C719AA19FFE3C2004F5466 /* VertexBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexBuffer.cpp; sourceTree = "<group>"; };
 		41C719AB19FFE3C2004F5466 /* VertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexBuffer.h; sourceTree = "<group>"; };
-		41C719B619FFE3D1004F5466 /* BillboardColorShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BillboardColorShader.cpp; sourceTree = "<group>"; };
-		41C719B719FFE3D1004F5466 /* BillboardColorShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BillboardColorShader.h; sourceTree = "<group>"; };
-		41C719B819FFE3D1004F5466 /* BillboardTextureShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BillboardTextureShape.cpp; sourceTree = "<group>"; };
-		41C719B919FFE3D1004F5466 /* BillboardTextureShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BillboardTextureShape.h; sourceTree = "<group>"; };
-		41C719BA19FFE3D1004F5466 /* PatchShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatchShape.cpp; sourceTree = "<group>"; };
-		41C719BB19FFE3D1004F5466 /* PatchShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatchShape.h; sourceTree = "<group>"; };
-		41C719BC19FFE3D1004F5466 /* PathRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PathRenderer.cpp; sourceTree = "<group>"; };
-		41C719BD19FFE3D1004F5466 /* PathRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathRenderer.h; sourceTree = "<group>"; };
-		41C719BE19FFE3D1004F5466 /* StringShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StringShape.cpp; sourceTree = "<group>"; };
-		41C719BF19FFE3D1004F5466 /* StringShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringShape.h; sourceTree = "<group>"; };
-		41C719C019FFE3D1004F5466 /* VertexShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexShape.cpp; sourceTree = "<group>"; };
-		41C719C119FFE3D1004F5466 /* VertexShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexShape.h; sourceTree = "<group>"; };
 		41D408451891029E00EAFEFA /* ButtonGesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ButtonGesture.cpp; sourceTree = "<group>"; };
 		41D408461891029E00EAFEFA /* ButtonGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonGesture.h; sourceTree = "<group>"; };
 		41D408471891029E00EAFEFA /* ButtonRendering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ButtonRendering.cpp; sourceTree = "<group>"; };
@@ -522,14 +528,16 @@
 				41C719A519FFE3C2004F5466 /* ShaderProgram.h */,
 				41C719A619FFE3C2004F5466 /* Texture.cpp */,
 				41C719A719FFE3C2004F5466 /* Texture.h */,
+				63F55A4E12802849F449690F /* TextureAtlas.cpp */,
+				63F55906F73DEE9A9A78FB59 /* TextureAtlas.h */,
+				4180D09F1A091B710037238F /* TextureFont.cpp */,
+				4180D0A01A091B710037238F /* TextureFont.h */,
+				63F55C215D6320E8679C241D /* TextureResource.cpp */,
+				63F55345F1B1F306ABE3CD3B /* TextureResource.h */,
 				41C719A819FFE3C2004F5466 /* Vertex.cpp */,
 				41C719A919FFE3C2004F5466 /* Vertex.h */,
 				41C719AA19FFE3C2004F5466 /* VertexBuffer.cpp */,
 				41C719AB19FFE3C2004F5466 /* VertexBuffer.h */,
-				63F55A4E12802849F449690F /* TextureAtlas.cpp */,
-				63F55906F73DEE9A9A78FB59 /* TextureAtlas.h */,
-				63F55C215D6320E8679C241D /* TextureResource.cpp */,
-				63F55345F1B1F306ABE3CD3B /* TextureResource.h */,
 			);
 			path = Graphics;
 			sourceTree = "<group>";
@@ -561,18 +569,20 @@
 		63F55FE9E6B9B333F8F123C7 /* Shapes */ = {
 			isa = PBXGroup;
 			children = (
-				41C719B619FFE3D1004F5466 /* BillboardColorShader.cpp */,
-				41C719B719FFE3D1004F5466 /* BillboardColorShader.h */,
-				41C719B819FFE3D1004F5466 /* BillboardTextureShape.cpp */,
-				41C719B919FFE3D1004F5466 /* BillboardTextureShape.h */,
-				41C719BA19FFE3D1004F5466 /* PatchShape.cpp */,
-				41C719BB19FFE3D1004F5466 /* PatchShape.h */,
-				41C719BC19FFE3D1004F5466 /* PathRenderer.cpp */,
-				41C719BD19FFE3D1004F5466 /* PathRenderer.h */,
-				41C719BE19FFE3D1004F5466 /* StringShape.cpp */,
-				41C719BF19FFE3D1004F5466 /* StringShape.h */,
-				41C719C019FFE3D1004F5466 /* VertexShape.cpp */,
-				41C719C119FFE3D1004F5466 /* VertexShape.h */,
+				4180D08A1A091B650037238F /* BillboardColorShader.cpp */,
+				4180D08B1A091B650037238F /* BillboardColorShader.h */,
+				4180D08C1A091B650037238F /* BillboardTextureShape.cpp */,
+				4180D08D1A091B650037238F /* BillboardTextureShape.h */,
+				4180D08E1A091B650037238F /* PatchGlyph.cpp */,
+				4180D08F1A091B650037238F /* PatchGlyph.h */,
+				4180D0901A091B650037238F /* PathRenderer.cpp */,
+				4180D0911A091B650037238F /* PathRenderer.h */,
+				4180D0921A091B650037238F /* StringGlyph.cpp */,
+				4180D0931A091B650037238F /* StringGlyph.h */,
+				4180D0941A091B650037238F /* VertexShape.cpp */,
+				4180D0951A091B650037238F /* VertexShape.h */,
+				4180D0961A091B650037238F /* WidgetShape.cpp */,
+				4180D0971A091B650037238F /* WidgetShape.h */,
 			);
 			path = Shapes;
 			sourceTree = "<group>";
@@ -671,31 +681,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				63F553D501D84AAEB66ECCF9 /* geometry.cpp in Sources */,
+				4180D09E1A091B650037238F /* WidgetShape.cpp in Sources */,
 				63F55141798EC9AE4917EA89 /* quadtree.cpp in Sources */,
 				63F558A3314F7A4251DF486E /* sampler.cpp in Sources */,
-				41C719C319FFE3D1004F5466 /* BillboardTextureShape.cpp in Sources */,
 				4105FB351806D3970074C855 /* UnitCounter.cpp in Sources */,
-				41C719C519FFE3D1004F5466 /* PathRenderer.cpp in Sources */,
 				4105FB261806D3890074C855 /* BattleScript.cpp in Sources */,
-				41C719C719FFE3D1004F5466 /* VertexShape.cpp in Sources */,
 				4105FB2A1806D3890074C855 /* MovementRules.cpp in Sources */,
 				4105FB421806D3C40074C855 /* TiledTerrainRenderer.cpp in Sources */,
-				41C719C419FFE3D1004F5466 /* PatchShape.cpp in Sources */,
+				4180D0A11A091B710037238F /* TextureFont.cpp in Sources */,
 				63F55BD434ACA029C8FCEA04 /* bspline.cpp in Sources */,
 				63F554D6FFA9FCA63FD7AB05 /* SoundLoader.cpp in Sources */,
 				41C719B019FFE3C2004F5466 /* RenderBuffer.cpp in Sources */,
 				63F55FF10D806725443AEE28 /* SoundPlayer.cpp in Sources */,
-				41C719C619FFE3D1004F5466 /* StringShape.cpp in Sources */,
 				4105FB281806D3890074C855 /* GroundMap.cpp in Sources */,
 				4105FB271806D3890074C855 /* BattleSimulator.cpp in Sources */,
 				41C719AF19FFE3C2004F5466 /* Image.cpp in Sources */,
 				41D408B11892DDDE00EAFEFA /* ButtonGrid.cpp in Sources */,
 				41FE9BC619234E85002F6043 /* PracticeScript.cpp in Sources */,
 				41C719AD19FFE3C2004F5466 /* FrameBuffer.cpp in Sources */,
+				4180D09C1A091B650037238F /* StringGlyph.cpp in Sources */,
 				4105FB331806D3970074C855 /* ShootingCounter.cpp in Sources */,
+				4180D09D1A091B650037238F /* VertexShape.cpp in Sources */,
 				4105FB2C1806D3890074C855 /* TiledGroundMap.cpp in Sources */,
 				41C719B419FFE3C2004F5466 /* Vertex.cpp in Sources */,
 				4105FB451806D3FA0074C855 /* bspline_patch.cpp in Sources */,
+				4180D09B1A091B650037238F /* PathRenderer.cpp in Sources */,
+				4180D09A1A091B650037238F /* PatchGlyph.cpp in Sources */,
 				63F55886DA1CF72461C234F2 /* Gesture.cpp in Sources */,
 				63F558B39EB29DFB791E2951 /* Surface.cpp in Sources */,
 				41D4084C1891029E00EAFEFA /* ButtonRendering.cpp in Sources */,
@@ -721,14 +732,15 @@
 				63F55D68A07CFDC7816F111A /* SmoothTerrainWater.cpp in Sources */,
 				41C719AC19FFE3C2004F5466 /* CommonShaders.cpp in Sources */,
 				63F55ECBBDB6C8631D7D8524 /* BillboardTerrainForest.cpp in Sources */,
-				41C719C219FFE3D1004F5466 /* BillboardColorShader.cpp in Sources */,
 				4105FB2B1806D3890074C855 /* SmoothGroundMap.cpp in Sources */,
 				63F550B662BEEAAA8D48C2A8 /* TerrainForest.cpp in Sources */,
 				4105FB3C1806D3A50074C855 /* SmoothTerrainRenderer.cpp in Sources */,
+				4180D0991A091B650037238F /* BillboardTextureShape.cpp in Sources */,
 				63F5552382844DD951176704 /* TerrainSky.cpp in Sources */,
 				63F55FBC597899D12FDCC5E9 /* TerrainGesture.cpp in Sources */,
 				4105FB3D1806D3A50074C855 /* SmoothTerrainShaders.cpp in Sources */,
 				63F5570002E7A8C45BA9193F /* TerrainView.cpp in Sources */,
+				4180D0981A091B650037238F /* BillboardColorShader.cpp in Sources */,
 				63F55DC9F91104DB98854A0F /* EditorModel.cpp in Sources */,
 				63F55E04CBD1D5B38067D31A /* EditorGesture.cpp in Sources */,
 				4105FB3E1806D3A50074C855 /* SmoothTerrainSky.cpp in Sources */,

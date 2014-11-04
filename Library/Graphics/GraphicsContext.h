@@ -8,6 +8,7 @@
 #include "GraphicsOpenGL.h"
 #include "ShaderProgram.h"
 #include <map>
+#include <string>
 
 class TextureAtlas;
 
@@ -28,7 +29,7 @@ public:
 
 	template <class _ShaderProgram> _ShaderProgram* GetShaderProgram()
 	{
-		const char* name = typeid(_ShaderProgram).name();
+		std::string name = typeid(_ShaderProgram).name();
 		_ShaderProgram* result = dynamic_cast<_ShaderProgram*>(_shaders[name]);
 		if (result == nullptr)
 		{

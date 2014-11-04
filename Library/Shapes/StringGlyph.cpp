@@ -30,7 +30,6 @@ static bool ContainsArabic(const std::wstring& ws)
 
 StringGlyph::StringGlyph() :
 	_string(),
-	_transform(),
 	_alpha(1),
 	_delta(0)
 {
@@ -39,19 +38,19 @@ StringGlyph::StringGlyph() :
 
 StringGlyph::StringGlyph(const char* string, glm::vec2 translate, float alpha, float delta) :
 	_string(string),
-	_transform(glm::translate(glm::mat4(), glm::vec3(translate, 0))),
 	_alpha(alpha),
 	_delta(delta)
 {
+	SetTranslate(translate);
 }
 
 
 StringGlyph::StringGlyph(const char* string, glm::mat4x4 transform, float alpha, float delta) :
 	_string(string),
-	_transform(transform),
 	_alpha(alpha),
 	_delta(delta)
 {
+	SetTransform(transform);
 }
 
 
@@ -77,6 +76,7 @@ void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices)
 
 
 	TextureFont* textureFont = GetWidgetShape()->GetTextureAtlas()->GetTextureFont(GetFontDescriptor());
+	glm::mat4x4 transform = GetTransform();
 
 	if (ContainsArabic(ws))
 	{
@@ -92,8 +92,8 @@ void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices)
 		glm::vec2 s = textureChar->GetInnerSize();
 
 		bounds2f bounds;
-		bounds.min = (_transform * glm::vec4(item_xy.min.x, item_xy.min.y, 0, 1)).xy();
-		bounds.max = (_transform * glm::vec4(item_xy.max.x, item_xy.max.y, 0, 1)).xy();
+		bounds.min = (transform * glm::vec4(item_xy.min.x, item_xy.min.y, 0, 1)).xy();
+		bounds.max = (transform * glm::vec4(item_xy.max.x, item_xy.max.y, 0, 1)).xy();
 
 		float next_alpha = alpha + _delta * s.x;
 
@@ -127,8 +127,8 @@ void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices)
 			glm::vec2 s = textureChar->GetInnerSize();
 
 			bounds2f bounds;
-			bounds.min = (_transform * glm::vec4(item_xy.min.x, item_xy.min.y, 0, 1)).xy();
-			bounds.max = (_transform * glm::vec4(item_xy.max.x, item_xy.max.y, 0, 1)).xy();
+			bounds.min = (transform * glm::vec4(item_xy.min.x, item_xy.min.y, 0, 1)).xy();
+			bounds.max = (transform * glm::vec4(item_xy.max.x, item_xy.max.y, 0, 1)).xy();
 
 			float next_alpha = alpha + _delta * s.x;
 

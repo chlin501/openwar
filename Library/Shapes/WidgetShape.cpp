@@ -71,8 +71,8 @@ void WidgetShape::WidgetVertexBuffer::Update()
 
 
 WidgetShape::WidgetShape(TextureAtlas* textureAtlas) :
-	_vertices(this),
-	_textureAtlas(textureAtlas)
+	_textureAtlas(textureAtlas),
+	_vertices(this)
 {
 	_vertices._mode = GL_TRIANGLES;
 }

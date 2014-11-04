@@ -2,13 +2,15 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
+#include "ShaderProgram.h"
+#include <string>
+
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #endif
 #endif
 
-#include "ShaderProgram.h"
 
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
 #import <Foundation/Foundation.h>

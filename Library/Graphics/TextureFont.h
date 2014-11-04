@@ -2,6 +2,7 @@
 #define TextureFont_H
 
 #include <map>
+#include <string>
 #include "bounds.h"
 
 class GraphicsContext;
