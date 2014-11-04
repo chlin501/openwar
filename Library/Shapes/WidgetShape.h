@@ -30,21 +30,6 @@ class WidgetShader : public ShaderProgram3<glm::vec2, glm::vec2, float>
 };
 
 
-struct StringFont
-{
-	TextureAtlas _textureAtlas;
-	TextureFont* _textureFont;
-
-public:
-	StringFont(GraphicsContext* gc, const char* name, float size);
-	StringFont(GraphicsContext* gc, bool bold, float size);
-	~StringFont();
-
-private:
-	StringFont(const StringFont&) : _textureAtlas(nullptr) { }
-	StringFont& operator=(const StringFont&) { return *this; }
-};
-
 
 class WidgetShape
 {
@@ -60,9 +45,9 @@ class WidgetShape
 	std::vector<StringGlyph*> _glyphs;
 
 public:
-	StringFont* _font;
+	TextureFont* _font;
 
-	explicit WidgetShape(StringFont* font);
+	explicit WidgetShape(TextureFont* font);
 	~WidgetShape();
 
 	VertexBuffer<Vertex_2f_2f_1f>* GetVertices();

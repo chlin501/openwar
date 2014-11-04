@@ -1,11 +1,11 @@
 #include "TextureFont.h"
 #include "Image.h"
 #include "TextureAtlas.h"
+#include "GraphicsContext.h"
+
 #include <codecvt>
 #include <cstdlib>
 #include <locale>
-#include "GraphicsContext.h"
-
 
 /*
 #ifdef OPENWAR_USE_XCODE_FRAMEWORKS
@@ -22,6 +22,36 @@
 
 
 static bool ContainsArabic(const std::wstring& ws) { return false; }
+
+
+TextureFont::TextureFont(GraphicsContext* gc, const char* name, float size) :
+	_textureAtlas(gc->GetWidgetTextureAtlas()),
+	_font(nil),
+	_attributes(nil)
+{
+	size *= gc->GetPixelDensity();
+
+	_font = [[NSFont fontWithName:[NSString stringWithUTF8String:name] size:size] retain];
+	_attributes = [@{
+		NSFontAttributeName: _font,
+		NSForegroundColorAttributeName: [NSColor whiteColor]
+	} retain];
+}
+
+
+TextureFont::TextureFont(GraphicsContext* gc, bool bold, float size) :
+	_textureAtlas(gc->GetWidgetTextureAtlas()),
+	_font(nil),
+	_attributes(nil)
+{
+	size *= gc->GetPixelDensity();
+
+	_font = [(bold ? [NSFont boldSystemFontOfSize:size] : [NSFont systemFontOfSize:size]) retain];
+	_attributes = [@{
+		NSFontAttributeName: _font,
+		NSForegroundColorAttributeName: [NSColor whiteColor]
+	} retain];
+}
 
 
 TextureFont::TextureFont(TextureAtlas* textureAtlas, const char* name, float size) :

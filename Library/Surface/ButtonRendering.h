@@ -17,7 +17,7 @@ struct ButtonRendering
 {
 	GraphicsContext* _gc;
 
-	StringFont* _string_font;
+	TextureFont* _string_font;
 	WidgetShape* _string_shape;
 
 	Texture* _textureButtonBackground;

@@ -18,7 +18,7 @@ _gc(gc)
 	_textureButtonSelected = new TextureResource(gc, resource("Textures/ButtonSelected.png"));
 	_textureButtonIcons = new TextureResource(gc, resource("Textures/ButtonIcons.png"));
 
-	_string_font = new StringFont(gc, true, 18);
+	_string_font = new TextureFont(gc, true, 18);
 	_string_shape = new WidgetShape(_string_font);
 
 	_textureEditorTools = new TextureResource(gc, resource("Textures/EditorTools.png"));
@@ -142,7 +142,7 @@ void ButtonRendering::RenderButtonText(const glm::mat4& transform, glm::vec2 pos
 	StringGlyph glyph(text, glm::mat4x4());
 	_string_shape->AddGlyph(&glyph);
 
-	glm::vec2 p = position - 0.5f * _string_font->_textureFont->MeasureText(text) - glm::vec2(0, 1);
+	glm::vec2 p = position - 0.5f * _string_font->MeasureText(text) - glm::vec2(0, 1);
 
 	RenderCall<WidgetShader> renderCall(_gc);
 

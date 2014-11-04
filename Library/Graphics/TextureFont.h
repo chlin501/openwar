@@ -1,12 +1,14 @@
 #ifndef TextureFont_H
 #define TextureFont_H
 
+#include <map>
+#include "bounds.h"
+
+class GraphicsContext;
 class TextureAtlas;
 class TextureChar;
 class TextureImage;
 
-#include <map>
-#include "bounds.h"
 
 #define OPENWAR_USE_NSFONT
 
@@ -21,6 +23,7 @@ class TextureImage;
 #endif
 
 
+
 class TextureFont
 {
 	TextureAtlas* _textureAtlas;
@@ -29,6 +32,8 @@ class TextureFont
 	std::map<std::string, TextureChar*> _textureChars;
 
 public:
+	TextureFont(GraphicsContext* gc, const char* name, float size);
+	TextureFont(GraphicsContext* gc, bool bold, float size);
 	TextureFont(TextureAtlas* textureAtlas, const char* name, float size);
 	TextureFont(TextureAtlas* textureAtlas, bool bold, float size);
 	~TextureFont();

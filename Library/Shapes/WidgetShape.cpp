@@ -75,34 +75,7 @@ static bool ContainsArabic(const std::wstring& ws)
 }
 
 
-
-
-StringFont::StringFont(GraphicsContext* gc, const char* name, float size) :
-	_textureAtlas(gc),
-	_textureFont(nullptr)
-{
-	_textureFont = new TextureFont(gc->GetWidgetTextureAtlas(), name, size);
-}
-
-
-
-StringFont::StringFont(GraphicsContext* gc, bool bold, float size) :
-	_textureAtlas(gc),
-	_textureFont(nullptr)
-{
-	_textureFont = new TextureFont(gc->GetWidgetTextureAtlas(), bold, size);
-}
-
-
-
-StringFont::~StringFont()
-{
-}
-
-
-
 /***/
-
 
 
 WidgetShape::StringVertexBuffer::StringVertexBuffer(WidgetShape* shape) :
@@ -121,7 +94,7 @@ void WidgetShape::StringVertexBuffer::Update()
 
 
 
-WidgetShape::WidgetShape(StringFont* font) :
+WidgetShape::WidgetShape(TextureFont* font) :
 	_vertices(this),
 	_font(font)
 {
@@ -191,7 +164,7 @@ void WidgetShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, Stri
 
 	if (ContainsArabic(ws))
 	{
-		TextureChar* textureChar = _font->_textureFont->GetTextureChar(glyph->_string.c_str());
+		TextureChar* textureChar = _font->GetTextureChar(glyph->_string.c_str());
 
 		bounds2f item_xy = textureChar->GetOuterXY(p);
 		bounds2f item_uv = textureChar->GetOuterUV();
@@ -226,7 +199,7 @@ void WidgetShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, Stri
 			if (character.empty())
 				continue;
 
-			TextureChar* textureChar = _font->_textureFont->GetTextureChar(character);
+			TextureChar* textureChar = _font->GetTextureChar(character);
 
 
 			bounds2f item_xy = textureChar->GetOuterXY(p);

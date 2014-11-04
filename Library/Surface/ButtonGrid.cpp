@@ -64,7 +64,7 @@ glm::vec2 ButtonItem::CalculateSize() const
 {
 	if (!_buttonText.empty())
 	{
-		glm::vec2 size = _buttonArea->GetButtonView()->_buttonRendering->_string_font->_textureFont->MeasureText(_buttonText.c_str());
+		glm::vec2 size = _buttonArea->GetButtonView()->_buttonRendering->_string_font->MeasureText(_buttonText.c_str());
 		return glm::vec2(38 + size.x, fmaxf(44, size.y));
 	}
 
