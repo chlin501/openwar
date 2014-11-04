@@ -3,34 +3,30 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "PatchShape.h"
+#include "TextureAtlas.h"
 
 
-
-TexturePatchXXX::TexturePatchXXX() :
-outer(0, 0, 1, 1),
-inner(0, 0, 1, 1)
+TextureSheet::TextureSheet(TextureAtlas* textureAtlas, int size_u, int size_v) :
+	_textureAtlas(textureAtlas),
+	size(size_u, size_v)
 {
 }
 
 
-TexturePatchXXX::TexturePatchXXX(bounds2f o, bounds2f i) :
-outer(o),
-inner(i)
+TextureImage* TextureSheet::GetTextureImage(int u0, int v0, int size_u, int size_v)
 {
+	bounds2f bounds = bounds2f(u0, v0, u0 + size_u, v0 + size_v);// / glm::vec2(size.x, size.y);
+
+	return _textureAtlas->GetTextureImage(bounds, bounds);
 }
 
 
-TexturePatchFactory::TexturePatchFactory(int size_u, int size_v) :
-size(size_u, size_v)
+TextureImage* TextureSheet::GetTexturePatch(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
 {
-}
+	bounds2f outer = bounds2f(u0, v0, u0 + size_u, v0 + size_v);// / glm::vec2(size.x, size.y);
+	bounds2f inner = outer.grow(-(float)inset_u /*/ size.x*/, -(float)inset_v /*/ size.y*/);
 
-
-TexturePatchXXX TexturePatchFactory::GetTexturePatch(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
-{
-	bounds2f outer = bounds2f(u0, v0, u0 + size_u, v0 + size_v) / glm::vec2(size.x, size.y);
-	bounds2f inner = outer.grow(-(float)inset_u / size.x, -(float)inset_v / size.y);
-	return TexturePatchXXX(outer, inner);
+	return _textureAtlas->GetTextureImage(inner, outer);
 }
 
 
@@ -41,13 +37,13 @@ PatchGlyph::PatchGlyph() :
 }
 
 
-PatchGlyph::PatchGlyph(TexturePatchXXX tile, bounds2f bounds, glm::vec2 inset) :
+PatchGlyph::PatchGlyph(TextureImage* tile, bounds2f bounds, glm::vec2 inset) :
 	_patchShape(nullptr)
 {
 	outer_xy = bounds;
 	inner_xy = bounds.grow(-inset.x, -inset.y);
-	outer_uv = tile.outer;
-	inner_uv = tile.inner;
+	outer_uv = tile->GetOuterUV();
+	inner_uv = tile->GetInnerUV();
 }
 
 
@@ -67,12 +63,12 @@ void PatchGlyph::Reset()
 }
 
 
-void PatchGlyph::Reset(TexturePatchXXX tile, bounds2f bounds, glm::vec2 inset)
+void PatchGlyph::Reset(TextureImage* tile, bounds2f bounds, glm::vec2 inset)
 {
 	outer_xy = bounds;
 	inner_xy = bounds.grow(-inset.x, -inset.y);
-	outer_uv = tile.outer;
-	inner_uv = tile.inner;
+	outer_uv = tile->GetOuterUV();
+	inner_uv = tile->GetInnerUV();
 }
 
 

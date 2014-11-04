@@ -39,6 +39,7 @@ public:
 
 	TextureFont* GetTextureFont(const FontDescriptor& fontDescriptor);
 
+	void LoadAtlasFromResource(const resource& r);
 	void LoadTextureFromImage(const Image& image);
 
 #ifdef OPENWAR_IMAGE_USE_SDL
@@ -48,6 +49,7 @@ public:
 	virtual void UpdateTexture();
 
 	TextureImage* AddTextureImage(Image* image);
+	TextureImage* GetTextureImage(const bounds2f& inner, const bounds2f& outer);
 
 private:
 	TextureAtlas(const TextureAtlas&) : Texture(nullptr) { }

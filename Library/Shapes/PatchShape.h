@@ -8,23 +8,19 @@
 #include "VertexShape.h"
 
 class PatchShape;
+class TextureAtlas;
+class TextureImage;
 
 
-struct TexturePatchXXX
+struct TextureSheet
 {
-	bounds2f outer;
-	bounds2f inner;
-
-	TexturePatchXXX();
-	TexturePatchXXX(bounds2f o, bounds2f i);
-};
-
-struct TexturePatchFactory
-{
+	TextureAtlas* _textureAtlas;
 	glm::ivec2 size;
 
-	TexturePatchFactory(int size_u, int size_v);
-	TexturePatchXXX GetTexturePatch(int u0, int v0, int size_u, int size_v, int insert_u, int inset_v);
+	TextureSheet(TextureAtlas* textureAtlas, int size_u, int size_v);
+
+	TextureImage* GetTextureImage(int u0, int v0, int size_u, int size_v);
+	TextureImage* GetTexturePatch(int u0, int v0, int size_u, int size_v, int insert_u, int inset_v);
 };
 
 
@@ -40,11 +36,11 @@ public:
 	bounds2f inner_uv;
 
 	PatchGlyph();
-	PatchGlyph(TexturePatchXXX tile, bounds2f bounds, glm::vec2 inset);
+	PatchGlyph(TextureImage* tile, bounds2f bounds, glm::vec2 inset);
 	~PatchGlyph();
 
 	void Reset();
-	void Reset(TexturePatchXXX tile, bounds2f bounds, glm::vec2 inset);
+	void Reset(TextureImage* tile, bounds2f bounds, glm::vec2 inset);
 
 private:
 	PatchGlyph(const PatchGlyph&) { }

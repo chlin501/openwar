@@ -33,6 +33,14 @@ TextureFont* TextureAtlas::GetTextureFont(const FontDescriptor& fontDescriptor)
 }
 
 
+void TextureAtlas::LoadAtlasFromResource(const resource& r)
+{
+	_image = new Image();
+	_image->LoadFromResource(r);
+	LoadTextureFromImage(*_image);
+}
+
+
 void TextureAtlas::LoadTextureFromImage(const Image& image)
 {
 	glBindTexture(GL_TEXTURE_2D, _id);
@@ -101,17 +109,24 @@ TextureImage* TextureAtlas::AddTextureImage(Image* image)
 
 	bounds2f bounds(_currentX, _currentY, _currentX + width, _currentY + height);
 
-	TextureImage* result = new TextureImage();
-	result->_textureAtlas = this;
-	result->_inner = bounds;
-	result->_outer = bounds;
-
-	_images.push_back(result);
-
 	_currentX += width;
 	_nextY = glm::max(_nextY, _currentY + height);
 
 	_dirty = true;
+
+	return GetTextureImage(bounds, bounds);
+}
+
+
+TextureImage* TextureAtlas::GetTextureImage(const bounds2f& inner, const bounds2f& outer)
+{
+	TextureImage* result = new TextureImage();
+
+	result->_textureAtlas = this;
+	result->_inner = inner;
+	result->_outer = outer;
+
+	_images.push_back(result);
 
 	return result;
 }
