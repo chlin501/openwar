@@ -18,7 +18,7 @@ _gc(gc)
 	_textureButtonSelected = new TextureResource(gc, resource("Textures/ButtonSelected.png"));
 	_textureButtonIcons = new TextureResource(gc, resource("Textures/ButtonIcons.png"));
 
-	_string_font = new StringFont(gc, true, 18, gc->GetPixelDensity());
+	_string_font = new StringFont(gc, true, 18);
 	_string_shape = new StringShape(_string_font);
 
 	_textureEditorTools = new TextureResource(gc, resource("Textures/EditorTools.png"));

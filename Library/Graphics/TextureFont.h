@@ -8,6 +8,17 @@ class TextureImage;
 #import <AppKit/AppKit.h>
 #import "bounds.h"
 
+#define OPENWAR_USE_NSFONT
+
+#ifdef OPENWAR_USE_SDL
+#include <SDL2_ttf/SDL_ttf.h>
+#endif
+#ifdef OPENWAR_USE_UIFONT
+#import <UIKit/UIKit.h>
+#endif
+#ifdef OPENWAR_USE_NSFONT
+#import <AppKit/AppKit.h>
+#endif
 
 
 class TextureFont

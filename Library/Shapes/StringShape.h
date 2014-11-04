@@ -4,34 +4,14 @@
 #include <map>
 #include <glm/gtc/matrix_transform.hpp>
 
-#ifndef OPENWAR_USE_SDL
-#if TARGET_OS_IPHONE
-#define OPENWAR_USE_UIFONT
-#else
-#define OPENWAR_USE_NSFONT
-#endif
-#endif
-
-#ifdef OPENWAR_USE_SDL
-#include <SDL2_ttf/SDL_ttf.h>
-#endif
-
-#ifdef OPENWAR_USE_UIFONT
-#import <UIKit/UIKit.h>
-#endif
-
-#ifdef OPENWAR_USE_NSFONT
-#import <AppKit/AppKit.h>
-#endif
 
 #include "Algebra/bounds.h"
 #include "ShaderProgram.h"
 #include "TextureAtlas.h"
+#include "TextureFont.h"
 
 class GraphicsContext;
 class StringShape;
-class TextureChar;
-class TextureFont;
 
 
 class StringShader : public ShaderProgram3<glm::vec2, glm::vec2, float>
@@ -69,7 +49,6 @@ struct StringFont
 	font_ptr _font;
 #endif
 
-	float _pixelDensity;
 	TextureAtlas _textureAtlas;
 	TextureFont* _textureFont;
 
@@ -77,8 +56,8 @@ struct StringFont
 	bool _dirty;
 
 public:
-	StringFont(GraphicsContext* gc, const char* name, float size, float pixelDensity);
-	StringFont(GraphicsContext* gc, bool bold, float size, float pixelDensity);
+	StringFont(GraphicsContext* gc, const char* name, float size);
+	StringFont(GraphicsContext* gc, bool bold, float size);
 	~StringFont();
 
 public:

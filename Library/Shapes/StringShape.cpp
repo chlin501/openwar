@@ -6,6 +6,7 @@
 #include <locale>
 
 #include "TextureFont.h"
+#import "GraphicsContext.h"
 
 
 #ifdef OPENWAR_USE_XCODE_FRAMEWORKS
@@ -88,7 +89,7 @@ static bool ContainsArabic(const std::wstring& ws)
 
 
 
-StringFont::StringFont(GraphicsContext* gc, const char* name, float size, float pixelDensity) :
+StringFont::StringFont(GraphicsContext* gc, const char* name, float size) :
 	#ifdef OPENWAR_USE_SDL
 	_font1(nullptr),
 	_font2(nullptr),
@@ -96,13 +97,12 @@ StringFont::StringFont(GraphicsContext* gc, const char* name, float size, float 
 	#else
 	_font(0),
 	#endif
-	_pixelDensity(pixelDensity),
 	_textureAtlas(gc),
 	_textureFont(nullptr),
     _items(),
 	_dirty(false)
 {
-	size *= _pixelDensity;
+	size *= gc->GetPixelDensity();
 
 #ifdef OPENWAR_USE_SDL
 	_font1 = TTF_OpenFont(ANDROID_FONT1, (int)size);
@@ -145,7 +145,7 @@ StringFont::StringFont(GraphicsContext* gc, const char* name, float size, float 
 
 
 
-StringFont::StringFont(GraphicsContext* gc, bool bold, float size, float pixelDensity) :
+StringFont::StringFont(GraphicsContext* gc, bool bold, float size) :
 	#ifdef OPENWAR_USE_SDL
 	_font1(nullptr),
 	_font2(nullptr),
@@ -153,13 +153,12 @@ StringFont::StringFont(GraphicsContext* gc, bool bold, float size, float pixelDe
 	#else
 	_font(nil),
 	#endif
-	_pixelDensity(pixelDensity),
 	_textureAtlas(gc),
 	_textureFont(nullptr),
     _items(),
 	_dirty(false)
 {
-	size *= _pixelDensity;
+	size *= gc->GetPixelDensity();
 
 #ifdef OPENWAR_USE_SDL
 	_font1 = TTF_OpenFont(ANDROID_FONT1, (int)size);
