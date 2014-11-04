@@ -28,9 +28,6 @@ struct ButtonRendering
 
 	ButtonIcon* buttonIconPlay;
 	ButtonIcon* buttonIconPause;
-	ButtonIcon* buttonIconRewind;
-	ButtonIcon* buttonIconHelp;
-	ButtonIcon* buttonIconChat;
 
 	ButtonIcon* buttonEditorToolHand;
 	ButtonIcon* buttonEditorToolPaint;

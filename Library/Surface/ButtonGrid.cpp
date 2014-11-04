@@ -70,7 +70,7 @@ glm::vec2 ButtonItem::CalculateSize() const
 
 	if (_buttonIcon != nullptr)
 		if (_buttonIcon->size.x > 44 || _buttonIcon->size.y > 44)
-			return _buttonIcon->size * _buttonIcon->scale;
+			return _buttonIcon->size;
 
 	return glm::vec2(44, 44);
 }

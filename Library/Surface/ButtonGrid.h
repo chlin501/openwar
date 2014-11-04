@@ -48,10 +48,9 @@ struct ButtonIcon
 	Texture* _texture;
 	bounds2f bounds;
 	glm::vec2 size;
-	float scale;
 
-	ButtonIcon() : _texture(nullptr), scale(1) { }
-	ButtonIcon(Texture* t, glm::vec2 s, bounds2f b) : _texture(t), bounds(b), size(s), scale(1) { }
+	ButtonIcon() : _texture(nullptr) { }
+	ButtonIcon(Texture* t, glm::vec2 s, bounds2f b) : _texture(t), bounds(b), size(s) { }
 };
 
 
