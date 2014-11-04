@@ -169,3 +169,31 @@ bounds2f TextureImage::GetOuterUV() const
 {
 	return _outer / glm::vec2(_textureAtlas->_image->GetWidth(), _textureAtlas->_image->GetHeight());
 }
+
+
+/***/
+
+
+
+TextureSheet::TextureSheet(TextureAtlas* textureAtlas, int size_u, int size_v) :
+	_textureAtlas(textureAtlas),
+	size(size_u, size_v)
+{
+}
+
+
+TextureImage* TextureSheet::GetTextureImage(int u0, int v0, int size_u, int size_v)
+{
+	bounds2f bounds = bounds2f(u0, v0, u0 + size_u, v0 + size_v);// / glm::vec2(size.x, size.y);
+
+	return _textureAtlas->GetTextureImage(bounds, bounds);
+}
+
+
+TextureImage* TextureSheet::GetTexturePatch(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
+{
+	bounds2f outer = bounds2f(u0, v0, u0 + size_u, v0 + size_v);// / glm::vec2(size.x, size.y);
+	bounds2f inner = outer.grow(-(float)inset_u /*/ size.x*/, -(float)inset_v /*/ size.y*/);
+
+	return _textureAtlas->GetTextureImage(inner, outer);
+}

@@ -13,6 +13,7 @@
 class GraphicsContext;
 class WidgetShape;
 class StringGlyph;
+class PatchGlyph;
 
 
 class WidgetShader : public ShaderProgram3<glm::vec2, glm::vec2, float>
@@ -33,16 +34,16 @@ class WidgetShader : public ShaderProgram3<glm::vec2, glm::vec2, float>
 
 class WidgetShape
 {
-	class StringVertexBuffer : public VertexBuffer<Vertex_2f_2f_1f>
+	class WidgetVertexBuffer : public VertexBuffer<Vertex_2f_2f_1f>
 	{
 		WidgetShape* _shape;
 	public:
-		StringVertexBuffer(WidgetShape* shape);
+		WidgetVertexBuffer(WidgetShape* shape);
 		virtual void Update();
 	};
 
 	TextureAtlas* _textureAtlas;
-	StringVertexBuffer _vertices;
+	WidgetVertexBuffer _vertices;
 	std::vector<StringGlyph*> _glyphs;
 
 public:
@@ -66,6 +67,71 @@ private:
 };
 
 
+
+class PatchShape
+{
+	friend class PatchGlyph;
+
+	class PatchVertexBuffer : public VertexBuffer<Vertex_2f_2f_1f>
+	{
+		PatchShape* _shape;
+	public:
+		PatchVertexBuffer(PatchShape* shape);
+		virtual void Update();
+	};
+
+	PatchVertexBuffer _vertices;
+	std::vector<PatchGlyph*> _glyphs;
+
+public:
+	PatchShape();
+
+	VertexBuffer<Vertex_2f_2f_1f>* GetVertices();
+
+	void ClearGlyphs();
+	void AddGlyph(PatchGlyph* glyph);
+	void RemoveGlyph(PatchGlyph* glyph);
+
+private:
+	void UpdateVertexBuffer();
+	void AppendShapeGlyph(std::vector<Vertex_2f_2f_1f>& vertices, PatchGlyph* shapeGlyph);
+	void AppendRectangle(std::vector<Vertex_2f_2f_1f>& vertices, bounds2f xy, bounds2f uv);
+};
+
+
+
+class WidgetGlyph
+{
+public:
+	virtual ~WidgetGlyph();
+};
+
+
+class PatchGlyph
+{
+	friend class PatchShape;
+	PatchShape* _patchShape;
+
+public:
+	bounds2f outer_xy;
+	bounds2f inner_xy;
+	bounds2f outer_uv;
+	bounds2f inner_uv;
+
+	PatchGlyph();
+	PatchGlyph(TextureImage* tile, bounds2f bounds, glm::vec2 inset);
+	~PatchGlyph();
+
+	void Reset();
+	void Reset(TextureImage* tile, bounds2f bounds, glm::vec2 inset);
+
+private:
+	PatchGlyph(const PatchGlyph&) { }
+	PatchGlyph& operator=(const PatchGlyph&) { return *this; }
+};
+
+
+
 class StringGlyph
 {
 	friend class WidgetShape;
@@ -81,7 +147,7 @@ public:
 	StringGlyph();
 	StringGlyph(const char* string, glm::vec2 translate, float alpha = 1, float delta = 0);
 	StringGlyph(const char* string, glm::mat4x4 transform, float alpha = 1, float delta = 0);
-	~StringGlyph();
+	virtual ~StringGlyph();
 
 	const FontDescriptor& GetFontDescriptor() const;
 	void SetFontDescriptor(const FontDescriptor& fontDescriptor);
