@@ -62,8 +62,8 @@ _battleLayer(nullptr)
 	ButtonItem* item3 = xxx->AddButtonItem(_buttonRendering->buttonEditorToolHand);
 	ButtonItem* item4 = xxx->AddButtonItem(_buttonRendering->buttonEditorToolHand);
 
-	/*item1->SetButtonText("Test");
-	item2->SetButtonText("Selected");
+	item1->SetButtonText("Test");
+	/*item2->SetButtonText("Selected");
 	item3->SetButtonText("Highlight");
 	item4->SetButtonText("Disabled");*/
 

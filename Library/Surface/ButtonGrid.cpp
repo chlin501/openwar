@@ -3,6 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "ButtonGrid.h"
+#include "Surface.h"
 #include "Touch.h"
 
 
@@ -335,25 +336,69 @@ void ButtonGrid::Update(double secondsSinceLastUpdate)
 
 void ButtonGrid::Render(const glm::mat4& transform)
 {
+	WidgetShape* buttonShape = new WidgetShape(_buttonRendering->_textureAtlas);
+
 	for (ButtonArea* buttonArea : _buttonAreas)
 	{
-		_buttonRendering->RenderTexturePatch(transform, _buttonRendering->buttonBackground, buttonArea->_bounds.grow(10), buttonArea->_bounds.grow(-22));
+		buttonArea->backgroundGlyph.outer_xy = buttonArea->_bounds.grow(10);
+		buttonArea->backgroundGlyph.inner_xy = buttonArea->_bounds.grow(-22);
+		buttonArea->backgroundGlyph.outer_uv = _buttonRendering->buttonBackground->GetOuterUV();
+		buttonArea->backgroundGlyph.inner_uv = _buttonRendering->buttonBackground->GetInnerUV();
+		buttonShape->AddGlyph(&buttonArea->backgroundGlyph);
 
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
 		{
 			if (buttonItem->IsSelected())
-				_buttonRendering->RenderTexturePatch(transform, _buttonRendering->buttonSelected, buttonItem->GetBounds().grow(10), buttonItem->GetBounds().grow(-22));
+			{
+				buttonItem->selectedGlyph.outer_xy = buttonItem->GetBounds().grow(10);
+				buttonItem->selectedGlyph.inner_xy = buttonItem->GetBounds().grow(-22);
+				buttonItem->selectedGlyph.outer_uv = _buttonRendering->buttonSelected->GetOuterUV();
+				buttonItem->selectedGlyph.inner_uv = _buttonRendering->buttonSelected->GetInnerUV();
+				buttonShape->AddGlyph(&buttonItem->selectedGlyph);
+			}
 
 			if (buttonItem->GetButtonIcon() != nullptr)
-				_buttonRendering->RenderButtonIcon(transform, buttonItem->GetBounds().center(), buttonItem->GetButtonIcon(), buttonItem->IsDisabled());
+			{
+				bounds2f bounds_xy = buttonItem->GetButtonIcon()->GetOuterBounds();
+				bounds_xy -= bounds_xy.center();
+				bounds_xy += buttonItem->GetBounds().center();
+
+				buttonItem->buttonIconGlyph.outer_xy = bounds_xy;
+				buttonItem->buttonIconGlyph.inner_xy = bounds_xy;
+				buttonItem->buttonIconGlyph.outer_uv = buttonItem->GetButtonIcon()->GetOuterUV();
+				buttonItem->buttonIconGlyph.inner_uv = buttonItem->GetButtonIcon()->GetInnerUV();
+				buttonItem->buttonIconGlyph._alpha = buttonItem->IsDisabled() ? 0.5f : 1.0f;
+
+				buttonShape->AddGlyph(&buttonItem->buttonIconGlyph);
+			}
 
 			if (buttonItem->IsHighlight())
-				_buttonRendering->RenderTexturePatch(transform, _buttonRendering->buttonHighlight, buttonItem->GetBounds(), bounds2f(buttonItem->GetBounds().center()));
+			{
+				buttonItem->highlightGlyph.outer_xy = buttonItem->GetBounds();
+				buttonItem->highlightGlyph.inner_xy = bounds2f(buttonItem->GetBounds().center());
+				buttonItem->highlightGlyph.outer_uv = _buttonRendering->buttonHighlight->GetOuterUV();
+				buttonItem->highlightGlyph.inner_uv = _buttonRendering->buttonHighlight->GetInnerUV();
+				buttonShape->AddGlyph(&buttonItem->highlightGlyph);
+			}
 
 			if (buttonItem->GetButtonText() != nullptr)
-				_buttonRendering->RenderStringGlyph(transform, buttonItem->GetBounds().center(), buttonItem->GetButtonText());
+			{
+				buttonItem->buttonTextGlyph.SetString(buttonItem->GetButtonText());
+				buttonItem->buttonTextGlyph.SetTranslate(buttonItem->GetBounds().center() - 0.5f * buttonShape->MeasureGlyph(&buttonItem->buttonTextGlyph));
+				buttonShape->AddGlyph(&buttonItem->buttonTextGlyph);
+			}
 		}
 	}
+
+	RenderCall<WidgetShader> renderCall(GetSurface()->GetGraphicsContext());
+
+	renderCall.SetVertices(buttonShape->GetVertices());
+	renderCall.SetTexture("texture", buttonShape->GetTextureAtlas());
+	renderCall.SetUniform("transform", transform);
+	renderCall.SetUniform("color", glm::vec4(1, 1, 1, 1));
+	renderCall.Render();
+
+	delete buttonShape;
 }
 
 

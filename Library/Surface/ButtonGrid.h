@@ -70,6 +70,11 @@ class ButtonItem
 	bool _disabled;
 
 public:
+	PatchGlyph selectedGlyph;
+	PatchGlyph buttonIconGlyph;
+	PatchGlyph highlightGlyph;
+	StringGlyph buttonTextGlyph;
+
 	ButtonItem(ButtonArea* buttonArea, const char* text);
 	ButtonItem(ButtonArea* buttonArea, TextureImage* icon);
 	~ButtonItem();
@@ -117,6 +122,8 @@ public:
 	bounds2f _bounds;
 	std::function<void()> noaction;
 	glm::vec2 _margin;
+
+	PatchGlyph backgroundGlyph;
 
 	ButtonArea(ButtonGrid* buttonView, int numberOfColumns);
 	~ButtonArea();

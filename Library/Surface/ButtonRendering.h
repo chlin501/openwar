@@ -17,8 +17,6 @@ struct ButtonRendering
 	GraphicsContext* _gc;
 
 	TextureFont* _string_font;
-	WidgetShape* _string_shape;
-
 	TextureAtlas* _textureAtlas;
 
 	TextureImage* buttonBackground;
@@ -38,12 +36,6 @@ struct ButtonRendering
 	TextureImage* buttonEditorToolFords;
 
 	ButtonRendering(GraphicsContext* gc);
-
-	void RenderStringGlyph(const glm::mat4& transform, glm::vec2 position, const char* text);
-	void RenderTexturePatch(const glm::mat4& transform, TextureImage* textureImage, bounds2f outer_xy, bounds2f inner_xy);
-	void RenderButtonIcon(const glm::mat4& transform, glm::vec2 position, TextureImage* buttonIcon, bool disabled);
-	void RenderTextureImage(const glm::mat4& transform, TextureImage* textureImage, bounds2f bounds_xy, float alpha = 1);
-
 };
 
 
