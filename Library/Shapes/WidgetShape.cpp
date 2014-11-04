@@ -94,9 +94,9 @@ void WidgetShape::StringVertexBuffer::Update()
 
 
 
-WidgetShape::WidgetShape(TextureFont* font) :
+WidgetShape::WidgetShape(TextureAtlas* widgetTextureAtlas) :
 	_vertices(this),
-	_font(font)
+	_widgetTextureAtlas(widgetTextureAtlas)
 {
 	_vertices._mode = GL_TRIANGLES;
 }
@@ -162,9 +162,11 @@ void WidgetShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, Stri
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv(".", L".");
 	std::wstring ws = conv.from_bytes(glyph->_string);
 
+	TextureFont* textureFont = _widgetTextureAtlas->GetTextureFont(glyph->GetTextureFontSpec());
+
 	if (ContainsArabic(ws))
 	{
-		TextureChar* textureChar = _font->GetTextureChar(glyph->_string.c_str());
+		TextureChar* textureChar = textureFont->GetTextureChar(glyph->_string.c_str());
 
 		bounds2f item_xy = textureChar->GetOuterXY(p);
 		bounds2f item_uv = textureChar->GetOuterUV();
@@ -199,8 +201,7 @@ void WidgetShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, Stri
 			if (character.empty())
 				continue;
 
-			TextureChar* textureChar = _font->GetTextureChar(character);
-
+			TextureChar* textureChar = textureFont->GetTextureChar(character);
 
 			bounds2f item_xy = textureChar->GetOuterXY(p);
 			bounds2f item_uv = textureChar->GetOuterUV();
@@ -277,3 +278,13 @@ StringGlyph::~StringGlyph()
 }
 
 
+const TextureFontSpec& StringGlyph::GetTextureFontSpec() const
+{
+	return _textureFontSpec;
+}
+
+
+void StringGlyph::SetTextureFontSpec(const TextureFontSpec& value)
+{
+	_textureFontSpec = value;
+}

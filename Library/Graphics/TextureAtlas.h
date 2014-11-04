@@ -8,6 +8,9 @@
 #include "Image.h"
 
 class TextureImage;
+class TextureFont;
+struct TextureFontSpec;
+
 
 
 /*enum class TextureImageType
@@ -22,6 +25,7 @@ class TextureAtlas : public Texture
 	friend class TextureImage;
 	GraphicsContext* _gc;
 	Image* _image;
+	std::vector<TextureFont*> _textureFonts;
 	std::vector<TextureImage*> _images;
 	int _currentX;
 	int _currentY;
@@ -32,6 +36,8 @@ public:
 	explicit TextureAtlas(GraphicsContext* gc);
 
 	GraphicsContext* GetGraphicsContext() const;
+
+	TextureFont* GetTextureFont(const TextureFontSpec& fontSpec);
 
 	void LoadTextureFromImage(const Image& image);
 

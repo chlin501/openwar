@@ -1,5 +1,6 @@
 #include "TextureAtlas.h"
 #include "GraphicsContext.h"
+#import "TextureFont.h"
 
 
 
@@ -17,6 +18,18 @@ TextureAtlas::TextureAtlas(GraphicsContext* gc) : Texture(gc),
 GraphicsContext* TextureAtlas::GetGraphicsContext() const
 {
 	return _gc;
+}
+
+
+TextureFont* TextureAtlas::GetTextureFont(const TextureFontSpec& fontSpec)
+{
+	for (TextureFont* textureFont : _textureFonts)
+		if (textureFont->GetTextureFontSpec() == fontSpec)
+			return textureFont;
+
+	TextureFont* result = new TextureFont(this, fontSpec);
+	_textureFonts.push_back(result);
+	return result;
 }
 
 

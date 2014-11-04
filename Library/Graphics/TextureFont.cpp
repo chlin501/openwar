@@ -24,59 +24,24 @@
 static bool ContainsArabic(const std::wstring& ws) { return false; }
 
 
-TextureFont::TextureFont(GraphicsContext* gc, const char* name, float size) :
-	_textureAtlas(gc->GetWidgetTextureAtlas()),
-	_font(nil),
-	_attributes(nil)
-{
-	size *= gc->GetPixelDensity();
 
-	_font = [[NSFont fontWithName:[NSString stringWithUTF8String:name] size:size] retain];
-	_attributes = [@{
-		NSFontAttributeName: _font,
-		NSForegroundColorAttributeName: [NSColor whiteColor]
-	} retain];
-}
-
-
-TextureFont::TextureFont(GraphicsContext* gc, bool bold, float size) :
-	_textureAtlas(gc->GetWidgetTextureAtlas()),
-	_font(nil),
-	_attributes(nil)
-{
-	size *= gc->GetPixelDensity();
-
-	_font = [(bold ? [NSFont boldSystemFontOfSize:size] : [NSFont systemFontOfSize:size]) retain];
-	_attributes = [@{
-		NSFontAttributeName: _font,
-		NSForegroundColorAttributeName: [NSColor whiteColor]
-	} retain];
-}
-
-
-TextureFont::TextureFont(TextureAtlas* textureAtlas, const char* name, float size) :
+TextureFont::TextureFont(TextureAtlas* textureAtlas, const TextureFontSpec& spec) :
 	_textureAtlas(textureAtlas),
+	_textureFontSpec(spec),
 	_font(nil),
 	_attributes(nil)
 {
-	size *= textureAtlas->GetGraphicsContext()->GetPixelDensity();
+	float size = spec.size * _textureAtlas->GetGraphicsContext()->GetPixelDensity();
+	if (size == 0)
+		size = 12 * _textureAtlas->GetGraphicsContext()->GetPixelDensity();
 
-	_font = [[NSFont fontWithName:[NSString stringWithUTF8String:name] size:size] retain];
-	_attributes = [@{
-		NSFontAttributeName: _font,
-		NSForegroundColorAttributeName: [NSColor whiteColor]
-	} retain];
-}
+	if (!spec.name.empty())
+		_font = [[NSFont fontWithName:[NSString stringWithUTF8String:spec.name.c_str()] size:size] retain];
+	else if (spec.bold)
+		_font = [[NSFont boldSystemFontOfSize:size] retain];
+	else
+		_font = [[NSFont systemFontOfSize:size] retain];
 
-
-TextureFont::TextureFont(TextureAtlas* textureAtlas, bool bold, float size) :
-	_textureAtlas(textureAtlas),
-	_font(nil),
-	_attributes(nil)
-{
-	size *= textureAtlas->GetGraphicsContext()->GetPixelDensity();
-
-	_font = [(bold ? [NSFont boldSystemFontOfSize:size] : [NSFont systemFontOfSize:size]) retain];
 	_attributes = [@{
 		NSFontAttributeName: _font,
 		NSForegroundColorAttributeName: [NSColor whiteColor]
@@ -138,6 +103,12 @@ TextureFont::~TextureFont()
 	if (_emoji != nullptr)
 		TTF_CloseFont(_emoji);
 #endif*/
+}
+
+
+const TextureFontSpec& TextureFont::GetTextureFontSpec()
+{
+	return _textureFontSpec;
 }
 
 

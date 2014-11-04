@@ -23,20 +23,40 @@ class TextureImage;
 #endif
 
 
+struct TextureFontSpec
+{
+	std::string name;
+	float size;
+	bool bold;
+
+	TextureFontSpec() : name(), size(0), bold(false) { }
+	TextureFontSpec(const char* n, float s) : name(n), size(s), bold(false) { }
+	TextureFontSpec(bool b, float s) : name(), size(s), bold(b) { }
+
+	bool operator==(const TextureFontSpec& other) const
+	{
+		return name == other.name
+			&& size == other.size
+			&& bold == other.bold;
+	}
+};
+
+
 
 class TextureFont
 {
 	TextureAtlas* _textureAtlas;
+	TextureFontSpec _textureFontSpec;
+
 	NSFont* _font;
 	NSDictionary* _attributes;
 	std::map<std::string, TextureChar*> _textureChars;
 
 public:
-	TextureFont(GraphicsContext* gc, const char* name, float size);
-	TextureFont(GraphicsContext* gc, bool bold, float size);
-	TextureFont(TextureAtlas* textureAtlas, const char* name, float size);
-	TextureFont(TextureAtlas* textureAtlas, bool bold, float size);
+	TextureFont(TextureAtlas* textureAtlas, const TextureFontSpec& spec);
 	~TextureFont();
+
+	const TextureFontSpec& GetTextureFontSpec();
 
 	TextureChar* GetTextureChar(const std::string& character);
 	glm::vec2 MeasureText(const char* text);
