@@ -86,112 +86,6 @@ static bool ContainsArabic(const std::wstring& ws)
 }
 
 
-#if !defined(ENABLE_BIDIRECTIONAL_TEXT)
-#define ENABLE_BIDIRECTIONAL_TEXT 0
-//#error ENABLE_BIDIRECTIONAL_TEXT not defined
-#endif
-
-#if ENABLE_BIDIRECTIONAL_TEXT
-
-
-#include "unicode/ubidi.h"
-
-
-static unichar* ReserveSrcBuffer(int required)
-{
-	static unichar* buffer = nullptr;
-	static int reserved = 0;
-
-	if (buffer == nullptr || required > reserved)
-	{
-		delete buffer;
-		buffer = new unichar[required];
-		reserved = required;
-	}
-
-	return buffer;
-}
-
-
-static unichar* ReserveDstBuffer(int required)
-{
-	static unichar* buffer = nullptr;
-	static int reserved = 0;
-
-	if (buffer == nullptr || required > reserved)
-	{
-		delete buffer;
-		buffer = new unichar[required];
-		reserved = required;
-	}
-
-	return buffer;
-}
-
-
-
-static bool MayNeedReorder(unichar c)
-{
-	return c > 255;
-}
-
-
-static bool CanSkipReorder(NSString* string)
-{
-	NSUInteger length = string.length;
-	if (length > 16)
-		return false;
-
-	static unichar buffer[16];
-	[string getCharacters:buffer];
-
-	for (NSUInteger i = 0; i < length; ++i)
-		if (MayNeedReorder(buffer[i]))
-			return false;
-
-	return true;
-}
-
-
-
-static NSString* ReorderToDisplayDirection(NSString* string)
-{
-	if (CanSkipReorder(string))
-		return string;
-
-	UErrorCode error = U_ZERO_ERROR;
-	int length = (int)string.length;
-
-	unichar* src = ReserveSrcBuffer(length);
-	unichar* dst = ReserveDstBuffer(length * 2);
-
-	UBiDi* ubidi = ubidi_openSized(length, 0, &error);
-    if (error != 0)
-        NSLog(@"%04x", error);
-
-	[string getCharacters:src];
-    ubidi_setPara(ubidi, src, length, UBIDI_DEFAULT_LTR, NULL, &error);
-    if (error != 0)
-        NSLog(@"%04x", error);
-
-	length = ubidi_writeReordered(ubidi, dst, length * 2, UBIDI_DO_MIRRORING | UBIDI_REMOVE_BIDI_CONTROLS, &error);
-    if (error != 0)
-        NSLog(@"%04x", error);
-
-    NSString* result = [NSString stringWithCharacters:dst length:(NSUInteger)length];
-
-    ubidi_close(ubidi);
-
-	return result;
-}
-
-#endif
-
-
-
-
-//Image* StringFont::_image = nullptr;
-
 
 
 StringFont::StringFont(GraphicsContext* gc, const char* name, float size, float pixelDensity) :
@@ -206,11 +100,8 @@ StringFont::StringFont(GraphicsContext* gc, const char* name, float size, float 
 	_textureAtlas(gc),
 	_textureFont(nullptr),
     _items(),
-    //_next(),
 	_dirty(false)
 {
-	initialize();
-
 	size *= _pixelDensity;
 
 #ifdef OPENWAR_USE_SDL
@@ -266,11 +157,8 @@ StringFont::StringFont(GraphicsContext* gc, bool bold, float size, float pixelDe
 	_textureAtlas(gc),
 	_textureFont(nullptr),
     _items(),
-    //_next(),
 	_dirty(false)
 {
-	initialize();
-
 	size *= _pixelDensity;
 
 #ifdef OPENWAR_USE_SDL
@@ -346,14 +234,6 @@ StringFont::~StringFont()
 
 
 
-void StringFont::initialize()
-{
-	//if (_image == nullptr)
-	//	_image = new Image(1024, 512);
-}
-
-
-
 StringFont::font_ptr StringFont::get_font_ptr() const
 {
 #ifdef OPENWAR_USE_SDL
@@ -378,91 +258,18 @@ StringFont::font_ptr StringFont::get_font_ptr(wchar_t wc) const
 }
 
 
-StringFont::item StringFont::add_character(font_ptr font, const std::string& character)
+TextureChar* StringFont::add_character(font_ptr font, const std::string& character)
 {
 	auto i = _items.find(character);
 	if (i != _items.end())
 		return i->second;
 
+	TextureChar* textureChar = _textureFont->GetTextureChar(character);
 
-	//glm::vec2 glyphsize;
-
-
-/*#ifdef OPENWAR_USE_SDL
-	int w, h;
-	if (TTF_SizeUTF8(font, character.c_str(), &w, &h) == 0)
-	{
-		glyphsize = glm::vec2(w, h);
-	}
-#endif*/
-
-/*#ifdef OPENWAR_USE_UIFONT
-	NSString* string = [NSString stringWithUTF8String:character.c_str()];
-	CGSize size = [string sizeWithFont:_font];
-	glyphsize = glm::vec2(size.width, size.height);
-#endif*/
-
-/*#ifdef OPENWAR_USE_NSFONT
-	NSString* string = [NSString stringWithUTF8String:character.c_str()];
-	NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:_font, NSFontAttributeName, nil];
-	CGSize size = [string sizeWithAttributes:attributes];
-	glyphsize = glm::vec2(size.width, size.height);
-#endif*/
-
-
-/*	if (_next.x + glyphsize.x > _image->GetWidth())
-	{
-		_next.x = 0;
-		_next.y += glyphsize.y + 1;
-		if (_next.y + glyphsize.y > _image->GetHeight())
-		{
-			_next.y = 0;
-
-#ifndef OPENWAR_USE_SDL
-			for (auto i : _items)
-				[i.second._string release];
-#endif
-
-			_items.clear();
-		}
-	}*/
-
-
-	item item;
-
-
-	item._textureChar = _textureFont->GetTextureChar(character);
-
-	//bounds2f bounds_uv = item._textureChar->GetTextureImage()->GetBoundsUV();
-
-/*
-	item._font = font;
-#ifdef OPENWAR_USE_SDL
-	item._string = character;
-#else
-	item._string = [string retain];
-#endif
-	//item._bounds_origin = _next;
-	item._bounds_size = glyphsize;
-	item._u0 = bounds_uv.min.x;//item._bounds_origin.x / _image->GetWidth();
-	item._u1 = bounds_uv.max.x;//(item._bounds_origin.x + item._bounds_size.x) / _image->GetWidth();
-	item._v0 = bounds_uv.min.y;//1 - (item._bounds_origin.y + item._bounds_size.y) / _image->GetHeight();
-	item._v1 = bounds_uv.max.y;//1 - item._bounds_origin.y / _image->GetHeight();
-
-#ifdef OPENWAR_USE_SDL
-	item._v0 = 1 - item._v0;
-	item._v1 = 1 - item._v1;
-#endif
-
-
-	_next.x += floorf(item._bounds_size.x + 1) + 1;
-*/
-
-	_items[character] = item;
-
+	_items[character] = textureChar;
 	_dirty = true;
 
-	return item;
+	return textureChar;
 }
 
 
@@ -473,81 +280,6 @@ void StringFont::update_texture()
 		_textureAtlas.UpdateTextureAtlas();
 		_dirty = false;
 	}
-
-/*
-#ifdef OPENWAR_USE_SDL
-
-	SDL_Surface* image_surface = _image->GetSurface();
-
-	SDL_FillRect(image_surface, NULL, SDL_MapRGBA(image_surface->format, 0, 0, 0, 0));
-
-	SDL_Color color;
-	color.r = 255;
-	color.g = 255;
-	color.b = 255;
-	color.a = 255;
-	for (std::map<std::string, item>::iterator i = _items.begin(); i != _items.end(); ++i)
-	{
-		const item& item = (*i).second;
-
-		SDL_Surface* surface = TTF_RenderUTF8_Blended(item._font, item._string.c_str(), color);
-		if (surface != nullptr)
-		{
-			SDL_Rect rect;
-			rect.x = (int)item._bounds_origin.x;
-			rect.y = (int)item._bounds_origin.y;
-			rect.w = (int)item._bounds_size.x;
-			rect.h = (int)item._bounds_size.y;
-			SDL_BlitSurface(surface, NULL, image_surface, &rect);
-			SDL_FreeSurface(surface);
-		}
-	}
-
-	_texture.LoadTextureFromImage(*_image);
-
-#endif
-
-#ifdef OPENWAR_USE_UIFONT
-	UIGraphicsPushContext(_image->GetCGContext());
-
-	CGContextClearRect(_image->GetCGContext(), CGRectMake(0, 0, _image->GetWidth(), _image->GetHeight()));
-
-	for (std::map<std::string, item>::iterator i = _items.begin(); i != _items.end(); ++i)
-	{
-		const item& item = (*i).second;
-
-		CGContextSetRGBFillColor(_image->GetCGContext(), 1, 1, 1, 1);
-	    [item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withFont:item._font];
-	}
-	_texture.LoadTextureFromImage(*_image);
-
-	UIGraphicsPopContext();
-
-#endif
-
-#ifdef OPENWAR_USE_NSFONT
-
-	NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithGraphicsPort:_image->GetCGContext() flipped:YES];
-	[NSGraphicsContext saveGraphicsState];
-	[NSGraphicsContext setCurrentContext:gc];
-
-	CGContextClearRect(_image->GetCGContext(), CGRectMake(0, 0, _image->GetWidth(), _image->GetHeight()));
-
-	for (std::map<std::string, item>::iterator i = _items.begin(); i != _items.end(); ++i)
-	{
-		const item& item = (*i).second;
-
-		CGContextSetRGBFillColor(_image->GetCGContext(), 1, 1, 1, 1);
-		NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:_font, NSFontAttributeName, nil];
-		[item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withAttributes:attributes];
-
-	}
-	_textureAtlas.LoadTextureFromImage(*_image);
-
-	[NSGraphicsContext restoreGraphicsState];
-
-#endif
-*/
 }
 
 
@@ -562,8 +294,8 @@ glm::vec2 StringFont::measure(const char* text)
 
 	if (ContainsArabic(ws))
 	{
-		StringFont::item item = add_character(get_font_ptr(), text);
-		glm::vec2 size = get_size(item);
+		TextureChar* item = add_character(get_font_ptr(), text);
+		glm::vec2 size = item->GetInnerSize();
 		w = size.x;
 		h = size.y;
 	}
@@ -578,27 +310,14 @@ glm::vec2 StringFont::measure(const char* text)
 			if (character.empty())
 				continue;
 
-			StringFont::item item = add_character(get_font_ptr(wc), character);
-			glm::vec2 size = get_size(item);
+			TextureChar* item = add_character(get_font_ptr(wc), character);
+			glm::vec2 size = item->GetInnerSize();
 			w += size.x;
 			h = fmaxf(h, size.y);
 		}
 	}
 
 	return glm::vec2(w, h);
-}
-
-
-
-glm::vec2 StringFont::get_size(const item& item) const
-{
-	return item._textureChar->GetInnerSize();
-
-	//return glm::vec2(item._bounds_size.x, item._bounds_size.y) / _pixelDensity;
-
-	/*float h = size;
-	float w = item._bounds_size.x * size / item._bounds_size.y;
-	return vector2(w, h) / pixel_scale();*/
 }
 
 
@@ -728,10 +447,6 @@ void StringShape::UpdateVertexBuffer()
 
 void StringShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, StringGlyph* glyph)
 {
-#if ENABLE_BIDIRECTIONAL_TEXT
-    string = ReorderToDisplayDirection(string);
-#endif
-
 	glm::vec2 p(0, 0);
 	float alpha = glyph->_alpha;
 
@@ -740,16 +455,17 @@ void StringShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, Stri
 
 	if (ContainsArabic(ws))
 	{
-		StringFont::item item = _font->add_character(_font->get_font_ptr(), glyph->_string.c_str());
+		TextureChar* textureChar = _font->add_character(_font->get_font_ptr(), glyph->_string.c_str());
 
-		bounds2f item_xy = item._textureChar->GetOuterXY(p);
-		bounds2f item_uv = item._textureChar->GetOuterUV();
+		bounds2f item_xy = textureChar->GetOuterXY(p);
+		bounds2f item_uv = textureChar->GetOuterUV();
 		float item_u0 = item_uv.min.x;
 		float item_u1 = item_uv.max.x;
 		float item_v0 = item_uv.min.y;
 		float item_v1 = item_uv.max.y;
 
-		glm::vec2 s = _font->get_size(item);
+		glm::vec2 s = textureChar->GetInnerSize();
+
 		bounds2f bounds;
 		bounds.min = (glyph->_transform * glm::vec4(item_xy.min.x, item_xy.min.y, 0, 1)).xy();
 		bounds.max = (glyph->_transform * glm::vec4(item_xy.max.x, item_xy.max.y, 0, 1)).xy();
@@ -774,16 +490,18 @@ void StringShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, Stri
 			if (character.empty())
 				continue;
 
-			StringFont::item item = _font->add_character(_font->get_font_ptr(wc), character);
+			TextureChar* textureChar = _font->add_character(_font->get_font_ptr(wc), character);
 
-			bounds2f item_xy = item._textureChar->GetOuterXY(p);
-			bounds2f item_uv = item._textureChar->GetOuterUV();
+
+			bounds2f item_xy = textureChar->GetOuterXY(p);
+			bounds2f item_uv = textureChar->GetOuterUV();
 			float item_u0 = item_uv.min.x;
 			float item_u1 = item_uv.max.x;
 			float item_v0 = item_uv.min.y;
 			float item_v1 = item_uv.max.y;
 
-			glm::vec2 s = _font->get_size(item);
+			glm::vec2 s = textureChar->GetInnerSize();
+
 			bounds2f bounds;
 			bounds.min = (glyph->_transform * glm::vec4(item_xy.min.x, item_xy.min.y, 0, 1)).xy();
 			bounds.max = (glyph->_transform * glm::vec4(item_xy.max.x, item_xy.max.y, 0, 1)).xy();

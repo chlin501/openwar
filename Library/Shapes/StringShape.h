@@ -61,24 +61,6 @@ struct StringFont
 	typedef NSFont* font_ptr;
 #endif
 
-	struct item
-	{
-		TextureChar* _textureChar;
-
-		//font_ptr _font;
-#ifdef OPENWAR_USE_SDL
-		//std::string _string;
-#else
-		//NSString* _string;
-#endif
-		//glm::vec2 _bounds_origin;
-		//glm::vec2 _bounds_size;
-		//float _u0, _u1;
-		//float _v0, _v1;
-	};
-
-	//static Image* _image;
-
 #ifdef OPENWAR_USE_SDL
 	font_ptr _font1;
 	font_ptr _font2;
@@ -91,8 +73,7 @@ struct StringFont
 	TextureAtlas _textureAtlas;
 	TextureFont* _textureFont;
 
-	std::map<std::string, item> _items;
-	//glm::vec2 _next;
+	std::map<std::string, TextureChar*> _items;
 	bool _dirty;
 
 public:
@@ -100,19 +81,15 @@ public:
 	StringFont(GraphicsContext* gc, bool bold, float size, float pixelDensity);
 	~StringFont();
 
-private:
-	void initialize();
-
 public:
 	font_ptr get_font_ptr() const;
 	font_ptr get_font_ptr(wchar_t wc) const;
 
-	item add_character(font_ptr font, const std::string& character);
+	TextureChar* add_character(font_ptr font, const std::string& character);
 
 	void update_texture();
 
 	glm::vec2 measure(const char* text);
-	glm::vec2 get_size(const item& item) const;
 
 private:
 	StringFont(const StringFont&) : _textureAtlas(nullptr) { }

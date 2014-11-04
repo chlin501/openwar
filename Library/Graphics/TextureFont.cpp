@@ -62,6 +62,83 @@ TextureChar* TextureFont::GetTextureChar(const std::string& character)
 }
 
 
+
+/*
+#ifdef OPENWAR_USE_SDL
+
+	SDL_Surface* image_surface = _image->GetSurface();
+
+	SDL_FillRect(image_surface, NULL, SDL_MapRGBA(image_surface->format, 0, 0, 0, 0));
+
+	SDL_Color color;
+	color.r = 255;
+	color.g = 255;
+	color.b = 255;
+	color.a = 255;
+	for (std::map<std::string, item>::iterator i = _items.begin(); i != _items.end(); ++i)
+	{
+		const item& item = (*i).second;
+
+		SDL_Surface* surface = TTF_RenderUTF8_Blended(item._font, item._string.c_str(), color);
+		if (surface != nullptr)
+		{
+			SDL_Rect rect;
+			rect.x = (int)item._bounds_origin.x;
+			rect.y = (int)item._bounds_origin.y;
+			rect.w = (int)item._bounds_size.x;
+			rect.h = (int)item._bounds_size.y;
+			SDL_BlitSurface(surface, NULL, image_surface, &rect);
+			SDL_FreeSurface(surface);
+		}
+	}
+
+	_texture.LoadTextureFromImage(*_image);
+
+#endif
+
+#ifdef OPENWAR_USE_UIFONT
+	UIGraphicsPushContext(_image->GetCGContext());
+
+	CGContextClearRect(_image->GetCGContext(), CGRectMake(0, 0, _image->GetWidth(), _image->GetHeight()));
+
+	for (std::map<std::string, item>::iterator i = _items.begin(); i != _items.end(); ++i)
+	{
+		const item& item = (*i).second;
+
+		CGContextSetRGBFillColor(_image->GetCGContext(), 1, 1, 1, 1);
+	    [item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withFont:item._font];
+	}
+	_texture.LoadTextureFromImage(*_image);
+
+	UIGraphicsPopContext();
+
+#endif
+
+#ifdef OPENWAR_USE_NSFONT
+
+	NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithGraphicsPort:_image->GetCGContext() flipped:YES];
+	[NSGraphicsContext saveGraphicsState];
+	[NSGraphicsContext setCurrentContext:gc];
+
+	CGContextClearRect(_image->GetCGContext(), CGRectMake(0, 0, _image->GetWidth(), _image->GetHeight()));
+
+	for (std::map<std::string, item>::iterator i = _items.begin(); i != _items.end(); ++i)
+	{
+		const item& item = (*i).second;
+
+		CGContextSetRGBFillColor(_image->GetCGContext(), 1, 1, 1, 1);
+		NSDictionary* attributes = [NSDictionary dictionaryWithObjectsAndKeys:_font, NSFontAttributeName, nil];
+		[item._string drawAtPoint:CGPointMake(item._bounds_origin.x, item._bounds_origin.y) withAttributes:attributes];
+
+	}
+	_textureAtlas.LoadTextureFromImage(*_image);
+
+	[NSGraphicsContext restoreGraphicsState];
+
+#endif
+*/
+
+
 /***/
 
 
