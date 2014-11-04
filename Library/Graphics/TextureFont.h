@@ -23,17 +23,17 @@ class TextureImage;
 #endif
 
 
-struct TextureFontSpec
+struct FontDescriptor
 {
 	std::string name;
 	float size;
 	bool bold;
 
-	TextureFontSpec() : name(), size(0), bold(false) { }
-	TextureFontSpec(const char* n, float s) : name(n), size(s), bold(false) { }
-	TextureFontSpec(bool b, float s) : name(), size(s), bold(b) { }
+	FontDescriptor() : name(), size(0), bold(false) { }
+	FontDescriptor(const char* n, float s) : name(n), size(s), bold(false) { }
+	FontDescriptor(bool b, float s) : name(), size(s), bold(b) { }
 
-	bool operator==(const TextureFontSpec& other) const
+	bool operator==(const FontDescriptor& other) const
 	{
 		return name == other.name
 			&& size == other.size
@@ -46,17 +46,17 @@ struct TextureFontSpec
 class TextureFont
 {
 	TextureAtlas* _textureAtlas;
-	TextureFontSpec _textureFontSpec;
+	FontDescriptor _fontDescriptor;
 
 	NSFont* _font;
 	NSDictionary* _attributes;
 	std::map<std::string, TextureChar*> _textureChars;
 
 public:
-	TextureFont(TextureAtlas* textureAtlas, const TextureFontSpec& spec);
+	TextureFont(TextureAtlas* textureAtlas, const FontDescriptor& fontDescriptor);
 	~TextureFont();
 
-	const TextureFontSpec& GetTextureFontSpec();
+	const FontDescriptor& GetFontDescriptor();
 
 	TextureChar* GetTextureChar(const std::string& character);
 	glm::vec2 MeasureText(const char* text);

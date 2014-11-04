@@ -94,9 +94,9 @@ void WidgetShape::StringVertexBuffer::Update()
 
 
 
-WidgetShape::WidgetShape(TextureAtlas* widgetTextureAtlas) :
+WidgetShape::WidgetShape(TextureAtlas* textureAtlas) :
 	_vertices(this),
-	_widgetTextureAtlas(widgetTextureAtlas)
+	_textureAtlas(textureAtlas)
 {
 	_vertices._mode = GL_TRIANGLES;
 }
@@ -142,6 +142,14 @@ void WidgetShape::RemoveGlyph(StringGlyph* glyph)
 }
 
 
+glm::vec2 WidgetShape::MeasureGlyph(StringGlyph* glyph) const
+{
+	TextureFont* textureFont = _textureAtlas->GetTextureFont(glyph->GetFontDescriptor());
+
+	return textureFont->MeasureText(glyph->GetString());
+}
+
+
 void WidgetShape::UpdateVertexBuffer()
 {
 	static std::vector<Vertex_2f_2f_1f> vertices;
@@ -162,7 +170,7 @@ void WidgetShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, Stri
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv(".", L".");
 	std::wstring ws = conv.from_bytes(glyph->_string);
 
-	TextureFont* textureFont = _widgetTextureAtlas->GetTextureFont(glyph->GetTextureFontSpec());
+	TextureFont* textureFont = _textureAtlas->GetTextureFont(glyph->GetFontDescriptor());
 
 	if (ContainsArabic(ws))
 	{
@@ -278,13 +286,13 @@ StringGlyph::~StringGlyph()
 }
 
 
-const TextureFontSpec& StringGlyph::GetTextureFontSpec() const
+const FontDescriptor& StringGlyph::GetFontDescriptor() const
 {
-	return _textureFontSpec;
+	return _fontDescriptor;
 }
 
 
-void StringGlyph::SetTextureFontSpec(const TextureFontSpec& value)
+void StringGlyph::SetFontDescriptor(const FontDescriptor& fontDescriptor)
 {
-	_textureFontSpec = value;
+	_fontDescriptor = fontDescriptor;
 }

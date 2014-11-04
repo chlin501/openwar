@@ -68,7 +68,7 @@ Surface* Content::GetSurface() const
 }
 
 
-WidgetShape* Content::GetWidgetShape()
+WidgetShape* Content::GetWidgetShape() const
 {
 	if (_widgetShape == nullptr)
 	{

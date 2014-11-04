@@ -138,6 +138,7 @@ class ButtonGrid : public Content
 {
 public:
 	ButtonRendering* _buttonRendering;
+
 private:
 	ButtonAlignment _alignment;
 	std::vector<ButtonArea*> _buttonAreas;

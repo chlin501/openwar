@@ -41,12 +41,12 @@ class WidgetShape
 		virtual void Update();
 	};
 
-	TextureAtlas* _widgetTextureAtlas;
+	TextureAtlas* _textureAtlas;
 	StringVertexBuffer _vertices;
 	std::vector<StringGlyph*> _glyphs;
 
 public:
-	explicit WidgetShape(TextureAtlas* widgetTextureAtlas);
+	explicit WidgetShape(TextureAtlas* textureAtlas);
 	~WidgetShape();
 
 	VertexBuffer<Vertex_2f_2f_1f>* GetVertices();
@@ -54,6 +54,8 @@ public:
 	void ClearGlyphs();
 	void AddGlyph(StringGlyph* glyph);
 	void RemoveGlyph(StringGlyph* glyph);
+
+	glm::vec2 MeasureGlyph(StringGlyph* glyph) const;
 
 private:
 	void UpdateVertexBuffer();
@@ -69,7 +71,7 @@ class StringGlyph
 	friend class WidgetShape;
 
 	WidgetShape* _shape;
-	TextureFontSpec _textureFontSpec;
+	FontDescriptor _fontDescriptor;
 	std::string _string;
 	glm::mat4x4 _transform;
 	float _alpha;
@@ -81,8 +83,8 @@ public:
 	StringGlyph(const char* string, glm::mat4x4 transform, float alpha = 1, float delta = 0);
 	~StringGlyph();
 
-	const TextureFontSpec& GetTextureFontSpec() const;
-	void SetTextureFontSpec(const TextureFontSpec& spec);
+	const FontDescriptor& GetFontDescriptor() const;
+	void SetFontDescriptor(const FontDescriptor& fontDescriptor);
 
 	const char* GetString() const { return _string.c_str(); }
 	void SetString(const char* value) { _string = value; }

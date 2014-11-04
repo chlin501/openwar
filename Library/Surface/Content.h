@@ -33,7 +33,7 @@ class Content
 	glm::vec2 _translate;
 	bool _flip;
 	bool _dismissed;
-	WidgetShape* _widgetShape;
+	mutable WidgetShape* _widgetShape;
 
 public:
 	Content();
@@ -44,7 +44,7 @@ public:
 
 	virtual Surface* GetSurface() const;
 
-	WidgetShape* GetWidgetShape();
+	WidgetShape* GetWidgetShape() const;
 
 	virtual Container* GetContainer() const;
 	virtual void SetContainer(Container* value, Content* behindContent = nullptr);

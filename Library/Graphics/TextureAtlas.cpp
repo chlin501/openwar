@@ -21,13 +21,13 @@ GraphicsContext* TextureAtlas::GetGraphicsContext() const
 }
 
 
-TextureFont* TextureAtlas::GetTextureFont(const TextureFontSpec& fontSpec)
+TextureFont* TextureAtlas::GetTextureFont(const FontDescriptor& fontDescriptor)
 {
 	for (TextureFont* textureFont : _textureFonts)
-		if (textureFont->GetTextureFontSpec() == fontSpec)
+		if (textureFont->GetFontDescriptor() == fontDescriptor)
 			return textureFont;
 
-	TextureFont* result = new TextureFont(this, fontSpec);
+	TextureFont* result = new TextureFont(this, fontDescriptor);
 	_textureFonts.push_back(result);
 	return result;
 }

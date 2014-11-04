@@ -18,7 +18,7 @@ _gc(gc)
 	_textureButtonSelected = new TextureResource(gc, resource("Textures/ButtonSelected.png"));
 	_textureButtonIcons = new TextureResource(gc, resource("Textures/ButtonIcons.png"));
 
-	_string_font = new TextureFont(gc->GetWidgetTextureAtlas(), TextureFontSpec(true, 18));
+	_string_font = new TextureFont(gc->GetWidgetTextureAtlas(), FontDescriptor(true, 18));
 	_string_shape = new WidgetShape(gc->GetWidgetTextureAtlas());
 
 	_textureEditorTools = new TextureResource(gc, resource("Textures/EditorTools.png"));

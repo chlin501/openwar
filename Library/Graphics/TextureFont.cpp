@@ -25,19 +25,19 @@ static bool ContainsArabic(const std::wstring& ws) { return false; }
 
 
 
-TextureFont::TextureFont(TextureAtlas* textureAtlas, const TextureFontSpec& spec) :
+TextureFont::TextureFont(TextureAtlas* textureAtlas, const FontDescriptor& fontDescriptor) :
 	_textureAtlas(textureAtlas),
-	_textureFontSpec(spec),
+	_fontDescriptor(fontDescriptor),
 	_font(nil),
 	_attributes(nil)
 {
-	float size = spec.size * _textureAtlas->GetGraphicsContext()->GetPixelDensity();
+	float size = fontDescriptor.size * _textureAtlas->GetGraphicsContext()->GetPixelDensity();
 	if (size == 0)
 		size = 12 * _textureAtlas->GetGraphicsContext()->GetPixelDensity();
 
-	if (!spec.name.empty())
-		_font = [[NSFont fontWithName:[NSString stringWithUTF8String:spec.name.c_str()] size:size] retain];
-	else if (spec.bold)
+	if (!fontDescriptor.name.empty())
+		_font = [[NSFont fontWithName:[NSString stringWithUTF8String:fontDescriptor.name.c_str()] size:size] retain];
+	else if (fontDescriptor.bold)
 		_font = [[NSFont boldSystemFontOfSize:size] retain];
 	else
 		_font = [[NSFont systemFontOfSize:size] retain];
@@ -106,9 +106,9 @@ TextureFont::~TextureFont()
 }
 
 
-const TextureFontSpec& TextureFont::GetTextureFontSpec()
+const FontDescriptor& TextureFont::GetFontDescriptor()
 {
-	return _textureFontSpec;
+	return _fontDescriptor;
 }
 
 

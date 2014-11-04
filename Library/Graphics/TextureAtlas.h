@@ -9,7 +9,7 @@
 
 class TextureImage;
 class TextureFont;
-struct TextureFontSpec;
+struct FontDescriptor;
 
 
 
@@ -37,7 +37,7 @@ public:
 
 	GraphicsContext* GetGraphicsContext() const;
 
-	TextureFont* GetTextureFont(const TextureFontSpec& fontSpec);
+	TextureFont* GetTextureFont(const FontDescriptor& fontDescriptor);
 
 	void LoadTextureFromImage(const Image& image);
 
