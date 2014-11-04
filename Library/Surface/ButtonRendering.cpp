@@ -8,6 +8,7 @@
 #include "GraphicsContext.h"
 #include "TextureResource.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "WidgetShape.h"
 
 
 ButtonRendering::ButtonRendering(GraphicsContext* gc) :
@@ -139,7 +140,7 @@ void ButtonRendering::RenderButtonText(const glm::mat4& transform, glm::vec2 pos
 	StringGlyph glyph(text, glm::mat4x4());
 	_string_shape->AddGlyph(&glyph);
 
-	glm::vec2 p = position - 0.5f * _string_font->MeasureText(text) - glm::vec2(0, 1);
+	glm::vec2 p = position - 0.5f * _string_shape->MeasureGlyph(&glyph) - glm::vec2(0, 1);
 
 	RenderCall<WidgetShader> renderCall(_gc);
 
