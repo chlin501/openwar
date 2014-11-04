@@ -132,6 +132,13 @@ TextureImage* TextureAtlas::GetTextureImage(const bounds2f& inner, const bounds2
 }
 
 
+TextureSheet TextureAtlas::AddTextureSheet(Image* image)
+{
+	TextureImage* textureImage = AddTextureImage(image);
+	return TextureSheet(this, textureImage->GetOuterBounds());
+}
+
+
 /***/
 
 
@@ -177,14 +184,22 @@ bounds2f TextureImage::GetOuterUV() const
 
 TextureSheet::TextureSheet(TextureAtlas* textureAtlas, int size_u, int size_v) :
 	_textureAtlas(textureAtlas),
-	size(size_u, size_v)
+	_sheetBounds(0, 0, size_u, size_v)
 {
+}
+
+
+TextureSheet::TextureSheet(TextureAtlas* textureAtlas, const bounds2f& bounds) :
+	_textureAtlas(textureAtlas),
+	_sheetBounds(bounds)
+{
+
 }
 
 
 TextureImage* TextureSheet::GetTextureImage(int u0, int v0, int size_u, int size_v)
 {
-	bounds2f bounds = bounds2f(u0, v0, u0 + size_u, v0 + size_v);// / glm::vec2(size.x, size.y);
+	bounds2f bounds = bounds2f(u0, v0, u0 + size_u, v0 + size_v) + _sheetBounds.min;
 
 	return _textureAtlas->GetTextureImage(bounds, bounds);
 }
@@ -192,8 +207,8 @@ TextureImage* TextureSheet::GetTextureImage(int u0, int v0, int size_u, int size
 
 TextureImage* TextureSheet::GetTexturePatch(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
 {
-	bounds2f outer = bounds2f(u0, v0, u0 + size_u, v0 + size_v);// / glm::vec2(size.x, size.y);
-	bounds2f inner = outer.grow(-(float)inset_u /*/ size.x*/, -(float)inset_v /*/ size.y*/);
+	bounds2f outer = bounds2f(u0, v0, u0 + size_u, v0 + size_v) + _sheetBounds.min;
+	bounds2f inner = outer.grow(-(float)inset_u, -(float)inset_v);
 
 	return _textureAtlas->GetTextureImage(inner, outer);
 }

@@ -34,7 +34,7 @@ _disabled(false)
 
 
 
-ButtonItem::ButtonItem(ButtonArea* buttonArea, ButtonIcon* icon) :
+ButtonItem::ButtonItem(ButtonArea* buttonArea, TextureImageX* icon) :
 _hotspot(),
 _buttonArea(buttonArea),
 _buttonText(),
@@ -69,8 +69,11 @@ glm::vec2 ButtonItem::CalculateSize() const
 	}
 
 	if (_buttonIcon != nullptr)
-		if (_buttonIcon->size.x > 44 || _buttonIcon->size.y > 44)
-			return _buttonIcon->size;
+	{
+		glm::vec2 size = _buttonIcon->GetOuterBounds().size();
+		if (size.x > 44 || size.y > 44)
+			return size;
+	}
 
 	return glm::vec2(44, 44);
 }
@@ -112,7 +115,7 @@ ButtonItem* ButtonArea::AddButtonItem(const char* buttonText)
 
 
 
-ButtonItem* ButtonArea::AddButtonItem(ButtonIcon* buttonIcon)
+ButtonItem* ButtonArea::AddButtonItem(TextureImageX* buttonIcon)
 {
 	ButtonItem* buttonItem = new ButtonItem(this, buttonIcon);
 	buttonItems.push_back(buttonItem);
@@ -334,21 +337,21 @@ void ButtonGrid::Render(const glm::mat4& transform)
 {
 	for (ButtonArea* buttonArea : _buttonAreas)
 	{
-		_buttonRendering->RenderBackground(transform, buttonArea->_bounds);
+		_buttonRendering->RenderTexturePatch(transform, _buttonRendering->_textureButtonBackground, buttonArea->_bounds.grow(10), 32);
 
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
 		{
 			if (buttonItem->IsSelected())
-				_buttonRendering->RenderSelected(transform, buttonItem->GetBounds());
+				_buttonRendering->RenderTexturePatch(transform, _buttonRendering->_textureButtonSelected, buttonItem->GetBounds().grow(10), 32);
 
 			if (buttonItem->GetButtonIcon() != nullptr)
 				_buttonRendering->RenderButtonIcon(transform, buttonItem->GetBounds().center(), buttonItem->GetButtonIcon(), buttonItem->IsDisabled());
 
 			if (buttonItem->IsHighlight())
-				_buttonRendering->RenderHighlight(transform, buttonItem->GetBounds());
+				_buttonRendering->RenderTextureImage(transform, _buttonRendering->_textureButtonHighlight, buttonItem->GetBounds(), bounds2f(0, 0, 1, 1));
 
 			if (buttonItem->GetButtonText() != nullptr)
-				_buttonRendering->RenderButtonText(transform, buttonItem->GetBounds().center(), buttonItem->GetButtonText());
+				_buttonRendering->RenderStringGlyph(transform, buttonItem->GetBounds().center(), buttonItem->GetButtonText());
 		}
 	}
 }

@@ -43,14 +43,17 @@ struct ButtonAlignment
 };
 
 
-struct ButtonIcon
+struct TextureImageX
 {
-	Texture* _texture;
-	bounds2f bounds;
-	glm::vec2 size;
+	TextureAtlas* _textureAtlas;
+	bounds2f _outer_uv;
+	bounds2f _outer_bounds;
 
-	ButtonIcon() : _texture(nullptr) { }
-	ButtonIcon(Texture* t, glm::vec2 s, bounds2f b) : _texture(t), bounds(b), size(s) { }
+	TextureImageX() : _textureAtlas(nullptr) { }
+	TextureImageX(TextureAtlas* t, glm::vec2 s, bounds2f b) : _textureAtlas(t), _outer_uv(b), _outer_bounds(0, 0, s) { }
+
+	bounds2f GetOuterBounds() const { return _outer_bounds; }
+	bounds2f GetOuterUV() const { return _outer_uv; }
 };
 
 
@@ -60,7 +63,7 @@ class ButtonItem
 	std::shared_ptr<ButtonHotspot> _hotspot;
 	ButtonArea* _buttonArea;
 	std::string _buttonText;
-	ButtonIcon* _buttonIcon;
+	TextureImageX* _buttonIcon;
 	char _keyboardShortcut;
 	bounds2f _bounds;
 	bool _selected;
@@ -68,7 +71,7 @@ class ButtonItem
 
 public:
 	ButtonItem(ButtonArea* buttonArea, const char* text);
-	ButtonItem(ButtonArea* buttonArea, ButtonIcon* icon);
+	ButtonItem(ButtonArea* buttonArea, TextureImageX* icon);
 	~ButtonItem();
 
 	std::shared_ptr<ButtonHotspot> GetHotspot() const { return _hotspot; }
@@ -77,8 +80,8 @@ public:
 	const char* GetButtonText() const { return _buttonText.empty() ? nullptr : _buttonText.c_str(); }
 	void SetButtonText(const char* value);
 
-	ButtonIcon* GetButtonIcon() const { return _buttonIcon; }
-	void SetButtonIcon(ButtonIcon* value) { _buttonIcon = value; }
+	TextureImageX* GetButtonIcon() const { return _buttonIcon; }
+	void SetButtonIcon(TextureImageX* value) { _buttonIcon = value; }
 
 	ButtonItem* SetAction(std::function<void()> action) { _hotspot->SetAction(action); return this; }
 	bool HasAction() const { return (bool)_hotspot->GetAction(); }
@@ -124,7 +127,7 @@ public:
 	ButtonGrid* GetButtonView() const { return _buttonView; }
 
 	ButtonItem* AddButtonItem(const char* buttonText);
-	ButtonItem* AddButtonItem(ButtonIcon* buttonIcon);
+	ButtonItem* AddButtonItem(TextureImageX* buttonIcon);
 
 	glm::vec2 CalculateSize() const;
 

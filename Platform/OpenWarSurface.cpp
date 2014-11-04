@@ -56,6 +56,22 @@ _battleLayer(nullptr)
 	_buttonItemWater = featureButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolWater);
 	_buttonItemFords = featureButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolFords);
 
+	ButtonArea* xxx = _buttonsTopLeft->AddButtonArea(2);
+	ButtonItem* item1 = xxx->AddButtonItem(_buttonRendering->buttonEditorToolHand);
+	ButtonItem* item2 = xxx->AddButtonItem(_buttonRendering->buttonEditorToolHand);
+	ButtonItem* item3 = xxx->AddButtonItem(_buttonRendering->buttonEditorToolHand);
+	ButtonItem* item4 = xxx->AddButtonItem(_buttonRendering->buttonEditorToolHand);
+
+	/*item1->SetButtonText("Test");
+	item2->SetButtonText("Selected");
+	item3->SetButtonText("Highlight");
+	item4->SetButtonText("Disabled");*/
+
+	item1->SetAction([](){});
+	item2->SetSelected(true);
+	item3->SetHighlight(true);
+	item4->SetDisabled(true);
+
 	_buttonItemHand->SetAction([this](){ SetEditorMode(EditorMode::Hand); });
 	_buttonItemPaint->SetAction([this](){ SetEditorMode(EditorMode::Paint); });
 	_buttonItemErase->SetAction([this](){ SetEditorMode(EditorMode::Erase); });

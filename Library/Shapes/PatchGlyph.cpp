@@ -2,13 +2,15 @@
 
 
 
-PatchGlyph::PatchGlyph()
+PatchGlyph::PatchGlyph() :
+	_alpha(1)
 {
 
 }
 
 
-PatchGlyph::PatchGlyph(TextureImage* tile, bounds2f bounds, glm::vec2 inset)
+PatchGlyph::PatchGlyph(TextureImage* tile, bounds2f bounds, glm::vec2 inset) :
+	_alpha(1)
 {
 	outer_xy = bounds;
 	inner_xy = bounds.grow(-inset.x, -inset.y);
@@ -95,10 +97,10 @@ void PatchGlyph::AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices)
 
 void PatchGlyph::AppendRectangle(std::vector<Vertex_2f_2f_1f>& vertices, bounds2f xy, bounds2f uv)
 {
-	vertices.push_back(Vertex_2f_2f_1f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y), 1.0f));
-	vertices.push_back(Vertex_2f_2f_1f(glm::vec2(xy.min.x, xy.max.y), glm::vec2(uv.min.x, uv.max.y), 1.0f));
-	vertices.push_back(Vertex_2f_2f_1f(glm::vec2(xy.max.x, xy.max.y), glm::vec2(uv.max.x, uv.max.y), 1.0f));
-	vertices.push_back(Vertex_2f_2f_1f(glm::vec2(xy.max.x, xy.max.y), glm::vec2(uv.max.x, uv.max.y), 1.0f));
-	vertices.push_back(Vertex_2f_2f_1f(glm::vec2(xy.max.x, xy.min.y), glm::vec2(uv.max.x, uv.min.y), 1.0f));
-	vertices.push_back(Vertex_2f_2f_1f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y), 1.0f));
+	vertices.push_back(Vertex_2f_2f_1f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y), _alpha));
+	vertices.push_back(Vertex_2f_2f_1f(glm::vec2(xy.min.x, xy.max.y), glm::vec2(uv.min.x, uv.max.y), _alpha));
+	vertices.push_back(Vertex_2f_2f_1f(glm::vec2(xy.max.x, xy.max.y), glm::vec2(uv.max.x, uv.max.y), _alpha));
+	vertices.push_back(Vertex_2f_2f_1f(glm::vec2(xy.max.x, xy.max.y), glm::vec2(uv.max.x, uv.max.y), _alpha));
+	vertices.push_back(Vertex_2f_2f_1f(glm::vec2(xy.max.x, xy.min.y), glm::vec2(uv.max.x, uv.min.y), _alpha));
+	vertices.push_back(Vertex_2f_2f_1f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y), _alpha));
 }

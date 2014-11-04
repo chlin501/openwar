@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "Image.h"
 
+class TextureAtlas;
 class TextureImage;
 class TextureFont;
 struct FontDescriptor;
@@ -18,6 +19,19 @@ struct FontDescriptor;
 	Permanent,
 	Discardable,
 };*/
+
+
+struct TextureSheet
+{
+	TextureAtlas* _textureAtlas;
+	bounds2f _sheetBounds;
+
+	TextureSheet(TextureAtlas* textureAtlas, int size_u, int size_v);
+	TextureSheet(TextureAtlas* textureAtlas, const bounds2f& bounds);
+
+	TextureImage* GetTextureImage(int u0, int v0, int size_u, int size_v);
+	TextureImage* GetTexturePatch(int u0, int v0, int size_u, int size_v, int insert_u, int inset_v);
+};
 
 
 class TextureAtlas : public Texture
@@ -50,6 +64,7 @@ public:
 
 	TextureImage* AddTextureImage(Image* image);
 	TextureImage* GetTextureImage(const bounds2f& inner, const bounds2f& outer);
+	TextureSheet AddTextureSheet(Image* image);
 
 private:
 	TextureAtlas(const TextureAtlas&) : Texture(nullptr) { }
@@ -78,18 +93,6 @@ public:
 private:
 	TextureImage(const TextureImage&) { }
 	TextureImage& operator=(const TextureImage&) { return *this; }
-};
-
-
-struct TextureSheet
-{
-	TextureAtlas* _textureAtlas;
-	glm::ivec2 size;
-
-	TextureSheet(TextureAtlas* textureAtlas, int size_u, int size_v);
-
-	TextureImage* GetTextureImage(int u0, int v0, int size_u, int size_v);
-	TextureImage* GetTexturePatch(int u0, int v0, int size_u, int size_v, int insert_u, int inset_v);
 };
 
 

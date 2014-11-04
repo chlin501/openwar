@@ -40,6 +40,7 @@ WidgetShader::WidgetShader(GraphicsContext* gc) : ShaderProgram3<glm::vec2, glm:
 			//result.rgb = color.rgb;
 			//result.a = texture2D(texture, _texcoord).a * color.a * clamp(_alpha, 0.0, 1.0);
 			result = texture2D(texture, _texcoord);
+			result = result * _alpha;
 
 			gl_FragColor = result;
 		}
