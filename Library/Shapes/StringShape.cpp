@@ -90,233 +90,37 @@ static bool ContainsArabic(const std::wstring& ws)
 
 
 StringFont::StringFont(GraphicsContext* gc, const char* name, float size) :
-	#ifdef OPENWAR_USE_SDL
-	_font1(nullptr),
-	_font2(nullptr),
-	_emoji(nullptr),
-	#else
-	_font(0),
-	#endif
 	_textureAtlas(gc),
-	_textureFont(nullptr),
-    _items(),
-	_dirty(false)
+	_textureFont(nullptr)
 {
 	size *= gc->GetPixelDensity();
 
-#ifdef OPENWAR_USE_SDL
-	_font1 = TTF_OpenFont(ANDROID_FONT1, (int)size);
-	_font2 = TTF_OpenFont(ANDROID_FONT2, (int)size);
-	_emoji = TTF_OpenFont(ANDROID_EMOJI, (int)size);
+	NSFont* font = [NSFont fontWithName:[NSString stringWithUTF8String:name] size:size];
 
-	if (_font1 != NULL)
-	{
-		TTF_SetFontStyle(_font1, TTF_STYLE_NORMAL);
-		TTF_SetFontOutline(_font1, 0);
-		TTF_SetFontKerning(_font1, 1);
-		TTF_SetFontHinting(_font1, TTF_HINTING_LIGHT);
-	}
-
-	if (_font2 != NULL)
-	{
-		TTF_SetFontStyle(_font2, TTF_STYLE_NORMAL);
-		TTF_SetFontOutline(_font2, 0);
-		TTF_SetFontKerning(_font2, 1);
-		TTF_SetFontHinting(_font2, TTF_HINTING_LIGHT);
-	}
-
-	if (_emoji != NULL)
-	{
-		TTF_SetFontStyle(_emoji, TTF_STYLE_NORMAL);
-		TTF_SetFontOutline(_emoji, 0);
-		TTF_SetFontKerning(_emoji, 1);
-		TTF_SetFontHinting(_emoji, TTF_HINTING_LIGHT);
-	}
-#endif
-
-#ifdef OPENWAR_USE_UIFONT
-	_font = [[UIFont fontWithName:[NSString stringWithUTF8String:name] size:size] retain];
-#endif
-
-#ifdef OPENWAR_USE_NSFONT
-	_font = [[NSFont fontWithName:[NSString stringWithUTF8String:name] size:size] retain];
-#endif
+	_textureFont = new TextureFont(&_textureAtlas, font);
 }
 
 
 
 StringFont::StringFont(GraphicsContext* gc, bool bold, float size) :
-	#ifdef OPENWAR_USE_SDL
-	_font1(nullptr),
-	_font2(nullptr),
-	_emoji(nullptr),
-	#else
-	_font(nil),
-	#endif
 	_textureAtlas(gc),
-	_textureFont(nullptr),
-    _items(),
-	_dirty(false)
+	_textureFont(nullptr)
 {
 	size *= gc->GetPixelDensity();
 
-#ifdef OPENWAR_USE_SDL
-	_font1 = TTF_OpenFont(ANDROID_FONT1, (int)size);
-	_font2 = TTF_OpenFont(ANDROID_FONT2, (int)size);
-	_emoji = TTF_OpenFont(ANDROID_EMOJI, (int)size);
-
-	if (_font1 != NULL)
-	{
-		TTF_SetFontStyle(_font1, TTF_STYLE_NORMAL);
-		TTF_SetFontOutline(_font1, 0);
-		TTF_SetFontKerning(_font1, 1);
-		TTF_SetFontHinting(_font1, TTF_HINTING_LIGHT);
-	}
-
-	if (_font2 != NULL)
-	{
-		TTF_SetFontStyle(_font2, TTF_STYLE_NORMAL);
-		TTF_SetFontOutline(_font2, 0);
-		TTF_SetFontKerning(_font2, 1);
-		TTF_SetFontHinting(_font2, TTF_HINTING_LIGHT);
-	}
-
-	if (_emoji != NULL)
-	{
-		TTF_SetFontStyle(_emoji, TTF_STYLE_NORMAL);
-		TTF_SetFontOutline(_emoji, 0);
-		TTF_SetFontKerning(_emoji, 1);
-		TTF_SetFontHinting(_emoji, TTF_HINTING_LIGHT);
-	}
-#endif
-
-#ifdef OPENWAR_USE_UIFONT
+	NSFont* font = nil;
 	if (bold)
-		_font = [[UIFont boldSystemFontOfSize:size] retain];
+		font = [[NSFont boldSystemFontOfSize:size] retain];
 	else
-		_font = [[UIFont systemFontOfSize:size] retain];
-#endif
+		font = [[NSFont systemFontOfSize:size] retain];
 
-#ifdef OPENWAR_USE_NSFONT
-	if (bold)
-		_font = [[NSFont boldSystemFontOfSize:size] retain];
-	else
-		_font = [[NSFont systemFontOfSize:size] retain];
-
-	_textureFont = new TextureFont(&_textureAtlas, _font);
-#endif
+	_textureFont = new TextureFont(&_textureAtlas, font);
 }
 
 
 
 StringFont::~StringFont()
 {
-#ifdef OPENWAR_USE_SDL
-	if (_font1 != nullptr)
-		TTF_CloseFont(_font1);
-
-	if (_font2 != nullptr)
-		TTF_CloseFont(_font2);
-
-	if (_emoji != nullptr)
-		TTF_CloseFont(_emoji);
-#endif
-
-#ifdef OPENWAR_USE_UIFONT
-	[_font release];
-#endif
-
-#ifdef OPENWAR_USE_NSFONT
-	[_font release];
-#endif
-}
-
-
-
-StringFont::font_ptr StringFont::get_font_ptr() const
-{
-#ifdef OPENWAR_USE_SDL
-	return _font2;
-#else
-	return _font;
-#endif
-}
-
-
-StringFont::font_ptr StringFont::get_font_ptr(wchar_t wc) const
-{
-#ifdef OPENWAR_USE_SDL
-	if (_emoji != nullptr && TTF_GlyphIsProvided(_emoji, (Uint16)wc))
-		return _emoji;
-	if (_font1 != nullptr && TTF_GlyphIsProvided(_font1, (Uint16)wc))
-		return _font1;
-	return _font2;
-#else
-	return _font;
-#endif
-}
-
-
-TextureChar* StringFont::add_character(font_ptr font, const std::string& character)
-{
-	auto i = _items.find(character);
-	if (i != _items.end())
-		return i->second;
-
-	TextureChar* textureChar = _textureFont->GetTextureChar(character);
-
-	_items[character] = textureChar;
-	_dirty = true;
-
-	return textureChar;
-}
-
-
-void StringFont::update_texture()
-{
-	if (_dirty)
-	{
-		_textureAtlas.UpdateTextureAtlas();
-		_dirty = false;
-	}
-}
-
-
-
-glm::vec2 StringFont::measure(const char* text)
-{
-	float w = 0;
-	float h = 0;
-
-	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv(".", L".");
-	std::wstring ws = conv.from_bytes(text);
-
-	if (ContainsArabic(ws))
-	{
-		TextureChar* item = add_character(get_font_ptr(), text);
-		glm::vec2 size = item->GetInnerSize();
-		w = size.x;
-		h = size.y;
-	}
-	else
-	{
-		for (wchar_t wc : ws)
-		{
-			if (wc == 0)
-				continue;
-
-			std::string character = conv.to_bytes(&wc, &wc + 1);
-			if (character.empty())
-				continue;
-
-			TextureChar* item = add_character(get_font_ptr(wc), character);
-			glm::vec2 size = item->GetInnerSize();
-			w += size.x;
-			h = fmaxf(h, size.y);
-		}
-	}
-
-	return glm::vec2(w, h);
 }
 
 
@@ -440,7 +244,7 @@ void StringShape::UpdateVertexBuffer()
 	_vertices.UpdateVBO(GL_TRIANGLES, vertices.data(), vertices.size());
 	vertices.clear();
 
-	_font->update_texture();
+	_font->_textureAtlas.UpdateTextureAtlas();
 }
 
 
@@ -454,7 +258,7 @@ void StringShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, Stri
 
 	if (ContainsArabic(ws))
 	{
-		TextureChar* textureChar = _font->add_character(_font->get_font_ptr(), glyph->_string.c_str());
+		TextureChar* textureChar = _font->_textureFont->GetTextureChar(glyph->_string.c_str());
 
 		bounds2f item_xy = textureChar->GetOuterXY(p);
 		bounds2f item_uv = textureChar->GetOuterUV();
@@ -489,7 +293,7 @@ void StringShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, Stri
 			if (character.empty())
 				continue;
 
-			TextureChar* textureChar = _font->add_character(_font->get_font_ptr(wc), character);
+			TextureChar* textureChar = _font->_textureFont->GetTextureChar(character);
 
 
 			bounds2f item_xy = textureChar->GetOuterXY(p);

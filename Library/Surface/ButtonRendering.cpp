@@ -142,7 +142,7 @@ void ButtonRendering::RenderButtonText(const glm::mat4& transform, glm::vec2 pos
 	StringGlyph glyph(text, glm::mat4x4());
 	_string_shape->AddGlyph(&glyph);
 
-	glm::vec2 p = position - 0.5f * _string_font->measure(text) - glm::vec2(0, 1);
+	glm::vec2 p = position - 0.5f * _string_font->_textureFont->MeasureText(text) - glm::vec2(0, 1);
 
 	RenderCall<StringShader> renderCall(_gc);
 

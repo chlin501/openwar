@@ -31,44 +31,13 @@ class StringShader : public ShaderProgram3<glm::vec2, glm::vec2, float>
 
 struct StringFont
 {
-#ifdef OPENWAR_USE_SDL
-	typedef TTF_Font* font_ptr;
-#endif
-#ifdef OPENWAR_USE_UIFONT
-	typedef UIFont* font_ptr;
-#endif
-#ifdef OPENWAR_USE_NSFONT
-	typedef NSFont* font_ptr;
-#endif
-
-#ifdef OPENWAR_USE_SDL
-	font_ptr _font1;
-	font_ptr _font2;
-	font_ptr _emoji;
-#else
-	font_ptr _font;
-#endif
-
 	TextureAtlas _textureAtlas;
 	TextureFont* _textureFont;
-
-	std::map<std::string, TextureChar*> _items;
-	bool _dirty;
 
 public:
 	StringFont(GraphicsContext* gc, const char* name, float size);
 	StringFont(GraphicsContext* gc, bool bold, float size);
 	~StringFont();
-
-public:
-	font_ptr get_font_ptr() const;
-	font_ptr get_font_ptr(wchar_t wc) const;
-
-	TextureChar* add_character(font_ptr font, const std::string& character);
-
-	void update_texture();
-
-	glm::vec2 measure(const char* text);
 
 private:
 	StringFont(const StringFont&) : _textureAtlas(nullptr) { }

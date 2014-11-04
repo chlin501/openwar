@@ -5,8 +5,8 @@ class TextureAtlas;
 class TextureChar;
 class TextureImage;
 
-#import <AppKit/AppKit.h>
-#import "bounds.h"
+#include <map>
+#include "bounds.h"
 
 #define OPENWAR_USE_NSFONT
 
@@ -26,12 +26,14 @@ class TextureFont
 	TextureAtlas* _textureAtlas;
 	NSFont* _font;
 	NSDictionary* _attributes;
+	std::map<std::string, TextureChar*> _textureChars;
 
 public:
 	TextureFont(TextureAtlas* textureAtlas, NSFont* font);
 	~TextureFont();
 
 	TextureChar* GetTextureChar(const std::string& character);
+	glm::vec2 MeasureText(const char* text);
 };
 
 
