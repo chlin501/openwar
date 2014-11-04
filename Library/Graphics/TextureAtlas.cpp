@@ -8,7 +8,8 @@ TextureAtlas::TextureAtlas(GraphicsContext* gc) : Texture(gc),
 	_image(nullptr),
 	_currentX(0),
 	_currentY(0),
-	_nextY(0)
+	_nextY(0),
+	_dirty(false)
 {
 }
 
@@ -58,10 +59,14 @@ void TextureAtlas::LoadTextureFromSurface(SDL_Surface* surface)
 #endif
 
 
-void TextureAtlas::UpdateTextureAtlas()
+void TextureAtlas::UpdateTexture()
 {
-	if (_image != nullptr)
-		LoadTextureFromImage(*_image);
+	if (_dirty)
+	{
+		if (_image != nullptr)
+			LoadTextureFromImage(*_image);
+		_dirty = false;
+	}
 }
 
 
@@ -92,6 +97,8 @@ TextureImage* TextureAtlas::AddTextureImage(Image* image)
 
 	_currentX += width;
 	_nextY = glm::max(_nextY, _currentY + height);
+
+	_dirty = true;
 
 	return result;
 }

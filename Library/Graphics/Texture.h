@@ -18,6 +18,8 @@ public:
 	explicit Texture(GraphicsContext* gc);
 	virtual ~Texture();
 
+	virtual void UpdateTexture() = 0;
+
 private:
 	Texture(const Texture&) { }
 	Texture& operator=(const Texture&) { return *this; }

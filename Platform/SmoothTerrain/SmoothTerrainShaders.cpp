@@ -388,46 +388,46 @@ GroundShadowShader::GroundShadowShader(GraphicsContext* gc) : ShaderProgram1<glm
 }
 
 
-void SmoothTerrainShaders::render_terrain_inside(GraphicsContext* gc, VertexShape_3f_3f& vertices, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_terrain_inside(GraphicsContext* gc, VertexShape_3f_3f& vertices, terrain_uniforms& uniforms)
 {
 	RenderCall<TerrainInsideShader>(gc)
 		.SetVertices(&vertices)
 		.SetUniform("transform", uniforms._transform)
 		.SetUniform("light_normal", uniforms._light_normal)
 		.SetUniform("map_bounds", uniforms._map_bounds)
-		.SetUniform("colormap", uniforms._colormap)
-		.SetUniform("splatmap", uniforms._splatmap)
+		.SetTexture("colormap", uniforms._colormap)
+		.SetTexture("splatmap", uniforms._splatmap)
 		.Render();
 }
 
 
 
-void SmoothTerrainShaders::render_terrain_border(GraphicsContext* gc, VertexShape_3f_3f& vertices, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_terrain_border(GraphicsContext* gc, VertexShape_3f_3f& vertices, terrain_uniforms& uniforms)
 {
 	RenderCall<TerrainBorderShader>(gc)
 		.SetVertices(&vertices)
 		.SetUniform("transform", uniforms._transform)
 		.SetUniform("light_normal", uniforms._light_normal)
 		.SetUniform("map_bounds", uniforms._map_bounds)
-		.SetUniform("colormap", uniforms._colormap)
-		.SetUniform("splatmap", uniforms._splatmap)
+		.SetTexture("colormap", uniforms._colormap)
+		.SetTexture("splatmap", uniforms._splatmap)
 		.Render();
 }
 
 
 
-void SmoothTerrainShaders::render_terrain_skirt(GraphicsContext* gc, VertexShape_3f_1f& vertices, const glm::mat4& transform, const Texture* texturex)
+void SmoothTerrainShaders::render_terrain_skirt(GraphicsContext* gc, VertexShape_3f_1f& vertices, const glm::mat4& transform, Texture* texturex)
 {
 	RenderCall<TerrainSkirtShader>(gc)
 		.SetVertices(&vertices)
 		.SetUniform("transform", transform)
-		.SetUniform("texture", texturex)
+		.SetTexture("texture", texturex)
 		.Render();
 }
 
 
 
-void SmoothTerrainShaders::render_depth_inside(GraphicsContext* gc, VertexShape_3f_3f& vertices, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_depth_inside(GraphicsContext* gc, VertexShape_3f_3f& vertices, terrain_uniforms& uniforms)
 {
 	RenderCall<DepthInsideShader>(gc)
 		.SetVertices(&vertices)
@@ -437,7 +437,7 @@ void SmoothTerrainShaders::render_depth_inside(GraphicsContext* gc, VertexShape_
 
 
 
-void SmoothTerrainShaders::render_depth_border(GraphicsContext* gc, VertexShape_3f_3f& vertices, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_depth_border(GraphicsContext* gc, VertexShape_3f_3f& vertices, terrain_uniforms& uniforms)
 {
 	RenderCall<DepthBorderShader>(gc)
 		.SetVertices(&vertices)
@@ -457,17 +457,17 @@ void SmoothTerrainShaders::render_depth_skirt(GraphicsContext* gc, VertexShape_3
 }
 
 
-void SmoothTerrainShaders::render_sobel_filter(GraphicsContext* gc, VertexShape_2f_2f& vertices, const sobel_uniforms& uniforms)
+void SmoothTerrainShaders::render_sobel_filter(GraphicsContext* gc, VertexShape_2f_2f& vertices, sobel_uniforms& uniforms)
 {
 	RenderCall<SobelFilterShader>(gc)
 		.SetVertices(&vertices)
 		.SetUniform("transform", uniforms._transform)
-		.SetUniform("depth", uniforms._depth)
+		.SetTexture("depth", uniforms._depth)
 		.Render();
 }
 
 
-void SmoothTerrainShaders::render_ground_shadow(GraphicsContext* gc, VertexShape_2f& vertices, const terrain_uniforms& uniforms)
+void SmoothTerrainShaders::render_ground_shadow(GraphicsContext* gc, VertexShape_2f& vertices, terrain_uniforms& uniforms)
 {
 	RenderCall<GroundShadowShader>(gc)
 		.SetVertices(&vertices)

@@ -75,7 +75,7 @@ void ButtonRendering::RenderCornerButton(const glm::mat4& transform, Texture* te
 	RenderCall<TextureShader_2f>(_gc)
 		.SetVertices(&vertices)
 		.SetUniform("transform", transform)
-		.SetUniform("texture", texturex)
+		.SetTexture("texture", texturex)
 		.Render();
 }
 
@@ -104,7 +104,7 @@ void ButtonRendering::RenderTextureRect(const glm::mat4& transform, Texture* tex
 		RenderCall<TextureShader_2f>(_gc)
 			.SetVertices(&vertices)
 			.SetUniform("transform", transform)
-			.SetUniform("texture", texturex)
+			.SetTexture("texture", texturex)
 			.Render();
 	}
 	else
@@ -112,7 +112,7 @@ void ButtonRendering::RenderTextureRect(const glm::mat4& transform, Texture* tex
 		RenderCall<AlphaTextureShader_2f>(_gc)
 			.SetVertices(&vertices)
 			.SetUniform("transform", transform)
-			.SetUniform("texture", texturex)
+			.SetTexture("texture", texturex)
 			.SetUniform("alpha", alpha)
 			.Render();
 	}
@@ -147,7 +147,7 @@ void ButtonRendering::RenderButtonText(const glm::mat4& transform, glm::vec2 pos
 	RenderCall<WidgetShader> renderCall(_gc);
 
 	renderCall.SetVertices(_string_shape->GetVertices());
-	renderCall.SetUniform("texture", &_string_font->_textureAtlas);
+	renderCall.SetTexture("texture", _gc->GetWidgetTextureAtlas());
 	renderCall.SetUniform("color", glm::vec4(0, 0, 0, 0.15f));
 
 	for (int dx = -1; dx <= 1; ++dx)

@@ -86,3 +86,7 @@ void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const resourc
 #endif
 }
 
+
+void TextureResource::UpdateTexture()
+{
+}

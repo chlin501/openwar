@@ -81,7 +81,7 @@ StringFont::StringFont(GraphicsContext* gc, const char* name, float size) :
 	_textureAtlas(gc),
 	_textureFont(nullptr)
 {
-	_textureFont = new TextureFont(&_textureAtlas, name, size);
+	_textureFont = new TextureFont(gc->GetWidgetTextureAtlas(), name, size);
 }
 
 
@@ -90,7 +90,7 @@ StringFont::StringFont(GraphicsContext* gc, bool bold, float size) :
 	_textureAtlas(gc),
 	_textureFont(nullptr)
 {
-	_textureFont = new TextureFont(&_textureAtlas, bold, size);
+	_textureFont = new TextureFont(gc->GetWidgetTextureAtlas(), bold, size);
 }
 
 
@@ -178,8 +178,6 @@ void WidgetShape::UpdateVertexBuffer()
 
 	_vertices.UpdateVBO(GL_TRIANGLES, vertices.data(), vertices.size());
 	vertices.clear();
-
-	_font->_textureAtlas.UpdateTextureAtlas();
 }
 
 

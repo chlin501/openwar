@@ -109,7 +109,7 @@ void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3&
 			RenderCall<TextureShader_3f>(_gc)
 				.SetVertices(&_vertices)
 				.SetUniform("transform", transform)
-				.SetUniform("texture", _textures[tile->texture])
+				.SetTexture("texture", _textures[tile->texture])
 				.Render();
 		}
 }

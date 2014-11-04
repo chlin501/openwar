@@ -31,7 +31,6 @@ class TextureFont
 public:
 	TextureFont(TextureAtlas* textureAtlas, const char* name, float size);
 	TextureFont(TextureAtlas* textureAtlas, bool bold, float size);
-	TextureFont(TextureAtlas* textureAtlas, NSFont* font);
 	~TextureFont();
 
 	TextureChar* GetTextureChar(const std::string& character);

@@ -190,7 +190,7 @@ void BillboardTextureShape::Draw(GraphicsContext* gc, Texture* tex, const glm::m
 	RenderCall<BillboardTextureShader>(gc)
 		.SetVertices(&_vertices)
 		.SetUniform("transform", transform)
-		.SetUniform("texture", tex)
+		.SetTexture("texture", tex)
 		.SetUniform("upvector", cameraUp)
 		.SetUniform("viewport_height", gc->GetPixelDensity() * viewportHeight)
 		.SetUniform("min_point_size", sizeLimit.min)

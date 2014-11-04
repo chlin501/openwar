@@ -9,17 +9,22 @@
 #include "ShaderProgram.h"
 #include <map>
 
+class TextureAtlas;
+
 
 class GraphicsContext
 {
 	float _pixeldensity;
 	std::map<std::string, ShaderProgramBase*> _shaders;
+	mutable TextureAtlas* _widgetTextureAtlas;
 
 public:
 	GraphicsContext(float pixelDensity);
 	~GraphicsContext();
 
-	float GetPixelDensity() const { return _pixeldensity; }
+	float GetPixelDensity() const;
+
+	TextureAtlas* GetWidgetTextureAtlas() const;
 
 	template <class _ShaderProgram> _ShaderProgram* GetShaderProgram()
 	{

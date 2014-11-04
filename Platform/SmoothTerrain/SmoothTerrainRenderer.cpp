@@ -6,6 +6,7 @@
 #include "SmoothTerrainRenderer.h"
 #include "CommonShaders.h"
 #include "GraphicsContext.h"
+#include "TextureAtlas.h"
 
 
 SmoothTerrainRenderer::SmoothTerrainRenderer(GraphicsContext* gc, SmoothGroundMap* smoothGroundMap) :
@@ -24,7 +25,7 @@ _editMode(false)
 	_renderers = new SmoothTerrainShaders();
 	_colormap = SmoothTerrainShaders::create_colormap(gc);
 
-	_splatmap = new Texture(gc);
+	_splatmap = new TextureAtlas(gc);
 	UpdateSplatmap();
 
 	InitializeSkirt();
@@ -166,7 +167,7 @@ static NSString* FramebufferStatusString(GLenum status)
 
 void SmoothTerrainRenderer::EnableRenderEdges()
 {
-	_depth = new Texture(_gc);
+	_depth = new TextureAtlas(_gc);
 	glBindTexture(GL_TEXTURE_2D, _depth->_id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

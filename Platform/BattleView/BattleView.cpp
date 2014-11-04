@@ -611,7 +611,7 @@ void BattleView::Render(const glm::mat4& transformx)
 	RenderCall<TextureShader_3f>(GetSurface()->GetGraphicsContext())
 		.SetVertices(_textureTriangleVertices)
 		.SetUniform("transform", facingTransform)
-		.SetUniform("texture", _textureUnitMarkers)
+		.SetTexture("texture", _textureUnitMarkers)
 		.Render();
 
 

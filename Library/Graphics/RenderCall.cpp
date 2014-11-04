@@ -2,81 +2,92 @@
 
 
 
-UniformBase::UniformBase(GLint location) :
-	_location(location),
-	_texture(0)
+RenderCallUniformBase::RenderCallUniformBase(GLint location) :
+	_location(location)
 {
 }
 
 
-UniformBase::~UniformBase()
+RenderCallUniformBase::~RenderCallUniformBase()
 {
 }
 
 
-void UniformBase::Assign(int value)
+void RenderCallUniformBase::Assign(int value)
 {
 	glUniform1iv(_location, 1, (const GLint*)&value);
 	CHECK_ERROR_GL();
 }
 
 
-void UniformBase::Assign(float value)
+void RenderCallUniformBase::Assign(float value)
 {
 	glUniform1fv(_location, 1, (const GLfloat*)&value);
 	CHECK_ERROR_GL();
 }
 
 
-void UniformBase::Assign(const glm::vec2& value)
+void RenderCallUniformBase::Assign(const glm::vec2& value)
 {
 	glUniform2fv(_location, 1, reinterpret_cast<const GLfloat*>(&value));
 	CHECK_ERROR_GL();
 }
 
 
-void UniformBase::Assign(const glm::vec3& value)
+void RenderCallUniformBase::Assign(const glm::vec3& value)
 {
 	glUniform3fv(_location, 1, reinterpret_cast<const GLfloat*>(&value));
 	CHECK_ERROR_GL();
 }
 
 
-void UniformBase::Assign(const glm::vec4& value)
+void RenderCallUniformBase::Assign(const glm::vec4& value)
 {
 	glUniform4fv(_location, 1, reinterpret_cast<const GLfloat*>(&value));
 	CHECK_ERROR_GL();
 }
 
 
-void UniformBase::Assign(const glm::mat2& value)
+void RenderCallUniformBase::Assign(const glm::mat2& value)
 {
 	glUniformMatrix2fv(_location, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&value));
 	CHECK_ERROR_GL();
 }
 
 
-void UniformBase::Assign(const glm::mat3& value)
+void RenderCallUniformBase::Assign(const glm::mat3& value)
 {
 	glUniformMatrix3fv(_location, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&value));
 	CHECK_ERROR_GL();
 }
 
 
-void UniformBase::Assign(const glm::mat4& value)
+void RenderCallUniformBase::Assign(const glm::mat4& value)
 {
 	glUniformMatrix4fv(_location, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&value));
 	CHECK_ERROR_GL();
 }
 
 
-void UniformBase::Assign(const Texture* value)
+/***/
+
+
+RenderCallTexture::RenderCallTexture(GLint location, GLenum texture) :
+	_location(location),
+	_texture(texture)
 {
-	if (value != nullptr)
+}
+
+
+void RenderCallTexture::Assign()
+{
+	if (_value != nullptr)
 	{
+		_value->UpdateTexture();
+
 		glActiveTexture(GL_TEXTURE0 + _texture);
 		CHECK_ERROR_GL();
-		glBindTexture(GL_TEXTURE_2D, value->_id);
+		glBindTexture(GL_TEXTURE_2D, _value->_id);
 		CHECK_ERROR_GL();
 	}
 	glUniform1i(_location, _texture);
@@ -84,16 +95,19 @@ void UniformBase::Assign(const Texture* value)
 }
 
 
+/***/
+
+
 RenderCallBase::RenderCallBase(ShaderProgramBase* shaderprogram) :
 	_shaderprogram(shaderprogram),
-	_textures(0)
+	_texture_count(0)
 {
 }
 
 
 RenderCallBase::~RenderCallBase()
 {
-	for (UniformBase* uniform : _uniforms)
+	for (RenderCallUniformBase* uniform : _uniforms)
 		delete uniform;
 }
 
@@ -110,8 +124,12 @@ void RenderCallBase::Render()
 		return;
 
 	glUseProgram(_shaderprogram->_program);
-	for (UniformBase* uniform : _uniforms)
+
+	for (RenderCallUniformBase* uniform : _uniforms)
 		uniform->Assign();
+
+	for (RenderCallTexture* texture : _textures)
+		texture->Assign();
 
 	glUseProgram(_shaderprogram->_program);
 	CHECK_ERROR_GL();
@@ -165,4 +183,23 @@ void RenderCallBase::Render()
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		CHECK_ERROR_GL();
 	}
+}
+
+
+RenderCallTexture* RenderCallBase::GetTexture(const char* name)
+{
+	RenderCallTexture* result = 0;
+	GLint location = glGetUniformLocation(_shaderprogram->_program, name);
+	for (RenderCallTexture* texture : _textures)
+		if (texture->_location == location)
+		{
+			result = texture;
+			break;
+		}
+	if (result == nullptr)
+	{
+		result = new RenderCallTexture(location, (GLenum)_texture_count++);
+		_textures.push_back(result);
+	}
+	return result;
 }

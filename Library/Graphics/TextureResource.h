@@ -10,6 +10,8 @@ class TextureResource : public Texture
 public:
 	TextureResource(GraphicsContext* gc, const resource& r);
 	void LoadTextureFromResource(GraphicsContext* gc, const resource& r);
+
+	virtual void UpdateTexture();
 };
 
 

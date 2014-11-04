@@ -6,16 +6,15 @@
 class RenderCallBase;
 
 
-class UniformBase
+class RenderCallUniformBase
 {
 	friend class RenderCallBase;
 
 	GLint _location;
-	GLenum _texture;
 
 protected:
-	UniformBase(GLint location);
-	virtual ~UniformBase();
+	RenderCallUniformBase(GLint location);
+	virtual ~RenderCallUniformBase();
 
 	virtual void Assign() = 0;
 
@@ -27,25 +26,40 @@ protected:
 	void Assign(const glm::mat2& value);
 	void Assign(const glm::mat3& value);
 	void Assign(const glm::mat4& value);
-	void Assign(const Texture* value);
 };
 
 
 template <class T>
-class Uniform : public UniformBase
+class RenderCallUniform : public RenderCallUniformBase
 {
 	friend class RenderCallBase;
 
 	T _value;
 
-	Uniform(GLint location) : UniformBase(location)
+	RenderCallUniform(GLint location) : RenderCallUniformBase(location)
 	{
 	}
 
 	virtual void Assign()
 	{
-		UniformBase::Assign(_value);
+		RenderCallUniformBase::Assign(_value);
 	}
+};
+
+
+
+class RenderCallTexture
+{
+	friend class RenderCallBase;
+
+	GLint _location;
+	GLenum _texture;
+	Texture* _value;
+
+protected:
+	RenderCallTexture(GLint location, GLenum texture);
+
+	void Assign();
 };
 
 
@@ -53,8 +67,9 @@ class RenderCallBase
 {
 protected:
 	ShaderProgramBase* _shaderprogram;
-	std::vector<UniformBase*> _uniforms;
-	int _textures;
+	std::vector<RenderCallUniformBase*> _uniforms;
+	std::vector<RenderCallTexture*> _textures;
+	int _texture_count;
 
 public:
 	RenderCallBase(ShaderProgramBase* shaderprogram);
@@ -67,29 +82,35 @@ public:
 		return *this;
 	}
 
+	RenderCallBase& SetTexture(const char* name, Texture* value)
+	{
+		GetTexture(name)->_value = value;
+		return *this;
+	}
+
 	void Render();
 
 private:
 	template <class T>
-	Uniform<T>* GetUniform(const char* name)
+	RenderCallUniform<T>* GetUniform(const char* name)
 	{
-		Uniform<T>* result = 0;
+		RenderCallUniform<T>* result = 0;
 		GLint location = glGetUniformLocation(_shaderprogram->_program, name);
-		for (UniformBase* uniform : _uniforms)
+		for (RenderCallUniformBase* uniform : _uniforms)
 			if (uniform->_location == location)
 			{
-				result = dynamic_cast<Uniform<T>*>(uniform);
+				result = dynamic_cast<RenderCallUniform<T>*>(uniform);
 				break;
 			}
 		if (result == nullptr)
 		{
-			result = new Uniform<T>(location);
-			if (typeid(T) == typeid(Texture*) || typeid(T) == typeid(const Texture*))
-				result->_texture = (GLenum)_textures++;
+			result = new RenderCallUniform<T>(location);
 			_uniforms.push_back(result);
 		}
 		return result;
 	}
+
+	RenderCallTexture* GetTexture(const char* name);
 
 	virtual VertexBufferBase* GetVertexBufferBase() = 0;
 };

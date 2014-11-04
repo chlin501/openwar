@@ -168,13 +168,13 @@ void SmoothTerrainWater::Render(GraphicsContext* gc, const glm::mat4x4& transfor
 		.SetVertices(&_waterInsideVertices)
 		.SetUniform("transform", transform)
 		.SetUniform("map_bounds", glm::vec4(bounds.min, bounds.size()))
-		.SetUniform("texture", nullptr)
+		.SetTexture("texture", nullptr)
 		.Render();
 
 	RenderCall<WaterBorderShader>(gc)
 		.SetVertices(&_waterBorderVertices)
 		.SetUniform("transform", transform)
 		.SetUniform("map_bounds", glm::vec4(bounds.min, bounds.size()))
-		.SetUniform("texture", nullptr)
+		.SetTexture("texture", nullptr)
 		.Render();
 }

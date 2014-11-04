@@ -26,6 +26,7 @@ class TextureAtlas : public Texture
 	int _currentX;
 	int _currentY;
 	int _nextY;
+	bool _dirty;
 
 public:
 	explicit TextureAtlas(GraphicsContext* gc);
@@ -38,7 +39,7 @@ public:
 	void LoadTextureFromSurface(SDL_Surface* surface);
 #endif
 
-	void UpdateTextureAtlas();
+	virtual void UpdateTexture();
 
 	TextureImage* AddTextureImage(Image* image);
 

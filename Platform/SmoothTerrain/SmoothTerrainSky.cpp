@@ -91,6 +91,6 @@ void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, bounds2
 	RenderCall<TextureShader_2f>(_gc)
 		.SetVertices(&vertices)
 		.SetUniform("transform", transform)
-		.SetUniform("texture", _textureBackgroundLinen)
+		.SetTexture("texture", _textureBackgroundLinen)
 		.Render();
 }
