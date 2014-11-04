@@ -7,6 +7,7 @@
 #include "Surface.h"
 #include "CommonShaders.h"
 #include "Shapes/VertexShape.h"
+#import "WidgetShape.h"
 
 
 
@@ -27,15 +28,16 @@ glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate, float rotate
 
 
 Content::Content() :
-_surface(nullptr),
-_container(nullptr),
-_visible(true),
-_frame(),
-_bounds(),
-_isUsingDepth(false),
-_translate(),
-_flip(false),
-_dismissed(false)
+	_surface(nullptr),
+	_container(nullptr),
+	_visible(true),
+	_frame(),
+	_bounds(),
+	_isUsingDepth(false),
+	_translate(),
+	_flip(false),
+	_dismissed(false),
+	_widgetShape(nullptr)
 {
 }
 
@@ -63,6 +65,18 @@ Surface* Content::GetSurface() const
 	if (_surface == nullptr && _container != nullptr)
 		_surface = _container->GetSurface();
 	return _surface;
+}
+
+
+WidgetShape* Content::GetWidgetShape()
+{
+	if (_widgetShape == nullptr)
+	{
+		Surface* surface = GetSurface();
+		if (surface != nullptr)
+			_widgetShape = new WidgetShape(surface->GetGraphicsContext()->GetWidgetTextureAtlas());
+	}
+	return _widgetShape;
 }
 
 

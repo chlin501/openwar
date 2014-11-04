@@ -14,7 +14,7 @@ class Container;
 class Hotspot;
 class Surface;
 class Touch;
-
+class WidgetShape;
 
 glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate = glm::vec2(), float rotate = 0);
 
@@ -33,6 +33,7 @@ class Content
 	glm::vec2 _translate;
 	bool _flip;
 	bool _dismissed;
+	WidgetShape* _widgetShape;
 
 public:
 	Content();
@@ -42,6 +43,8 @@ public:
 	virtual bool IsDismissed() const;
 
 	virtual Surface* GetSurface() const;
+
+	WidgetShape* GetWidgetShape();
 
 	virtual Container* GetContainer() const;
 	virtual void SetContainer(Container* value, Content* behindContent = nullptr);
