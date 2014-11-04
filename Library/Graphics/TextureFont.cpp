@@ -4,28 +4,61 @@
 #include <codecvt>
 #include <cstdlib>
 #include <locale>
+#include "GraphicsContext.h"
+
+
+/*
+#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
+#define ANDROID_FONT1 "Roboto-Regular.ttf"
+#define ANDROID_FONT2 "Roboto-Regular.ttf"
+#define ANDROID_EMOJI "Roboto-Regular.ttf"
+#else
+#define ANDROID_FONT1 "/system/fonts/Roboto-Regular.ttf"
+#define ANDROID_FONT2 "/system/fonts/DroidSansFallback.ttf"
+#define ANDROID_EMOJI "/system/fonts/AndroidEmoji.ttf"
+#endif
+*/
+
 
 
 static bool ContainsArabic(const std::wstring& ws) { return false; }
 
 
-TextureFont::TextureFont(TextureAtlas* textureAtlas, NSFont* font) :
+TextureFont::TextureFont(TextureAtlas* textureAtlas, const char* name, float size) :
 	_textureAtlas(textureAtlas),
 	_font(nil),
 	_attributes(nil)
-
 {
-	_font = [font retain];
+	size *= textureAtlas->GetGraphicsContext()->GetPixelDensity();
+
+	_font = [[NSFont fontWithName:[NSString stringWithUTF8String:name] size:size] retain];
 	_attributes = [@{
 		NSFontAttributeName: _font,
 		NSForegroundColorAttributeName: [NSColor whiteColor]
 	} retain];
+}
 
-	/*
-	#ifdef OPENWAR_USE_UIFONT
-	_font = [[UIFont fontWithName:[NSString stringWithUTF8String:name] size:size] retain];
-	#endif
-	*/
+
+TextureFont::TextureFont(TextureAtlas* textureAtlas, bool bold, float size) :
+	_textureAtlas(textureAtlas),
+	_font(nil),
+	_attributes(nil)
+{
+	size *= textureAtlas->GetGraphicsContext()->GetPixelDensity();
+
+	_font = [(bold ? [NSFont boldSystemFontOfSize:size] : [NSFont systemFontOfSize:size]) retain];
+	_attributes = [@{
+		NSFontAttributeName: _font,
+		NSForegroundColorAttributeName: [NSColor whiteColor]
+	} retain];
+}
+
+
+/*
+#ifdef OPENWAR_USE_UIFONT
+_font = [[UIFont fontWithName:[NSString stringWithUTF8String:name] size:size] retain];
+#endif
+*/
 
 /*
 	_font1 = TTF_OpenFont(ANDROID_FONT1, (int)size);
@@ -56,7 +89,8 @@ TextureFont::TextureFont(TextureAtlas* textureAtlas, NSFont* font) :
 		TTF_SetFontHinting(_emoji, TTF_HINTING_LIGHT);
 	}
 	*/
-}
+
+
 
 
 TextureFont::~TextureFont()

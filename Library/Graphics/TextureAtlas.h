@@ -20,6 +20,7 @@ class TextureImage;
 class TextureAtlas : public Texture
 {
 	friend class TextureImage;
+	GraphicsContext* _gc;
 	Image* _image;
 	std::vector<TextureImage*> _images;
 	int _currentX;
@@ -28,6 +29,8 @@ class TextureAtlas : public Texture
 
 public:
 	explicit TextureAtlas(GraphicsContext* gc);
+
+	GraphicsContext* GetGraphicsContext() const;
 
 	void LoadTextureFromImage(const Image& image);
 

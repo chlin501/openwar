@@ -11,10 +11,11 @@
 #include "TextureFont.h"
 
 class GraphicsContext;
-class StringShape;
+class WidgetShape;
+class StringGlyph;
 
 
-class StringShader : public ShaderProgram3<glm::vec2, glm::vec2, float>
+class WidgetShader : public ShaderProgram3<glm::vec2, glm::vec2, float>
 {
 	friend class GraphicsContext;
 	/*
@@ -25,7 +26,7 @@ class StringShader : public ShaderProgram3<glm::vec2, glm::vec2, float>
 		uniform sampler2D texture;
 		uniform vec4 color;
 	 */
-	StringShader(GraphicsContext* gc);
+	WidgetShader(GraphicsContext* gc);
 };
 
 
@@ -45,11 +46,45 @@ private:
 };
 
 
+class WidgetShape
+{
+	class StringVertexBuffer : public VertexBuffer<Vertex_2f_2f_1f>
+	{
+		WidgetShape* _shape;
+	public:
+		StringVertexBuffer(WidgetShape* shape);
+		virtual void Update();
+	};
+
+	StringVertexBuffer _vertices;
+	std::vector<StringGlyph*> _glyphs;
+
+public:
+	StringFont* _font;
+
+	explicit WidgetShape(StringFont* font);
+	~WidgetShape();
+
+	VertexBuffer<Vertex_2f_2f_1f>* GetVertices();
+
+	void ClearGlyphs();
+	void AddGlyph(StringGlyph* glyph);
+	void RemoveGlyph(StringGlyph* glyph);
+
+private:
+	void UpdateVertexBuffer();
+	void AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, StringGlyph* glyph);
+
+	WidgetShape(const WidgetShape&) : _vertices(nullptr) { }
+	WidgetShape& operator=(const WidgetShape&) { return *this; }
+};
+
+
 class StringGlyph
 {
-	friend class StringShape;
+	friend class WidgetShape;
 
-	StringShape* _shape;
+	WidgetShape* _shape;
 	std::string _string;
 	glm::mat4x4 _transform;
 	float _alpha;
@@ -77,40 +112,6 @@ public:
 private:
 	StringGlyph(const StringGlyph&) { }
 	StringGlyph& operator=(const StringGlyph&) { return *this; }
-};
-
-
-class StringShape
-{
-	class StringVertexBuffer : public VertexBuffer<Vertex_2f_2f_1f>
-	{
-		StringShape* _shape;
-	public:
-		StringVertexBuffer(StringShape* shape);
-		virtual void Update();
-	};
-
-	StringVertexBuffer _vertices;
-	std::vector<StringGlyph*> _glyphs;
-
-public:
-	StringFont* _font;
-
-	explicit StringShape(StringFont* font);
-	~StringShape();
-
-	VertexBuffer<Vertex_2f_2f_1f>* GetVertices();
-
-	void ClearGlyphs();
-	void AddGlyph(StringGlyph* glyph);
-	void RemoveGlyph(StringGlyph* glyph);
-
-private:
-	void UpdateVertexBuffer();
-	void AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, StringGlyph* glyph);
-
-	StringShape(const StringShape&) : _vertices(nullptr) { }
-	StringShape& operator=(const StringShape&) { return *this; }
 };
 
 

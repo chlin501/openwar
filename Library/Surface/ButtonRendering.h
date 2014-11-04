@@ -7,7 +7,7 @@
 
 #include "Algebra/bounds.h"
 #include "Texture.h"
-#include "StringShape.h"
+#include "WidgetShape.h"
 #include "CommonShaders.h"
 
 
@@ -18,7 +18,7 @@ struct ButtonRendering
 	GraphicsContext* _gc;
 
 	StringFont* _string_font;
-	StringShape* _string_shape;
+	WidgetShape* _string_shape;
 
 	Texture* _textureButtonBackground;
 	Texture* _textureButtonHighlight;

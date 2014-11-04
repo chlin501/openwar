@@ -1,4 +1,4 @@
-#include "StringShape.h"
+#include "WidgetShape.h"
 #include "Image.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <codecvt>
@@ -6,22 +6,10 @@
 #include <locale>
 
 #include "TextureFont.h"
-#import "GraphicsContext.h"
+#include "GraphicsContext.h"
 
 
-#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
-#define ANDROID_FONT1 "Roboto-Regular.ttf"
-#define ANDROID_FONT2 "Roboto-Regular.ttf"
-#define ANDROID_EMOJI "Roboto-Regular.ttf"
-#else
-#define ANDROID_FONT1 "/system/fonts/Roboto-Regular.ttf"
-#define ANDROID_FONT2 "/system/fonts/DroidSansFallback.ttf"
-#define ANDROID_EMOJI "/system/fonts/AndroidEmoji.ttf"
-#endif
-
-
-
-StringShader::StringShader(GraphicsContext* gc) : ShaderProgram3<glm::vec2, glm::vec2, float>(
+WidgetShader::WidgetShader(GraphicsContext* gc) : ShaderProgram3<glm::vec2, glm::vec2, float>(
 	"position", "texcoord", "alpha",
 	VERTEX_SHADER
 	({
@@ -93,11 +81,7 @@ StringFont::StringFont(GraphicsContext* gc, const char* name, float size) :
 	_textureAtlas(gc),
 	_textureFont(nullptr)
 {
-	size *= gc->GetPixelDensity();
-
-	NSFont* font = [NSFont fontWithName:[NSString stringWithUTF8String:name] size:size];
-
-	_textureFont = new TextureFont(&_textureAtlas, font);
+	_textureFont = new TextureFont(&_textureAtlas, name, size);
 }
 
 
@@ -106,15 +90,7 @@ StringFont::StringFont(GraphicsContext* gc, bool bold, float size) :
 	_textureAtlas(gc),
 	_textureFont(nullptr)
 {
-	size *= gc->GetPixelDensity();
-
-	NSFont* font = nil;
-	if (bold)
-		font = [[NSFont boldSystemFontOfSize:size] retain];
-	else
-		font = [[NSFont systemFontOfSize:size] retain];
-
-	_textureFont = new TextureFont(&_textureAtlas, font);
+	_textureFont = new TextureFont(&_textureAtlas, bold, size);
 }
 
 
@@ -124,59 +100,18 @@ StringFont::~StringFont()
 }
 
 
-/***/
-
-
-
-StringGlyph::StringGlyph() :
-	_shape(nullptr),
-	_string(),
-	_transform(),
-	_alpha(1),
-	_delta(0)
-{
-}
-
-
-StringGlyph::StringGlyph(const char* string, glm::vec2 translate, float alpha, float delta) :
-	_shape(nullptr),
-	_string(string),
-	_transform(glm::translate(glm::mat4(), glm::vec3(translate, 0))),
-	_alpha(alpha),
-	_delta(delta)
-{
-}
-
-
-StringGlyph::StringGlyph(const char* string, glm::mat4x4 transform, float alpha, float delta) :
-	_shape(nullptr),
-	_string(string),
-	_transform(transform),
-	_alpha(alpha),
-	_delta(delta)
-{
-}
-
-
-StringGlyph::~StringGlyph()
-{
-	if (_shape != nullptr)
-		_shape->RemoveGlyph(this);
-}
-
-
 
 /***/
 
 
 
-StringShape::StringVertexBuffer::StringVertexBuffer(StringShape* shape) :
+WidgetShape::StringVertexBuffer::StringVertexBuffer(WidgetShape* shape) :
 	_shape(shape)
 {
 }
 
 
-void StringShape::StringVertexBuffer::Update()
+void WidgetShape::StringVertexBuffer::Update()
 {
 	_shape->UpdateVertexBuffer();
 }
@@ -186,7 +121,7 @@ void StringShape::StringVertexBuffer::Update()
 
 
 
-StringShape::StringShape(StringFont* font) :
+WidgetShape::WidgetShape(StringFont* font) :
 	_vertices(this),
 	_font(font)
 {
@@ -194,20 +129,20 @@ StringShape::StringShape(StringFont* font) :
 }
 
 
-StringShape::~StringShape()
+WidgetShape::~WidgetShape()
 {
 	for (StringGlyph* glyph : _glyphs)
 		glyph->_shape = nullptr;
 }
 
 
-VertexBuffer<Vertex_2f_2f_1f>* StringShape::GetVertices()
+VertexBuffer<Vertex_2f_2f_1f>* WidgetShape::GetVertices()
 {
 	return &_vertices;
 }
 
 
-void StringShape::ClearGlyphs()
+void WidgetShape::ClearGlyphs()
 {
 	for (StringGlyph* glyph : _glyphs)
 		glyph->_shape = nullptr;
@@ -215,7 +150,7 @@ void StringShape::ClearGlyphs()
 }
 
 
-void StringShape::AddGlyph(StringGlyph* glyph)
+void WidgetShape::AddGlyph(StringGlyph* glyph)
 {
 	if (glyph->_shape != nullptr)
 		glyph->_shape->RemoveGlyph(glyph);
@@ -225,7 +160,7 @@ void StringShape::AddGlyph(StringGlyph* glyph)
 }
 
 
-void StringShape::RemoveGlyph(StringGlyph* glyph)
+void WidgetShape::RemoveGlyph(StringGlyph* glyph)
 {
 	glyph->_shape = nullptr;
 	_glyphs.erase(
@@ -234,7 +169,7 @@ void StringShape::RemoveGlyph(StringGlyph* glyph)
 }
 
 
-void StringShape::UpdateVertexBuffer()
+void WidgetShape::UpdateVertexBuffer()
 {
 	static std::vector<Vertex_2f_2f_1f> vertices;
 
@@ -248,7 +183,7 @@ void StringShape::UpdateVertexBuffer()
 }
 
 
-void StringShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, StringGlyph* glyph)
+void WidgetShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, StringGlyph* glyph)
 {
 	glm::vec2 p(0, 0);
 	float alpha = glyph->_alpha;
@@ -328,3 +263,46 @@ void StringShape::AppendStringGlyph(std::vector<Vertex_2f_2f_1f>& vertices, Stri
 		}
 	}
 }
+
+
+/***/
+
+
+
+StringGlyph::StringGlyph() :
+	_shape(nullptr),
+	_string(),
+	_transform(),
+	_alpha(1),
+	_delta(0)
+{
+}
+
+
+StringGlyph::StringGlyph(const char* string, glm::vec2 translate, float alpha, float delta) :
+	_shape(nullptr),
+	_string(string),
+	_transform(glm::translate(glm::mat4(), glm::vec3(translate, 0))),
+	_alpha(alpha),
+	_delta(delta)
+{
+}
+
+
+StringGlyph::StringGlyph(const char* string, glm::mat4x4 transform, float alpha, float delta) :
+	_shape(nullptr),
+	_string(string),
+	_transform(transform),
+	_alpha(alpha),
+	_delta(delta)
+{
+}
+
+
+StringGlyph::~StringGlyph()
+{
+	if (_shape != nullptr)
+		_shape->RemoveGlyph(this);
+}
+
+

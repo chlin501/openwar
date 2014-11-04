@@ -4,11 +4,18 @@
 
 
 TextureAtlas::TextureAtlas(GraphicsContext* gc) : Texture(gc),
+	_gc(gc),
 	_image(nullptr),
 	_currentX(0),
 	_currentY(0),
 	_nextY(0)
 {
+}
+
+
+GraphicsContext* TextureAtlas::GetGraphicsContext() const
+{
+	return _gc;
 }
 
 

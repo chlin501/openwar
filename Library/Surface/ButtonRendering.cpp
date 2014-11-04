@@ -19,7 +19,7 @@ _gc(gc)
 	_textureButtonIcons = new TextureResource(gc, resource("Textures/ButtonIcons.png"));
 
 	_string_font = new StringFont(gc, true, 18);
-	_string_shape = new StringShape(_string_font);
+	_string_shape = new WidgetShape(_string_font);
 
 	_textureEditorTools = new TextureResource(gc, resource("Textures/EditorTools.png"));
 
@@ -144,7 +144,7 @@ void ButtonRendering::RenderButtonText(const glm::mat4& transform, glm::vec2 pos
 
 	glm::vec2 p = position - 0.5f * _string_font->_textureFont->MeasureText(text) - glm::vec2(0, 1);
 
-	RenderCall<StringShader> renderCall(_gc);
+	RenderCall<WidgetShader> renderCall(_gc);
 
 	renderCall.SetVertices(_string_shape->GetVertices());
 	renderCall.SetUniform("texture", &_string_font->_textureAtlas);
