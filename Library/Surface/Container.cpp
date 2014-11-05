@@ -1,5 +1,6 @@
 #include "Container.h"
 #include "Surface.h"
+#include "GraphicsOpenGL.h"
 
 
 Container::Container(GraphicsContext* gc) : Content(gc)

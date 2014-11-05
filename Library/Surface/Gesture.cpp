@@ -46,27 +46,27 @@ void Gesture::RenderHints()
 }
 
 
-void Gesture::KeyDown(Surface* surface, char key)
+void Gesture::KeyDown(char key)
 {
 }
 
 
-void Gesture::KeyUp(Surface* surface, char key)
+void Gesture::KeyUp(char key)
 {
 }
 
 
-void Gesture::ScrollWheel(Surface* surface, glm::vec2 position, glm::vec2 delta)
+void Gesture::ScrollWheel(glm::vec2 position, glm::vec2 delta)
 {
 }
 
 
-void Gesture::Magnify(Surface* surface, glm::vec2 position, float magnification)
+void Gesture::Magnify(glm::vec2 position, float magnification)
 {
 }
 
 
-void Gesture::Magnify(Surface* surface, glm::vec2 position)
+void Gesture::Magnify(glm::vec2 position)
 {
 }
 

@@ -40,13 +40,13 @@ public:
 	TerrainView* GetTerrainView() const { return _terrainView; }
 
 	virtual void RenderHints();
-	virtual void Update(Surface* surface, double secondsSinceLastUpdate);
+	virtual void Update(double secondsSinceLastUpdate);
 
-	virtual void KeyDown(Surface* surface, char key);
-	virtual void KeyUp(Surface* surface, char key);
+	virtual void KeyDown(char key);
+	virtual void KeyUp(char key);
 
-	virtual void ScrollWheel(Surface* surface, glm::vec2 position, glm::vec2 delta);
-	virtual void Magnify(Surface* surface, glm::vec2 position, float magnification);
+	virtual void ScrollWheel(glm::vec2 position, glm::vec2 delta);
+	virtual void Magnify(glm::vec2 position, float magnification);
 
 	virtual void TouchBegan(Touch* touch);
 	virtual void TouchMoved();

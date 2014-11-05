@@ -40,7 +40,7 @@ _battleLayer(nullptr)
 	_buttonsTopLeft->SetContainer(this);
 	_buttonsTopRight->SetContainer(this);
 
-	_buttonGesture = new ButtonGesture(this);
+	_buttonGesture = new ButtonGesture();
 	_buttonGesture->_buttonViews.push_back(_buttonsTopLeft);
 	_buttonGesture->_buttonViews.push_back(_buttonsTopRight);
 

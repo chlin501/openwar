@@ -8,8 +8,7 @@
 #include "Surface.h"
 #include "Touch.h"
 
-ButtonGesture::ButtonGesture(Surface* surface) :
-_surface(surface),
+ButtonGesture::ButtonGesture() :
 _buttonItem(nullptr)
 {
 }
@@ -23,14 +22,14 @@ ButtonGesture::~ButtonGesture()
 
 
 
-void ButtonGesture::Update(Surface* surface, double secondsSinceLastUpdate)
+void ButtonGesture::Update(double secondsSinceLastUpdate)
 {
 
 }
 
 
 
-void ButtonGesture::KeyDown(Surface* surface, char key)
+void ButtonGesture::KeyDown(char key)
 {
 	for (ButtonGrid* buttonView : _buttonViews)
 		for (ButtonArea* buttonArea : buttonView->GetButtonAreas())
@@ -41,7 +40,6 @@ void ButtonGesture::KeyDown(Surface* surface, char key)
 				{
 					buttonItem->CallAction();
 				}
-
 }
 
 

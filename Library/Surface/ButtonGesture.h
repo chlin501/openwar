@@ -15,19 +15,18 @@ class ButtonGrid;
 
 class ButtonGesture : public Gesture
 {
-	Surface* _surface;
 	ButtonItem* _buttonItem;
 	std::shared_ptr<ButtonHotspot> _hotspot;
 
 public:
 	std::vector<ButtonGrid*> _buttonViews;
 
-	ButtonGesture(Surface* surface);
+	ButtonGesture();
 	virtual ~ButtonGesture();
 
-	virtual void Update(Surface* surface, double secondsSinceLastUpdate);
+	virtual void Update(double secondsSinceLastUpdate);
 
-	virtual void KeyDown(Surface* surface, char key);
+	virtual void KeyDown(char key);
 
 	virtual void TouchBegan(Touch* touch);
 	virtual void TouchMoved();

@@ -16,7 +16,7 @@ _editorModel(editorModel)
 }
 
 
-void EditorGesture::Update(Surface* surface, double secondsSinceLastUpdate)
+void EditorGesture::Update(double secondsSinceLastUpdate)
 {
 
 }

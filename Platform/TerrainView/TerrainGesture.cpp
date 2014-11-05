@@ -88,7 +88,7 @@ void TerrainGesture::RenderHints()
 }
 
 
-void TerrainGesture::Update(Surface* surface, double secondsSinceLastUpdate)
+void TerrainGesture::Update(double secondsSinceLastUpdate)
 {
 	if (_touches.empty())
 	{
@@ -107,7 +107,7 @@ void TerrainGesture::Update(Surface* surface, double secondsSinceLastUpdate)
 }
 
 
-void TerrainGesture::KeyDown(Surface* surface, char key)
+void TerrainGesture::KeyDown(char key)
 {
 	switch (key)
 	{
@@ -122,7 +122,7 @@ void TerrainGesture::KeyDown(Surface* surface, char key)
 }
 
 
-void TerrainGesture::KeyUp(Surface* surface, char key)
+void TerrainGesture::KeyUp(char key)
 {
 	switch (key)
 	{
@@ -137,13 +137,13 @@ void TerrainGesture::KeyUp(Surface* surface, char key)
 }
 
 
-void TerrainGesture::ScrollWheel(Surface* surface, glm::vec2 position, glm::vec2 delta)
+void TerrainGesture::ScrollWheel(glm::vec2 position, glm::vec2 delta)
 {
-	Magnify(surface, position, -delta.y / 10);
+	Magnify(position, -delta.y / 10);
 }
 
 
-void TerrainGesture::Magnify(Surface* surface, glm::vec2 position, float magnification)
+void TerrainGesture::Magnify(glm::vec2 position, float magnification)
 {
 	glm::vec2 p = (glm::vec2)_terrainView->GetViewport().center();
 	glm::vec2 d1 = glm::vec2(0, 64);

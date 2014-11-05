@@ -57,7 +57,6 @@ public:
 
 	int GetTapCount() const;
 
-	Surface* GetSurface() const;
 	const std::vector<Gesture*>& GetGestures() const;
 	bool HasGesture() const;
 

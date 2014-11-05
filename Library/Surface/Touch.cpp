@@ -63,12 +63,6 @@ int Touch::GetTapCount() const
 }
 
 
-Surface* Touch::GetSurface() const
-{
-	return _surface;
-}
-
-
 const std::vector<Gesture*>& Touch::GetGestures() const
 {
 	return _gestures;

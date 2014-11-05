@@ -45,7 +45,7 @@ BattleGesture::~BattleGesture()
 }
 
 
-void BattleGesture::Update(Surface* surface, double secondsSinceLastUpdate)
+void BattleGesture::Update(double secondsSinceLastUpdate)
 {
 
 }

@@ -5,8 +5,7 @@
 #include "Surface.h"
 
 
-ScrollerGesture::ScrollerGesture(Surface* surface) :
-_surface(surface),
+ScrollerGesture::ScrollerGesture() :
 _hotspot(nullptr)
 {
 }
@@ -17,7 +16,7 @@ ScrollerGesture::~ScrollerGesture()
 }
 
 
-void ScrollerGesture::Update(Surface* surface, double secondsSinceLastUpdate)
+void ScrollerGesture::Update(double secondsSinceLastUpdate)
 {
 
 }

@@ -8,14 +8,13 @@ class ScrollerHotspot;
 
 class ScrollerGesture : public Gesture
 {
-	Surface* _surface;
 	std::shared_ptr<ScrollerHotspot> _hotspot;
 
 public:
-	ScrollerGesture(Surface* surface);
+	ScrollerGesture();
 	virtual ~ScrollerGesture();
 
-	virtual void Update(Surface* surface, double secondsSinceLastUpdate);
+	virtual void Update(double secondsSinceLastUpdate);
 
 	virtual void TouchBegan(Touch* touch);
 	virtual void TouchMoved();

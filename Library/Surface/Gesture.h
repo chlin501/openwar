@@ -26,15 +26,15 @@ public:
 	bool IsEnabled() const { return _enabled; }
 	void SetEnabled(bool value) { _enabled = value; }
 
-	virtual void Update(Surface* surface, double secondsSinceLastUpdate) = 0;
+	virtual void Update(double secondsSinceLastUpdate) = 0;
 	virtual void RenderHints();
 
-	virtual void KeyDown(Surface* surface, char key);
-	virtual void KeyUp(Surface* surface, char key);
+	virtual void KeyDown(char key);
+	virtual void KeyUp(char key);
 
-	virtual void ScrollWheel(Surface* surface, glm::vec2 position, glm::vec2 delta);
-	virtual void Magnify(Surface* surface, glm::vec2 position, float magnification);
-	virtual void Magnify(Surface* surface, glm::vec2 position);
+	virtual void ScrollWheel(glm::vec2 position, glm::vec2 delta);
+	virtual void Magnify(glm::vec2 position, float magnification);
+	virtual void Magnify(glm::vec2 position);
 
 	virtual void TouchBegan(Touch* touch) = 0;
 	virtual void TouchMoved() = 0;

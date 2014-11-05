@@ -5,21 +5,15 @@
 #ifndef SURFACE_H
 #define SURFACE_H
 
-#include <vector>
-
-#include "Algebra/bounds.h"
-#include "GraphicsContext.h"
 #include "Container.h"
 
-class Gesture;
-class Touch;
+class GraphicsContext;
 
 
 class Surface : public Container
 {
 public:
 	Surface(GraphicsContext* gc);
-	virtual ~Surface();
 };
 
 

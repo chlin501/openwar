@@ -13,7 +13,6 @@
 class Container;
 class GraphicsContext;
 class Hotspot;
-class Surface;
 class Touch;
 class WidgetShape;
 
