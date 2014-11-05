@@ -104,12 +104,6 @@ void Content::SetVisible(bool value)
 }
 
 
-bounds2i Content::GetViewport() const
-{
-	return _viewport;
-}
-
-
 void Content::UseViewport()
 {
 	glViewport((GLint)_frame.min.x, (GLint)_frame.min.y, (GLsizei)_frame.x().size(), (GLsizei)_frame.y().size());
@@ -131,32 +125,6 @@ void Content::SetFrame(bounds2i value)
 
 void Content::OnFrameChanged()
 {
-}
-
-
-glm::ivec2 Content::GetPosition() const
-{
-	return _frame.min;
-}
-
-
-void Content::SetPosition(glm::ivec2 value)
-{
-	glm::ivec2 delta = value - GetPosition();
-	SetFrameValue(_frame + delta);
-}
-
-
-glm::ivec2 Content::GetSize() const
-{
-	return _frame.size();
-}
-
-
-void Content::SetSize(glm::ivec2 value)
-{
-	glm::ivec2 p = GetPosition();
-	SetFrameValue(bounds2i(p,  p + value));
 }
 
 

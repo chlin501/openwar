@@ -30,7 +30,6 @@ public:
 	// Content
 
 	virtual Surface* GetSurface() const;
-	virtual bounds2i GetViewport() const;
 
 	virtual void OnFrameChanged();
 

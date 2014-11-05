@@ -27,7 +27,6 @@ class Content
 	Container* _container;
 	bool _visible;
 
-	bounds2i _viewport;
 	bounds2i _frame;
 	bounds2f _bounds;
 
@@ -56,22 +55,11 @@ public:
 	virtual bool IsVisible() const;
 	void SetVisible(bool value);
 
-	virtual bounds2i GetViewport() const;
 	virtual void UseViewport();
-
-	//
 
 	virtual bounds2i GetFrame() const;
 	virtual void SetFrame(bounds2i value);
 	virtual void OnFrameChanged();
-
-	virtual glm::ivec2 GetPosition() const;
-	virtual void SetPosition(glm::ivec2 value);
-
-	virtual glm::ivec2 GetSize() const;
-	virtual void SetSize(glm::ivec2 value);
-
-	//
 
 	virtual bounds2f GetBounds() const;
 	virtual void SetBounds(const bounds2f& value);
@@ -79,12 +67,8 @@ public:
 	virtual bool IsUsingDepth() const;
 	virtual void SetUsingDepth(bool value);
 
-	//
-
 	virtual glm::vec2 GetTranslate() const;
 	virtual void SetTranslate(glm::vec2 value);
-
-	//
 
 	virtual glm::mat4 GetViewportTransform() const;
 	virtual glm::mat4 GetContainerTransform() const;

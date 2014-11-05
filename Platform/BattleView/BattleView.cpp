@@ -493,7 +493,7 @@ void BattleView::Render(const glm::mat4& transformx)
 	glm::mat4 terrainTransform = GetTerrainTransform();
 
 	glm::mat4 adjustmentTransform;
-	adjustmentTransform = glm::scale(adjustmentTransform, glm::vec3(GetSize(), 1));
+	adjustmentTransform = glm::scale(adjustmentTransform, glm::vec3(GetFrame().size(), 1));
 	adjustmentTransform = glm::scale(adjustmentTransform, glm::vec3(0.5f, 0.5f, 1));
 	adjustmentTransform = glm::translate(adjustmentTransform, glm::vec3(1, 1, 0));
 

@@ -11,7 +11,7 @@
 Surface::Surface(GraphicsContext* gc, glm::ivec2 size) :
 _gc(gc)
 {
-	SetSize(size);
+	SetFrame(bounds2i(0, 0, size));
 }
 
 
@@ -23,12 +23,6 @@ Surface::~Surface()
 Surface* Surface::GetSurface() const
 {
 	return const_cast<Surface*>(this);
-}
-
-
-bounds2i Surface::GetViewport() const
-{
-	return bounds2i(0, 0, GetSize());
 }
 
 

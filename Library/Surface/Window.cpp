@@ -432,8 +432,8 @@ void Window::ProcessMouseWheel(const SDL_MouseWheelEvent& event)
 
 void Window::Update()
 {
-	if (_surface->GetSize() != GetWindowSize())
-		_surface->SetSize(GetWindowSize());
+	if (_surface->GetFrame().size() != GetWindowSize())
+		_surface->SetFrame(bounds2i(0, 0, GetWindowSize()));
 
 	std::chrono::system_clock::time_point timestamp = std::chrono::system_clock::now();
 	double secondsSinceTimeStart = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(timestamp - _timestart).count();

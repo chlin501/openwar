@@ -259,7 +259,7 @@ void BattleLayer::UpdateBattleViewSize()
 {
 	if (!_battleViews.empty())
 	{
-		glm::ivec2 localSize = GetSize();
+		glm::ivec2 localSize = GetFrame().size();
 		glm::ivec2 globalSize = GetSurface()->GetFrame().size();
 
 		int localHeight = localSize.y / _battleViews.size();
