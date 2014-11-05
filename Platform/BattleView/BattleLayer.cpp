@@ -259,24 +259,24 @@ void BattleLayer::UpdateBattleViewSize()
 {
 	if (!_battleViews.empty())
 	{
-		glm::ivec2 localSize = GetFrame().size();
-		glm::ivec2 globalSize = GetSurface()->GetFrame().size();
+		float count = _battleViews.size();
 
-		int localHeight = localSize.y / _battleViews.size();
-		int localY = 0;
-		int globalHeight = globalSize.y / _battleViews.size();
-		int globalY = 0;
+		bounds1i frame_x = GetFrame().x();
+		bounds1f frame_y = GetFrame().y();
 
+		bounds1f bounds_x = GetFrame().x();
+		float bounds_y_size = GetFrame().y().size() / count;
+
+		int index = 0;
 		for (BattleView* battleView : _battleViews)
 		{
-			bounds2i frame = bounds2i(0, localY, localSize.x, localY + localHeight);
-			bounds2i viewport = bounds2i(0, globalY, globalSize.x, globalY + globalHeight);
+			float k1 = index / count;
+			float k2 = (index + 1) / count;
 
-			battleView->SetFrame(frame);
-			battleView->SetBounds(bounds2f(0, 0, localSize.x, localHeight));
+			battleView->SetFrame(bounds2i(frame_x, (int)frame_y.lerp(k1), (int)frame_y.lerp(k2)));
+			battleView->SetBounds(bounds2f(bounds_x, 0, bounds_y_size));
 
-			localY += localHeight;
-			globalY += globalHeight;
+			++index;
 		}
 	}
 }
