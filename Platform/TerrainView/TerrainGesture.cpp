@@ -50,17 +50,17 @@ void TerrainGesture::RenderHints()
 
 	bounds2f bounds(left.x, bottom.y, right.x, top.y);
 
-	vertices.AddVertex(Vertex_2f(bounds.p12() + glm::vec2(0, 4)));
-	vertices.AddVertex(Vertex_2f(bounds.p22() + glm::vec2(0, 4)));
+	vertices.AddVertex(Vertex_2f(bounds.mix_01() + glm::vec2(0, 4)));
+	vertices.AddVertex(Vertex_2f(bounds.mix_11() + glm::vec2(0, 4)));
 
-	vertices.AddVertex(Vertex_2f(bounds.p11()));
-	vertices.AddVertex(Vertex_2f(bounds.p12()));
-	vertices.AddVertex(Vertex_2f(bounds.p12()));
-	vertices.AddVertex(Vertex_2f(bounds.p22()));
-	vertices.AddVertex(Vertex_2f(bounds.p22()));
-	vertices.AddVertex(Vertex_2f(bounds.p21()));
-	vertices.AddVertex(Vertex_2f(bounds.p21()));
-	vertices.AddVertex(Vertex_2f(bounds.p11()));
+	vertices.AddVertex(Vertex_2f(bounds.mix_00()));
+	vertices.AddVertex(Vertex_2f(bounds.mix_01()));
+	vertices.AddVertex(Vertex_2f(bounds.mix_01()));
+	vertices.AddVertex(Vertex_2f(bounds.mix_11()));
+	vertices.AddVertex(Vertex_2f(bounds.mix_11()));
+	vertices.AddVertex(Vertex_2f(bounds.mix_10()));
+	vertices.AddVertex(Vertex_2f(bounds.mix_10()));
+	vertices.AddVertex(Vertex_2f(bounds.mix_00()));
 
 	if (this != nullptr)
 	{

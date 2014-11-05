@@ -74,7 +74,7 @@ const float* intersect(ray r, bounds3f b)
 {
 	static float result;
 
-	if (b.is_empty())
+	if (b.empty())
 		return nullptr;
 
 	if (b.contains(r.origin))

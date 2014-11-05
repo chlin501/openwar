@@ -128,7 +128,7 @@ void UnitCounter::AppendFacingMarker(VertexShape_3f_2f* vertices, BattleView* ba
 
 	bounds2f bounds = battleView->GetUnitCurrentFacingMarkerBounds(_unit);
 	glm::vec2 p = bounds.center();
-	float size = bounds.height();
+	float size = bounds.y().size();
 	float direction = xindex != 0 || yindex != 0 ? -glm::half_pi<float>() : (_unit->state.bearing - battleView->GetCameraFacing());
 	if (battleView->GetFlip())
 		direction += glm::pi<float>();

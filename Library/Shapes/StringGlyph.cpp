@@ -97,12 +97,12 @@ void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices)
 
 		float next_alpha = alpha + _delta * s.x;
 
-		vertices.push_back(Vertex_2f_2f_1f(bounds.p11(), glm::vec2(item_u0, item_v1), alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.p12(), glm::vec2(item_u0, item_v0), alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.p22(), glm::vec2(item_u1, item_v0), next_alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.p22(), glm::vec2(item_u1, item_v0), next_alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.p21(), glm::vec2(item_u1, item_v1), next_alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.p11(), glm::vec2(item_u0, item_v1), alpha));
+		vertices.push_back(Vertex_2f_2f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), alpha));
+		vertices.push_back(Vertex_2f_2f_1f(bounds.mix_01(), glm::vec2(item_u0, item_v0), alpha));
+		vertices.push_back(Vertex_2f_2f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), next_alpha));
+		vertices.push_back(Vertex_2f_2f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), next_alpha));
+		vertices.push_back(Vertex_2f_2f_1f(bounds.mix_10(), glm::vec2(item_u1, item_v1), next_alpha));
+		vertices.push_back(Vertex_2f_2f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), alpha));
 	}
 	else
 	{
@@ -132,12 +132,12 @@ void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices)
 
 			float next_alpha = alpha + _delta * s.x;
 
-			vertices.push_back(Vertex_2f_2f_1f(bounds.p11(), glm::vec2(item_u0, item_v1), alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.p12(), glm::vec2(item_u0, item_v0), alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.p22(), glm::vec2(item_u1, item_v0), next_alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.p22(), glm::vec2(item_u1, item_v0), next_alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.p21(), glm::vec2(item_u1, item_v1), next_alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.p11(), glm::vec2(item_u0, item_v1), alpha));
+			vertices.push_back(Vertex_2f_2f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), alpha));
+			vertices.push_back(Vertex_2f_2f_1f(bounds.mix_01(), glm::vec2(item_u0, item_v0), alpha));
+			vertices.push_back(Vertex_2f_2f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), next_alpha));
+			vertices.push_back(Vertex_2f_2f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), next_alpha));
+			vertices.push_back(Vertex_2f_2f_1f(bounds.mix_10(), glm::vec2(item_u1, item_v1), next_alpha));
+			vertices.push_back(Vertex_2f_2f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), alpha));
 
 			if (next_alpha < 0)
 				break;

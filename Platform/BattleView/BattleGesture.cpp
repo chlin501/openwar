@@ -62,39 +62,39 @@ void BattleGesture::RenderHints()
 	{
 		bounds2f bounds = GetUnitCurrentBounds(unitMarker->_unit);
 
-		vertices.AddVertex(Vertex_2f(bounds.p11()));
-		vertices.AddVertex(Vertex_2f(bounds.p12()));
-		vertices.AddVertex(Vertex_2f(bounds.p12()));
-		vertices.AddVertex(Vertex_2f(bounds.p22()));
-		vertices.AddVertex(Vertex_2f(bounds.p22()));
-		vertices.AddVertex(Vertex_2f(bounds.p21()));
-		vertices.AddVertex(Vertex_2f(bounds.p21()));
-		vertices.AddVertex(Vertex_2f(bounds.p11()));
+		vertices.AddVertex(Vertex_2f(bounds.mix_00()));
+		vertices.AddVertex(Vertex_2f(bounds.mix_01()));
+		vertices.AddVertex(Vertex_2f(bounds.mix_01()));
+		vertices.AddVertex(Vertex_2f(bounds.mix_11()));
+		vertices.AddVertex(Vertex_2f(bounds.mix_11()));
+		vertices.AddVertex(Vertex_2f(bounds.mix_10()));
+		vertices.AddVertex(Vertex_2f(bounds.mix_10()));
+		vertices.AddVertex(Vertex_2f(bounds.mix_00()));
 
 		bounds = GetUnitFutureBounds(unitMarker->_unit);
-		if (!bounds.is_empty())
+		if (!bounds.empty())
 		{
-			vertices.AddVertex(Vertex_2f(bounds.p11()));
-			vertices.AddVertex(Vertex_2f(bounds.p12()));
-			vertices.AddVertex(Vertex_2f(bounds.p12()));
-			vertices.AddVertex(Vertex_2f(bounds.p22()));
-			vertices.AddVertex(Vertex_2f(bounds.p22()));
-			vertices.AddVertex(Vertex_2f(bounds.p21()));
-			vertices.AddVertex(Vertex_2f(bounds.p21()));
-			vertices.AddVertex(Vertex_2f(bounds.p11()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_00()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_01()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_01()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_11()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_11()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_10()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_10()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_00()));
 		}
 
 		bounds = GetUnitModifierBounds(unitMarker->_unit);
-		if (!bounds.is_empty())
+		if (!bounds.empty())
 		{
-			vertices.AddVertex(Vertex_2f(bounds.p11()));
-			vertices.AddVertex(Vertex_2f(bounds.p12()));
-			vertices.AddVertex(Vertex_2f(bounds.p12()));
-			vertices.AddVertex(Vertex_2f(bounds.p22()));
-			vertices.AddVertex(Vertex_2f(bounds.p22()));
-			vertices.AddVertex(Vertex_2f(bounds.p21()));
-			vertices.AddVertex(Vertex_2f(bounds.p21()));
-			vertices.AddVertex(Vertex_2f(bounds.p11()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_00()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_01()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_01()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_11()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_11()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_10()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_10()));
+			vertices.AddVertex(Vertex_2f(bounds.mix_00()));
 		}
 	}
 
@@ -437,7 +437,7 @@ void BattleGesture::UpdateTrackingMarker()
 
 		bounds2f contentBounds = _battleView->GetContentBounds();
 		glm::vec2 contentCenter = contentBounds.center();
-		float contentRadius = contentBounds.width() / 2;
+		float contentRadius = contentBounds.x().size() / 2;
 
 		glm::vec2 differenceToCenter = contentCenter - markerPosition;
 		float distanceToCenter = glm::length(differenceToCenter);

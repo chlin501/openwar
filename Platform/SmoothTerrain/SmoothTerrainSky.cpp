@@ -41,7 +41,7 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f bounds, float
 
 	float x0 = bounds.min.x;
 	float x1 = bounds.max.x;
-	float y0 = bounds.y().lerp(0.2f);
+	float y0 = bounds.y().mix(0.2f);
 	float y1 = bounds.max.y;
 
 	vertices.AddVertex(Vertex_2f_4f(glm::vec2(x0, y0), c1));

@@ -226,7 +226,7 @@ void SmoothTerrainRenderer::InitializeShadow()
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
 	glm::vec2 center = bounds.center();
-	float radius1 = bounds.width() / 2;
+	float radius1 = bounds.x().size() / 2;
 	float radius2 = radius1 * 1.075f;
 
 	_shadowVertices._mode = GL_TRIANGLES;
@@ -257,7 +257,7 @@ void SmoothTerrainRenderer::InitializeSkirt()
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
 	glm::vec2 center = bounds.center();
-	float radius = bounds.width() / 2;
+	float radius = bounds.x().size() / 2;
 
 	_skirtVertices._mode = GL_TRIANGLE_STRIP;
 	_skirtVertices.Clear();
@@ -439,7 +439,7 @@ void SmoothTerrainRenderer::InitializeLines()
 
 static int inside_circle(bounds2f bounds, glm::vec2 p)
 {
-	return glm::length(p - bounds.center()) <= bounds.width() / 2 ? 1 : 0;
+	return glm::length(p - bounds.center()) <= bounds.x().size() / 2 ? 1 : 0;
 }
 
 
@@ -455,7 +455,7 @@ static int inside_circle(bounds2f bounds, Vertex_3f_3f v1, Vertex_3f_3f v2, Vert
 void SmoothTerrainRenderer::BuildTriangles()
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
-	glm::vec2 corner = bounds.p11();
+	glm::vec2 corner = bounds.mix_00();
 	glm::vec2 size = bounds.size();
 
 	_insideVertices._mode = GL_TRIANGLES;

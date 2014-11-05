@@ -262,7 +262,7 @@ void BattleLayer::UpdateBattleViewSize()
 			float k1 = index / count;
 			float k2 = (index + 1) / count;
 
-			battleView->SetFrame(bounds2i(frame_x, (int)frame_y.lerp(k1), (int)frame_y.lerp(k2)));
+			battleView->SetFrame(bounds2i(frame_x, (int)frame_y.mix(k1), (int)frame_y.mix(k2)));
 			battleView->SetBounds(bounds2f(bounds_x, 0, bounds_y_size));
 
 			++index;

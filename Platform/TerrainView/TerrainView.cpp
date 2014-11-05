@@ -85,7 +85,7 @@ void TerrainView::SetHeightMap(HeightMap* heightMap)
 
 float TerrainView::GetContentRadius() const
 {
-	return _contentBounds.height() / 2;
+	return _contentBounds.y().size() / 2;
 }
 
 
@@ -321,7 +321,7 @@ void TerrainView::ClampCameraPosition()
 	glm::vec2 centerScreen = (glm::vec2)GetBounds().center();
 	glm::vec2 contentCamera = GetTerrainPosition2(centerScreen).xy();
 	glm::vec2 contentCenter = GetContentBounds().center();
-	float contentRadius = _heightMap->GetBounds().width() / 2;
+	float contentRadius = _heightMap->GetBounds().x().size() / 2;
 
 	glm::vec2 offset = contentCamera - contentCenter;
 	float distance = glm::length(offset);

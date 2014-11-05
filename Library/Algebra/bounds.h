@@ -7,24 +7,6 @@
 
 #include <glm/glm.hpp>
 
-/* TODO:
-	is_empty() => empty()
-	lerp(v) => mix(v)
-	unlerp(v) => unmix(v)
-	shrink(d) => grow(-d)
-	mix(x, y)
-	mix_00()
-	mix_01()
-	mix_10()
-	mix_11()
-
-	width() => x().size()
-	height() => y().size()
-
-	bounds2_from_center(p, r) => bounds2(p).grow(r)
-	bounds2_from_corner(p, s) => ???
-*/
-
 
 template <class T, glm::precision P>
 struct bounds1
@@ -42,7 +24,7 @@ struct bounds1
 	T size() const {return max - min;}
 	T radius() const {return (max - min) / 2;}
 
-	bool is_empty() const {return min >= max;}
+	bool empty() const {return min >= max;}
 	bool contains(T v) const {return min <= v && v <= max;}
 
 	bool intersects(const bounds1<T, P>& b) const
@@ -53,12 +35,11 @@ struct bounds1
 		return !disjoint;
 	}
 
-
 	bounds1<T, P> grow(T d) const {return bounds1<T, P>(min - d, max + d);}
-	bounds1<T, P> shrink(T d) const {return bounds1<T, P>(min + d, max - d);}
 
-	T unlerp(T v) const {return (v - min) / (max - min);}
-	T lerp(T v) const {return min + v * (max - min);}
+	T mix(T v) const {return min + v * (max - min);}
+	T unmix(T v) const {return (v - min) / (max - min);}
+
 	T clamp(T v) const
 	{
 		if (min > max) return (min + max) / 2;
@@ -90,19 +71,18 @@ struct bounds2
 	bounds1<T, P> x() const {return bounds1<T, P>(min.x, max.x);}
 	bounds1<T, P> y() const {return bounds1<T, P>(min.y, max.y);}
 
-	glm::tvec2<T, P> p11() const {return glm::tvec2<T, P>(min.x, min.y);}
-	glm::tvec2<T, P> p12() const {return glm::tvec2<T, P>(min.x, max.y);}
-	glm::tvec2<T, P> p21() const {return glm::tvec2<T, P>(max.x, min.y);}
-	glm::tvec2<T, P> p22() const {return glm::tvec2<T, P>(max.x, max.y);}
+	glm::tvec2<T, P> mix(T kx, T ky) const {return glm::tvec2<T, P>(x().mix(kx), y().mix(ky));}
+
+	glm::tvec2<T, P> mix_00() const {return glm::tvec2<T, P>(min.x, min.y);}
+	glm::tvec2<T, P> mix_01() const {return glm::tvec2<T, P>(min.x, max.y);}
+	glm::tvec2<T, P> mix_10() const {return glm::tvec2<T, P>(max.x, min.y);}
+	glm::tvec2<T, P> mix_11() const {return glm::tvec2<T, P>(max.x, max.y);}
 
 	glm::tvec2<T, P> center() const {return glm::tvec2<T, P>((min.x + max.x) / 2, (min.y + max.y) / 2);}
 	glm::tvec2<T, P> size() const {return glm::tvec2<T, P>(max.x - min.x, max.y - min.y);}
 	glm::tvec2<T, P> radius() const {return glm::tvec2<T, P>((max.x - min.x) / 2, (max.y - min.y) / 2);}
 
-	T width() const {return max.x - min.x;}
-	T height() const {return max.y - min.y;}
-
-	bool is_empty() const {return min.x >= max.x || min.y >= max.y;}
+	bool empty() const {return min.x >= max.x || min.y >= max.y;}
 	bool contains(T x, T y) const {return min.x <= x && x <= max.x && min.y <= y && y <= max.y;}
 	bool contains(glm::tvec2<T, P> p) const {return min.x <= p.x && p.x <= max.x && min.y <= p.y && p.y <= max.y;}
 	bool intersects(const bounds2<T, P>& b) const {return x().intersects(b.x()) && y().intersects(b.y());}
@@ -168,7 +148,7 @@ struct bounds3
 
 	template <class T2> operator bounds3<T2, P>() const { return bounds3<T2, P>((glm::tvec3<T2, P>)min, (glm::tvec3<T2, P>)max); }
 
-	bool is_empty() const {return min.x >= max.x || min.y >= max.y || min.z >= max.z;}
+	bool empty() const {return min.x >= max.x || min.y >= max.y || min.z >= max.z;}
 	bool contains(glm::tvec3<T, P> p) const {return min.x <= p.x && p.x <= max.x && min.y <= p.y && p.y <= max.y && min.z <= p.z && p.z <= max.z;}
 
 	bounds2<T, P> xy() const {return bounds2<T, P>(min.x, min.y, max.x, max.y);}
@@ -229,16 +209,6 @@ typedef bounds3<float, glm::highp> bounds3f;
 typedef bounds1<int, glm::highp> bounds1i;
 typedef bounds2<int, glm::highp> bounds2i;
 typedef bounds3<int, glm::highp> bounds3i;
-
-
-inline bounds2f bounds2_from_center(float x, float y, float r) {return bounds2f(x - r, y - r, x + r, y + r);}
-inline bounds2f bounds2_from_center(glm::vec2 p, float r) {return bounds2f(p.x - r, p.y - r, p.x + r, p.y + r);}
-inline bounds2f bounds2_from_center(glm::vec2 p, glm::vec2 r) {return bounds2f(p.x - r.x, p.y - r.y, p.x + r.x, p.y + r.y);}
-inline bounds2f bounds2_from_center(float x, float y, float rx, float ry) {return bounds2f(x - rx, y - ry, x + rx, y + ry);}
-inline bounds2f bounds2_from_center(glm::vec2 p, float rx, float ry) {return bounds2f(p.x - rx, p.y - ry, p.x + rx, p.y + ry);}
-inline bounds2f bounds2_from_corner(float x, float y, float sx, float sy) {return bounds2f(x, y, x + sx, y + sy);}
-inline bounds2f bounds2_from_corner(glm::vec2 p, glm::vec2 s) {return bounds2f(p.x, p.y, p.x + s.x, p.y + s.y);}
-
 
 
 #endif

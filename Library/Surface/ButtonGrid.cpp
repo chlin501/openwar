@@ -189,7 +189,7 @@ void ButtonArea::UpdateBounds(bounds2f bounds)
 			size_t index = i * columns.size() + j;
 			if (index < buttonItems.size())
 			{
-				buttonItems[index]->SetBounds(bounds2f(x, -y - h, x + w, -y) + bounds.p12());
+				buttonItems[index]->SetBounds(bounds2f(x, -y - h, x + w, -y) + bounds.mix_01());
 			}
 			x += w;
 		}
@@ -257,7 +257,7 @@ void ButtonGrid::UpdateLayout()
 		buttonArea->UpdateColumnsAndRows();
 		glm::vec2 size = buttonArea->CalculateSize();
 		position += glm::vec2(spacing, -spacing - size.y);
-		bounds.push_back(bounds2_from_corner(position, size));
+		bounds.push_back(bounds2f(position, position + size));
 		position += glm::vec2(size.x, 0);
 	}
 

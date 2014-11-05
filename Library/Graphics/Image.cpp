@@ -291,7 +291,7 @@ void Image::Fill(const glm::vec4& color, const bounds2f& bounds)
 	[NSGraphicsContext setCurrentContext:gc];
 
 	CGContextSetRGBFillColor(context, color.r, color.g, color.b, color.a);
-	CGRect rect = CGRectMake(bounds.min.x, bounds.min.y, bounds.width(), bounds.height());
+	CGRect rect = CGRectMake(bounds.min.x, bounds.min.y, bounds.x().size(), bounds.y().size());
 	CGContextClearRect(context, rect);
 	CGContextFillRect(context, rect);
 

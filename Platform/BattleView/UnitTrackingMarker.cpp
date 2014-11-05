@@ -88,7 +88,7 @@ void UnitTrackingMarker::AppendFacingMarker(VertexShape_3f_2f* vertices, BattleV
 
 	bounds2f b = battleView->GetUnitFacingMarkerBounds(_path.back(), facing);
 	glm::vec2 p = b.center();
-	float size = b.height();
+	float size = b.y().size();
 	float direction = facing - battleView->GetCameraFacing();
 	if (battleView->GetFlip())
 		direction += glm::pi<float>();

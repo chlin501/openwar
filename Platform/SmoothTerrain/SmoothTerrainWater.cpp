@@ -88,7 +88,7 @@ SmoothTerrainWater::~SmoothTerrainWater()
 
 static int inside_circle(bounds2f bounds, glm::vec2 p)
 {
-	return glm::distance(p, bounds.center()) <= bounds.width() / 2 ? 1 : 0;
+	return glm::distance(p, bounds.center()) <= bounds.x().size() / 2 ? 1 : 0;
 }
 
 
