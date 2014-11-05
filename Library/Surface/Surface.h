@@ -20,8 +20,6 @@ class Surface : public Container
 	GraphicsContext* _gc;
 
 public:
-	//std::vector<Gesture*> _gestures;
-
 	Surface(GraphicsContext* gc);
 	virtual ~Surface();
 

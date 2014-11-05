@@ -478,8 +478,8 @@ void BattleView::InitializeCameraPosition()
 
 	bool flip = GetFlip();
 
-	glm::vec2 friendlyScreen = ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2(0, flip ? 0.4 : -0.4));
-	glm::vec2 enemyScreen = ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2(0, flip ? -0.4 : 0.4));
+	glm::vec2 friendlyScreen = NormalizedToContent(glm::vec2(0, flip ? 0.4 : -0.4));
+	glm::vec2 enemyScreen = NormalizedToContent(glm::vec2(0, flip ? -0.4 : 0.4));
 
 	Zoom(GetTerrainPosition(friendlyCenter, 0), GetTerrainPosition(enemyCenter, 0), friendlyScreen, enemyScreen, 0);
 
@@ -491,7 +491,6 @@ void BattleView::Render()
 {
 	glm::mat4 transform = GetRenderTransform();
 
-	glm::mat4 containerTransform = transform * glm::inverse(GetContentTransform());
 	glm::mat4 terrainTransform = GetTerrainTransform();
 
 	glm::mat4 adjustmentTransform;
@@ -767,7 +766,7 @@ void BattleView::Update(double secondsSinceLastUpdate)
 }
 
 
-void BattleView::FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch)
+void BattleView::FindHotspots(glm::vec2 viewportPosition, Touch* touch)
 {
 
 }
@@ -875,7 +874,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 	glm::vec4 q = transform * glm::vec4(position2, 1);
 	float s = glm::clamp(glm::abs(q.y / q.w - p.y / p.w), sizeLimit.min, sizeLimit.max);
 
-	return bounds2f(ConvertNormalizedDeviceCoordinateToContentCoordinate((glm::vec2)p.xy() / p.w)).grow(s / 2);
+	return bounds2f(NormalizedToContent((glm::vec2)p.xy() / p.w)).grow(s / 2);
 }
 
 

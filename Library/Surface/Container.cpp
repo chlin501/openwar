@@ -89,14 +89,14 @@ void Container::Render()
 }
 
 
-void Container::FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch)
+void Container::FindHotspots(glm::vec2 viewportPosition, Touch* touch)
 {
 	for (auto i = _contents.rbegin(); i != _contents.rend(); ++i)
 	{
 		Content* content = *i;
 		if (content->IsVisible())
 		{
-			content->FindHotspots(content->GetContentTransform(), position, touch);
+			content->FindHotspots(viewportPosition, touch);
 		}
 	}
 }

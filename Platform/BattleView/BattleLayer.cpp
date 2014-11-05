@@ -250,11 +250,11 @@ void BattleLayer::UpdateBattleViewSize()
 	{
 		float count = _battleViews.size();
 
-		bounds1i frame_x = GetFrame().x();
-		bounds1f frame_y = GetFrame().y();
+		bounds1i viewport_x = GetViewport().x();
+		bounds1f viewport_y = GetViewport().y();
 
-		bounds1f bounds_x = GetFrame().x();
-		float bounds_y_size = GetFrame().y().size() / count;
+		bounds1f bounds_x = GetBounds().x();
+		float bounds_y_size = GetBounds().y().size() / count;
 
 		int index = 0;
 		for (BattleView* battleView : _battleViews)
@@ -262,7 +262,7 @@ void BattleLayer::UpdateBattleViewSize()
 			float k1 = index / count;
 			float k2 = (index + 1) / count;
 
-			battleView->SetFrame(bounds2i(frame_x, (int)frame_y.mix(k1), (int)frame_y.mix(k2)));
+			battleView->SetViewport(bounds2i(viewport_x, (int)viewport_y.mix(k1), (int)viewport_y.mix(k2)));
 			battleView->SetBounds(bounds2f(bounds_x, 0, bounds_y_size));
 
 			++index;

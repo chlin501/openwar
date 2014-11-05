@@ -41,7 +41,7 @@ Touch::~Touch()
 void Touch::UpdateHotspots()
 {
 	_hotspots.clear();
-	_surface->FindHotspots(glm::mat4(), _position, this);
+	_surface->FindHotspots(_position, this);
 }
 
 

@@ -16,8 +16,6 @@ class Surface;
 class Touch;
 class WidgetShape;
 
-glm::mat4 ViewportTransform(bounds2i viewport, glm::vec2 translate = glm::vec2(), float rotate = 0);
-
 
 class Content
 {
@@ -27,11 +25,10 @@ class Content
 	Container* _container;
 	bool _visible;
 
-	bounds2i _frame;
+	bounds2i _viewport;
 	bounds2f _bounds;
 
 	bool _isUsingDepth;
-	glm::vec2 _translate;
 	bool _flip;
 	bool _dismissed;
 	mutable WidgetShape* _widgetShape;
@@ -53,10 +50,9 @@ public:
 	virtual bool IsVisible() const;
 	void SetVisible(bool value);
 
+	virtual bounds2i GetViewport() const;
+	virtual void SetViewport(bounds2i value);
 	virtual void UseViewport();
-
-	virtual bounds2i GetFrame() const;
-	virtual void SetFrame(bounds2i value);
 
 	virtual bounds2f GetBounds() const;
 	virtual void SetBounds(const bounds2f& value);
@@ -64,21 +60,23 @@ public:
 	virtual bool IsUsingDepth() const;
 	virtual void SetUsingDepth(bool value);
 
-	virtual glm::vec2 GetTranslate() const;
-	virtual void SetTranslate(glm::vec2 value);
-
 	virtual glm::mat4 GetRenderTransform() const;
-	virtual glm::mat4 GetContentTransform() const;
 
 	bool GetFlip() const { return _flip; }
 	void SetFlip(bool value) { _flip = value; }
 
-	glm::vec2 ConvertContentCoordinateToNormalizedDeviceCoordinate(glm::vec2 value) const;
-	glm::vec2 ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2 value) const;
+	glm::vec2 ContentToViewport(glm::vec2 value) const;
+	glm::vec2 ViewportToContent(glm::vec2 value) const;
+
+	glm::vec2 ContentToNormalized(glm::vec2 value) const;
+	glm::vec2 NormalizedToContent(glm::vec2 value) const;
+
+	glm::vec2 ViewportToNormalized(glm::vec2 value) const;
+	glm::vec2 NormalizedToViewport(glm::vec2 value) const;
 
 	virtual void Update(double secondsSinceLastUpdate) = 0;
 	virtual void Render() = 0;
-	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch) = 0;
+	virtual void FindHotspots(glm::vec2 viewportPosition, Touch* touch) = 0;
 };
 
 

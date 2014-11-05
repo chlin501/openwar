@@ -11,30 +11,14 @@
 
 
 
-glm::mat4 ViewportTransform(bounds2i viewport, glm::vec2 translate, float rotate)
-{
-	glm::vec2 viewport_center = (glm::vec2)viewport.center();
-	glm::vec2 viewport_scale = 2.0f / (glm::vec2)viewport.size();
-
-	glm::mat4x4 result = glm::scale(glm::mat4x4(), glm::vec3(viewport_scale.x, viewport_scale.y, 1.0f))
-		* glm::translate(glm::mat4x4(), glm::vec3(translate.x - viewport_center.x, translate.y - viewport_center.y, 0.0f));
-
-	if (rotate != 0)
-		result = result * glm::rotate(glm::mat4x4(), rotate * 180 / (float)M_PI, glm::vec3(0, 0, 1));
-
-	return result;
-}
-
-
 
 Content::Content() :
 	_surface(nullptr),
 	_container(nullptr),
 	_visible(true),
-	_frame(),
+	_viewport(),
 	_bounds(),
 	_isUsingDepth(false),
-	_translate(),
 	_flip(false),
 	_dismissed(false),
 	_widgetShape(nullptr)
@@ -104,22 +88,22 @@ void Content::SetVisible(bool value)
 }
 
 
+
+bounds2i Content::GetViewport() const
+{
+	return _viewport;
+}
+
+
+void Content::SetViewport(bounds2i value)
+{
+	_viewport = value;
+}
+
+
 void Content::UseViewport()
 {
-	glViewport((GLint)_frame.min.x, (GLint)_frame.min.y, (GLsizei)_frame.x().size(), (GLsizei)_frame.y().size());
-}
-
-
-
-bounds2i Content::GetFrame() const
-{
-	return _frame;
-}
-
-
-void Content::SetFrame(bounds2i value)
-{
-	_frame = value;
+	glViewport((GLint)_viewport.min.x, (GLint)_viewport.min.y, (GLsizei)_viewport.x().size(), (GLsizei)_viewport.y().size());
 }
 
 
@@ -147,19 +131,6 @@ void Content::SetUsingDepth(bool value)
 }
 
 
-glm::vec2 Content::GetTranslate() const
-{
-	return _translate;
-}
-
-
-void Content::SetTranslate(glm::vec2 value)
-{
-	_translate = value;
-}
-
-
-
 glm::mat4 Content::GetRenderTransform() const
 {
 	glm::mat4 result;
@@ -172,24 +143,37 @@ glm::mat4 Content::GetRenderTransform() const
 }
 
 
-glm::mat4 Content::GetContentTransform() const
+glm::vec2 Content::ContentToViewport(glm::vec2 value) const
 {
-	glm::mat4 result;
-
-	result = glm::translate(result, glm::vec3(_bounds.min, 0));
-	result = glm::translate(result, glm::vec3(_translate, 0));
-
-	return result;
+	return NormalizedToViewport(ContentToNormalized(value));
 }
 
 
-glm::vec2 Content::ConvertContentCoordinateToNormalizedDeviceCoordinate(glm::vec2 value) const
+glm::vec2 Content::ViewportToContent(glm::vec2 value) const
+{
+	return NormalizedToContent(ViewportToNormalized(value));
+}
+
+
+glm::vec2 Content::ContentToNormalized(glm::vec2 value) const
 {
 	return 2.0f * (value - _bounds.min) / _bounds.size() - 1.0f;
 }
 
 
-glm::vec2 Content::ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2 value) const
+glm::vec2 Content::NormalizedToContent(glm::vec2 value) const
 {
 	return _bounds.min + (value + 1.0f) / 2.0f * _bounds.size();
+}
+
+
+glm::vec2 Content::ViewportToNormalized(glm::vec2 value) const
+{
+	return 2.0f * (value - (glm::vec2)_viewport.min) / (glm::vec2)_viewport.size() - 1.0f;
+}
+
+
+glm::vec2 Content::NormalizedToViewport(glm::vec2 value) const
+{
+	return (glm::vec2)_viewport.min + (value + 1.0f) / 2.0f * (glm::vec2)_viewport.size();
 }

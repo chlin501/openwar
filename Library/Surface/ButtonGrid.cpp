@@ -214,7 +214,7 @@ _alignment(alignment)
 
 void ButtonGrid::SetFrame(bounds2f value)
 {
-	Content::SetFrame(value);
+	Content::SetViewport(value);
 	UpdateLayout();
 }
 
@@ -245,8 +245,8 @@ ButtonArea* ButtonGrid::AddButtonArea(int numberOfColumns)
 
 void ButtonGrid::UpdateLayout()
 {
-	bounds2f viewport = GetFrame();
-	glm::vec2 viewport_center = viewport.center();
+	bounds2f contentBounds = GetBounds();
+	glm::vec2 contentCenter = contentBounds.center();
 	float margin = 3;
 	float spacing = 20;
 	std::vector<bounds2f> bounds;
@@ -267,17 +267,17 @@ void ButtonGrid::UpdateLayout()
 		{
 			case ButtonAlignment::Vertical::Top:
 				for (bounds2f& b : bounds)
-					b += glm::vec2(viewport_center.x - b.x().center(), viewport.max.y - margin);
+					b += glm::vec2(contentCenter.x - b.x().center(), contentBounds.max.y - margin);
 				break;
 
 			case ButtonAlignment::Vertical::Center:
 		        for (bounds2f& b : bounds)
-	                b += glm::vec2(viewport_center.x - b.x().center(), viewport_center.y - position.y / 2);
+	                b += glm::vec2(contentCenter.x - b.x().center(), contentCenter.y - position.y / 2);
 				break;
 
 			case ButtonAlignment::Vertical::Bottom:
 		        for (bounds2f& b : bounds)
-	                b += glm::vec2(viewport_center.x - b.x().center(), viewport.min.y + margin - position.y);
+	                b += glm::vec2(contentCenter.x - b.x().center(), contentBounds.min.y + margin - position.y);
 				break;
 		}
 	}
@@ -287,12 +287,12 @@ void ButtonGrid::UpdateLayout()
 		{
 			case ButtonAlignment::Horizontal::Left:
 				for (bounds2f& b : bounds)
-					b += glm::vec2(viewport.min.x + margin, 0);
+					b += glm::vec2(contentBounds.min.x + margin, 0);
 				break;
 
 			case ButtonAlignment::Horizontal::Right:
 		        for (bounds2f& b : bounds)
-	                b += glm::vec2(viewport.max.x - margin - position.x, 0);
+	                b += glm::vec2(contentBounds.max.x - margin - position.x, 0);
 				break;
 
 			default:
@@ -303,17 +303,17 @@ void ButtonGrid::UpdateLayout()
 		{
 			case ButtonAlignment::Vertical::Top:
 				for (bounds2f& b : bounds)
-					b += glm::vec2(0, viewport.max.y - margin - b.max.y);
+					b += glm::vec2(0, contentBounds.max.y - margin - b.max.y);
 				break;
 
 			case ButtonAlignment::Vertical::Center:
 		        for (bounds2f& b : bounds)
-	                b += glm::vec2(0, viewport_center.y - b.y().center());
+	                b += glm::vec2(0, contentCenter.y - b.y().center());
 				break;
 
 			case ButtonAlignment::Vertical::Bottom:
 		        for (bounds2f& b : bounds)
-	                b += glm::vec2(0, viewport.min.y + margin - b.min.y);
+	                b += glm::vec2(0, contentBounds.min.y + margin - b.min.y);
 				break;
 		}
 	}
@@ -404,8 +404,10 @@ void ButtonGrid::Render()
 }
 
 
-void ButtonGrid::FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch)
+void ButtonGrid::FindHotspots(glm::vec2 viewportPosition, Touch* touch)
 {
+	glm::vec2 position = ViewportToContent(viewportPosition);
+
 	for (ButtonArea* buttonArea : _buttonAreas)
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
 			if (buttonItem->HasAction()

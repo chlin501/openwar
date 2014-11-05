@@ -125,16 +125,16 @@ void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vecto
 
 void OpenWarSurface::Update(double secondsSinceLastUpdate)
 {
-	bounds2i frame = GetFrame();
+	bounds2i viewport = GetViewport();
 	bounds2f bounds = GetBounds();
 
-	_battleLayer->SetFrame(frame);
+	_battleLayer->SetViewport(viewport);
 	_battleLayer->SetBounds(bounds);
 
-	_buttonsTopLeft->SetFrame(frame);
+	_buttonsTopLeft->SetViewport(viewport);
 	_buttonsTopLeft->SetBounds(bounds);
 
-	_buttonsTopRight->SetFrame(frame);
+	_buttonsTopRight->SetViewport(viewport);
 	_buttonsTopRight->SetBounds(bounds);
 
 	Surface::Update(secondsSinceLastUpdate);

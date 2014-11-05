@@ -33,6 +33,7 @@ void ScrollerHotspot::ScrollToPosition(glm::vec2 position)
 
 	if (_scroller != nullptr)
 	{
+		/*
 		glm::mat4 transform;
 		for (Container* c = _scroller->GetContainer(); c != nullptr; c = c->GetContainer())
 			transform = c->GetContentTransform() * transform;
@@ -49,5 +50,6 @@ void ScrollerHotspot::ScrollToPosition(glm::vec2 position)
 			delta.y = 0;
 
 		_scroller->SetContentOffset(_scroller->GetContentOffset() - delta);
+		*/
 	}
 }

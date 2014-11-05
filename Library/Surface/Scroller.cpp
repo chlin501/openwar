@@ -83,27 +83,13 @@ void Scroller::SetHorizontalScrolling(bool value)
 }
 
 
-glm::mat4 Scroller::GetContentTransform() const
+void Scroller::FindHotspots(glm::vec2 viewportPosition, Touch* touch)
 {
-	glm::mat4 transform = Container::GetContentTransform();
+	Container::FindHotspots(viewportPosition, touch);
 
-	transform = glm::scale(transform, glm::vec3(_zoomScale, _zoomScale, 1));
-	transform = glm::translate(transform, -glm::vec3(_contentOffset, 0));
-
-	return transform;
-}
-
-
-void Scroller::FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch)
-{
-	Container::FindHotspots(transform, position, touch);
-
-	glm::mat4 inverse = glm::inverse(transform);
-	glm::vec4 p = inverse * glm::vec4(position, 0, 1);
-	glm::vec2 pos = p.xy() / p.w;
-
-	if (GetBounds().contains(pos))
+	glm::vec2 position = ViewportToContent(viewportPosition);
+	if (GetBounds().contains(position))
 	{
-		touch->AddHotspot(std::make_shared<ScrollerHotspot>(pos, this));
+		touch->AddHotspot(std::make_shared<ScrollerHotspot>(position, this));
 	}
 }

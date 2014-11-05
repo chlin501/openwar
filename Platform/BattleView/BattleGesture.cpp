@@ -53,8 +53,6 @@ void BattleGesture::Update(Surface* surface, double secondsSinceLastUpdate)
 
 void BattleGesture::RenderHints()
 {
-	glm::mat4 transform = ViewportTransform(_battleView->GetFrame());
-
 	VertexShape_2f vertices;
 	vertices._mode = GL_LINES;
 
@@ -102,7 +100,7 @@ void BattleGesture::RenderHints()
 
 	RenderCall<PlainShader_2f>(gc)
 		.SetVertices(&vertices)
-		.SetUniform("transform", transform)
+		.SetUniform("transform", _battleView->GetRenderTransform())
 		.SetUniform("point_size", 1)
 		.SetUniform("color", glm::vec4(0, 0, 0, 0.2f))
 		.Render();
@@ -146,7 +144,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 	if (touch->HasGesture())
 		return;
 
-	bounds2f frame = (bounds2f)_battleView->GetFrame();
+	bounds2f frame = (bounds2f)_battleView->GetViewport();
 	if (!frame.contains(touch->GetPosition()))
 		return;
 
