@@ -56,7 +56,6 @@ public:
 
 	// Surface
 	virtual void Update(double secondsSinceLastUpdate);
-	virtual bool NeedsRender() const;
 
 	// EditorModelObserver
 	virtual void OnEditorModeChanged(EditorModel* editorModel);

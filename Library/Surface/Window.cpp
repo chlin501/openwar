@@ -463,9 +463,10 @@ void Window::Update()
 
 void Window::Render()
 {
-	if (_surface != nullptr && _surface->NeedsRender())
+	if (_surface != nullptr)
 	{
-		_surface->RenderSurface();
+		_surface->UseViewport();
+		_surface->Render();
 		SDL_GL_SwapWindow(_window);
 	}
 }

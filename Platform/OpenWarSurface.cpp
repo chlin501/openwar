@@ -125,8 +125,6 @@ void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vecto
 
 void OpenWarSurface::Update(double secondsSinceLastUpdate)
 {
-	Surface::Update(secondsSinceLastUpdate);
-
 	bounds2i frame = GetFrame();
 	bounds2f bounds = GetBounds();
 
@@ -139,49 +137,30 @@ void OpenWarSurface::Update(double secondsSinceLastUpdate)
 	_buttonsTopRight->SetFrame(frame);
 	_buttonsTopRight->SetBounds(bounds);
 
+	Surface::Update(secondsSinceLastUpdate);
+
 	if (_battleLayer->GetScenario() != nullptr && _battleLayer->IsPlaying())
 		_battleLayer->GetScenario()->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);
 }
 
 
-bool OpenWarSurface::NeedsRender() const
-{
-	return true;
-}
 
-
-void OpenWarSurface::RenderSurface()
-{
-	glClearColor(0.9137f, 0.8666f, 0.7647f, 1.0f);
-#ifdef OPENWAR_USE_GLES2
-	glClearDepthf(1.0f);
-#else
-	glClearDepth(1.0f);
-#endif
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glEnable(GL_BLEND);
-
-	Surface::RenderSurface();
-}
-
-
-void OpenWarSurface::MouseEnter(glm::vec2 position)
+/*void OpenWarSurface::MouseEnter(glm::vec2 position)
 {
 	//_battleView->ShowMouseHint(position);
-}
+}*/
 
 
-void OpenWarSurface::MouseHover(glm::vec2 position)
+/*void OpenWarSurface::MouseHover(glm::vec2 position)
 {
 	//_battleView->ShowMouseHint(position);
-}
+}*/
 
 
-void OpenWarSurface::MouseLeave(glm::vec2 position)
+/*void OpenWarSurface::MouseLeave(glm::vec2 position)
 {
 	//_battleView->HideMouseHint();
-}
+}*/
 
 
 void OpenWarSurface::ClickedPlay()

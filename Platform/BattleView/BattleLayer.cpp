@@ -157,12 +157,6 @@ void BattleLayer::Update(double secondsSinceLastUpdate)
 }
 
 
-bool BattleLayer::NeedsRender() const
-{
-	return true;
-}
-
-
 void BattleLayer::CreateBattleView(BattleCommander* commander)
 {
 	BattleSimulator* simulator = _scenario->GetSimulator();

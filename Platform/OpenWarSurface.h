@@ -52,13 +52,9 @@ public:
 
 	// Surface
 
-
-	virtual bool NeedsRender() const;
-	virtual void RenderSurface();
-
-	virtual void MouseEnter(glm::vec2 position);
-	virtual void MouseHover(glm::vec2 position);
-	virtual void MouseLeave(glm::vec2 position);
+	//virtual void MouseEnter(glm::vec2 position);
+	//virtual void MouseHover(glm::vec2 position);
+	//virtual void MouseLeave(glm::vec2 position);
 
 	// Content
 	virtual void Update(double secondsSinceLastUpdate);
