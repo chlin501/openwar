@@ -94,19 +94,6 @@ glm::mat4 Scroller::GetContentTransform() const
 }
 
 
-void Scroller::Render(const glm::mat4& transform)
-{
-	//RenderSolid(transform, GetBounds(), glm::vec4(1.0f, 0.0f, 0.0f, 0.15f));
-	Container::Render(transform);
-}
-
-
-void Scroller::Update(double secondsSinceLastUpdate)
-{
-	Container::Update(secondsSinceLastUpdate);
-}
-
-
 void Scroller::FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch)
 {
 	Container::FindHotspots(transform, position, touch);

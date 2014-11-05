@@ -65,7 +65,7 @@ void Container::Update(double secondsSinceLastUpdate)
 }
 
 
-void Container::Render(const glm::mat4& transform)
+void Container::Render()
 {
 	for (Content* content : _contents)
 	{
@@ -83,7 +83,7 @@ void Container::Render(const glm::mat4& transform)
 				glDisable(GL_DEPTH_TEST);
 			}
 
-			content->Render(content->GetRenderTransform());
+			content->Render();
 		}
 	}
 }

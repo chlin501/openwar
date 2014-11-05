@@ -334,8 +334,10 @@ void ButtonGrid::Update(double secondsSinceLastUpdate)
 }
 
 
-void ButtonGrid::Render(const glm::mat4& transform)
+void ButtonGrid::Render()
 {
+	glm::mat4 transform = GetRenderTransform();
+
 	WidgetShape* buttonShape = new WidgetShape(_buttonRendering->_textureAtlas);
 
 	for (ButtonArea* buttonArea : _buttonAreas)

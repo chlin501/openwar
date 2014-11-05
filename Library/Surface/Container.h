@@ -29,7 +29,7 @@ public:
 	// Content
 
 	virtual void Update(double secondsSinceLastUpdate);
-	virtual void Render(const glm::mat4& transform);
+	virtual void Render();
 	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch);
 };
 

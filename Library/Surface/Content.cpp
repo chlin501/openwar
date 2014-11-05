@@ -193,22 +193,3 @@ glm::vec2 Content::ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec
 {
 	return _bounds.min + (value + 1.0f) / 2.0f * _bounds.size();
 }
-
-
-void Content::RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const
-{
-	VertexShape_2f vertices;
-	vertices._mode = GL_TRIANGLE_STRIP;
-	vertices.AddVertex(Vertex_2f(bounds.p11()));
-	vertices.AddVertex(Vertex_2f(bounds.p12()));
-	vertices.AddVertex(Vertex_2f(bounds.p21()));
-	vertices.AddVertex(Vertex_2f(bounds.p22()));
-
-	GraphicsContext* gc = GetSurface()->GetGraphicsContext();
-	RenderCall<PlainShader_2f>(gc)
-		.SetVertices(&vertices)
-		.SetUniform("transform", transform)
-		.SetUniform("point_size", 1)
-		.SetUniform("color", color)
-		.Render();
-}

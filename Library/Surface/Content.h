@@ -77,11 +77,8 @@ public:
 	glm::vec2 ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2 value) const;
 
 	virtual void Update(double secondsSinceLastUpdate) = 0;
-	virtual void Render(const glm::mat4& transform) = 0;
+	virtual void Render() = 0;
 	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch) = 0;
-
-protected:
-	void RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const;
 };
 
 

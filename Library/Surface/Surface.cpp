@@ -31,7 +31,7 @@ void Surface::RenderSurface()
 	glClearColor(0.5f, 0.5f, 0.5f, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	Container::Render(GetRenderTransform());
+	Container::Render();
 }
 
 

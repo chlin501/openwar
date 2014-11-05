@@ -487,8 +487,10 @@ void BattleView::InitializeCameraPosition()
 }
 
 
-void BattleView::Render(const glm::mat4& transform)
+void BattleView::Render()
 {
+	glm::mat4 transform = GetRenderTransform();
+
 	glm::mat4 containerTransform = transform * glm::inverse(GetContentTransform());
 	glm::mat4 terrainTransform = GetTerrainTransform();
 
