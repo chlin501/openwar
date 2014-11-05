@@ -19,8 +19,8 @@ public:
 	SmoothTerrainSky(GraphicsContext* gc);
 	virtual ~SmoothTerrainSky();
 
-	void Render(const glm::mat4& transform, bounds2f frame, float cameraDirectionZ, bool flip);
-	void RenderBackgroundLinen(const glm::mat4& transform, bounds2f frame, bool flip);
+	void Render(const glm::mat4& transform, bounds2f bounds, float cameraDirectionZ, bool flip);
+	void RenderBackgroundLinen(const glm::mat4& transform, bounds2f bounds);
 };
 
 

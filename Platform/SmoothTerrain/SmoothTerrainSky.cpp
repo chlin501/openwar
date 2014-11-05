@@ -23,7 +23,7 @@ SmoothTerrainSky::~SmoothTerrainSky()
 }
 
 
-void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f frame, float cameraDirectionZ, bool flip)
+void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f bounds, float cameraDirectionZ, bool flip)
 {
 	VertexShape_2f_4f vertices;
 
@@ -39,10 +39,10 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f frame, float 
 	glm::vec4 c2 = glm::vec4(160, 207, 243, 255) / 255.0f;
 	c2.a = blend;
 
-	float x0 = frame.min.x;
-	float x1 = frame.max.x;
-	float y0 = frame.y().lerp(0.2f);
-	float y1 = frame.max.y;
+	float x0 = bounds.min.x;
+	float x1 = bounds.max.x;
+	float y0 = bounds.y().lerp(0.2f);
+	float y1 = bounds.max.y;
 
 	vertices.AddVertex(Vertex_2f_4f(glm::vec2(x0, y0), c1));
 	vertices.AddVertex(Vertex_2f_4f(glm::vec2(x0, y1), c2));
@@ -53,8 +53,11 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f frame, float 
 
 	glm::mat4 t = transform;
 	if (flip)
-		t = glm::scale(t, glm::vec3(-1.0f, -1.0f, 1.0f));
-
+	{
+		t = glm::translate(t, glm::vec3(bounds.center(), 0));
+		t = glm::scale(t, glm::vec3(-1, -1, 1));
+		t = glm::translate(t, glm::vec3(-bounds.center(), 0));
+	}
 
 	RenderCall<GradientShader_2f>(_gc)
 		.SetVertices(&vertices)
@@ -65,21 +68,21 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f frame, float 
 
 
 
-void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, bounds2f frame, bool flip)
+void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, bounds2f bounds)
 {
 	VertexShape_2f_2f vertices;
 
 	vertices._mode = GL_TRIANGLES;
 	vertices.Clear();
 
-	glm::vec2 size = frame.size();
+	glm::vec2 size = bounds.size();
 	glm::vec2 vt0 = glm::vec2();
 	glm::vec2 vt1 = size / 128.0f;
 
-	float x0 = frame.min.x;
-	float x1 = frame.max.x;
-	float y0 = frame.min.y;
-	float y1 = frame.max.y;
+	float x0 = bounds.min.x;
+	float x1 = bounds.max.x;
+	float y0 = bounds.min.y;
+	float y1 = bounds.max.y;
 
 	vertices.AddVertex(Vertex_2f_2f(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
 	vertices.AddVertex(Vertex_2f_2f(glm::vec2(x0, y1), glm::vec2(vt0.x, vt1.y)));
