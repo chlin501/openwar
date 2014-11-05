@@ -478,8 +478,8 @@ void BattleView::InitializeCameraPosition()
 
 	bool flip = GetFlip();
 
-	glm::vec2 friendlyScreen = ContentToSurface(glm::vec2(0, flip ? 0.4 : -0.4));
-	glm::vec2 enemyScreen = ContentToSurface(glm::vec2(0, flip ? -0.4 : 0.4));
+	glm::vec2 friendlyScreen = ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2(0, flip ? 0.4 : -0.4));
+	glm::vec2 enemyScreen = ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2(0, flip ? -0.4 : 0.4));
 
 	Zoom(GetTerrainPosition(friendlyCenter, 0), GetTerrainPosition(enemyCenter, 0), friendlyScreen, enemyScreen, 0);
 
@@ -873,7 +873,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 	glm::vec4 q = transform * glm::vec4(position2, 1);
 	float s = glm::clamp(glm::abs(q.y / q.w - p.y / p.w), sizeLimit.min, sizeLimit.max);
 
-	return bounds2_from_center(ContentToSurface((glm::vec2)p.xy() / p.w), s / 2);
+	return bounds2_from_center(ConvertNormalizedDeviceCoordinateToContentCoordinate((glm::vec2)p.xy() / p.w), s / 2);
 }
 
 

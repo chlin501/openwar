@@ -110,21 +110,9 @@ bounds2i Content::GetViewport() const
 }
 
 
-void Content::SetViewport(bounds2i value)
-{
-	_viewport = value;
-}
-
-
 void Content::UseViewport()
 {
-	bounds2i viewport;
-
-	for (Content* c = this; c != nullptr && viewport.is_empty(); c = c->GetContainer())
-		viewport = c->GetViewport();
-
-	//viewport = viewport * GetSurface()->GetGraphicsContext()->GetPixelDensity();
-	glViewport((GLint)viewport.min.x, (GLint)viewport.min.y, (GLsizei)viewport.x().size(), (GLsizei)viewport.y().size());
+	glViewport((GLint)_frame.min.x, (GLint)_frame.min.y, (GLsizei)_frame.x().size(), (GLsizei)_frame.y().size());
 }
 
 
@@ -144,8 +132,6 @@ void Content::SetFrame(bounds2i value)
 void Content::OnFrameChanged()
 {
 }
-
-
 
 
 glm::ivec2 Content::GetPosition() const
@@ -214,21 +200,11 @@ void Content::SetTranslate(glm::vec2 value)
 
 glm::mat4 Content::GetViewportTransform() const
 {
-	bounds2i viewport;
-
-	for (const Content* c = this; c != nullptr && viewport.is_empty(); c = c->GetContainer())
-		viewport = c->GetViewport();
-
 	glm::mat4 result;
 
-	if (!viewport.is_empty())
-	{
-		glm::vec2 size = (glm::vec2)viewport.size();
-
-		result = glm::translate(result, glm::vec3(-1, -1, 0));
-		result = glm::scale(result, glm::vec3(2 / size.x, 2 / size.y, 1));
-		result = glm::translate(result, glm::vec3(-viewport.min, 0));
-	}
+	result = glm::translate(result, glm::vec3(-1, -1, 0));
+	result = glm::scale(result, glm::vec3(glm::vec2(2, 2) / _bounds.size(), 1));
+	result = glm::translate(result, glm::vec3(-_bounds.min, 0));
 
 	return result;
 }
@@ -236,41 +212,30 @@ glm::mat4 Content::GetViewportTransform() const
 
 glm::mat4 Content::GetContainerTransform() const
 {
-	glm::mat4 result;
-
-	for (const Content* c = GetContainer(); c != nullptr; c = c->GetContainer())
-	{
-		result = c->GetContentTransform() * result;
-	}
-
-	return result;
+	return glm::mat4();
 }
 
 
 glm::mat4 Content::GetContentTransform() const
 {
-	bounds2i frame = GetFrame();
-
 	glm::mat4 result;
 
-	result = glm::translate(result, glm::vec3(frame.min, 0));
+	result = glm::translate(result, glm::vec3(_bounds.min, 0));
 	result = glm::translate(result, glm::vec3(_translate, 0));
 
 	return result;
 }
 
 
-glm::vec2 Content::SurfaceToContent(glm::vec2 value) const
+glm::vec2 Content::ConvertContentCoordinateToNormalizedDeviceCoordinate(glm::vec2 value) const
 {
-	bounds2i viewport = GetFrame();
-	return 2.0f * (value - (glm::vec2)viewport.p11()) / (glm::vec2)viewport.size() - 1.0f;
+	return 2.0f * (value - _bounds.min) / _bounds.size() - 1.0f;
 }
 
 
-glm::vec2 Content::ContentToSurface(glm::vec2 value) const
+glm::vec2 Content::ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2 value) const
 {
-	bounds2i viewport = GetFrame();
-	return (glm::vec2)viewport.p11() + (value + 1.0f) / 2.0f * (glm::vec2)viewport.size();
+	return _bounds.min + (value + 1.0f) / 2.0f * _bounds.size();
 }
 
 

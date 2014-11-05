@@ -57,7 +57,6 @@ public:
 	void SetVisible(bool value);
 
 	virtual bounds2i GetViewport() const;
-	virtual void SetViewport(bounds2i value);
 	virtual void UseViewport();
 
 	//
@@ -95,8 +94,8 @@ public:
 	bool GetFlip() const { return _flip; }
 	void SetFlip(bool value) { _flip = value; }
 
-	glm::vec2 SurfaceToContent(glm::vec2 value) const;
-	glm::vec2 ContentToSurface(glm::vec2 value) const;
+	glm::vec2 ConvertContentCoordinateToNormalizedDeviceCoordinate(glm::vec2 value) const;
+	glm::vec2 ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2 value) const;
 
 	virtual void Update(double secondsSinceLastUpdate) = 0;
 	virtual void Render(const glm::mat4& transform) = 0;

@@ -261,7 +261,7 @@ void TerrainGesture::TouchEnded(Touch* touch)
 
 void TerrainGesture::UpdateMomentumOrbit(double secondsSinceLastUpdate)
 {
-	glm::vec2 screenPosition = _terrainView->ContentToSurface(glm::vec2(0, 0));
+	glm::vec2 screenPosition = _terrainView->ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2(0, 0));
 	glm::vec3 contentPosition = _terrainView->GetTerrainPosition2(screenPosition);
 
 	_terrainView->Orbit(contentPosition.xy(), (float)secondsSinceLastUpdate * _orbitVelocity);
@@ -271,7 +271,7 @@ void TerrainGesture::UpdateMomentumOrbit(double secondsSinceLastUpdate)
 
 void TerrainGesture::UpdateMomentumScroll(double secondsSinceLastUpdate)
 {
-	glm::vec2 screenPosition = _terrainView->ContentToSurface(glm::vec2(0, 0));
+	glm::vec2 screenPosition = _terrainView->ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2(0, 0));
 	glm::vec3 contentPosition = _terrainView->GetTerrainPosition2(screenPosition);
 
 	contentPosition += (float)secondsSinceLastUpdate * glm::vec3(_scrollVelocity, 0);
@@ -306,7 +306,7 @@ void TerrainGesture::UpdateKeyOrbit(double secondsSinceLastUpdate)
 	if (_keyOrbitLeft) _keyOrbitMomentum -= 32 * (float)secondsSinceLastUpdate;
 	if (_keyOrbitRight) _keyOrbitMomentum += 32 * (float)secondsSinceLastUpdate;
 
-	glm::vec2 centerScreen = _terrainView->ContentToSurface(glm::vec2(0, 0));
+	glm::vec2 centerScreen = _terrainView->ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2(0, 0));
 	glm::vec2 centerContent = _terrainView->GetTerrainPosition3(centerScreen).xy();
 	_terrainView->Orbit(centerContent, (float)secondsSinceLastUpdate * _keyOrbitMomentum);
 
@@ -319,7 +319,7 @@ void TerrainGesture::MoveAndOrbit(Touch* touch)
 	bounds2f viewportBounds = _terrainView->GetFrame();
 	glm::vec2 touchPosition = touch->GetPosition();
 
-	glm::vec2 centerScreen = _terrainView->ContentToSurface(glm::vec2(0, 0));
+	glm::vec2 centerScreen = _terrainView->ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2(0, 0));
 	glm::vec2 centerContent = _terrainView->GetTerrainPosition3(centerScreen).xy();
 	glm::vec2 previousContent = _terrainView->GetTerrainPosition3(_previousTouchPosition).xy();
 	glm::vec2 currentContent = _terrainView->GetTerrainPosition3(touchPosition).xy();
@@ -367,7 +367,7 @@ void TerrainGesture::ResetSamples(double timestamp)
 	_previousCameraDirection = angle(_terrainView->GetCameraDirection().xy());
 	_orbitAccumulator = 0;
 
-	glm::vec2 screenPosition = _terrainView->ContentToSurface(glm::vec2(0, 0));
+	glm::vec2 screenPosition = _terrainView->ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2(0, 0));
 	glm::vec3 contentPosition = _terrainView->GetTerrainPosition2(screenPosition);
 
 	_scrollSampler.clear();
@@ -385,7 +385,7 @@ void TerrainGesture::UpdateSamples(double timestamp)
 	_previousCameraDirection = currentCameraDirection;
 
 	_orbitAccumulator += orbitDelta;
-	glm::vec2 screenPosition = _terrainView->ContentToSurface(glm::vec2(0, 0));
+	glm::vec2 screenPosition = _terrainView->ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2(0, 0));
 	glm::vec3 contentPosition = _terrainView->GetTerrainPosition2(screenPosition);
 
 	_scrollSampler.add(timestamp, contentPosition.xy());

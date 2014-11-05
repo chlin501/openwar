@@ -273,7 +273,7 @@ void BattleLayer::UpdateBattleViewSize()
 			bounds2i viewport = bounds2i(0, globalY, globalSize.x, globalY + globalHeight);
 
 			battleView->SetFrame(frame);
-			battleView->SetViewport(viewport);
+			battleView->SetBounds(bounds2f(0, 0, localSize.x, localHeight));
 
 			localY += localHeight;
 			globalY += globalHeight;
