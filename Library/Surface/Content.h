@@ -50,8 +50,6 @@ public:
 	virtual Container* GetContainer() const;
 	virtual void SetContainer(Container* value, Content* behindContent = nullptr);
 
-	//
-
 	virtual bool IsVisible() const;
 	void SetVisible(bool value);
 
@@ -59,7 +57,6 @@ public:
 
 	virtual bounds2i GetFrame() const;
 	virtual void SetFrame(bounds2i value);
-	virtual void OnFrameChanged();
 
 	virtual bounds2f GetBounds() const;
 	virtual void SetBounds(const bounds2f& value);
@@ -70,10 +67,8 @@ public:
 	virtual glm::vec2 GetTranslate() const;
 	virtual void SetTranslate(glm::vec2 value);
 
-	virtual glm::mat4 GetViewportTransform() const;
-	virtual glm::mat4 GetContainerTransform() const;
+	virtual glm::mat4 GetRenderTransform() const;
 	virtual glm::mat4 GetContentTransform() const;
-
 
 	bool GetFlip() const { return _flip; }
 	void SetFlip(bool value) { _flip = value; }
@@ -85,12 +80,7 @@ public:
 	virtual void Render(const glm::mat4& transform) = 0;
 	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch) = 0;
 
-private:
-	void SetFrameValue(const bounds2i& value);
-
 protected:
-	virtual void OnBoundsChanged();
-
 	void RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const;
 };
 

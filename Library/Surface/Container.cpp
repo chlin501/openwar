@@ -83,7 +83,7 @@ void Container::Render(const glm::mat4& transform)
 				glDisable(GL_DEPTH_TEST);
 			}
 
-			content->Render(content->GetViewportTransform() * content->GetContainerTransform() * content->GetContentTransform());
+			content->Render(content->GetRenderTransform());
 		}
 	}
 }
@@ -96,7 +96,7 @@ void Container::FindHotspots(const glm::mat4 transform, glm::vec2 position, Touc
 		Content* content = *i;
 		if (content->IsVisible())
 		{
-			content->FindHotspots(content->GetContainerTransform() * content->GetContentTransform(), position, touch);
+			content->FindHotspots(content->GetContentTransform(), position, touch);
 		}
 	}
 }

@@ -12,7 +12,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-OpenWarSurface::OpenWarSurface(GraphicsContext* gc, glm::ivec2 size) : Surface(gc, size),
+OpenWarSurface::OpenWarSurface(GraphicsContext* gc) : Surface(gc),
 _buttonRendering(nullptr),
 _editorModel(nullptr),
 _editorGesture(nullptr),
@@ -90,7 +90,6 @@ _battleLayer(nullptr)
 	_buttonItemWater->SetKeyboardShortcut('7');
 	_buttonItemFords->SetKeyboardShortcut('8');
 
-	OnFrameChanged();
 	UpdateButtonsAndGestures();
 }
 
@@ -124,21 +123,21 @@ void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vecto
 }
 
 
-void OpenWarSurface::OnBoundsChanged()
-{
-	Surface::OnBoundsChanged();
-
-	bounds2f bounds = GetBounds();
-
-	_battleLayer->SetFrame(bounds);
-	_buttonsTopLeft->SetFrame(bounds);
-	_buttonsTopRight->SetFrame(bounds);
-}
-
-
 void OpenWarSurface::Update(double secondsSinceLastUpdate)
 {
 	Surface::Update(secondsSinceLastUpdate);
+
+	bounds2i frame = GetFrame();
+	bounds2f bounds = GetBounds();
+
+	_battleLayer->SetFrame(frame);
+	_battleLayer->SetBounds(bounds);
+
+	_buttonsTopLeft->SetFrame(frame);
+	_buttonsTopLeft->SetBounds(bounds);
+
+	_buttonsTopRight->SetFrame(frame);
+	_buttonsTopRight->SetBounds(bounds);
 
 	if (_battleLayer->GetScenario() != nullptr && _battleLayer->IsPlaying())
 		_battleLayer->GetScenario()->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);

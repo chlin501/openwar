@@ -8,10 +8,9 @@
 
 
 
-Surface::Surface(GraphicsContext* gc, glm::ivec2 size) :
+Surface::Surface(GraphicsContext* gc) :
 _gc(gc)
 {
-	SetFrame(bounds2i(0, 0, size));
 }
 
 
@@ -26,21 +25,13 @@ Surface* Surface::GetSurface() const
 }
 
 
-void Surface::OnFrameChanged()
-{
-	Content::OnFrameChanged();
-
-	SetBounds(GetFrame());
-}
-
-
 void Surface::RenderSurface()
 {
+	UseViewport();
 	glClearColor(0.5f, 0.5f, 0.5f, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	UseViewport();
-	Container::Render(GetViewportTransform() * GetContainerTransform() * GetContentTransform());
+	Container::Render(GetRenderTransform());
 }
 
 

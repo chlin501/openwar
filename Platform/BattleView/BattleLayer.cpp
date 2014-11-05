@@ -117,13 +117,6 @@ void BattleLayer::SetEditing(bool value)
 }
 
 
-void BattleLayer::OnFrameChanged()
-{
-	Container::OnFrameChanged();
-	UpdateBattleViewSize();
-}
-
-
 /* EditorModelObserver */
 
 void BattleLayer::OnEditorModeChanged(EditorModel* editorModel)
@@ -142,6 +135,8 @@ void BattleLayer::OnTerrainFeatureChanged(EditorModel* editorModel)
 
 void BattleLayer::Update(double secondsSinceLastUpdate)
 {
+	UpdateBattleViewSize();
+
 	if (_scenario != nullptr)
 	{
 		if (_playing)

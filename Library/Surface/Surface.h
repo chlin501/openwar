@@ -22,7 +22,7 @@ class Surface : public Container
 public:
 	std::vector<Gesture*> _gestures;
 
-	Surface(GraphicsContext* gc, glm::ivec2 size);
+	Surface(GraphicsContext* gc);
 	virtual ~Surface();
 
 	GraphicsContext* GetGraphicsContext() const { return _gc; }
@@ -30,8 +30,6 @@ public:
 	// Content
 
 	virtual Surface* GetSurface() const;
-
-	virtual void OnFrameChanged();
 
 	// Surface
 

@@ -203,9 +203,8 @@ void Window::ProcessWindow(const SDL_WindowEvent& event)
 	SDL_GetWindowPosition(_window, &x, &y);
 	SDL_GetWindowSize(_window, &w, &h);
 
-	x = y = 0;
-
-	_surface->SetFrame(bounds2f(x, y, x + w, y + h));
+	_surface->SetFrame(bounds2i(0, 0, w, h));
+	_surface->SetBounds(bounds2f(0, 0, w, h));
 }
 
 
@@ -432,8 +431,8 @@ void Window::ProcessMouseWheel(const SDL_MouseWheelEvent& event)
 
 void Window::Update()
 {
-	if (_surface->GetFrame().size() != GetWindowSize())
-		_surface->SetFrame(bounds2i(0, 0, GetWindowSize()));
+	_surface->SetFrame(bounds2i(0, 0, GetWindowSize()));
+	_surface->SetBounds(bounds2f(0, 0, (glm::vec2)GetWindowSize()));
 
 	std::chrono::system_clock::time_point timestamp = std::chrono::system_clock::now();
 	double secondsSinceTimeStart = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(timestamp - _timestart).count();

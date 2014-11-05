@@ -58,9 +58,6 @@ public:
 	virtual void Update(double secondsSinceLastUpdate);
 	virtual bool NeedsRender() const;
 
-	// Content
-	virtual void OnFrameChanged();
-
 	// EditorModelObserver
 	virtual void OnEditorModeChanged(EditorModel* editorModel);
 	virtual void OnTerrainFeatureChanged(EditorModel* editorModel);

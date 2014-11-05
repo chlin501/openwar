@@ -119,12 +119,7 @@ bounds2i Content::GetFrame() const
 
 void Content::SetFrame(bounds2i value)
 {
-	SetFrameValue(value);
-}
-
-
-void Content::OnFrameChanged()
-{
+	_frame = value;
 }
 
 
@@ -137,7 +132,6 @@ bounds2f Content::GetBounds() const
 void Content::SetBounds(const bounds2f& value)
 {
 	_bounds = value;
-	OnBoundsChanged();
 }
 
 
@@ -166,7 +160,7 @@ void Content::SetTranslate(glm::vec2 value)
 
 
 
-glm::mat4 Content::GetViewportTransform() const
+glm::mat4 Content::GetRenderTransform() const
 {
 	glm::mat4 result;
 
@@ -175,12 +169,6 @@ glm::mat4 Content::GetViewportTransform() const
 	result = glm::translate(result, glm::vec3(-_bounds.min, 0));
 
 	return result;
-}
-
-
-glm::mat4 Content::GetContainerTransform() const
-{
-	return glm::mat4();
 }
 
 
@@ -204,20 +192,6 @@ glm::vec2 Content::ConvertContentCoordinateToNormalizedDeviceCoordinate(glm::vec
 glm::vec2 Content::ConvertNormalizedDeviceCoordinateToContentCoordinate(glm::vec2 value) const
 {
 	return _bounds.min + (value + 1.0f) / 2.0f * _bounds.size();
-}
-
-
-void Content::SetFrameValue(const bounds2i& value)
-{
-	_frame = value;
-
-	OnFrameChanged();
-}
-
-
-void Content::OnBoundsChanged()
-{
-
 }
 
 
