@@ -5,7 +5,7 @@
 #include "Touch.h"
 
 
-Scroller::Scroller() :
+Scroller::Scroller(GraphicsContext* gc) : Container(gc),
 _contentSize(),
 _contentOffset(),
 _zoomScale(1),

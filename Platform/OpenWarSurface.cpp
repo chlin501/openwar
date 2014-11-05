@@ -34,8 +34,8 @@ _battleLayer(nullptr)
 
 	_buttonRendering = new ButtonRendering(gc);
 
-	_buttonsTopLeft = new ButtonGrid(_buttonRendering, ButtonAlignment::TopLeft);
-	_buttonsTopRight = new ButtonGrid(_buttonRendering, ButtonAlignment::TopRight);
+	_buttonsTopLeft = new ButtonGrid(gc, _buttonRendering, ButtonAlignment::TopLeft);
+	_buttonsTopRight = new ButtonGrid(gc, _buttonRendering, ButtonAlignment::TopRight);
 
 	_buttonsTopLeft->SetContainer(this);
 	_buttonsTopRight->SetContainer(this);

@@ -39,7 +39,7 @@ static affine2 billboard_texcoords(int x, int y, bool flip)
 
 
 
-BattleView::BattleView(GraphicsContext* gc) :
+BattleView::BattleView(GraphicsContext* gc) : TerrainView(gc),
 	_simulator(nullptr),
 	_commander(nullptr),
 	_lightNormal(),

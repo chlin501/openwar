@@ -18,7 +18,7 @@ public:
 	Property<float> zoomScale;
 
 public:
-	Scroller();
+	Scroller(GraphicsContext* gc);
 	virtual ~Scroller();
 
 	virtual glm::vec2 GetContentSize() const;

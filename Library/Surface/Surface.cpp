@@ -8,8 +8,7 @@
 
 
 
-Surface::Surface(GraphicsContext* gc) :
-	_gc(gc)
+Surface::Surface(GraphicsContext* gc) : Container(gc)
 {
 }
 

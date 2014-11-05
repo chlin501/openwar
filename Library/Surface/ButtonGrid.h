@@ -154,7 +154,7 @@ private:
 	std::vector<ButtonArea*> _obsolete;
 
 public:
-	ButtonGrid(ButtonRendering* buttonRendering, ButtonAlignment alignment);
+	ButtonGrid(GraphicsContext* gc, ButtonRendering* buttonRendering, ButtonAlignment alignment);
 
 	ButtonAlignment GetAlignment() const { return _alignment; }
 

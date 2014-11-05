@@ -204,7 +204,7 @@ void ButtonArea::UpdateBounds(bounds2f bounds)
 
 
 
-ButtonGrid::ButtonGrid(ButtonRendering* buttonRendering, ButtonAlignment alignment) :
+ButtonGrid::ButtonGrid(GraphicsContext* gc, ButtonRendering* buttonRendering, ButtonAlignment alignment) : Content(gc),
 _buttonRendering(buttonRendering),
 _alignment(alignment)
 {

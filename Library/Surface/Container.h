@@ -12,7 +12,7 @@ class Container : public Content
 	std::vector<Content*> _contents;
 
 public:
-	Container();
+	Container(GraphicsContext* gc);
 	virtual ~Container();
 
 	virtual void DeleteDismissedContent();

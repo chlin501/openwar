@@ -12,7 +12,8 @@
 
 
 
-Content::Content() :
+Content::Content(GraphicsContext* gc) :
+	_gc(gc),
 	_surface(nullptr),
 	_container(nullptr),
 	_visible(true),

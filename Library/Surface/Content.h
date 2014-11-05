@@ -11,6 +11,7 @@
 #include "Property.h"
 
 class Container;
+class GraphicsContext;
 class Hotspot;
 class Surface;
 class Touch;
@@ -21,6 +22,7 @@ class Content
 {
 	friend void SetContentContainer(Content*, Container*, Content*);
 
+	GraphicsContext* _gc;
 	mutable Surface* _surface;
 	Container* _container;
 	bool _visible;
@@ -34,12 +36,13 @@ class Content
 	mutable WidgetShape* _widgetShape;
 
 public:
-	Content();
+	Content(GraphicsContext* gc);
 	virtual ~Content();
 
 	virtual void Dismiss();
 	virtual bool IsDismissed() const;
 
+	GraphicsContext* GetGraphicsContext() const { return _gc; }
 	virtual Surface* GetSurface() const;
 
 	WidgetShape* GetWidgetShape() const;

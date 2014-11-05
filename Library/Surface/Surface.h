@@ -17,13 +17,9 @@ class Touch;
 
 class Surface : public Container
 {
-	GraphicsContext* _gc;
-
 public:
 	Surface(GraphicsContext* gc);
 	virtual ~Surface();
-
-	GraphicsContext* GetGraphicsContext() const { return _gc; }
 
 	// Content
 

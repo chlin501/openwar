@@ -2,7 +2,7 @@
 #include "Surface.h"
 
 
-Container::Container()
+Container::Container(GraphicsContext* gc) : Content(gc)
 {
 }
 

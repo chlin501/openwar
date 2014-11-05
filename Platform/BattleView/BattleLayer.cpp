@@ -15,7 +15,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-BattleLayer::BattleLayer(GraphicsContext* gc) :
+BattleLayer::BattleLayer(GraphicsContext* gc) : Container(gc),
 _playing(false),
 _editing(false),
 _scenario(nullptr),
