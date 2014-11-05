@@ -76,7 +76,7 @@ void TerrainGesture::RenderHints()
 
 	glLineWidth(2);
 
-	GraphicsContext* gc = _terrainView->GetSurface()->GetGraphicsContext();
+	GraphicsContext* gc = _terrainView->GetGraphicsContext();
 	RenderCall<PlainShader_2f>(gc)
 		.SetVertices(&vertices)
 		.SetUniform("transform", _terrainView->GetRenderTransform())

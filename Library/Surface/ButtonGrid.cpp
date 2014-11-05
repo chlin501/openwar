@@ -392,7 +392,7 @@ void ButtonGrid::Render()
 		}
 	}
 
-	RenderCall<WidgetShader> renderCall(GetSurface()->GetGraphicsContext());
+	RenderCall<WidgetShader> renderCall(GetGraphicsContext());
 
 	renderCall.SetVertices(buttonShape->GetVertices());
 	renderCall.SetTexture("texture", buttonShape->GetTextureAtlas());

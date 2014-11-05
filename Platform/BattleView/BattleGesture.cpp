@@ -96,7 +96,7 @@ void BattleGesture::RenderHints()
 		}
 	}
 
-	GraphicsContext* gc = _battleView->GetSurface()->GetGraphicsContext();
+	GraphicsContext* gc = _battleView->GetGraphicsContext();
 
 	RenderCall<PlainShader_2f>(gc)
 		.SetVertices(&vertices)
