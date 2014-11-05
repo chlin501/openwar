@@ -11,10 +11,10 @@
 
 
 
-glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate, float rotate)
+glm::mat4 ViewportTransform(bounds2i viewport, glm::vec2 translate, float rotate)
 {
-	glm::vec2 viewport_center = viewport.center();
-	glm::vec2 viewport_scale = 2.0f / viewport.size();
+	glm::vec2 viewport_center = (glm::vec2)viewport.center();
+	glm::vec2 viewport_scale = 2.0f / (glm::vec2)viewport.size();
 
 	glm::mat4x4 result = glm::scale(glm::mat4x4(), glm::vec3(viewport_scale.x, viewport_scale.y, 1.0f))
 		* glm::translate(glm::mat4x4(), glm::vec3(translate.x - viewport_center.x, translate.y - viewport_center.y, 0.0f));
@@ -104,13 +104,13 @@ void Content::SetVisible(bool value)
 }
 
 
-bounds2f Content::GetViewport() const
+bounds2i Content::GetViewport() const
 {
 	return _viewport;
 }
 
 
-void Content::SetViewport(bounds2f value)
+void Content::SetViewport(bounds2i value)
 {
 	_viewport = value;
 }
@@ -118,24 +118,24 @@ void Content::SetViewport(bounds2f value)
 
 void Content::UseViewport()
 {
-	bounds2f viewport;
+	bounds2i viewport;
 
 	for (Content* c = this; c != nullptr && viewport.is_empty(); c = c->GetContainer())
 		viewport = c->GetViewport();
 
-	viewport = viewport * GetSurface()->GetGraphicsContext()->GetPixelDensity();
-	glViewport((GLint)viewport.min.x, (GLint)viewport.min.y, (GLsizei)viewport.size().x, (GLsizei)viewport.size().y);
+	//viewport = viewport * GetSurface()->GetGraphicsContext()->GetPixelDensity();
+	glViewport((GLint)viewport.min.x, (GLint)viewport.min.y, (GLsizei)viewport.x().size(), (GLsizei)viewport.y().size());
 }
 
 
 
-bounds2f Content::GetFrame() const
+bounds2i Content::GetFrame() const
 {
 	return _frame;
 }
 
 
-void Content::SetFrame(bounds2f value)
+void Content::SetFrame(bounds2i value)
 {
 	SetFrameValue(value);
 }
@@ -148,29 +148,29 @@ void Content::OnFrameChanged()
 
 
 
-glm::vec2 Content::GetPosition() const
+glm::ivec2 Content::GetPosition() const
 {
 	return _frame.min;
 }
 
 
-void Content::SetPosition(glm::vec2 value)
+void Content::SetPosition(glm::ivec2 value)
 {
-	glm::vec2 delta = value - GetPosition();
+	glm::ivec2 delta = value - GetPosition();
 	SetFrameValue(_frame + delta);
 }
 
 
-glm::vec2 Content::GetSize() const
+glm::ivec2 Content::GetSize() const
 {
 	return _frame.size();
 }
 
 
-void Content::SetSize(glm::vec2 value)
+void Content::SetSize(glm::ivec2 value)
 {
-	glm::vec2 p = GetPosition();
-	SetFrameValue(bounds2f(p,  p + value));
+	glm::ivec2 p = GetPosition();
+	SetFrameValue(bounds2i(p,  p + value));
 }
 
 
@@ -214,7 +214,7 @@ void Content::SetTranslate(glm::vec2 value)
 
 glm::mat4 Content::GetViewportTransform() const
 {
-	bounds2f viewport;
+	bounds2i viewport;
 
 	for (const Content* c = this; c != nullptr && viewport.is_empty(); c = c->GetContainer())
 		viewport = c->GetViewport();
@@ -223,7 +223,7 @@ glm::mat4 Content::GetViewportTransform() const
 
 	if (!viewport.is_empty())
 	{
-		glm::vec2 size = viewport.size();
+		glm::vec2 size = (glm::vec2)viewport.size();
 
 		result = glm::translate(result, glm::vec3(-1, -1, 0));
 		result = glm::scale(result, glm::vec3(2 / size.x, 2 / size.y, 1));
@@ -249,7 +249,7 @@ glm::mat4 Content::GetContainerTransform() const
 
 glm::mat4 Content::GetContentTransform() const
 {
-	bounds2f frame = GetFrame();
+	bounds2i frame = GetFrame();
 
 	glm::mat4 result;
 
@@ -262,19 +262,19 @@ glm::mat4 Content::GetContentTransform() const
 
 glm::vec2 Content::SurfaceToContent(glm::vec2 value) const
 {
-	bounds2f viewport = GetFrame();
-	return 2.0f * (value - viewport.p11()) / viewport.size() - 1.0f;
+	bounds2i viewport = GetFrame();
+	return 2.0f * (value - (glm::vec2)viewport.p11()) / (glm::vec2)viewport.size() - 1.0f;
 }
 
 
 glm::vec2 Content::ContentToSurface(glm::vec2 value) const
 {
-	bounds2f viewport = GetFrame();
-	return viewport.p11() + (value + 1.0f) / 2.0f * viewport.size();
+	bounds2i viewport = GetFrame();
+	return (glm::vec2)viewport.p11() + (value + 1.0f) / 2.0f * (glm::vec2)viewport.size();
 }
 
 
-void Content::SetFrameValue(const bounds2f& value)
+void Content::SetFrameValue(const bounds2i& value)
 {
 	_frame = value;
 

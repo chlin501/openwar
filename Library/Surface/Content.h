@@ -16,7 +16,7 @@ class Surface;
 class Touch;
 class WidgetShape;
 
-glm::mat4 ViewportTransform(bounds2f viewport, glm::vec2 translate = glm::vec2(), float rotate = 0);
+glm::mat4 ViewportTransform(bounds2i viewport, glm::vec2 translate = glm::vec2(), float rotate = 0);
 
 
 class Content
@@ -26,9 +26,11 @@ class Content
 	mutable Surface* _surface;
 	Container* _container;
 	bool _visible;
-	bounds2f _viewport;
-	bounds2f _frame;
+
+	bounds2i _viewport;
+	bounds2i _frame;
 	bounds2f _bounds;
+
 	bool _isUsingDepth;
 	glm::vec2 _translate;
 	bool _flip;
@@ -54,21 +56,21 @@ public:
 	virtual bool IsVisible() const;
 	void SetVisible(bool value);
 
-	virtual bounds2f GetViewport() const;
-	virtual void SetViewport(bounds2f value);
+	virtual bounds2i GetViewport() const;
+	virtual void SetViewport(bounds2i value);
 	virtual void UseViewport();
 
 	//
 
-	virtual bounds2f GetFrame() const;
-	virtual void SetFrame(bounds2f value);
+	virtual bounds2i GetFrame() const;
+	virtual void SetFrame(bounds2i value);
 	virtual void OnFrameChanged();
 
-	virtual glm::vec2 GetPosition() const;
-	virtual void SetPosition(glm::vec2 value);
+	virtual glm::ivec2 GetPosition() const;
+	virtual void SetPosition(glm::ivec2 value);
 
-	virtual glm::vec2 GetSize() const;
-	virtual void SetSize(glm::vec2 value);
+	virtual glm::ivec2 GetSize() const;
+	virtual void SetSize(glm::ivec2 value);
 
 	//
 
@@ -101,7 +103,7 @@ public:
 	virtual void FindHotspots(const glm::mat4 transform, glm::vec2 position, Touch* touch) = 0;
 
 private:
-	void SetFrameValue(const bounds2f& value);
+	void SetFrameValue(const bounds2i& value);
 
 protected:
 	virtual void OnBoundsChanged();

@@ -36,6 +36,8 @@ struct bounds1
 	explicit bounds1(T v) : min(v), max(v) {}
 	bounds1(T min_, T max_) : min(min_), max(max_) {}
 
+	template <class T2> operator bounds1<T2, P>() const { return bounds1<T2, P>((T2)min, (T2)max); }
+
 	T center() const {return (min + max) / 2;}
 	T size() const {return max - min;}
 	T radius() const {return (max - min) / 2;}
@@ -82,6 +84,8 @@ struct bounds2
 	bounds2(bounds1<T, P> x, T min_y, T max_y) : min(x.min, min_y), max(x.max, max_y) {}
 	bounds2(glm::tvec2<T, P> min_, glm::tvec2<T, P> max_) : min(min_), max(max_) {}
 	bounds2(bounds1<T, P> x, bounds1<T, P> y) : min(x.min, y.min), max(x.max, y.max) {}
+
+	template <class T2> operator bounds2<T2, P>() const { return bounds2<T2, P>((glm::tvec2<T2, P>)min, (glm::tvec2<T2, P>)max); }
 
 	bounds1<T, P> x() const {return bounds1<T, P>(min.x, max.x);}
 	bounds1<T, P> y() const {return bounds1<T, P>(min.y, max.y);}
@@ -161,6 +165,8 @@ struct bounds3
 	bounds3(glm::tvec3<T, P> min_, glm::tvec3<T, P> max_)  : min(min_), max(max_) {}
 	bounds3(bounds2<T, P> b, bounds1<T, P> z) : min(b.min, z.min), max(b.max, z.max) {}
 	bounds3(bounds1<T, P> x, bounds1<T, P> y, bounds1<T, P> z) : min(x.min, y.min, z.min), max(x.max, y.max, z.max) {}
+
+	template <class T2> operator bounds3<T2, P>() const { return bounds3<T2, P>((glm::tvec3<T2, P>)min, (glm::tvec3<T2, P>)max); }
 
 	bool is_empty() const {return min.x >= max.x || min.y >= max.y || min.z >= max.z;}
 	bool contains(glm::tvec3<T, P> p) const {return min.x <= p.x && p.x <= max.x && min.y <= p.y && p.y <= max.y && min.z <= p.z && p.z <= max.z;}

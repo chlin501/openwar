@@ -58,7 +58,7 @@ private:
 	static Window* GetWindow(Uint32 windowID);
 
 	glm::vec2 ToVector(int x, int y);
-	glm::vec2 GetWindowSize() const;
+	glm::ivec2 GetWindowSize() const;
 	glm::vec2 ToPosition(const SDL_TouchFingerEvent& event);
 	double ToTimestamp(Uint32 timestamp);
 

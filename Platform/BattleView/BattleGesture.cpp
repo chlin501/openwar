@@ -145,7 +145,9 @@ void BattleGesture::TouchBegan(Touch* touch)
 		return;
 	if (touch->HasGesture())
 		return;
-	if (!_battleView->GetFrame().contains(touch->GetPosition()))
+
+	bounds2f frame = (bounds2f)_battleView->GetFrame();
+	if (!frame.contains(touch->GetPosition()))
 		return;
 
 	glm::vec2 screenPosition = touch->GetPosition();

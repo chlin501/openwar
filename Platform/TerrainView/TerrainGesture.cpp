@@ -160,7 +160,7 @@ void TerrainGesture::Magnify(Surface* surface, glm::vec2 position, float magnifi
 	if (_terrainView->GetSurface() != surface)
 		return;
 
-	glm::vec2 p = _terrainView->GetFrame().center();
+	glm::vec2 p = (glm::vec2)_terrainView->GetFrame().center();
 	glm::vec2 d1 = glm::vec2(0, 64);
 	glm::vec2 d2 = d1 * glm::exp(magnification);
 
@@ -174,7 +174,9 @@ void TerrainGesture::TouchBegan(Touch* touch)
 		return;
 	if (touch->HasGesture())
 		return;
-	if (!_terrainView->GetFrame().contains(touch->GetPosition()))
+
+	bounds2f frame = (bounds2f)_terrainView->GetFrame();
+	if (!frame.contains(touch->GetPosition()))
 		return;
 
 	CaptureTouch(touch);

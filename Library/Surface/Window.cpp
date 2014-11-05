@@ -480,11 +480,11 @@ glm::vec2 Window::ToVector(int x, int y)
 }
 
 
-glm::vec2 Window::GetWindowSize() const
+glm::ivec2 Window::GetWindowSize() const
 {
 	int w, h;
 	SDL_GetWindowSize(_window, &w, &h);
-	return glm::vec2(w, h);
+	return glm::ivec2(w, h);
 }
 
 

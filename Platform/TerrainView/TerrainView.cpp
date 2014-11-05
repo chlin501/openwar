@@ -184,8 +184,8 @@ glm::mat4x4 TerrainView::GetProjectionMatrix() const
 {
 	float r = 2 * glm::length(_contentBounds.size());
 
-	glm::vec2 frameSize = GetFrame().size();
-	float frameAspect = frameSize.y / frameSize.x;
+	glm::ivec2 frameSize = GetFrame().size();
+	float frameAspect = (float)frameSize.y / (float)frameSize.x;
 
 	return glm::perspective(45.0f, 1.0f / frameAspect, 0.01f * r, r);
 }
@@ -318,7 +318,7 @@ void TerrainView::MoveCamera(glm::vec3 position)
 
 void TerrainView::ClampCameraPosition()
 {
-	glm::vec2 centerScreen = GetFrame().center();
+	glm::vec2 centerScreen = (glm::vec2)GetFrame().center();
 	glm::vec2 contentCamera = GetTerrainPosition2(centerScreen).xy();
 	glm::vec2 contentCenter = GetContentBounds().center();
 	float contentRadius = _heightMap->GetBounds().width() / 2;

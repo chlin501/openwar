@@ -41,7 +41,7 @@ public:
 	BattleLayer* _battleLayer;
 
 public:
-	OpenWarSurface(GraphicsContext* gc, glm::vec2 size);
+	OpenWarSurface(GraphicsContext* gc, glm::ivec2 size);
 	virtual ~OpenWarSurface();
 
 	BattleLayer* GetBattleLayer() const { return _battleLayer; }

@@ -12,7 +12,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-OpenWarSurface::OpenWarSurface(GraphicsContext* gc, glm::vec2 size) : Surface(gc, size),
+OpenWarSurface::OpenWarSurface(GraphicsContext* gc, glm::ivec2 size) : Surface(gc, size),
 _buttonRendering(nullptr),
 _editorModel(nullptr),
 _editorGesture(nullptr),
