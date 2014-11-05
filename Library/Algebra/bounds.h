@@ -7,6 +7,24 @@
 
 #include <glm/glm.hpp>
 
+/* TODO:
+	is_empty() => empty()
+	lerp(v) => mix(v)
+	unlerp(v) => unmix(v)
+	shrink(d) => grow(-d)
+	mix(x, y)
+	mix_00()
+	mix_01()
+	mix_10()
+	mix_11()
+
+	width() => x().size()
+	height() => y().size()
+
+	bounds2_from_center(p, r) => bounds2(p).grow(r)
+	bounds2_from_corner(p, s) => ???
+*/
+
 
 template <class T, glm::precision P>
 struct bounds1
