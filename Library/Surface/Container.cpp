@@ -104,10 +104,6 @@ void Container::FindHotspots(glm::vec2 viewportPosition, Touch* touch)
 
 void SetContentContainer(Content* content, Container* container, Content* behindContent)
 {
-	Surface* surface = nullptr;
-	for (Container* c = container; surface == nullptr && c != nullptr; c = c->GetContainer())
-		surface = dynamic_cast<Surface*>(c);
-
 	Container* existing = content->GetContainer();
 	if (existing != nullptr)
 	{
@@ -115,7 +111,6 @@ void SetContentContainer(Content* content, Container* container, Content* behind
 		existing->_contents.erase(i);
 	}
 
-	content->_surface = surface;
 	content->_container = container;
 
 	if (container != nullptr)

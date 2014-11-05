@@ -32,16 +32,15 @@ void ButtonGesture::Update(Surface* surface, double secondsSinceLastUpdate)
 
 void ButtonGesture::KeyDown(Surface* surface, char key)
 {
-	for (ButtonGrid* buttonView : buttonViews)
-		if (buttonView->GetSurface() == surface)
-			for (ButtonArea* buttonArea : buttonView->GetButtonAreas())
-				for (ButtonItem* buttonItem : buttonArea->buttonItems)
-					if (buttonItem->HasAction()
-							&& !buttonItem->IsDisabled()
-							&& buttonItem->GetKeyboardShortcut() == key)
-					{
-						buttonItem->CallAction();
-					}
+	for (ButtonGrid* buttonView : _buttonViews)
+		for (ButtonArea* buttonArea : buttonView->GetButtonAreas())
+			for (ButtonItem* buttonItem : buttonArea->buttonItems)
+				if (buttonItem->HasAction()
+						&& !buttonItem->IsDisabled()
+						&& buttonItem->GetKeyboardShortcut() == key)
+				{
+					buttonItem->CallAction();
+				}
 
 }
 
@@ -68,12 +67,9 @@ void ButtonGesture::TouchBegan(Touch* touch)
 	}
 	else
 	{
-		for (ButtonGrid* buttonView : buttonViews)
-			if (buttonView->GetSurface() == touch->GetSurface())
-				for (ButtonArea* buttonArea : buttonView->GetButtonAreas())
-				{
-					buttonArea->noaction();
-				}
+		for (ButtonGrid* buttonView : _buttonViews)
+			for (ButtonArea* buttonArea : buttonView->GetButtonAreas())
+				buttonArea->noaction();
 	}
 }
 

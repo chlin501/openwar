@@ -90,9 +90,6 @@ void TerrainGesture::RenderHints()
 
 void TerrainGesture::Update(Surface* surface, double secondsSinceLastUpdate)
 {
-	if (_terrainView->GetSurface() != surface)
-		return;
-
 	if (_touches.empty())
 	{
 		UpdateMomentumOrbit(secondsSinceLastUpdate);
@@ -112,9 +109,6 @@ void TerrainGesture::Update(Surface* surface, double secondsSinceLastUpdate)
 
 void TerrainGesture::KeyDown(Surface* surface, char key)
 {
-	if (_terrainView->GetSurface() != surface)
-		return;
-
 	switch (key)
 	{
 		case 'W': _keyScrollForward = true; break;
@@ -130,9 +124,6 @@ void TerrainGesture::KeyDown(Surface* surface, char key)
 
 void TerrainGesture::KeyUp(Surface* surface, char key)
 {
-	if (_terrainView->GetSurface() != surface)
-		return;
-
 	switch (key)
 	{
 		case 'W': _keyScrollForward = false; break;
@@ -148,18 +139,12 @@ void TerrainGesture::KeyUp(Surface* surface, char key)
 
 void TerrainGesture::ScrollWheel(Surface* surface, glm::vec2 position, glm::vec2 delta)
 {
-	if (_terrainView->GetSurface() != surface)
-		return;
-
 	Magnify(surface, position, -delta.y / 10);
 }
 
 
 void TerrainGesture::Magnify(Surface* surface, glm::vec2 position, float magnification)
 {
-	if (_terrainView->GetSurface() != surface)
-		return;
-
 	glm::vec2 p = (glm::vec2)_terrainView->GetViewport().center();
 	glm::vec2 d1 = glm::vec2(0, 64);
 	glm::vec2 d2 = d1 * glm::exp(magnification);
@@ -170,8 +155,6 @@ void TerrainGesture::Magnify(Surface* surface, glm::vec2 position, float magnifi
 
 void TerrainGesture::TouchBegan(Touch* touch)
 {
-	if (touch->GetSurface() != _terrainView->GetSurface())
-		return;
 	if (touch->HasGesture())
 		return;
 

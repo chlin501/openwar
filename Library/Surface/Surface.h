@@ -20,10 +20,6 @@ class Surface : public Container
 public:
 	Surface(GraphicsContext* gc);
 	virtual ~Surface();
-
-	// Content
-
-	virtual Surface* GetSurface() const;
 };
 
 

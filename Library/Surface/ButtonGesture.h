@@ -20,7 +20,7 @@ class ButtonGesture : public Gesture
 	std::shared_ptr<ButtonHotspot> _hotspot;
 
 public:
-	std::vector<ButtonGrid*> buttonViews;
+	std::vector<ButtonGrid*> _buttonViews;
 
 	ButtonGesture(Surface* surface);
 	virtual ~ButtonGesture();

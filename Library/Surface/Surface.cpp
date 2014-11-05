@@ -16,9 +16,3 @@ Surface::Surface(GraphicsContext* gc) : Container(gc)
 Surface::~Surface()
 {
 }
-
-
-Surface* Surface::GetSurface() const
-{
-	return const_cast<Surface*>(this);
-}

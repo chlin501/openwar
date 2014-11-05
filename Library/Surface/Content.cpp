@@ -14,7 +14,6 @@
 
 Content::Content(GraphicsContext* gc) :
 	_gc(gc),
-	_surface(nullptr),
 	_container(nullptr),
 	_visible(true),
 	_viewport(),
@@ -45,22 +44,11 @@ bool Content::IsDismissed() const
 }
 
 
-Surface* Content::GetSurface() const
-{
-	if (_surface == nullptr && _container != nullptr)
-		_surface = _container->GetSurface();
-	return _surface;
-}
-
-
 WidgetShape* Content::GetWidgetShape() const
 {
 	if (_widgetShape == nullptr)
-	{
-		Surface* surface = GetSurface();
-		if (surface != nullptr)
-			_widgetShape = new WidgetShape(surface->GetGraphicsContext()->GetWidgetTextureAtlas());
-	}
+		_widgetShape = new WidgetShape(GetGraphicsContext()->GetWidgetTextureAtlas());
+
 	return _widgetShape;
 }
 

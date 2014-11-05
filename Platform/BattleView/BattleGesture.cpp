@@ -139,8 +139,6 @@ void BattleGesture::RenderHints()
 
 void BattleGesture::TouchBegan(Touch* touch)
 {
-	if (touch->GetSurface() != _battleView->GetSurface())
-		return;
 	if (touch->HasGesture())
 		return;
 

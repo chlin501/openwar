@@ -41,8 +41,8 @@ _battleLayer(nullptr)
 	_buttonsTopRight->SetContainer(this);
 
 	_buttonGesture = new ButtonGesture(this);
-	_buttonGesture->buttonViews.push_back(_buttonsTopLeft);
-	_buttonGesture->buttonViews.push_back(_buttonsTopRight);
+	_buttonGesture->_buttonViews.push_back(_buttonsTopLeft);
+	_buttonGesture->_buttonViews.push_back(_buttonsTopRight);
 
 	ButtonArea* toolButtonArea = _buttonsTopLeft->AddButtonArea(4);
 	_buttonItemHand = toolButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolHand);

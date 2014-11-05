@@ -24,9 +24,6 @@ void EditorGesture::Update(Surface* surface, double secondsSinceLastUpdate)
 
 void EditorGesture::TouchBegan(Touch* touch)
 {
-	if (touch->GetSurface() != _battleView->GetSurface())
-		return;
-
 	if (_editorModel->GetEditorMode() == EditorMode::Hand)
 	{
 		bounds2f b = _battleView->GetContentBounds();
