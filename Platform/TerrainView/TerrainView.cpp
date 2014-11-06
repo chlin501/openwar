@@ -70,7 +70,7 @@ void TerrainView::SetHeightMap(HeightMap* heightMap)
 {
 	_heightMap = heightMap;
 
-	_contentBounds = heightMap->GetBounds();
+	_terrainBounds = heightMap->GetBounds();
 
 	/*
 	glm::vec2 center = _contentBounds.center();
@@ -85,13 +85,13 @@ void TerrainView::SetHeightMap(HeightMap* heightMap)
 
 float TerrainView::GetContentRadius() const
 {
-	return _contentBounds.y().size() / 2;
+	return _terrainBounds.y().size() / 2;
 }
 
 
 glm::vec2 TerrainView::GetScreenTop() const
 {
-	glm::vec2 center = _contentBounds.center();
+	glm::vec2 center = _terrainBounds.center();
 	float angle = _cameraFacing;
 	if (GetFlip())
 		angle += (float)M_PI;
@@ -103,13 +103,13 @@ glm::vec2 TerrainView::GetScreenTop() const
 
 glm::vec2 TerrainView::GetScreenLeft() const
 {
-	glm::vec2 center = _contentBounds.center();
+	glm::vec2 center = _terrainBounds.center();
 	float angle = _cameraFacing;
 	if (GetFlip())
 		angle += (float)M_PI;
 	float radius = GetContentRadius();
 
-	glm::vec2 result(GetBounds().max.x, 0);
+	glm::vec2 result(GetContentBounds().max.x, 0);
 
 	int n = 20;
 	for (int i = 0; i < n; ++i)
@@ -126,7 +126,7 @@ glm::vec2 TerrainView::GetScreenLeft() const
 
 glm::vec2 TerrainView::GetScreenBottom() const
 {
-	glm::vec2 center = _contentBounds.center();
+	glm::vec2 center = _terrainBounds.center();
 	float angle = _cameraFacing + (float)M_PI;
 	if (GetFlip())
 		angle += (float)M_PI;
@@ -134,8 +134,8 @@ glm::vec2 TerrainView::GetScreenBottom() const
 
 	glm::vec2 result = ContentToScreen(glm::vec3(center + radius * vector2_from_angle(angle), 0));
 
-	if (result.y > GetBounds().max.y)
-		result.y = GetBounds().min.y;
+	if (result.y > GetContentBounds().max.y)
+		result.y = GetContentBounds().min.y;
 
 	return result;
 }
@@ -143,13 +143,13 @@ glm::vec2 TerrainView::GetScreenBottom() const
 
 glm::vec2 TerrainView::GetScreenRight() const
 {
-	glm::vec2 center = _contentBounds.center();
+	glm::vec2 center = _terrainBounds.center();
 	float angle = _cameraFacing;
 	if (GetFlip())
 		angle += (float)M_PI;
 	float radius = GetContentRadius();
 
-	glm::vec2 result(GetBounds().min.x, 0);
+	glm::vec2 result(GetContentBounds().min.x, 0);
 
 	int n = 20;
 	for (int i = 4; i < n - 4; ++i)
@@ -182,10 +182,10 @@ glm::vec3 TerrainView::GetCameraUpVector() const
 
 glm::mat4x4 TerrainView::GetProjectionMatrix() const
 {
-	float r = 2 * glm::length(_contentBounds.size());
+	float r = 2 * glm::length(_terrainBounds.size());
 
-	glm::vec2 size = GetBounds().size();
-	float aspect = size.y / size.x;
+	glm::vec2 viewportSize = (glm::vec2)GetViewportBounds().size();
+	float aspect = viewportSize.y / viewportSize.x;
 
 	return glm::perspective(45.0f, 1.0f / aspect, 0.01f * r, r);
 }
@@ -254,7 +254,7 @@ void TerrainView::Zoom(glm::vec3 originalContentPosition1, glm::vec3 originalCon
 	glm::vec3 originalContentCenter = (originalContentPosition1 + originalContentPosition2) / 2.0f;
 	glm::vec2 currentScreenCenter = (currentScreenPosition1 + currentScreenPosition2) / 2.0f;
 
-	float delta = (1 - orbitFactor) * glm::length(GetContentBounds().size()) / 20.0f;
+	float delta = (1 - orbitFactor) * glm::length(GetTerrainBounds().size()) / 20.0f;
 	for (int i = 0; i < 18; ++i)
 	{
 		glm::vec3 currentContentPosition1 = GetTerrainPosition3(currentScreenPosition1);
@@ -291,7 +291,7 @@ void TerrainView::Orbit(glm::vec2 originalContentPosition, float angle)
 
 void TerrainView::MoveCamera(glm::vec3 position)
 {
-	bounds2f contentBounds = GetContentBounds();
+	bounds2f contentBounds = GetTerrainBounds();
 	float contentRadius = 0.5f * glm::length(contentBounds.size());
 
 	position.z = (bounds1f(0.05f, 2) * contentRadius).clamp(position.z);
@@ -318,9 +318,9 @@ void TerrainView::MoveCamera(glm::vec3 position)
 
 void TerrainView::ClampCameraPosition()
 {
-	glm::vec2 centerScreen = (glm::vec2)GetBounds().center();
+	glm::vec2 centerScreen = (glm::vec2)GetContentBounds().center();
 	glm::vec2 contentCamera = GetTerrainPosition2(centerScreen).xy();
-	glm::vec2 contentCenter = GetContentBounds().center();
+	glm::vec2 contentCenter = GetTerrainBounds().center();
 	float contentRadius = _heightMap->GetBounds().x().size() / 2;
 
 	glm::vec2 offset = contentCamera - contentCenter;

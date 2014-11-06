@@ -16,8 +16,8 @@ Content::Content(GraphicsContext* gc) :
 	_gc(gc),
 	_container(nullptr),
 	_visible(true),
-	_viewport(),
-	_bounds(),
+	_viewportBounds(),
+	_contentBounds(),
 	_isUsingDepth(false),
 	_flip(false),
 	_dismissed(false),
@@ -78,33 +78,33 @@ void Content::SetVisible(bool value)
 
 
 
-bounds2i Content::GetViewport() const
+bounds2i Content::GetViewportBounds() const
 {
-	return _viewport;
+	return _viewportBounds;
 }
 
 
-void Content::SetViewport(bounds2i value)
+void Content::SetViewportBounds(bounds2i value)
 {
-	_viewport = value;
+	_viewportBounds = value;
 }
 
 
 void Content::UseViewport()
 {
-	glViewport((GLint)_viewport.min.x, (GLint)_viewport.min.y, (GLsizei)_viewport.x().size(), (GLsizei)_viewport.y().size());
+	glViewport((GLint)_viewportBounds.min.x, (GLint)_viewportBounds.min.y, (GLsizei)_viewportBounds.x().size(), (GLsizei)_viewportBounds.y().size());
 }
 
 
-bounds2f Content::GetBounds() const
+bounds2f Content::GetContentBounds() const
 {
-	return _bounds;
+	return _contentBounds;
 }
 
 
-void Content::SetBounds(const bounds2f& value)
+void Content::SetContentBounds(const bounds2f& value)
 {
-	_bounds = value;
+	_contentBounds = value;
 }
 
 
@@ -125,8 +125,8 @@ glm::mat4 Content::GetRenderTransform() const
 	glm::mat4 result;
 
 	result = glm::translate(result, glm::vec3(-1, -1, 0));
-	result = glm::scale(result, glm::vec3(glm::vec2(2, 2) / _bounds.size(), 1));
-	result = glm::translate(result, glm::vec3(-_bounds.min, 0));
+	result = glm::scale(result, glm::vec3(glm::vec2(2, 2) / _contentBounds.size(), 1));
+	result = glm::translate(result, glm::vec3(-_contentBounds.min, 0));
 
 	return result;
 }
@@ -146,23 +146,23 @@ glm::vec2 Content::ViewportToContent(glm::vec2 value) const
 
 glm::vec2 Content::ContentToNormalized(glm::vec2 value) const
 {
-	return 2.0f * (value - _bounds.min) / _bounds.size() - 1.0f;
+	return 2.0f * (value - _contentBounds.min) / _contentBounds.size() - 1.0f;
 }
 
 
 glm::vec2 Content::NormalizedToContent(glm::vec2 value) const
 {
-	return _bounds.min + (value + 1.0f) / 2.0f * _bounds.size();
+	return _contentBounds.min + (value + 1.0f) / 2.0f * _contentBounds.size();
 }
 
 
 glm::vec2 Content::ViewportToNormalized(glm::vec2 value) const
 {
-	return 2.0f * (value - (glm::vec2)_viewport.min) / (glm::vec2)_viewport.size() - 1.0f;
+	return 2.0f * (value - (glm::vec2)_viewportBounds.min) / (glm::vec2)_viewportBounds.size() - 1.0f;
 }
 
 
 glm::vec2 Content::NormalizedToViewport(glm::vec2 value) const
 {
-	return (glm::vec2)_viewport.min + (value + 1.0f) / 2.0f * (glm::vec2)_viewport.size();
+	return (glm::vec2)_viewportBounds.min + (value + 1.0f) / 2.0f * (glm::vec2)_viewportBounds.size();
 }

@@ -142,8 +142,8 @@ void BattleGesture::TouchBegan(Touch* touch)
 	if (touch->HasGesture())
 		return;
 
-	bounds2f frame = (bounds2f)_battleView->GetViewport();
-	if (!frame.contains(touch->GetPosition()))
+	bounds2f viewportBounds = (bounds2f)_battleView->GetViewportBounds();
+	if (!viewportBounds.contains(touch->GetPosition()))
 		return;
 
 	glm::vec2 screenPosition = touch->GetPosition();
@@ -431,7 +431,7 @@ void BattleGesture::UpdateTrackingMarker()
 
 		glm::vec2 currentDestination = path.size() != 0 ? *(path.end() - 1) : unit->state.center;
 
-		bounds2f contentBounds = _battleView->GetContentBounds();
+		bounds2f contentBounds = _battleView->GetTerrainBounds();
 		glm::vec2 contentCenter = contentBounds.center();
 		float contentRadius = contentBounds.x().size() / 2;
 

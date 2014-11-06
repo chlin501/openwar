@@ -88,7 +88,7 @@ void Scroller::FindHotspots(glm::vec2 viewportPosition, Touch* touch)
 	Container::FindHotspots(viewportPosition, touch);
 
 	glm::vec2 position = ViewportToContent(viewportPosition);
-	if (GetBounds().contains(position))
+	if (GetContentBounds().contains(position))
 	{
 		touch->AddHotspot(std::make_shared<ScrollerHotspot>(position, this));
 	}

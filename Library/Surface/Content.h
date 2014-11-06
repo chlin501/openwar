@@ -25,8 +25,8 @@ class Content
 	Container* _container;
 	bool _visible;
 
-	bounds2i _viewport;
-	bounds2f _bounds;
+	bounds2i _viewportBounds;
+	bounds2f _contentBounds;
 
 	bool _isUsingDepth;
 	bool _flip;
@@ -50,12 +50,12 @@ public:
 	virtual bool IsVisible() const;
 	void SetVisible(bool value);
 
-	virtual bounds2i GetViewport() const;
-	virtual void SetViewport(bounds2i value);
+	virtual bounds2i GetViewportBounds() const;
+	virtual void SetViewportBounds(bounds2i value);
 	virtual void UseViewport();
 
-	virtual bounds2f GetBounds() const;
-	virtual void SetBounds(const bounds2f& value);
+	virtual bounds2f GetContentBounds() const;
+	virtual void SetContentBounds(const bounds2f& value);
 
 	virtual bool IsUsingDepth() const;
 	virtual void SetUsingDepth(bool value);

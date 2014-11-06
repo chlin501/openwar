@@ -145,7 +145,7 @@ void TerrainGesture::ScrollWheel(glm::vec2 position, glm::vec2 delta)
 
 void TerrainGesture::Magnify(glm::vec2 position, float magnification)
 {
-	glm::vec2 p = (glm::vec2)_terrainView->GetViewport().center();
+	glm::vec2 p = (glm::vec2)_terrainView->GetViewportBounds().center();
 	glm::vec2 d1 = glm::vec2(0, 64);
 	glm::vec2 d2 = d1 * glm::exp(magnification);
 
@@ -158,8 +158,8 @@ void TerrainGesture::TouchBegan(Touch* touch)
 	if (touch->HasGesture())
 		return;
 
-	bounds2f frame = (bounds2f)_terrainView->GetViewport();
-	if (!frame.contains(touch->GetPosition()))
+	bounds2f viewportBounds = (bounds2f)_terrainView->GetViewportBounds();
+	if (!viewportBounds.contains(touch->GetPosition()))
 		return;
 
 	CaptureTouch(touch);
@@ -299,7 +299,7 @@ void TerrainGesture::UpdateKeyOrbit(double secondsSinceLastUpdate)
 
 void TerrainGesture::MoveAndOrbit(Touch* touch)
 {
-	bounds2f viewportBounds = _terrainView->GetViewport();
+	bounds2f viewportBounds = _terrainView->GetViewportBounds();
 	glm::vec2 touchPosition = touch->GetPosition();
 
 	glm::vec2 centerScreen = _terrainView->NormalizedToContent(glm::vec2(0, 0));
@@ -407,7 +407,7 @@ void TerrainGesture::AdjustToKeepInView(float adjustmentFactor, float secondsSin
 	bool is_scrolling = glm::length(_scrollVelocity) > 16;
 	bool brake_scrolling = false;
 
-	bounds2f viewportBounds = _terrainView->GetViewport();
+	bounds2f viewportBounds = _terrainView->GetViewportBounds();
 	glm::vec2 left = _terrainView->GetScreenLeft();
 	glm::vec2 right = _terrainView->GetScreenRight();
 	float dx1 = left.x - viewportBounds.min.x;

@@ -494,12 +494,12 @@ void BattleView::Render()
 	glm::mat4 terrainTransform = GetTerrainTransform();
 
 	glm::mat4 adjustmentTransform;
-	adjustmentTransform = glm::scale(adjustmentTransform, glm::vec3(GetBounds().size(), 1));
+	adjustmentTransform = glm::scale(adjustmentTransform, glm::vec3(GetContentBounds().size(), 1));
 	adjustmentTransform = glm::scale(adjustmentTransform, glm::vec3(0.5f, 0.5f, 1));
 	adjustmentTransform = glm::translate(adjustmentTransform, glm::vec3(1, 1, 0));
 
 	glm::mat4 contentTransform = transform * adjustmentTransform * terrainTransform;
-	glm::mat4 facingTransform = transform * glm::translate(glm::mat4(), glm::vec3(-GetBounds().min, 0));
+	glm::mat4 facingTransform = transform * glm::translate(glm::mat4(), glm::vec3(-GetContentBounds().min, 0));
 
 
 	glm::vec2 facing = vector2_from_angle(GetCameraFacing() - 2.5f * (float)M_PI_4);
@@ -511,8 +511,8 @@ void BattleView::Render()
 	glDisable(GL_DEPTH_TEST);
 	if (_smoothTerrainSky != nullptr)
 	{
-		_smoothTerrainSky->RenderBackgroundLinen(transform, GetBounds());
-		_smoothTerrainSky->Render(transform, GetBounds(), GetCameraDirection().z, GetFlip());
+		_smoothTerrainSky->RenderBackgroundLinen(transform, GetContentBounds());
+		_smoothTerrainSky->Render(transform, GetContentBounds(), GetCameraDirection().z, GetFlip());
 	}
 
 
@@ -560,7 +560,7 @@ void BattleView::Render()
 		.SetVertices(_colorBillboardVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("upvector", GetCameraUpVector())
-		.SetUniform("viewport_height", 0.25f * GetGraphicsContext()->GetPixelDensity() * GetBounds().y().size())
+		.SetUniform("viewport_height", 0.25f * GetGraphicsContext()->GetPixelDensity() * GetContentBounds().y().size())
 		.Render();
 
 
@@ -572,7 +572,7 @@ void BattleView::Render()
 		marker->AppendFighterBillboards(_billboardModel);
 	for (SmokeCounter* marker : _smokeMarkers)
 		marker->AppendSmokeBillboards(_billboardModel);
-	_textureBillboardShape->Render(GetGraphicsContext(), _billboardModel, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetBounds().y().size(), GetFlip());
+	_textureBillboardShape->Render(GetGraphicsContext(), _billboardModel, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetContentBounds().y().size(), GetFlip());
 
 
 	// Range Markers
@@ -630,8 +630,8 @@ void BattleView::Render()
 		marker->RenderTrackingMarker(_textureBillboardShape1);
 
 	bounds1f sizeLimit = GetUnitIconSizeLimit();
-	_textureBillboardShape1->Draw(GetGraphicsContext(), _textureUnitMarkers, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetBounds().y().size(), sizeLimit);
-	_textureBillboardShape2->Draw(GetGraphicsContext(), _textureUnitMarkers, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetBounds().y().size(), sizeLimit);
+	_textureBillboardShape1->Draw(GetGraphicsContext(), _textureUnitMarkers, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetContentBounds().y().size(), sizeLimit);
+	_textureBillboardShape2->Draw(GetGraphicsContext(), _textureUnitMarkers, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetContentBounds().y().size(), sizeLimit);
 
 
 	// Tracking Markers
@@ -641,7 +641,7 @@ void BattleView::Render()
 	{
 		_textureBillboardShape1->Reset();
 		marker->RenderTrackingShadow(_textureBillboardShape1);
-		_textureBillboardShape1->Draw(GetGraphicsContext(), _textureTouchMarker, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetBounds().y().size(), bounds1f(64, 64));
+		_textureBillboardShape1->Draw(GetGraphicsContext(), _textureTouchMarker, contentTransform, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetContentBounds().y().size(), bounds1f(64, 64));
 	}
 
 
@@ -687,7 +687,7 @@ void BattleView::Render()
 		.SetVertices(_colorBillboardVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("upvector", GetCameraUpVector())
-		.SetUniform("viewport_height", 0.25f * GetGraphicsContext()->GetPixelDensity() * GetBounds().y().size())
+		.SetUniform("viewport_height", 0.25f * GetGraphicsContext()->GetPixelDensity() * GetContentBounds().y().size())
 		.Render();
 
 
@@ -701,7 +701,7 @@ void BattleView::Render()
 		.SetVertices(_colorBillboardVertices)
 		.SetUniform("transform", contentTransform)
 		.SetUniform("upvector", GetCameraUpVector())
-		.SetUniform("viewport_height", 0.25f * GetGraphicsContext()->GetPixelDensity() * GetBounds().y().size())
+		.SetUniform("viewport_height", 0.25f * GetGraphicsContext()->GetPixelDensity() * GetContentBounds().y().size())
 		.Render();
 
 
@@ -866,7 +866,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 {
 	glm::mat4x4 transform = GetTerrainTransform();
 	glm::vec3 upvector = GetCameraUpVector();
-	float viewport_height = GetBounds().y().size();
+	float viewport_height = GetContentBounds().y().size();
 	bounds1f sizeLimit = GetUnitIconSizeLimit() / GetGraphicsContext()->GetPixelDensity();
 
 	glm::vec3 position2 = position + height * 0.5f * viewport_height * upvector;

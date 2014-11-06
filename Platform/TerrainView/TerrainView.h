@@ -14,7 +14,7 @@
 
 class TerrainView : public Content
 {
-	bounds2f _contentBounds;
+	bounds2f _terrainBounds;
 	glm::vec3 _cameraPosition;
 	float _cameraTilt;
 	float _cameraFacing;
@@ -28,7 +28,7 @@ public:
 	TerrainView(GraphicsContext* gc);
 	virtual ~TerrainView();
 
-	bounds2f GetContentBounds() const { return _contentBounds; }
+	bounds2f GetTerrainBounds() const { return _terrainBounds; }
 
 	void ShowMouseHint(glm::vec2 position);
 	void HideMouseHint();

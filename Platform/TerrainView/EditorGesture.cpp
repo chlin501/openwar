@@ -26,7 +26,7 @@ void EditorGesture::TouchBegan(Touch* touch)
 {
 	if (_editorModel->GetEditorMode() == EditorMode::Hand)
 	{
-		bounds2f b = _battleView->GetContentBounds();
+		bounds2f b = _battleView->GetTerrainBounds();
 		glm::vec2 p = (TerrainPosition(touch) - b.min) / b.size();
 
 		static glm::vec2 old;

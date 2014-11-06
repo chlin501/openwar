@@ -214,7 +214,7 @@ _alignment(alignment)
 
 void ButtonGrid::SetFrame(bounds2f value)
 {
-	Content::SetViewport(value);
+	Content::SetViewportBounds(value);
 	UpdateLayout();
 }
 
@@ -245,7 +245,7 @@ ButtonArea* ButtonGrid::AddButtonArea(int numberOfColumns)
 
 void ButtonGrid::UpdateLayout()
 {
-	bounds2f contentBounds = GetBounds();
+	bounds2f contentBounds = GetContentBounds();
 	glm::vec2 contentCenter = contentBounds.center();
 	float margin = 3;
 	float spacing = 20;
