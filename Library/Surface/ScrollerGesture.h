@@ -11,7 +11,7 @@ class ScrollerGesture : public Gesture
 	std::shared_ptr<ScrollerHotspot> _hotspot;
 
 public:
-	ScrollerGesture();
+	ScrollerGesture(ScrollerHotspot* scrollerHotspot);
 	virtual ~ScrollerGesture();
 
 	virtual void Update(double secondsSinceLastUpdate);

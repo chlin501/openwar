@@ -10,7 +10,7 @@
 #include "Algorithms/sampler.h"
 
 class Gesture;
-class Hotspot;
+class HotspotBase;
 class Surface;
 
 
@@ -44,7 +44,7 @@ class Touch
 	sampler _sampler;
 	MouseButtons _currentButtons;
 	MouseButtons _previousButtons;
-	std::vector<std::shared_ptr<Hotspot>> _hotspots;
+	std::vector<std::shared_ptr<HotspotBase>> _hotspots;
 	bool _hasBegun;
 
 public:
@@ -52,8 +52,8 @@ public:
 	~Touch();
 
 	void UpdateHotspots();
-	void AddHotspot(std::shared_ptr<Hotspot> hotspot);
-	const std::vector<std::shared_ptr<Hotspot>>& GetHotspots() const;
+	void AddHotspot(std::shared_ptr<HotspotBase> hotspot);
+	const std::vector<std::shared_ptr<HotspotBase>>& GetHotspots() const;
 
 	int GetTapCount() const;
 

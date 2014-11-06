@@ -21,7 +21,7 @@ class ButtonGesture : public Gesture
 public:
 	std::vector<ButtonGrid*> _buttonViews;
 
-	ButtonGesture();
+	ButtonGesture(ButtonHotspot* buttonHotspot);
 	virtual ~ButtonGesture();
 
 	virtual void Update(double secondsSinceLastUpdate);

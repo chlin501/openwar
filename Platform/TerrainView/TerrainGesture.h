@@ -9,6 +9,7 @@
 #include "Algorithms/sampler.h"
 
 class TerrainView;
+class TerrainHotspot;
 
 
 class TerrainGesture : public Gesture
@@ -34,7 +35,7 @@ class TerrainGesture : public Gesture
 	glm::vec2 _keyScrollMomentum;
 
 public:
-	TerrainGesture(TerrainView* terrainView);
+	TerrainGesture(TerrainHotspot* terrainHotspot);
 	virtual ~TerrainGesture();
 
 	TerrainView* GetTerrainView() const { return _terrainView; }

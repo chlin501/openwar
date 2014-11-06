@@ -8,25 +8,21 @@
 #include "Surface.h"
 #include "Touch.h"
 
-ButtonGesture::ButtonGesture() :
+
+ButtonGesture::ButtonGesture(ButtonHotspot* buttonHotspot) : Gesture(buttonHotspot),
 _buttonItem(nullptr)
 {
 }
 
 
-
 ButtonGesture::~ButtonGesture()
 {
-
 }
-
 
 
 void ButtonGesture::Update(double secondsSinceLastUpdate)
 {
-
 }
-
 
 
 void ButtonGesture::KeyDown(char key)
@@ -50,7 +46,7 @@ void ButtonGesture::TouchBegan(Touch* touch)
 	if (/*touch->HasGesture() ||*/ !_touches.empty())
 		return;
 
-	for (std::shared_ptr<Hotspot> hotspot : touch->GetHotspots())
+	for (std::shared_ptr<HotspotBase> hotspot : touch->GetHotspots())
 		if (_hotspot == nullptr)
 			_hotspot = std::dynamic_pointer_cast<ButtonHotspot>(hotspot);
 
@@ -88,7 +84,7 @@ void ButtonGesture::TouchMoved()
 		}
 		else
 		{
-			for (std::shared_ptr<Hotspot> hotspot : touch->GetHotspots())
+			for (std::shared_ptr<HotspotBase> hotspot : touch->GetHotspots())
 				if (hotspot == _hotspot)
 					found = true;
 
@@ -105,7 +101,7 @@ void ButtonGesture::TouchEnded(Touch* touch)
 	{
 		bool found = false;
 
-		for (std::shared_ptr<Hotspot> hotspot : touch->GetHotspots())
+		for (std::shared_ptr<HotspotBase> hotspot : touch->GetHotspots())
 			if (hotspot == _hotspot)
 				found = true;
 

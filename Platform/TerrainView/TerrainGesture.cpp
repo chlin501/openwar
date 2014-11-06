@@ -8,10 +8,11 @@
 #include "ShaderProgram.h"
 #include "CommonShaders.h"
 #include "Surface.h"
+#include "TerrainHotspot.h"
 
 
-TerrainGesture::TerrainGesture(TerrainView* terrainView) :
-_terrainView(terrainView),
+TerrainGesture::TerrainGesture(TerrainHotspot* terrainHotspot) : Gesture(terrainHotspot),
+_terrainView(terrainHotspot->GetTerrainView()),
 _previousCameraDirection(0),
 _orbitAccumulator(0),
 _orbitVelocity(0),

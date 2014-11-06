@@ -158,8 +158,6 @@ public:
 
 	ButtonAlignment GetAlignment() const { return _alignment; }
 
-	virtual void SetFrame(bounds2f value);
-
 	const std::vector<ButtonArea*>& GetButtonAreas() const {  return _buttonAreas; }
 
 	bool HasButtons() const;

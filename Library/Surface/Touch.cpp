@@ -48,13 +48,13 @@ void Touch::UpdateHotspots()
 }
 
 
-void Touch::AddHotspot(std::shared_ptr<Hotspot> hotspot)
+void Touch::AddHotspot(std::shared_ptr<HotspotBase> hotspot)
 {
 	_hotspots.push_back(hotspot);
 }
 
 
-const std::vector<std::shared_ptr<Hotspot>>& Touch::GetHotspots() const
+const std::vector<std::shared_ptr<HotspotBase>>& Touch::GetHotspots() const
 {
 	return _hotspots;
 }

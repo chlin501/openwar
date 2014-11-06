@@ -5,11 +5,11 @@
 #include "Hotspot.h"
 
 
-Hotspot::Hotspot()
+HotspotBase::HotspotBase()
 {
 }
 
 
-Hotspot::~Hotspot()
+HotspotBase::~HotspotBase()
 {
 }

@@ -4,11 +4,11 @@
 #include <functional>
 #include <glm/glm.hpp>
 #include "Hotspot.h"
-
+#include "ScrollerGesture.h"
 class Scroller;
 
 
-class ScrollerHotspot : public Hotspot
+class ScrollerHotspot : public Hotspot<ScrollerHotspot, ScrollerGesture>
 {
 	glm::vec2 _position;
 	Scroller* _scroller;
@@ -24,7 +24,6 @@ public:
 
 	void ScrollToPosition(glm::vec2 position);
 };
-
 
 
 #endif

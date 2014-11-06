@@ -10,6 +10,7 @@
 #include "Surface/Gesture.h"
 #include "Surface/Touch.h"
 
+class BattleHotspot;
 class BattleView;
 class UnitTrackingMarker;
 class Unit;
@@ -35,7 +36,7 @@ class BattleGesture : public Gesture
 public:
 	static bool disableUnitTracking;
 
-	BattleGesture(BattleView* battleView);
+	BattleGesture(BattleHotspot* battleHotspot);
 	virtual ~BattleGesture();
 
 	BattleView* GetBattleView() const { return _battleView; }

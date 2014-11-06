@@ -6,12 +6,13 @@
 #include "BattleView/BattleView.h"
 #include "Surface/Touch.h"
 #include "EditorModel.h"
+#include "EditorHotspot.h"
 
 
 
-EditorGesture::EditorGesture(BattleView* battleView, EditorModel* editorModel) :
-_battleView(battleView),
-_editorModel(editorModel)
+EditorGesture::EditorGesture(EditorHotspot* editorHotspot) : Gesture(editorHotspot),
+	_battleView(editorHotspot->GetBattleView()),
+	_editorModel(editorHotspot->GetEditorModel())
 {
 }
 

@@ -60,8 +60,8 @@ int main(int argc, char *argv[])
     
     GraphicsContext* gc = new GraphicsContext(1);
 	OpenWarSurface* surface = new OpenWarSurface(gc);
-	surface->SetFrame(bounds2i(0, 0, 640, 480));
-	surface->SetBounds(bounds2f(0, 0, 640, 480));
+	surface->SetViewportBounds(bounds2i(0, 0, 640, 480));
+	surface->SetContentBounds(bounds2f(0, 0, 640, 480));
 	surface->Update(0);
 
 	window->SetSurface(surface);

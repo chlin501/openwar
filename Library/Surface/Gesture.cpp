@@ -11,8 +11,9 @@
 std::vector<Gesture*>* Gesture::_gestures = nullptr;
 
 
-Gesture::Gesture() :
-_enabled(true)
+Gesture::Gesture(HotspotBase* hotspot) :
+	_hotspot(hotspot),
+	_enabled(true)
 {
 	if (_gestures == nullptr)
 		_gestures = new std::vector<Gesture*>();

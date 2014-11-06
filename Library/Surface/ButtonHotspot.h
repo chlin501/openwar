@@ -7,11 +7,12 @@
 
 #include <functional>
 #include "Hotspot.h"
+#include "ButtonGesture.h"
 
 class Button;
 
 
-class ButtonHotspot : public Hotspot
+class ButtonHotspot : public Hotspot<ButtonHotspot, ButtonGesture>
 {
 	std::function<void()> _action;
 	bool _highlight;

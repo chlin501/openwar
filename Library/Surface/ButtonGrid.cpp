@@ -212,13 +212,6 @@ _alignment(alignment)
 
 
 
-void ButtonGrid::SetFrame(bounds2f value)
-{
-	Content::SetViewportBounds(value);
-	UpdateLayout();
-}
-
-
 bool ButtonGrid::HasButtons() const
 {
 	return !_buttonAreas.empty() && !_buttonAreas.front()->buttonItems.empty();
@@ -325,6 +318,7 @@ void ButtonGrid::UpdateLayout()
 
 void ButtonGrid::Update(double secondsSinceLastUpdate)
 {
+	UpdateLayout();
 	if (!_obsolete.empty())
 	{
 		for (ButtonArea* buttonArea : _obsolete)
@@ -336,8 +330,6 @@ void ButtonGrid::Update(double secondsSinceLastUpdate)
 
 void ButtonGrid::Render()
 {
-	glm::mat4 transform = GetRenderTransform();
-
 	WidgetShape* buttonShape = new WidgetShape(_buttonRendering->_textureAtlas);
 
 	for (ButtonArea* buttonArea : _buttonAreas)
@@ -396,7 +388,7 @@ void ButtonGrid::Render()
 
 	renderCall.SetVertices(buttonShape->GetVertices());
 	renderCall.SetTexture("texture", buttonShape->GetTextureAtlas());
-	renderCall.SetUniform("transform", transform);
+	renderCall.SetUniform("transform", GetRenderTransform());
 	renderCall.SetUniform("color", glm::vec4(1, 1, 1, 1));
 	renderCall.Render();
 

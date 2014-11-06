@@ -8,6 +8,7 @@
 #include "Surface/Gesture.h"
 
 class BattleView;
+class EditorHotspot;
 class EditorModel;
 
 
@@ -17,7 +18,7 @@ class EditorGesture : public Gesture
 	EditorModel* _editorModel;
 
 public:
-	EditorGesture(BattleView* battleView, EditorModel* editorModel);
+	EditorGesture(EditorHotspot* editorHotspot);
 
 	virtual void Update(double secondsSinceLastUpdate);
 

@@ -10,6 +10,7 @@
 #include "TerrainView/EditorGesture.h"
 #include "OpenWarSurface.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "EditorHotspot.h"
 
 
 OpenWarSurface::OpenWarSurface(GraphicsContext* gc) : Surface(gc),
@@ -40,7 +41,7 @@ _battleLayer(nullptr)
 	_buttonsTopLeft->SetContainer(this);
 	_buttonsTopRight->SetContainer(this);
 
-	_buttonGesture = new ButtonGesture();
+	_buttonGesture = new ButtonGesture(nullptr);
 	_buttonGesture->_buttonViews.push_back(_buttonsTopLeft);
 	_buttonGesture->_buttonViews.push_back(_buttonsTopRight);
 
@@ -115,7 +116,7 @@ void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vecto
 	{
 		BattleView* battleView = battleViews.front();
 		_editorModel = new EditorModel(battleView, battleView->GetSmoothTerrainRenderer());
-		_editorGesture = new EditorGesture(battleView, _editorModel);
+		_editorGesture = new EditorGesture(new EditorHotspot(battleView, _editorModel));
 	}
 
 	_battleLayer->SetPlaying(false);

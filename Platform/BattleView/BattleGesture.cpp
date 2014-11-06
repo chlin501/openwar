@@ -15,6 +15,7 @@
 #include "UnitMovementMarker.h"
 #include "UnitTrackingMarker.h"
 #include "Surface.h"
+#include "BattleHotspot.h"
 
 
 #define SNAP_TO_UNIT_TRESHOLD 22 // meters
@@ -26,8 +27,8 @@
 bool BattleGesture::disableUnitTracking = false;
 
 
-BattleGesture::BattleGesture(BattleView* battleView) :
-_battleView(battleView),
+BattleGesture::BattleGesture(BattleHotspot* battleHotspot) : Gesture(battleHotspot),
+_battleView(battleHotspot->GetBattleView()),
 _tappedUnitCenter(false),
 _tappedDestination(false),
 _tappedModiferArea(false),

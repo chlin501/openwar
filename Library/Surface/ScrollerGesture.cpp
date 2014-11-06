@@ -5,7 +5,7 @@
 #include "Surface.h"
 
 
-ScrollerGesture::ScrollerGesture() :
+ScrollerGesture::ScrollerGesture(ScrollerHotspot* scrollerHotspot) : Gesture(scrollerHotspot),
 _hotspot(nullptr)
 {
 }
@@ -32,7 +32,7 @@ void ScrollerGesture::TouchBegan(Touch* touch)
 
 	std::shared_ptr<ScrollerHotspot> scrollerHotspot;
 
-	for (std::shared_ptr<Hotspot> hotspot : touch->GetHotspots())
+	for (std::shared_ptr<HotspotBase> hotspot : touch->GetHotspots())
 		if (scrollerHotspot == nullptr)
 			scrollerHotspot = std::dynamic_pointer_cast<ScrollerHotspot>(hotspot);
 

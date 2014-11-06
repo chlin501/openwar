@@ -5,12 +5,36 @@
 #ifndef Hotspot_H
 #define Hotspot_H
 
+class Gesture;
 
-class Hotspot
+
+class HotspotBase
 {
 public:
-	Hotspot();
-	virtual ~Hotspot();
+	HotspotBase();
+	virtual ~HotspotBase();
+	virtual Gesture* GetGesture() const = 0;
+};
+
+
+template <class _Hotspot, class _Gesture>
+class Hotspot : public HotspotBase
+{
+	mutable _Gesture* _gesture;
+
+public:
+	Hotspot() : _gesture(nullptr) { }
+	virtual ~Hotspot() { delete _gesture; }
+
+	virtual Gesture* GetGesture() const
+	{
+		if (_gesture == nullptr)
+		{
+			_Hotspot* hotspot = dynamic_cast<_Hotspot*>(const_cast<Hotspot<_Hotspot, _Gesture>*>(this));
+			_gesture = new _Gesture(hotspot);
+		}
+		return _gesture;
+	}
 };
 
 

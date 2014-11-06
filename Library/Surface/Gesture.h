@@ -8,19 +8,21 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+class HotspotBase;
 class Surface;
 class Touch;
 
 
 class Gesture
 {
+	HotspotBase* _hotspot;
 	bool _enabled;
 
 public:
 	static std::vector<Gesture*>* _gestures;
 	std::vector<Touch*> _touches;
 
-	Gesture();
+	Gesture(HotspotBase* hotspot);
 	virtual ~Gesture();
 
 	bool IsEnabled() const { return _enabled; }
