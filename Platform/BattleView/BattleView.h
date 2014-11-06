@@ -23,6 +23,7 @@ class UnitCounter;
 class SmoothTerrainWater;
 class SmoothTerrainSky;
 class SmokeCounter;
+class BattleHotspot;
 
 
 class BattleView : public TerrainView, public BattleObserver
@@ -60,6 +61,7 @@ class BattleView : public TerrainView, public BattleObserver
 	SmoothTerrainWater* _smoothTerrainWater;
 	SmoothTerrainSky* _smoothTerrainSky;
 	TiledTerrainRenderer* _tiledTerrainRenderer;
+	std::shared_ptr<BattleHotspot> _battleHotspot;
 
 public:
 	BattleView(GraphicsContext* gc);

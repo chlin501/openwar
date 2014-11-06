@@ -11,7 +11,6 @@
 
 class Gesture;
 class HotspotBase;
-class Surface;
 
 
 struct MouseButtons
@@ -32,7 +31,7 @@ class Touch
 {
 	friend class Gesture;
 
-	Surface* _surface;
+	std::vector<std::shared_ptr<HotspotBase>> _hotspots;
 	std::vector<Gesture*> _gestures;
 	int _tapCount;
 	bool _hasMoved;
@@ -44,18 +43,20 @@ class Touch
 	sampler _sampler;
 	MouseButtons _currentButtons;
 	MouseButtons _previousButtons;
-	std::vector<std::shared_ptr<HotspotBase>> _hotspots;
 	bool _hasBegun;
 
 public:
-	Touch(Surface* surface, int tapCount, glm::vec2 position, double timestamp, MouseButtons buttons);
+	Touch(int tapCount, glm::vec2 position, double timestamp, MouseButtons buttons);
 	~Touch();
 
-	void UpdateHotspots();
 	void AddHotspot(std::shared_ptr<HotspotBase> hotspot);
 	const std::vector<std::shared_ptr<HotspotBase>>& GetHotspots() const;
 
 	int GetTapCount() const;
+
+	void TouchBegan();
+	void TouchMoved();
+	void TouchEnded();
 
 	const std::vector<Gesture*>& GetGestures() const;
 	bool HasGesture() const;

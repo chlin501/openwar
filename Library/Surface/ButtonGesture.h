@@ -15,13 +15,13 @@ class ButtonGrid;
 
 class ButtonGesture : public Gesture
 {
+	ButtonHotspot* _hotspot;
 	ButtonItem* _buttonItem;
-	std::shared_ptr<ButtonHotspot> _hotspot;
 
 public:
 	std::vector<ButtonGrid*> _buttonViews;
 
-	ButtonGesture(ButtonHotspot* buttonHotspot);
+	ButtonGesture(ButtonHotspot* hotspot);
 	virtual ~ButtonGesture();
 
 	virtual void Update(double secondsSinceLastUpdate);

@@ -11,6 +11,10 @@
 #include "Algebra/geometry.h"
 #include "Shapes/VertexShape.h"
 
+class EditorModel;
+class EditorHotspot;
+class TerrainHotspot;
+
 
 class TerrainView : public Content
 {
@@ -21,12 +25,16 @@ class TerrainView : public Content
 	bool _mouseHintVisible;
 	glm::vec2 _mouseHintPosition;
 
+	std::shared_ptr<TerrainHotspot> _terrainHotspot;
+
 protected:
 	HeightMap* _heightMap;
 
 public:
 	TerrainView(GraphicsContext* gc);
 	virtual ~TerrainView();
+
+	virtual void FindHotspots(Touch* touch);
 
 	bounds2f GetTerrainBounds() const { return _terrainBounds; }
 

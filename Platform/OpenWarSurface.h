@@ -13,7 +13,7 @@ class ButtonGesture;
 class ButtonItem;
 class ButtonRendering;
 class ButtonGrid;
-class EditorGesture;
+class EditorHotspot;
 //class SmoothTerrainSurfaceRenderer;
 //class TiledTerrainSurfaceRenderer;
 
@@ -24,11 +24,11 @@ public:
 	ButtonRendering* _buttonRendering;
 
 	EditorModel* _editorModel;
-	EditorGesture* _editorGesture;
+	std::shared_ptr<EditorHotspot> _editorHotspot;
 
 	ButtonGrid* _buttonsTopLeft;
 	ButtonGrid* _buttonsTopRight;
-	ButtonGesture* _buttonGesture;
+	//ButtonGesture* _buttonGesture;
 	ButtonItem* _buttonItemHand;
 	ButtonItem* _buttonItemPaint;
 	ButtonItem* _buttonItemErase;
@@ -58,6 +58,7 @@ public:
 
 	// Content
 	virtual void Update(double secondsSinceLastUpdate);
+	virtual void FindHotspots(Touch* touch);
 
 protected:
 	void ClickedPlay();

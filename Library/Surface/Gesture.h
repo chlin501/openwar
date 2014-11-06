@@ -42,7 +42,7 @@ public:
 	virtual void TouchMoved() = 0;
 	virtual void TouchEnded(Touch* touch) = 0;
 
-	virtual void TouchWasCancelled(Touch* touch);
+	//virtual void TouchWasCancelled(Touch* touch);
 
 	void CaptureTouch(Touch* touch);
 	void UncaptureTouch(Touch* touch);

@@ -10,9 +10,9 @@
 
 
 
-EditorGesture::EditorGesture(EditorHotspot* editorHotspot) : Gesture(editorHotspot),
-	_battleView(editorHotspot->GetBattleView()),
-	_editorModel(editorHotspot->GetEditorModel())
+EditorGesture::EditorGesture(EditorHotspot* hotspot) : Gesture(hotspot),
+	_battleView(hotspot->GetBattleView()),
+	_editorModel(hotspot->GetEditorModel())
 {
 }
 

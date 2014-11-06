@@ -12,6 +12,7 @@ class BattleModel;
 class BattleScenario;
 class BattleScript;
 class BattleView;
+class EditorHotspot;
 class EditorGesture;
 class TerrainGesture;
 class SmoothTerrainRenderer;
@@ -29,11 +30,9 @@ protected:
 	std::vector<BattleCommander*> _commanders;
 
 	std::vector<BattleView*> _battleViews;
-	std::vector<BattleGesture*> _battleGestures;
-	std::vector<TerrainGesture*> _terrainGestures;
 
-	EditorGesture* _editorGesture;
 	EditorModel* _editorModel;
+	std::shared_ptr<EditorHotspot> _editorHotspot;
 
 public:
 	BattleLayer(GraphicsContext* gc);
@@ -56,6 +55,7 @@ public:
 
 	// Surface
 	virtual void Update(double secondsSinceLastUpdate);
+	virtual void FindHotspots(Touch* touch);
 
 	// EditorModelObserver
 	virtual void OnEditorModeChanged(EditorModel* editorModel);

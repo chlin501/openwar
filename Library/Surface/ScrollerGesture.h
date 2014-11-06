@@ -8,10 +8,10 @@ class ScrollerHotspot;
 
 class ScrollerGesture : public Gesture
 {
-	std::shared_ptr<ScrollerHotspot> _hotspot;
+	ScrollerHotspot* _hotspot;
 
 public:
-	ScrollerGesture(ScrollerHotspot* scrollerHotspot);
+	ScrollerGesture(ScrollerHotspot* hotspot);
 	virtual ~ScrollerGesture();
 
 	virtual void Update(double secondsSinceLastUpdate);

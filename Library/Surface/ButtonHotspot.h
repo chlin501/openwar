@@ -9,19 +9,22 @@
 #include "Hotspot.h"
 #include "ButtonGesture.h"
 
-class Button;
+class Content;
 
 
 class ButtonHotspot : public Hotspot<ButtonHotspot, ButtonGesture>
 {
+	Content* _content;
 	std::function<void()> _action;
 	bool _highlight;
 	bool _stationary;
 	bool _immediate;
 
 public:
-	ButtonHotspot();
+	ButtonHotspot(Content* content);
 	virtual ~ButtonHotspot();
+
+	virtual bool IsInside(glm::vec2 position) const;
 
 	virtual std::function<void()> GetClickAction() const;
 	virtual void SetClickAction(std::function<void()> value);

@@ -6,6 +6,7 @@
 #include "BattleGesture.h"
 #include "BattleView.h"
 #include "BattleLayer.h"
+#include "EditorHotspot.h"
 #include "UnitCounter.h"
 #include "SmoothTerrain/SmoothTerrainWater.h"
 #include "SmoothTerrain/SmoothTerrainSky.h"
@@ -22,7 +23,6 @@ BattleLayer::BattleLayer(GraphicsContext* gc) : Container(gc),
 _playing(false),
 _editing(false),
 _scenario(nullptr),
-_editorGesture(nullptr),
 _editorModel(nullptr)
 {
 	SoundPlayer::Initialize();
@@ -37,10 +37,9 @@ BattleLayer::~BattleLayer()
 
 void BattleLayer::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
 {
-	delete _editorGesture;
-	_editorGesture = nullptr;
 	delete _editorModel;
 	_editorModel = nullptr;
+	_editorHotspot = nullptr;
 
 	_scenario = scenario;
 	_commanders = commanders;
@@ -65,10 +64,9 @@ void BattleLayer::ResetBattleViews(BattleScenario* scenario, const std::vector<B
 
 void BattleLayer::ResetEditor(BattleScenario* scenario)
 {
-	delete _editorGesture;
-	_editorGesture = nullptr;
 	delete _editorModel;
 	_editorModel = nullptr;
+	_editorHotspot = nullptr;
 
 	_scenario = scenario;
 	_commanders.clear();
@@ -82,8 +80,7 @@ void BattleLayer::ResetEditor(BattleScenario* scenario)
 		ResetBattleView(_battleViews.front(), nullptr);
 
 	_editorModel = new EditorModel(_battleViews.front(), _battleViews.front()->GetSmoothTerrainRenderer());
-	_editorGesture = new EditorGesture(new EditorHotspot(_battleViews.front(), _editorModel));
-
+	_editorHotspot = std::make_shared<EditorHotspot>(_battleViews.front(), _editorModel);
 	_editorModel->AddObserver(this);
 
 	UpdateBattleViewSize();
@@ -106,8 +103,8 @@ void BattleLayer::SetPlaying(bool value)
 	else
 		SoundPlayer::singleton->Pause();
 
-	for (BattleGesture* gesture : _battleGestures)
-		gesture->SetEnabled(_playing);
+	//for (BattleGesture* gesture : _battleGestures)
+	//	gesture->SetEnabled(_playing);
 }
 
 
@@ -115,8 +112,8 @@ void BattleLayer::SetEditing(bool value)
 {
 	_editing = value;
 
-	for (TerrainGesture* gesture : _terrainGestures)
-		gesture->SetEnabled(!_editing);
+	//for (TerrainGesture* gesture : _terrainGestures)
+	//	gesture->SetEnabled(!_editing);
 }
 
 
@@ -160,6 +157,15 @@ void BattleLayer::Update(double secondsSinceLastUpdate)
 }
 
 
+void BattleLayer::FindHotspots(Touch* touch)
+{
+	if (_editorHotspot != nullptr)
+		touch->AddHotspot(_editorHotspot);
+
+	Container::FindHotspots(touch);
+}
+
+
 void BattleLayer::CreateBattleView(BattleCommander* commander)
 {
 	BattleSimulator* simulator = _scenario->GetSimulator();
@@ -176,12 +182,12 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 
 	battleView->Initialize();
 
-	BattleGesture* battleGesture = new BattleGesture(new BattleHotspot(battleView));
-	_battleGestures.push_back(battleGesture);
+	//BattleGesture* battleGesture = new BattleGesture(new BattleHotspot(battleView));
+	//_battleGestures.push_back(battleGesture);
 
 
-	TerrainGesture* terrainGesture = new TerrainGesture(new TerrainHotspot(battleView));
-	_terrainGestures.push_back(terrainGesture);
+	//TerrainGesture* terrainGesture = new TerrainGesture(new TerrainHotspot(battleView));
+	//_terrainGestures.push_back(terrainGesture);
 }
 
 
@@ -191,49 +197,49 @@ void BattleLayer::ResetBattleView(BattleView* battleView, BattleCommander* comma
 	battleView->SetCommander(commander);
 	battleView->SetSimulator(_scenario->GetSimulator());
 
-	for (auto i = _battleGestures.begin(); i != _battleGestures.end(); ++i)
-		if ((*i)->GetBattleView() == battleView)
-		{
-			delete *i;
-			*i = new BattleGesture(new BattleHotspot(battleView));
-		}
+	//for (auto i = _battleGestures.begin(); i != _battleGestures.end(); ++i)
+	//	if ((*i)->GetBattleView() == battleView)
+	//	{
+	//		delete *i;
+	//		*i = new BattleGesture(new BattleHotspot(battleView));
+	//	}
 
-	for (auto i = _terrainGestures.begin(); i != _terrainGestures.end(); ++i)
-		if ((*i)->GetTerrainView() == battleView)
-		{
-			delete *i;
-			*i = new TerrainGesture(new TerrainHotspot(battleView));
-		}
+	//for (auto i = _terrainGestures.begin(); i != _terrainGestures.end(); ++i)
+	//	if ((*i)->GetTerrainView() == battleView)
+	//	{
+	//		delete *i;
+	//		*i = new TerrainGesture(new TerrainHotspot(battleView));
+	//	}
 }
 
 
 void BattleLayer::RemoveBattleView(BattleView* battleView)
 {
-	for (auto i = _battleGestures.begin(); i != _battleGestures.end(); )
-	{
-		if ((*i)->GetBattleView() == battleView)
-		{
-			delete *i;
-			i = _battleGestures.erase(i);
-		}
-		else
-		{
-			++i;
-		}
-	}
+	//for (auto i = _battleGestures.begin(); i != _battleGestures.end(); )
+	//{
+	//	if ((*i)->GetBattleView() == battleView)
+	//	{
+	//		delete *i;
+	//		i = _battleGestures.erase(i);
+	//	}
+	//	else
+	//	{
+	//		++i;
+	//	}
+	//}
 
-	for (auto i = _terrainGestures.begin(); i != _terrainGestures.end(); )
-	{
-		if ((*i)->GetTerrainView() == battleView)
-		{
-			delete *i;
-			i = _terrainGestures.erase(i);
-		}
-		else
-		{
-			++i;
-		}
-	}
+	//for (auto i = _terrainGestures.begin(); i != _terrainGestures.end(); )
+	//{
+	//	if ((*i)->GetTerrainView() == battleView)
+	//	{
+	//		delete *i;
+	//		i = _terrainGestures.erase(i);
+	//	}
+	//	else
+	//	{
+	//		++i;
+	//	}
+	//}
 
 	for (auto i = _battleViews.begin(); i != _battleViews.end(); )
 	{

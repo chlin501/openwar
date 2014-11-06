@@ -18,7 +18,7 @@ class EditorGesture : public Gesture
 	EditorModel* _editorModel;
 
 public:
-	EditorGesture(EditorHotspot* editorHotspot);
+	EditorGesture(EditorHotspot* hotspot);
 
 	virtual void Update(double secondsSinceLastUpdate);
 

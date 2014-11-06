@@ -5,11 +5,10 @@
 #include "Touch.h"
 #include "Gesture.h"
 #include "Surface.h"
+#include "Hotspot.h"
 
 
-
-Touch::Touch(Surface* surface, int tapCount, glm::vec2 position, double timestamp, MouseButtons buttons) :
-	_surface(surface),
+Touch::Touch(int tapCount, glm::vec2 position, double timestamp, MouseButtons buttons) :
 	_gestures(),
 	_tapCount(tapCount),
 	_hasMoved(false),
@@ -23,7 +22,6 @@ Touch::Touch(Surface* surface, int tapCount, glm::vec2 position, double timestam
 	_hasBegun(false)
 {
 	_sampler.add(timestamp, position);
-	UpdateHotspots();
 }
 
 
@@ -35,16 +33,6 @@ Touch::~Touch()
 			std::remove(gesture->_touches.begin(), gesture->_touches.end(), this),
 			gesture->_touches.end());
 	}
-}
-
-
-void Touch::UpdateHotspots()
-{
-	_hotspots.clear();
-	glm::vec2 old = _original;
-	_original = _position;
-	_surface->FindHotspots(this);
-	_original = old;
 }
 
 
@@ -63,6 +51,27 @@ const std::vector<std::shared_ptr<HotspotBase>>& Touch::GetHotspots() const
 int Touch::GetTapCount() const
 {
 	return _tapCount;
+}
+
+
+void Touch::TouchBegan()
+{
+	for (std::shared_ptr<HotspotBase> hotspot : _hotspots)
+		hotspot->GetGesture()->TouchBegan(this);
+}
+
+
+void Touch::TouchMoved()
+{
+	for (Gesture* gesture : _gestures)
+		gesture->TouchMoved();
+}
+
+
+void Touch::TouchEnded()
+{
+	for (Gesture* gesture : _gestures)
+		gesture->TouchEnded(this);
 }
 
 
@@ -90,8 +99,6 @@ void Touch::Update(glm::vec2 position, glm::vec2 previous, double timestamp)
 
 	if (GetMotion() == Motion::Moving)
 		_hasMoved = true;
-
-	UpdateHotspots();
 }
 
 
@@ -110,8 +117,6 @@ void Touch::Update(glm::vec2 position, double timestamp, MouseButtons buttons)
 
 	if (GetMotion() == Motion::Moving)
 		_hasMoved = true;
-
-	UpdateHotspots();
 }
 
 

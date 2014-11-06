@@ -9,20 +9,31 @@
 
 #include "BattleModel/HeightMap.h"
 #include "TerrainView.h"
+#include "Touch.h"
+#include "EditorHotspot.h"
+#include "TerrainHotspot.h"
+#include "EditorModel.h"
 
 
 TerrainView::TerrainView(GraphicsContext* gc) : Content(gc),
-_cameraTilt((float)M_PI_4),
-_cameraFacing(0),
-_mouseHintVisible(false),
-_heightMap(nullptr)
+	_cameraTilt((float)M_PI_4),
+	_cameraFacing(0),
+	_mouseHintVisible(false),
+	_heightMap(nullptr)
 {
 }
 
 
 TerrainView::~TerrainView()
 {
+}
 
+
+void TerrainView::FindHotspots(Touch* touch)
+{
+	if (_terrainHotspot == nullptr)
+		_terrainHotspot = std::make_shared<TerrainHotspot>(this);
+	touch->AddHotspot(_terrainHotspot);
 }
 
 

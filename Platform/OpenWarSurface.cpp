@@ -16,10 +16,9 @@
 OpenWarSurface::OpenWarSurface(GraphicsContext* gc) : Surface(gc),
 _buttonRendering(nullptr),
 _editorModel(nullptr),
-_editorGesture(nullptr),
 _buttonsTopLeft(nullptr),
 _buttonsTopRight(nullptr),
-_buttonGesture(nullptr),
+//_buttonGesture(nullptr),
 _buttonItemHand(nullptr),
 _buttonItemPaint(nullptr),
 _buttonItemErase(nullptr),
@@ -41,9 +40,9 @@ _battleLayer(nullptr)
 	_buttonsTopLeft->SetContainer(this);
 	_buttonsTopRight->SetContainer(this);
 
-	_buttonGesture = new ButtonGesture(nullptr);
-	_buttonGesture->_buttonViews.push_back(_buttonsTopLeft);
-	_buttonGesture->_buttonViews.push_back(_buttonsTopRight);
+	//_buttonGesture = new ButtonGesture(nullptr);
+	//_buttonGesture->_buttonViews.push_back(_buttonsTopLeft);
+	//_buttonGesture->_buttonViews.push_back(_buttonsTopRight);
 
 	ButtonArea* toolButtonArea = _buttonsTopLeft->AddButtonArea(4);
 	_buttonItemHand = toolButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolHand);
@@ -103,11 +102,9 @@ OpenWarSurface::~OpenWarSurface()
 
 void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
 {
-	delete _editorGesture;
-	_editorGesture = nullptr;
-
 	delete _editorModel;
 	_editorModel = nullptr;
+	_editorHotspot = nullptr;
 
 	_battleLayer->ResetBattleViews(scenario, commanders);
 
@@ -116,7 +113,7 @@ void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vecto
 	{
 		BattleView* battleView = battleViews.front();
 		_editorModel = new EditorModel(battleView, battleView->GetSmoothTerrainRenderer());
-		_editorGesture = new EditorGesture(new EditorHotspot(battleView, _editorModel));
+		_editorHotspot = std::make_shared<EditorHotspot>(battleView, _editorModel);
 	}
 
 	_battleLayer->SetPlaying(false);
@@ -144,6 +141,15 @@ void OpenWarSurface::Update(double secondsSinceLastUpdate)
 		_battleLayer->GetScenario()->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);
 }
 
+
+
+void OpenWarSurface::FindHotspots(Touch* touch)
+{
+	if (_editorHotspot != nullptr)
+		touch->AddHotspot(_editorHotspot);
+
+	Container::FindHotspots(touch);
+}
 
 
 /*void OpenWarSurface::MouseEnter(glm::vec2 position)
@@ -225,10 +231,10 @@ void OpenWarSurface::UpdateButtonsAndGestures()
 		_buttonItemFords->SetSelected(_editorModel->GetTerrainFeature() == TerrainFeature::Fords);
 	}
 
-	if (_editorGesture != nullptr)
+	/*if (_editorGesture != nullptr)
 	{
 		_editorGesture->SetEnabled(editing);
-	}
+	}*/
 
 	_buttonsTopRight->Reset();
 	if (playing)

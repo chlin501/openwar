@@ -36,12 +36,6 @@ Gesture::~Gesture()
 }
 
 
-/*void Gesture::Update(double secondsSinceLastUpdate)
-{
-}*/
-
-
-
 void Gesture::RenderHints()
 {
 }
@@ -68,11 +62,6 @@ void Gesture::Magnify(glm::vec2 position, float magnification)
 
 
 void Gesture::Magnify(glm::vec2 position)
-{
-}
-
-
-void Gesture::TouchWasCancelled(Touch* touch)
 {
 }
 

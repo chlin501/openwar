@@ -267,13 +267,11 @@ void Window::ProcessFingerDown(const SDL_TouchFingerEvent& event)
 	glm::vec2 position = ToPosition(event);
 	double timestamp = ToTimestamp(event.timestamp);
 
-	Touch* touch = new Touch(_surface, 1, position, timestamp, MouseButtons());
+	Touch* touch = new Touch(1, position, timestamp, MouseButtons());
 	_touches[MakeTouchKey(event)] = touch;
+	_surface->FindHotspots(touch);
 
-	if (Gesture::_gestures != nullptr)
-		for (Gesture* gesture : *Gesture::_gestures)
-			if (gesture->IsEnabled())
-				gesture->TouchBegan(touch);
+	touch->TouchBegan();
 }
 
 
@@ -292,8 +290,7 @@ void Window::ProcessFingerUp(const SDL_TouchFingerEvent& event)
 		double timestamp = ToTimestamp(event.timestamp);
 		touch->Update(position, previous, timestamp);
 
-		for (Gesture* gesture : touch->GetGestures())
-			gesture->TouchEnded(touch);
+		touch->TouchEnded();
 
 		_touches.erase(MakeTouchKey(event));
 		delete touch;
@@ -318,8 +315,7 @@ void Window::ProcessFingerMotion(const SDL_TouchFingerEvent& event)
 			double timestamp = ToTimestamp(event.timestamp);
 			touch->Update(position, previous, timestamp);
 
-			for (Gesture* gesture : touch->GetGestures())
-				gesture->TouchMoved();
+			touch->TouchMoved();
 		}
 	}
 }
@@ -341,8 +337,7 @@ void Window::ProcessMouseMotion(const SDL_MouseMotionEvent& event)
 		_mouseTouch->Update(position, timestamp, buttons);
 
         if (_mouseTouch->GetCurrentButtons().Any())
-			for (Gesture* gesture : _mouseTouch->GetGestures())
-				gesture->TouchMoved();
+			_mouseTouch->TouchMoved();
 	}
 }
 
@@ -366,14 +361,16 @@ void Window::ProcessMouseButtonDown(const SDL_MouseButtonEvent& event)
 	}
 
 	if (_mouseTouch == nullptr)
-		_mouseTouch = new Touch(_surface, 1, position, timestamp, buttons);
+	{
+		_mouseTouch = new Touch(1, position, timestamp, buttons);
+		_surface->FindHotspots(_mouseTouch);
+	}
 	else
+	{
 		_mouseTouch->Update(position, timestamp, buttons);
+	}
 
-	if (Gesture::_gestures != nullptr)
-		for (Gesture* gesture : *Gesture::_gestures)
-			if (gesture->IsEnabled())
-				gesture->TouchBegan(_mouseTouch);
+	_mouseTouch->TouchBegan();
 }
 
 
@@ -398,14 +395,11 @@ void Window::ProcessMouseButtonUp(const SDL_MouseButtonEvent& event)
 
 		if (buttons.Any())
 		{
-			for (Gesture* gesture : _mouseTouch->GetGestures())
-				gesture->TouchMoved();
+			_mouseTouch->TouchMoved();
 		}
 		else
 		{
-			for (Gesture* gesture : _mouseTouch->GetGestures())
-				gesture->TouchEnded(_mouseTouch);
-
+			_mouseTouch->TouchEnded();
 			delete _mouseTouch;
 			_mouseTouch = nullptr;
 		}
@@ -455,8 +449,7 @@ void Window::Update()
 		_mouseTouch->Update(secondsSinceTimeStart);
 
 		if (_mouseTouch->GetTimestamp() != oldTimestamp)
-			for (Gesture* gesture : _mouseTouch->GetGestures())
-				gesture->TouchMoved();
+			_mouseTouch->TouchMoved();
 	}
 }
 

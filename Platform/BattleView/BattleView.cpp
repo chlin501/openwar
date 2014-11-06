@@ -23,6 +23,7 @@
 #include "UnitMovementMarker.h"
 #include "UnitTrackingMarker.h"
 #include "TextureResource.h"
+#include "BattleHotspot.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -768,7 +769,11 @@ void BattleView::Update(double secondsSinceLastUpdate)
 
 void BattleView::FindHotspots(Touch* touch)
 {
+	if (_battleHotspot == nullptr)
+		_battleHotspot = std::make_shared<BattleHotspot>(this);
+	touch->AddHotspot(_battleHotspot);
 
+	TerrainView::FindHotspots(touch);
 }
 
 

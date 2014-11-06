@@ -5,8 +5,8 @@
 #include "Surface.h"
 
 
-ScrollerGesture::ScrollerGesture(ScrollerHotspot* scrollerHotspot) : Gesture(scrollerHotspot),
-_hotspot(nullptr)
+ScrollerGesture::ScrollerGesture(ScrollerHotspot* hotspot) : Gesture(hotspot),
+_hotspot(hotspot)
 {
 }
 
@@ -24,8 +24,7 @@ void ScrollerGesture::Update(double secondsSinceLastUpdate)
 
 void ScrollerGesture::TouchBegan(Touch* touch)
 {
-	if (/*touch->HasGesture() ||*/ !_touches.empty())
-		return;
+	/*
 
 	if (_hotspot != nullptr)
 		return;
@@ -41,6 +40,7 @@ void ScrollerGesture::TouchBegan(Touch* touch)
 		CaptureTouch(touch);
 		_hotspot = scrollerHotspot;
 	}
+	*/
 }
 
 
@@ -57,5 +57,4 @@ void ScrollerGesture::TouchMoved()
 
 void ScrollerGesture::TouchEnded(Touch* touch)
 {
-	_hotspot = nullptr;
 }

@@ -9,8 +9,9 @@
 #include "Touch.h"
 
 
-ButtonGesture::ButtonGesture(ButtonHotspot* buttonHotspot) : Gesture(buttonHotspot),
-_buttonItem(nullptr)
+ButtonGesture::ButtonGesture(ButtonHotspot* hotspot) : Gesture(hotspot),
+	_hotspot(hotspot),
+	_buttonItem(nullptr)
 {
 }
 
@@ -42,15 +43,6 @@ void ButtonGesture::KeyDown(char key)
 void ButtonGesture::TouchBegan(Touch* touch)
 {
 	if (_hotspot != nullptr)
-		return;
-	if (/*touch->HasGesture() ||*/ !_touches.empty())
-		return;
-
-	for (std::shared_ptr<HotspotBase> hotspot : touch->GetHotspots())
-		if (_hotspot == nullptr)
-			_hotspot = std::dynamic_pointer_cast<ButtonHotspot>(hotspot);
-
-	if (_hotspot != nullptr)
 	{
 		CaptureTouch(touch);
 
@@ -74,22 +66,8 @@ void ButtonGesture::TouchMoved()
 	if (_hotspot != nullptr)
 	{
 		Touch* touch = _touches.front();
-		bool found = false;
-
-		if (_hotspot->ShouldReleaseWhenMoving() && touch->GetMotion() == Motion::Moving)
-		{
-			UncaptureTouch(touch);
-			_hotspot->SetHighlight(false);
-			_hotspot = nullptr;
-		}
-		else
-		{
-			for (std::shared_ptr<HotspotBase> hotspot : touch->GetHotspots())
-				if (hotspot == _hotspot)
-					found = true;
-
-			_hotspot->SetHighlight(found);
-		}
+		bool inside = _hotspot->IsInside(touch->GetPosition());
+		_hotspot->SetHighlight(inside);
 	}
 }
 
@@ -99,16 +77,11 @@ void ButtonGesture::TouchEnded(Touch* touch)
 {
 	if (_hotspot != nullptr)
 	{
-		bool found = false;
+		bool inside = _hotspot->IsInside(touch->GetPosition());
 
-		for (std::shared_ptr<HotspotBase> hotspot : touch->GetHotspots())
-			if (hotspot == _hotspot)
-				found = true;
-
-		if (found && !_hotspot->IsImmediateClick() && _hotspot->GetClickAction())
+		if (inside && !_hotspot->IsImmediateClick() && _hotspot->GetClickAction())
 			_hotspot->GetClickAction()();
 
 		_hotspot->SetHighlight(false);
-		_hotspot = nullptr;
 	}
 }

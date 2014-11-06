@@ -30,7 +30,7 @@ _keyboardShortcut('\0'),
 _selected(false),
 _disabled(false)
 {
-	_hotspot = std::make_shared<ButtonHotspot>();
+	_hotspot = std::make_shared<ButtonHotspot>(buttonArea->GetButtonView());
 }
 
 
@@ -44,7 +44,7 @@ _keyboardShortcut('\0'),
 _selected(false),
 _disabled(false)
 {
-	_hotspot = std::make_shared<ButtonHotspot>();
+	_hotspot = std::make_shared<ButtonHotspot>(buttonArea->GetButtonView());
 }
 
 
