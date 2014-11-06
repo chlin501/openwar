@@ -22,19 +22,18 @@ public:
 	ButtonHotspot();
 	virtual ~ButtonHotspot();
 
-	virtual std::function<void()> GetAction() const;
-	virtual void SetAction(std::function<void()> value);
+	virtual std::function<void()> GetClickAction() const;
+	virtual void SetClickAction(std::function<void()> value);
 
-	virtual bool IsStationary() const;
-	virtual void SetStationary(bool value);
+	virtual bool ShouldReleaseWhenMoving() const;
+	virtual void SetReleaseWhenMoving(bool value);
 
-	virtual bool IsImmediate() const;
-	virtual void SetImmediate(bool value);
+	virtual bool IsImmediateClick() const;
+	virtual void SetImmediateClick(bool value);
 
 	virtual bool IsHighlight() const;
 	virtual void SetHighlight(bool value);
 };
-
 
 
 #endif

@@ -19,37 +19,37 @@ ButtonHotspot::~ButtonHotspot()
 }
 
 
-std::function<void ()> ButtonHotspot::GetAction() const
+std::function<void ()> ButtonHotspot::GetClickAction() const
 {
 	return _action;
 }
 
 
-void ButtonHotspot::SetAction(std::function<void ()> value)
+void ButtonHotspot::SetClickAction(std::function<void()> value)
 {
 	_action = value;
 }
 
 
-bool ButtonHotspot::IsImmediate() const
+bool ButtonHotspot::IsImmediateClick() const
 {
 	return _immediate;
 }
 
 
-bool ButtonHotspot::IsStationary() const
+bool ButtonHotspot::ShouldReleaseWhenMoving() const
 {
 	return _stationary;
 }
 
 
-void ButtonHotspot::SetStationary(bool value)
+void ButtonHotspot::SetReleaseWhenMoving(bool value)
 {
 	_stationary = value;
 }
 
 
-void ButtonHotspot::SetImmediate(bool value)
+void ButtonHotspot::SetImmediateClick(bool value)
 {
 	_immediate = value;
 }

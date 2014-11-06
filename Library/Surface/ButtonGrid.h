@@ -88,9 +88,9 @@ public:
 	TextureImage* GetButtonIcon() const { return _buttonIcon; }
 	void SetButtonIcon(TextureImage* value) { _buttonIcon = value; }
 
-	ButtonItem* SetAction(std::function<void()> action) { _hotspot->SetAction(action); return this; }
-	bool HasAction() const { return (bool)_hotspot->GetAction(); }
-	void CallAction() const { _hotspot->GetAction()(); }
+	ButtonItem* SetAction(std::function<void()> action) { _hotspot->SetClickAction(action); return this; }
+	bool HasAction() const { return (bool)_hotspot->GetClickAction(); }
+	void CallAction() const { _hotspot->GetClickAction()(); }
 
 	char GetKeyboardShortcut() const { return _keyboardShortcut; }
 	void SetKeyboardShortcut(char value) { _keyboardShortcut = value; }
@@ -171,7 +171,7 @@ public:
 
 	virtual void Update(double secondsSinceLastUpdate);
 	virtual void Render();
-	virtual void FindHotspots(glm::vec2 viewportPosition, Touch* touch);
+	virtual void FindHotspots(Touch* touch);
 };
 
 

@@ -30,7 +30,7 @@ public:
 
 	virtual void Update(double secondsSinceLastUpdate);
 	virtual void Render();
-	virtual void FindHotspots(glm::vec2 viewportPosition, Touch* touch);
+	virtual void FindHotspots(Touch* touch);
 };
 
 

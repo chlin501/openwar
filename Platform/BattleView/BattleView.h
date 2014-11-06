@@ -105,7 +105,7 @@ public:
 
 	virtual void Render();
 	virtual void Update(double secondsSinceLastUpdate);
-	virtual void FindHotspots(glm::vec2 viewportPosition, Touch* touch);
+	virtual void FindHotspots(Touch* touch);
 
 	bounds2f GetBillboardBounds(glm::vec3 position, float height);
 

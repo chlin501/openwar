@@ -39,7 +39,7 @@ public:
 
 	// Content
 
-	virtual void FindHotspots(glm::vec2 viewportPosition, Touch* touch);
+	virtual void FindHotspots(Touch* touch);
 
 };
 

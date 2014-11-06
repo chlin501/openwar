@@ -766,7 +766,7 @@ void BattleView::Update(double secondsSinceLastUpdate)
 }
 
 
-void BattleView::FindHotspots(glm::vec2 viewportPosition, Touch* touch)
+void BattleView::FindHotspots(Touch* touch)
 {
 
 }
