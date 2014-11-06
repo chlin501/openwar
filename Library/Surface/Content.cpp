@@ -17,7 +17,7 @@ Content::Content(GraphicsContext* gc) :
 	_container(nullptr),
 	_visible(true),
 	_viewportBounds(),
-	_contentBounds(),
+	_contentOffset(),
 	_isUsingDepth(false),
 	_flip(false),
 	_dismissed(false),
@@ -96,15 +96,21 @@ void Content::UseViewport()
 }
 
 
-bounds2f Content::GetContentBounds() const
+glm::vec2 Content::GetContentOffset() const
 {
-	return _contentBounds;
+	return _contentOffset;
 }
 
 
-void Content::SetContentBounds(const bounds2f& value)
+void Content::SetContentOffset(glm::vec2 value)
 {
-	_contentBounds = value;
+	_contentOffset = value;
+}
+
+
+bounds2f Content::GetContentBounds() const
+{
+	return bounds2f(0, 0, _viewportBounds.x().size(), _viewportBounds.y().size()) + _contentOffset;
 }
 
 
@@ -125,8 +131,8 @@ glm::mat4 Content::GetRenderTransform() const
 	glm::mat4 result;
 
 	result = glm::translate(result, glm::vec3(-1, -1, 0));
-	result = glm::scale(result, glm::vec3(glm::vec2(2, 2) / _contentBounds.size(), 1));
-	result = glm::translate(result, glm::vec3(-_contentBounds.min, 0));
+	result = glm::scale(result, glm::vec3(glm::vec2(2, 2) / (glm::vec2)_viewportBounds.size(), 1));
+	result = glm::translate(result, glm::vec3(-_contentOffset, 0));
 
 	return result;
 }
@@ -146,13 +152,13 @@ glm::vec2 Content::ViewportToContent(glm::vec2 value) const
 
 glm::vec2 Content::ContentToNormalized(glm::vec2 value) const
 {
-	return 2.0f * (value - _contentBounds.min) / _contentBounds.size() - 1.0f;
+	return 2.0f * (value - _contentOffset) / (glm::vec2)_viewportBounds.size() - 1.0f;
 }
 
 
 glm::vec2 Content::NormalizedToContent(glm::vec2 value) const
 {
-	return _contentBounds.min + (value + 1.0f) / 2.0f * _contentBounds.size();
+	return _contentOffset + (value + 1.0f) / 2.0f * (glm::vec2)_viewportBounds.size();
 }
 
 

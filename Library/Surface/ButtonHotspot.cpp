@@ -24,14 +24,14 @@ ButtonHotspot::~ButtonHotspot()
 
 bool ButtonHotspot::IsInside(glm::vec2 position) const
 {
-	if (_content == nullptr)
-		return false;
-
-	Touch touch(1, position, 0, MouseButtons());
-	_content->FindHotspots(&touch);
-	for (const std::shared_ptr<HotspotBase> hotspot : touch.GetHotspots())
-		if (hotspot.get() == this)
-			return true;
+	if (_content != nullptr)
+	{
+		Touch touch(1, position, 0, MouseButtons());
+		_content->FindHotspots(&touch);
+		for (const std::shared_ptr<HotspotBase> hotspot : touch.GetHotspots())
+			if (hotspot.get() == this)
+				return true;
+	}
 
 	return false;
 }

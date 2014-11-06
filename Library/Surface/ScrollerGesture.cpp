@@ -24,37 +24,27 @@ void ScrollerGesture::Update(double secondsSinceLastUpdate)
 
 void ScrollerGesture::TouchBegan(Touch* touch)
 {
-	/*
-
-	if (_hotspot != nullptr)
-		return;
-
-	std::shared_ptr<ScrollerHotspot> scrollerHotspot;
-
-	for (std::shared_ptr<HotspotBase> hotspot : touch->GetHotspots())
-		if (scrollerHotspot == nullptr)
-			scrollerHotspot = std::dynamic_pointer_cast<ScrollerHotspot>(hotspot);
-
-	if (scrollerHotspot != nullptr)
+	bounds2f viewportBounds = _hotspot->GetContent()->GetViewportBounds();
+	if (viewportBounds.contains(touch->GetOriginal()))
 	{
 		CaptureTouch(touch);
-		_hotspot = scrollerHotspot;
+		_originalContentOffset = _hotspot->GetContent()->GetContentOffset();
 	}
-	*/
 }
 
 
 void ScrollerGesture::TouchMoved()
 {
-	if (_hotspot != nullptr && !_touches.empty())
+	if (!_touches.empty())
 	{
-		glm::vec2 position = _touches.front()->GetPosition();
-
-		_hotspot->ScrollToPosition(position);
+		glm::vec2 original = _hotspot->GetContent()->ViewportToContent(_touches.front()->GetOriginal());
+		glm::vec2 position = _hotspot->GetContent()->ViewportToContent(_touches.front()->GetPosition());
+		_hotspot->GetContent()->SetContentOffset(_originalContentOffset + original - position);
 	}
 }
 
 
 void ScrollerGesture::TouchEnded(Touch* touch)
 {
+	ReleaseTouch(touch);
 }

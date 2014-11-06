@@ -83,5 +83,6 @@ void ButtonGesture::TouchEnded(Touch* touch)
 			_hotspot->GetClickAction()();
 
 		_hotspot->SetHighlight(false);
+		ReleaseTouch(touch);
 	}
 }

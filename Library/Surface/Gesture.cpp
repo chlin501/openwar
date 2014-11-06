@@ -73,7 +73,7 @@ void Gesture::CaptureTouch(Touch* touch)
 }
 
 
-void Gesture::UncaptureTouch(Touch* touch)
+void Gesture::ReleaseTouch(Touch* touch)
 {
 	_touches.erase(
 		std::remove(_touches.begin(), _touches.end(), touch),

@@ -26,7 +26,7 @@ class Content
 	bool _visible;
 
 	bounds2i _viewportBounds;
-	bounds2f _contentBounds;
+	glm::vec2 _contentOffset;
 
 	bool _isUsingDepth;
 	bool _flip;
@@ -54,8 +54,10 @@ public:
 	virtual void SetViewportBounds(bounds2i value);
 	virtual void UseViewport();
 
+	glm::vec2 GetContentOffset() const;
+	void SetContentOffset(glm::vec2 value);
+
 	virtual bounds2f GetContentBounds() const;
-	virtual void SetContentBounds(const bounds2f& value);
 
 	virtual bool IsUsingDepth() const;
 	virtual void SetUsingDepth(bool value);

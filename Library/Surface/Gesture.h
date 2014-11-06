@@ -45,7 +45,7 @@ public:
 	//virtual void TouchWasCancelled(Touch* touch);
 
 	void CaptureTouch(Touch* touch);
-	void UncaptureTouch(Touch* touch);
+	void ReleaseTouch(Touch* touch);
 };
 
 
