@@ -29,11 +29,20 @@ TerrainView::~TerrainView()
 }
 
 
+void TerrainView::SetEditorHotspot(std::shared_ptr<EditorHotspot> hotspot)
+{
+	_editorHotspot = hotspot;
+}
+
+
 void TerrainView::FindHotspots(Touch* touch)
 {
+	if (_editorHotspot != nullptr)
+		_editorHotspot->SubscribeTouch(touch);
+
 	if (_terrainHotspot == nullptr)
 		_terrainHotspot = std::make_shared<TerrainHotspot>(this);
-	touch->AddHotspot(_terrainHotspot);
+	_terrainHotspot->SubscribeTouch(touch);
 }
 
 

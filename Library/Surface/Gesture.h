@@ -8,22 +8,18 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-class HotspotBase;
+class Hotspot;
 class Surface;
 class Touch;
 
 
 class Gesture
 {
-	HotspotBase* _hotspotBase;
-
 public:
 	static std::vector<Gesture*>* _gestures;
 
-	Gesture(HotspotBase* hotspot);
+	Gesture();
 	virtual ~Gesture();
-
-	HotspotBase* GetHotspot() const;
 
 	virtual void Update(double secondsSinceLastUpdate) = 0;
 
@@ -33,6 +29,9 @@ public:
 	virtual void ScrollWheel(glm::vec2 position, glm::vec2 delta);
 	virtual void Magnify(glm::vec2 position, float magnification);
 	virtual void Magnify(glm::vec2 position);
+
+	virtual void TouchCaptured(Touch* touch) = 0;
+	virtual void TouchReleased(Touch* touch) = 0;
 
 	virtual void TouchBegan(Touch* touch) = 0;
 	virtual void TouchMoved() = 0;

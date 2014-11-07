@@ -15,7 +15,6 @@ class TerrainHotspot;
 class TerrainGesture : public Gesture
 {
 	TerrainHotspot* _hotspot;
-	TerrainView* _terrainView;
 	glm::vec3 _contentPosition1;
 	glm::vec3 _contentPosition2;
 	glm::vec2 _previousTouchPosition;
@@ -39,8 +38,6 @@ public:
 	TerrainGesture(TerrainHotspot* hotspot);
 	virtual ~TerrainGesture();
 
-	TerrainView* GetTerrainView() const { return _terrainView; }
-
 	virtual void Update(double secondsSinceLastUpdate);
 
 	virtual void KeyDown(char key);
@@ -48,6 +45,9 @@ public:
 
 	virtual void ScrollWheel(glm::vec2 position, glm::vec2 delta);
 	virtual void Magnify(glm::vec2 position, float magnification);
+
+	virtual void TouchCaptured(Touch* touch);
+	virtual void TouchReleased(Touch* touch);
 
 	virtual void TouchBegan(Touch* touch);
 	virtual void TouchMoved();

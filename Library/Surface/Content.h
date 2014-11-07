@@ -12,7 +12,7 @@
 
 class Container;
 class GraphicsContext;
-class HotspotBase;
+class Hotspot;
 class Touch;
 class WidgetShape;
 

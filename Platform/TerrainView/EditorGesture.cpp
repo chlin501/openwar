@@ -10,10 +10,8 @@
 
 
 
-EditorGesture::EditorGesture(EditorHotspot* hotspot) : Gesture(hotspot),
-	_hotspot(hotspot),
-	_battleView(hotspot->GetBattleView()),
-	_editorModel(hotspot->GetEditorModel())
+EditorGesture::EditorGesture(EditorHotspot* hotspot) :
+	_hotspot(hotspot)
 {
 }
 
@@ -24,53 +22,49 @@ void EditorGesture::Update(double secondsSinceLastUpdate)
 }
 
 
+void EditorGesture::TouchCaptured(Touch* touch)
+{
+}
+
+
+void EditorGesture::TouchReleased(Touch* touch)
+{
+}
+
+
 void EditorGesture::TouchBegan(Touch* touch)
 {
-	if (_editorModel->GetEditorMode() == EditorMode::Hand)
+	if (touch->IsCaptured() || _hotspot->HasCapturedTouch())
+		return;
+
+	if (_hotspot->GetEditorModel()->GetEditorMode() == EditorMode::Hand)
+		return;
+
+	if (_hotspot->TryCaptureTouch(touch))
 	{
-		bounds2f b = _battleView->GetTerrainBounds();
-		glm::vec2 p = (TerrainPosition(touch) - b.min) / b.size();
-
-		static glm::vec2 old;
-		if (old != glm::vec2())
-		{
-			glm::vec2 d = p - old;
-			float a = 90 - glm::round(glm::degrees(glm::atan(d.y, d.x)));
-			while (a > 360)
-				a -= 360;
-			while (a < 0)
-				a += 360;
-			//NSLog(@"Angle: %g", a);
-		}
-		old = p;
-
-		//NSLog(@"Position: %g, %g", p.x, p.y);
-		return;
+		_hotspot->GetEditorModel()->ToolBegan(TerrainPosition(touch));
 	}
-
-	if (touch->HasGesture() || !GetHotspot()->_touches.empty())
-		return;
-
-	_editorModel->ToolBegan(TerrainPosition(touch));
-	_hotspot->CaptureTouch(touch);
 }
 
 
 void EditorGesture::TouchMoved()
 {
-	if (!_hotspot->_touches.empty())
-		_editorModel->ToolMoved(TerrainPosition(GetHotspot()->_touches.front()));
+	if (_hotspot->HasCapturedTouch())
+		_hotspot->GetEditorModel()->ToolMoved(TerrainPosition(_hotspot->GetCapturedTouch()));
 }
 
 
 void EditorGesture::TouchEnded(Touch* touch)
 {
-	_editorModel->ToolEnded(TerrainPosition(touch));
-
+	if (_hotspot->HasCapturedTouch(touch))
+	{
+		_hotspot->GetEditorModel()->ToolEnded(TerrainPosition(touch));
+		_hotspot->ReleaseTouch(touch);
+	}
 }
 
 
 glm::vec2 EditorGesture::TerrainPosition(Touch* touch)
 {
-	return _battleView->GetTerrainPosition3(touch->GetPosition()).xy();
+	return _hotspot->GetBattleView()->GetTerrainPosition3(touch->GetPosition()).xy();
 }

@@ -10,7 +10,7 @@
 #include "Algorithms/sampler.h"
 
 class Gesture;
-class HotspotBase;
+class Hotspot;
 
 
 struct MouseButtons
@@ -30,10 +30,12 @@ enum class Motion { Unknown, Stationary, Moving };
 class Touch
 {
 	friend class Gesture;
-	friend class HotspotBase;
+	friend class Hotspot;
+	friend class ButtonHotspot; // fulhack
 
-	std::vector<std::shared_ptr<HotspotBase>> _hotspots;
-	std::vector<Gesture*> _gestures;
+	std::vector<std::shared_ptr<Hotspot>> _subscribedHotspots;
+	std::shared_ptr<Hotspot> _capturedByHotspot;
+
 	int _tapCount;
 	bool _hasMoved;
 	glm::vec2 _position;
@@ -50,17 +52,13 @@ public:
 	Touch(int tapCount, glm::vec2 position, double timestamp, MouseButtons buttons);
 	~Touch();
 
-	void AddHotspot(std::shared_ptr<HotspotBase> hotspot);
-	const std::vector<std::shared_ptr<HotspotBase>>& GetHotspots() const;
+	bool IsCaptured() const;
 
 	int GetTapCount() const;
 
 	void TouchBegan();
 	void TouchMoved();
 	void TouchEnded();
-
-	const std::vector<Gesture*>& GetGestures() const;
-	bool HasGesture() const;
 
 	void Update(glm::vec2 position, glm::vec2 previous, double timestamp);
 	void Update(glm::vec2 position, double timestamp, MouseButtons buttons);
@@ -79,7 +77,6 @@ public:
 	Motion GetMotion() const;
 
 	bool HasBegun() const;
-
 	bool HasMoved() const;
 	void ResetHasMoved();
 

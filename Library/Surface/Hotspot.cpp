@@ -3,33 +3,132 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "Hotspot.h"
+#include "Gesture.h"
 #include "Touch.h"
 
 
-HotspotBase::HotspotBase()
+Hotspot::~Hotspot()
 {
+	for (Touch* touch : _subscribedTouches)
+	{
+		touch->_subscribedHotspots.erase(
+			std::remove(touch->_subscribedHotspots.begin(), touch->_subscribedHotspots.end(), shared_from_this()),
+			touch->_subscribedHotspots.end());
+	}
+
+	while (!_capturedTouches.empty())
+		ReleaseTouch(_capturedTouches.back());
+
+	while (!_subscribedTouches.empty())
+		UnsubscribeTouch(_subscribedTouches.back());
 }
 
 
-HotspotBase::~HotspotBase()
+void Hotspot::SubscribeTouch(Touch* touch)
 {
+	if (std::find(_subscribedTouches.begin(), _subscribedTouches.end(), touch) != _subscribedTouches.end())
+		return;
+
+	_subscribedTouches.push_back(touch);
+	touch->_subscribedHotspots.push_back(shared_from_this());
 }
 
 
-void HotspotBase::CaptureTouch(Touch* touch)
+void Hotspot::UnsubscribeTouch(Touch* touch)
 {
-	_touches.push_back(touch);
-	touch->_gestures.push_back(GetGesture());
+	if (HasCapturedTouch(touch))
+		ReleaseTouch(touch);
+
+	_subscribedTouches.erase(
+		std::remove(_subscribedTouches.begin(), _subscribedTouches.end(), touch),
+		_subscribedTouches.end());
+
+	touch->_subscribedHotspots.erase(
+		std::remove(touch->_subscribedHotspots.begin(), touch->_subscribedHotspots.end(), shared_from_this()),
+		touch->_subscribedHotspots.end());
 }
 
 
-void HotspotBase::ReleaseTouch(Touch* touch)
+bool Hotspot::CanCaptureTouch(Touch* touch) const
 {
-	_touches.erase(
-		std::remove(_touches.begin(), _touches.end(), touch),
-		_touches.end());
+	if (touch->_capturedByHotspot == nullptr)
+		return true;
+	if (touch->_capturedByHotspot.get() == this)
+		return false;
 
-	touch->_gestures.erase(
-		std::remove(touch->_gestures.begin(), touch->_gestures.end(), GetGesture()),
-		touch->_gestures.end());
+	for (std::shared_ptr<Hotspot> hotspot : touch->_subscribedHotspots)
+	{
+		if (hotspot.get() == this)
+			return true;
+		if (hotspot == touch->_capturedByHotspot)
+			return false;
+	}
+
+	return false;
+}
+
+
+bool Hotspot::TryCaptureTouch(Touch* touch)
+{
+	if (!CanCaptureTouch(touch))
+		return false;
+
+	if (touch->_capturedByHotspot != nullptr)
+		touch->_capturedByHotspot->ReleaseTouch(touch);
+
+	_capturedTouches.push_back(touch);
+	touch->_capturedByHotspot = shared_from_this();
+
+	std::vector<std::shared_ptr<Hotspot>> hotspots(touch->_subscribedHotspots);
+	for (std::shared_ptr<Hotspot> hotspot : hotspots)
+		hotspot->GetGesture()->TouchCaptured(touch);
+
+	return true;
+}
+
+
+void Hotspot::ReleaseTouch(Touch* touch)
+{
+	if (!HasCapturedTouch(touch))
+		return;
+
+	_capturedTouches.erase(
+		std::remove(_capturedTouches.begin(), _capturedTouches.end(), touch),
+		_capturedTouches.end());
+
+	touch->_capturedByHotspot = nullptr;
+
+	std::vector<std::shared_ptr<Hotspot>> hotspots(touch->_subscribedHotspots);
+	for (std::shared_ptr<Hotspot> hotspot : hotspots)
+		hotspot->GetGesture()->TouchReleased(touch);
+}
+
+
+bool Hotspot::HasCapturedTouch(Touch* touch) const
+{
+	return std::find(_capturedTouches.begin(), _capturedTouches.end(), touch) != _capturedTouches.end();
+}
+
+
+bool Hotspot::HasCapturedTouch() const
+{
+	return _capturedTouches.size() == 1;
+}
+
+
+bool Hotspot::HasCapturedTouches() const
+{
+	return !_capturedTouches.empty();
+}
+
+
+Touch* Hotspot::GetCapturedTouch() const
+{
+	return _capturedTouches.size() == 1 ? _capturedTouches.front() : nullptr;
+}
+
+
+const std::vector<Touch*>& Hotspot::GetCapturedTouches() const
+{
+	return _capturedTouches;
 }

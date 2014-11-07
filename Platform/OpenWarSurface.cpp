@@ -18,7 +18,6 @@ _buttonRendering(nullptr),
 _editorModel(nullptr),
 _buttonsTopLeft(nullptr),
 _buttonsTopRight(nullptr),
-//_buttonGesture(nullptr),
 _buttonItemHand(nullptr),
 _buttonItemPaint(nullptr),
 _buttonItemErase(nullptr),
@@ -39,10 +38,6 @@ _battleLayer(nullptr)
 
 	_buttonsTopLeft->SetContainer(this);
 	_buttonsTopRight->SetContainer(this);
-
-	//_buttonGesture = new ButtonGesture(nullptr);
-	//_buttonGesture->_buttonViews.push_back(_buttonsTopLeft);
-	//_buttonGesture->_buttonViews.push_back(_buttonsTopRight);
 
 	ButtonArea* toolButtonArea = _buttonsTopLeft->AddButtonArea(4);
 	_buttonItemHand = toolButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolHand);
@@ -90,7 +85,7 @@ _battleLayer(nullptr)
 	_buttonItemWater->SetKeyboardShortcut('7');
 	_buttonItemFords->SetKeyboardShortcut('8');
 
-	UpdateButtonsAndGestures();
+	UpdateButtons();
 }
 
 
@@ -102,22 +97,10 @@ OpenWarSurface::~OpenWarSurface()
 
 void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
 {
-	delete _editorModel;
-	_editorModel = nullptr;
-	_editorHotspot = nullptr;
-
-	_battleLayer->ResetBattleViews(scenario, commanders);
-
-	const std::vector<BattleView*>& battleViews = _battleLayer->GetBattleViews();
-	if (!battleViews.empty())
-	{
-		BattleView* battleView = battleViews.front();
-		_editorModel = new EditorModel(battleView, battleView->GetSmoothTerrainRenderer());
-		_editorHotspot = std::make_shared<EditorHotspot>(battleView, _editorModel);
-	}
-
+	_battleLayer->ResetEditor(scenario, commanders);
 	_battleLayer->SetPlaying(false);
-	UpdateButtonsAndGestures();
+	_editorModel = _battleLayer->GetEditorModel();
+	UpdateButtons();
 }
 
 
@@ -135,16 +118,6 @@ void OpenWarSurface::Update(double secondsSinceLastUpdate)
 
 	if (_battleLayer->GetScenario() != nullptr && _battleLayer->IsPlaying())
 		_battleLayer->GetScenario()->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);
-}
-
-
-
-void OpenWarSurface::FindHotspots(Touch* touch)
-{
-	if (_editorHotspot != nullptr)
-		touch->AddHotspot(_editorHotspot);
-
-	Container::FindHotspots(touch);
 }
 
 
@@ -169,14 +142,14 @@ void OpenWarSurface::FindHotspots(Touch* touch)
 void OpenWarSurface::ClickedPlay()
 {
 	_battleLayer->SetPlaying(true);
-	UpdateButtonsAndGestures();
+	UpdateButtons();
 }
 
 
 void OpenWarSurface::ClickedPause()
 {
 	_battleLayer->SetPlaying(false);
-	UpdateButtonsAndGestures();
+	UpdateButtons();
 }
 
 
@@ -185,7 +158,7 @@ void OpenWarSurface::SetEditorMode(EditorMode editorMode)
 	if (_editorModel != nullptr)
 	{
 		_editorModel->SetEditorMode(editorMode);
-		UpdateButtonsAndGestures();
+		UpdateButtons();
 	}
 }
 
@@ -195,18 +168,19 @@ void OpenWarSurface::SetEditorFeature(TerrainFeature terrainFeature)
 	if (_editorModel != nullptr)
 	{
 		_editorModel->SetTerrainFeature(terrainFeature);
-		UpdateButtonsAndGestures();
+		UpdateButtons();
 	}
 }
 
 
-void OpenWarSurface::UpdateButtonsAndGestures()
+void OpenWarSurface::UpdateButtons()
 {
 	bool playing = _battleLayer->IsPlaying();
 	bool editing = _editorModel != nullptr && _editorModel->GetEditorMode() != EditorMode::Hand;
 	_battleLayer->SetEditing(editing);
 
-	_buttonItemHand->SetDisabled (playing);
+	/*
+	_buttonItemHand->SetDisabled(playing);
 	_buttonItemPaint->SetDisabled(playing);
 	_buttonItemErase->SetDisabled(playing);
 	_buttonItemSmear->SetDisabled(playing);
@@ -214,6 +188,7 @@ void OpenWarSurface::UpdateButtonsAndGestures()
 	_buttonItemTrees->SetDisabled(playing);
 	_buttonItemWater->SetDisabled(playing);
 	_buttonItemFords->SetDisabled(playing);
+	*/
 
 	if (_editorModel != nullptr)
 	{

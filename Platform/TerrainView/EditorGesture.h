@@ -9,19 +9,19 @@
 
 class BattleView;
 class EditorHotspot;
-class EditorModel;
 
 
 class EditorGesture : public Gesture
 {
 	EditorHotspot* _hotspot;
-	BattleView* _battleView;
-	EditorModel* _editorModel;
 
 public:
 	EditorGesture(EditorHotspot* hotspot);
 
 	virtual void Update(double secondsSinceLastUpdate);
+
+	virtual void TouchCaptured(Touch* touch);
+	virtual void TouchReleased(Touch* touch);
 
 	virtual void TouchBegan(Touch* touch);
 	virtual void TouchMoved();

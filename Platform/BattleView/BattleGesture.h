@@ -20,7 +20,6 @@ class UnitCounter;
 class BattleGesture : public Gesture
 {
 	BattleHotspot* _hotspot;
-	BattleView* _battleView;
 
 	bool _tappedUnitCenter;
 	bool _tappedDestination;
@@ -40,9 +39,10 @@ public:
 	BattleGesture(BattleHotspot* hotspot);
 	virtual ~BattleGesture();
 
-	BattleView* GetBattleView() const { return _battleView; }
-
 	virtual void Update(double secondsSinceLastUpdate);
+
+	virtual void TouchCaptured(Touch* touch);
+	virtual void TouchReleased(Touch* touch);
 
 	virtual void TouchBegan(Touch* touch);
 	virtual void TouchMoved();
@@ -63,8 +63,6 @@ private:
 	bounds2f GetUnitCurrentBounds(Unit* unit);
 	bounds2f GetUnitFutureBounds(Unit* unit);
 	bounds2f GetUnitModifierBounds(Unit* unit);
-
-	bool IsInsideUnitModifierArea(Unit* unit, glm::vec2 position);
 };
 
 

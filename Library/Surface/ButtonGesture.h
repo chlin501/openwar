@@ -16,7 +16,6 @@ class ButtonGrid;
 class ButtonGesture : public Gesture
 {
 	ButtonHotspot* _hotspot;
-	ButtonItem* _buttonItem;
 
 public:
 	std::vector<ButtonGrid*> _buttonViews;
@@ -27,6 +26,9 @@ public:
 	virtual void Update(double secondsSinceLastUpdate);
 
 	virtual void KeyDown(char key);
+
+	virtual void TouchCaptured(Touch* touch);
+	virtual void TouchReleased(Touch* touch);
 
 	virtual void TouchBegan(Touch* touch);
 	virtual void TouchMoved();

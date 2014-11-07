@@ -9,7 +9,7 @@
 
 
 Touch::Touch(int tapCount, glm::vec2 position, double timestamp, MouseButtons buttons) :
-	_gestures(),
+	_capturedByHotspot(nullptr),
 	_tapCount(tapCount),
 	_hasMoved(false),
 	_position(position),
@@ -27,25 +27,20 @@ Touch::Touch(int tapCount, glm::vec2 position, double timestamp, MouseButtons bu
 
 Touch::~Touch()
 {
-	for (Gesture* gesture : _gestures)
+	if (_capturedByHotspot != nullptr)
+		_capturedByHotspot->ReleaseTouch(this);
+
+	while (!_subscribedHotspots.empty())
 	{
-		HotspotBase* hotspot = gesture->GetHotspot();
-		hotspot->_touches.erase(
-			std::remove(hotspot->_touches.begin(), hotspot->_touches.end(), this),
-			hotspot->_touches.end());
+		std::shared_ptr<Hotspot> hotspot = _subscribedHotspots.back();
+		hotspot->UnsubscribeTouch(this);
 	}
 }
 
 
-void Touch::AddHotspot(std::shared_ptr<HotspotBase> hotspot)
+bool Touch::IsCaptured() const
 {
-	_hotspots.push_back(hotspot);
-}
-
-
-const std::vector<std::shared_ptr<HotspotBase>>& Touch::GetHotspots() const
-{
-	return _hotspots;
+	return _capturedByHotspot != nullptr;
 }
 
 
@@ -57,34 +52,25 @@ int Touch::GetTapCount() const
 
 void Touch::TouchBegan()
 {
-	for (std::shared_ptr<HotspotBase> hotspot : _hotspots)
+	std::vector<std::shared_ptr<Hotspot>> hotspots(_subscribedHotspots);
+	for (std::shared_ptr<Hotspot> hotspot : hotspots)
 		hotspot->GetGesture()->TouchBegan(this);
 }
 
 
 void Touch::TouchMoved()
 {
-	for (Gesture* gesture : _gestures)
-		gesture->TouchMoved();
+	std::vector<std::shared_ptr<Hotspot>> hotspots(_subscribedHotspots);
+	for (std::shared_ptr<Hotspot> hotspot : hotspots)
+		hotspot->GetGesture()->TouchMoved();
 }
 
 
 void Touch::TouchEnded()
 {
-	for (Gesture* gesture : _gestures)
-		gesture->TouchEnded(this);
-}
-
-
-const std::vector<Gesture*>& Touch::GetGestures() const
-{
-	return _gestures;
-}
-
-
-bool Touch::HasGesture() const
-{
-	return !_gestures.empty();
+	std::vector<std::shared_ptr<Hotspot>> hotspots(_subscribedHotspots);
+	for (std::shared_ptr<Hotspot> hotspot : hotspots)
+		hotspot->GetGesture()->TouchEnded(this);
 }
 
 

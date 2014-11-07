@@ -25,6 +25,7 @@ class TerrainView : public Content
 	bool _mouseHintVisible;
 	glm::vec2 _mouseHintPosition;
 
+	std::shared_ptr<EditorHotspot> _editorHotspot;
 	std::shared_ptr<TerrainHotspot> _terrainHotspot;
 
 protected:
@@ -33,6 +34,8 @@ protected:
 public:
 	TerrainView(GraphicsContext* gc);
 	virtual ~TerrainView();
+
+	void SetEditorHotspot(std::shared_ptr<EditorHotspot> hotspot);
 
 	virtual void FindHotspots(Touch* touch);
 

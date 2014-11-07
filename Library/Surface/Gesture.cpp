@@ -12,8 +12,7 @@
 std::vector<Gesture*>* Gesture::_gestures = nullptr;
 
 
-Gesture::Gesture(HotspotBase* hotspot) :
-	_hotspotBase(hotspot)
+Gesture::Gesture()
 {
 	if (_gestures == nullptr)
 		_gestures = new std::vector<Gesture*>();
@@ -23,22 +22,9 @@ Gesture::Gesture(HotspotBase* hotspot) :
 
 Gesture::~Gesture()
 {
-	for (Touch* touch : _hotspotBase->_touches)
-	{
-		touch->_gestures.erase(
-			std::remove(touch->_gestures.begin(), touch->_gestures.end(), this),
-			touch->_gestures.end());
-	}
-
 	_gestures->erase(
 		std::remove(_gestures->begin(), _gestures->end(), this),
 		_gestures->end());
-}
-
-
-HotspotBase* Gesture::GetHotspot() const
-{
-	return _hotspotBase;
 }
 
 

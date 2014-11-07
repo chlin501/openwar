@@ -2,10 +2,9 @@
 #include "ScrollerGesture.h"
 #include "ScrollerHotspot.h"
 #include "Touch.h"
-#include "Surface.h"
 
 
-ScrollerGesture::ScrollerGesture(ScrollerHotspot* hotspot) : Gesture(hotspot),
+ScrollerGesture::ScrollerGesture(ScrollerHotspot* hotspot) :
 _hotspot(hotspot)
 {
 }
@@ -22,23 +21,38 @@ void ScrollerGesture::Update(double secondsSinceLastUpdate)
 }
 
 
+void ScrollerGesture::TouchCaptured(Touch* touch)
+{
+}
+
+
+void ScrollerGesture::TouchReleased(Touch* touch)
+{
+}
+
+
 void ScrollerGesture::TouchBegan(Touch* touch)
 {
+	if (_hotspot->HasCapturedTouch())
+		return;
+
 	bounds2f viewportBounds = _hotspot->GetContent()->GetViewportBounds();
 	if (viewportBounds.contains(touch->GetOriginal()))
 	{
-		_hotspot->CaptureTouch(touch);
-		_originalContentOffset = _hotspot->GetContent()->GetContentOffset();
+		if (_hotspot->TryCaptureTouch(touch))
+		{
+			_originalContentOffset = _hotspot->GetContent()->GetContentOffset();
+		}
 	}
 }
 
 
 void ScrollerGesture::TouchMoved()
 {
-	if (!_hotspot->_touches.empty())
+	if (_hotspot->HasCapturedTouch())
 	{
-		glm::vec2 original = _hotspot->GetContent()->ViewportToContent(_hotspot->_touches.front()->GetOriginal());
-		glm::vec2 position = _hotspot->GetContent()->ViewportToContent(_hotspot->_touches.front()->GetPosition());
+		glm::vec2 original = _hotspot->GetContent()->ViewportToContent(_hotspot->GetCapturedTouch()->GetOriginal());
+		glm::vec2 position = _hotspot->GetContent()->ViewportToContent(_hotspot->GetCapturedTouch()->GetPosition());
 		_hotspot->GetContent()->SetContentOffset(_originalContentOffset + original - position);
 	}
 }
@@ -46,5 +60,6 @@ void ScrollerGesture::TouchMoved()
 
 void ScrollerGesture::TouchEnded(Touch* touch)
 {
-	_hotspot->ReleaseTouch(touch);
+	if (_hotspot->HasCapturedTouch(touch))
+		_hotspot->ReleaseTouch(touch);
 }

@@ -5,13 +5,16 @@
 #include "TerrainGesture.h"
 
 
-class TerrainHotspot : public Hotspot<TerrainHotspot, TerrainGesture>
+class TerrainHotspot : public Hotspot
 {
+	TerrainGesture _gesture;
 	TerrainView* _terrainView;
 
 public:
 	TerrainHotspot(TerrainView* terrainView);
 	virtual ~TerrainHotspot();
+
+	virtual Gesture* GetGesture() const;
 
 	TerrainView* GetTerrainView() const;
 };

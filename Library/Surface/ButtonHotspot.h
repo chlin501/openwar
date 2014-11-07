@@ -12,8 +12,9 @@
 class Content;
 
 
-class ButtonHotspot : public Hotspot<ButtonHotspot, ButtonGesture>
+class ButtonHotspot : public Hotspot
 {
+	ButtonGesture _gesture;
 	Content* _content;
 	std::function<void()> _action;
 	bool _highlight;
@@ -23,6 +24,8 @@ class ButtonHotspot : public Hotspot<ButtonHotspot, ButtonGesture>
 public:
 	ButtonHotspot(Content* content);
 	virtual ~ButtonHotspot();
+
+	virtual Gesture* GetGesture() const;
 
 	virtual bool IsInside(glm::vec2 position) const;
 

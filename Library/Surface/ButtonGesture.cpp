@@ -9,9 +9,8 @@
 #include "Touch.h"
 
 
-ButtonGesture::ButtonGesture(ButtonHotspot* hotspot) : Gesture(hotspot),
-	_hotspot(hotspot),
-	_buttonItem(nullptr)
+ButtonGesture::ButtonGesture(ButtonHotspot* hotspot) :
+	_hotspot(hotspot)
 {
 }
 
@@ -40,22 +39,27 @@ void ButtonGesture::KeyDown(char key)
 }
 
 
+void ButtonGesture::TouchCaptured(Touch* touch)
+{
+}
+
+
+void ButtonGesture::TouchReleased(Touch* touch)
+{
+}
+
+
 void ButtonGesture::TouchBegan(Touch* touch)
 {
-	if (_hotspot != nullptr)
-	{
-		_hotspot->CaptureTouch(touch);
+	if (touch->IsCaptured() || _hotspot->HasCapturedTouch())
+		return;
 
+	if (_hotspot->TryCaptureTouch(touch))
+	{
 		_hotspot->SetHighlight(true);
 
 		if (_hotspot->IsImmediateClick() && _hotspot->GetClickAction())
 			_hotspot->GetClickAction()();
-	}
-	else
-	{
-		for (ButtonGrid* buttonView : _buttonViews)
-			for (ButtonArea* buttonArea : buttonView->GetButtonAreas())
-				buttonArea->noaction();
 	}
 }
 
@@ -63,9 +67,9 @@ void ButtonGesture::TouchBegan(Touch* touch)
 
 void ButtonGesture::TouchMoved()
 {
-	if (_hotspot != nullptr)
+	if (_hotspot->HasCapturedTouch())
 	{
-		Touch* touch = _hotspot->_touches.front();
+		Touch* touch = _hotspot->GetCapturedTouch();
 		bool inside = _hotspot->IsInside(touch->GetPosition());
 		_hotspot->SetHighlight(inside);
 	}
@@ -75,7 +79,7 @@ void ButtonGesture::TouchMoved()
 
 void ButtonGesture::TouchEnded(Touch* touch)
 {
-	if (_hotspot != nullptr)
+	if (_hotspot->HasCapturedTouch(touch))
 	{
 		bool inside = _hotspot->IsInside(touch->GetPosition());
 

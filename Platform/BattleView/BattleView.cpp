@@ -762,7 +762,7 @@ void BattleView::FindHotspots(Touch* touch)
 {
 	if (_battleHotspot == nullptr)
 		_battleHotspot = std::make_shared<BattleHotspot>(this);
-	touch->AddHotspot(_battleHotspot);
+	_battleHotspot->SubscribeTouch(touch);
 
 	TerrainView::FindHotspots(touch);
 }

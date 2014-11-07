@@ -17,6 +17,9 @@ public:
 
 	virtual void Update(double secondsSinceLastUpdate);
 
+	virtual void TouchCaptured(Touch* touch);
+	virtual void TouchReleased(Touch* touch);
+
 	virtual void TouchBegan(Touch* touch);
 	virtual void TouchMoved();
 	virtual void TouchEnded(Touch* touch);

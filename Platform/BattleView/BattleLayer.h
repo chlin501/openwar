@@ -44,7 +44,7 @@ public:
 	EditorModel* GetEditorModel() const { return _editorModel; }
 
 	virtual void ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
-	void ResetEditor(BattleScenario* scenario);
+	void ResetEditor(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
 
 	void ResetCameraPosition();
 
@@ -55,7 +55,6 @@ public:
 
 	// Surface
 	virtual void Update(double secondsSinceLastUpdate);
-	virtual void FindHotspots(Touch* touch);
 
 	// EditorModelObserver
 	virtual void OnEditorModeChanged(EditorModel* editorModel);

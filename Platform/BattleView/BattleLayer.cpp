@@ -62,25 +62,26 @@ void BattleLayer::ResetBattleViews(BattleScenario* scenario, const std::vector<B
 }
 
 
-void BattleLayer::ResetEditor(BattleScenario* scenario)
+void BattleLayer::ResetEditor(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
 {
 	delete _editorModel;
 	_editorModel = nullptr;
 	_editorHotspot = nullptr;
 
 	_scenario = scenario;
-	_commanders.clear();
+	_commanders = commanders;
 
 	while ((int)_battleViews.size() > 1)
 		RemoveBattleView(_battleViews.back());
 
 	if (_battleViews.empty())
-		CreateBattleView(nullptr);
+		CreateBattleView(commanders.front());
 	else
-		ResetBattleView(_battleViews.front(), nullptr);
+		ResetBattleView(_battleViews.front(), commanders.front());
 
 	_editorModel = new EditorModel(_battleViews.front(), _battleViews.front()->GetSmoothTerrainRenderer());
 	_editorHotspot = std::make_shared<EditorHotspot>(_battleViews.front(), _editorModel);
+	_battleViews.front()->SetEditorHotspot(_editorHotspot);
 	_editorModel->AddObserver(this);
 
 	UpdateBattleViewSize();
@@ -111,9 +112,6 @@ void BattleLayer::SetPlaying(bool value)
 void BattleLayer::SetEditing(bool value)
 {
 	_editing = value;
-
-	//for (TerrainGesture* gesture : _terrainGestures)
-	//	gesture->SetEnabled(!_editing);
 }
 
 
@@ -154,15 +152,6 @@ void BattleLayer::Update(double secondsSinceLastUpdate)
 	{
 		battleView->AnimateMarkers((float)secondsSinceLastUpdate);
 	}
-}
-
-
-void BattleLayer::FindHotspots(Touch* touch)
-{
-	if (_editorHotspot != nullptr)
-		touch->AddHotspot(_editorHotspot);
-
-	Container::FindHotspots(touch);
 }
 
 

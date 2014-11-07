@@ -3,8 +3,15 @@
 
 
 ScrollerHotspot::ScrollerHotspot(Content* content) :
+	_gesture(this),
 	_content(content)
 {
+}
+
+
+Gesture* ScrollerHotspot::GetGesture() const
+{
+	return const_cast<ScrollerGesture*>(&_gesture);
 }
 
 

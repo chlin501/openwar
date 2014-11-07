@@ -406,6 +406,6 @@ void ButtonGrid::FindHotspots(Touch* touch)
 				&& !buttonItem->IsDisabled()
 				&& buttonItem->GetBounds().contains(position))
 			{
-				touch->AddHotspot(buttonItem->GetHotspot());
+				buttonItem->GetHotspot()->SubscribeTouch(touch);
 			}
 }

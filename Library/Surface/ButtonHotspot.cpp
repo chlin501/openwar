@@ -8,6 +8,7 @@
 
 
 ButtonHotspot::ButtonHotspot(Content* content) :
+	_gesture(this),
 	_content(content),
 	_action(),
 	_highlight(false),
@@ -22,13 +23,19 @@ ButtonHotspot::~ButtonHotspot()
 }
 
 
+Gesture* ButtonHotspot::GetGesture() const
+{
+	return const_cast<ButtonGesture*>(&_gesture);
+}
+
+
 bool ButtonHotspot::IsInside(glm::vec2 position) const
 {
 	if (_content != nullptr)
 	{
 		Touch touch(1, position, 0, MouseButtons());
 		_content->FindHotspots(&touch);
-		for (const std::shared_ptr<HotspotBase> hotspot : touch.GetHotspots())
+		for (std::shared_ptr<Hotspot> hotspot : touch._subscribedHotspots)
 			if (hotspot.get() == this)
 				return true;
 	}
