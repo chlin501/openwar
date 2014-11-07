@@ -41,7 +41,6 @@ public:
 
 	TerrainView* GetTerrainView() const { return _terrainView; }
 
-	virtual void RenderHints();
 	virtual void Update(double secondsSinceLastUpdate);
 
 	virtual void KeyDown(char key);

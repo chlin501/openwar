@@ -239,8 +239,7 @@ void Window::ProcessKeyDown(const SDL_KeyboardEvent& event)
 
 	if (Gesture::_gestures != nullptr)
 		for (Gesture* gesture : *Gesture::_gestures)
-			if (gesture->IsEnabled())
-				gesture->KeyDown(key);
+			gesture->KeyDown(key);
 
 }
 
@@ -253,8 +252,7 @@ void Window::ProcessKeyUp(const SDL_KeyboardEvent& event)
 
 	if (Gesture::_gestures != nullptr)
 		for (Gesture* gesture : *Gesture::_gestures)
-			if (gesture->IsEnabled())
-				gesture->KeyUp(key);
+			gesture->KeyUp(key);
 }
 
 
@@ -416,8 +414,7 @@ void Window::ProcessMouseWheel(const SDL_MouseWheelEvent& event)
 
 	if (Gesture::_gestures != nullptr)
 		for (Gesture* gesture : *Gesture::_gestures)
-			if (gesture->IsEnabled())
-				gesture->ScrollWheel(position, k * glm::vec2(event.x, event.y));
+			gesture->ScrollWheel(position, k * glm::vec2(event.x, event.y));
 
 }
 

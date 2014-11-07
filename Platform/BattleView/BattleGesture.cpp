@@ -53,7 +53,7 @@ void BattleGesture::Update(double secondsSinceLastUpdate)
 }
 
 
-void BattleGesture::RenderHints()
+/*void BattleGesture::RenderHints()
 {
 	VertexShape_2f vertices;
 	vertices._mode = GL_LINES;
@@ -108,7 +108,7 @@ void BattleGesture::RenderHints()
 		.Render();
 
 
-	/*PlainLineRenderer renderer;
+	/ *PlainLineRenderer renderer;
 	renderer.Reset();
 	for (UnitCounter* unitMarker : _battleView->GetBattleSimulator()->_unitMarkers)
 	{
@@ -135,8 +135,8 @@ void BattleGesture::RenderHints()
 			renderer.AddLine(_battleView->GetPosition(p1), _battleView->GetPosition(p2));
 		}
 	}
-	renderer.Draw(_battleView->GetTransform(), glm::vec4(0, 0, 0, 0.2f));*/
-}
+	renderer.Draw(_battleView->GetTransform(), glm::vec4(0, 0, 0, 0.2f));* /
+}*/
 
 
 void BattleGesture::TouchBegan(Touch* touch)
@@ -397,15 +397,14 @@ void BattleGesture::TouchEnded(Touch* touch)
 }
 
 
-void BattleGesture::TouchWasCancelled(Touch* touch)
+/*void BattleGesture::TouchWasCancelled(Touch* touch)
 {
 	if (_trackingMarker)
 	{
 		_battleView->RemoveTrackingMarker(_trackingMarker);
 		_trackingMarker = nullptr;
 	}
-
-}
+}*/
 
 
 /***/

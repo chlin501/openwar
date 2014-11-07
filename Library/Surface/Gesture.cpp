@@ -13,8 +13,7 @@ std::vector<Gesture*>* Gesture::_gestures = nullptr;
 
 
 Gesture::Gesture(HotspotBase* hotspot) :
-	_hotspotBase(hotspot),
-	_enabled(true)
+	_hotspotBase(hotspot)
 {
 	if (_gestures == nullptr)
 		_gestures = new std::vector<Gesture*>();
@@ -40,11 +39,6 @@ Gesture::~Gesture()
 HotspotBase* Gesture::GetHotspot() const
 {
 	return _hotspotBase;
-}
-
-
-void Gesture::RenderHints()
-{
 }
 
 

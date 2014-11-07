@@ -70,12 +70,6 @@ void EditorGesture::TouchEnded(Touch* touch)
 }
 
 
-void EditorGesture::TouchWasCancelled(Touch* touch)
-{
-
-}
-
-
 glm::vec2 EditorGesture::TerrainPosition(Touch* touch)
 {
 	return _battleView->GetTerrainPosition3(touch->GetPosition()).xy();

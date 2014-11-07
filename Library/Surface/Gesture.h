@@ -16,7 +16,6 @@ class Touch;
 class Gesture
 {
 	HotspotBase* _hotspotBase;
-	bool _enabled;
 
 public:
 	static std::vector<Gesture*>* _gestures;
@@ -26,11 +25,7 @@ public:
 
 	HotspotBase* GetHotspot() const;
 
-	bool IsEnabled() const { return _enabled; }
-	void SetEnabled(bool value) { _enabled = value; }
-
 	virtual void Update(double secondsSinceLastUpdate) = 0;
-	virtual void RenderHints();
 
 	virtual void KeyDown(char key);
 	virtual void KeyUp(char key);
@@ -42,9 +37,6 @@ public:
 	virtual void TouchBegan(Touch* touch) = 0;
 	virtual void TouchMoved() = 0;
 	virtual void TouchEnded(Touch* touch) = 0;
-
-	//virtual void TouchWasCancelled(Touch* touch);
-
 };
 
 

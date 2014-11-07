@@ -35,7 +35,7 @@ TerrainGesture::~TerrainGesture()
 }
 
 
-void TerrainGesture::RenderHints()
+/*void TerrainGesture::RenderHints()
 {
 	if (this != nullptr)
 		return;
@@ -87,7 +87,7 @@ void TerrainGesture::RenderHints()
 		.Render();
 
 	glLineWidth(1);
-}
+}*/
 
 
 void TerrainGesture::Update(double secondsSinceLastUpdate)

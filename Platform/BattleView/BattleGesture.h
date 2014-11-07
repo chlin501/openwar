@@ -43,15 +43,10 @@ public:
 	BattleView* GetBattleView() const { return _battleView; }
 
 	virtual void Update(double secondsSinceLastUpdate);
-	virtual void RenderHints();
 
 	virtual void TouchBegan(Touch* touch);
 	virtual void TouchMoved();
 	virtual void TouchEnded(Touch* touch);
-
-	virtual void TouchWasCancelled(Touch* touch);
-
-	//void UpdateTouchMarkers();
 
 private:
 	void UpdateTrackingMarker();

@@ -27,8 +27,6 @@ public:
 	virtual void TouchMoved();
 	virtual void TouchEnded(Touch* touch);
 
-	virtual void TouchWasCancelled(Touch* touch);
-
 private:
 	glm::vec2 TerrainPosition(Touch* touch);
 };
