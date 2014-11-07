@@ -286,16 +286,16 @@ void Image::Fill(const glm::vec4& color, const bounds2f& bounds)
 #ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
 	CGContextRef context = GetCGContext();
 
-	NSGraphicsContext* gc = [NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:YES];
-	[NSGraphicsContext saveGraphicsState];
-	[NSGraphicsContext setCurrentContext:gc];
+	//NSGraphicsContext* gc = [NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:YES];
+	//[NSGraphicsContext saveGraphicsState];
+	//[NSGraphicsContext setCurrentContext:gc];
 
 	CGContextSetRGBFillColor(context, color.r, color.g, color.b, color.a);
 	CGRect rect = CGRectMake(bounds.min.x, bounds.min.y, bounds.x().size(), bounds.y().size());
 	CGContextClearRect(context, rect);
 	CGContextFillRect(context, rect);
 
-	[NSGraphicsContext restoreGraphicsState];
+	//[NSGraphicsContext restoreGraphicsState];
 #endif
 }
 

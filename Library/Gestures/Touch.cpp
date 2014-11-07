@@ -61,7 +61,7 @@ void Touch::TouchMoved()
 {
 	std::vector<std::shared_ptr<Hotspot>> hotspots(_subscribedHotspots);
 	for (std::shared_ptr<Hotspot> hotspot : hotspots)
-		hotspot->GetGesture()->TouchMoved();
+		hotspot->GetGesture()->TouchMoved(this);
 }
 
 

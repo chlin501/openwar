@@ -52,7 +52,13 @@ class TextureFont
 	TextureAtlas* _textureAtlas;
 	FontDescriptor _fontDescriptor;
 
+#ifdef OPENWAR_USE_UIFONT
+	UIFont* _font;
+#endif
+#ifdef OPENWAR_USE_NSFONT
 	NSFont* _font;
+#endif
+
 	NSDictionary* _attributes;
 	std::map<std::string, TextureChar*> _textureChars;
 

@@ -45,7 +45,7 @@ public:
 	virtual void TouchWillBeReleased(Touch* touch);
 
 	virtual void TouchBegan(Touch* touch);
-	virtual void TouchMoved();
+	virtual void TouchMoved(Touch* touch);
 	virtual void TouchEnded(Touch* touch);
 
 private:

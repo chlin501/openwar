@@ -35,6 +35,7 @@ TextureFont::TextureFont(TextureAtlas* textureAtlas, const FontDescriptor& fontD
 	if (size == 0)
 		size = 12 * _textureAtlas->GetGraphicsContext()->GetPixelDensity();
 
+#ifdef OPENWAR_USE_NSFONT
 	if (!fontDescriptor.name.empty())
 		_font = [[NSFont fontWithName:[NSString stringWithUTF8String:fontDescriptor.name.c_str()] size:size] retain];
 	else if (fontDescriptor.bold)
@@ -46,6 +47,21 @@ TextureFont::TextureFont(TextureAtlas* textureAtlas, const FontDescriptor& fontD
 		NSFontAttributeName: _font,
 		NSForegroundColorAttributeName: [NSColor whiteColor]
 	} retain];
+#endif
+
+#ifdef OPENWAR_USE_UIFONT
+	if (!fontDescriptor.name.empty())
+		_font = [[UIFont fontWithName:[NSString stringWithUTF8String:fontDescriptor.name.c_str()] size:size] retain];
+	else if (fontDescriptor.bold)
+		_font = [[UIFont boldSystemFontOfSize:size] retain];
+	else
+		_font = [[UIFont systemFontOfSize:size] retain];
+
+	_attributes = [@{
+		//NSFontAttributeName: _font,
+		//NSForegroundColorAttributeName: [UIColor whiteColor]
+	} retain];
+#endif
 }
 
 
@@ -132,6 +148,7 @@ TextureChar* TextureFont::GetTextureChar(const std::string& character)
 
 	CGContextRef context = image.GetCGContext();
 
+#ifdef OPENWAR_USE_NSFONT
 	NSGraphicsContext* gc = [NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:NO];
 	[NSGraphicsContext saveGraphicsState];
 	[NSGraphicsContext setCurrentContext:gc];
@@ -143,6 +160,21 @@ TextureChar* TextureFont::GetTextureChar(const std::string& character)
 	[string drawAtPoint:p withAttributes:_attributes];
 
 	[NSGraphicsContext restoreGraphicsState];
+#endif
+
+#ifdef OPENWAR_USE_UIFONT
+	/*UIGraphicsContext* gc = [NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:NO];
+	[NSGraphicsContext saveGraphicsState];
+	[NSGraphicsContext setCurrentContext:gc];*/
+
+	CGContextSetRGBFillColor(context, 1, 1, 1, 1);
+	CGContextSetRGBStrokeColor(context, 1, 1, 1, 1);
+
+	//CGPoint p = CGPointMake(1, 1);
+	//[string drawAtPoint:p];
+
+	/*[NSGraphicsContext restoreGraphicsState];*/
+#endif
 
 	TextureImage* textureImage = _textureAtlas->AddTextureImage(image);
 	textureImage->_inner.min = textureImage->_outer.min + glm::vec2(1, 1);

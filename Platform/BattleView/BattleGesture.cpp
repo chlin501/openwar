@@ -255,7 +255,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 }
 
 
-void BattleGesture::TouchMoved()
+void BattleGesture::TouchMoved(Touch* touch)
 {
 	if (!_hotspot->HasCapturedTouch())
 		return;

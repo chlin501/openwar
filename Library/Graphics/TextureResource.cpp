@@ -43,7 +43,7 @@ void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const resourc
 			NSData* pvrtc = [NSData dataWithContentsOfFile:path];
 			if (pvrtc != nil)
 			{
-				glBindTexture(GL_TEXTURE_2D, id);
+				glBindTexture(GL_TEXTURE_2D, _id);
 				CHECK_ERROR_GL();
 				glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG, 1024, 1024, 0, pvrtc.length, pvrtc.bytes);
 				CHECK_ERROR_GL();
@@ -64,7 +64,7 @@ void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const resourc
 	Image img;
 	img.LoadFromCGImage(image.CGImage);
 
-	glBindTexture(GL_TEXTURE_2D, id);
+	glBindTexture(GL_TEXTURE_2D, _id);
 	CHECK_ERROR_GL();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.GetWidth(), img.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, img.GetPixels());
 	CHECK_ERROR_GL();

@@ -47,7 +47,7 @@ void EditorGesture::TouchBegan(Touch* touch)
 }
 
 
-void EditorGesture::TouchMoved()
+void EditorGesture::TouchMoved(Touch* touch)
 {
 	if (_hotspot->HasCapturedTouch())
 		_hotspot->GetEditorModel()->ToolMoved(TerrainPosition(_hotspot->GetCapturedTouch()));

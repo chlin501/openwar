@@ -69,7 +69,7 @@ void ButtonGesture::TouchBegan(Touch* touch)
 
 
 
-void ButtonGesture::TouchMoved()
+void ButtonGesture::TouchMoved(Touch* touch)
 {
 	if (_hotspot->HasCapturedTouch())
 	{

@@ -223,7 +223,7 @@ static float GetOrbitFactor(Touch* touch, bounds2f bounds)
 }
 
 
-void TerrainGesture::TouchMoved()
+void TerrainGesture::TouchMoved(Touch* touch)
 {
 	int touchCount = _hotspot->GetCapturedTouches().size();
 	if (touchCount != 0)

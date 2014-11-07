@@ -36,7 +36,7 @@ void ScrollerGesture::TouchBegan(Touch* touch)
 }
 
 
-void ScrollerGesture::TouchMoved()
+void ScrollerGesture::TouchMoved(Touch* touch)
 {
 	if (!_hotspot->HasCapturedTouch())
 	{
