@@ -92,7 +92,8 @@ void Content::SetViewportBounds(bounds2i value)
 
 void Content::UseViewport()
 {
-	glViewport((GLint)_viewportBounds.min.x, (GLint)_viewportBounds.min.y, (GLsizei)_viewportBounds.x().size(), (GLsizei)_viewportBounds.y().size());
+	bounds2f bounds = (bounds2f)_viewportBounds * _gc->GetPixelDensity();
+	glViewport((GLint)bounds.min.x, (GLint)bounds.min.y, (GLsizei)bounds.x().size(), (GLsizei)bounds.y().size());
 }
 
 
