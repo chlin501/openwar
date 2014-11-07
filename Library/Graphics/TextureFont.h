@@ -10,8 +10,11 @@ class TextureAtlas;
 class TextureChar;
 class TextureImage;
 
-
+#if TARGET_OS_IPHONE
+#define OPENWAR_USE_UIFONT
+#else
 #define OPENWAR_USE_NSFONT
+#endif
 
 #ifdef OPENWAR_USE_SDL
 #include <SDL2_ttf/SDL_ttf.h>

@@ -5,7 +5,7 @@
 #ifndef EDITORGESTURE_H
 #define EDITORGESTURE_H
 
-#include "Surface/Gesture.h"
+#include "Gestures/Gesture.h"
 
 class BattleView;
 class EditorHotspot;

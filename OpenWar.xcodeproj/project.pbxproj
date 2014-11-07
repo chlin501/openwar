@@ -29,6 +29,9 @@
 		41396E0D17E7517F00EC1DA6 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B7022175DFEA900AABF10 /* OpenAL.framework */; };
 		41396E0E17E7517F00EC1DA6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B6ED1175DE19200AABF10 /* OpenGL.framework */; };
 		4156F29619A5FEC300A9990D /* SDL2_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4156F29519A5FEC300A9990D /* SDL2_mixer.framework */; };
+		417DCA871A0CF48400509299 /* Gesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 417DCA811A0CF48400509299 /* Gesture.cpp */; };
+		417DCA881A0CF48400509299 /* Hotspot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 417DCA831A0CF48400509299 /* Hotspot.cpp */; };
+		417DCA891A0CF48400509299 /* Touch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 417DCA851A0CF48400509299 /* Touch.cpp */; };
 		4180D0981A091B650037238F /* BillboardColorShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4180D08A1A091B650037238F /* BillboardColorShader.cpp */; };
 		4180D0991A091B650037238F /* BillboardTextureShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4180D08C1A091B650037238F /* BillboardTextureShape.cpp */; };
 		4180D09A1A091B650037238F /* PatchGlyph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4180D08E1A091B650037238F /* PatchGlyph.cpp */; };
@@ -56,7 +59,6 @@
 		41D408AF1892DDDE00EAFEFA /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408A21892DDDE00EAFEFA /* Animation.cpp */; };
 		41D408B11892DDDE00EAFEFA /* ButtonGrid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408A61892DDDE00EAFEFA /* ButtonGrid.cpp */; };
 		41D408B31892DDDE00EAFEFA /* ButtonHotspot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408AA1892DDDE00EAFEFA /* ButtonHotspot.cpp */; };
-		41D408B41892DDDE00EAFEFA /* Hotspot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41D408AC1892DDDE00EAFEFA /* Hotspot.cpp */; };
 		41FE9BC619234E85002F6043 /* PracticeScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41FE9BC419234E85002F6043 /* PracticeScript.cpp */; };
 		41FE9BC819235642002F6043 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41FE9BC719235641002F6043 /* SDL2_image.framework */; };
 		63F550B662BEEAAA8D48C2A8 /* TerrainForest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F551DA89F0EC589EAF7E01 /* TerrainForest.cpp */; };
@@ -76,7 +78,6 @@
 		63F5575DCDE438070E9DF48C /* BattleView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F5561912400A1271CD5499 /* BattleView.cpp */; };
 		63F558135D9CAF42C5BFE545 /* TextureAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55A4E12802849F449690F /* TextureAtlas.cpp */; };
 		63F5582E120B722D806CDB58 /* CasualtyMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55DFD84BC5463290D7393 /* CasualtyMarker.cpp */; };
-		63F55886DA1CF72461C234F2 /* Gesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55E9460C9DAACCDCCA217 /* Gesture.cpp */; };
 		63F558A3314F7A4251DF486E /* sampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55CE5272DE6F5E75AD10C /* sampler.cpp */; };
 		63F558B39EB29DFB791E2951 /* Surface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55D85DD218A9816498CE7 /* Surface.cpp */; };
 		63F55932A50F5611BA25ED6F /* SamuraiModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F556B39CE20E4EF1B28141 /* SamuraiModule.cpp */; };
@@ -96,7 +97,6 @@
 		63F55ECBBDB6C8631D7D8524 /* BillboardTerrainForest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F553CAD4D4F581C8F04465 /* BillboardTerrainForest.cpp */; };
 		63F55F282E4AB4A3DC32F341 /* resource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55EA10AE026287D60893A /* resource.cpp */; };
 		63F55FBC597899D12FDCC5E9 /* TerrainGesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55662FF64D23F4AE9F8F2 /* TerrainGesture.cpp */; };
-		63F55FC60E3AC160AB4A7CF2 /* Touch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55354D8CD65C3BB96B765 /* Touch.cpp */; };
 		63F55FF10D806725443AEE28 /* SoundPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55EDB26A6E2039B956B1B /* SoundPlayer.cpp */; };
 /* End PBXBuildFile section */
 
@@ -143,6 +143,12 @@
 		413B7024175DFEB900AABF10 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		413B7026175DFEC800AABF10 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		4156F29519A5FEC300A9990D /* SDL2_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_mixer.framework; path = ../../../../Library/Frameworks/SDL2_mixer.framework; sourceTree = "<group>"; };
+		417DCA811A0CF48400509299 /* Gesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gesture.cpp; sourceTree = "<group>"; };
+		417DCA821A0CF48400509299 /* Gesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gesture.h; sourceTree = "<group>"; };
+		417DCA831A0CF48400509299 /* Hotspot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hotspot.cpp; sourceTree = "<group>"; };
+		417DCA841A0CF48400509299 /* Hotspot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hotspot.h; sourceTree = "<group>"; };
+		417DCA851A0CF48400509299 /* Touch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Touch.cpp; sourceTree = "<group>"; };
+		417DCA861A0CF48400509299 /* Touch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Touch.h; sourceTree = "<group>"; };
 		4180D08A1A091B650037238F /* BillboardColorShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BillboardColorShader.cpp; sourceTree = "<group>"; };
 		4180D08B1A091B650037238F /* BillboardColorShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BillboardColorShader.h; sourceTree = "<group>"; };
 		4180D08C1A091B650037238F /* BillboardTextureShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BillboardTextureShape.cpp; sourceTree = "<group>"; };
@@ -195,8 +201,6 @@
 		41D408A71892DDDE00EAFEFA /* ButtonGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonGrid.h; sourceTree = "<group>"; };
 		41D408AA1892DDDE00EAFEFA /* ButtonHotspot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ButtonHotspot.cpp; sourceTree = "<group>"; };
 		41D408AB1892DDDE00EAFEFA /* ButtonHotspot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonHotspot.h; sourceTree = "<group>"; };
-		41D408AC1892DDDE00EAFEFA /* Hotspot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hotspot.cpp; sourceTree = "<group>"; };
-		41D408AD1892DDDE00EAFEFA /* Hotspot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hotspot.h; sourceTree = "<group>"; };
 		41D408AE1892DDDE00EAFEFA /* Property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Property.h; sourceTree = "<group>"; };
 		41FE9BC419234E85002F6043 /* PracticeScript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PracticeScript.cpp; sourceTree = "<group>"; };
 		41FE9BC519234E85002F6043 /* PracticeScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PracticeScript.h; sourceTree = "<group>"; };
@@ -206,17 +210,14 @@
 		63F550783E4B40F4117A4A1D /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = main.cpp; sourceTree = "<group>"; };
 		63F5509439B53C00F30EFF32 /* OpenWarSurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenWarSurface.h; sourceTree = "<group>"; };
 		63F5512700D8F875408129B0 /* BattleCommander.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleCommander.h; sourceTree = "<group>"; };
-		63F55193EB82580AA48251BC /* Touch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Touch.h; sourceTree = "<group>"; };
 		63F551DA5FF720685BD4D72F /* BillboardTerrainForest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BillboardTerrainForest.h; sourceTree = "<group>"; };
 		63F551DA89F0EC589EAF7E01 /* TerrainForest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TerrainForest.cpp; sourceTree = "<group>"; };
 		63F552CCF852821EC8BD4752 /* EditorModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorModel.h; sourceTree = "<group>"; };
 		63F552E43A0079DB88A52C9E /* RangeMarker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RangeMarker.cpp; sourceTree = "<group>"; };
 		63F552E8E7EB3B493C22ED59 /* affine2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = affine2.h; sourceTree = "<group>"; };
 		63F55345F1B1F306ABE3CD3B /* TextureResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureResource.h; sourceTree = "<group>"; };
-		63F55354D8CD65C3BB96B765 /* Touch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Touch.cpp; sourceTree = "<group>"; };
 		63F5536A34BFD90B10F1240C /* TerrainGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainGesture.h; sourceTree = "<group>"; };
 		63F553933FC184F5D860432E /* Container.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Container.cpp; sourceTree = "<group>"; };
-		63F553A5C950C36CB298DCA0 /* Gesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gesture.h; sourceTree = "<group>"; };
 		63F553CAD4D4F581C8F04465 /* BillboardTerrainForest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BillboardTerrainForest.cpp; sourceTree = "<group>"; };
 		63F554EDD3E3CD7369473A6E /* TerrainHotspot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TerrainHotspot.cpp; sourceTree = "<group>"; };
 		63F5554DB57C199D82F2C968 /* TerrainSky.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TerrainSky.cpp; sourceTree = "<group>"; };
@@ -268,7 +269,6 @@
 		63F55E1A41E735430E302DAD /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
 		63F55E44BC84FFD7546A9DC8 /* Content.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Content.h; sourceTree = "<group>"; };
 		63F55E5ACB461AF50E8B57D9 /* RangeMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RangeMarker.h; sourceTree = "<group>"; };
-		63F55E9460C9DAACCDCCA217 /* Gesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gesture.cpp; sourceTree = "<group>"; };
 		63F55EA10AE026287D60893A /* resource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = resource.cpp; sourceTree = "<group>"; };
 		63F55EA7CE6A2900CE71DD1D /* EditorGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorGesture.h; sourceTree = "<group>"; };
 		63F55ECD0E316AB8F5468718 /* TerrainHotspot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainHotspot.h; sourceTree = "<group>"; };
@@ -381,6 +381,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		417DCA801A0CF48400509299 /* Gestures */ = {
+			isa = PBXGroup;
+			children = (
+				417DCA811A0CF48400509299 /* Gesture.cpp */,
+				417DCA821A0CF48400509299 /* Gesture.h */,
+				417DCA831A0CF48400509299 /* Hotspot.cpp */,
+				417DCA841A0CF48400509299 /* Hotspot.h */,
+				417DCA851A0CF48400509299 /* Touch.cpp */,
+				417DCA861A0CF48400509299 /* Touch.h */,
+			);
+			path = Gestures;
+			sourceTree = "<group>";
+		};
 		41B2298817EC72C400DFA0B6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -411,19 +424,13 @@
 				41D408A71892DDDE00EAFEFA /* ButtonGrid.h */,
 				41D408AA1892DDDE00EAFEFA /* ButtonHotspot.cpp */,
 				41D408AB1892DDDE00EAFEFA /* ButtonHotspot.h */,
-				41D408AC1892DDDE00EAFEFA /* Hotspot.cpp */,
-				41D408AD1892DDDE00EAFEFA /* Hotspot.h */,
 				41D408AE1892DDDE00EAFEFA /* Property.h */,
 				41D408451891029E00EAFEFA /* ButtonGesture.cpp */,
 				41D408461891029E00EAFEFA /* ButtonGesture.h */,
 				41D408471891029E00EAFEFA /* ButtonRendering.cpp */,
 				41D408481891029E00EAFEFA /* ButtonRendering.h */,
-				63F55E9460C9DAACCDCCA217 /* Gesture.cpp */,
-				63F553A5C950C36CB298DCA0 /* Gesture.h */,
 				63F55D85DD218A9816498CE7 /* Surface.cpp */,
 				63F55F31EB1255C4B6B0337F /* Surface.h */,
-				63F55354D8CD65C3BB96B765 /* Touch.cpp */,
-				63F55193EB82580AA48251BC /* Touch.h */,
 				63F55E03B1193B22920A311E /* Window.cpp */,
 				63F55E1A41E735430E302DAD /* Window.h */,
 				63F55A6866AACB1CF79A93D2 /* Content.cpp */,
@@ -512,6 +519,7 @@
 				63F5503F7A0639ADB22855EF /* Algebra */,
 				63F55E5F5D5E4F81EED26BDC /* Algorithms */,
 				63F555A069B7FC38DF394761 /* Audio */,
+				417DCA801A0CF48400509299 /* Gestures */,
 				63F5596EDE0967E5B2E70EF4 /* Graphics */,
 				63F55FE9E6B9B333F8F123C7 /* Shapes */,
 				63F5509FBDF9B166B4498329 /* Surface */,
@@ -706,6 +714,7 @@
 				4180D0A11A091B710037238F /* TextureFont.cpp in Sources */,
 				63F55BD434ACA029C8FCEA04 /* bspline.cpp in Sources */,
 				63F554D6FFA9FCA63FD7AB05 /* SoundLoader.cpp in Sources */,
+				417DCA871A0CF48400509299 /* Gesture.cpp in Sources */,
 				41C719B019FFE3C2004F5466 /* RenderBuffer.cpp in Sources */,
 				63F55FF10D806725443AEE28 /* SoundPlayer.cpp in Sources */,
 				4105FB281806D3890074C855 /* GroundMap.cpp in Sources */,
@@ -722,10 +731,8 @@
 				4105FB451806D3FA0074C855 /* bspline_patch.cpp in Sources */,
 				4180D09B1A091B650037238F /* PathRenderer.cpp in Sources */,
 				4180D09A1A091B650037238F /* PatchGlyph.cpp in Sources */,
-				63F55886DA1CF72461C234F2 /* Gesture.cpp in Sources */,
 				63F558B39EB29DFB791E2951 /* Surface.cpp in Sources */,
 				41D4084C1891029E00EAFEFA /* ButtonRendering.cpp in Sources */,
-				63F55FC60E3AC160AB4A7CF2 /* Touch.cpp in Sources */,
 				63F5548D06981F2EA28B4C70 /* Window.cpp in Sources */,
 				41C719AE19FFE3C2004F5466 /* GraphicsContext.cpp in Sources */,
 				63F55F282E4AB4A3DC32F341 /* resource.cpp in Sources */,
@@ -738,7 +745,6 @@
 				63F5582E120B722D806CDB58 /* CasualtyMarker.cpp in Sources */,
 				41C719B119FFE3C2004F5466 /* RenderCall.cpp in Sources */,
 				63F55433D66E0956B386D227 /* UnitMovementMarker.cpp in Sources */,
-				41D408B41892DDDE00EAFEFA /* Hotspot.cpp in Sources */,
 				63F5596C0986FE7D81143BE1 /* RangeMarker.cpp in Sources */,
 				63F5563E7284F60A11F8D90F /* UnitTrackingMarker.cpp in Sources */,
 				63F559482A86E47274136F37 /* UnitMarker.cpp in Sources */,
@@ -758,6 +764,7 @@
 				4180D0981A091B650037238F /* BillboardColorShader.cpp in Sources */,
 				63F55DC9F91104DB98854A0F /* EditorModel.cpp in Sources */,
 				63F55E04CBD1D5B38067D31A /* EditorGesture.cpp in Sources */,
+				417DCA881A0CF48400509299 /* Hotspot.cpp in Sources */,
 				4105FB3E1806D3A50074C855 /* SmoothTerrainSky.cpp in Sources */,
 				63F55D81972105FD90CA832F /* OpenWarSurface.cpp in Sources */,
 				63F55BC7E8C99A6C96EE1A21 /* main.cpp in Sources */,
@@ -772,6 +779,7 @@
 				63F558135D9CAF42C5BFE545 /* TextureAtlas.cpp in Sources */,
 				63F55403408707DC6E1BEF5E /* TextureResource.cpp in Sources */,
 				63F55C0BC0B938B21CEB2D70 /* BattleHotspot.cpp in Sources */,
+				417DCA891A0CF48400509299 /* Touch.cpp in Sources */,
 				63F553445E70F2F5641FE284 /* EditorHotspot.cpp in Sources */,
 				63F555DD68EC4972892F6EF9 /* TerrainHotspot.cpp in Sources */,
 			);
