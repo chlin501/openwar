@@ -35,6 +35,7 @@ public:
 
 	Touch* GetCapturedTouch() const;
 	const std::vector<Touch*>& GetCapturedTouches() const;
+	const std::vector<Touch*>& GetSubscribedTouches() const;
 };
 
 

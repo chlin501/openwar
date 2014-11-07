@@ -81,7 +81,7 @@ bool Hotspot::TryCaptureTouch(Touch* touch)
 
 	std::vector<std::shared_ptr<Hotspot>> hotspots(touch->_subscribedHotspots);
 	for (std::shared_ptr<Hotspot> hotspot : hotspots)
-		hotspot->GetGesture()->TouchCaptured(touch);
+		hotspot->GetGesture()->TouchWasCaptured(touch);
 
 	return true;
 }
@@ -92,15 +92,15 @@ void Hotspot::ReleaseTouch(Touch* touch)
 	if (!HasCapturedTouch(touch))
 		return;
 
+	std::vector<std::shared_ptr<Hotspot>> hotspots(touch->_subscribedHotspots);
+	for (std::shared_ptr<Hotspot> hotspot : hotspots)
+		hotspot->GetGesture()->TouchWillBeReleased(touch);
+
 	_capturedTouches.erase(
 		std::remove(_capturedTouches.begin(), _capturedTouches.end(), touch),
 		_capturedTouches.end());
 
 	touch->_capturedByHotspot = nullptr;
-
-	std::vector<std::shared_ptr<Hotspot>> hotspots(touch->_subscribedHotspots);
-	for (std::shared_ptr<Hotspot> hotspot : hotspots)
-		hotspot->GetGesture()->TouchReleased(touch);
 }
 
 
@@ -131,4 +131,10 @@ Touch* Hotspot::GetCapturedTouch() const
 const std::vector<Touch*>& Hotspot::GetCapturedTouches() const
 {
 	return _capturedTouches;
+}
+
+
+const std::vector<Touch*>& Hotspot::GetSubscribedTouches() const
+{
+	return _subscribedTouches;
 }

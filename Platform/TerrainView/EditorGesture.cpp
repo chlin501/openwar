@@ -22,12 +22,12 @@ void EditorGesture::Update(double secondsSinceLastUpdate)
 }
 
 
-void EditorGesture::TouchCaptured(Touch* touch)
+void EditorGesture::TouchWasCaptured(Touch* touch)
 {
 }
 
 
-void EditorGesture::TouchReleased(Touch* touch)
+void EditorGesture::TouchWillBeReleased(Touch* touch)
 {
 }
 

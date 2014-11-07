@@ -46,7 +46,6 @@ class Touch
 	sampler _sampler;
 	MouseButtons _currentButtons;
 	MouseButtons _previousButtons;
-	bool _hasBegun;
 
 public:
 	Touch(int tapCount, glm::vec2 position, double timestamp, MouseButtons buttons);
@@ -76,7 +75,6 @@ public:
 
 	Motion GetMotion() const;
 
-	bool HasBegun() const;
 	bool HasMoved() const;
 	void ResetHasMoved();
 

@@ -18,8 +18,7 @@ Touch::Touch(int tapCount, glm::vec2 position, double timestamp, MouseButtons bu
 	_timestart(timestamp),
 	_timestamp(timestamp),
 	_currentButtons(buttons),
-	_previousButtons(),
-	_hasBegun(false)
+	_previousButtons()
 {
 	_sampler.add(timestamp, position);
 }
@@ -82,8 +81,6 @@ void Touch::Update(glm::vec2 position, glm::vec2 previous, double timestamp)
 
 	_sampler.add(timestamp, position);
 
-	_hasBegun = true;
-
 	if (GetMotion() == Motion::Moving)
 		_hasMoved = true;
 }
@@ -100,8 +97,6 @@ void Touch::Update(glm::vec2 position, double timestamp, MouseButtons buttons)
 
 	_sampler.add(timestamp, position);
 
-	_hasBegun = true;
-
 	if (GetMotion() == Motion::Moving)
 		_hasMoved = true;
 }
@@ -114,7 +109,6 @@ void Touch::Update(double timestamp)
 		_previous = _position;
 		_timestamp = timestamp;
 	}
-	_hasBegun = true;
 }
 
 
@@ -177,12 +171,6 @@ Motion Touch::GetMotion() const
 		return Motion::Stationary;
 
 	return Motion::Unknown;
-}
-
-
-bool Touch::HasBegun() const
-{
-	return _hasBegun;
 }
 
 

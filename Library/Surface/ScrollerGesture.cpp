@@ -21,34 +21,32 @@ void ScrollerGesture::Update(double secondsSinceLastUpdate)
 }
 
 
-void ScrollerGesture::TouchCaptured(Touch* touch)
+void ScrollerGesture::TouchWasCaptured(Touch* touch)
 {
 }
 
 
-void ScrollerGesture::TouchReleased(Touch* touch)
+void ScrollerGesture::TouchWillBeReleased(Touch* touch)
 {
 }
 
 
 void ScrollerGesture::TouchBegan(Touch* touch)
 {
-	if (_hotspot->HasCapturedTouch())
-		return;
-
-	bounds2f viewportBounds = _hotspot->GetContent()->GetViewportBounds();
-	if (viewportBounds.contains(touch->GetOriginal()))
-	{
-		if (_hotspot->TryCaptureTouch(touch))
-		{
-			_originalContentOffset = _hotspot->GetContent()->GetContentOffset();
-		}
-	}
 }
 
 
 void ScrollerGesture::TouchMoved()
 {
+	if (!_hotspot->HasCapturedTouch())
+	{
+		for (Touch* touch : _hotspot->GetSubscribedTouches())
+			if (touch->HasMoved() && _hotspot->TryCaptureTouch(touch))
+			{
+				_originalContentOffset = _hotspot->GetContent()->GetContentOffset();
+			}
+	}
+
 	if (_hotspot->HasCapturedTouch())
 	{
 		glm::vec2 original = _hotspot->GetContent()->ViewportToContent(_hotspot->GetCapturedTouch()->GetOriginal());

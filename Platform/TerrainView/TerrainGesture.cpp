@@ -154,12 +154,12 @@ void TerrainGesture::Magnify(glm::vec2 position, float magnification)
 }
 
 
-void TerrainGesture::TouchCaptured(Touch* touch)
+void TerrainGesture::TouchWasCaptured(Touch* touch)
 {
 }
 
 
-void TerrainGesture::TouchReleased(Touch* touch)
+void TerrainGesture::TouchWillBeReleased(Touch* touch)
 {
 }
 

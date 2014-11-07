@@ -46,8 +46,8 @@ public:
 	virtual void ScrollWheel(glm::vec2 position, glm::vec2 delta);
 	virtual void Magnify(glm::vec2 position, float magnification);
 
-	virtual void TouchCaptured(Touch* touch);
-	virtual void TouchReleased(Touch* touch);
+	virtual void TouchWasCaptured(Touch* touch);
+	virtual void TouchWillBeReleased(Touch* touch);
 
 	virtual void TouchBegan(Touch* touch);
 	virtual void TouchMoved();

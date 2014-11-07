@@ -39,13 +39,17 @@ void ButtonGesture::KeyDown(char key)
 }
 
 
-void ButtonGesture::TouchCaptured(Touch* touch)
+void ButtonGesture::TouchWasCaptured(Touch* touch)
 {
 }
 
 
-void ButtonGesture::TouchReleased(Touch* touch)
+void ButtonGesture::TouchWillBeReleased(Touch* touch)
 {
+	if (_hotspot->HasCapturedTouch(touch))
+	{
+		_hotspot->SetHighlight(false);
+	}
 }
 
 
@@ -86,7 +90,6 @@ void ButtonGesture::TouchEnded(Touch* touch)
 		if (inside && !_hotspot->IsImmediateClick() && _hotspot->GetClickAction())
 			_hotspot->GetClickAction()();
 
-		_hotspot->SetHighlight(false);
 		_hotspot->ReleaseTouch(touch);
 	}
 }

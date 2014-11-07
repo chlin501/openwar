@@ -27,8 +27,8 @@ public:
 
 	virtual void KeyDown(char key);
 
-	virtual void TouchCaptured(Touch* touch);
-	virtual void TouchReleased(Touch* touch);
+	virtual void TouchWasCaptured(Touch* touch);
+	virtual void TouchWillBeReleased(Touch* touch);
 
 	virtual void TouchBegan(Touch* touch);
 	virtual void TouchMoved();

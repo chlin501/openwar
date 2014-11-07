@@ -139,12 +139,12 @@ void BattleGesture::Update(double secondsSinceLastUpdate)
 }*/
 
 
-void BattleGesture::TouchCaptured(Touch* touch)
+void BattleGesture::TouchWasCaptured(Touch* touch)
 {
 }
 
 
-void BattleGesture::TouchReleased(Touch* touch)
+void BattleGesture::TouchWillBeReleased(Touch* touch)
 {
 }
 

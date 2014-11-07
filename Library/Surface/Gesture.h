@@ -30,8 +30,8 @@ public:
 	virtual void Magnify(glm::vec2 position, float magnification);
 	virtual void Magnify(glm::vec2 position);
 
-	virtual void TouchCaptured(Touch* touch) = 0;
-	virtual void TouchReleased(Touch* touch) = 0;
+	virtual void TouchWasCaptured(Touch* touch) = 0;
+	virtual void TouchWillBeReleased(Touch* touch) = 0;
 
 	virtual void TouchBegan(Touch* touch) = 0;
 	virtual void TouchMoved() = 0;
