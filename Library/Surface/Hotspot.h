@@ -5,15 +5,23 @@
 #ifndef Hotspot_H
 #define Hotspot_H
 
+#include <vector>
+
 class Gesture;
+class Touch;
 
 
 class HotspotBase
 {
 public:
+	std::vector<Touch*> _touches;
+
 	HotspotBase();
 	virtual ~HotspotBase();
 	virtual Gesture* GetGesture() const = 0;
+
+	void CaptureTouch(Touch* touch);
+	void ReleaseTouch(Touch* touch);
 };
 
 

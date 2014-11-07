@@ -44,7 +44,7 @@ void ButtonGesture::TouchBegan(Touch* touch)
 {
 	if (_hotspot != nullptr)
 	{
-		CaptureTouch(touch);
+		_hotspot->CaptureTouch(touch);
 
 		_hotspot->SetHighlight(true);
 
@@ -65,7 +65,7 @@ void ButtonGesture::TouchMoved()
 {
 	if (_hotspot != nullptr)
 	{
-		Touch* touch = _touches.front();
+		Touch* touch = _hotspot->_touches.front();
 		bool inside = _hotspot->IsInside(touch->GetPosition());
 		_hotspot->SetHighlight(inside);
 	}
@@ -83,6 +83,6 @@ void ButtonGesture::TouchEnded(Touch* touch)
 			_hotspot->GetClickAction()();
 
 		_hotspot->SetHighlight(false);
-		ReleaseTouch(touch);
+		_hotspot->ReleaseTouch(touch);
 	}
 }

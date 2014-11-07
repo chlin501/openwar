@@ -27,16 +27,17 @@
 bool BattleGesture::disableUnitTracking = false;
 
 
-BattleGesture::BattleGesture(BattleHotspot* battleHotspot) : Gesture(battleHotspot),
-_battleView(battleHotspot->GetBattleView()),
-_tappedUnitCenter(false),
-_tappedDestination(false),
-_tappedModiferArea(false),
-_trackingMarker(0),
-_trackingTouch(0),
-_modifierTouch(0),
-_offsetToMarker(0),
-_allowTargetEnemyUnit(false)
+BattleGesture::BattleGesture(BattleHotspot* hotspot) : Gesture(hotspot),
+	_hotspot(hotspot),
+	_battleView(hotspot->GetBattleView()),
+	_tappedUnitCenter(false),
+	_tappedDestination(false),
+	_tappedModiferArea(false),
+	_trackingMarker(0),
+	_trackingTouch(0),
+	_modifierTouch(0),
+	_offsetToMarker(0),
+	_allowTargetEnemyUnit(false)
 {
 }
 
@@ -206,17 +207,17 @@ void BattleGesture::TouchBegan(Touch* touch)
 
 			_trackingMarker->SetRunning(touch->GetTapCount() > 1 || (!_tappedUnitCenter && command.running));
 
-			CaptureTouch(touch);
+			_hotspot->CaptureTouch(touch);
 			_trackingTouch = touch;
 		}
 		else if (_modifierTouch == nullptr)
 		{
-			CaptureTouch(touch);
+			_hotspot->CaptureTouch(touch);
 			_modifierTouch = touch;
 		}
 		else
 		{
-			CaptureTouch(touch);
+			_hotspot->CaptureTouch(touch);
 			_trackingTouch = touch;
 		}
 	}
@@ -238,7 +239,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 			}
 		}
 
-		CaptureTouch(touch);
+		_hotspot->CaptureTouch(touch);
 		_modifierTouch = touch;
 	}
 }

@@ -29,9 +29,10 @@ Touch::~Touch()
 {
 	for (Gesture* gesture : _gestures)
 	{
-		gesture->_touches.erase(
-			std::remove(gesture->_touches.begin(), gesture->_touches.end(), this),
-			gesture->_touches.end());
+		HotspotBase* hotspot = gesture->GetHotspot();
+		hotspot->_touches.erase(
+			std::remove(hotspot->_touches.begin(), hotspot->_touches.end(), this),
+			hotspot->_touches.end());
 	}
 }
 

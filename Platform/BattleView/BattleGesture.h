@@ -19,6 +19,7 @@ class UnitCounter;
 
 class BattleGesture : public Gesture
 {
+	BattleHotspot* _hotspot;
 	BattleView* _battleView;
 
 	bool _tappedUnitCenter;
@@ -36,7 +37,7 @@ class BattleGesture : public Gesture
 public:
 	static bool disableUnitTracking;
 
-	BattleGesture(BattleHotspot* battleHotspot);
+	BattleGesture(BattleHotspot* hotspot);
 	virtual ~BattleGesture();
 
 	BattleView* GetBattleView() const { return _battleView; }

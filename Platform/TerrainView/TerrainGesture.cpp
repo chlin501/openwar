@@ -11,19 +11,20 @@
 #include "TerrainHotspot.h"
 
 
-TerrainGesture::TerrainGesture(TerrainHotspot* terrainHotspot) : Gesture(terrainHotspot),
-_terrainView(terrainHotspot->GetTerrainView()),
-_previousCameraDirection(0),
-_orbitAccumulator(0),
-_orbitVelocity(0),
-_keyScrollLeft(false),
-_keyScrollRight(false),
-_keyScrollForward(false),
-_keyScrollBackward(false),
-_keyOrbitLeft(false),
-_keyOrbitRight(false),
-_keyOrbitMomentum(0),
-_keyScrollMomentum()
+TerrainGesture::TerrainGesture(TerrainHotspot* hotspot) : Gesture(hotspot),
+	_hotspot(hotspot),
+	_terrainView(hotspot->GetTerrainView()),
+	_previousCameraDirection(0),
+	_orbitAccumulator(0),
+	_orbitVelocity(0),
+	_keyScrollLeft(false),
+	_keyScrollRight(false),
+	_keyScrollForward(false),
+	_keyScrollBackward(false),
+	_keyOrbitLeft(false),
+	_keyOrbitRight(false),
+	_keyOrbitMomentum(0),
+	_keyScrollMomentum()
 {
 }
 
@@ -91,7 +92,7 @@ void TerrainGesture::RenderHints()
 
 void TerrainGesture::Update(double secondsSinceLastUpdate)
 {
-	if (_touches.empty())
+	if (_hotspot->_touches.empty())
 	{
 		UpdateMomentumOrbit(secondsSinceLastUpdate);
 		UpdateMomentumScroll(secondsSinceLastUpdate);
@@ -163,11 +164,11 @@ void TerrainGesture::TouchBegan(Touch* touch)
 	if (!viewportBounds.contains(touch->GetPosition()))
 		return;
 
-	CaptureTouch(touch);
+	_hotspot->CaptureTouch(touch);
 
-	_contentPosition1 = _terrainView->GetTerrainPosition3(_touches[0]->GetPosition());
-	if (_touches.size() == 2)
-		_contentPosition2 = _terrainView->GetTerrainPosition3(_touches[1]->GetPosition());
+	_contentPosition1 = _terrainView->GetTerrainPosition3(_hotspot->_touches[0]->GetPosition());
+	if (_hotspot->_touches.size() == 2)
+		_contentPosition2 = _terrainView->GetTerrainPosition3(_hotspot->_touches[1]->GetPosition());
 
 	_previousTouchPosition = touch->GetPosition();
 
@@ -214,29 +215,29 @@ static float GetOrbitFactor(Touch* touch, bounds2f bounds)
 
 void TerrainGesture::TouchMoved()
 {
-	if (_touches.size() == 1)
+	if (_hotspot->_touches.size() == 1)
 	{
-		MoveAndOrbit(_touches[0]);
+		MoveAndOrbit(_hotspot->_touches[0]);
 	}
-	else if (_touches.size() == 2)
+	else if (_hotspot->_touches.size() == 2)
 	{
-		ZoomAndOrbit(_touches[0], _touches[1]);
+		ZoomAndOrbit(_hotspot->_touches[0], _hotspot->_touches[1]);
 	}
 
-	UpdateSamples(_touches[0]->GetTimestamp());
+	UpdateSamples(_hotspot->_touches[0]->GetTimestamp());
 }
 
 
 void TerrainGesture::TouchEnded(Touch* touch)
 {
-	if (_touches.size() == 1)
+	if (_hotspot->_touches.size() == 1)
 	{
 		_scrollVelocity = GetScrollVelocity();
 		_orbitVelocity = GetOrbitVelocity();
 	}
-	else if (_touches.size() == 2)
+	else if (_hotspot->_touches.size() == 2)
 	{
-		Touch* other = touch == _touches[0] ? _touches[1] : _touches[0];
+		Touch* other = touch == _hotspot->_touches[0] ? _hotspot->_touches[1] : _hotspot->_touches[0];
 		_previousTouchPosition = other->GetPosition();
 		_contentPosition1 = _terrainView->GetTerrainPosition3(_previousTouchPosition);
 	}

@@ -14,6 +14,7 @@ class TerrainHotspot;
 
 class TerrainGesture : public Gesture
 {
+	TerrainHotspot* _hotspot;
 	TerrainView* _terrainView;
 	glm::vec3 _contentPosition1;
 	glm::vec3 _contentPosition2;
@@ -35,7 +36,7 @@ class TerrainGesture : public Gesture
 	glm::vec2 _keyScrollMomentum;
 
 public:
-	TerrainGesture(TerrainHotspot* terrainHotspot);
+	TerrainGesture(TerrainHotspot* hotspot);
 	virtual ~TerrainGesture();
 
 	TerrainView* GetTerrainView() const { return _terrainView; }

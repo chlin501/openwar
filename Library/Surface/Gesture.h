@@ -15,15 +15,16 @@ class Touch;
 
 class Gesture
 {
-	HotspotBase* _hotspot;
+	HotspotBase* _hotspotBase;
 	bool _enabled;
 
 public:
 	static std::vector<Gesture*>* _gestures;
-	std::vector<Touch*> _touches;
 
 	Gesture(HotspotBase* hotspot);
 	virtual ~Gesture();
+
+	HotspotBase* GetHotspot() const;
 
 	bool IsEnabled() const { return _enabled; }
 	void SetEnabled(bool value) { _enabled = value; }
@@ -44,8 +45,6 @@ public:
 
 	//virtual void TouchWasCancelled(Touch* touch);
 
-	void CaptureTouch(Touch* touch);
-	void ReleaseTouch(Touch* touch);
 };
 
 

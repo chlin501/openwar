@@ -6,13 +6,14 @@
 #include "Gesture.h"
 #include "Touch.h"
 #include "Surface.h"
+#include "Hotspot.h"
 
 
 std::vector<Gesture*>* Gesture::_gestures = nullptr;
 
 
 Gesture::Gesture(HotspotBase* hotspot) :
-	_hotspot(hotspot),
+	_hotspotBase(hotspot),
 	_enabled(true)
 {
 	if (_gestures == nullptr)
@@ -23,7 +24,7 @@ Gesture::Gesture(HotspotBase* hotspot) :
 
 Gesture::~Gesture()
 {
-	for (Touch* touch : _touches)
+	for (Touch* touch : _hotspotBase->_touches)
 	{
 		touch->_gestures.erase(
 			std::remove(touch->_gestures.begin(), touch->_gestures.end(), this),
@@ -33,6 +34,12 @@ Gesture::~Gesture()
 	_gestures->erase(
 		std::remove(_gestures->begin(), _gestures->end(), this),
 		_gestures->end());
+}
+
+
+HotspotBase* Gesture::GetHotspot() const
+{
+	return _hotspotBase;
 }
 
 
@@ -63,23 +70,4 @@ void Gesture::Magnify(glm::vec2 position, float magnification)
 
 void Gesture::Magnify(glm::vec2 position)
 {
-}
-
-
-void Gesture::CaptureTouch(Touch* touch)
-{
-	_touches.push_back(touch);
-	touch->_gestures.push_back(this);
-}
-
-
-void Gesture::ReleaseTouch(Touch* touch)
-{
-	_touches.erase(
-		std::remove(_touches.begin(), _touches.end(), touch),
-		_touches.end());
-
-	touch->_gestures.erase(
-		std::remove(touch->_gestures.begin(), touch->_gestures.end(), this),
-		touch->_gestures.end());
 }

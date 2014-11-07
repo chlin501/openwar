@@ -11,6 +11,7 @@
 
 
 EditorGesture::EditorGesture(EditorHotspot* hotspot) : Gesture(hotspot),
+	_hotspot(hotspot),
 	_battleView(hotspot->GetBattleView()),
 	_editorModel(hotspot->GetEditorModel())
 {
@@ -47,18 +48,18 @@ void EditorGesture::TouchBegan(Touch* touch)
 		return;
 	}
 
-	if (touch->HasGesture() || !_touches.empty())
+	if (touch->HasGesture() || !GetHotspot()->_touches.empty())
 		return;
 
 	_editorModel->ToolBegan(TerrainPosition(touch));
-	CaptureTouch(touch);
+	_hotspot->CaptureTouch(touch);
 }
 
 
 void EditorGesture::TouchMoved()
 {
-	if (!_touches.empty())
-		_editorModel->ToolMoved(TerrainPosition(_touches.front()));
+	if (!_hotspot->_touches.empty())
+		_editorModel->ToolMoved(TerrainPosition(GetHotspot()->_touches.front()));
 }
 
 

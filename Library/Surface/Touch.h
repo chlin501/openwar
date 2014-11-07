@@ -30,6 +30,7 @@ enum class Motion { Unknown, Stationary, Moving };
 class Touch
 {
 	friend class Gesture;
+	friend class HotspotBase;
 
 	std::vector<std::shared_ptr<HotspotBase>> _hotspots;
 	std::vector<Gesture*> _gestures;

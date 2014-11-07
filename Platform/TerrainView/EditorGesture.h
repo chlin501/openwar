@@ -14,6 +14,7 @@ class EditorModel;
 
 class EditorGesture : public Gesture
 {
+	EditorHotspot* _hotspot;
 	BattleView* _battleView;
 	EditorModel* _editorModel;
 
