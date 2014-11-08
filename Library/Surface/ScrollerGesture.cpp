@@ -1,7 +1,7 @@
-#include "Scroller.h"
 #include "ScrollerGesture.h"
 #include "ScrollerHotspot.h"
 #include "Touch.h"
+#include "Content.h"
 
 
 ScrollerGesture::ScrollerGesture(ScrollerHotspot* hotspot) :

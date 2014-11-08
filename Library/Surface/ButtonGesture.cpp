@@ -63,7 +63,10 @@ void ButtonGesture::TouchBegan(Touch* touch)
 		_hotspot->SetHighlight(true);
 
 		if (_hotspot->IsImmediateClick() && _hotspot->GetClickAction())
+		{
 			_hotspot->GetClickAction()();
+			_hotspot->ReleaseTouch(touch);
+		}
 	}
 }
 

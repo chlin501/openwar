@@ -18,7 +18,6 @@ class ButtonHotspot : public Hotspot
 	Content* _content;
 	std::function<void()> _action;
 	bool _highlight;
-	bool _stationary;
 	bool _immediate;
 
 public:
@@ -31,9 +30,6 @@ public:
 
 	virtual std::function<void()> GetClickAction() const;
 	virtual void SetClickAction(std::function<void()> value);
-
-	virtual bool ShouldReleaseWhenMoving() const;
-	virtual void SetReleaseWhenMoving(bool value);
 
 	virtual bool IsImmediateClick() const;
 	virtual void SetImmediateClick(bool value);

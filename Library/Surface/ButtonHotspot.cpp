@@ -12,7 +12,6 @@ ButtonHotspot::ButtonHotspot(Content* content) :
 	_content(content),
 	_action(),
 	_highlight(false),
-	_stationary(false),
 	_immediate(false)
 {
 }
@@ -59,18 +58,6 @@ void ButtonHotspot::SetClickAction(std::function<void()> value)
 bool ButtonHotspot::IsImmediateClick() const
 {
 	return _immediate;
-}
-
-
-bool ButtonHotspot::ShouldReleaseWhenMoving() const
-{
-	return _stationary;
-}
-
-
-void ButtonHotspot::SetReleaseWhenMoving(bool value)
-{
-	_stationary = value;
 }
 
 
