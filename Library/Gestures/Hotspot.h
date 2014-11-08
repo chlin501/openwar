@@ -8,6 +8,7 @@
 #include <vector>
 
 class Gesture;
+class Surface;
 class Touch;
 
 
@@ -21,6 +22,9 @@ public:
 	virtual ~Hotspot();
 
 	virtual Gesture* GetGesture() const = 0;
+
+	void SubscribeSurface(Surface* surface);
+	void UnsubscribeSurface(Surface* surface);
 
 	void SubscribeTouch(Touch* touch);
 	void UnsubscribeTouch(Touch* touch);

@@ -155,10 +155,10 @@ void BattleGesture::TouchBegan(Touch* touch)
 		return;
 
 	bounds2f viewportBounds = (bounds2f)_hotspot->GetBattleView()->GetViewportBounds();
-	if (!viewportBounds.contains(touch->GetPosition()))
+	if (!viewportBounds.contains(touch->GetCurrentPosition()))
 		return;
 
-	glm::vec2 screenPosition = touch->GetPosition();
+	glm::vec2 screenPosition = touch->GetCurrentPosition();
 	glm::vec2 terrainPosition = _hotspot->GetBattleView()->GetTerrainPosition3(screenPosition).xy();
 	Unit* unit = FindCommandableUnit(screenPosition, terrainPosition);
 
@@ -243,7 +243,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 				BattleGesture* gesture = dynamic_cast<BattleGesture*>(g);
 				if (gesture != nullptr && gesture != this && gesture->_trackingTouch != nullptr)
 				{
-					if (glm::length(_trackingTouch->GetPosition() - touch->GetPosition()) > glm::length(gesture->_trackingTouch->GetPosition() - touch->GetPosition()))
+					if (glm::length(_trackingTouch->GetCurrentPosition() - touch->GetCurrentPosition()) > glm::length(gesture->_trackingTouch->GetCurrentPosition() - touch->GetCurrentPosition()))
 						return;
 				}
 			}
@@ -274,8 +274,8 @@ void BattleGesture::TouchMoved(Touch* touch)
 		icon_size = 96;
 #endif
 
-		glm::vec2 oldPosition = _trackingTouch->GetPrevious();//_boardView->GetTerrainPosition(_trackingTouch->_previous).xy();
-		glm::vec2 newPosition = _trackingTouch->GetPosition();//_boardView->GetTerrainPosition(_trackingTouch->_position).xy();
+		glm::vec2 oldPosition = _trackingTouch->GetPreviousPosition();//_boardView->GetTerrainPosition(_trackingTouch->_previous).xy();
+		glm::vec2 newPosition = _trackingTouch->GetCurrentPosition();//_boardView->GetTerrainPosition(_trackingTouch->_position).xy();
 
 		float diff = (newPosition.y - oldPosition.y) * GetFlipSign();
 		if (diff < 0)
@@ -431,7 +431,7 @@ void BattleGesture::UpdateTrackingMarker()
 {
 	Unit* unit = _trackingMarker->GetUnit();
 
-	glm::vec2 screenTouchPosition = _trackingTouch->GetPosition();
+	glm::vec2 screenTouchPosition = _trackingTouch->GetCurrentPosition();
 	glm::vec2 screenMarkerPosition = screenTouchPosition + glm::vec2(0, 1) * (_offsetToMarker * GetFlipSign());
 	glm::vec2 touchPosition = _hotspot->GetBattleView()->GetTerrainPosition3(screenTouchPosition).xy();
 	glm::vec2 markerPosition = _hotspot->GetBattleView()->GetTerrainPosition3(screenMarkerPosition).xy();

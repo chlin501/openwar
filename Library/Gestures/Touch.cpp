@@ -112,19 +112,19 @@ void Touch::Update(double timestamp)
 }
 
 
-glm::vec2 Touch::GetPosition() const
+glm::vec2 Touch::GetCurrentPosition() const
 {
 	return _position;
 }
 
 
-glm::vec2 Touch::GetPrevious() const
+glm::vec2 Touch::GetPreviousPosition() const
 {
 	return _previous;
 }
 
 
-glm::vec2 Touch::GetOriginal() const
+glm::vec2 Touch::GetOriginalPosition() const
 {
 	return _original;
 }

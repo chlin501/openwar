@@ -66,5 +66,5 @@ void EditorGesture::TouchEnded(Touch* touch)
 
 glm::vec2 EditorGesture::TerrainPosition(Touch* touch)
 {
-	return _hotspot->GetBattleView()->GetTerrainPosition3(touch->GetPosition()).xy();
+	return _hotspot->GetBattleView()->GetTerrainPosition3(touch->GetCurrentPosition()).xy();
 }

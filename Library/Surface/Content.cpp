@@ -109,7 +109,34 @@ void Content::SetContentOffset(glm::vec2 value)
 }
 
 
-bounds2f Content::GetContentBounds() const
+static float ClampContentOffset(float value, bounds1f bounds)
+{
+	return !bounds.empty() ? bounds.clamp(value) : bounds.center();
+}
+
+
+glm::vec2 Content::ClampContentOffset(glm::vec2 value) const
+{
+	bounds2f bounds = bounds2f(0, 0, _contentSize - (glm::vec2)_viewportBounds.size());
+	return glm::vec2(
+		::ClampContentOffset(value.x, bounds.x()),
+		::ClampContentOffset(value.y, bounds.y()));
+}
+
+
+glm::vec2 Content::GetContentSize() const
+{
+	return _contentSize;
+}
+
+
+void Content::SetContentSize(glm::vec2 value)
+{
+	_contentSize = value;
+}
+
+
+bounds2f Content::GetVisibleBounds() const
 {
 	return bounds2f(0, 0, _viewportBounds.x().size(), _viewportBounds.y().size()) + _contentOffset;
 }

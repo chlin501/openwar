@@ -238,7 +238,7 @@ ButtonArea* ButtonGrid::AddButtonArea(int numberOfColumns)
 
 void ButtonGrid::UpdateLayout()
 {
-	bounds2f contentBounds = GetContentBounds();
+	bounds2f contentBounds = GetVisibleBounds();
 	glm::vec2 contentCenter = contentBounds.center();
 	float margin = 3;
 	float spacing = 20;
@@ -398,7 +398,7 @@ void ButtonGrid::Render()
 
 void ButtonGrid::FindHotspots(Touch* touch)
 {
-	glm::vec2 position = ViewportToContent(touch->GetOriginal());
+	glm::vec2 position = ViewportToContent(touch->GetOriginalPosition());
 
 	for (ButtonArea* buttonArea : _buttonAreas)
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)

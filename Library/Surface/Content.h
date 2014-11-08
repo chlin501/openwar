@@ -27,6 +27,7 @@ class Content
 
 	bounds2i _viewportBounds;
 	glm::vec2 _contentOffset;
+	glm::vec2 _contentSize;
 
 	bool _isUsingDepth;
 	bool _flip;
@@ -56,8 +57,12 @@ public:
 
 	glm::vec2 GetContentOffset() const;
 	void SetContentOffset(glm::vec2 value);
+	glm::vec2 ClampContentOffset(glm::vec2 value) const;
 
-	virtual bounds2f GetContentBounds() const;
+	glm::vec2 GetContentSize() const;
+	void SetContentSize(glm::vec2 value);
+
+	virtual bounds2f GetVisibleBounds() const;
 
 	virtual bool IsUsingDepth() const;
 	virtual void SetUsingDepth(bool value);

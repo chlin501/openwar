@@ -9,6 +9,7 @@ class ScrollerHotspot;
 class ScrollerGesture : public Gesture
 {
 	ScrollerHotspot* _hotspot;
+	Touch* _touch;
 	glm::vec2 _originalContentOffset;
 
 public:

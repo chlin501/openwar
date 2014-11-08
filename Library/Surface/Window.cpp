@@ -283,7 +283,7 @@ void Window::ProcessFingerUp(const SDL_TouchFingerEvent& event)
 		Touch* touch = i->second;
 
 		glm::vec2 position = ToPosition(event);
-		glm::vec2 previous = touch->GetPosition();
+		glm::vec2 previous = touch->GetCurrentPosition();
 		double timestamp = ToTimestamp(event.timestamp);
 		touch->Update(position, previous, timestamp);
 
@@ -306,7 +306,7 @@ void Window::ProcessFingerMotion(const SDL_TouchFingerEvent& event)
 		Touch* touch = i->second;
 
 		glm::vec2 position = ToPosition(event);
-		glm::vec2 previous = touch->GetPosition();
+		glm::vec2 previous = touch->GetCurrentPosition();
 		if (position != previous)
 		{
 			double timestamp = ToTimestamp(event.timestamp);
@@ -464,7 +464,7 @@ glm::vec2 Window::ToVector(int x, int y)
 {
 	int w, h;
 	SDL_GetWindowSize(_window, &w, &h);
-	return _surface->GetContentBounds().size() * glm::vec2(x, h - y) / glm::vec2(w, h);
+	return _surface->GetVisibleBounds().size() * glm::vec2(x, h - y) / glm::vec2(w, h);
 }
 
 
@@ -481,7 +481,7 @@ glm::vec2 Window::ToPosition(const SDL_TouchFingerEvent& event)
 	if (_surface == nullptr)
 		return glm::vec2();
 
-	return _surface->GetContentBounds().size() * glm::vec2(event.x, 1.0f - event.y);
+	return _surface->GetVisibleBounds().size() * glm::vec2(event.x, 1.0f - event.y);
 }
 
 

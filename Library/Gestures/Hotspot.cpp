@@ -5,6 +5,7 @@
 #include "Hotspot.h"
 #include "Gesture.h"
 #include "Touch.h"
+#import "Surface.h"
 
 
 Hotspot::~Hotspot()
@@ -21,6 +22,16 @@ Hotspot::~Hotspot()
 
 	while (!_subscribedTouches.empty())
 		UnsubscribeTouch(_subscribedTouches.back());
+}
+
+
+void Hotspot::SubscribeSurface(Surface* surface)
+{
+}
+
+
+void Hotspot::UnsubscribeSurface(Surface* surface)
+{
 }
 
 

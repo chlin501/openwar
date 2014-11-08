@@ -23,19 +23,22 @@ public:
 
 	virtual void Update(double secondsSinceLastUpdate) = 0;
 
-	virtual void KeyDown(char key);
-	virtual void KeyUp(char key);
+	virtual void KeyDown(char key) { }
+	virtual void KeyUp(char key) { }
 
-	virtual void ScrollWheel(glm::vec2 position, glm::vec2 delta);
-	virtual void Magnify(glm::vec2 position, float magnification);
-	virtual void Magnify(glm::vec2 position);
+	virtual void ScrollWheel(glm::vec2 position, glm::vec2 delta) { }
+	virtual void Magnify(glm::vec2 position, float magnification) { }
+	virtual void Magnify(glm::vec2 position) { }
 
-	virtual void TouchWasCaptured(Touch* touch) = 0;
-	virtual void TouchWillBeReleased(Touch* touch) = 0;
+	virtual void TouchWasCreated(Touch* touch) { }
+	virtual void TouchWillBeDestroyed(Touch* touch) { }
 
-	virtual void TouchBegan(Touch* touch) = 0;
-	virtual void TouchMoved(Touch* touch) = 0;
-	virtual void TouchEnded(Touch* touch) = 0;
+	virtual void TouchWasCaptured(Touch* touch) { }
+	virtual void TouchWillBeReleased(Touch* touch) { }
+
+	virtual void TouchBegan(Touch* touch) { }
+	virtual void TouchMoved(Touch* touch) { }
+	virtual void TouchEnded(Touch* touch) { }
 };
 
 

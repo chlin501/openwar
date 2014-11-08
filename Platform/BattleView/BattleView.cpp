@@ -503,8 +503,8 @@ void BattleView::Render()
 	glDisable(GL_DEPTH_TEST);
 	if (_smoothTerrainSky != nullptr)
 	{
-		_smoothTerrainSky->RenderBackgroundLinen(transform2D, GetContentBounds());
-		_smoothTerrainSky->Render(transform2D, GetContentBounds(), GetCameraDirection().z, GetFlip());
+		_smoothTerrainSky->RenderBackgroundLinen(transform2D, GetVisibleBounds());
+		_smoothTerrainSky->Render(transform2D, GetVisibleBounds(), GetCameraDirection().z, GetFlip());
 	}
 
 
@@ -552,7 +552,7 @@ void BattleView::Render()
 		.SetVertices(_colorBillboardVertices)
 		.SetUniform("transform", transform3D)
 		.SetUniform("upvector", GetCameraUpVector())
-		.SetUniform("viewport_height", 0.25f * GetGraphicsContext()->GetPixelDensity() * GetContentBounds().y().size())
+		.SetUniform("viewport_height", 0.25f * GetGraphicsContext()->GetPixelDensity() * GetVisibleBounds().y().size())
 		.Render();
 
 

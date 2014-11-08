@@ -63,9 +63,9 @@ public:
 	void Update(glm::vec2 position, double timestamp, MouseButtons buttons);
 	void Update(double timestamp);
 
-	glm::vec2 GetPosition() const;
-	glm::vec2 GetPrevious() const;
-	glm::vec2 GetOriginal() const;
+	glm::vec2 GetCurrentPosition() const;
+	glm::vec2 GetPreviousPosition() const;
+	glm::vec2 GetOriginalPosition() const;
 
 	double GetTimeStart() const;
 	double GetTimestamp() const;

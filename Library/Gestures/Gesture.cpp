@@ -26,28 +26,3 @@ Gesture::~Gesture()
 		std::remove(_gestures->begin(), _gestures->end(), this),
 		_gestures->end());
 }
-
-
-void Gesture::KeyDown(char key)
-{
-}
-
-
-void Gesture::KeyUp(char key)
-{
-}
-
-
-void Gesture::ScrollWheel(glm::vec2 position, glm::vec2 delta)
-{
-}
-
-
-void Gesture::Magnify(glm::vec2 position, float magnification)
-{
-}
-
-
-void Gesture::Magnify(glm::vec2 position)
-{
-}
