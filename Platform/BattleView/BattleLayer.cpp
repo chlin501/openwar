@@ -20,10 +20,11 @@
 
 
 BattleLayer::BattleLayer(GraphicsContext* gc) : Container(gc),
-_playing(false),
-_editing(false),
-_scenario(nullptr),
-_editorModel(nullptr)
+	_gc(gc),
+	_playing(false),
+	_editing(false),
+	_scenario(nullptr),
+	_editorModel(nullptr)
 {
 	SoundPlayer::Initialize();
 	SoundPlayer::singleton->Pause();
@@ -172,7 +173,7 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 {
 	BattleSimulator* simulator = _scenario->GetSimulator();
 
-	BattleView* battleView = new BattleView(GetGraphicsContext());
+	BattleView* battleView = new BattleView(_gc);
 
 	_battleViews.push_back(battleView);
 	UpdateBattleViewSize();

@@ -4,18 +4,11 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include "Content.h"
-#include "Surface.h"
-#include "CommonShaders.h"
-#include "Shapes/VertexShape.h"
-#import "WidgetShape.h"
-#import "WidgetViewport.h"
 
 
 
 Content::Content(GraphicsContext* gc) :
-	_gc(gc),
-	_viewport(new WidgetViewport(gc)),
-	_flip(false)
+	_viewport(new WidgetViewport(gc))
 {
 }
 

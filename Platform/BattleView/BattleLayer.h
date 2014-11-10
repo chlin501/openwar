@@ -23,7 +23,8 @@ class SmoothTerrainSky;
 
 class BattleLayer : public Container, public Renderable, RenderLoopObserver, EditorModelObserver
 {
-protected:
+	GraphicsContext* _gc;
+
 	bool _playing;
 	bool _editing;
 

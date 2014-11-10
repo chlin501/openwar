@@ -41,6 +41,7 @@ static affine2 billboard_texcoords(int x, int y, bool flip)
 
 
 BattleView::BattleView(GraphicsContext* gc) : TerrainView(gc),
+	_gc(gc),
 	_simulator(nullptr),
 	_commander(nullptr),
 	_lightNormal(),
@@ -267,10 +268,10 @@ void BattleView::OnSetGroundMap(GroundMap* groundMap)
 
 	if (smoothGroundMap != nullptr)
 	{
-		_smoothTerrainSurface = new SmoothTerrainRenderer(GetGraphicsContext(), smoothGroundMap);
+		_smoothTerrainSurface = new SmoothTerrainRenderer(_gc, smoothGroundMap);
 		_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
 
-		if (ShouldEnableRenderEdges(GetGraphicsContext()))
+		if (ShouldEnableRenderEdges(_gc))
 			_smoothTerrainSurface->EnableRenderEdges();
 	}
 
@@ -278,10 +279,10 @@ void BattleView::OnSetGroundMap(GroundMap* groundMap)
 	if (tiledGroundMap != nullptr)
 	{
 		tiledGroundMap->UpdateHeightMap();
-		_tiledTerrainRenderer = new TiledTerrainRenderer(GetGraphicsContext(), tiledGroundMap);
+		_tiledTerrainRenderer = new TiledTerrainRenderer(_gc, tiledGroundMap);
 	}
 
-	_smoothTerrainSky = new SmoothTerrainSky(GetGraphicsContext());
+	_smoothTerrainSky = new SmoothTerrainSky(_gc);
 
 	UpdateTerrainTrees(groundMap->GetBounds());
 }
@@ -525,7 +526,7 @@ void BattleView::Render()
 
 	glDisable(GL_CULL_FACE);
 	if (_smoothTerrainWater != nullptr)
-		_smoothTerrainWater->Render(GetGraphicsContext(), transform3D);
+		_smoothTerrainWater->Render(_gc, transform3D);
 
 
 	// Fighter Weapons
@@ -536,7 +537,7 @@ void BattleView::Render()
 		marker->AppendFighterWeapons(_plainLineVertices);
 
 	glLineWidth(1);
-	RenderCall<PlainShader_3f>(GetGraphicsContext())
+	RenderCall<PlainShader_3f>(_gc)
 		.SetVertices(_plainLineVertices)
 		.SetUniform("transform", transform3D)
 		.SetUniform("point_size", 1)
@@ -549,11 +550,11 @@ void BattleView::Render()
 	_colorBillboardVertices->Reset(GL_POINTS);
 	_casualtyMarker->RenderCasualtyColorBillboards(_colorBillboardVertices);
 
-	RenderCall<BillboardColorShader>(GetGraphicsContext())
+	RenderCall<BillboardColorShader>(_gc)
 		.SetVertices(_colorBillboardVertices)
 		.SetUniform("transform", transform3D)
 		.SetUniform("upvector", GetCameraUpVector())
-		.SetUniform("viewport_height", 0.25f * GetGraphicsContext()->GetPixelDensity() * GetViewport()->GetVisibleBounds().y().size())
+		.SetUniform("viewport_height", 0.25f * _gc->GetPixelDensity() * GetViewport()->GetVisibleBounds().y().size())
 		.Render();
 
 
@@ -565,7 +566,7 @@ void BattleView::Render()
 		marker->AppendFighterBillboards(_billboardModel);
 	for (SmokeCounter* marker : _smokeMarkers)
 		marker->AppendSmokeBillboards(_billboardModel);
-	_textureBillboardShape->Render(GetGraphicsContext(), _billboardModel, transform3D, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetViewport()->GetBounds().y().size(), GetFlip());
+	_textureBillboardShape->Render(_gc, _billboardModel, transform3D, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetViewport()->GetBounds().y().size(), GetFlip());
 
 
 	// Range Markers
@@ -578,7 +579,7 @@ void BattleView::Render()
 			_gradientTriangleStripVertices->Reset(GL_TRIANGLE_STRIP);
 			marker.Render(_gradientTriangleStripVertices);
 
-			RenderCall<GradientShader_3f>(GetGraphicsContext())
+			RenderCall<GradientShader_3f>(_gc)
 				.SetVertices(_gradientTriangleStripVertices)
 				.SetUniform("transform", transform3D)
 				.SetUniform("point_size", 1)
@@ -602,7 +603,7 @@ void BattleView::Render()
 		if (marker->GetUnit()->IsFriendlyCommander(_commander))
 			marker->AppendFacingMarker(_textureTriangleVertices, this);
 
-	RenderCall<TextureShader_3f>(GetGraphicsContext())
+	RenderCall<TextureShader_3f>(_gc)
 		.SetVertices(_textureTriangleVertices)
 		.SetUniform("transform", transform2D)
 		.SetTexture("texture", _textureUnitMarkers)
@@ -623,8 +624,8 @@ void BattleView::Render()
 		marker->RenderTrackingMarker(_textureBillboardShape1);
 
 	bounds1f sizeLimit = GetUnitIconSizeLimit();
-	_textureBillboardShape1->Draw(GetGraphicsContext(), _textureUnitMarkers, transform3D, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetViewport()->GetBounds().y().size(), sizeLimit);
-	_textureBillboardShape2->Draw(GetGraphicsContext(), _textureUnitMarkers, transform3D, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetViewport()->GetBounds().y().size(), sizeLimit);
+	_textureBillboardShape1->Draw(_gc, _textureUnitMarkers, transform3D, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetViewport()->GetBounds().y().size(), sizeLimit);
+	_textureBillboardShape2->Draw(_gc, _textureUnitMarkers, transform3D, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetViewport()->GetBounds().y().size(), sizeLimit);
 
 
 	// Tracking Markers
@@ -634,7 +635,7 @@ void BattleView::Render()
 	{
 		_textureBillboardShape1->Reset();
 		marker->RenderTrackingShadow(_textureBillboardShape1);
-		_textureBillboardShape1->Draw(GetGraphicsContext(), _textureTouchMarker, transform3D, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetViewport()->GetBounds().y().size(), bounds1f(64, 64));
+		_textureBillboardShape1->Draw(_gc, _textureTouchMarker, transform3D, GetCameraUpVector(), glm::degrees(GetCameraFacing()), GetViewport()->GetBounds().y().size(), bounds1f(64, 64));
 	}
 
 
@@ -645,7 +646,7 @@ void BattleView::Render()
 	for (UnitMovementMarker* marker : _movementMarkers)
 		marker->RenderMovementPath(_gradientTriangleVertices);
 
-	RenderCall<GradientShader_3f>(GetGraphicsContext())
+	RenderCall<GradientShader_3f>(_gc)
 		.SetVertices(_gradientTriangleVertices)
 		.SetUniform("transform", transform3D)
 		.SetUniform("point_size", 1)
@@ -661,7 +662,7 @@ void BattleView::Render()
 		marker->RenderTrackingPath(_gradientTriangleVertices);
 		marker->RenderOrientation(_gradientTriangleVertices);
 
-		RenderCall<GradientShader_3f>(GetGraphicsContext())
+		RenderCall<GradientShader_3f>(_gc)
 			.SetVertices(_gradientTriangleVertices)
 			.SetUniform("transform", transform3D)
 			.SetUniform("point_size", 1)
@@ -676,11 +677,11 @@ void BattleView::Render()
 	for (UnitTrackingMarker* marker : _trackingMarkers)
 		marker->RenderTrackingFighters(_colorBillboardVertices);
 
-	RenderCall<BillboardColorShader>(GetGraphicsContext())
+	RenderCall<BillboardColorShader>(_gc)
 		.SetVertices(_colorBillboardVertices)
 		.SetUniform("transform", transform3D)
 		.SetUniform("upvector", GetCameraUpVector())
-		.SetUniform("viewport_height", 0.25f * GetGraphicsContext()->GetPixelDensity() * GetViewport()->GetBounds().y().size())
+		.SetUniform("viewport_height", 0.25f * _gc->GetPixelDensity() * GetViewport()->GetBounds().y().size())
 		.Render();
 
 
@@ -690,11 +691,11 @@ void BattleView::Render()
 	for (UnitMovementMarker* marker : _movementMarkers)
 		marker->RenderMovementFighters(_colorBillboardVertices);
 
-	RenderCall<BillboardColorShader>(GetGraphicsContext())
+	RenderCall<BillboardColorShader>(_gc)
 		.SetVertices(_colorBillboardVertices)
 		.SetUniform("transform", transform3D)
 		.SetUniform("upvector", GetCameraUpVector())
-		.SetUniform("viewport_height", 0.25f * GetGraphicsContext()->GetPixelDensity() * GetViewport()->GetBounds().y().size())
+		.SetUniform("viewport_height", 0.25f * _gc->GetPixelDensity() * GetViewport()->GetBounds().y().size())
 		.Render();
 
 
@@ -704,7 +705,7 @@ void BattleView::Render()
 	for (ShootingCounter* shootingCounter : _shootingCounters)
 		shootingCounter->Render(_gradientLineVertices);
 
-	RenderCall<GradientShader_3f>(GetGraphicsContext())
+	RenderCall<GradientShader_3f>(_gc)
 		.SetVertices(_gradientLineVertices)
 		.SetUniform("transform", transform3D)
 		.SetUniform("point_size", 1)
@@ -717,7 +718,7 @@ void BattleView::Render()
 	RenderMouseHint(_plainLineVertices);
 
 	glLineWidth(1);
-	RenderCall<PlainShader_3f>(GetGraphicsContext())
+	RenderCall<PlainShader_3f>(_gc)
 		.SetVertices(_plainLineVertices)
 		.SetUniform("transform", transform3D)
 		.SetUniform("point_size", 1)
@@ -864,7 +865,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 	glm::mat4x4 transform = GetTerrainTransform();
 	glm::vec3 upvector = GetCameraUpVector();
 	float viewport_height = GetViewport()->GetBounds().y().size();
-	bounds1f sizeLimit = GetUnitIconSizeLimit() / GetGraphicsContext()->GetPixelDensity();
+	bounds1f sizeLimit = GetUnitIconSizeLimit() / _gc->GetPixelDensity();
 
 	glm::vec3 position2 = position + height * 0.5f * viewport_height * upvector;
 	glm::vec4 p = transform * glm::vec4(position, 1);
@@ -926,7 +927,7 @@ bounds1f BattleView::GetUnitIconSizeLimit() const
 	float x = sqrtf(1 - y * y);
 	float a = 1 - fabsf(atan2f(y, x) / (float)M_PI_2);
 
-	float pixelsPerPoint = GetGraphicsContext()->GetPixelDensity();
+	float pixelsPerPoint = _gc->GetPixelDensity();
 
 	bounds1f result(0, 0);
 	result.min = (32 - 8 * a) * pixelsPerPoint;

@@ -30,6 +30,7 @@ class Touch;
 
 class BattleView : public TerrainView, public BattleObserver, RenderLoopObserver
 {
+	GraphicsContext* _gc;
 	BattleSimulator* _simulator;
 	BattleCommander* _commander;
 

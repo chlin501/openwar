@@ -10,20 +10,13 @@
 
 class Content
 {
-	GraphicsContext* _gc;
 	WidgetViewport* _viewport;
-	bool _flip;
 
 public:
 	Content(GraphicsContext* gc);
 	virtual ~Content();
 
-	GraphicsContext* GetGraphicsContext() const { return _gc; }
-
 	WidgetViewport* GetViewport() const;
-
-	bool GetFlip() const { return _flip; }
-	void SetFlip(bool value) { _flip = value; }
 };
 
 

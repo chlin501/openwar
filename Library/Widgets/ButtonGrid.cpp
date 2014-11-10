@@ -209,8 +209,9 @@ void ButtonArea::UpdateBounds(bounds2f bounds)
 
 
 ButtonGrid::ButtonGrid(GraphicsContext* gc, ButtonRendering* buttonRendering, ButtonAlignment alignment) : Content(gc),
-_buttonRendering(buttonRendering),
-_alignment(alignment)
+	_gc(gc),
+	_buttonRendering(buttonRendering),
+	_alignment(alignment)
 {
 }
 
@@ -388,7 +389,7 @@ void ButtonGrid::Render()
 		}
 	}
 
-	RenderCall<WidgetShader> renderCall(GetGraphicsContext());
+	RenderCall<WidgetShader> renderCall(_gc);
 
 	renderCall.SetVertices(buttonShape->GetVertices());
 	renderCall.SetTexture("texture", buttonShape->GetTextureAtlas());

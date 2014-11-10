@@ -149,6 +149,7 @@ public:
 	ButtonRendering* _buttonRendering;
 
 private:
+	GraphicsContext* _gc;
 	ButtonAlignment _alignment;
 	std::vector<ButtonArea*> _buttonAreas;
 	std::vector<ButtonArea*> _obsolete;

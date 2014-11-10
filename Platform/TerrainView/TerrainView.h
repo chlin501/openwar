@@ -29,12 +29,19 @@ class TerrainView : public Content
 	std::shared_ptr<EditorHotspot> _editorHotspot;
 	std::shared_ptr<TerrainHotspot> _terrainHotspot;
 
+	bool _flip;
+
 protected:
 	HeightMap* _heightMap;
 
 public:
 	TerrainView(GraphicsContext* gc);
 	virtual ~TerrainView();
+
+
+	bool GetFlip() const { return _flip; }
+	void SetFlip(bool value) { _flip = value; }
+
 
 	void SetEditorHotspot(std::shared_ptr<EditorHotspot> hotspot);
 
