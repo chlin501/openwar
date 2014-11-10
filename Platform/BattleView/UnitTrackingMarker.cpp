@@ -10,6 +10,7 @@
 #include "BillboardColorShader.h"
 #include "BattleView.h"
 #include "UnitTrackingMarker.h"
+#include "TerrainViewport.h"
 
 
 UnitTrackingMarker::UnitTrackingMarker(BattleView* battleView, Unit* unit) : UnitMarker(battleView, unit),
@@ -89,8 +90,8 @@ void UnitTrackingMarker::AppendFacingMarker(VertexShape_3f_2f* vertices, BattleV
 	bounds2f b = battleView->GetUnitFacingMarkerBounds(_path.back(), facing);
 	glm::vec2 p = b.center();
 	float size = b.y().size();
-	float direction = facing - battleView->GetCameraFacing();
-	if (battleView->GetFlip())
+	float direction = facing - battleView->GetTerrainViewport()->GetCameraFacing();
+	if (battleView->GetTerrainViewport()->GetFlip())
 		direction += glm::pi<float>();
 
 	glm::vec2 d1 = size * vector2_from_angle(direction - glm::half_pi<float>() / 2.0f);

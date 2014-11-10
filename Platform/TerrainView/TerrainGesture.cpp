@@ -291,8 +291,8 @@ void TerrainGesture::UpdateKeyScroll(double secondsSinceLastUpdate)
 	if (_keyScrollForward) _keyScrollMomentum.x += limit;
 	if (_keyScrollBackward) _keyScrollMomentum.x -= limit;
 
-	glm::vec3 pos = _hotspot->GetTerrainView()->GetCameraPosition();
-	glm::vec3 dir = _hotspot->GetTerrainView()->GetCameraDirection();
+	glm::vec3 pos = _hotspot->GetTerrainView()->GetTerrainViewport()->GetCameraPosition();
+	glm::vec3 dir = _hotspot->GetTerrainView()->GetTerrainViewport()->GetCameraDirection();
 	glm::vec2 delta = (float)secondsSinceLastUpdate * glm::log(2.0f + glm::max(0.0f, pos.z)) * rotate(_keyScrollMomentum, angle(dir.xy()));
 	_hotspot->GetTerrainView()->MoveCamera(pos + glm::vec3(delta, 0));
 
@@ -316,7 +316,7 @@ void TerrainGesture::UpdateKeyOrbit(double secondsSinceLastUpdate)
 
 void TerrainGesture::MoveAndOrbit(Touch* touch)
 {
-	bounds2f viewportBounds = _hotspot->GetTerrainView()->GetWidgetViewport()->GetBounds();
+	bounds2f viewportBounds = _hotspot->GetTerrainView()->GetTerrainViewport()->GetBounds();
 	glm::vec2 touchPosition = touch->GetCurrentPosition();
 
 	glm::vec2 centerScreen = _hotspot->GetTerrainView()->GetWidgetViewport()->NormalizedToLocal(glm::vec2(0, 0));
@@ -364,7 +364,7 @@ void TerrainGesture::ZoomAndOrbit(Touch* touch1, Touch* touch2)
 
 void TerrainGesture::ResetSamples(double timestamp)
 {
-	_previousCameraDirection = angle(_hotspot->GetTerrainView()->GetCameraDirection().xy());
+	_previousCameraDirection = angle(_hotspot->GetTerrainView()->GetTerrainViewport()->GetCameraDirection().xy());
 	_orbitAccumulator = 0;
 
 	glm::vec2 screenPosition = _hotspot->GetTerrainView()->GetWidgetViewport()->NormalizedToLocal(glm::vec2(0, 0));
@@ -379,7 +379,7 @@ void TerrainGesture::ResetSamples(double timestamp)
 
 void TerrainGesture::UpdateSamples(double timestamp)
 {
-	float currentCameraDirection = angle(_hotspot->GetTerrainView()->GetCameraDirection().xy());
+	float currentCameraDirection = angle(_hotspot->GetTerrainView()->GetTerrainViewport()->GetCameraDirection().xy());
 	float orbitDelta = diff_radians(currentCameraDirection, _previousCameraDirection);
 
 	_previousCameraDirection = currentCameraDirection;
@@ -424,7 +424,7 @@ void TerrainGesture::AdjustToKeepInView(float adjustmentFactor, float secondsSin
 	bool is_scrolling = glm::length(_scrollVelocity) > 16;
 	bool brake_scrolling = false;
 
-	bounds2f viewportBounds = _hotspot->GetTerrainView()->GetWidgetViewport()->GetBounds();
+	bounds2f viewportBounds = _hotspot->GetTerrainView()->GetTerrainViewport()->GetBounds();
 	glm::vec2 left = _hotspot->GetTerrainView()->GetScreenLeft();
 	glm::vec2 right = _hotspot->GetTerrainView()->GetScreenRight();
 	float dx1 = left.x - viewportBounds.min.x;

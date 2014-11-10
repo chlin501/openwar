@@ -23,17 +23,11 @@ class TerrainView
 	TerrainViewport* _terrainViewport;
 	WidgetViewport* _widgetViewport;
 
-	bounds2f _terrainBounds;
-	glm::vec3 _cameraPosition;
-	float _cameraTilt;
-	float _cameraFacing;
 	bool _mouseHintVisible;
 	glm::vec2 _mouseHintPosition;
 
 	std::shared_ptr<EditorHotspot> _editorHotspot;
 	std::shared_ptr<TerrainHotspot> _terrainHotspot;
-
-	bool _flip;
 
 protected:
 	HeightMap* _heightMap;
@@ -42,43 +36,23 @@ public:
 	TerrainView(GraphicsContext* gc);
 	virtual ~TerrainView();
 
+	glm::vec2 GetScreenTop() const;
+	glm::vec2 GetScreenLeft() const;
+	glm::vec2 GetScreenBottom() const;
+	glm::vec2 GetScreenRight() const;
+
 	TerrainViewport* GetTerrainViewport() const;
 	WidgetViewport* GetWidgetViewport() const;
-
-	bool GetFlip() const { return _flip; }
-	void SetFlip(bool value) { _flip = value; }
-
 
 	void SetEditorHotspot(std::shared_ptr<EditorHotspot> hotspot);
 
 	void FindTerrainHotspots(Touch* touch);
-
-	bounds2f GetTerrainBounds() const { return _terrainBounds; }
 
 	void ShowMouseHint(glm::vec2 position);
 	void HideMouseHint();
 	void RenderMouseHint(VertexShape_3f* vertices);
 
 	void SetHeightMap(HeightMap* heightMap);
-
-	float GetContentRadius() const;
-
-	glm::vec2 GetScreenTop() const;
-	glm::vec2 GetScreenLeft() const;
-	glm::vec2 GetScreenBottom() const;
-	glm::vec2 GetScreenRight() const;
-
-	glm::vec3 GetCameraPosition() const { return _cameraPosition; }
-
-	glm::vec3 GetCameraDirection() const;
-	glm::vec3 GetCameraUpVector() const;
-
-	float GetCameraFacing() const { return _cameraFacing; }
-	void SetCameraFacing(float value) { _cameraFacing = value; }
-
-	glm::mat4x4 GetProjectionMatrix() const;
-	glm::mat4x4 GetViewMatrix() const;
-	glm::mat4x4 GetTerrainTransform() const { return GetProjectionMatrix() * GetViewMatrix(); }
 
 	ray GetCameraRay(glm::vec2 screenPosition) const;
 	glm::vec3 GetTerrainPosition2(glm::vec2 screenPosition) const;

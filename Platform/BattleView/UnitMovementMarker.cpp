@@ -11,7 +11,7 @@
 #include "BillboardTextureShape.h"
 #include "BattleView.h"
 #include "UnitMovementMarker.h"
-
+#include "TerrainViewport.h"
 
 
 UnitMovementMarker::UnitMovementMarker(BattleView* battleView, Unit* unit) : UnitMarker(battleView, unit)
@@ -67,8 +67,8 @@ void UnitMovementMarker::AppendFacingMarker(VertexShape_3f_2f* vertices, BattleV
 	bounds2f b = battleView->GetUnitFutureFacingMarkerBounds(_unit);
 	glm::vec2 p = b.center();
 	float size = b.y().size();
-	float direction = command.bearing - battleView->GetCameraFacing();
-	if (battleView->GetFlip())
+	float direction = command.bearing - battleView->GetTerrainViewport()->GetCameraFacing();
+	if (battleView->GetTerrainViewport()->GetFlip())
 		direction += glm::pi<float>();
 
 	glm::vec2 d1 = size * vector2_from_angle(direction - glm::half_pi<float>() / 2.0f);
