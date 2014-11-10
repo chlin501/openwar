@@ -23,8 +23,6 @@ public:
 	ButtonGesture(ButtonHotspot* hotspot);
 	virtual ~ButtonGesture();
 
-	virtual void Update(double secondsSinceLastUpdate);
-
 	virtual void KeyDown(char key);
 
 	virtual void TouchWasCaptured(Touch* touch);

@@ -46,13 +46,6 @@ BattleGesture::~BattleGesture()
 }
 
 
-void BattleGesture::Update(double secondsSinceLastUpdate)
-{
-
-}
-
-
-
 /*void BattleGesture::RenderHints()
 {
 	VertexShape_2f vertices;

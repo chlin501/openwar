@@ -18,8 +18,6 @@ class EditorGesture : public Gesture
 public:
 	EditorGesture(EditorHotspot* hotspot);
 
-	virtual void Update(double secondsSinceLastUpdate);
-
 	virtual void TouchWasCaptured(Touch* touch);
 	virtual void TouchWillBeReleased(Touch* touch);
 

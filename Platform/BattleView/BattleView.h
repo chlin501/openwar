@@ -12,6 +12,7 @@
 #include "TiledTerrain/TiledTerrainRenderer.h"
 #include "SmoothTerrain/SmoothTerrainRenderer.h"
 #include "CommonShaders.h"
+#include "RenderLoopObserver.h"
 
 class BattleCommander;
 class CasualtyMarker;
@@ -26,7 +27,7 @@ class SmokeCounter;
 class BattleHotspot;
 
 
-class BattleView : public TerrainView, public BattleObserver
+class BattleView : public TerrainView, public BattleObserver, RenderLoopObserver
 {
 	BattleSimulator* _simulator;
 	BattleCommander* _commander;
@@ -106,7 +107,7 @@ public:
 	void InitializeCameraPosition();
 
 	virtual void Render();
-	virtual void Update(double secondsSinceLastUpdate);
+	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 	virtual void FindHotspots(Touch* touch);
 
 	bounds2f GetBillboardBounds(glm::vec3 position, float height);

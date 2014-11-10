@@ -20,11 +20,6 @@ ButtonGesture::~ButtonGesture()
 }
 
 
-void ButtonGesture::Update(double secondsSinceLastUpdate)
-{
-}
-
-
 void ButtonGesture::KeyDown(char key)
 {
 	for (ButtonGrid* buttonView : _buttonViews)

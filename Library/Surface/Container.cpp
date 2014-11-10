@@ -59,13 +59,6 @@ Content* Container::GetFrontContent() const
 }
 
 
-void Container::Update(double secondsSinceLastUpdate)
-{
-	for (Content* content : _contents)
-		content->Update(secondsSinceLastUpdate);
-}
-
-
 /*void Container::Render()
 {
 	for (Content* content : _contents)

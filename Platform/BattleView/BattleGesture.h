@@ -39,8 +39,6 @@ public:
 	BattleGesture(BattleHotspot* hotspot);
 	virtual ~BattleGesture();
 
-	virtual void Update(double secondsSinceLastUpdate);
-
 	virtual void TouchWasCaptured(Touch* touch);
 	virtual void TouchWillBeReleased(Touch* touch);
 

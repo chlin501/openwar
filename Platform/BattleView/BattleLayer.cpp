@@ -131,7 +131,7 @@ void BattleLayer::OnTerrainFeatureChanged(EditorModel* editorModel)
 /***/
 
 
-void BattleLayer::Update(double secondsSinceLastUpdate)
+void BattleLayer::OnRenderLoop(double secondsSinceLastUpdate)
 {
 	UpdateBattleViewSize();
 
@@ -145,8 +145,6 @@ void BattleLayer::Update(double secondsSinceLastUpdate)
 		if (_playing)
 			UpdateSoundPlayer();
 	}
-
-	Container::Update(secondsSinceLastUpdate);
 
 	for (BattleView* battleView : _battleViews)
 	{

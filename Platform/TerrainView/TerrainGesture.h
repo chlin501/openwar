@@ -6,13 +6,14 @@
 #define TERRAINGESTURE_H
 
 #include "Surface/Gesture.h"
+#include "RenderLoopObserver.h"
 #include "Algorithms/sampler.h"
 
 class TerrainView;
 class TerrainHotspot;
 
 
-class TerrainGesture : public Gesture
+class TerrainGesture : public Gesture, RenderLoopObserver
 {
 	TerrainHotspot* _hotspot;
 	glm::vec3 _contentPosition1;
@@ -38,7 +39,7 @@ public:
 	TerrainGesture(TerrainHotspot* hotspot);
 	virtual ~TerrainGesture();
 
-	virtual void Update(double secondsSinceLastUpdate);
+	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
 	virtual void KeyDown(char key);
 	virtual void KeyUp(char key);

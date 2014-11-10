@@ -16,7 +16,7 @@ ScrollerGesture::~ScrollerGesture()
 }
 
 
-void ScrollerGesture::Update(double secondsSinceLastUpdate)
+void ScrollerGesture::OnRenderLoop(double secondsSinceLastUpdate)
 {
 
 }

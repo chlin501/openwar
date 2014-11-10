@@ -21,8 +21,6 @@ public:
 	Gesture();
 	virtual ~Gesture();
 
-	virtual void Update(double secondsSinceLastUpdate) = 0;
-
 	virtual void KeyDown(char key) { }
 	virtual void KeyUp(char key) { }
 

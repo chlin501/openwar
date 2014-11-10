@@ -11,7 +11,7 @@
 #include "Content.h"
 #include "ButtonRendering.h"
 #include "ButtonHotspot.h"
-
+#include "RenderLoopObserver.h"
 
 class ButtonArea;
 class ButtonGrid;
@@ -143,7 +143,7 @@ public:
 };
 
 
-class ButtonGrid : public Content
+class ButtonGrid : public Content, RenderLoopObserver
 {
 public:
 	ButtonRendering* _buttonRendering;
@@ -167,7 +167,7 @@ public:
 
 	void UpdateLayout();
 
-	virtual void Update(double secondsSinceLastUpdate);
+	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 	virtual void Render();
 	virtual void FindHotspots(Touch* touch);
 };

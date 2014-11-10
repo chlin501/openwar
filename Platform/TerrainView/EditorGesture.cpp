@@ -16,12 +16,6 @@ EditorGesture::EditorGesture(EditorHotspot* hotspot) :
 }
 
 
-void EditorGesture::Update(double secondsSinceLastUpdate)
-{
-
-}
-
-
 void EditorGesture::TouchWasCaptured(Touch* touch)
 {
 }

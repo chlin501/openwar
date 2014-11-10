@@ -2,11 +2,12 @@
 #define ScrollerGesture_H
 
 #include "Gesture.h"
+#include "RenderLoopObserver.h"
 
 class ScrollerHotspot;
 
 
-class ScrollerGesture : public Gesture
+class ScrollerGesture : public Gesture, RenderLoopObserver
 {
 	ScrollerHotspot* _hotspot;
 	Touch* _touch;
@@ -16,7 +17,7 @@ public:
 	ScrollerGesture(ScrollerHotspot* hotspot);
 	virtual ~ScrollerGesture();
 
-	virtual void Update(double secondsSinceLastUpdate);
+	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
 	virtual void TouchWasCaptured(Touch* touch);
 	virtual void TouchWillBeReleased(Touch* touch);

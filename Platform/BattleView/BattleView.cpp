@@ -749,7 +749,7 @@ template <class T> void AnimateMarkers(std::vector<T*>& markers, float seconds)
 
 
 
-void BattleView::Update(double secondsSinceLastUpdate)
+void BattleView::OnRenderLoop(double secondsSinceLastUpdate)
 {
 	_casualtyMarker->Animate((float)secondsSinceLastUpdate);
 

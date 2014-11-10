@@ -48,7 +48,6 @@ public:
 	bool GetFlip() const { return _flip; }
 	void SetFlip(bool value) { _flip = value; }
 
-	virtual void Update(double secondsSinceLastUpdate) = 0;
 	virtual void FindHotspots(Touch* touch) = 0;
 };
 

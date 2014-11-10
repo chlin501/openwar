@@ -5,6 +5,7 @@
 #include "Surface/Container.h"
 #include "TerrainView/EditorModel.h"
 #include "CommonShaders.h"
+#include "RenderLoopObserver.h"
 
 class BattleCommander;
 class BattleGesture;
@@ -20,7 +21,7 @@ class SmoothTerrainWater;
 class SmoothTerrainSky;
 
 
-class BattleLayer : public Container, public Renderable, EditorModelObserver
+class BattleLayer : public Container, public Renderable, RenderLoopObserver, EditorModelObserver
 {
 protected:
 	bool _playing;
@@ -53,8 +54,8 @@ public:
 	bool IsPlaying() const { return _playing; }
 	bool IsEditing() const { return _editing; }
 
-	// Surface
-	virtual void Update(double secondsSinceLastUpdate);
+	// RenderLoopObserver
+	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
 	virtual void Render();
 	virtual bool HasChangedSinceLastRender() const;

@@ -8,6 +8,7 @@
 #include "Surface/Surface.h"
 #include "BattleView/BattleLayer.h"
 #include "TerrainView/EditorModel.h"
+#include "RenderLoopObserver.h"
 
 class ButtonGesture;
 class ButtonItem;
@@ -16,7 +17,7 @@ class ButtonGrid;
 class EditorHotspot;
 
 
-class OpenWarSurface : public Surface
+class OpenWarSurface : public Surface, RenderLoopObserver
 {
 public:
 	ButtonRendering* _buttonRendering;
@@ -45,7 +46,7 @@ public:
 	virtual void ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);    
 
 	// Content
-	virtual void Update(double secondsSinceLastUpdate);
+	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
 protected:
 	void ClickedPlay();

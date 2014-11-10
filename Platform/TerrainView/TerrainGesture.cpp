@@ -89,7 +89,7 @@ TerrainGesture::~TerrainGesture()
 }*/
 
 
-void TerrainGesture::Update(double secondsSinceLastUpdate)
+void TerrainGesture::OnRenderLoop(double secondsSinceLastUpdate)
 {
 	if (!_hotspot->HasCapturedTouches())
 	{
