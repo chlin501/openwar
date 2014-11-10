@@ -6,11 +6,12 @@
 #define SURFACE_H
 
 #include "Container.h"
+#include "Renderable.h"
 
 class GraphicsContext;
 
 
-class Surface : public Container
+class Surface : public Container, public Renderable
 {
 public:
 	Surface(GraphicsContext* gc);

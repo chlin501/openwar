@@ -82,7 +82,6 @@ public:
 	glm::vec2 NormalizedToViewport(glm::vec2 value) const;
 
 	virtual void Update(double secondsSinceLastUpdate) = 0;
-	virtual void Render() = 0;
 	virtual void FindHotspots(Touch* touch) = 0;
 };
 

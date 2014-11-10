@@ -66,7 +66,7 @@ void Container::Update(double secondsSinceLastUpdate)
 }
 
 
-void Container::Render()
+/*void Container::Render()
 {
 	for (Content* content : _contents)
 	{
@@ -87,7 +87,7 @@ void Container::Render()
 			content->Render();
 		}
 	}
-}
+}*/
 
 
 void Container::FindHotspots(Touch* touch)

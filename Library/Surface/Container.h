@@ -29,7 +29,6 @@ public:
 	// Content
 
 	virtual void Update(double secondsSinceLastUpdate);
-	virtual void Render();
 	virtual void FindHotspots(Touch* touch);
 };
 

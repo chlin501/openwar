@@ -497,6 +497,7 @@ void BattleView::Render()
 	glm::vec2 facing = vector2_from_angle(GetCameraFacing() - 2.5f * (float)M_PI_4);
 	_lightNormal = glm::normalize(glm::vec3(facing, -1));
 
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	// Terrain Sky
 

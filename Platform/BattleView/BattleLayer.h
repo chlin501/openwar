@@ -20,7 +20,7 @@ class SmoothTerrainWater;
 class SmoothTerrainSky;
 
 
-class BattleLayer : public Container, EditorModelObserver
+class BattleLayer : public Container, public Renderable, EditorModelObserver
 {
 protected:
 	bool _playing;
@@ -55,6 +55,9 @@ public:
 
 	// Surface
 	virtual void Update(double secondsSinceLastUpdate);
+
+	virtual void Render();
+	virtual bool HasChangedSinceLastRender() const;
 
 	// EditorModelObserver
 	virtual void OnEditorModeChanged(EditorModel* editorModel);

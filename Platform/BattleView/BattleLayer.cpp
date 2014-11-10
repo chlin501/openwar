@@ -155,6 +155,22 @@ void BattleLayer::Update(double secondsSinceLastUpdate)
 }
 
 
+void BattleLayer::Render()
+{
+	for (BattleView* battleView : _battleViews)
+	{
+		battleView->UseViewport();
+		battleView->Render();
+	}
+}
+
+
+bool BattleLayer::HasChangedSinceLastRender() const
+{
+	return false;
+}
+
+
 void BattleLayer::CreateBattleView(BattleCommander* commander)
 {
 	BattleSimulator* simulator = _scenario->GetSimulator();
