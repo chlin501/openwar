@@ -15,13 +15,13 @@ class Content;
 class ButtonHotspot : public Hotspot
 {
 	ButtonGesture _gesture;
-	Content* _content;
+	std::function<void(Touch*)> _findHotspots;
 	std::function<void()> _action;
 	bool _highlight;
 	bool _immediate;
 
 public:
-	ButtonHotspot(Content* content);
+	ButtonHotspot(std::function<void(Touch*)> findHotspots);
 	virtual ~ButtonHotspot();
 
 	virtual Gesture* GetGesture() const;

@@ -759,13 +759,13 @@ void BattleView::OnRenderLoop(double secondsSinceLastUpdate)
 }
 
 
-void BattleView::FindHotspots(Touch* touch)
+void BattleView::FindBattleHotspots(Touch* touch)
 {
 	if (_battleHotspot == nullptr)
 		_battleHotspot = std::make_shared<BattleHotspot>(this);
 	_battleHotspot->SubscribeTouch(touch);
 
-	TerrainView::FindHotspots(touch);
+	FindTerrainHotspots(touch);
 }
 
 

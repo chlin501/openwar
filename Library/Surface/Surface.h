@@ -15,6 +15,9 @@ class Surface : public Container, public Renderable
 {
 public:
 	Surface(GraphicsContext* gc);
+
+	virtual void FindHotspots(Touch* touch) = 0;
+
 };
 
 

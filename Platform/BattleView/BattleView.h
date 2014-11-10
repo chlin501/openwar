@@ -108,7 +108,8 @@ public:
 
 	virtual void Render();
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
-	virtual void FindHotspots(Touch* touch);
+
+	void FindBattleHotspots(Touch* touch);
 
 	bounds2f GetBillboardBounds(glm::vec3 position, float height);
 

@@ -4,12 +4,12 @@
 
 #include "ButtonHotspot.h"
 #include "Touch.h"
-#import "Content.h"
+#include "Surface.h"
 
 
-ButtonHotspot::ButtonHotspot(Content* content) :
+ButtonHotspot::ButtonHotspot(std::function<void(Touch*)> findHotspots) :
 	_gesture(this),
-	_content(content),
+	_findHotspots(findHotspots),
 	_action(),
 	_highlight(false),
 	_immediate(false)
@@ -30,10 +30,10 @@ Gesture* ButtonHotspot::GetGesture() const
 
 bool ButtonHotspot::IsInside(glm::vec2 position) const
 {
-	if (_content != nullptr)
+	if (_findHotspots)
 	{
 		Touch touch(1, position, 0, MouseButtons());
-		_content->FindHotspots(&touch);
+		_findHotspots(&touch);
 		for (std::shared_ptr<Hotspot> hotspot : touch._subscribedHotspots)
 			if (hotspot.get() == this)
 				return true;

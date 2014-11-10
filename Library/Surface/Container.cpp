@@ -59,43 +59,6 @@ Content* Container::GetFrontContent() const
 }
 
 
-/*void Container::Render()
-{
-	for (Content* content : _contents)
-	{
-		if (content->IsVisible())
-		{
-			content->UseViewport();
-
-			if (content->IsUsingDepth())
-			{
-				glClear(GL_DEPTH_BUFFER_BIT);
-				glEnable(GL_DEPTH_TEST);
-			}
-			else
-			{
-				glDisable(GL_DEPTH_TEST);
-			}
-
-			content->Render();
-		}
-	}
-}*/
-
-
-void Container::FindHotspots(Touch* touch)
-{
-	for (auto i = _contents.rbegin(); i != _contents.rend(); ++i)
-	{
-		Content* content = *i;
-		if (content->IsVisible())
-		{
-			content->FindHotspots(touch);
-		}
-	}
-}
-
-
 void SetContentContainer(Content* content, Container* container, Content* behindContent)
 {
 	Container* existing = content->GetContainer();

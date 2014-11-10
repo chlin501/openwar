@@ -169,7 +169,8 @@ public:
 
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 	virtual void Render();
-	virtual void FindHotspots(Touch* touch);
+
+	void FindButtonHotspots(Touch* touch);
 };
 
 

@@ -25,10 +25,6 @@ public:
 
 	virtual Content* GetBackContent() const;
 	virtual Content* GetFrontContent() const;
-
-	// Content
-
-	virtual void FindHotspots(Touch* touch);
 };
 
 

@@ -48,6 +48,8 @@ public:
 	// Content
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
+	virtual void FindHotspots(Touch* touch);
+
 protected:
 	void ClickedPlay();
 	void ClickedPause();

@@ -30,7 +30,9 @@ _keyboardShortcut('\0'),
 _selected(false),
 _disabled(false)
 {
-	_hotspot = std::make_shared<ButtonHotspot>(buttonArea->GetButtonView());
+	_hotspot = std::make_shared<ButtonHotspot>([buttonArea](Touch* touch) {
+		buttonArea->GetButtonView()->FindButtonHotspots(touch);
+	});
 }
 
 
@@ -44,7 +46,9 @@ _keyboardShortcut('\0'),
 _selected(false),
 _disabled(false)
 {
-	_hotspot = std::make_shared<ButtonHotspot>(buttonArea->GetButtonView());
+	_hotspot = std::make_shared<ButtonHotspot>([buttonArea](Touch* touch) {
+		buttonArea->GetButtonView()->FindButtonHotspots(touch);
+	});
 }
 
 
@@ -396,7 +400,7 @@ void ButtonGrid::Render()
 }
 
 
-void ButtonGrid::FindHotspots(Touch* touch)
+void ButtonGrid::FindButtonHotspots(Touch* touch)
 {
 	glm::vec2 position = GetViewport()->GlobalToLocal(touch->GetOriginalPosition());
 

@@ -131,6 +131,16 @@ void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 }*/
 
 
+void OpenWarSurface::FindHotspots(Touch* touch)
+{
+	for (BattleView* battleView : _battleLayer->GetBattleViews())
+		battleView->FindBattleHotspots(touch);
+
+	_buttonsTopLeft->FindButtonHotspots(touch);
+	_buttonsTopRight->FindButtonHotspots(touch);
+}
+
+
 /*void OpenWarSurface::MouseLeave(glm::vec2 position)
 {
 	//_battleView->HideMouseHint();

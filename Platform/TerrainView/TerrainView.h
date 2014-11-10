@@ -37,7 +37,7 @@ public:
 
 	void SetEditorHotspot(std::shared_ptr<EditorHotspot> hotspot);
 
-	virtual void FindHotspots(Touch* touch);
+	void FindTerrainHotspots(Touch* touch);
 
 	bounds2f GetTerrainBounds() const { return _terrainBounds; }
 
