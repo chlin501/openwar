@@ -11,6 +11,7 @@
 #include "OpenWarSurface.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "EditorHotspot.h"
+#include "WidgetViewport.h"
 
 
 OpenWarSurface::OpenWarSurface(GraphicsContext* gc) : Surface(gc),
@@ -104,7 +105,7 @@ void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 {
 	bounds2i viewportBounds = GetViewport()->GetBounds();
 
-	_battleLayer->GetViewport()->SetBounds(viewportBounds);
+	_battleLayer->SetViewportBounds(viewportBounds);
 
 	_buttonsTopLeft->GetViewport()->SetBounds(viewportBounds);
 
@@ -119,6 +120,12 @@ void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 {
 	//_battleView->ShowMouseHint(position);
 }*/
+
+
+Viewport* OpenWarSurface::GetViewport() const
+{
+	return _buttonsTopLeft->GetViewport();
+}
 
 
 /*void OpenWarSurface::MouseHover(glm::vec2 position)

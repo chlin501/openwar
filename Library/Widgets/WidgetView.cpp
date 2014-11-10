@@ -1,10 +1,12 @@
 #include "WidgetView.h"
 #import "GraphicsContext.h"
 #import "WidgetShape.h"
+#import "WidgetViewport.h"
 
 
 WidgetView::WidgetView(GraphicsContext* gc) :
 	_gc(gc),
+	_viewport(nullptr),
 	_widgetShape(nullptr)
 {
 }
@@ -19,6 +21,15 @@ WidgetView::~WidgetView()
 {
 	return _gc;
 }*/
+
+
+WidgetViewport* WidgetView::GetViewport() const
+{
+	if (_viewport == nullptr)
+		_viewport = new WidgetViewport(_gc);
+
+	return _viewport;
+}
 
 
 WidgetShape* WidgetView::GetWidgetShape() const

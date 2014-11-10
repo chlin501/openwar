@@ -16,6 +16,7 @@ class EditorHotspot;
 class TerrainHotspot;
 class TerrainViewport;
 class Touch;
+class WidgetViewport;
 
 
 class TerrainView

@@ -31,6 +31,10 @@ extern void CHECK_ERROR_GL();
 #endif
 
 
+#ifndef GL_POINT_SPRITE
+#define GL_POINT_SPRITE 0x8861
+#endif
+
 /*
 #ifdef OPENWAR_USE_XCODE_FRAMEWORKS
 #if TARGET_OS_IPHONE

@@ -2,6 +2,7 @@
 #define TerrainViewport_H
 
 #include "Viewport.h"
+#include "WidgetViewport.h"
 
 
 class TerrainViewport : public Viewport

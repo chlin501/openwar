@@ -48,6 +48,8 @@ public:
 	// Content
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
+	virtual Viewport* GetViewport() const;
+
 	virtual void FindHotspots(Touch* touch);
 
 protected:

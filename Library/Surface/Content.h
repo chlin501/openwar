@@ -5,18 +5,14 @@
 #ifndef CONTENT_H
 #define CONTENT_H
 
-#include "WidgetViewport.h"
+class GraphicsContext;
 
 
 class Content
 {
-	WidgetViewport* _viewport;
-
 public:
 	Content(GraphicsContext* gc);
 	virtual ~Content();
-
-	WidgetViewport* GetViewport() const;
 };
 
 

@@ -7,20 +7,20 @@
 #include "ScrollerGesture.h"
 #include "bounds.h"
 
-class Content;
+class WidgetViewport;
 
 
 class ScrollerHotspot : public Hotspot
 {
 	ScrollerGesture _gesture;
-	Content* _content;
+	WidgetViewport* _viewport;
 
 public:
-	ScrollerHotspot(Content* content);
+	ScrollerHotspot(WidgetViewport* viewport);
 
 	virtual Gesture* GetGesture() const;
 
-	Content* GetContent() const;
+	WidgetViewport* GetViewport() const;
 };
 
 

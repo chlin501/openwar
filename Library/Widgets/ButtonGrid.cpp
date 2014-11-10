@@ -5,6 +5,7 @@
 #include "ButtonGrid.h"
 #include "Surface.h"
 #include "Touch.h"
+#include "WidgetViewport.h"
 
 
 const ButtonAlignment ButtonAlignment::TopLeft(ButtonAlignment::Vertical::Top, ButtonAlignment::Horizontal::Left);
@@ -208,7 +209,7 @@ void ButtonArea::UpdateBounds(bounds2f bounds)
 
 
 
-ButtonGrid::ButtonGrid(GraphicsContext* gc, ButtonRendering* buttonRendering, ButtonAlignment alignment) : Content(gc),
+ButtonGrid::ButtonGrid(GraphicsContext* gc, ButtonRendering* buttonRendering, ButtonAlignment alignment) : WidgetView(gc),
 	_gc(gc),
 	_buttonRendering(buttonRendering),
 	_alignment(alignment)

@@ -2,9 +2,9 @@
 #import "Content.h"
 
 
-ScrollerHotspot::ScrollerHotspot(Content* content) :
+ScrollerHotspot::ScrollerHotspot(WidgetViewport* viewport) :
 	_gesture(this),
-	_content(content)
+	_viewport(viewport)
 {
 }
 
@@ -15,7 +15,7 @@ Gesture* ScrollerHotspot::GetGesture() const
 }
 
 
-Content* ScrollerHotspot::GetContent() const
+WidgetViewport* ScrollerHotspot::GetViewport() const
 {
-	return _content;
+	return _viewport;
 }

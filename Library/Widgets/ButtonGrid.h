@@ -8,7 +8,7 @@
 #include <string>
 #include "Algebra/bounds.h"
 #include "Texture.h"
-#include "Content.h"
+#include "WidgetView.h"
 #include "ButtonRendering.h"
 #include "ButtonHotspot.h"
 #include "RenderLoopObserver.h"
@@ -143,7 +143,7 @@ public:
 };
 
 
-class ButtonGrid : public Content, RenderLoopObserver
+class ButtonGrid : public WidgetView, RenderLoopObserver
 {
 public:
 	ButtonRendering* _buttonRendering;

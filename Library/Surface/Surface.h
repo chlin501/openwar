@@ -9,12 +9,15 @@
 #include "Renderable.h"
 
 class Touch;
+class Viewport;
 
 
 class Surface : public Container, public Renderable
 {
 public:
 	Surface(GraphicsContext* gc);
+
+	virtual Viewport* GetViewport() const = 0;
 
 	virtual void FindHotspots(Touch* touch) = 0;
 

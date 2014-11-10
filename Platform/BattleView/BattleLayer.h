@@ -25,6 +25,8 @@ class BattleLayer : public Container, public Renderable, RenderLoopObserver, Edi
 {
 	GraphicsContext* _gc;
 
+	bounds2i _viewportBounds;
+
 	bool _playing;
 	bool _editing;
 
@@ -39,6 +41,9 @@ class BattleLayer : public Container, public Renderable, RenderLoopObserver, Edi
 public:
 	BattleLayer(GraphicsContext* gc);
 	~BattleLayer();
+
+	bounds2i GetViewportBounds() const;
+	void SetViewportBounds(const bounds2i& value);
 
 	BattleScenario* GetScenario() const { return _scenario; }
 	const std::vector<BattleView*>& GetBattleViews() const { return _battleViews; }

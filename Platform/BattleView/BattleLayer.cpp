@@ -37,6 +37,18 @@ BattleLayer::~BattleLayer()
 }
 
 
+bounds2i BattleLayer::GetViewportBounds() const
+{
+	return _viewportBounds;
+}
+
+
+void BattleLayer::SetViewportBounds(const bounds2i& value)
+{
+	_viewportBounds = value;
+}
+
+
 void BattleLayer::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
 {
 	delete _editorModel;
@@ -263,8 +275,8 @@ void BattleLayer::UpdateBattleViewSize()
 	{
 		float count = _battleViews.size();
 
-		bounds1i viewport_x = GetViewport()->GetBounds().x();
-		bounds1f viewport_y = GetViewport()->GetBounds().y();
+		bounds1i viewport_x = _viewportBounds.x();
+		bounds1f viewport_y = _viewportBounds.y();
 
 		int index = 0;
 		for (BattleView* battleView : _battleViews)

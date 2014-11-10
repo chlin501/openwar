@@ -3,11 +3,13 @@
 
 class GraphicsContext;
 class WidgetShape;
+class WidgetViewport;
 
 
 class WidgetView
 {
 	GraphicsContext* _gc;
+	mutable WidgetViewport* _viewport;
 	mutable WidgetShape* _widgetShape;
 
 public:
@@ -15,8 +17,9 @@ public:
 	~WidgetView();
 
 	//GraphicsContext* GetGraphicsContext() const;
-	WidgetShape* GetWidgetShape() const;
 
+	WidgetViewport* GetViewport() const;
+	WidgetShape* GetWidgetShape() const;
 };
 
 
