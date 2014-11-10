@@ -488,6 +488,8 @@ void BattleView::InitializeCameraPosition()
 
 void BattleView::Render()
 {
+	GetViewport()->UseViewport();
+
 	glm::mat4 transform2D = GetViewport()->GetTransform();
 	glm::mat4 transform3D = GetTerrainTransform();
 

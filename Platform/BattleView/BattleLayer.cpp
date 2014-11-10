@@ -157,7 +157,6 @@ void BattleLayer::Render()
 {
 	for (BattleView* battleView : _battleViews)
 	{
-		battleView->GetViewport()->UseViewport();
 		battleView->Render();
 	}
 }
