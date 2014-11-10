@@ -9,6 +9,7 @@
 #include <memory>
 #include "Algebra/bounds.h"
 #include "Property.h"
+#include "WidgetViewport.h"
 
 class Container;
 class GraphicsContext;
@@ -23,12 +24,8 @@ class Content
 
 	GraphicsContext* _gc;
 	Container* _container;
+	WidgetViewport* _viewport;
 	bool _visible;
-
-	bounds2i _viewportBounds;
-	glm::vec2 _contentOffset;
-	glm::vec2 _contentSize;
-
 	bool _flip;
 	bool _dismissed;
 
@@ -44,35 +41,12 @@ public:
 	virtual Container* GetContainer() const;
 	virtual void SetContainer(Container* value, Content* behindContent = nullptr);
 
+	WidgetViewport* GetViewport() const;
+
 	virtual bool IsVisible() const;
 	void SetVisible(bool value);
-
-	virtual bounds2i GetViewportBounds() const;
-	virtual void SetViewportBounds(bounds2i value);
-	virtual void UseViewport();
-
-	glm::vec2 GetContentOffset() const;
-	void SetContentOffset(glm::vec2 value);
-	glm::vec2 ClampContentOffset(glm::vec2 value) const;
-
-	glm::vec2 GetContentSize() const;
-	void SetContentSize(glm::vec2 value);
-
-	virtual bounds2f GetVisibleBounds() const;
-
-	virtual glm::mat4 GetRenderTransform() const;
-
 	bool GetFlip() const { return _flip; }
 	void SetFlip(bool value) { _flip = value; }
-
-	glm::vec2 LocalToGlobal(glm::vec2 value) const;
-	glm::vec2 GlobalToLocal(glm::vec2 value) const;
-
-	glm::vec2 LocalToNormalized(glm::vec2 value) const;
-	glm::vec2 NormalizedToLocal(glm::vec2 value) const;
-
-	glm::vec2 GlobalToNormalized(glm::vec2 value) const;
-	glm::vec2 NormalizedToGlobal(glm::vec2 value) const;
 
 	virtual void Update(double secondsSinceLastUpdate) = 0;
 	virtual void FindHotspots(Touch* touch) = 0;

@@ -34,11 +34,11 @@ void ScrollerGesture::TouchWillBeReleased(Touch* touch)
 
 void ScrollerGesture::TouchBegan(Touch* touch)
 {
-	bounds2f viewportBounds = _hotspot->GetContent()->GetViewportBounds();
+	bounds2f viewportBounds = _hotspot->GetContent()->GetViewport()->GetBounds();
 	if (viewportBounds.contains(touch->GetOriginalPosition()))
 	{
 		_touch = touch;
-		_originalContentOffset = _hotspot->GetContent()->GetContentOffset();
+		_originalContentOffset = _hotspot->GetContent()->GetViewport()->GetContentOffset();
 	}
 }
 
@@ -47,9 +47,9 @@ void ScrollerGesture::TouchMoved(Touch* touch)
 {
 	if (touch == _touch)
 	{
-		glm::vec2 original = _hotspot->GetContent()->GlobalToLocal(touch->GetOriginalPosition());
-		glm::vec2 position = _hotspot->GetContent()->GlobalToLocal(touch->GetCurrentPosition());
-		glm::vec2 offset = _hotspot->GetContent()->ClampContentOffset(_originalContentOffset + original - position);
+		glm::vec2 original = _hotspot->GetContent()->GetViewport()->GlobalToLocal(touch->GetOriginalPosition());
+		glm::vec2 position = _hotspot->GetContent()->GetViewport()->GlobalToLocal(touch->GetCurrentPosition());
+		glm::vec2 offset = _hotspot->GetContent()->GetViewport()->ClampContentOffset(_originalContentOffset + original - position);
 
 		if (!_hotspot->HasCapturedTouch(touch) && touch->HasMoved() && offset != _originalContentOffset)
 		{
@@ -57,7 +57,7 @@ void ScrollerGesture::TouchMoved(Touch* touch)
 		}
 
 		if (_hotspot->HasCapturedTouch(touch))
-			_hotspot->GetContent()->SetContentOffset(offset);
+			_hotspot->GetContent()->GetViewport()->SetContentOffset(offset);
 	}
 }
 

@@ -238,7 +238,7 @@ ButtonArea* ButtonGrid::AddButtonArea(int numberOfColumns)
 
 void ButtonGrid::UpdateLayout()
 {
-	bounds2f contentBounds = GetVisibleBounds();
+	bounds2f contentBounds = GetViewport()->GetVisibleBounds();
 	glm::vec2 contentCenter = contentBounds.center();
 	float margin = 3;
 	float spacing = 20;
@@ -388,7 +388,7 @@ void ButtonGrid::Render()
 
 	renderCall.SetVertices(buttonShape->GetVertices());
 	renderCall.SetTexture("texture", buttonShape->GetTextureAtlas());
-	renderCall.SetUniform("transform", GetRenderTransform());
+	renderCall.SetUniform("transform", GetViewport()->GetTransform());
 	renderCall.SetUniform("color", glm::vec4(1, 1, 1, 1));
 	renderCall.Render();
 
@@ -398,7 +398,7 @@ void ButtonGrid::Render()
 
 void ButtonGrid::FindHotspots(Touch* touch)
 {
-	glm::vec2 position = GlobalToLocal(touch->GetOriginalPosition());
+	glm::vec2 position = GetViewport()->GlobalToLocal(touch->GetOriginalPosition());
 
 	for (ButtonArea* buttonArea : _buttonAreas)
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)

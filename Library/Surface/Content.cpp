@@ -8,16 +8,15 @@
 #include "CommonShaders.h"
 #include "Shapes/VertexShape.h"
 #import "WidgetShape.h"
-
+#import "WidgetViewport.h"
 
 
 
 Content::Content(GraphicsContext* gc) :
 	_gc(gc),
 	_container(nullptr),
+	_viewport(new WidgetViewport(gc)),
 	_visible(true),
-	_viewportBounds(),
-	_contentOffset(),
 	_flip(false),
 	_dismissed(false)
 {
@@ -54,6 +53,12 @@ void Content::SetContainer(Container* value, Content* behindContent)
 }
 
 
+WidgetViewport* Content::GetViewport() const
+{
+	return _viewport;
+}
+
+
 bool Content::IsVisible() const
 {
 	return _visible;
@@ -63,117 +68,4 @@ bool Content::IsVisible() const
 void Content::SetVisible(bool value)
 {
 	_visible = value;
-}
-
-
-
-bounds2i Content::GetViewportBounds() const
-{
-	return _viewportBounds;
-}
-
-
-void Content::SetViewportBounds(bounds2i value)
-{
-	_viewportBounds = value;
-}
-
-
-void Content::UseViewport()
-{
-	bounds2f bounds = (bounds2f)_viewportBounds * _gc->GetPixelDensity();
-	glViewport((GLint)bounds.min.x, (GLint)bounds.min.y, (GLsizei)bounds.x().size(), (GLsizei)bounds.y().size());
-}
-
-
-glm::vec2 Content::GetContentOffset() const
-{
-	return _contentOffset;
-}
-
-
-void Content::SetContentOffset(glm::vec2 value)
-{
-	_contentOffset = value;
-}
-
-
-static float ClampContentOffset(float value, bounds1f bounds)
-{
-	return !bounds.empty() ? bounds.clamp(value) : bounds.center();
-}
-
-
-glm::vec2 Content::ClampContentOffset(glm::vec2 value) const
-{
-	bounds2f bounds = bounds2f(0, 0, _contentSize - (glm::vec2)_viewportBounds.size());
-	return glm::vec2(
-		::ClampContentOffset(value.x, bounds.x()),
-		::ClampContentOffset(value.y, bounds.y()));
-}
-
-
-glm::vec2 Content::GetContentSize() const
-{
-	return _contentSize;
-}
-
-
-void Content::SetContentSize(glm::vec2 value)
-{
-	_contentSize = value;
-}
-
-
-bounds2f Content::GetVisibleBounds() const
-{
-	return bounds2f(0, 0, _viewportBounds.x().size(), _viewportBounds.y().size()) + _contentOffset;
-}
-
-
-glm::mat4 Content::GetRenderTransform() const
-{
-	glm::mat4 result;
-
-	result = glm::translate(result, glm::vec3(-1, -1, 0));
-	result = glm::scale(result, glm::vec3(glm::vec2(2, 2) / (glm::vec2)_viewportBounds.size(), 1));
-	result = glm::translate(result, glm::vec3(-_contentOffset, 0));
-
-	return result;
-}
-
-
-glm::vec2 Content::LocalToGlobal(glm::vec2 value) const
-{
-	return NormalizedToGlobal(LocalToNormalized(value));
-}
-
-
-glm::vec2 Content::GlobalToLocal(glm::vec2 value) const
-{
-	return NormalizedToLocal(GlobalToNormalized(value));
-}
-
-
-glm::vec2 Content::LocalToNormalized(glm::vec2 value) const
-{
-	return 2.0f * (value - _contentOffset) / (glm::vec2)_viewportBounds.size() - 1.0f;
-}
-
-
-glm::vec2 Content::NormalizedToLocal(glm::vec2 value) const
-{
-	return _contentOffset + (value + 1.0f) / 2.0f * (glm::vec2)_viewportBounds.size();
-}
-
-
-glm::vec2 Content::GlobalToNormalized(glm::vec2 value) const
-{
-	return 2.0f * (value - (glm::vec2)_viewportBounds.min) / (glm::vec2)_viewportBounds.size() - 1.0f;
-}
-
-
-glm::vec2 Content::NormalizedToGlobal(glm::vec2 value) const
-{
-	return (glm::vec2)_viewportBounds.min + (value + 1.0f) / 2.0f * (glm::vec2)_viewportBounds.size();
 }
