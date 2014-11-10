@@ -8,7 +8,7 @@
 #include "Container.h"
 #include "Renderable.h"
 
-class GraphicsContext;
+class Touch;
 
 
 class Surface : public Container, public Renderable

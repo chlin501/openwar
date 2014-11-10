@@ -14,6 +14,7 @@
 class EditorModel;
 class EditorHotspot;
 class TerrainHotspot;
+class Touch;
 
 
 class TerrainView : public Content

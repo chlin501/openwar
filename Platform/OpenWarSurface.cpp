@@ -29,15 +29,11 @@ _buttonItemFords(nullptr),
 _battleLayer(nullptr)
 {
 	_battleLayer = new BattleLayer(gc);
-	_battleLayer->SetContainer(this);
 
 	_buttonRendering = new ButtonRendering(gc);
 
 	_buttonsTopLeft = new ButtonGrid(gc, _buttonRendering, ButtonAlignment::TopLeft);
 	_buttonsTopRight = new ButtonGrid(gc, _buttonRendering, ButtonAlignment::TopRight);
-
-	_buttonsTopLeft->SetContainer(this);
-	_buttonsTopRight->SetContainer(this);
 
 	ButtonArea* toolButtonArea = _buttonsTopLeft->AddButtonArea(4);
 	_buttonItemHand = toolButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolHand);

@@ -14,9 +14,7 @@
 
 Content::Content(GraphicsContext* gc) :
 	_gc(gc),
-	_container(nullptr),
 	_viewport(new WidgetViewport(gc)),
-	_visible(true),
 	_flip(false)
 {
 }
@@ -24,35 +22,11 @@ Content::Content(GraphicsContext* gc) :
 
 Content::~Content()
 {
-	SetContainer(nullptr, nullptr);
 }
 
-
-Container* Content::GetContainer() const
-{
-	return _container;
-}
-
-
-void Content::SetContainer(Container* value, Content* behindContent)
-{
-	SetContentContainer(this, value, behindContent);
-}
 
 
 WidgetViewport* Content::GetViewport() const
 {
 	return _viewport;
-}
-
-
-bool Content::IsVisible() const
-{
-	return _visible;
-}
-
-
-void Content::SetVisible(bool value)
-{
-	_visible = value;
 }

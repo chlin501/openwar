@@ -173,7 +173,6 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 	BattleSimulator* simulator = _scenario->GetSimulator();
 
 	BattleView* battleView = new BattleView(GetGraphicsContext());
-	battleView->SetContainer(this);
 
 	_battleViews.push_back(battleView);
 	UpdateBattleViewSize();

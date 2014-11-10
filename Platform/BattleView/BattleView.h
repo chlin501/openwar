@@ -25,6 +25,7 @@ class SmoothTerrainWater;
 class SmoothTerrainSky;
 class SmokeCounter;
 class BattleHotspot;
+class Touch;
 
 
 class BattleView : public TerrainView, public BattleObserver, RenderLoopObserver

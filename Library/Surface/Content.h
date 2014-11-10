@@ -5,27 +5,13 @@
 #ifndef CONTENT_H
 #define CONTENT_H
 
-#include <functional>
-#include <memory>
-#include "Algebra/bounds.h"
-#include "Property.h"
 #include "WidgetViewport.h"
-
-class Container;
-class GraphicsContext;
-class Hotspot;
-class Touch;
-class WidgetShape;
 
 
 class Content
 {
-	friend void SetContentContainer(Content*, Container*, Content*);
-
 	GraphicsContext* _gc;
-	Container* _container;
 	WidgetViewport* _viewport;
-	bool _visible;
 	bool _flip;
 
 public:
@@ -34,13 +20,8 @@ public:
 
 	GraphicsContext* GetGraphicsContext() const { return _gc; }
 
-	virtual Container* GetContainer() const;
-	virtual void SetContainer(Container* value, Content* behindContent = nullptr);
-
 	WidgetViewport* GetViewport() const;
 
-	virtual bool IsVisible() const;
-	void SetVisible(bool value);
 	bool GetFlip() const { return _flip; }
 	void SetFlip(bool value) { _flip = value; }
 };
