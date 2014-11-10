@@ -5,7 +5,7 @@
 #ifndef TERRAINGESTURE_H
 #define TERRAINGESTURE_H
 
-#include "Gestures/Gesture.h"
+#include "Surface/Gesture.h"
 #include "Algorithms/sampler.h"
 
 class TerrainView;

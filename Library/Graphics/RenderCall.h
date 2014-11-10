@@ -2,6 +2,7 @@
 #define RenderCall_H
 
 #include "GraphicsContext.h"
+#include "Renderable.h"
 
 class RenderCallBase;
 
@@ -63,7 +64,7 @@ protected:
 };
 
 
-class RenderCallBase
+class RenderCallBase : public Renderable
 {
 protected:
 	ShaderProgramBase* _shaderprogram;
@@ -88,7 +89,10 @@ public:
 		return *this;
 	}
 
-	void Render();
+	// Renderable
+
+	virtual void Render();
+	virtual bool HasChangedSinceLastRender() const;
 
 private:
 	template <class T>

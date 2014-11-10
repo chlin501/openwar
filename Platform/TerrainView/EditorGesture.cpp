@@ -4,7 +4,7 @@
 
 #include "EditorGesture.h"
 #include "BattleView/BattleView.h"
-#include "Gestures/Touch.h"
+#include "Surface/Touch.h"
 #include "EditorModel.h"
 #include "EditorHotspot.h"
 

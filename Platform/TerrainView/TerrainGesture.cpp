@@ -4,7 +4,7 @@
 
 #include "TerrainGesture.h"
 #include "TerrainView.h"
-#include "Gestures/Touch.h"
+#include "Surface/Touch.h"
 #include "ShaderProgram.h"
 #include "CommonShaders.h"
 #include "Surface.h"

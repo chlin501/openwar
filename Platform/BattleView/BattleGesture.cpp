@@ -14,7 +14,7 @@
 #include "UnitCounter.h"
 #include "UnitMovementMarker.h"
 #include "UnitTrackingMarker.h"
-#include "Surface.h"
+#include "Surface/Surface.h"
 #include "BattleHotspot.h"
 
 

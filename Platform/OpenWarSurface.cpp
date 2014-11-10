@@ -3,8 +3,8 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "BattleModel/BattleScenario.h"
-#include "Surface/ButtonGrid.h"
-#include "Surface/ButtonGesture.h"
+#include "Widgets/ButtonGrid.h"
+#include "Widgets/ButtonGesture.h"
 #include "BattleView/BattleGesture.h"
 #include "BattleView/BattleView.h"
 #include "TerrainView/EditorGesture.h"

@@ -7,8 +7,8 @@
 
 #include "BattleModel/BattleSimulator.h"
 #include "Algebra/bounds.h"
-#include "Gestures/Gesture.h"
-#include "Gestures/Touch.h"
+#include "Surface/Gesture.h"
+#include "Surface/Touch.h"
 
 class BattleHotspot;
 class BattleView;
