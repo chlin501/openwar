@@ -15,8 +15,6 @@ public:
 	Container(GraphicsContext* gc);
 	virtual ~Container();
 
-	virtual void DeleteDismissedContent();
-
 	// Container
 
 	virtual void AddContent(Content* content, Content* behindContent = nullptr);

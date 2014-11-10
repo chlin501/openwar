@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "Surface.h"
 #include "Gesture.h"
+#import "RenderLoopObserver.h"
 
 
 bool Window::_done = false;
@@ -428,15 +429,7 @@ void Window::Update()
 	double secondsSinceLastUpdate = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(timestamp - _timestamp).count();
 	_timestamp = timestamp;
 
-	if (_surface != nullptr)
-	{
-		_surface->DeleteDismissedContent();
-		_surface->Update(secondsSinceLastUpdate);
-	}
-
-	if (Gesture::_gestures != nullptr)
-		for (Gesture* gesture : *Gesture::_gestures)
-			gesture->Update(secondsSinceLastUpdate);
+	RenderLoopObserver::NotifyRenderLoop(secondsSinceLastUpdate);
 
 	if (_mouseTouch != nullptr)
 	{

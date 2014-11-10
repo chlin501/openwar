@@ -27,14 +27,10 @@ class Content
 	WidgetViewport* _viewport;
 	bool _visible;
 	bool _flip;
-	bool _dismissed;
 
 public:
 	Content(GraphicsContext* gc);
 	virtual ~Content();
-
-	virtual void Dismiss();
-	virtual bool IsDismissed() const;
 
 	GraphicsContext* GetGraphicsContext() const { return _gc; }
 

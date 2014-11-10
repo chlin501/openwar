@@ -17,8 +17,7 @@ Content::Content(GraphicsContext* gc) :
 	_container(nullptr),
 	_viewport(new WidgetViewport(gc)),
 	_visible(true),
-	_flip(false),
-	_dismissed(false)
+	_flip(false)
 {
 }
 
@@ -26,18 +25,6 @@ Content::Content(GraphicsContext* gc) :
 Content::~Content()
 {
 	SetContainer(nullptr, nullptr);
-}
-
-
-void Content::Dismiss()
-{
-	_dismissed = true;
-}
-
-
-bool Content::IsDismissed() const
-{
-	return _dismissed;
 }
 
 
