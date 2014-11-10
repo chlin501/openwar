@@ -398,7 +398,7 @@ void ButtonGrid::Render()
 
 void ButtonGrid::FindHotspots(Touch* touch)
 {
-	glm::vec2 position = ViewportToContent(touch->GetOriginalPosition());
+	glm::vec2 position = GlobalToLocal(touch->GetOriginalPosition());
 
 	for (ButtonArea* buttonArea : _buttonAreas)
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)

@@ -18,10 +18,8 @@ Content::Content(GraphicsContext* gc) :
 	_visible(true),
 	_viewportBounds(),
 	_contentOffset(),
-	_isUsingDepth(false),
 	_flip(false),
-	_dismissed(false),
-	_widgetShape(nullptr)
+	_dismissed(false)
 {
 }
 
@@ -41,15 +39,6 @@ void Content::Dismiss()
 bool Content::IsDismissed() const
 {
 	return _dismissed;
-}
-
-
-WidgetShape* Content::GetWidgetShape() const
-{
-	if (_widgetShape == nullptr)
-		_widgetShape = new WidgetShape(GetGraphicsContext()->GetWidgetTextureAtlas());
-
-	return _widgetShape;
 }
 
 
@@ -142,18 +131,6 @@ bounds2f Content::GetVisibleBounds() const
 }
 
 
-bool Content::IsUsingDepth() const
-{
-	return _isUsingDepth;
-}
-
-
-void Content::SetUsingDepth(bool value)
-{
-	_isUsingDepth = value;
-}
-
-
 glm::mat4 Content::GetRenderTransform() const
 {
 	glm::mat4 result;
@@ -166,37 +143,37 @@ glm::mat4 Content::GetRenderTransform() const
 }
 
 
-glm::vec2 Content::ContentToViewport(glm::vec2 value) const
+glm::vec2 Content::LocalToGlobal(glm::vec2 value) const
 {
-	return NormalizedToViewport(ContentToNormalized(value));
+	return NormalizedToGlobal(LocalToNormalized(value));
 }
 
 
-glm::vec2 Content::ViewportToContent(glm::vec2 value) const
+glm::vec2 Content::GlobalToLocal(glm::vec2 value) const
 {
-	return NormalizedToContent(ViewportToNormalized(value));
+	return NormalizedToLocal(GlobalToNormalized(value));
 }
 
 
-glm::vec2 Content::ContentToNormalized(glm::vec2 value) const
+glm::vec2 Content::LocalToNormalized(glm::vec2 value) const
 {
 	return 2.0f * (value - _contentOffset) / (glm::vec2)_viewportBounds.size() - 1.0f;
 }
 
 
-glm::vec2 Content::NormalizedToContent(glm::vec2 value) const
+glm::vec2 Content::NormalizedToLocal(glm::vec2 value) const
 {
 	return _contentOffset + (value + 1.0f) / 2.0f * (glm::vec2)_viewportBounds.size();
 }
 
 
-glm::vec2 Content::ViewportToNormalized(glm::vec2 value) const
+glm::vec2 Content::GlobalToNormalized(glm::vec2 value) const
 {
 	return 2.0f * (value - (glm::vec2)_viewportBounds.min) / (glm::vec2)_viewportBounds.size() - 1.0f;
 }
 
 
-glm::vec2 Content::NormalizedToViewport(glm::vec2 value) const
+glm::vec2 Content::NormalizedToGlobal(glm::vec2 value) const
 {
 	return (glm::vec2)_viewportBounds.min + (value + 1.0f) / 2.0f * (glm::vec2)_viewportBounds.size();
 }

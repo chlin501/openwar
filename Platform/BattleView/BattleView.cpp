@@ -65,8 +65,6 @@ BattleView::BattleView(GraphicsContext* gc) : TerrainView(gc),
 	_smoothTerrainSky(nullptr),
 	_tiledTerrainRenderer(nullptr)
 {
-	SetUsingDepth(true);
-
 	_textureUnitMarkers = new TextureResource(gc, resource("Textures/UnitMarkers.png"));
 	_textureTouchMarker = new TextureResource(gc, resource("Textures/TouchMarker.png"));
 
@@ -479,8 +477,8 @@ void BattleView::InitializeCameraPosition()
 
 	bool flip = GetFlip();
 
-	glm::vec2 friendlyScreen = NormalizedToContent(glm::vec2(0, flip ? 0.4 : -0.4));
-	glm::vec2 enemyScreen = NormalizedToContent(glm::vec2(0, flip ? -0.4 : 0.4));
+	glm::vec2 friendlyScreen = NormalizedToLocal(glm::vec2(0, flip ? 0.4 : -0.4));
+	glm::vec2 enemyScreen = NormalizedToLocal(glm::vec2(0, flip ? -0.4 : 0.4));
 
 	Zoom(GetTerrainPosition(friendlyCenter, 0), GetTerrainPosition(enemyCenter, 0), friendlyScreen, enemyScreen, 0);
 
@@ -871,7 +869,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 	glm::vec4 q = transform * glm::vec4(position2, 1);
 	float s = glm::clamp(glm::abs(q.y / q.w - p.y / p.w), sizeLimit.min, sizeLimit.max);
 
-	return bounds2f(NormalizedToContent((glm::vec2)p.xy() / p.w)).grow(s / 2);
+	return bounds2f(NormalizedToLocal((glm::vec2)p.xy() / p.w)).grow(s / 2);
 }
 
 

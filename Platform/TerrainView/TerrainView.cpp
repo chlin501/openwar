@@ -222,7 +222,7 @@ glm::mat4x4 TerrainView::GetViewMatrix() const
 
 ray TerrainView::GetCameraRay(glm::vec2 screenPosition) const
 {
-	glm::vec2 viewPosition = ContentToNormalized(screenPosition);
+	glm::vec2 viewPosition = LocalToNormalized(screenPosition);
 	glm::mat4x4 inverse = glm::inverse(GetTerrainTransform());
 	glm::vec4 p1 = inverse * glm::vec4(viewPosition, 0, 1.0f);
 	glm::vec4 p2 = inverse * glm::vec4(viewPosition, 0.5f, 1.0f);
@@ -372,7 +372,7 @@ static glm::vec3 transform_d(const glm::mat4x4& m, glm::vec3 v)
 glm::vec3 TerrainView::ScreenToContent(glm::vec2 value) const
 {
 	glm::mat4x4 transform = glm::inverse(GetTerrainTransform());
-	glm::vec2 p = ContentToNormalized(value);
+	glm::vec2 p = LocalToNormalized(value);
 	return transform_d(transform, glm::vec3(p, 0));
 }
 
@@ -381,5 +381,5 @@ glm::vec2 TerrainView::ContentToScreen(glm::vec3 value) const
 {
 	glm::mat4x4 transform = GetTerrainTransform();
 	glm::vec3 v = transform_d(transform, value);
-	return NormalizedToContent(v.xy());
+	return NormalizedToLocal(v.xy());
 }
