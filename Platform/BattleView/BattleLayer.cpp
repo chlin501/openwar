@@ -15,6 +15,7 @@
 #include "TerrainView/EditorModel.h"
 #include "TerrainView/TerrainGesture.h"
 #include "TerrainView/TerrainHotspot.h"
+#include "TerrainView/TerrainViewport.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -271,7 +272,10 @@ void BattleLayer::UpdateBattleViewSize()
 			float k1 = index / count;
 			float k2 = (index + 1) / count;
 
-			battleView->GetViewport()->SetBounds(bounds2i(viewport_x, (int)viewport_y.mix(k1), (int)viewport_y.mix(k2)));
+			bounds2i viewport_bounds(viewport_x, (int)viewport_y.mix(k1), (int)viewport_y.mix(k2));
+
+			battleView->GetTerrainViewport()->SetBounds(viewport_bounds);
+			battleView->GetWidgetViewport()->SetBounds(viewport_bounds);
 
 			++index;
 		}

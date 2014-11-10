@@ -14,11 +14,15 @@
 class EditorModel;
 class EditorHotspot;
 class TerrainHotspot;
+class TerrainViewport;
 class Touch;
 
 
-class TerrainView : public Content
+class TerrainView
 {
+	TerrainViewport* _terrainViewport;
+	WidgetViewport* _widgetViewport;
+
 	bounds2f _terrainBounds;
 	glm::vec3 _cameraPosition;
 	float _cameraTilt;
@@ -38,6 +42,8 @@ public:
 	TerrainView(GraphicsContext* gc);
 	virtual ~TerrainView();
 
+	TerrainViewport* GetTerrainViewport() const;
+	WidgetViewport* GetWidgetViewport() const;
 
 	bool GetFlip() const { return _flip; }
 	void SetFlip(bool value) { _flip = value; }

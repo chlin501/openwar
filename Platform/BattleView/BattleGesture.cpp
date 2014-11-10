@@ -147,7 +147,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 	if (touch->IsCaptured() || _hotspot->HasCapturedTouch())
 		return;
 
-	bounds2f viewportBounds = (bounds2f)_hotspot->GetBattleView()->GetViewport()->GetBounds();
+	bounds2f viewportBounds = (bounds2f)_hotspot->GetBattleView()->GetWidgetViewport()->GetBounds();
 	if (!viewportBounds.contains(touch->GetCurrentPosition()))
 		return;
 

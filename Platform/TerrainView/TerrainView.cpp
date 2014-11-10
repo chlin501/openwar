@@ -13,20 +13,39 @@
 #include "EditorHotspot.h"
 #include "TerrainHotspot.h"
 #include "EditorModel.h"
+#include "TerrainViewport.h"
 
 
-TerrainView::TerrainView(GraphicsContext* gc) : Content(gc),
+TerrainView::TerrainView(GraphicsContext* gc) :
+	_terrainViewport(nullptr),
+	_widgetViewport(nullptr),
 	_cameraTilt((float)M_PI_4),
 	_cameraFacing(0),
 	_mouseHintVisible(false),
 	_flip(false),
 	_heightMap(nullptr)
 {
+	_terrainViewport = new TerrainViewport(gc);
+	_widgetViewport = new WidgetViewport(gc);
 }
 
 
 TerrainView::~TerrainView()
 {
+	delete _terrainViewport;
+	delete _widgetViewport;
+}
+
+
+TerrainViewport* TerrainView::GetTerrainViewport() const
+{
+	return _terrainViewport;
+}
+
+
+WidgetViewport* TerrainView::GetWidgetViewport() const
+{
+	return _widgetViewport;
 }
 
 
@@ -130,7 +149,7 @@ glm::vec2 TerrainView::GetScreenLeft() const
 		angle += (float)M_PI;
 	float radius = GetContentRadius();
 
-	glm::vec2 result(GetViewport()->GetVisibleBounds().max.x, 0);
+	glm::vec2 result(GetWidgetViewport()->GetVisibleBounds().max.x, 0);
 
 	int n = 20;
 	for (int i = 0; i < n; ++i)
@@ -155,8 +174,8 @@ glm::vec2 TerrainView::GetScreenBottom() const
 
 	glm::vec2 result = ContentToScreen(glm::vec3(center + radius * vector2_from_angle(angle), 0));
 
-	if (result.y > GetViewport()->GetVisibleBounds().max.y)
-		result.y = GetViewport()->GetVisibleBounds().min.y;
+	if (result.y > GetWidgetViewport()->GetVisibleBounds().max.y)
+		result.y = GetWidgetViewport()->GetVisibleBounds().min.y;
 
 	return result;
 }
@@ -170,7 +189,7 @@ glm::vec2 TerrainView::GetScreenRight() const
 		angle += (float)M_PI;
 	float radius = GetContentRadius();
 
-	glm::vec2 result(GetViewport()->GetVisibleBounds().min.x, 0);
+	glm::vec2 result(GetWidgetViewport()->GetVisibleBounds().min.x, 0);
 
 	int n = 20;
 	for (int i = 4; i < n - 4; ++i)
@@ -205,7 +224,7 @@ glm::mat4x4 TerrainView::GetProjectionMatrix() const
 {
 	float r = 2 * glm::length(_terrainBounds.size());
 
-	glm::vec2 viewportSize = (glm::vec2)GetViewport()->GetBounds().size();
+	glm::vec2 viewportSize = (glm::vec2)GetTerrainViewport()->GetBounds().size();
 	float aspect = viewportSize.y / viewportSize.x;
 
 	return glm::perspective(45.0f, 1.0f / aspect, 0.01f * r, r);
@@ -223,7 +242,7 @@ glm::mat4x4 TerrainView::GetViewMatrix() const
 
 ray TerrainView::GetCameraRay(glm::vec2 screenPosition) const
 {
-	glm::vec2 viewPosition = GetViewport()->LocalToNormalized(screenPosition);
+	glm::vec2 viewPosition = GetWidgetViewport()->LocalToNormalized(screenPosition);
 	glm::mat4x4 inverse = glm::inverse(GetTerrainTransform());
 	glm::vec4 p1 = inverse * glm::vec4(viewPosition, 0, 1.0f);
 	glm::vec4 p2 = inverse * glm::vec4(viewPosition, 0.5f, 1.0f);
@@ -339,7 +358,7 @@ void TerrainView::MoveCamera(glm::vec3 position)
 
 void TerrainView::ClampCameraPosition()
 {
-	glm::vec2 centerScreen = (glm::vec2)GetViewport()->GetVisibleBounds().center();
+	glm::vec2 centerScreen = (glm::vec2)GetWidgetViewport()->GetVisibleBounds().center();
 	glm::vec2 contentCamera = GetTerrainPosition2(centerScreen).xy();
 	glm::vec2 contentCenter = GetTerrainBounds().center();
 	float contentRadius = _heightMap->GetBounds().x().size() / 2;
@@ -373,7 +392,7 @@ static glm::vec3 transform_d(const glm::mat4x4& m, glm::vec3 v)
 glm::vec3 TerrainView::ScreenToContent(glm::vec2 value) const
 {
 	glm::mat4x4 transform = glm::inverse(GetTerrainTransform());
-	glm::vec2 p = GetViewport()->LocalToNormalized(value);
+	glm::vec2 p = GetWidgetViewport()->LocalToNormalized(value);
 	return transform_d(transform, glm::vec3(p, 0));
 }
 
@@ -382,5 +401,5 @@ glm::vec2 TerrainView::ContentToScreen(glm::vec3 value) const
 {
 	glm::mat4x4 transform = GetTerrainTransform();
 	glm::vec3 v = transform_d(transform, value);
-	return GetViewport()->NormalizedToLocal(v.xy());
+	return GetWidgetViewport()->NormalizedToLocal(v.xy());
 }
