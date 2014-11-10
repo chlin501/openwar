@@ -11,7 +11,7 @@
 #include "OpenWarSurface.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "EditorHotspot.h"
-#include "WidgetViewport.h"
+#include "ScrollerViewport.h"
 
 
 OpenWarSurface::OpenWarSurface(GraphicsContext* gc) : Surface(gc),

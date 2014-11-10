@@ -1,17 +1,17 @@
-#ifndef WidgetViewport_H
-#define WidgetViewport_H
+#ifndef ScrollerViewport_H
+#define ScrollerViewport_H
 
 #include "Viewport.h"
 
 
-class WidgetViewport : public Viewport
+class ScrollerViewport : public Viewport
 {
 	glm::vec2 _contentOffset;
 	glm::vec2 _contentSize;
 
 public:
-	WidgetViewport(GraphicsContext* gc);
-	virtual ~WidgetViewport();
+	ScrollerViewport(GraphicsContext* gc);
+	virtual ~ScrollerViewport();
 
 	virtual glm::mat4 GetTransform() const;
 

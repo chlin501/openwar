@@ -287,7 +287,7 @@ void BattleLayer::UpdateBattleViewSize()
 			bounds2i viewport_bounds(viewport_x, (int)viewport_y.mix(k1), (int)viewport_y.mix(k2));
 
 			battleView->GetTerrainViewport()->SetBounds(viewport_bounds);
-			battleView->GetWidgetViewport()->SetBounds(viewport_bounds);
+			battleView->GetScrollerViewport()->SetBounds(viewport_bounds);
 
 			++index;
 		}

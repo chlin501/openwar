@@ -1,7 +1,7 @@
 #include "WidgetView.h"
 #import "GraphicsContext.h"
 #import "WidgetShape.h"
-#import "WidgetViewport.h"
+#import "ScrollerViewport.h"
 
 
 WidgetView::WidgetView(GraphicsContext* gc) :
@@ -23,10 +23,10 @@ WidgetView::~WidgetView()
 }*/
 
 
-WidgetViewport* WidgetView::GetViewport() const
+ScrollerViewport* WidgetView::GetViewport() const
 {
 	if (_viewport == nullptr)
-		_viewport = new WidgetViewport(_gc);
+		_viewport = new ScrollerViewport(_gc);
 
 	return _viewport;
 }

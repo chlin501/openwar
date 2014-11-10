@@ -479,8 +479,8 @@ void BattleView::InitializeCameraPosition()
 
 	bool flip = GetTerrainViewport()->GetFlip();
 
-	glm::vec2 friendlyScreen = GetWidgetViewport()->NormalizedToLocal(glm::vec2(0, flip ? 0.4 : -0.4));
-	glm::vec2 enemyScreen = GetWidgetViewport()->NormalizedToLocal(glm::vec2(0, flip ? -0.4 : 0.4));
+	glm::vec2 friendlyScreen = GetScrollerViewport()->NormalizedToLocal(glm::vec2(0, flip ? 0.4 : -0.4));
+	glm::vec2 enemyScreen = GetScrollerViewport()->NormalizedToLocal(glm::vec2(0, flip ? -0.4 : 0.4));
 
 	Zoom(GetTerrainPosition(friendlyCenter, 0), GetTerrainPosition(enemyCenter, 0), friendlyScreen, enemyScreen, 0);
 
@@ -492,7 +492,7 @@ void BattleView::Render()
 {
 	GetTerrainViewport()->UseViewport();
 
-	glm::mat4 transform2D = GetWidgetViewport()->GetTransform();
+	glm::mat4 transform2D = GetScrollerViewport()->GetTransform();
 	glm::mat4 transform3D = GetTerrainViewport()->GetTransform();
 
 
@@ -506,8 +506,8 @@ void BattleView::Render()
 	glDisable(GL_DEPTH_TEST);
 	if (_smoothTerrainSky != nullptr)
 	{
-		_smoothTerrainSky->RenderBackgroundLinen(transform2D, GetWidgetViewport()->GetVisibleBounds());
-		_smoothTerrainSky->Render(transform2D, GetWidgetViewport()->GetVisibleBounds(), GetTerrainViewport()->GetCameraDirection().z, GetTerrainViewport()->GetFlip());
+		_smoothTerrainSky->RenderBackgroundLinen(transform2D, GetScrollerViewport()->GetVisibleBounds());
+		_smoothTerrainSky->Render(transform2D, GetScrollerViewport()->GetVisibleBounds(), GetTerrainViewport()->GetCameraDirection().z, GetTerrainViewport()->GetFlip());
 	}
 
 
@@ -899,7 +899,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 	glm::vec4 q = transform * glm::vec4(position2, 1);
 	float s = glm::clamp(glm::abs(q.y / q.w - p.y / p.w), sizeLimit.min, sizeLimit.max);
 
-	return bounds2f(GetWidgetViewport()->NormalizedToLocal((glm::vec2)p.xy() / p.w)).grow(s / 2);
+	return bounds2f(GetScrollerViewport()->NormalizedToLocal((glm::vec2)p.xy() / p.w)).grow(s / 2);
 }
 
 

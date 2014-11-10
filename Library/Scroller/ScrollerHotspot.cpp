@@ -1,7 +1,7 @@
 #include "ScrollerHotspot.h"
 
 
-ScrollerHotspot::ScrollerHotspot(WidgetViewport* viewport) :
+ScrollerHotspot::ScrollerHotspot(ScrollerViewport* viewport) :
 	_gesture(this),
 	_viewport(viewport)
 {
@@ -14,7 +14,7 @@ Gesture* ScrollerHotspot::GetGesture() const
 }
 
 
-WidgetViewport* ScrollerHotspot::GetViewport() const
+ScrollerViewport* ScrollerHotspot::GetViewport() const
 {
 	return _viewport;
 }

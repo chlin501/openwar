@@ -16,13 +16,13 @@ class GraphicsContext;
 class TerrainHotspot;
 class TerrainViewport;
 class Touch;
-class WidgetViewport;
+class ScrollerViewport;
 
 
 class TerrainView
 {
 	TerrainViewport* _terrainViewport;
-	WidgetViewport* _widgetViewport;
+	ScrollerViewport* _scrollerViewport;
 
 	bool _mouseHintVisible;
 	glm::vec2 _mouseHintPosition;
@@ -43,7 +43,7 @@ public:
 	glm::vec2 GetScreenRight() const;
 
 	TerrainViewport* GetTerrainViewport() const;
-	WidgetViewport* GetWidgetViewport() const;
+	ScrollerViewport* GetScrollerViewport() const;
 
 	void SetEditorHotspot(std::shared_ptr<EditorHotspot> hotspot);
 
