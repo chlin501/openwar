@@ -2,7 +2,6 @@
 #define BattleSurface_H
 
 #include "ShaderProgram.h"
-#include "Surface/Container.h"
 #include "TerrainView/EditorModel.h"
 #include "CommonShaders.h"
 #include "RenderLoopObserver.h"
@@ -21,7 +20,7 @@ class SmoothTerrainWater;
 class SmoothTerrainSky;
 
 
-class BattleLayer : public Container, public Renderable, RenderLoopObserver, EditorModelObserver
+class BattleLayer : public Renderable, RenderLoopObserver, EditorModelObserver
 {
 	GraphicsContext* _gc;
 

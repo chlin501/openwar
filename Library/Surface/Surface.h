@@ -5,14 +5,14 @@
 #ifndef SURFACE_H
 #define SURFACE_H
 
-#include "Container.h"
 #include "Renderable.h"
 
+class GraphicsContext;
 class Touch;
 class Viewport;
 
 
-class Surface : public Container, public Renderable
+class Surface : public Renderable
 {
 public:
 	Surface(GraphicsContext* gc);

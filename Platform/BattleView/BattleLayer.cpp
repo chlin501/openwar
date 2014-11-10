@@ -20,7 +20,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-BattleLayer::BattleLayer(GraphicsContext* gc) : Container(gc),
+BattleLayer::BattleLayer(GraphicsContext* gc) :
 	_gc(gc),
 	_playing(false),
 	_editing(false),

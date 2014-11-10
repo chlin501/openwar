@@ -7,12 +7,12 @@
 
 #include "BattleModel/GroundMap.h"
 #include "BattleModel/HeightMap.h"
-#include "Surface/Content.h"
 #include "Algebra/geometry.h"
 #include "Shapes/VertexShape.h"
 
 class EditorModel;
 class EditorHotspot;
+class GraphicsContext;
 class TerrainHotspot;
 class TerrainViewport;
 class Touch;

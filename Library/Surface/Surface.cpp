@@ -5,6 +5,6 @@
 #include "Surface.h"
 
 
-Surface::Surface(GraphicsContext* gc) : Container(gc)
+Surface::Surface(GraphicsContext* gc)
 {
 }

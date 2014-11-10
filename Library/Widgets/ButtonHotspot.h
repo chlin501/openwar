@@ -9,8 +9,6 @@
 #include "Hotspot.h"
 #include "ButtonGesture.h"
 
-class Content;
-
 
 class ButtonHotspot : public Hotspot
 {

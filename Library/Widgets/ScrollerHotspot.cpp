@@ -1,5 +1,4 @@
 #include "ScrollerHotspot.h"
-#import "Content.h"
 
 
 ScrollerHotspot::ScrollerHotspot(WidgetViewport* viewport) :
