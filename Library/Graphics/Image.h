@@ -39,6 +39,7 @@ class Image
 
 public:
 	Image();
+	Image(const Image& image);
 	Image(int width, int height);
 	~Image();
 
@@ -62,10 +63,15 @@ public:
 	glm::ivec2 size() const { return glm::ivec2(GetWidth(), GetHeight()); }
 	glm::vec4 GetPixel(int x, int y) const;
 	void SetPixel(int x, int y, glm::vec4 c);
+
 	void PremultiplyAlpha();
+	void Blur(float radius);
 
 	void Copy(const Image& image, int x, int y);
 	void Fill(const glm::vec4& color, const bounds2f& bounds);
+
+private:
+	Image& operator=(const Image&) { return *this; }
 };
 
 

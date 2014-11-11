@@ -5,6 +5,7 @@
 #include "Image.h"
 #include "bounds.h"
 #include "GraphicsContext.h"
+#include "Algorithms/GaussBlur.h"
 
 #ifdef OPENWAR_IMAGE_USE_SDL
 #include <SDL2_image/SDL_image.h>
@@ -33,6 +34,25 @@ Image::Image() :
 	_pixels(nullptr),
 	_owner(false)
 {
+}
+
+
+Image::Image(const Image& image) :
+#ifdef OPENWAR_IMAGE_USE_SDL
+	_surface(nullptr),
+#endif
+#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+	_context(NULL),
+	_image(NULL),
+#endif
+	_width(image._width),
+	_height(image._height),
+	_pixels(nullptr),
+	_owner(false)
+{
+	_pixels = (unsigned char*) calloc((size_t)(_width * _height), 4);
+	std::memcpy(_pixels, image._pixels, (size_t)(_width * _height) * 4);
+	_owner = true;
 }
 
 
@@ -266,6 +286,36 @@ void Image::PremultiplyAlpha()
 				SetPixel(x, y, c);
 			}
 }
+
+
+void Image::Blur(float r)
+{
+	int w = GetWidth();
+	int h = GetHeight();
+	glm::vec4* scl = new glm::vec4[w * h];
+	glm::vec4* tcl = new glm::vec4[w * h];
+
+	int i = 0;
+	for (int y = 0; y < h; ++y)
+		for (int x = 0; x < w; ++x)
+		{
+			scl[i] = tcl[i] = GetPixel(x, y);
+			++i;
+		}
+
+	GaussBlur(scl, tcl, w, h, r);
+
+	i = 0;
+	for (int y = 0; y < h; ++y)
+		for (int x = 0; x < w; ++x)
+			SetPixel(x, y, tcl[i++]);
+
+	delete [] scl;
+	delete [] tcl;
+
+}
+
+
 
 
 void Image::Copy(const Image& image, int x, int y)
