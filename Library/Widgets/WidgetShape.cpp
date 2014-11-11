@@ -1,9 +1,9 @@
 #include "WidgetShape.h"
-#include "Image.h"
-#include <glm/gtc/matrix_transform.hpp>
-
-#include "TextureFont.h"
 #include "GraphicsContext.h"
+//#include <glm/gtc/matrix_transform.hpp>
+
+
+/* WidgetShader */
 
 
 WidgetShader::WidgetShader(GraphicsContext* gc) : ShaderProgram3<glm::vec2, glm::vec2, float>(
@@ -51,8 +51,7 @@ WidgetShader::WidgetShader(GraphicsContext* gc) : ShaderProgram3<glm::vec2, glm:
 }
 
 
-
-/***/
+/* WidgetShape::WidgetVertexBuffer */
 
 
 WidgetShape::WidgetVertexBuffer::WidgetVertexBuffer(WidgetShape* shape) :
@@ -67,7 +66,7 @@ void WidgetShape::WidgetVertexBuffer::Update()
 }
 
 
-/***/
+/* WidgetShape */
 
 
 
@@ -145,9 +144,7 @@ void WidgetShape::UpdateVertexBuffer()
 }
 
 
-
-
-/***/
+/* WidgetGlyph */
 
 
 WidgetGlyph::WidgetGlyph()
@@ -167,12 +164,3 @@ WidgetShape* WidgetGlyph::GetWidgetShape() const
 {
 	return _widgetShape;
 }
-
-
-/***/
-
-
-
-
-/***/
-

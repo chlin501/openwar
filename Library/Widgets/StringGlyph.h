@@ -8,6 +8,7 @@ class StringGlyph : public WidgetGlyph
 {
 	FontDescriptor _fontDescriptor;
 	std::string _string;
+	glm::vec3 _color;
 	float _alpha;
 	float _delta;
 
@@ -19,14 +20,17 @@ public:
 	const FontDescriptor& GetFontDescriptor() const;
 	void SetFontDescriptor(const FontDescriptor& fontDescriptor);
 
-	const char* GetString() const { return _string.c_str(); }
-	void SetString(const char* value) { _string = value; }
+	const char* GetString() const;
+	void SetString(const char* value);
 
-	const float GetAlpha() const { return _alpha; }
-	void SetAlpha(float value) { _alpha = value; }
+	const glm::vec3 GetColor() const;
+	void SetColor(const glm::vec3& value);
 
-	const float GetDelta() const { return _delta; }
-	void SetDelta(float value) { _delta = value; }
+	const float GetAlpha() const;
+	void SetAlpha(float value);
+
+	const float GetDelta() const;
+	void SetDelta(float value);
 
 private:
 	virtual void AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices);

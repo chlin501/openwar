@@ -66,6 +66,54 @@ void StringGlyph::SetFontDescriptor(const FontDescriptor& fontDescriptor)
 }
 
 
+const char* StringGlyph::GetString() const
+{
+	return _string.c_str();
+}
+
+
+void StringGlyph::SetString(const char* value)
+{
+	_string = value;
+}
+
+
+const glm::vec3 StringGlyph::GetColor() const
+{
+	return _color;
+}
+
+
+void StringGlyph::SetColor(const glm::vec3& value)
+{
+	_color = value;
+}
+
+
+const float StringGlyph::GetAlpha() const
+{
+	return _alpha;
+}
+
+
+void StringGlyph::SetAlpha(float value)
+{
+	_alpha = value;
+}
+
+
+const float StringGlyph::GetDelta() const
+{
+	return _delta;
+}
+
+
+void StringGlyph::SetDelta(float value)
+{
+	_delta = value;
+}
+
+
 void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices)
 {
 	glm::vec2 p(0, 0);
