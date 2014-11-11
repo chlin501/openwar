@@ -114,9 +114,12 @@ void StringGlyph::SetDelta(float value)
 }
 
 
-void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices)
+void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	glm::vec2 p(0, 0);
+
+	glm::vec4 colorize = glm::vec4(_color, 1);
+
 	float alpha = _alpha;
 
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv(".", L".");
@@ -145,12 +148,12 @@ void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices)
 
 		float next_alpha = alpha + _delta * s.x;
 
-		vertices.push_back(Vertex_2f_2f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.mix_01(), glm::vec2(item_u0, item_v0), alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), next_alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), next_alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.mix_10(), glm::vec2(item_u1, item_v1), next_alpha));
-		vertices.push_back(Vertex_2f_2f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), alpha));
+		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), colorize, alpha));
+		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_01(), glm::vec2(item_u0, item_v0), colorize, alpha));
+		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), colorize, next_alpha));
+		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), colorize, next_alpha));
+		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_10(), glm::vec2(item_u1, item_v1), colorize, next_alpha));
+		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), colorize, alpha));
 	}
 	else
 	{
@@ -180,12 +183,12 @@ void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices)
 
 			float next_alpha = alpha + _delta * s.x;
 
-			vertices.push_back(Vertex_2f_2f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.mix_01(), glm::vec2(item_u0, item_v0), alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), next_alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), next_alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.mix_10(), glm::vec2(item_u1, item_v1), next_alpha));
-			vertices.push_back(Vertex_2f_2f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), alpha));
+			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), colorize, alpha));
+			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_01(), glm::vec2(item_u0, item_v0), colorize, alpha));
+			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), colorize, next_alpha));
+			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), colorize, next_alpha));
+			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_10(), glm::vec2(item_u1, item_v1), colorize, next_alpha));
+			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), colorize, alpha));
 
 			if (next_alpha < 0)
 				break;

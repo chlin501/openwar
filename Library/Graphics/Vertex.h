@@ -67,8 +67,8 @@ struct Vertex4
 	Vertex4() { }
 	Vertex4(const T1& v1, const T2& v2, const T3& v3, const T4& v4) : _1(v1), _2(v2), _3(v3), _4(v4) { }
 };
+typedef Vertex4<glm::vec2, glm::vec2, glm::vec4, float> Vertex_2f_2f_4f_1f;
 typedef Vertex4<glm::vec3, float, glm::vec2, glm::vec2> Vertex_3f_1f_2f_2f;
-
 
 
 #endif

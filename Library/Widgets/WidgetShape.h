@@ -17,17 +17,17 @@ class PatchGlyph;
 class WidgetGlyph;
 
 
-class WidgetShader : public ShaderProgram<Vertex_2f_2f_1f>
+class WidgetShader : public ShaderProgram<Vertex_2f_2f_4f_1f>
 {
 	friend class GraphicsContext;
 	/*
 		attribute vec2 position;
 		attribute vec2 texcoord;
+		attribute vec4 colorize;
 		attribute float alpha;
 
 		uniform mat4 transform;
 		uniform sampler2D texture;
-		uniform vec4 color;
 	 */
 	WidgetShader(GraphicsContext* gc);
 };
@@ -35,7 +35,7 @@ class WidgetShader : public ShaderProgram<Vertex_2f_2f_1f>
 
 class WidgetShape
 {
-	class WidgetVertexBuffer : public VertexBuffer<Vertex_2f_2f_1f>
+	class WidgetVertexBuffer : public VertexBuffer<Vertex_2f_2f_4f_1f>
 	{
 		WidgetShape* _widgetShape;
 	public:
@@ -53,7 +53,7 @@ public:
 
 	TextureAtlas* GetTextureAtlas() const;
 
-	VertexBuffer<Vertex_2f_2f_1f>* GetVertices();
+	VertexBuffer<Vertex_2f_2f_4f_1f>* GetVertices();
 
 	void ClearGlyphs();
 	void AddGlyph(WidgetGlyph* glyph);
@@ -87,7 +87,7 @@ public:
 	void SetTranslate(glm::vec2 value) { _transform = glm::translate(glm::mat4(), glm::vec3(value, 0)); }
 
 private:
-	virtual void AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices) = 0;
+	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices) = 0;
 
 private:
 	WidgetGlyph(const WidgetGlyph&) { }

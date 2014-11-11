@@ -33,7 +33,7 @@ public:
 	void SetDelta(float value);
 
 private:
-	virtual void AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices);
+	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
 private:
 	StringGlyph(const StringGlyph&) { }

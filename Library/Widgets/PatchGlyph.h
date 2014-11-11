@@ -11,6 +11,7 @@ public:
 	bounds2f inner_xy;
 	bounds2f outer_uv;
 	bounds2f inner_uv;
+	glm::vec4 _colorize;
 	float _alpha;
 
 	PatchGlyph();
@@ -20,9 +21,9 @@ public:
 	void Reset(TextureImage* tile, bounds2f bounds, glm::vec2 inset);
 
 private:
-	virtual void AppendVertices(std::vector<Vertex_2f_2f_1f>& vertices);
+	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
-	void AppendRectangle(std::vector<Vertex_2f_2f_1f>& vertices, bounds2f xy, bounds2f uv);
+	void AppendRectangle(std::vector<Vertex_2f_2f_4f_1f>& vertices, bounds2f xy, bounds2f uv);
 
 private:
 	PatchGlyph(const PatchGlyph&) { }

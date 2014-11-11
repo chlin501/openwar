@@ -6,14 +6,16 @@
 /* WidgetShader */
 
 
-WidgetShader::WidgetShader(GraphicsContext* gc) : ShaderProgram<Vertex_2f_2f_1f>(
+WidgetShader::WidgetShader(GraphicsContext* gc) : ShaderProgram<Vertex_2f_2f_4f_1f>(
 	VERTEX_SHADER
 	({
 		attribute vec2 position;
 		attribute vec2 texcoord;
+		attribute vec4 colorize;
 		attribute float alpha;
 		uniform mat4 transform;
 		varying vec2 _texcoord;
+		varying vec4 _colorize;
 		varying float _alpha;
 
 		void main()
@@ -21,6 +23,7 @@ WidgetShader::WidgetShader(GraphicsContext* gc) : ShaderProgram<Vertex_2f_2f_1f>
 			vec4 p = transform * vec4(position.x, position.y, 0, 1);
 
 			_texcoord = texcoord;
+			_colorize = colorize;
 			_alpha = alpha;
 
 			gl_Position = vec4(p.x, p.y, 0.5, 1.0);
@@ -29,19 +32,17 @@ WidgetShader::WidgetShader(GraphicsContext* gc) : ShaderProgram<Vertex_2f_2f_1f>
 	FRAGMENT_SHADER
 	({
 		uniform sampler2D texture;
-		uniform vec4 color;
 		varying vec2 _texcoord;
+		varying vec4 _colorize;
 		varying float _alpha;
 
 		void main()
 		{
-			vec4 result;
-			//result.rgb = color.rgb;
-			//result.a = texture2D(texture, _texcoord).a * color.a * clamp(_alpha, 0.0, 1.0);
-			result = texture2D(texture, _texcoord);
-			result = result * _alpha;
+			vec4 color = texture2D(texture, _texcoord);
+			color.rgb = mix(color.rgb, _colorize.rgb * color.a, _colorize.a);
+			color = color * _alpha;
 
-			gl_FragColor = result;
+			gl_FragColor = color;
 		}
 	}))
 {
@@ -90,7 +91,7 @@ TextureAtlas* WidgetShape::GetTextureAtlas() const
 }
 
 
-VertexBuffer<Vertex_2f_2f_1f>* WidgetShape::GetVertices()
+VertexBuffer<Vertex_2f_2f_4f_1f>* WidgetShape::GetVertices()
 {
 	return &_vertices;
 }
@@ -133,7 +134,7 @@ glm::vec2 WidgetShape::MeasureGlyph(StringGlyph* glyph) const
 
 void WidgetShape::UpdateVertexBuffer()
 {
-	static std::vector<Vertex_2f_2f_1f> vertices;
+	static std::vector<Vertex_2f_2f_4f_1f> vertices;
 
 	for (WidgetGlyph* glyph : _widgetGlyphs)
 		glyph->AppendVertices(vertices);

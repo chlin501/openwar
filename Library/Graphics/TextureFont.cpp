@@ -143,8 +143,8 @@ TextureChar* TextureFont::GetTextureChar(const std::string& character)
 
 
 	Image image(width, height);
-	image.Fill(glm::vec4(0.2f, 0.2f, 0.2f, 1), bounds2f(0, 0, width, height));
-	image.Fill(glm::vec4(0.3f, 0.3f, 0.3f, 1), bounds2f(1, 1, width - 1, height - 1));
+	//image.Fill(glm::vec4(0.2f, 0.2f, 0.2f, 1), bounds2f(0, 0, width, height));
+	//image.Fill(glm::vec4(0.3f, 0.3f, 0.3f, 1), bounds2f(1, 1, width - 1, height - 1));
 
 	CGContextRef context = image.GetCGContext();
 
@@ -175,6 +175,8 @@ TextureChar* TextureFont::GetTextureChar(const std::string& character)
 
 	/*[NSGraphicsContext restoreGraphicsState];*/
 #endif
+
+	image.PremultiplyAlpha();
 
 	TextureImage* textureImage = _textureAtlas->AddTextureImage(image);
 	textureImage->_inner.min = textureImage->_outer.min + glm::vec2(1, 1);
