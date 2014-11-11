@@ -6,8 +6,7 @@
 /* WidgetShader */
 
 
-WidgetShader::WidgetShader(GraphicsContext* gc) : ShaderProgram3<glm::vec2, glm::vec2, float>(
-	"position", "texcoord", "alpha",
+WidgetShader::WidgetShader(GraphicsContext* gc) : ShaderProgram<Vertex_2f_2f_1f>(
 	VERTEX_SHADER
 	({
 		attribute vec2 position;

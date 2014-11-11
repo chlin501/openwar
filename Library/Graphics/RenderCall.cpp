@@ -1,6 +1,16 @@
 #include "RenderCall.h"
 
 
+template<> GLint GetVertexAttributeSize<float>() { return 1; }
+template<> GLint GetVertexAttributeSize<glm::vec2>() { return 2; }
+template<> GLint GetVertexAttributeSize<glm::vec3>() { return 3; }
+template<> GLint GetVertexAttributeSize<glm::vec4>() { return 4; }
+
+template<> GLenum GetVertexAttributeType<float>() { return GL_FLOAT; }
+template<> GLenum GetVertexAttributeType<glm::vec2>() { return GL_FLOAT; }
+template<> GLenum GetVertexAttributeType<glm::vec3>() { return GL_FLOAT; }
+template<> GLenum GetVertexAttributeType<glm::vec4>() { return GL_FLOAT; }
+
 
 RenderCallUniformBase::RenderCallUniformBase(GLint location) :
 	_location(location)
@@ -140,17 +150,20 @@ void RenderCallBase::Render()
 		CHECK_ERROR_GL();
 	}
 
-	const char* ptr = nullptr;//vertices->_vbo != 0 ? nullptr : reinterpret_cast<const char*>(vertices->data());
-	for (GLuint index = 0; index < _shaderprogram->_vertex_attributes.size(); ++index)
+	for (const RenderCallAttribute& attribute : _attributes)
 	{
-		glEnableVertexAttribArray(index);
-		CHECK_ERROR_GL();
+		if (attribute._index != -1)
+		{
+			GLuint index = (GLuint)attribute._index;
 
-		const renderer_vertex_attribute& item = _shaderprogram->_vertex_attributes[index];
-		const GLvoid* offset = reinterpret_cast<const GLvoid*>(ptr + item._offset);
+			glEnableVertexAttribArray(index);
+			CHECK_ERROR_GL();
 
-		glVertexAttribPointer(index, item._size, item._type, GL_FALSE, item._stride, offset);
-		CHECK_ERROR_GL();
+			const GLvoid* pointer = reinterpret_cast<const GLvoid*>(attribute._offset);
+
+			glVertexAttribPointer(index, attribute._size, attribute._type, GL_FALSE, attribute._stride, pointer);
+			CHECK_ERROR_GL();
+		}
 	}
 
 	if (_shaderprogram->_blend_sfactor != GL_ONE || _shaderprogram->_blend_dfactor != GL_ZERO)
@@ -172,9 +185,9 @@ void RenderCallBase::Render()
 		CHECK_ERROR_GL();
 	}
 
-	for (GLuint index = 0; index < _shaderprogram->_vertex_attributes.size(); ++index)
+	for (const RenderCallAttribute& attribute : _attributes)
 	{
-		glDisableVertexAttribArray(index);
+		glDisableVertexAttribArray(attribute._index);
 		CHECK_ERROR_GL();
 	}
 

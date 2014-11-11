@@ -107,7 +107,7 @@ void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3&
 			_vertices.AddVertex(Vertex_3f_2f(glm::vec3(p0.x, p0.y, h00), t01));
 
 			RenderCall<TextureShader_3f>(_gc)
-				.SetVertices(&_vertices)
+				.SetVertices(&_vertices, "position", "texcoord")
 				.SetUniform("transform", transform)
 				.SetTexture("texture", _textures[tile->texture])
 				.Render();

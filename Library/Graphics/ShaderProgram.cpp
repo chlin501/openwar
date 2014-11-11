@@ -35,7 +35,7 @@ static void print_log(const char* operation, const char* log)
 }
 
 
-ShaderProgramBase::ShaderProgramBase(std::vector<const char*> attrs, const char* vertexshader, const char* fragmentshader) :
+ShaderProgramBase::ShaderProgramBase(const char* vertexshader, const char* fragmentshader) :
 _blend_sfactor(GL_ONE),
 _blend_dfactor(GL_ZERO)
 {
@@ -49,12 +49,6 @@ _blend_dfactor(GL_ZERO)
 	CHECK_ERROR_GL();
     glAttachShader(_program, fragment_shader);
 	CHECK_ERROR_GL();
-
-	for (GLuint index = 0; index < attrs.size(); ++index)
-	{
-		glBindAttribLocation(_program, index, attrs[index]);
-		CHECK_ERROR_GL();
-	}
 
     if (!link_program(_program)) {
         if (_program) {

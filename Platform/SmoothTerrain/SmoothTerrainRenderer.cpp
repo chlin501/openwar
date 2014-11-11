@@ -107,7 +107,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 	{
 		glDisable(GL_DEPTH_TEST);
 		RenderCall<PlainShader_3f>(_gc)
-			.SetVertices(&_lineVertices)
+			.SetVertices(&_lineVertices, "position")
 			.SetUniform("transform", uniforms._transform)
 			.SetUniform("point_size", 1)
 			.SetUniform("color", glm::vec4(0, 0, 0, 0.06f))

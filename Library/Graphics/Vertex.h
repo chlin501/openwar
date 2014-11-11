@@ -4,9 +4,10 @@
 #include <glm/glm.hpp>
 
 
-template <class T1>
+template <class _T1>
 struct Vertex1
 {
+	typedef _T1 T1;
 	T1 _1;
 	Vertex1() { }
 	Vertex1(const T1& __1) : _1(__1) { }
@@ -17,9 +18,11 @@ typedef Vertex1<glm::vec3> Vertex_3f;
 typedef Vertex1<glm::vec4> Vertex_4f;
 
 
-template <class T1, class T2>
+template <class _T1, class _T2>
 struct Vertex2
 {
+	typedef _T1 T1;
+	typedef _T2 T2;
 	T1 _1;
 	T2 _2;
 	Vertex2() { }
@@ -33,9 +36,12 @@ typedef Vertex2<glm::vec3, glm::vec3> Vertex_3f_3f;
 typedef Vertex2<glm::vec3, glm::vec4> Vertex_3f_4f;
 
 
-template <class T1, class T2, class T3>
+template <class _T1, class _T2, class _T3>
 struct Vertex3
 {
+	typedef _T1 T1;
+	typedef _T2 T2;
+	typedef _T3 T3;
 	T1 _1;
 	T2 _2;
 	T3 _3;
@@ -47,9 +53,13 @@ typedef Vertex3<glm::vec3, glm::vec4, float> Vertex_3f_4f_1f;
 typedef Vertex3<glm::vec2, glm::vec2, glm::vec2> Vertex_2f_2f_2f;
 
 
-template <class T1, class T2, class T3, class T4>
+template <class _T1, class _T2, class _T3, class _T4>
 struct Vertex4
 {
+	typedef _T1 T1;
+	typedef _T2 T2;
+	typedef _T3 T3;
+	typedef _T4 T4;
 	T1 _1;
 	T2 _2;
 	T3 _3;

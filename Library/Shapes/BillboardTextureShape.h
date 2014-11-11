@@ -77,9 +77,21 @@ struct BillboardModel
 };
 
 
-class BillboardTextureShader : public ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2>
+class BillboardTextureShader : public ShaderProgram<Vertex_3f_1f_2f_2f>
 {
 	friend class GraphicsContext;
+	/*
+		attribute vec3 position;
+		attribute float height;
+		attribute vec2 texcoord;
+		attribute vec2 texsize;
+
+		uniform mat4 transform;
+		uniform vec3 upvector;
+		uniform float viewport_height;
+		uniform float min_point_size;
+		uniform float max_point_size;
+	 */
 	BillboardTextureShader(GraphicsContext* gc);
 };
 

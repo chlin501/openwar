@@ -73,8 +73,7 @@ affine2 BillboardTexture::GetTexCoords(int shape, float facing)
 }
 
 
-BillboardTextureShader::BillboardTextureShader(GraphicsContext* gc) : ShaderProgram4<glm::vec3, float, glm::vec2, glm::vec2>(
-	"position", "height", "texcoord", "texsize",
+BillboardTextureShader::BillboardTextureShader(GraphicsContext* gc) : ShaderProgram<Vertex_3f_1f_2f_2f>(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;
@@ -188,7 +187,7 @@ void BillboardTextureShape::Draw(GraphicsContext* gc, Texture* tex, const glm::m
 	indices.clear();
 
 	RenderCall<BillboardTextureShader>(gc)
-		.SetVertices(&_vertices)
+		.SetVertices(&_vertices, "position", "height", "texcoord", "texsize")
 		.SetUniform("transform", transform)
 		.SetTexture("texture", tex)
 		.SetUniform("upvector", cameraUp)

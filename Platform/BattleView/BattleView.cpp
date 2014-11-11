@@ -539,7 +539,7 @@ void BattleView::Render()
 
 	glLineWidth(1);
 	RenderCall<PlainShader_3f>(_gc)
-		.SetVertices(_plainLineVertices)
+		.SetVertices(_plainLineVertices, "position")
 		.SetUniform("transform", transform3D)
 		.SetUniform("point_size", 1)
 		.SetUniform("color", glm::vec4(0.4, 0.4, 0.4, 0.6))
@@ -552,7 +552,7 @@ void BattleView::Render()
 	_casualtyMarker->RenderCasualtyColorBillboards(_colorBillboardVertices);
 
 	RenderCall<BillboardColorShader>(_gc)
-		.SetVertices(_colorBillboardVertices)
+		.SetVertices(_colorBillboardVertices, "position", "color", "height")
 		.SetUniform("transform", transform3D)
 		.SetUniform("upvector", GetTerrainViewport()->GetCameraUpVector())
 		.SetUniform("viewport_height", 0.25f * _gc->GetPixelDensity() * GetTerrainViewport()->GetBounds().y().size())
@@ -587,7 +587,7 @@ void BattleView::Render()
 			marker.Render(_gradientTriangleStripVertices);
 
 			RenderCall<GradientShader_3f>(_gc)
-				.SetVertices(_gradientTriangleStripVertices)
+				.SetVertices(_gradientTriangleStripVertices, "position", "color")
 				.SetUniform("transform", transform3D)
 				.SetUniform("point_size", 1)
 				.Render();
@@ -611,7 +611,7 @@ void BattleView::Render()
 			marker->AppendFacingMarker(_textureTriangleVertices, this);
 
 	RenderCall<TextureShader_3f>(_gc)
-		.SetVertices(_textureTriangleVertices)
+		.SetVertices(_textureTriangleVertices, "position", "texcoord")
 		.SetUniform("transform", transform2D)
 		.SetTexture("texture", _textureUnitMarkers)
 		.Render();
@@ -674,7 +674,7 @@ void BattleView::Render()
 		marker->RenderMovementPath(_gradientTriangleVertices);
 
 	RenderCall<GradientShader_3f>(_gc)
-		.SetVertices(_gradientTriangleVertices)
+		.SetVertices(_gradientTriangleVertices, "position", "color")
 		.SetUniform("transform", transform3D)
 		.SetUniform("point_size", 1)
 		.Render();
@@ -690,7 +690,7 @@ void BattleView::Render()
 		marker->RenderOrientation(_gradientTriangleVertices);
 
 		RenderCall<GradientShader_3f>(_gc)
-			.SetVertices(_gradientTriangleVertices)
+			.SetVertices(_gradientTriangleVertices, "position", "color")
 			.SetUniform("transform", transform3D)
 			.SetUniform("point_size", 1)
 			.Render();
@@ -705,7 +705,7 @@ void BattleView::Render()
 		marker->RenderTrackingFighters(_colorBillboardVertices);
 
 	RenderCall<BillboardColorShader>(_gc)
-		.SetVertices(_colorBillboardVertices)
+		.SetVertices(_colorBillboardVertices, "position", "color", "height")
 		.SetUniform("transform", transform3D)
 		.SetUniform("upvector", GetTerrainViewport()->GetCameraUpVector())
 		.SetUniform("viewport_height", 0.25f * _gc->GetPixelDensity() * GetTerrainViewport()->GetBounds().y().size())
@@ -719,7 +719,7 @@ void BattleView::Render()
 		marker->RenderMovementFighters(_colorBillboardVertices);
 
 	RenderCall<BillboardColorShader>(_gc)
-		.SetVertices(_colorBillboardVertices)
+		.SetVertices(_colorBillboardVertices, "position", "color", "height")
 		.SetUniform("transform", transform3D)
 		.SetUniform("upvector", GetTerrainViewport()->GetCameraUpVector())
 		.SetUniform("viewport_height", 0.25f * _gc->GetPixelDensity() * GetTerrainViewport()->GetBounds().y().size())
@@ -733,7 +733,7 @@ void BattleView::Render()
 		shootingCounter->Render(_gradientLineVertices);
 
 	RenderCall<GradientShader_3f>(_gc)
-		.SetVertices(_gradientLineVertices)
+		.SetVertices(_gradientLineVertices, "position", "color")
 		.SetUniform("transform", transform3D)
 		.SetUniform("point_size", 1)
 		.Render();
@@ -746,7 +746,7 @@ void BattleView::Render()
 
 	glLineWidth(1);
 	RenderCall<PlainShader_3f>(_gc)
-		.SetVertices(_plainLineVertices)
+		.SetVertices(_plainLineVertices, "position")
 		.SetUniform("transform", transform3D)
 		.SetUniform("point_size", 1)
 		.SetUniform("color", glm::vec4(0, 0, 0, 0.5f))

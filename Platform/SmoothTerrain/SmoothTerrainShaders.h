@@ -30,60 +30,113 @@ struct sobel_uniforms
 };
 
 
-class TerrainInsideShader : public ShaderProgram2<glm::vec3, glm::vec3>
+class TerrainInsideShader : public ShaderProgram<Vertex_3f_3f>
 {
 	friend class GraphicsContext;
+	/*
+		attribute vec3 position;
+		attribute vec3 normal;
+
+		uniform mat4 transform;
+		uniform vec4 map_bounds;
+		uniform vec3 light_normal;
+	 */
 	TerrainInsideShader(GraphicsContext* gc);
 };
 
 
-class TerrainBorderShader : public ShaderProgram2<glm::vec3, glm::vec3>
+class TerrainBorderShader : public ShaderProgram<Vertex_3f_3f>
 {
 	friend class GraphicsContext;
+	/*
+		attribute vec3 position;
+		attribute vec3 normal;
+
+		uniform mat4 transform;
+		uniform vec4 map_bounds;
+		uniform vec3 light_normal;
+	 */
 	TerrainBorderShader(GraphicsContext* gc);
 };
 
 
-class TerrainSkirtShader : public ShaderProgram2<glm::vec3, float>
+class TerrainSkirtShader : public ShaderProgram<Vertex_3f_1f>
 {
 	friend class GraphicsContext;
+	/*
+		attribute vec3 position;
+		attribute float height;
+
+		uniform mat4 transform;
+	 */
 	TerrainSkirtShader(GraphicsContext* gc);
 };
 
 
 
-class DepthInsideShader : public ShaderProgram2<glm::vec3, glm::vec3>
+class DepthInsideShader : public ShaderProgram<Vertex_3f_3f>
 {
 	friend class GraphicsContext;
+	/*
+		attribute vec3 position;
+		attribute vec3 normal;
+
+		uniform mat4 transform;
+	 */
 	DepthInsideShader(GraphicsContext* gc);
 };
 
 
-class DepthBorderShader : public ShaderProgram2<glm::vec3, glm::vec3>
+class DepthBorderShader : public ShaderProgram<Vertex_3f_3f>
 {
 	friend class GraphicsContext;
+	/*
+		attribute vec3 position;
+		attribute vec3 normal;
+
+		uniform mat4 transform;
+		uniform vec4 map_bounds;
+	 */
 	DepthBorderShader(GraphicsContext* gc);
 };
 
 
-class DepthSkirtShader : public ShaderProgram2<glm::vec3, float>
+class DepthSkirtShader : public ShaderProgram<Vertex_3f_1f>
 {
 	friend class GraphicsContext;
+	/*
+		attribute vec3 position;
+		attribute float height;
+
+		uniform mat4 transform;
+	 */
 	DepthSkirtShader(GraphicsContext* gc);
 };
 
 
 
-class SobelFilterShader : public ShaderProgram2<glm::vec2, glm::vec2>
+class SobelFilterShader : public ShaderProgram<Vertex_2f_2f>
 {
 	friend class GraphicsContext;
+	/*
+		attribute vec2 position;
+		attribute vec2 texcoord;
+
+		uniform mat4 transform;
+	 */
 	SobelFilterShader(GraphicsContext* gc);
 };
 
 
-class GroundShadowShader : public ShaderProgram1<glm::vec2>
+class GroundShadowShader : public ShaderProgram<Vertex_2f>
 {
 	friend class GraphicsContext;
+	/*
+		attribute vec2 position;
+
+		uniform mat4 transform;
+		uniform vec4 map_bounds;
+	 */
 	GroundShadowShader(GraphicsContext* gc);
 };
 

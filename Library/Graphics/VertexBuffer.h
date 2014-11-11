@@ -10,8 +10,6 @@
 #include "Vertex.h"
 
 
-struct renderer_vertex_attribute;
-
 class VertexBufferBase
 {
 public:

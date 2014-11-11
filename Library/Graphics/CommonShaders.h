@@ -7,7 +7,7 @@
 class GraphicsContext;
 
 
-class GradientShader_2f : public ShaderProgram2<glm::vec2, glm::vec4>
+class GradientShader_2f : public ShaderProgram<Vertex_2f_4f>
 {
 	friend class GraphicsContext;
 /*
@@ -21,12 +21,13 @@ class GradientShader_2f : public ShaderProgram2<glm::vec2, glm::vec4>
 };
 
 
-class GradientShader_3f : public ShaderProgram2<glm::vec3, glm::vec4>
+class GradientShader_3f : public ShaderProgram<Vertex_3f_4f>
 {
 	friend class GraphicsContext;
 /*
 	attribute vec3 position;
 	attribute vec4 color;
+
 	uniform mat4 transform;
 	uniform float point_size;
  */
@@ -34,7 +35,7 @@ class GradientShader_3f : public ShaderProgram2<glm::vec3, glm::vec4>
 };
 
 
-class PlainShader_2f : public ShaderProgram1<glm::vec2>
+class PlainShader_2f : public ShaderProgram<Vertex_2f>
 {
 	friend class GraphicsContext;
 /*
@@ -48,7 +49,7 @@ class PlainShader_2f : public ShaderProgram1<glm::vec2>
 };
 
 
-class PlainShader_3f : public ShaderProgram1<glm::vec3>
+class PlainShader_3f : public ShaderProgram<Vertex_3f>
 {
 	friend class GraphicsContext;
 /*
@@ -62,7 +63,7 @@ class PlainShader_3f : public ShaderProgram1<glm::vec3>
 };
 
 
-class TextureShader_2f : public ShaderProgram2<glm::vec2, glm::vec2>
+class TextureShader_2f : public ShaderProgram<Vertex_2f_2f>
 {
 	friend class GraphicsContext;
 /*
@@ -76,7 +77,7 @@ class TextureShader_2f : public ShaderProgram2<glm::vec2, glm::vec2>
 };
 
 
-class TextureShader_3f : public ShaderProgram2<glm::vec3, glm::vec2>
+class TextureShader_3f : public ShaderProgram<Vertex_3f_2f>
 {
 	friend class GraphicsContext;
 /*
@@ -90,7 +91,7 @@ class TextureShader_3f : public ShaderProgram2<glm::vec3, glm::vec2>
 };
 
 
-class OpaqueTextureShader_2f : public ShaderProgram2<glm::vec2, glm::vec2>
+class OpaqueTextureShader_2f : public ShaderProgram<Vertex_2f_2f>
 {
 	friend class GraphicsContext;
 /*
@@ -104,7 +105,7 @@ class OpaqueTextureShader_2f : public ShaderProgram2<glm::vec2, glm::vec2>
 };
 
 
-class AlphaTextureShader_2f : public ShaderProgram2<glm::vec2, glm::vec2>
+class AlphaTextureShader_2f : public ShaderProgram<Vertex_2f_2f>
 {
 	friend class GraphicsContext;
 /*

@@ -8,8 +8,7 @@
 
 
 
-WaterInsideShader::WaterInsideShader(GraphicsContext* gc) : ShaderProgram1<glm::vec2>(
-	"position",
+WaterInsideShader::WaterInsideShader(GraphicsContext* gc) : ShaderProgram<Vertex_2f>(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;
@@ -37,8 +36,7 @@ WaterInsideShader::WaterInsideShader(GraphicsContext* gc) : ShaderProgram1<glm::
 }
 
 
-WaterBorderShader::WaterBorderShader(GraphicsContext* gc) : ShaderProgram1<glm::vec2>(
-	"position",
+WaterBorderShader::WaterBorderShader(GraphicsContext* gc) : ShaderProgram<Vertex_2f>(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;
@@ -165,14 +163,14 @@ void SmoothTerrainWater::Render(GraphicsContext* gc, const glm::mat4x4& transfor
 	bounds2f bounds = _groundMap->GetBounds();
 
 	RenderCall<WaterInsideShader>(gc)
-		.SetVertices(&_waterInsideVertices)
+		.SetVertices(&_waterInsideVertices, "position")
 		.SetUniform("transform", transform)
 		.SetUniform("map_bounds", glm::vec4(bounds.min, bounds.size()))
 		.SetTexture("texture", nullptr)
 		.Render();
 
 	RenderCall<WaterBorderShader>(gc)
-		.SetVertices(&_waterBorderVertices)
+		.SetVertices(&_waterBorderVertices, "position")
 		.SetUniform("transform", transform)
 		.SetUniform("map_bounds", glm::vec4(bounds.min, bounds.size()))
 		.SetTexture("texture", nullptr)

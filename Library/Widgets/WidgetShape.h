@@ -17,13 +17,14 @@ class PatchGlyph;
 class WidgetGlyph;
 
 
-class WidgetShader : public ShaderProgram3<glm::vec2, glm::vec2, float>
+class WidgetShader : public ShaderProgram<Vertex_2f_2f_1f>
 {
 	friend class GraphicsContext;
 	/*
 		attribute vec2 position;
 		attribute vec2 texcoord;
 		attribute float alpha;
+
 		uniform mat4 transform;
 		uniform sampler2D texture;
 		uniform vec4 color;

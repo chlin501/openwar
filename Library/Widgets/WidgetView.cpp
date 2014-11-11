@@ -43,7 +43,7 @@ void WidgetView::Render()
 	_viewport->UseViewport();
 
 	RenderCall<WidgetShader>(_gc)
-		.SetVertices(_widgetShape->GetVertices())
+		.SetVertices(_widgetShape->GetVertices(), "position", "texcoord", "alpha")
 		.SetUniform("transform", _viewport->GetTransform())
 		.SetTexture("texture", _widgetShape->GetTextureAtlas())
 		.SetUniform("color", glm::vec4(0, 0, 0, 1))

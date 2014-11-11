@@ -13,16 +13,28 @@ class GraphicsContext;
 class GroundMap;
 
 
-class WaterInsideShader : public ShaderProgram1<glm::vec2>
+class WaterInsideShader : public ShaderProgram<Vertex_2f>
 {
 	friend class GraphicsContext;
+	/*
+		attribute vec2 position;
+
+		uniform mat4 transform;
+		uniform vec4 map_bounds;
+	 */
 	WaterInsideShader(GraphicsContext* gc);
 };
 
 
-class WaterBorderShader : public ShaderProgram1<glm::vec2>
+class WaterBorderShader : public ShaderProgram<Vertex_2f>
 {
 	friend class GraphicsContext;
+	/*
+		attribute vec2 position;
+
+		uniform mat4 transform;
+		uniform vec4 map_bounds;
+	 */
 	WaterBorderShader(GraphicsContext* gc);
 };
 

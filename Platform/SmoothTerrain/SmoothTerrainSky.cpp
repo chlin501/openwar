@@ -60,7 +60,7 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f bounds, float
 	}
 
 	RenderCall<GradientShader_2f>(_gc)
-		.SetVertices(&vertices)
+		.SetVertices(&vertices, "position", "color")
 		.SetUniform("transform", t)
 		.SetUniform("point_size", 1)
 		.Render();
@@ -92,7 +92,7 @@ void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, bounds2
 	vertices.AddVertex(Vertex_2f_2f(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
 
 	RenderCall<TextureShader_2f>(_gc)
-		.SetVertices(&vertices)
+		.SetVertices(&vertices, "position", "texcoord")
 		.SetUniform("transform", transform)
 		.SetTexture("texture", _textureBackgroundLinen)
 		.Render();

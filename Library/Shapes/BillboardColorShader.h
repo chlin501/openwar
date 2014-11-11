@@ -9,13 +9,14 @@
 #include "ShaderProgram.h"
 
 
-class BillboardColorShader : public ShaderProgram3<glm::vec3, glm::vec4, float>
+class BillboardColorShader : public ShaderProgram<Vertex_3f_4f_1f>
 {
 	friend class GraphicsContext;
 /*
 	attribute vec3 position;
 	attribute vec4 color;
 	attribute float height;
+
 	uniform mat4 transform;
 	uniform vec3 upvector;
 	uniform float viewport_height;
