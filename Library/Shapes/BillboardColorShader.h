@@ -9,7 +9,7 @@
 #include "ShaderProgram.h"
 
 
-class BillboardColorShader : public ShaderProgram<Vertex_3f_4f_1f>
+class BillboardColorShader : public ShaderProgram
 {
 	friend class GraphicsContext;
 /*

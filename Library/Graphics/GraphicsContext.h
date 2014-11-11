@@ -16,7 +16,7 @@ class TextureAtlas;
 class GraphicsContext
 {
 	float _pixeldensity;
-	std::map<std::string, ShaderProgramBase*> _shaders;
+	std::map<std::string, ShaderProgram*> _shaders;
 	mutable TextureAtlas* _widgetTextureAtlas;
 
 public:

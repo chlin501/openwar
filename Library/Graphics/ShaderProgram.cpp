@@ -35,22 +35,22 @@ static void print_log(const char* operation, const char* log)
 }
 
 
-ShaderProgramBase::ShaderProgramBase(const char* vertexshader, const char* fragmentshader) :
+ShaderProgram::ShaderProgram(const char* vertexshader, const char* fragmentshader) :
 _blend_sfactor(GL_ONE),
 _blend_dfactor(GL_ZERO)
 {
 	_program = glCreateProgram();
 	CHECK_ERROR_GL();
 
-	GLuint vertex_shader = compile_shader(GL_VERTEX_SHADER, vertexshader);
-	GLuint fragment_shader = compile_shader(GL_FRAGMENT_SHADER, fragmentshader);
+	GLuint vertex_shader = CompileShader(GL_VERTEX_SHADER, vertexshader);
+	GLuint fragment_shader = CompileShader(GL_FRAGMENT_SHADER, fragmentshader);
 
     glAttachShader(_program, vertex_shader);
 	CHECK_ERROR_GL();
     glAttachShader(_program, fragment_shader);
 	CHECK_ERROR_GL();
 
-    if (!link_program(_program)) {
+    if (!LinkProgram(_program)) {
         if (_program) {
             glDeleteProgram(_program);
 	        CHECK_ERROR_GL();
@@ -58,7 +58,7 @@ _blend_dfactor(GL_ZERO)
         }
         return;
     }
-	validate_program(_program);
+	ValidateProgram(_program);
 
 	glDetachShader(_program, vertex_shader);
 	CHECK_ERROR_GL();
@@ -72,7 +72,7 @@ _blend_dfactor(GL_ZERO)
 }
 
 
-ShaderProgramBase::~ShaderProgramBase()
+ShaderProgram::~ShaderProgram()
 {
     if (_program != 0)
     {
@@ -82,7 +82,7 @@ ShaderProgramBase::~ShaderProgramBase()
 }
 
 
-GLuint ShaderProgramBase::compile_shader(GLenum type, const char* source)
+GLuint ShaderProgram::CompileShader(GLenum type, const char* source)
 {
     std::string str(source);
     
@@ -125,7 +125,7 @@ GLuint ShaderProgramBase::compile_shader(GLenum type, const char* source)
 }
 
 
-bool ShaderProgramBase::link_program(GLuint program)
+bool ShaderProgram::LinkProgram(GLuint program)
 {
     GLint status;
     glLinkProgram(program);
@@ -154,7 +154,7 @@ bool ShaderProgramBase::link_program(GLuint program)
 }
 
 
-bool ShaderProgramBase::validate_program(GLuint program)
+bool ShaderProgram::ValidateProgram(GLuint program)
 {
 	GLint logLength, status;
 

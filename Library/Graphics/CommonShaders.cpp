@@ -2,7 +2,7 @@
 #include "GraphicsContext.h"
 
 
-GradientShader_2f::GradientShader_2f(GraphicsContext* gc) : ShaderProgram<Vertex_2f_4f>(
+GradientShader_2f::GradientShader_2f(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		attribute vec3 position;
@@ -36,7 +36,7 @@ GradientShader_2f::GradientShader_2f(GraphicsContext* gc) : ShaderProgram<Vertex
 }
 
 
-GradientShader_3f::GradientShader_3f(GraphicsContext* gc) : ShaderProgram<Vertex_3f_4f>(
+GradientShader_3f::GradientShader_3f(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		attribute vec3 position;
@@ -69,7 +69,7 @@ GradientShader_3f::GradientShader_3f(GraphicsContext* gc) : ShaderProgram<Vertex
 }
 
 
-PlainShader_2f::PlainShader_2f(GraphicsContext* gc) : ShaderProgram<Vertex_2f>(
+PlainShader_2f::PlainShader_2f(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		attribute vec2 position;
@@ -99,7 +99,7 @@ PlainShader_2f::PlainShader_2f(GraphicsContext* gc) : ShaderProgram<Vertex_2f>(
 }
 
 
-PlainShader_3f::PlainShader_3f(GraphicsContext* gc) : ShaderProgram<Vertex_3f>(
+PlainShader_3f::PlainShader_3f(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		attribute vec3 position;
@@ -129,7 +129,7 @@ PlainShader_3f::PlainShader_3f(GraphicsContext* gc) : ShaderProgram<Vertex_3f>(
 }
 
 
-TextureShader_2f::TextureShader_2f(GraphicsContext* gc) : ShaderProgram<Vertex_2f_2f>(
+TextureShader_2f::TextureShader_2f(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;
@@ -163,7 +163,7 @@ TextureShader_2f::TextureShader_2f(GraphicsContext* gc) : ShaderProgram<Vertex_2
 }
 
 
-TextureShader_3f::TextureShader_3f(GraphicsContext* gc) : ShaderProgram<Vertex_3f_2f>(
+TextureShader_3f::TextureShader_3f(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;
@@ -197,7 +197,7 @@ TextureShader_3f::TextureShader_3f(GraphicsContext* gc) : ShaderProgram<Vertex_3
 }
 
 
-OpaqueTextureShader_2f::OpaqueTextureShader_2f(GraphicsContext* gc) : ShaderProgram<Vertex_2f_2f>(
+OpaqueTextureShader_2f::OpaqueTextureShader_2f(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;
@@ -231,7 +231,7 @@ OpaqueTextureShader_2f::OpaqueTextureShader_2f(GraphicsContext* gc) : ShaderProg
 }
 
 
-AlphaTextureShader_2f::AlphaTextureShader_2f(GraphicsContext* gc) : ShaderProgram<Vertex_2f_2f>(
+AlphaTextureShader_2f::AlphaTextureShader_2f(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;

@@ -9,7 +9,7 @@
 #include "TextureAtlas.h"
 
 
-TerrainInsideShader::TerrainInsideShader(GraphicsContext* gc) : ShaderProgram<Vertex_3f_3f>(
+TerrainInsideShader::TerrainInsideShader(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;
@@ -69,7 +69,7 @@ TerrainInsideShader::TerrainInsideShader(GraphicsContext* gc) : ShaderProgram<Ve
 }
 
 
-TerrainBorderShader::TerrainBorderShader(GraphicsContext* gc) : ShaderProgram<Vertex_3f_3f>(
+TerrainBorderShader::TerrainBorderShader(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;
@@ -131,7 +131,7 @@ TerrainBorderShader::TerrainBorderShader(GraphicsContext* gc) : ShaderProgram<Ve
 }
 
 
-TerrainSkirtShader::TerrainSkirtShader(GraphicsContext* gc) : ShaderProgram<Vertex_3f_1f>(
+TerrainSkirtShader::TerrainSkirtShader(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		attribute vec3 position;
@@ -173,7 +173,7 @@ TerrainSkirtShader::TerrainSkirtShader(GraphicsContext* gc) : ShaderProgram<Vert
 }
 
 
-DepthInsideShader::DepthInsideShader(GraphicsContext* gc) : ShaderProgram<Vertex_3f_3f>(
+DepthInsideShader::DepthInsideShader(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;
@@ -200,7 +200,7 @@ DepthInsideShader::DepthInsideShader(GraphicsContext* gc) : ShaderProgram<Vertex
 }
 
 
-DepthBorderShader::DepthBorderShader(GraphicsContext* gc) : ShaderProgram<Vertex_3f_3f>(
+DepthBorderShader::DepthBorderShader(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;
@@ -236,7 +236,7 @@ DepthBorderShader::DepthBorderShader(GraphicsContext* gc) : ShaderProgram<Vertex
 }
 
 
-DepthSkirtShader::DepthSkirtShader(GraphicsContext* gc) : ShaderProgram<Vertex_3f_1f>(
+DepthSkirtShader::DepthSkirtShader(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;
@@ -264,7 +264,7 @@ DepthSkirtShader::DepthSkirtShader(GraphicsContext* gc) : ShaderProgram<Vertex_3
 }
 
 
-SobelFilterShader::SobelFilterShader(GraphicsContext* gc) : ShaderProgram<Vertex_2f_2f>(
+SobelFilterShader::SobelFilterShader(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;
@@ -342,7 +342,7 @@ SobelFilterShader::SobelFilterShader(GraphicsContext* gc) : ShaderProgram<Vertex
 }
 
 
-GroundShadowShader::GroundShadowShader(GraphicsContext* gc) : ShaderProgram<Vertex_2f>(
+GroundShadowShader::GroundShadowShader(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;

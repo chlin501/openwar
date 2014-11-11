@@ -8,7 +8,7 @@
 
 
 
-WaterInsideShader::WaterInsideShader(GraphicsContext* gc) : ShaderProgram<Vertex_2f>(
+WaterInsideShader::WaterInsideShader(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;
@@ -36,7 +36,7 @@ WaterInsideShader::WaterInsideShader(GraphicsContext* gc) : ShaderProgram<Vertex
 }
 
 
-WaterBorderShader::WaterBorderShader(GraphicsContext* gc) : ShaderProgram<Vertex_2f>(
+WaterBorderShader::WaterBorderShader(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;

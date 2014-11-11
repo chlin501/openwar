@@ -73,7 +73,7 @@ affine2 BillboardTexture::GetTexCoords(int shape, float facing)
 }
 
 
-BillboardTextureShader::BillboardTextureShader(GraphicsContext* gc) : ShaderProgram<Vertex_3f_1f_2f_2f>(
+BillboardTextureShader::BillboardTextureShader(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;

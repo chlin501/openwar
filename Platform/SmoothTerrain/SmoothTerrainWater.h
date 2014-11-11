@@ -13,7 +13,7 @@ class GraphicsContext;
 class GroundMap;
 
 
-class WaterInsideShader : public ShaderProgram<Vertex_2f>
+class WaterInsideShader : public ShaderProgram
 {
 	friend class GraphicsContext;
 	/*
@@ -26,7 +26,7 @@ class WaterInsideShader : public ShaderProgram<Vertex_2f>
 };
 
 
-class WaterBorderShader : public ShaderProgram<Vertex_2f>
+class WaterBorderShader : public ShaderProgram
 {
 	friend class GraphicsContext;
 	/*

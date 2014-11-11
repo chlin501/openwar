@@ -30,7 +30,7 @@ struct sobel_uniforms
 };
 
 
-class TerrainInsideShader : public ShaderProgram<Vertex_3f_3f>
+class TerrainInsideShader : public ShaderProgram
 {
 	friend class GraphicsContext;
 	/*
@@ -45,7 +45,7 @@ class TerrainInsideShader : public ShaderProgram<Vertex_3f_3f>
 };
 
 
-class TerrainBorderShader : public ShaderProgram<Vertex_3f_3f>
+class TerrainBorderShader : public ShaderProgram
 {
 	friend class GraphicsContext;
 	/*
@@ -60,7 +60,7 @@ class TerrainBorderShader : public ShaderProgram<Vertex_3f_3f>
 };
 
 
-class TerrainSkirtShader : public ShaderProgram<Vertex_3f_1f>
+class TerrainSkirtShader : public ShaderProgram
 {
 	friend class GraphicsContext;
 	/*
@@ -74,7 +74,7 @@ class TerrainSkirtShader : public ShaderProgram<Vertex_3f_1f>
 
 
 
-class DepthInsideShader : public ShaderProgram<Vertex_3f_3f>
+class DepthInsideShader : public ShaderProgram
 {
 	friend class GraphicsContext;
 	/*
@@ -87,7 +87,7 @@ class DepthInsideShader : public ShaderProgram<Vertex_3f_3f>
 };
 
 
-class DepthBorderShader : public ShaderProgram<Vertex_3f_3f>
+class DepthBorderShader : public ShaderProgram
 {
 	friend class GraphicsContext;
 	/*
@@ -101,7 +101,7 @@ class DepthBorderShader : public ShaderProgram<Vertex_3f_3f>
 };
 
 
-class DepthSkirtShader : public ShaderProgram<Vertex_3f_1f>
+class DepthSkirtShader : public ShaderProgram
 {
 	friend class GraphicsContext;
 	/*
@@ -115,7 +115,7 @@ class DepthSkirtShader : public ShaderProgram<Vertex_3f_1f>
 
 
 
-class SobelFilterShader : public ShaderProgram<Vertex_2f_2f>
+class SobelFilterShader : public ShaderProgram
 {
 	friend class GraphicsContext;
 	/*
@@ -128,7 +128,7 @@ class SobelFilterShader : public ShaderProgram<Vertex_2f_2f>
 };
 
 
-class GroundShadowShader : public ShaderProgram<Vertex_2f>
+class GroundShadowShader : public ShaderProgram
 {
 	friend class GraphicsContext;
 	/*

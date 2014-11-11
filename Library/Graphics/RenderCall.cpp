@@ -108,8 +108,9 @@ void RenderCallTexture::Assign()
 /***/
 
 
-RenderCallBase::RenderCallBase(ShaderProgramBase* shaderprogram) :
+RenderCallBase::RenderCallBase(ShaderProgram* shaderprogram) :
 	_shaderprogram(shaderprogram),
+	_vertices(nullptr),
 	_texture_count(0)
 {
 }
@@ -124,13 +125,12 @@ RenderCallBase::~RenderCallBase()
 
 void RenderCallBase::Render()
 {
-	VertexBufferBase* vertices = GetVertexBufferBase();
-	if (vertices == nullptr)
+	if (_vertices == nullptr)
 		return;
 
-	vertices->Update();
+	_vertices->Update();
 
-	if (vertices->_vbo == 0 || vertices->_count == 0)
+	if (_vertices->_vbo == 0 || _vertices->_count == 0)
 		return;
 
 	glUseProgram(_shaderprogram->_program);
@@ -144,9 +144,9 @@ void RenderCallBase::Render()
 	glUseProgram(_shaderprogram->_program);
 	CHECK_ERROR_GL();
 
-	if (vertices->_vbo != 0)
+	if (_vertices->_vbo != 0)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, vertices->_vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, _vertices->_vbo);
 		CHECK_ERROR_GL();
 	}
 
@@ -174,7 +174,7 @@ void RenderCallBase::Render()
 		CHECK_ERROR_GL();
 	}
 
-	glDrawArrays(vertices->_mode, 0, vertices->_count);
+	glDrawArrays(_vertices->_mode, 0, _vertices->_count);
 	CHECK_ERROR_GL();
 
 	if (_shaderprogram->_blend_sfactor != GL_ONE || _shaderprogram->_blend_dfactor != GL_ZERO)
@@ -191,7 +191,7 @@ void RenderCallBase::Render()
 		CHECK_ERROR_GL();
 	}
 
-	if (vertices->_vbo != 0)
+	if (_vertices->_vbo != 0)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		CHECK_ERROR_GL();

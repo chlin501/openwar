@@ -20,7 +20,7 @@ extern void CHECK_ERROR_GL();
 #define FRAGMENT_SHADER(source) (#source)
 
 
-class ShaderProgramBase
+class ShaderProgram
 {
 	friend class RenderCallBase;
 
@@ -29,33 +29,17 @@ public:
 	GLenum _blend_sfactor;
 	GLenum _blend_dfactor;
 
-	ShaderProgramBase(const char* vertexshader, const char* fragmentshader);
-	virtual ~ShaderProgramBase();
-
-	static GLuint compile_shader(GLenum type, const char* source);
-
-	static bool link_program(GLuint program);
-	static bool validate_program(GLuint program);
-
-protected:
-	ShaderProgramBase(const ShaderProgramBase&) { }
-	ShaderProgramBase& operator=(const ShaderProgramBase&) { return *this; }
-};
-
-
-
-template <class _Vertex>
-class ShaderProgram : public ShaderProgramBase
-{
-public:
-	typedef _Vertex VertexT;
-
-	ShaderProgram(const char* vertexshader, const char* fragmentshader) : ShaderProgramBase(vertexshader, fragmentshader)
-	{
-	}
+	ShaderProgram(const char* vertexshader, const char* fragmentshader);
+	virtual ~ShaderProgram();
 
 private:
-	ShaderProgram(const ShaderProgram& _) : ShaderProgramBase(_) { }
+	static GLuint CompileShader(GLenum type, const char* source);
+
+	static bool LinkProgram(GLuint program);
+	static bool ValidateProgram(GLuint program);
+
+protected:
+	ShaderProgram(const ShaderProgram&) { }
 	ShaderProgram& operator=(const ShaderProgram&) { return *this; }
 };
 

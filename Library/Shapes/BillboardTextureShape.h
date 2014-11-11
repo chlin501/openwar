@@ -77,7 +77,7 @@ struct BillboardModel
 };
 
 
-class BillboardTextureShader : public ShaderProgram<Vertex_3f_1f_2f_2f>
+class BillboardTextureShader : public ShaderProgram
 {
 	friend class GraphicsContext;
 	/*

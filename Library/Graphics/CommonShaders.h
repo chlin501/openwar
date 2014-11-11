@@ -7,7 +7,7 @@
 class GraphicsContext;
 
 
-class GradientShader_2f : public ShaderProgram<Vertex_2f_4f>
+class GradientShader_2f : public ShaderProgram
 {
 	friend class GraphicsContext;
 /*
@@ -21,7 +21,7 @@ class GradientShader_2f : public ShaderProgram<Vertex_2f_4f>
 };
 
 
-class GradientShader_3f : public ShaderProgram<Vertex_3f_4f>
+class GradientShader_3f : public ShaderProgram
 {
 	friend class GraphicsContext;
 /*
@@ -35,7 +35,7 @@ class GradientShader_3f : public ShaderProgram<Vertex_3f_4f>
 };
 
 
-class PlainShader_2f : public ShaderProgram<Vertex_2f>
+class PlainShader_2f : public ShaderProgram
 {
 	friend class GraphicsContext;
 /*
@@ -49,7 +49,7 @@ class PlainShader_2f : public ShaderProgram<Vertex_2f>
 };
 
 
-class PlainShader_3f : public ShaderProgram<Vertex_3f>
+class PlainShader_3f : public ShaderProgram
 {
 	friend class GraphicsContext;
 /*
@@ -63,7 +63,7 @@ class PlainShader_3f : public ShaderProgram<Vertex_3f>
 };
 
 
-class TextureShader_2f : public ShaderProgram<Vertex_2f_2f>
+class TextureShader_2f : public ShaderProgram
 {
 	friend class GraphicsContext;
 /*
@@ -77,7 +77,7 @@ class TextureShader_2f : public ShaderProgram<Vertex_2f_2f>
 };
 
 
-class TextureShader_3f : public ShaderProgram<Vertex_3f_2f>
+class TextureShader_3f : public ShaderProgram
 {
 	friend class GraphicsContext;
 /*
@@ -91,7 +91,7 @@ class TextureShader_3f : public ShaderProgram<Vertex_3f_2f>
 };
 
 
-class OpaqueTextureShader_2f : public ShaderProgram<Vertex_2f_2f>
+class OpaqueTextureShader_2f : public ShaderProgram
 {
 	friend class GraphicsContext;
 /*
@@ -105,7 +105,7 @@ class OpaqueTextureShader_2f : public ShaderProgram<Vertex_2f_2f>
 };
 
 
-class AlphaTextureShader_2f : public ShaderProgram<Vertex_2f_2f>
+class AlphaTextureShader_2f : public ShaderProgram
 {
 	friend class GraphicsContext;
 /*

@@ -6,7 +6,7 @@
 
 
 
-BillboardColorShader::BillboardColorShader(GraphicsContext* gc) : ShaderProgram<Vertex_3f_4f_1f>(
+BillboardColorShader::BillboardColorShader(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
 		uniform mat4 transform;

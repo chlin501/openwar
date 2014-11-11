@@ -85,14 +85,15 @@ protected:
 class RenderCallBase : public Renderable
 {
 protected:
-	ShaderProgramBase* _shaderprogram;
+	ShaderProgram* _shaderprogram;
 	std::vector<RenderCallUniformBase*> _uniforms;
 	std::vector<RenderCallTexture*> _textures;
 	std::vector<RenderCallAttribute> _attributes;
+	VertexBufferBase* _vertices;
 	int _texture_count;
 
 public:
-	RenderCallBase(ShaderProgramBase* shaderprogram);
+	RenderCallBase(ShaderProgram* shaderprogram);
 	virtual ~RenderCallBase();
 
 	template <class T>
@@ -105,6 +106,44 @@ public:
 	RenderCallBase& SetTexture(const char* name, Texture* value)
 	{
 		GetTexture(name)->_value = value;
+		return *this;
+	}
+
+	template <class VertexT>
+	RenderCallBase& SetVertices(VertexBuffer<VertexT>* vertices, const char* name1)
+	{
+		_vertices = vertices;
+		_attributes.push_back(MakeRenderCallAttribute<VertexT, typename VertexT::T1>(name1, &((VertexT*)nullptr)->_1));
+		return *this;
+	}
+
+	template <class VertexT>
+	RenderCallBase& SetVertices(VertexBuffer<VertexT>* vertices, const char* name1, const char* name2)
+	{
+		_vertices = vertices;
+		_attributes.push_back(MakeRenderCallAttribute<VertexT, typename VertexT::T1>(name1, &((VertexT*)nullptr)->_1));
+		_attributes.push_back(MakeRenderCallAttribute<VertexT, typename VertexT::T2>(name2, &((VertexT*)nullptr)->_2));
+		return *this;
+	}
+
+	template <class VertexT>
+	RenderCallBase& SetVertices(VertexBuffer<VertexT>* vertices, const char* name1, const char* name2, const char* name3)
+	{
+		_vertices = vertices;
+		_attributes.push_back(MakeRenderCallAttribute<VertexT, typename VertexT::T1>(name1, &((VertexT*)nullptr)->_1));
+		_attributes.push_back(MakeRenderCallAttribute<VertexT, typename VertexT::T2>(name2, &((VertexT*)nullptr)->_2));
+		_attributes.push_back(MakeRenderCallAttribute<VertexT, typename VertexT::T3>(name3, &((VertexT*)nullptr)->_3));
+		return *this;
+	}
+
+	template <class VertexT>
+	RenderCallBase& SetVertices(VertexBuffer<VertexT>* vertices, const char* name1, const char* name2, const char* name3, const char* name4)
+	{
+		_vertices = vertices;
+		_attributes.push_back(MakeRenderCallAttribute<VertexT, typename VertexT::T1>(name1, &((VertexT*)nullptr)->_1));
+		_attributes.push_back(MakeRenderCallAttribute<VertexT, typename VertexT::T2>(name2, &((VertexT*)nullptr)->_2));
+		_attributes.push_back(MakeRenderCallAttribute<VertexT, typename VertexT::T3>(name3, &((VertexT*)nullptr)->_3));
+		_attributes.push_back(MakeRenderCallAttribute<VertexT, typename VertexT::T4>(name4, &((VertexT*)nullptr)->_4));
 		return *this;
 	}
 
@@ -133,61 +172,7 @@ private:
 		return result;
 	}
 
-	RenderCallTexture* GetTexture(const char* name);
-
-	virtual VertexBufferBase* GetVertexBufferBase() = 0;
-};
-
-
-template <class _ShaderProgram>
-class RenderCall : public RenderCallBase
-{
-public:
-	typedef typename _ShaderProgram::VertexT VertexT;
-
-	VertexBuffer<VertexT>* _vertices;
-
-	RenderCall(GraphicsContext* gc) : RenderCallBase(gc->GetShaderProgram<_ShaderProgram>()),
-		_vertices(nullptr)
-	{
-	}
-
-	RenderCall<_ShaderProgram>& SetVertices(VertexBuffer<VertexT>* vertices, const char* name1)
-	{
-		_vertices = vertices;
-		_attributes.push_back(MakeRenderCallAttribute<typename VertexT::T1>(name1, &((VertexT*)nullptr)->_1));
-		return *this;
-	}
-
-	RenderCall<_ShaderProgram>& SetVertices(VertexBuffer<VertexT>* vertices, const char* name1, const char* name2)
-	{
-		_vertices = vertices;
-		_attributes.push_back(MakeRenderCallAttribute<typename VertexT::T1>(name1, &((VertexT*)nullptr)->_1));
-		_attributes.push_back(MakeRenderCallAttribute<typename VertexT::T2>(name2, &((VertexT*)nullptr)->_2));
-		return *this;
-	}
-
-	RenderCall<_ShaderProgram>& SetVertices(VertexBuffer<VertexT>* vertices, const char* name1, const char* name2, const char* name3)
-	{
-		_vertices = vertices;
-		_attributes.push_back(MakeRenderCallAttribute<typename VertexT::T1>(name1, &((VertexT*)nullptr)->_1));
-		_attributes.push_back(MakeRenderCallAttribute<typename VertexT::T2>(name2, &((VertexT*)nullptr)->_2));
-		_attributes.push_back(MakeRenderCallAttribute<typename VertexT::T3>(name3, &((VertexT*)nullptr)->_3));
-		return *this;
-	}
-
-	RenderCall<_ShaderProgram>& SetVertices(VertexBuffer<VertexT>* vertices, const char* name1, const char* name2, const char* name3, const char* name4)
-	{
-		_vertices = vertices;
-		_attributes.push_back(MakeRenderCallAttribute<typename VertexT::T1>(name1, &((VertexT*)nullptr)->_1));
-		_attributes.push_back(MakeRenderCallAttribute<typename VertexT::T2>(name2, &((VertexT*)nullptr)->_2));
-		_attributes.push_back(MakeRenderCallAttribute<typename VertexT::T3>(name3, &((VertexT*)nullptr)->_3));
-		_attributes.push_back(MakeRenderCallAttribute<typename VertexT::T4>(name4, &((VertexT*)nullptr)->_4));
-		return *this;
-	}
-
-private:
-	template <class AttributeT>
+	template <class VertexT, class AttributeT>
 	RenderCallAttribute MakeRenderCallAttribute(const char* name, void* offset)
 	{
 		return RenderCallAttribute(
@@ -199,9 +184,16 @@ private:
 		);
 	}
 
-	virtual VertexBufferBase* GetVertexBufferBase()
+	RenderCallTexture* GetTexture(const char* name);
+};
+
+
+template <class _ShaderProgram>
+class RenderCall : public RenderCallBase
+{
+public:
+	RenderCall(GraphicsContext* gc) : RenderCallBase(gc->GetShaderProgram<_ShaderProgram>())
 	{
-		return _vertices;
 	}
 };
 

@@ -17,7 +17,7 @@ class PatchGlyph;
 class WidgetGlyph;
 
 
-class WidgetShader : public ShaderProgram<Vertex_2f_2f_4f_1f>
+class WidgetShader : public ShaderProgram
 {
 	friend class GraphicsContext;
 	/*
