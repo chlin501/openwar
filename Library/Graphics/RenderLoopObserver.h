@@ -5,7 +5,6 @@
 class RenderLoopObserver
 {
 	static std::vector<RenderLoopObserver*> _instances;
-	static std::vector<RenderLoopObserver*> _snapshot;
 
 public:
 	RenderLoopObserver();

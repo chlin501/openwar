@@ -2,7 +2,6 @@
 
 
 std::vector<RenderLoopObserver*> RenderLoopObserver::_instances;
-std::vector<RenderLoopObserver*> RenderLoopObserver::_snapshot;
 
 
 RenderLoopObserver::RenderLoopObserver()
@@ -22,7 +21,6 @@ RenderLoopObserver::~RenderLoopObserver()
 
 void RenderLoopObserver::NotifyRenderLoop(double secondsSinceLastLoop)
 {
-	_snapshot = _instances;
-	for (RenderLoopObserver* instance : _snapshot)
-		instance->OnRenderLoop(secondsSinceLastLoop);
+	for (size_t i = 0; i < _instances.size(); ++i)
+		_instances[i]->OnRenderLoop(secondsSinceLastLoop);
 }
