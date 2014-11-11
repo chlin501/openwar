@@ -336,15 +336,13 @@ void ButtonGrid::OnRenderLoop(double secondsSinceLastUpdate)
 
 void ButtonGrid::Render()
 {
-	WidgetShape* buttonShape = new WidgetShape(_buttonRendering->_textureAtlas);
-
 	for (ButtonArea* buttonArea : _buttonAreas)
 	{
 		buttonArea->backgroundGlyph.outer_xy = buttonArea->_bounds.grow(10);
 		buttonArea->backgroundGlyph.inner_xy = buttonArea->_bounds.grow(-22);
 		buttonArea->backgroundGlyph.outer_uv = _buttonRendering->buttonBackground->GetOuterUV();
 		buttonArea->backgroundGlyph.inner_uv = _buttonRendering->buttonBackground->GetInnerUV();
-		buttonShape->AddGlyph(&buttonArea->backgroundGlyph);
+		GetWidgetShape()->AddGlyph(&buttonArea->backgroundGlyph);
 
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
 		{
@@ -354,7 +352,7 @@ void ButtonGrid::Render()
 				buttonItem->selectedGlyph.inner_xy = buttonItem->GetBounds().grow(-22);
 				buttonItem->selectedGlyph.outer_uv = _buttonRendering->buttonSelected->GetOuterUV();
 				buttonItem->selectedGlyph.inner_uv = _buttonRendering->buttonSelected->GetInnerUV();
-				buttonShape->AddGlyph(&buttonItem->selectedGlyph);
+				GetWidgetShape()->AddGlyph(&buttonItem->selectedGlyph);
 			}
 
 			if (buttonItem->GetButtonIcon() != nullptr)
@@ -369,7 +367,7 @@ void ButtonGrid::Render()
 				buttonItem->buttonIconGlyph.inner_uv = buttonItem->GetButtonIcon()->GetInnerUV();
 				buttonItem->buttonIconGlyph._alpha = buttonItem->IsDisabled() ? 0.5f : 1.0f;
 
-				buttonShape->AddGlyph(&buttonItem->buttonIconGlyph);
+				GetWidgetShape()->AddGlyph(&buttonItem->buttonIconGlyph);
 			}
 
 			if (buttonItem->IsHighlight())
@@ -378,27 +376,19 @@ void ButtonGrid::Render()
 				buttonItem->highlightGlyph.inner_xy = bounds2f(buttonItem->GetBounds().center());
 				buttonItem->highlightGlyph.outer_uv = _buttonRendering->buttonHighlight->GetOuterUV();
 				buttonItem->highlightGlyph.inner_uv = _buttonRendering->buttonHighlight->GetInnerUV();
-				buttonShape->AddGlyph(&buttonItem->highlightGlyph);
+				GetWidgetShape()->AddGlyph(&buttonItem->highlightGlyph);
 			}
 
 			if (buttonItem->GetButtonText() != nullptr)
 			{
 				buttonItem->buttonTextGlyph.SetString(buttonItem->GetButtonText());
-				buttonItem->buttonTextGlyph.SetTranslate(buttonItem->GetBounds().center() - 0.5f * buttonShape->MeasureGlyph(&buttonItem->buttonTextGlyph));
-				buttonShape->AddGlyph(&buttonItem->buttonTextGlyph);
+				buttonItem->buttonTextGlyph.SetTranslate(buttonItem->GetBounds().center() - 0.5f * GetWidgetShape()->MeasureGlyph(&buttonItem->buttonTextGlyph));
+				GetWidgetShape()->AddGlyph(&buttonItem->buttonTextGlyph);
 			}
 		}
 	}
 
-	RenderCall<WidgetShader> renderCall(_gc);
-
-	renderCall.SetVertices(buttonShape->GetVertices());
-	renderCall.SetTexture("texture", buttonShape->GetTextureAtlas());
-	renderCall.SetUniform("transform", GetViewport()->GetTransform());
-	renderCall.SetUniform("color", glm::vec4(1, 1, 1, 1));
-	renderCall.Render();
-
-	delete buttonShape;
+	WidgetView::Render();
 }
 
 

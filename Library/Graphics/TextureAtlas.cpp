@@ -139,6 +139,12 @@ TextureSheet TextureAtlas::AddTextureSheet(const Image& image)
 }
 
 
+TextureSheet TextureAtlas::GetTextureSheet(const bounds2f& bounds)
+{
+	return TextureSheet(this, bounds);
+}
+
+
 /***/
 
 
@@ -200,6 +206,12 @@ TextureSheet::TextureSheet(TextureAtlas* textureAtlas, const bounds2f& bounds) :
 	_sheetBounds(bounds)
 {
 
+}
+
+
+glm::vec2 TextureSheet::MapCoord(int u, int v) const
+{
+	return (_sheetBounds.min + glm::vec2(u, v)) / (glm::vec2)_textureAtlas->_image->size();
 }
 
 

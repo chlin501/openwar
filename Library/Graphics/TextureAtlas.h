@@ -29,6 +29,8 @@ struct TextureSheet
 	TextureSheet(TextureAtlas* textureAtlas, int size_u, int size_v);
 	TextureSheet(TextureAtlas* textureAtlas, const bounds2f& bounds);
 
+	glm::vec2 MapCoord(int u, int v) const;
+
 	TextureImage* GetTextureImage(int u0, int v0, int size_u, int size_v);
 	TextureImage* GetTexturePatch(int u0, int v0, int size_u, int size_v, int insert_u, int inset_v);
 };
@@ -37,6 +39,8 @@ struct TextureSheet
 class TextureAtlas : public Texture
 {
 	friend class TextureImage;
+	friend class TextureSheet;
+
 	GraphicsContext* _gc;
 	Image* _image;
 	std::vector<TextureFont*> _textureFonts;
@@ -64,7 +68,9 @@ public:
 
 	TextureImage* AddTextureImage(const Image& image);
 	TextureImage* GetTextureImage(const bounds2f& inner, const bounds2f& outer);
+
 	TextureSheet AddTextureSheet(const Image& image);
+	TextureSheet GetTextureSheet(const bounds2f& bounds);
 
 private:
 	TextureAtlas(const TextureAtlas&) : Texture(nullptr) { }

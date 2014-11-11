@@ -23,6 +23,6 @@ RenderLoopObserver::~RenderLoopObserver()
 void RenderLoopObserver::NotifyRenderLoop(double secondsSinceLastLoop)
 {
 	_snapshot = _instances;
-	for (RenderLoopObserver* timer : _snapshot)
-		timer->OnRenderLoop(secondsSinceLastLoop);
+	for (RenderLoopObserver* instance : _snapshot)
+		instance->OnRenderLoop(secondsSinceLastLoop);
 }
