@@ -15,10 +15,10 @@ public:
 	float _alpha;
 
 	PatchGlyph();
-	PatchGlyph(TextureImage* tile, bounds2f bounds, glm::vec2 inset);
+	PatchGlyph(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm::vec2 inset);
 
 	void Reset();
-	void Reset(TextureImage* tile, bounds2f bounds, glm::vec2 inset);
+	void Reset(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm::vec2 inset);
 
 private:
 	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);

@@ -44,7 +44,7 @@ TextureChar* TextureFont::GetTextureChar(const std::string& character, float blu
 
 	int border = (int)glm::ceil(blur) + 1;
 
-	TextureImage* textureImage = _fontAdapter->AddTextureImage(_textureAtlas, character, border, filter);
+	std::shared_ptr<TextureImage> textureImage = _fontAdapter->AddTextureImage(_textureAtlas, character, border, filter);
 	TextureChar* textureChar = new TextureChar(textureImage, canColorize);
 	_textureChars[key] = textureChar;
 	return textureChar;
@@ -91,14 +91,14 @@ glm::vec2 TextureFont::MeasureText(const char* text)
 /***/
 
 
-TextureChar::TextureChar(TextureImage* textureImage, bool canColorize) :
+TextureChar::TextureChar(std::shared_ptr<TextureImage> textureImage, bool canColorize) :
 	_textureImage(textureImage),
 	_canColorize(canColorize)
 {
 }
 
 
-TextureImage* TextureChar::GetTextureImage() const
+std::shared_ptr<TextureImage> TextureChar::GetTextureImage() const
 {
 	return _textureImage;
 }

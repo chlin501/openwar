@@ -30,13 +30,13 @@ public:
 
 class TextureChar
 {
-	TextureImage* _textureImage;
+	std::shared_ptr<TextureImage> _textureImage;
 	bool _canColorize;
 
 public:
-	TextureChar(TextureImage* textureImage, bool canColorize);
+	TextureChar(std::shared_ptr<TextureImage> textureImage, bool canColorize);
 
-	TextureImage* GetTextureImage() const;
+	std::shared_ptr<TextureImage> GetTextureImage() const;
 	bool CanColorize() const;
 
 	glm::vec2 GetInnerSize() const;

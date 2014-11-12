@@ -19,21 +19,21 @@ struct ButtonRendering
 	TextureFont* _string_font;
 	TextureAtlas* _textureAtlas;
 
-	TextureImage* buttonBackground;
-	TextureImage* buttonHighlight;
-	TextureImage* buttonSelected;
+	std::shared_ptr<TextureImage> buttonBackground;
+	std::shared_ptr<TextureImage> buttonHighlight;
+	std::shared_ptr<TextureImage> buttonSelected;
 
-	TextureImage* buttonIconPlay;
-	TextureImage* buttonIconPause;
+	std::shared_ptr<TextureImage> buttonIconPlay;
+	std::shared_ptr<TextureImage> buttonIconPause;
 
-	TextureImage* buttonEditorToolHand;
-	TextureImage* buttonEditorToolPaint;
-	TextureImage* buttonEditorToolErase;
-	TextureImage* buttonEditorToolSmear;
-	TextureImage* buttonEditorToolHills;
-	TextureImage* buttonEditorToolTrees;
-	TextureImage* buttonEditorToolWater;
-	TextureImage* buttonEditorToolFords;
+	std::shared_ptr<TextureImage> buttonEditorToolHand;
+	std::shared_ptr<TextureImage> buttonEditorToolPaint;
+	std::shared_ptr<TextureImage> buttonEditorToolErase;
+	std::shared_ptr<TextureImage> buttonEditorToolSmear;
+	std::shared_ptr<TextureImage> buttonEditorToolHills;
+	std::shared_ptr<TextureImage> buttonEditorToolTrees;
+	std::shared_ptr<TextureImage> buttonEditorToolWater;
+	std::shared_ptr<TextureImage> buttonEditorToolFords;
 
 	ButtonRendering(GraphicsContext* gc);
 };

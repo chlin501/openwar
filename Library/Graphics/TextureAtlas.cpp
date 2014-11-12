@@ -92,7 +92,7 @@ void TextureAtlas::UpdateTexture()
 }
 
 
-TextureImage* TextureAtlas::AddTextureImage(const Image& image, TextureImageType textureImageType)
+std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, TextureImageType textureImageType)
 {
 	if (_textureAtlasImage == nullptr)
 	{
@@ -140,7 +140,7 @@ TextureImage* TextureAtlas::AddTextureImage(const Image& image, TextureImageType
 
 TextureSheet TextureAtlas::AddTextureSheet(const Image& image)
 {
-	TextureImage* textureImage = AddTextureImage(image, TextureImageType::Permanent);
+	std::shared_ptr<TextureImage> textureImage = AddTextureImage(image, TextureImageType::Permanent);
 	return TextureSheet(this, textureImage->GetOuterBounds());
 }
 
@@ -151,9 +151,9 @@ TextureSheet TextureAtlas::GetTextureSheet(const bounds2f& bounds)
 }
 
 
-TextureImage* TextureAtlas::NewTextureImage(bool discardable, const bounds2f& inner, const bounds2f& outer)
+std::shared_ptr<TextureImage> TextureAtlas::NewTextureImage(bool discardable, const bounds2f& inner, const bounds2f& outer)
 {
-	TextureImage* result = new TextureImage();
+	std::shared_ptr<TextureImage> result = std::make_shared<TextureImage>();
 
 	result->_textureAtlas = this;
 	result->_discardable = discardable;
@@ -238,7 +238,7 @@ glm::vec2 TextureSheet::MapCoord(int u, int v) const
 }
 
 
-TextureImage* TextureSheet::NewTextureImage(int u0, int v0, int size_u, int size_v)
+std::shared_ptr<TextureImage> TextureSheet::NewTextureImage(int u0, int v0, int size_u, int size_v)
 {
 	bounds2f bounds = bounds2f(u0, v0, u0 + size_u, v0 + size_v) + _sheetBounds.min;
 
@@ -246,7 +246,7 @@ TextureImage* TextureSheet::NewTextureImage(int u0, int v0, int size_u, int size
 }
 
 
-TextureImage* TextureSheet::NewTexturePatch(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
+std::shared_ptr<TextureImage> TextureSheet::NewTexturePatch(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
 {
 	bounds2f outer = bounds2f(u0, v0, u0 + size_u, v0 + size_v) + _sheetBounds.min;
 	bounds2f inner = outer.grow(-(float)inset_u, -(float)inset_v);

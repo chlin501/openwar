@@ -63,7 +63,7 @@ class ButtonItem
 	std::shared_ptr<ButtonHotspot> _hotspot;
 	ButtonArea* _buttonArea;
 	std::string _buttonText;
-	TextureImage* _buttonIcon;
+	std::shared_ptr<TextureImage> _buttonIcon;
 	char _keyboardShortcut;
 	bounds2f _bounds;
 	bool _selected;
@@ -76,7 +76,7 @@ public:
 	StringGlyph buttonTextGlyph;
 
 	ButtonItem(ButtonArea* buttonArea, const char* text);
-	ButtonItem(ButtonArea* buttonArea, TextureImage* icon);
+	ButtonItem(ButtonArea* buttonArea, std::shared_ptr<TextureImage> icon);
 	~ButtonItem();
 
 	std::shared_ptr<ButtonHotspot> GetHotspot() const { return _hotspot; }
@@ -85,8 +85,8 @@ public:
 	const char* GetButtonText() const { return _buttonText.empty() ? nullptr : _buttonText.c_str(); }
 	void SetButtonText(const char* value);
 
-	TextureImage* GetButtonIcon() const { return _buttonIcon; }
-	void SetButtonIcon(TextureImage* value) { _buttonIcon = value; }
+	std::shared_ptr<TextureImage> GetButtonIcon() const { return _buttonIcon; }
+	void SetButtonIcon(std::shared_ptr<TextureImage> value) { _buttonIcon = value; }
 
 	ButtonItem* SetAction(std::function<void()> action) { _hotspot->SetClickAction(action); return this; }
 	bool HasAction() const { return (bool)_hotspot->GetClickAction(); }
@@ -134,7 +134,7 @@ public:
 	ButtonGrid* GetButtonView() const { return _buttonView; }
 
 	ButtonItem* AddButtonItem(const char* buttonText);
-	ButtonItem* AddButtonItem(TextureImage* buttonIcon);
+	ButtonItem* AddButtonItem(std::shared_ptr<TextureImage> buttonIcon);
 
 	glm::vec2 CalculateSize() const;
 

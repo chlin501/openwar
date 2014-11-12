@@ -203,7 +203,7 @@ FontAdapter_NSFont::~FontAdapter_NSFont()
 }
 
 
-TextureImage* FontAdapter_NSFont::AddTextureImage(TextureAtlas* textureAtlas, const std::string& character, int border, std::function<void(Image&)> filter)
+std::shared_ptr<TextureImage> FontAdapter_NSFont::AddTextureImage(TextureAtlas* textureAtlas, const std::string& character, int border, std::function<void(Image&)> filter)
 {
 	NSString* string = [NSString stringWithUTF8String:character.c_str()];
 
@@ -245,7 +245,7 @@ TextureImage* FontAdapter_NSFont::AddTextureImage(TextureAtlas* textureAtlas, co
 	if (filter)
 		filter(image);
 
-	TextureImage* textureImage = textureAtlas->AddTextureImage(image, TextureImageType::Discardable);
+	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image, TextureImageType::Discardable);
 	textureImage->_inner.min = textureImage->_outer.min + glm::vec2(border, border);
 	textureImage->_inner.max = textureImage->_inner.min + glm::vec2(size.width, size.height);
 

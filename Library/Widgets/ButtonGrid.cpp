@@ -38,7 +38,7 @@ _disabled(false)
 
 
 
-ButtonItem::ButtonItem(ButtonArea* buttonArea, TextureImage* icon) :
+ButtonItem::ButtonItem(ButtonArea* buttonArea, std::shared_ptr<TextureImage> icon) :
 _hotspot(),
 _buttonArea(buttonArea),
 _buttonText(),
@@ -121,7 +121,7 @@ ButtonItem* ButtonArea::AddButtonItem(const char* buttonText)
 
 
 
-ButtonItem* ButtonArea::AddButtonItem(TextureImage* buttonIcon)
+ButtonItem* ButtonArea::AddButtonItem(std::shared_ptr<TextureImage> buttonIcon)
 {
 	ButtonItem* buttonItem = new ButtonItem(this, buttonIcon);
 	buttonItems.push_back(buttonItem);

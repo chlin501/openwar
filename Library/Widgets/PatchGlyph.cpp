@@ -9,7 +9,7 @@ PatchGlyph::PatchGlyph() :
 }
 
 
-PatchGlyph::PatchGlyph(TextureImage* tile, bounds2f bounds, glm::vec2 inset) :
+PatchGlyph::PatchGlyph(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm::vec2 inset) :
 	_alpha(1)
 {
 	outer_xy = bounds;
@@ -28,7 +28,7 @@ void PatchGlyph::Reset()
 }
 
 
-void PatchGlyph::Reset(TextureImage* tile, bounds2f bounds, glm::vec2 inset)
+void PatchGlyph::Reset(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm::vec2 inset)
 {
 	outer_xy = bounds;
 	inner_xy = bounds.grow(-inset.x, -inset.y);

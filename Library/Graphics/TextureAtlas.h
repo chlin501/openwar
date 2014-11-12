@@ -27,8 +27,8 @@ struct TextureSheet
 
 	glm::vec2 MapCoord(int u, int v) const;
 
-	TextureImage* NewTextureImage(int u0, int v0, int size_u, int size_v);
-	TextureImage* NewTexturePatch(int u0, int v0, int size_u, int size_v, int insert_u, int inset_v);
+	std::shared_ptr<TextureImage> NewTextureImage(int u0, int v0, int size_u, int size_v);
+	std::shared_ptr<TextureImage> NewTexturePatch(int u0, int v0, int size_u, int size_v, int insert_u, int inset_v);
 };
 
 
@@ -40,7 +40,7 @@ class TextureAtlas : public Texture
 	GraphicsContext* _gc;
 	Image* _textureAtlasImage;
 	std::map<FontAdapter*, TextureFont*> _textureFonts;
-	std::vector<TextureImage*> _textureImages;
+	std::vector<std::shared_ptr<TextureImage>> _textureImages;
 	glm::ivec2 _permamentPos;
 	int _permanentHeight;
 	glm::ivec2 _discardablePos;
@@ -63,12 +63,12 @@ public:
 
 	virtual void UpdateTexture();
 
-	TextureImage* AddTextureImage(const Image& image, TextureImageType textureImageType);
+	std::shared_ptr<TextureImage> AddTextureImage(const Image& image, TextureImageType textureImageType);
 	TextureSheet AddTextureSheet(const Image& image);
 	TextureSheet GetTextureSheet(const bounds2f& bounds);
 
 private:
-	TextureImage* NewTextureImage(bool discardable, const bounds2f& inner, const bounds2f& outer);
+	std::shared_ptr<TextureImage> NewTextureImage(bool discardable, const bounds2f& inner, const bounds2f& outer);
 
 private:
 	TextureAtlas(const TextureAtlas&) : Texture(nullptr) { }
