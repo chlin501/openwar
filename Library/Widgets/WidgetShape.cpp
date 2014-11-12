@@ -40,7 +40,7 @@ WidgetShader::WidgetShader(GraphicsContext* gc) : ShaderProgram(
 		{
 			vec4 color = texture2D(texture, _texcoord);
 			color.rgb = mix(color.rgb, _colorize.rgb * color.a, _colorize.a);
-			color = color * _alpha;
+			color = color * clamp(_alpha, 0.0, 1.0);
 
 			gl_FragColor = color;
 		}

@@ -22,7 +22,7 @@ public:
 	TextureFont(TextureAtlas* textureAtlas, FontAdapter* fontAdapter);
 	~TextureFont();
 
-	TextureChar* GetTextureChar(const std::string& character);
+	TextureChar* GetTextureChar(const std::string& character, float blur);
 	glm::vec2 MeasureText(const char* text);
 };
 

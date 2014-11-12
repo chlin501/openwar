@@ -203,14 +203,15 @@ FontAdapter_NSFont::~FontAdapter_NSFont()
 }
 
 
-TextureImage* FontAdapter_NSFont::AddTextureImage(TextureAtlas* textureAtlas, const std::string& character)
+TextureImage* FontAdapter_NSFont::AddTextureImage(TextureAtlas* textureAtlas, const std::string& character, float blur)
 {
 	NSString* string = [NSString stringWithUTF8String:character.c_str()];
 
 	CGSize size = [string sizeWithAttributes:_attributes];
 
-	int width = (int)size.width + 2;
-	int height = (int)size.height + 2;
+	int border = (int)glm::ceil(blur) + 1;
+	int width = (int)glm::ceil(size.width) + border * 2;
+	int height = (int)glm::ceil(size.height) + border * 2;
 
 	Image image(width, height);
 
@@ -223,7 +224,7 @@ TextureImage* FontAdapter_NSFont::AddTextureImage(TextureAtlas* textureAtlas, co
 	CGContextSetRGBFillColor(context, 1, 1, 1, 1);
 	CGContextSetRGBStrokeColor(context, 1, 1, 1, 1);
 
-	CGPoint p = CGPointMake(1, 1);
+	CGPoint p = CGPointMake(border, border);
 	[string drawAtPoint:p withAttributes:_attributes];
 
 	[NSGraphicsContext restoreGraphicsState];
@@ -242,10 +243,13 @@ TextureImage* FontAdapter_NSFont::AddTextureImage(TextureAtlas* textureAtlas, co
 	/*[NSGraphicsContext restoreGraphicsState];*/
 #endif
 
+	if (blur != 0)
+		image.Blur(blur);
+
 	image.PremultiplyAlpha();
 
 	TextureImage* textureImage = textureAtlas->AddTextureImage(image);
-	textureImage->_inner.min = textureImage->_outer.min + glm::vec2(1, 1);
+	textureImage->_inner.min = textureImage->_outer.min + glm::vec2(border, border);
 	textureImage->_inner.max = textureImage->_inner.min + glm::vec2(size.width, size.height);
 
 	return textureImage;

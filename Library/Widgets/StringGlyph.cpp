@@ -131,7 +131,7 @@ void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 
 	if (ContainsArabic(ws))
 	{
-		TextureChar* textureChar = textureFont->GetTextureChar(_string.c_str());
+		TextureChar* textureChar = textureFont->GetTextureChar(_string.c_str(), 0);
 
 		bounds2f item_xy = textureChar->GetOuterXY(p);
 		bounds2f item_uv = textureChar->GetOuterUV();
@@ -166,7 +166,7 @@ void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 			if (character.empty())
 				continue;
 
-			TextureChar* textureChar = textureFont->GetTextureChar(character);
+			TextureChar* textureChar = textureFont->GetTextureChar(character, 0);
 
 			bounds2f item_xy = textureChar->GetOuterXY(p);
 			bounds2f item_uv = textureChar->GetOuterUV();

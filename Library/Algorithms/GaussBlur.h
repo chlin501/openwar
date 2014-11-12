@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 
 
-void GaussBlur(glm::vec4* scl, glm::vec4* tcl, int w, int h, int r);
+void GaussBlur(glm::vec4* scl, glm::vec4* tcl, int w, int h, float r);
 
 
 #endif

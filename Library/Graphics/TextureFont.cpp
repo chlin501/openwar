@@ -26,13 +26,13 @@ TextureFont::~TextureFont()
 }
 
 
-TextureChar* TextureFont::GetTextureChar(const std::string& character)
+TextureChar* TextureFont::GetTextureChar(const std::string& character, float blur)
 {
 	auto i = _textureChars.find(character);
 	if (i != _textureChars.end())
 		return i->second;
 
-	TextureImage* textureImage = _fontAdapter->AddTextureImage(_textureAtlas, character);
+	TextureImage* textureImage = _fontAdapter->AddTextureImage(_textureAtlas, character, blur);
 	TextureChar* textureChar = new TextureChar(textureImage);
 	_textureChars[character] = textureChar;
 	return textureChar;
@@ -50,7 +50,7 @@ glm::vec2 TextureFont::MeasureText(const char* text)
 
 	if (ContainsArabic(ws))
 	{
-		TextureChar* item = GetTextureChar(text);
+		TextureChar* item = GetTextureChar(text, 0);
 		glm::vec2 size = item->GetInnerSize();
 		w = size.x;
 		h = size.y;
@@ -66,7 +66,7 @@ glm::vec2 TextureFont::MeasureText(const char* text)
 			if (character.empty())
 				continue;
 
-			TextureChar* item = GetTextureChar(character);
+			TextureChar* item = GetTextureChar(character, 0);
 			glm::vec2 size = item->GetInnerSize();
 			w += size.x;
 			h = fmaxf(h, size.y);
