@@ -15,6 +15,8 @@ GraphicsContext::GraphicsContext(float pixelDensity) :
 
 GraphicsContext::~GraphicsContext()
 {
+	for (auto i : _fontAdapters)
+		delete i.second;
 }
 
 
@@ -30,4 +32,16 @@ TextureAtlas* GraphicsContext::GetWidgetTextureAtlas() const
 		_widgetTextureAtlas = new TextureAtlas(const_cast<GraphicsContext*>(this));
 
 	return _widgetTextureAtlas;
+}
+
+
+FontAdapter* GraphicsContext::GetFontAdapter(const FontDescriptor& fontDescriptor)
+{
+	auto i = _fontAdapters.find(fontDescriptor);
+	if (i != _fontAdapters.end())
+		return i->second;
+
+	FontAdapter* fontAdapter = new FontAdapter_NSFont(this, fontDescriptor);
+	_fontAdapters[fontDescriptor] = fontAdapter;
+	return fontAdapter;
 }

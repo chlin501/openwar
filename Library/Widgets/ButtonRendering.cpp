@@ -8,7 +8,7 @@
 ButtonRendering::ButtonRendering(GraphicsContext* gc) :
 	_gc(gc)
 {
-	_string_font = new TextureFont(gc->GetWidgetTextureAtlas(), FontDescriptor(true, 18));
+	_string_font = gc->GetWidgetTextureAtlas()->GetTextureFont(FontDescriptor(true, 18));
 
 	_textureAtlas = new TextureAtlas(gc);
 

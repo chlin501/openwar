@@ -5,6 +5,7 @@
 #ifndef GraphicsContext_H
 #define GraphicsContext_H
 
+#include "FontAdapter.h"
 #include "GraphicsOpenGL.h"
 #include "ShaderProgram.h"
 #include <map>
@@ -18,6 +19,7 @@ class GraphicsContext
 	float _pixeldensity;
 	std::map<std::string, ShaderProgram*> _shaders;
 	mutable TextureAtlas* _widgetTextureAtlas;
+	std::map<FontDescriptor, FontAdapter*> _fontAdapters;
 
 public:
 	GraphicsContext(float pixelDensity);
@@ -26,6 +28,8 @@ public:
 	float GetPixelDensity() const;
 
 	TextureAtlas* GetWidgetTextureAtlas() const;
+
+	FontAdapter* GetFontAdapter(const FontDescriptor& fontDescriptor);
 
 	template <class _ShaderProgram> _ShaderProgram* GetShaderProgram()
 	{
@@ -38,6 +42,7 @@ public:
 		}
 		return result;
 	}
+
 
 private:
 	GraphicsContext(const GraphicsContext&) { }

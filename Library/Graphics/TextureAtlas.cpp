@@ -1,6 +1,6 @@
 #include "TextureAtlas.h"
 #include "GraphicsContext.h"
-#import "TextureFont.h"
+#include "TextureFont.h"
 
 
 
@@ -23,12 +23,14 @@ GraphicsContext* TextureAtlas::GetGraphicsContext() const
 
 TextureFont* TextureAtlas::GetTextureFont(const FontDescriptor& fontDescriptor)
 {
-	for (TextureFont* textureFont : _textureFonts)
-		if (textureFont->GetFontDescriptor() == fontDescriptor)
-			return textureFont;
+	FontAdapter* fontAdapter = _gc->GetFontAdapter(fontDescriptor);
 
-	TextureFont* result = new TextureFont(this, fontDescriptor);
-	_textureFonts.push_back(result);
+	auto i = _textureFonts.find(fontAdapter);
+	if (i != _textureFonts.end())
+		return i->second;
+
+	TextureFont* result = new TextureFont(this, fontAdapter);
+	_textureFonts[fontAdapter] = result;
 	return result;
 }
 

@@ -1,17 +1,17 @@
 #ifndef TextureAtlas_H
 #define TextureAtlas_H
 
+#include <map>
 #include <vector>
-#include <glm/glm.hpp>
 #include "Algebra/bounds.h"
 #include "Texture.h"
 #include "Image.h"
 
-class TextureAtlas;
-class TextureImage;
-class TextureFont;
 struct FontDescriptor;
-
+class FontAdapter;
+class TextureAtlas;
+class TextureFont;
+class TextureImage;
 
 
 /*enum class TextureImageType
@@ -43,7 +43,7 @@ class TextureAtlas : public Texture
 
 	GraphicsContext* _gc;
 	Image* _image;
-	std::vector<TextureFont*> _textureFonts;
+	std::map<FontAdapter*, TextureFont*> _textureFonts;
 	std::vector<TextureImage*> _images;
 	int _currentX;
 	int _currentY;

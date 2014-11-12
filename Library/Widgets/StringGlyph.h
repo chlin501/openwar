@@ -1,6 +1,7 @@
 #ifndef StringGlyph_H
 #define StringGlyph_H
 
+#include "FontAdapter.h"
 #include "WidgetShape.h"
 
 
