@@ -14,9 +14,10 @@ class TextureImage;
 
 class TextureFont
 {
+	typedef std::pair<std::string, float> CharacterKey;
 	TextureAtlas* _textureAtlas;
 	FontAdapter* _fontAdapter;
-	std::map<std::string, TextureChar*> _textureChars;
+	std::map<CharacterKey, TextureChar*> _textureChars;
 
 public:
 	TextureFont(TextureAtlas* textureAtlas, FontAdapter* fontAdapter);

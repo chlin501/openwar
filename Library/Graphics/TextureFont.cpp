@@ -28,16 +28,17 @@ TextureFont::~TextureFont()
 
 TextureChar* TextureFont::GetTextureChar(const std::string& character, float blur)
 {
-	auto i = _textureChars.find(character);
+	CharacterKey key(character, blur);
+
+	auto i = _textureChars.find(key);
 	if (i != _textureChars.end())
 		return i->second;
 
 	TextureImage* textureImage = _fontAdapter->AddTextureImage(_textureAtlas, character, blur);
 	TextureChar* textureChar = new TextureChar(textureImage);
-	_textureChars[character] = textureChar;
+	_textureChars[key] = textureChar;
 	return textureChar;
 }
-
 
 
 glm::vec2 TextureFont::MeasureText(const char* text)

@@ -30,25 +30,25 @@ static bool ContainsArabic(const std::wstring& ws)
 
 StringGlyph::StringGlyph() :
 	_string(),
-	_alpha(1),
-	_delta(0)
+	_color(1, 1, 1, 1),
+	_width(0)
 {
 }
 
 
-StringGlyph::StringGlyph(const char* string, glm::vec2 translate, float alpha, float delta) :
+StringGlyph::StringGlyph(const char* string, glm::vec2 translate) :
 	_string(string),
-	_alpha(alpha),
-	_delta(delta)
+	_color(1, 1, 1, 1),
+	_width(0)
 {
 	SetTranslate(translate);
 }
 
 
-StringGlyph::StringGlyph(const char* string, glm::mat4x4 transform, float alpha, float delta) :
+StringGlyph::StringGlyph(const char* string, glm::mat4x4 transform) :
 	_string(string),
-	_alpha(alpha),
-	_delta(delta)
+	_color(1, 1, 1, 1),
+	_width(0)
 {
 	SetTransform(transform);
 }
@@ -78,7 +78,7 @@ void StringGlyph::SetString(const char* value)
 }
 
 
-const glm::vec3 StringGlyph::GetColor() const
+const glm::vec4 StringGlyph::GetColor() const
 {
 	return _color;
 }
@@ -86,52 +86,86 @@ const glm::vec3 StringGlyph::GetColor() const
 
 void StringGlyph::SetColor(const glm::vec3& value)
 {
+	_color = glm::vec4(value, _color.a);
+}
+
+
+void StringGlyph::SetColor(const glm::vec4& value)
+{
 	_color = value;
+}
+
+
+const glm::vec4 StringGlyph::GetGlow() const
+{
+	return _glow;
+}
+
+
+void StringGlyph::SetGlow(const glm::vec4& value)
+{
+	_glow = value;
 }
 
 
 const float StringGlyph::GetAlpha() const
 {
-	return _alpha;
+	return _color.a;
 }
 
 
 void StringGlyph::SetAlpha(float value)
 {
-	_alpha = value;
+	_color.a = value;
 }
 
 
-const float StringGlyph::GetDelta() const
+
+const float StringGlyph::GetWidth() const
 {
-	return _delta;
+	return _width;
 }
 
 
-void StringGlyph::SetDelta(float value)
+void StringGlyph::SetWidth(float value)
 {
-	_delta = value;
+	_width = value;
 }
 
 
 void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
+	if (_glow.a != 0)
+		AppendVertices(vertices, _glow, 2);
+
+	AppendVertices(vertices, _color, 0);
+}
+
+
+void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur)
+{
 	glm::vec2 p(0, 0);
 
-	glm::vec4 colorize = glm::vec4(_color, 1);
+	float alpha = color.a;
+	float delta = 0;
 
-	float alpha = _alpha;
+	if (_width != 0)
+	{
+		float fade = 8.0f;
+		alpha = _width / fade - 0.5f;
+		delta = -1.0f / fade;
+	}
 
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv(".", L".");
 	std::wstring ws = conv.from_bytes(_string);
-
 
 	TextureFont* textureFont = GetWidgetShape()->GetTextureAtlas()->GetTextureFont(GetFontDescriptor());
 	glm::mat4x4 transform = GetTransform();
 
 	if (ContainsArabic(ws))
 	{
-		TextureChar* textureChar = textureFont->GetTextureChar(_string.c_str(), 0);
+		TextureChar* textureChar = textureFont->GetTextureChar(_string.c_str(), blur);
+		glm::vec4 colorize = glm::vec4(color.rgb(), 1);
 
 		bounds2f item_xy = textureChar->GetOuterXY(p);
 		bounds2f item_uv = textureChar->GetOuterUV();
@@ -146,7 +180,7 @@ void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 		bounds.min = (transform * glm::vec4(item_xy.min.x, item_xy.min.y, 0, 1)).xy();
 		bounds.max = (transform * glm::vec4(item_xy.max.x, item_xy.max.y, 0, 1)).xy();
 
-		float next_alpha = alpha + _delta * s.x;
+		float next_alpha = alpha + delta * s.x;
 
 		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), colorize, alpha));
 		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_01(), glm::vec2(item_u0, item_v0), colorize, alpha));
@@ -166,7 +200,8 @@ void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 			if (character.empty())
 				continue;
 
-			TextureChar* textureChar = textureFont->GetTextureChar(character, 0);
+			TextureChar* textureChar = textureFont->GetTextureChar(character, blur);
+			glm::vec4 colorize = glm::vec4(color.rgb(), 1);
 
 			bounds2f item_xy = textureChar->GetOuterXY(p);
 			bounds2f item_uv = textureChar->GetOuterUV();
@@ -181,7 +216,7 @@ void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 			bounds.min = (transform * glm::vec4(item_xy.min.x, item_xy.min.y, 0, 1)).xy();
 			bounds.max = (transform * glm::vec4(item_xy.max.x, item_xy.max.y, 0, 1)).xy();
 
-			float next_alpha = alpha + _delta * s.x;
+			float next_alpha = alpha + delta * s.x;
 
 			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), colorize, alpha));
 			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_01(), glm::vec2(item_u0, item_v0), colorize, alpha));
