@@ -34,8 +34,18 @@ TextureChar* TextureFont::GetTextureChar(const std::string& character, float blu
 	if (i != _textureChars.end())
 		return i->second;
 
-	TextureImage* textureImage = _fontAdapter->AddTextureImage(_textureAtlas, character, blur);
-	TextureChar* textureChar = new TextureChar(textureImage);
+	bool canColorize = false;
+	std::function<void(Image&)> filter = [&canColorize, blur](Image& image) {
+		canColorize = image.IsGrayscale();
+		if (blur != 0)
+			image.Blur(blur);
+		image.PremultiplyAlpha();
+	};
+
+	int border = (int)glm::ceil(blur) + 1;
+
+	TextureImage* textureImage = _fontAdapter->AddTextureImage(_textureAtlas, character, border, filter);
+	TextureChar* textureChar = new TextureChar(textureImage, canColorize);
 	_textureChars[key] = textureChar;
 	return textureChar;
 }
@@ -81,10 +91,22 @@ glm::vec2 TextureFont::MeasureText(const char* text)
 /***/
 
 
-TextureChar::TextureChar(TextureImage* textureImage) :
-	_textureImage(textureImage)
+TextureChar::TextureChar(TextureImage* textureImage, bool canColorize) :
+	_textureImage(textureImage),
+	_canColorize(canColorize)
 {
+}
 
+
+TextureImage* TextureChar::GetTextureImage() const
+{
+	return _textureImage;
+}
+
+
+bool TextureChar::CanColorize() const
+{
+	return _canColorize;
 }
 
 
@@ -105,10 +127,4 @@ bounds2f TextureChar::GetOuterXY(glm::vec2 position) const
 	bounds2f inner_xy = _textureImage->GetInnerBounds();
 	bounds2f outer_xy = _textureImage->GetOuterBounds();
 	return outer_xy + position - inner_xy.min;
-}
-
-
-TextureImage* TextureChar::GetTextureImage() const
-{
-	return _textureImage;
 }

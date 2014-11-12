@@ -274,6 +274,30 @@ void Image::SetPixel(int x, int y, glm::vec4 c)
 }
 
 
+static int CalculateSaturation(const unsigned char* pixel)
+{
+	int r = pixel[0];
+	int g = pixel[1];
+	int b = pixel[2];
+	int M = glm::max(glm::max(r, g), b);
+	int m = glm::min(glm::min(r, g), b);
+	int C = M - m;
+	int V = M;
+	return V == 0 ? 0 : 255 * C / V;
+}
+
+
+bool Image::IsGrayscale() const
+{
+	const unsigned char* end = _pixels + _height * _width * 4;
+	for (const unsigned char* pixel = _pixels; pixel != end; pixel += 4)
+		if (pixel[3] > 32 && CalculateSaturation(pixel) > 16)
+			return false;
+
+	return true;
+}
+
+
 void Image::PremultiplyAlpha()
 {
 	for (int y = 0; y < _height; ++y)

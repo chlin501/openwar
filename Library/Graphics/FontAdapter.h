@@ -1,6 +1,8 @@
 #ifndef FontAdapter_H
 #define FontAdapter_H
 
+#include <functional>
+
 #if TARGET_OS_IPHONE
 #define OPENWAR_USE_UIFONT
 #else
@@ -15,6 +17,7 @@
 #endif
 
 class GraphicsContext;
+class Image;
 class TextureAtlas;
 class TextureImage;
 
@@ -52,7 +55,7 @@ class FontAdapter
 {
 public:
 	virtual ~FontAdapter();
-	virtual TextureImage* AddTextureImage(TextureAtlas* textureAtlas, const std::string& character, float blur) = 0;
+	virtual TextureImage* AddTextureImage(TextureAtlas* textureAtlas, const std::string& character, int border, std::function<void(Image&)> filter) = 0;
 };
 
 
@@ -67,7 +70,7 @@ class FontAdapter_NSFont : public FontAdapter
 public:
 	FontAdapter_NSFont(GraphicsContext* gc, const FontDescriptor& fontDescriptor);
 	virtual ~FontAdapter_NSFont();
-	virtual TextureImage* AddTextureImage(TextureAtlas* textureAtlas, const std::string& character, float blur);
+	virtual TextureImage* AddTextureImage(TextureAtlas* textureAtlas, const std::string& character, int border, std::function<void(Image&)> filter);
 };
 #endif
 

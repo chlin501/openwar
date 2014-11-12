@@ -203,13 +203,12 @@ FontAdapter_NSFont::~FontAdapter_NSFont()
 }
 
 
-TextureImage* FontAdapter_NSFont::AddTextureImage(TextureAtlas* textureAtlas, const std::string& character, float blur)
+TextureImage* FontAdapter_NSFont::AddTextureImage(TextureAtlas* textureAtlas, const std::string& character, int border, std::function<void(Image&)> filter)
 {
 	NSString* string = [NSString stringWithUTF8String:character.c_str()];
 
 	CGSize size = [string sizeWithAttributes:_attributes];
 
-	int border = (int)glm::ceil(blur) + 1;
 	int width = (int)glm::ceil(size.width) + border * 2;
 	int height = (int)glm::ceil(size.height) + border * 2;
 
@@ -243,10 +242,8 @@ TextureImage* FontAdapter_NSFont::AddTextureImage(TextureAtlas* textureAtlas, co
 	/*[NSGraphicsContext restoreGraphicsState];*/
 #endif
 
-	if (blur != 0)
-		image.Blur(blur);
-
-	image.PremultiplyAlpha();
+	if (filter)
+		filter(image);
 
 	TextureImage* textureImage = textureAtlas->AddTextureImage(image);
 	textureImage->_inner.min = textureImage->_outer.min + glm::vec2(border, border);

@@ -64,6 +64,8 @@ public:
 	glm::vec4 GetPixel(int x, int y) const;
 	void SetPixel(int x, int y, glm::vec4 c);
 
+	bool IsGrayscale() const;
+
 	void PremultiplyAlpha();
 	void Blur(float radius);
 

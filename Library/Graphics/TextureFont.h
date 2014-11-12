@@ -31,15 +31,18 @@ public:
 class TextureChar
 {
 	TextureImage* _textureImage;
+	bool _canColorize;
 
 public:
-	TextureChar(TextureImage* textureImage);
+	TextureChar(TextureImage* textureImage, bool canColorize);
+
+	TextureImage* GetTextureImage() const;
+	bool CanColorize() const;
 
 	glm::vec2 GetInnerSize() const;
 	bounds2f GetOuterUV() const;
 	bounds2f GetOuterXY(glm::vec2 position) const;
 
-	TextureImage* GetTextureImage() const;
 };
 
 
