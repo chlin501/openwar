@@ -18,24 +18,24 @@ ButtonRendering::ButtonRendering(GraphicsContext* gc) :
 	TextureSheet buttonIcons = _textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonIcons.png")));
 	TextureSheet editorTools = _textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/EditorTools.png")));
 
-	buttonBackground = buttonBackgroundSheet.GetTextureImage(0, 0, 64, 64);
+	buttonBackground = buttonBackgroundSheet.NewTextureImage(0, 0, 64, 64);
 	buttonBackground->_inner = bounds2f(buttonBackground->_inner.center());
 
-	buttonHighlight = buttonHighlightSheet.GetTextureImage(0, 0, 64, 64);
+	buttonHighlight = buttonHighlightSheet.NewTextureImage(0, 0, 64, 64);
 	buttonHighlight->_inner = bounds2f(buttonHighlight->_inner.center());
 
-	buttonSelected = buttonSelectedSheet.GetTextureImage(0, 0, 64, 64);
+	buttonSelected = buttonSelectedSheet.NewTextureImage(0, 0, 64, 64);
 	buttonSelected->_inner = bounds2f(buttonSelected->_inner.center());
 
-	buttonIconPlay = buttonIcons.GetTextureImage(0, 0, 25, 32);
-	buttonIconPause = buttonIcons.GetTextureImage(25, 0, 25, 32);
+	buttonIconPlay = buttonIcons.NewTextureImage(0, 0, 25, 32);
+	buttonIconPause = buttonIcons.NewTextureImage(25, 0, 25, 32);
 
-	buttonEditorToolHand  = editorTools.GetTextureImage(  0,  0, 64, 64);
-	buttonEditorToolPaint = editorTools.GetTextureImage( 64,  0, 64, 64);
-	buttonEditorToolErase = editorTools.GetTextureImage(128,  0, 64, 64);
-	buttonEditorToolSmear = editorTools.GetTextureImage(196,  0, 64, 64);
-	buttonEditorToolHills = editorTools.GetTextureImage(  0, 64, 64, 64);
-	buttonEditorToolTrees = editorTools.GetTextureImage( 64, 64, 64, 64);
-	buttonEditorToolWater = editorTools.GetTextureImage(128, 64, 64, 64);
-	buttonEditorToolFords = editorTools.GetTextureImage(196, 64, 64, 64);
+	buttonEditorToolHand  = editorTools.NewTextureImage(0, 0, 64, 64);
+	buttonEditorToolPaint = editorTools.NewTextureImage(64, 0, 64, 64);
+	buttonEditorToolErase = editorTools.NewTextureImage(128, 0, 64, 64);
+	buttonEditorToolSmear = editorTools.NewTextureImage(196, 0, 64, 64);
+	buttonEditorToolHills = editorTools.NewTextureImage(0, 64, 64, 64);
+	buttonEditorToolTrees = editorTools.NewTextureImage(64, 64, 64, 64);
+	buttonEditorToolWater = editorTools.NewTextureImage(128, 64, 64, 64);
+	buttonEditorToolFords = editorTools.NewTextureImage(196, 64, 64, 64);
 }

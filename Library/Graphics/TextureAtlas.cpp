@@ -6,10 +6,9 @@
 
 TextureAtlas::TextureAtlas(GraphicsContext* gc) : Texture(gc),
 	_gc(gc),
-	_image(nullptr),
-	_currentX(0),
-	_currentY(0),
-	_nextY(0),
+	_textureAtlasImage(nullptr),
+	_permanentHeight(0),
+	_discardableHeight(0),
 	_dirty(false)
 {
 }
@@ -37,9 +36,9 @@ TextureFont* TextureAtlas::GetTextureFont(const FontDescriptor& fontDescriptor)
 
 void TextureAtlas::LoadAtlasFromResource(const resource& r)
 {
-	_image = new Image();
-	_image->LoadFromResource(r);
-	LoadTextureFromImage(*_image);
+	_textureAtlasImage = new Image();
+	_textureAtlasImage->LoadFromResource(r);
+	LoadTextureFromImage(*_textureAtlasImage);
 }
 
 
@@ -86,57 +85,62 @@ void TextureAtlas::UpdateTexture()
 {
 	if (_dirty)
 	{
-		if (_image != nullptr)
-			LoadTextureFromImage(*_image);
+		if (_textureAtlasImage != nullptr)
+			LoadTextureFromImage(*_textureAtlasImage);
 		_dirty = false;
 	}
 }
 
 
-TextureImage* TextureAtlas::AddTextureImage(const Image& image)
+TextureImage* TextureAtlas::AddTextureImage(const Image& image, TextureImageType textureImageType)
 {
-	if (_image == nullptr)
-		_image = new Image(512, 512);
-
-	int width = image.GetWidth();
-	int height = image.GetHeight();
-
-	if (_currentX + width > _image->GetWidth())
+	if (_textureAtlasImage == nullptr)
 	{
-		_currentX = 0;
-		_currentY = _nextY;
+		_textureAtlasImage = new Image(512, 512);
+		_permamentPos = glm::ivec2(0, 0);
+		_permanentHeight = 0;
+		_discardablePos = glm::ivec2(0, _textureAtlasImage->GetHeight());
+		_discardableHeight = 0;
 	}
 
-	_image->Copy(image, _currentX, _currentY);
+	glm::ivec2 atlasSize(_textureAtlasImage->GetWidth(), _textureAtlasImage->GetHeight());
+	glm::ivec2 imageSize(image.GetWidth(), image.GetHeight());
 
-	bounds2f bounds(_currentX, _currentY, _currentX + width, _currentY + height);
+	bool discardable = textureImageType == TextureImageType::Discardable;
+	glm::ivec2 position;
 
-	_currentX += width;
-	_nextY = glm::max(_nextY, _currentY + height);
+	if (!discardable)
+	{
+		if (_permamentPos.x + imageSize.x > atlasSize.x)
+			_discardablePos = glm::ivec2(0, _permanentHeight);
 
+		position = _permamentPos;
+
+		_permamentPos.x += imageSize.x;
+		_permanentHeight = glm::max(_permanentHeight, _permamentPos.y + imageSize.y);
+	}
+	else
+	{
+		if (_discardablePos.x + imageSize.x > atlasSize.x)
+			_discardablePos = glm::ivec2(0, atlasSize.y - _discardableHeight);
+
+		position = glm::ivec2(_discardablePos.x, _discardablePos.y - imageSize.y);
+
+		_discardablePos.x += imageSize.x;
+		_discardableHeight = glm::max(_discardableHeight, atlasSize.y - position.y);
+	}
+
+	bounds2i bounds = bounds2i(position, position + imageSize);
+	_textureAtlasImage->Copy(image, position.x, position.y);
 	_dirty = true;
 
-	return GetTextureImage(bounds, bounds);
-}
-
-
-TextureImage* TextureAtlas::GetTextureImage(const bounds2f& inner, const bounds2f& outer)
-{
-	TextureImage* result = new TextureImage();
-
-	result->_textureAtlas = this;
-	result->_inner = inner;
-	result->_outer = outer;
-
-	_images.push_back(result);
-
-	return result;
+	return NewTextureImage(discardable, bounds, bounds);
 }
 
 
 TextureSheet TextureAtlas::AddTextureSheet(const Image& image)
 {
-	TextureImage* textureImage = AddTextureImage(image);
+	TextureImage* textureImage = AddTextureImage(image, TextureImageType::Permanent);
 	return TextureSheet(this, textureImage->GetOuterBounds());
 }
 
@@ -147,11 +151,28 @@ TextureSheet TextureAtlas::GetTextureSheet(const bounds2f& bounds)
 }
 
 
+TextureImage* TextureAtlas::NewTextureImage(bool discardable, const bounds2f& inner, const bounds2f& outer)
+{
+	TextureImage* result = new TextureImage();
+
+	result->_textureAtlas = this;
+	result->_discardable = discardable;
+	result->_inner = inner;
+	result->_outer = outer;
+
+	_textureImages.push_back(result);
+
+	return result;
+}
+
+
 /***/
 
 
 TextureImage::TextureImage() :
-	_textureAtlas(nullptr)
+	_textureAtlas(nullptr),
+	_discardable(false),
+	_discarded(false)
 {
 }
 
@@ -162,9 +183,9 @@ TextureImage::~TextureImage()
 }
 
 
-TextureAtlas* TextureImage::GetTextureAtlas() const
+bool TextureImage::IsDiscarded() const
 {
-	return _textureAtlas;
+	return _discarded;
 }
 
 
@@ -182,13 +203,13 @@ bounds2f TextureImage::GetOuterBounds() const
 
 bounds2f TextureImage::GetInnerUV() const
 {
-	return _inner / glm::vec2(_textureAtlas->_image->GetWidth(), _textureAtlas->_image->GetHeight());
+	return _inner / glm::vec2(_textureAtlas->_textureAtlasImage->GetWidth(), _textureAtlas->_textureAtlasImage->GetHeight());
 }
 
 
 bounds2f TextureImage::GetOuterUV() const
 {
-	return _outer / glm::vec2(_textureAtlas->_image->GetWidth(), _textureAtlas->_image->GetHeight());
+	return _outer / glm::vec2(_textureAtlas->_textureAtlasImage->GetWidth(), _textureAtlas->_textureAtlasImage->GetHeight());
 }
 
 
@@ -213,22 +234,22 @@ TextureSheet::TextureSheet(TextureAtlas* textureAtlas, const bounds2f& bounds) :
 
 glm::vec2 TextureSheet::MapCoord(int u, int v) const
 {
-	return (_sheetBounds.min + glm::vec2(u, v)) / (glm::vec2)_textureAtlas->_image->size();
+	return (_sheetBounds.min + glm::vec2(u, v)) / (glm::vec2)_textureAtlas->_textureAtlasImage->size();
 }
 
 
-TextureImage* TextureSheet::GetTextureImage(int u0, int v0, int size_u, int size_v)
+TextureImage* TextureSheet::NewTextureImage(int u0, int v0, int size_u, int size_v)
 {
 	bounds2f bounds = bounds2f(u0, v0, u0 + size_u, v0 + size_v) + _sheetBounds.min;
 
-	return _textureAtlas->GetTextureImage(bounds, bounds);
+	return _textureAtlas->NewTextureImage(false, bounds, bounds);
 }
 
 
-TextureImage* TextureSheet::GetTexturePatch(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
+TextureImage* TextureSheet::NewTexturePatch(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
 {
 	bounds2f outer = bounds2f(u0, v0, u0 + size_u, v0 + size_v) + _sheetBounds.min;
 	bounds2f inner = outer.grow(-(float)inset_u, -(float)inset_v);
 
-	return _textureAtlas->GetTextureImage(inner, outer);
+	return _textureAtlas->NewTextureImage(false, inner, outer);
 }

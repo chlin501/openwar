@@ -14,11 +14,7 @@ class TextureFont;
 class TextureImage;
 
 
-/*enum class TextureImageType
-{
-	Permanent,
-	Discardable,
-};*/
+enum class TextureImageType { Permanent, Discardable };
 
 
 struct TextureSheet
@@ -31,8 +27,8 @@ struct TextureSheet
 
 	glm::vec2 MapCoord(int u, int v) const;
 
-	TextureImage* GetTextureImage(int u0, int v0, int size_u, int size_v);
-	TextureImage* GetTexturePatch(int u0, int v0, int size_u, int size_v, int insert_u, int inset_v);
+	TextureImage* NewTextureImage(int u0, int v0, int size_u, int size_v);
+	TextureImage* NewTexturePatch(int u0, int v0, int size_u, int size_v, int insert_u, int inset_v);
 };
 
 
@@ -42,12 +38,13 @@ class TextureAtlas : public Texture
 	friend class TextureSheet;
 
 	GraphicsContext* _gc;
-	Image* _image;
+	Image* _textureAtlasImage;
 	std::map<FontAdapter*, TextureFont*> _textureFonts;
-	std::vector<TextureImage*> _images;
-	int _currentX;
-	int _currentY;
-	int _nextY;
+	std::vector<TextureImage*> _textureImages;
+	glm::ivec2 _permamentPos;
+	int _permanentHeight;
+	glm::ivec2 _discardablePos;
+	int _discardableHeight;
 	bool _dirty;
 
 public:
@@ -66,11 +63,12 @@ public:
 
 	virtual void UpdateTexture();
 
-	TextureImage* AddTextureImage(const Image& image);
-	TextureImage* GetTextureImage(const bounds2f& inner, const bounds2f& outer);
-
+	TextureImage* AddTextureImage(const Image& image, TextureImageType textureImageType);
 	TextureSheet AddTextureSheet(const Image& image);
 	TextureSheet GetTextureSheet(const bounds2f& bounds);
+
+private:
+	TextureImage* NewTextureImage(bool discardable, const bounds2f& inner, const bounds2f& outer);
 
 private:
 	TextureAtlas(const TextureAtlas&) : Texture(nullptr) { }
@@ -83,6 +81,8 @@ class TextureImage
 	friend class TextureAtlas;
 	friend class TexturePatch;
 	TextureAtlas* _textureAtlas;
+	bool _discardable;
+	bool _discarded;
 
 public:
 	bounds2f _inner;
@@ -91,7 +91,7 @@ public:
 	TextureImage();
 	~TextureImage();
 
-	TextureAtlas* GetTextureAtlas() const;
+	bool IsDiscarded() const;
 
 	bounds2f GetInnerBounds() const;
 	bounds2f GetOuterBounds() const;
