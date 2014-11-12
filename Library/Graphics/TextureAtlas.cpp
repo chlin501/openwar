@@ -95,12 +95,18 @@ void TextureAtlas::UpdateTexture()
 std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, TextureImageType textureImageType)
 {
 	if (_textureAtlasImage == nullptr)
+		_textureAtlasImage = new Image(glm::max(512, image.GetWidth()), glm::max(256, image.GetHeight()));
+
+	if (_permanentHeight + _discardableHeight + image.GetHeight() > _textureAtlasImage->GetHeight())
 	{
-		_textureAtlasImage = new Image(512, 512);
-		_permamentPos = glm::ivec2(0, 0);
-		_permanentHeight = 0;
-		_discardablePos = glm::ivec2(0, _textureAtlasImage->GetHeight());
-		_discardableHeight = 0;
+		DiscardTextureImages();
+		if (_textureAtlasImage->GetHeight() < 2048)
+		{
+			Image* textureAtlasImage = new Image(_textureAtlasImage->GetWidth(), _textureAtlasImage->GetHeight() * 2);
+			textureAtlasImage->Copy(*_textureAtlasImage, 0, 0);
+			delete _textureAtlasImage;
+			_textureAtlasImage = textureAtlasImage;
+		}
 	}
 
 	glm::ivec2 atlasSize(_textureAtlasImage->GetWidth(), _textureAtlasImage->GetHeight());
@@ -122,12 +128,12 @@ std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, 
 	else
 	{
 		if (_discardablePos.x + imageSize.x > atlasSize.x)
-			_discardablePos = glm::ivec2(0, atlasSize.y - _discardableHeight);
+			_discardablePos = glm::ivec2(0, _discardableHeight);
 
-		position = glm::ivec2(_discardablePos.x, _discardablePos.y - imageSize.y);
+		position = glm::ivec2(_discardablePos.x, atlasSize.y - _discardablePos.y - imageSize.y);
 
 		_discardablePos.x += imageSize.x;
-		_discardableHeight = glm::max(_discardableHeight, atlasSize.y - position.y);
+		_discardableHeight = glm::max(_discardableHeight, _discardablePos.y + imageSize.y);
 	}
 
 	bounds2i bounds = bounds2i(position, position + imageSize);
@@ -163,6 +169,24 @@ std::shared_ptr<TextureImage> TextureAtlas::NewTextureImage(bool discardable, co
 	_textureImages.push_back(result);
 
 	return result;
+}
+
+
+void TextureAtlas::DiscardTextureImages()
+{
+	for (std::shared_ptr<TextureImage> textureImage : _textureImages)
+		if (textureImage->_discardable)
+			textureImage->_discarded = true;
+
+	_textureImages.erase(
+		std::remove_if(_textureImages.begin(), _textureImages.end(), [](std::shared_ptr<TextureImage> textureImage) {
+			return textureImage->_discarded;
+		}),
+		_textureImages.end());
+
+
+	_discardablePos = glm::ivec2(0, 0);
+	_discardableHeight = 0;
 }
 
 

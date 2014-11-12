@@ -31,7 +31,7 @@ TextureChar* TextureFont::GetTextureChar(const std::string& character, float blu
 	CharacterKey key(character, blur);
 
 	auto i = _textureChars.find(key);
-	if (i != _textureChars.end())
+	if (i != _textureChars.end() && !i->second->GetTextureImage()->IsDiscarded())
 		return i->second;
 
 	bool canColorize = false;

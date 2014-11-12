@@ -69,6 +69,7 @@ public:
 
 private:
 	std::shared_ptr<TextureImage> NewTextureImage(bool discardable, const bounds2f& inner, const bounds2f& outer);
+	void DiscardTextureImages();
 
 private:
 	TextureAtlas(const TextureAtlas&) : Texture(nullptr) { }
