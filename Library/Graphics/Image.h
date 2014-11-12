@@ -10,24 +10,22 @@
 #include "resource.h"
 #include "bounds.h"
 
-//#define OPENWAR_IMAGE_USE_SDL
-#define OPENWAR_IMAGE_USE_COREGRAPHICS
 
-#ifdef OPENWAR_IMAGE_USE_SDL
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
 #include <SDL2/SDL.h>
 #endif
 
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 #import <CoreGraphics/CoreGraphics.h>
 #endif
 
 
 class Image
 {
-#ifdef OPENWAR_IMAGE_USE_SDL
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
 	mutable SDL_Surface* _surface;
 #endif
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 	mutable CGContextRef _context;
 	mutable CGImageRef _image;
 #endif
@@ -45,11 +43,12 @@ public:
 
 	Image& LoadFromResource(const resource& r);
 
-#ifdef OPENWAR_IMAGE_USE_SDL
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
+	void LoadFromSurface(SDL_Surface* surface);
 	SDL_Surface* GetSurface() const;
 #endif
 
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 	void LoadFromCGImage(CGImageRef image);
 
 	CGContextRef GetCGContext() const;
@@ -77,7 +76,7 @@ private:
 };
 
 
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 NSData* ConvertImageToTiff(Image* map);
 Image* ConvertTiffToImage(NSData* data);
 #endif

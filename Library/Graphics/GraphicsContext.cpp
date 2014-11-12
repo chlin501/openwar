@@ -41,7 +41,25 @@ FontAdapter* GraphicsContext::GetFontAdapter(const FontDescriptor& fontDescripto
 	if (i != _fontAdapters.end())
 		return i->second;
 
-	FontAdapter* fontAdapter = new FontAdapter_NSFont(this, fontDescriptor);
-	_fontAdapters[fontDescriptor] = fontAdapter;
+	FontAdapter* fontAdapter = nullptr;
+
+#ifdef ENABLE_FONTADAPTER_NSFONT
+	if (fontAdapter == nullptr)
+		fontAdapter = new FontAdapter_NSFont(this, fontDescriptor);
+#endif
+
+#ifdef ENABLE_FONTADAPTER_UIFONT
+	if (fontAdapter == nullptr)
+		fontAdapter = new FontAdapter_UIFont(this, fontDescriptor);
+#endif
+
+#ifdef ENABLE_FONTADAPTER_SDL_TTF
+	if (fontAdapter == nullptr)
+		fontAdapter = new FontAdapter_SDL_ttf(this, fontDescriptor);
+#endif
+
+	if (fontAdapter != nullptr)
+		_fontAdapters[fontDescriptor] = fontAdapter;
+
 	return fontAdapter;
 }

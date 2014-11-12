@@ -2,19 +2,8 @@
 #define FontAdapter_H
 
 #include <functional>
+#include <string>
 
-#if TARGET_OS_IPHONE
-#define OPENWAR_USE_UIFONT
-#else
-#define OPENWAR_USE_NSFONT
-#endif
-
-#ifdef OPENWAR_USE_SDL
-#include <SDL2_ttf/SDL_ttf.h>
-#endif
-#ifdef OPENWAR_USE_UIFONT
-#import <UIKit/UIKit.h>
-#endif
 
 class GraphicsContext;
 class Image;
@@ -59,7 +48,7 @@ public:
 };
 
 
-#ifdef OPENWAR_USE_NSFONT
+#ifdef ENABLE_FONTADAPTER_NSFONT
 @class NSFont;
 @class NSDictionary;
 class FontAdapter_NSFont : public FontAdapter
@@ -70,6 +59,38 @@ class FontAdapter_NSFont : public FontAdapter
 public:
 	FontAdapter_NSFont(GraphicsContext* gc, const FontDescriptor& fontDescriptor);
 	virtual ~FontAdapter_NSFont();
+	virtual std::shared_ptr<TextureImage> AddTextureImage(TextureAtlas* textureAtlas, const std::string& character, int border, std::function<void(Image&)> filter);
+};
+#endif
+
+
+#ifdef ENABLE_FONTADAPTER_UIFONT
+@class UIFont;
+@class NSDictionary;
+class FontAdapter_UIFont : public FontAdapter
+{
+	UIFont* _font;
+	NSDictionary* _attributes;
+
+public:
+	FontAdapter_UIFont(GraphicsContext* gc, const FontDescriptor& fontDescriptor);
+	virtual ~FontAdapter_UIFont();
+	virtual std::shared_ptr<TextureImage> AddTextureImage(TextureAtlas* textureAtlas, const std::string& character, int border, std::function<void(Image&)> filter);
+};
+#endif
+
+
+#ifdef ENABLE_FONTADAPTER_SDL_TTF
+#include <SDL2_ttf/SDL_ttf.h>
+class FontAdapter_SDL_ttf : public FontAdapter
+{
+	TTF_Font* _font1;
+	TTF_Font* _font2;
+	TTF_Font* _emoji;
+
+public:
+	FontAdapter_SDL_ttf(GraphicsContext* gc, const FontDescriptor& fontDescriptor);
+	virtual ~FontAdapter_SDL_ttf();
 	virtual std::shared_ptr<TextureImage> AddTextureImage(TextureAtlas* textureAtlas, const std::string& character, int border, std::function<void(Image&)> filter);
 };
 #endif

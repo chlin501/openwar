@@ -6,7 +6,8 @@
 #include "Window.h"
 #include "Surface.h"
 #include "Gesture.h"
-#import "RenderLoopObserver.h"
+#include "RenderLoopObserver.h"
+#include "Viewport.h"
 
 
 bool Window::_done = false;
@@ -456,7 +457,7 @@ glm::vec2 Window::ToVector(int x, int y)
 {
 	int w, h;
 	SDL_GetWindowSize(_window, &w, &h);
-	return _surface->GetViewport()->GetVisibleBounds().size() * glm::vec2(x, h - y) / glm::vec2(w, h);
+	return glm::vec2(x, h - y);
 }
 
 
@@ -473,7 +474,7 @@ glm::vec2 Window::ToPosition(const SDL_TouchFingerEvent& event)
 	if (_surface == nullptr)
 		return glm::vec2();
 
-	return _surface->GetViewport()->GetVisibleBounds().size() * glm::vec2(event.x, 1.0f - event.y);
+	return (glm::vec2)_surface->GetViewport()->GetBounds().size() * glm::vec2(event.x, 1.0f - event.y);
 }
 
 

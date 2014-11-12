@@ -101,6 +101,20 @@ void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vecto
 }
 
 
+void OpenWarSurface::Render()
+{
+	_battleLayer->Render();
+	_buttonsTopLeft->Render();
+	_buttonsTopRight->Render();
+}
+
+
+bool OpenWarSurface::HasChangedSinceLastRender() const
+{
+	return true;
+}
+
+
 void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 {
 	bounds2i viewportBounds = GetViewport()->GetBounds();
@@ -108,7 +122,6 @@ void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 	_battleLayer->SetViewportBounds(viewportBounds);
 
 	_buttonsTopLeft->GetViewport()->SetBounds(viewportBounds);
-
 	_buttonsTopRight->GetViewport()->SetBounds(viewportBounds);
 
 	if (_battleLayer->GetScenario() != nullptr && _battleLayer->IsPlaying())
@@ -136,11 +149,11 @@ Viewport* OpenWarSurface::GetViewport() const
 
 void OpenWarSurface::FindHotspots(Touch* touch)
 {
-	for (BattleView* battleView : _battleLayer->GetBattleViews())
-		battleView->FindBattleHotspots(touch);
-
 	_buttonsTopLeft->FindButtonHotspots(touch);
 	_buttonsTopRight->FindButtonHotspots(touch);
+
+	for (BattleView* battleView : _battleLayer->GetBattleViews())
+		battleView->FindBattleHotspots(touch);
 }
 
 

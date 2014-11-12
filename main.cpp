@@ -21,6 +21,7 @@
 #include "BattleModel/BattleScenario.h"
 #include "BattleModel/BattleScript.h"
 #include "BattleModel/PracticeScript.h"
+#include "Viewport.h"
 
 static BattleScenario* CreateBattleScenario()
 {
@@ -60,8 +61,8 @@ int main(int argc, char *argv[])
     
     GraphicsContext* gc = new GraphicsContext(1);
 	OpenWarSurface* surface = new OpenWarSurface(gc);
-	surface->SetViewportBounds(bounds2i(0, 0, 640, 480));
-	surface->Update(0);
+	surface->GetViewport()->SetBounds(bounds2i(0, 0, 640, 480));
+	surface->OnRenderLoop(0);
 
 	window->SetSurface(surface);
 

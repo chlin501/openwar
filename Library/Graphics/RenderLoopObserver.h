@@ -1,6 +1,8 @@
 #ifndef RenderLoopObserver_H
 #define RenderLoopObserver_H
 
+#include <vector>
+
 
 class RenderLoopObserver
 {

@@ -7,7 +7,7 @@
 #include "GraphicsContext.h"
 #include "Algorithms/GaussBlur.h"
 
-#ifdef OPENWAR_IMAGE_USE_SDL
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
 #include <SDL2_image/SDL_image.h>
 #endif
 
@@ -22,10 +22,10 @@
 
 
 Image::Image() :
-#ifdef OPENWAR_IMAGE_USE_SDL
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
 	_surface(nullptr),
 #endif
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 	_context(NULL),
 	_image(NULL),
 #endif
@@ -38,10 +38,10 @@ Image::Image() :
 
 
 Image::Image(const Image& image) :
-#ifdef OPENWAR_IMAGE_USE_SDL
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
 	_surface(nullptr),
 #endif
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 	_context(NULL),
 	_image(NULL),
 #endif
@@ -57,10 +57,10 @@ Image::Image(const Image& image) :
 
 
 Image::Image(int width, int height) :
-#ifdef OPENWAR_IMAGE_USE_SDL
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
 	_surface(nullptr),
 #endif
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 	_context(NULL),
 	_image(NULL),
 #endif
@@ -76,14 +76,14 @@ Image::Image(int width, int height) :
 
 Image::~Image()
 {
-#ifdef OPENWAR_IMAGE_USE_SDL
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
 
 	if (_surface != nullptr)
 		SDL_FreeSurface(_surface);
 
 #endif
 
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 
 	if (_context != NULL)
 		CGContextRelease(_context);
@@ -100,7 +100,7 @@ Image::~Image()
 
 Image& Image::LoadFromResource(const resource& r)
 {
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 #if TARGET_OS_IPHONE
 
 	NSString* name = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:r.name()], [NSString stringWithUTF8String:r.type()]];
@@ -134,7 +134,7 @@ Image& Image::LoadFromResource(const resource& r)
 
 #endif
 
-#ifdef OPENWAR_IMAGE_USE_SDL
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
 
 	_surface = IMG_Load(r.path());
 	if (_surface->format->format != SDL_PIXELFORMAT_ABGR8888)
@@ -157,12 +157,28 @@ Image& Image::LoadFromResource(const resource& r)
 }
 
 
-#ifdef OPENWAR_IMAGE_USE_SDL
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
+void Image::LoadFromSurface(SDL_Surface* surface)
+{
+	_width = surface->w;
+	_height = surface->h;
+	_pixels = (unsigned char*)surface->pixels;
+	_owner = false;
+	_surface = nullptr;
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+	_context = nil;
+	_image = nil;
+#endif
+}
+#endif
+
+
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
 SDL_Surface* Image::GetSurface() const
 {
 	if (_surface == nullptr)
 	{
-		_surface = SDL_CreateRGBSurface(0, _width, _height, 32, 0, 0, 0, 0);
+		_surface = SDL_CreateRGBSurfaceFrom(_pixels, _width, _height, 32, _width * 4, 0, 0, 0, 0);
 	}
 
 	return _surface;
@@ -170,7 +186,7 @@ SDL_Surface* Image::GetSurface() const
 #endif
 
 
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 void Image::LoadFromCGImage(CGImageRef image)
 {
 	_width = CGImageGetWidth(image);
@@ -186,7 +202,7 @@ void Image::LoadFromCGImage(CGImageRef image)
 
 
 
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 CGContextRef Image::GetCGContext() const
 {
 	if (_context == NULL)
@@ -206,7 +222,7 @@ CGContextRef Image::GetCGContext() const
 #endif
 
 
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 CGImageRef Image::GetCGImage() const
 {
 	if (_image == NULL)
@@ -344,7 +360,7 @@ void Image::Blur(float r)
 
 void Image::Copy(const Image& image, int x, int y)
 {
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 	CGContextRef context = GetCGContext();
 	int width = image.GetWidth();
 	int height = image.GetHeight();
@@ -357,7 +373,7 @@ void Image::Copy(const Image& image, int x, int y)
 
 void Image::Fill(const glm::vec4& color, const bounds2f& bounds)
 {
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 	CGContextRef context = GetCGContext();
 
 	//NSGraphicsContext* gc = [NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:YES];
@@ -374,7 +390,7 @@ void Image::Fill(const glm::vec4& color, const bounds2f& bounds)
 }
 
 
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 NSData* ConvertImageToTiff(Image* map)
 {
 #if TARGET_OS_IPHONE
@@ -399,7 +415,7 @@ NSData* ConvertImageToTiff(Image* map)
 #endif
 
 
-#ifdef OPENWAR_IMAGE_USE_COREGRAPHICS
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 Image* ConvertTiffToImage(NSData* data)
 {
 #if TARGET_OS_IPHONE

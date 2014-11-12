@@ -17,7 +17,6 @@ struct ButtonRendering
 	GraphicsContext* _gc;
 
 	TextureFont* _string_font;
-	TextureAtlas* _textureAtlas;
 
 	std::shared_ptr<TextureImage> buttonBackground;
 	std::shared_ptr<TextureImage> buttonHighlight;

@@ -211,8 +211,8 @@ void ButtonArea::UpdateBounds(bounds2f bounds)
 
 ButtonGrid::ButtonGrid(GraphicsContext* gc, ButtonRendering* buttonRendering, ButtonAlignment alignment) : WidgetView(gc),
 	_gc(gc),
-	_buttonRendering(buttonRendering),
-	_alignment(alignment)
+	_alignment(alignment),
+	_buttonRendering(buttonRendering)
 {
 }
 

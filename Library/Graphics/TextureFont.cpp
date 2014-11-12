@@ -45,6 +45,9 @@ TextureChar* TextureFont::GetTextureChar(const std::string& character, float blu
 	int border = (int)glm::ceil(blur) + 1;
 
 	std::shared_ptr<TextureImage> textureImage = _fontAdapter->AddTextureImage(_textureAtlas, character, border, filter);
+	if (textureImage == nullptr)
+		return nullptr;
+
 	TextureChar* textureChar = new TextureChar(textureImage, canColorize);
 	_textureChars[key] = textureChar;
 	return textureChar;

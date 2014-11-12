@@ -145,14 +145,14 @@ public:
 
 class ButtonGrid : public WidgetView, RenderLoopObserver
 {
-public:
-	ButtonRendering* _buttonRendering;
-
 private:
 	GraphicsContext* _gc;
 	ButtonAlignment _alignment;
 	std::vector<ButtonArea*> _buttonAreas;
 	std::vector<ButtonArea*> _obsolete;
+
+public:
+	ButtonRendering* _buttonRendering;
 
 public:
 	ButtonGrid(GraphicsContext* gc, ButtonRendering* buttonRendering, ButtonAlignment alignment);

@@ -10,13 +10,13 @@ ButtonRendering::ButtonRendering(GraphicsContext* gc) :
 {
 	_string_font = gc->GetWidgetTextureAtlas()->GetTextureFont(FontDescriptor(true, 18));
 
-	_textureAtlas = new TextureAtlas(gc);
+	TextureAtlas* widgetTextureAtlas = gc->GetWidgetTextureAtlas();
 
-	TextureSheet buttonBackgroundSheet = _textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonNormal.png")));
-	TextureSheet buttonHighlightSheet = _textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonHighlight.png")));
-	TextureSheet buttonSelectedSheet = _textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonSelected.png")));
-	TextureSheet buttonIcons = _textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonIcons.png")));
-	TextureSheet editorTools = _textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/EditorTools.png")));
+	TextureSheet buttonBackgroundSheet = widgetTextureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonNormal.png")));
+	TextureSheet buttonHighlightSheet = widgetTextureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonHighlight.png")));
+	TextureSheet buttonSelectedSheet = widgetTextureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonSelected.png")));
+	TextureSheet buttonIcons = widgetTextureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonIcons.png")));
+	TextureSheet editorTools = widgetTextureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/EditorTools.png")));
 
 	buttonBackground = buttonBackgroundSheet.NewTextureImage(0, 0, 64, 64);
 	buttonBackground->_inner = bounds2f(buttonBackground->_inner.center());
