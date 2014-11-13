@@ -6,6 +6,7 @@
 #include "Surface.h"
 #include "Touch.h"
 #include "ScrollerViewport.h"
+#include "TextureFont.h"
 
 
 const ButtonAlignment ButtonAlignment::TopLeft(ButtonAlignment::Vertical::Top, ButtonAlignment::Horizontal::Left);
@@ -374,7 +375,7 @@ void ButtonGrid::Render()
 			if (buttonItem->GetButtonText() != nullptr)
 			{
 				buttonItem->buttonString.SetString(buttonItem->GetButtonText());
-				buttonItem->buttonString.SetTranslate(buttonItem->GetBounds().center() - 0.5f * GetWidgetShape()->MeasureStringWidget(&buttonItem->buttonString));
+				buttonItem->buttonString.SetPosition(buttonItem->GetBounds().center() - 0.5f * GetWidgetShape()->MeasureStringWidget(&buttonItem->buttonString));
 				GetWidgetShape()->AddWidget(&buttonItem->buttonString);
 			}
 		}

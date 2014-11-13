@@ -12,6 +12,8 @@
 #include "ButtonRendering.h"
 #include "ButtonHotspot.h"
 #include "RenderLoopObserver.h"
+#include "ImageWidget.h"
+#include "StringWidget.h"
 
 class ButtonArea;
 class ButtonGrid;
@@ -41,21 +43,6 @@ struct ButtonAlignment
 	bool operator==(const ButtonAlignment& other) const { return vertical == other.vertical && horizontal == other.horizontal; }
 	bool operator!=(const ButtonAlignment& other) const { return vertical != other.vertical || horizontal != other.horizontal; }
 };
-
-
-/*struct TextureImageX
-{
-	TextureAtlas* _textureAtlas;
-	bounds2f _outer_uv;
-	bounds2f _outer_bounds;
-
-	TextureImageX() : _textureAtlas(nullptr) { }
-	TextureImageX(TextureAtlas* t, glm::vec2 s, bounds2f b) : _textureAtlas(t), _outer_uv(b), _outer_bounds(0, 0, s) { }
-
-	bounds2f GetOuterBounds() const { return _outer_bounds; }
-	bounds2f GetOuterUV() const { return _outer_uv; }
-};*/
-
 
 
 class ButtonItem

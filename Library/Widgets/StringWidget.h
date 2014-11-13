@@ -5,15 +5,18 @@
 #ifndef StringWidget_H
 #define StringWidget_H
 
+#include "Widget.h"
 #include "FontAdapter.h"
 #include "WidgetShape.h"
+
+#include <glm/gtx/transform.hpp>
 
 
 class StringWidget : public Widget
 {
 	FontDescriptor _fontDescriptor;
 	std::string _string;
-	glm::mat4x4 _transform;
+	glm::vec2 _position;
 	glm::vec4 _color;
 	glm::vec4 _glow;
 	float _width;
@@ -21,14 +24,12 @@ class StringWidget : public Widget
 public:
 	StringWidget();
 	StringWidget(const char* string, glm::vec2 translate);
-	StringWidget(const char* string, glm::mat4x4 transform);
-
-	const glm::mat4x4& GetTransform() const { return _transform; }
-	void SetTransform(glm::mat4x4 value) { _transform = value; }
-	void SetTranslate(glm::vec2 value) { _transform = glm::translate(glm::mat4(), glm::vec3(value, 0)); }
 
 	const FontDescriptor& GetFontDescriptor() const;
 	void SetFontDescriptor(const FontDescriptor& fontDescriptor);
+
+	glm::vec2 GetPosition() const;
+	void SetPosition(glm::vec2 value);
 
 	const char* GetString() const;
 	void SetString(const char* value);

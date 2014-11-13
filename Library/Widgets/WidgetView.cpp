@@ -7,6 +7,8 @@
 #include "WidgetShape.h"
 #include "ScrollerViewport.h"
 #include "RenderCall.h"
+#include "WidgetShader.h"
+#include "TextureAtlas.h"
 
 
 WidgetView::WidgetView(GraphicsContext* gc) :

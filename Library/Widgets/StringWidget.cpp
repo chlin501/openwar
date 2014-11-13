@@ -3,10 +3,12 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "StringWidget.h"
+#include "TextureAtlas.h"
+#include "TextureFont.h"
+
 #include <codecvt>
 #include <cstdlib>
 #include <locale>
-
 
 
 static bool IsArabic(wchar_t wc)
@@ -45,16 +47,7 @@ StringWidget::StringWidget(const char* string, glm::vec2 translate) :
 	_color(1, 1, 1, 1),
 	_width(0)
 {
-	SetTranslate(translate);
-}
-
-
-StringWidget::StringWidget(const char* string, glm::mat4x4 transform) :
-	_string(string),
-	_color(1, 1, 1, 1),
-	_width(0)
-{
-	SetTransform(transform);
+	SetPosition(translate);
 }
 
 
@@ -67,6 +60,18 @@ const FontDescriptor& StringWidget::GetFontDescriptor() const
 void StringWidget::SetFontDescriptor(const FontDescriptor& fontDescriptor)
 {
 	_fontDescriptor = fontDescriptor;
+}
+
+
+glm::vec2 StringWidget::GetPosition() const
+{
+	return _position;
+}
+
+
+void StringWidget::SetPosition(glm::vec2 value)
+{
+	_position = value;
 }
 
 
@@ -164,7 +169,6 @@ void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm
 	std::wstring ws = conv.from_bytes(_string);
 
 	TextureFont* textureFont = GetWidgetShape()->GetTextureAtlas()->GetTextureFont(GetFontDescriptor());
-	glm::mat4x4 transform = GetTransform();
 
 	if (ContainsArabic(ws))
 	{
@@ -180,9 +184,7 @@ void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm
 
 		glm::vec2 s = textureChar->GetInnerSize();
 
-		bounds2f bounds;
-		bounds.min = (transform * glm::vec4(item_xy.min.x, item_xy.min.y, 0, 1)).xy();
-		bounds.max = (transform * glm::vec4(item_xy.max.x, item_xy.max.y, 0, 1)).xy();
+		bounds2f bounds = item_xy + _position;
 
 		float next_alpha = alpha + delta * s.x;
 
@@ -216,9 +218,7 @@ void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm
 
 			glm::vec2 s = textureChar->GetInnerSize();
 
-			bounds2f bounds;
-			bounds.min = (transform * glm::vec4(item_xy.min.x, item_xy.min.y, 0, 1)).xy();
-			bounds.max = (transform * glm::vec4(item_xy.max.x, item_xy.max.y, 0, 1)).xy();
+			bounds2f bounds = item_xy + _position;
 
 			float next_alpha = alpha + delta * s.x;
 

@@ -5,7 +5,9 @@
 #ifndef ImageWidget_H
 #define ImageWidget_H
 
+#include "Widget.h"
 #include "WidgetShape.h"
+#include "TextureAtlas.h"
 
 
 class ImageWidget : public Widget

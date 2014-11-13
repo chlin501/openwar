@@ -10,6 +10,7 @@
 #include "WidgetShape.h"
 #include "CommonShaders.h"
 
+class TextureFont;
 
 
 struct ButtonRendering

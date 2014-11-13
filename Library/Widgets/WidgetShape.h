@@ -5,36 +5,12 @@
 #ifndef WidgetShape_H
 #define WidgetShape_H
 
-#include <map>
-#include <glm/gtc/matrix_transform.hpp>
-
-
 #include "Algebra/bounds.h"
-#include "ShaderProgram.h"
-#include "TextureAtlas.h"
-#include "TextureFont.h"
+#include "VertexBuffer.h"
 
-class GraphicsContext;
-class WidgetShape;
 class StringWidget;
-class ImageWidget;
+class TextureAtlas;
 class Widget;
-
-
-class WidgetShader : public ShaderProgram
-{
-	friend class GraphicsContext;
-	/*
-		attribute vec2 position;
-		attribute vec2 texcoord;
-		attribute vec4 colorize;
-		attribute float alpha;
-
-		uniform mat4 transform;
-		uniform sampler2D texture;
-	 */
-	WidgetShader(GraphicsContext* gc);
-};
 
 
 class WidgetShape
@@ -72,9 +48,5 @@ private:
 	WidgetShape& operator=(const WidgetShape&) { return *this; }
 };
 
-
-#include "Widget.h"
-#include "ImageWidget.h"
-#include "StringWidget.h"
 
 #endif
