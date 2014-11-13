@@ -2,15 +2,13 @@
 #include "GraphicsContext.h"
 #include "WidgetShape.h"
 #include "ScrollerViewport.h"
-#include "Widget.h"
 #include "RenderCall.h"
 
 
 WidgetView::WidgetView(GraphicsContext* gc) :
 	_gc(gc),
 	_viewport(nullptr),
-	_widgetShape(nullptr),
-	_widgets()
+	_widgetShape(nullptr)
 {
 }
 
@@ -53,27 +51,4 @@ void WidgetView::Render()
 bool WidgetView::HasChangedSinceLastRender() const
 {
 	return true;
-}
-
-
-void WidgetView::AddWidget(Widget* widget)
-{
-	if (widget->_widgetView != nullptr)
-		widget->_widgetView->RemoveWidget(widget);
-
-	_widgets.push_back(widget);
-	widget->_widgetView = this;
-
-}
-
-
-void WidgetView::RemoveWidget(Widget* widget)
-{
-	if (widget->_widgetView == this)
-	{
-		_widgets.erase(
-			std::remove(_widgets.begin(), _widgets.end(), widget),
-			_widgets.end());
-		widget->_widgetView = nullptr;
-	}
 }

@@ -72,7 +72,6 @@
 		4156C3391A139E40006A264C /* ButtonRendering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C3031A139E3F006A264C /* ButtonRendering.cpp */; };
 		4156C33A1A139E40006A264C /* PatchGlyph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C3051A139E40006A264C /* PatchGlyph.cpp */; };
 		4156C33B1A139E40006A264C /* StringGlyph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C3071A139E40006A264C /* StringGlyph.cpp */; };
-		4156C33C1A139E40006A264C /* Widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C3091A139E40006A264C /* Widget.cpp */; };
 		4156C33D1A139E40006A264C /* WidgetShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C30B1A139E40006A264C /* WidgetShape.cpp */; };
 		4156C33E1A139E40006A264C /* WidgetView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C30D1A139E40006A264C /* WidgetView.cpp */; };
 		4156F29619A5FEC300A9990D /* SDL2_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4156F29519A5FEC300A9990D /* SDL2_mixer.framework */; };
@@ -243,8 +242,6 @@
 		4156C3061A139E40006A264C /* PatchGlyph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatchGlyph.h; sourceTree = "<group>"; };
 		4156C3071A139E40006A264C /* StringGlyph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StringGlyph.cpp; sourceTree = "<group>"; };
 		4156C3081A139E40006A264C /* StringGlyph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringGlyph.h; sourceTree = "<group>"; };
-		4156C3091A139E40006A264C /* Widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Widget.cpp; sourceTree = "<group>"; };
-		4156C30A1A139E40006A264C /* Widget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Widget.h; sourceTree = "<group>"; };
 		4156C30B1A139E40006A264C /* WidgetShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WidgetShape.cpp; sourceTree = "<group>"; };
 		4156C30C1A139E40006A264C /* WidgetShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WidgetShape.h; sourceTree = "<group>"; };
 		4156C30D1A139E40006A264C /* WidgetView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WidgetView.cpp; sourceTree = "<group>"; };
@@ -552,8 +549,6 @@
 				4156C3061A139E40006A264C /* PatchGlyph.h */,
 				4156C3071A139E40006A264C /* StringGlyph.cpp */,
 				4156C3081A139E40006A264C /* StringGlyph.h */,
-				4156C3091A139E40006A264C /* Widget.cpp */,
-				4156C30A1A139E40006A264C /* Widget.h */,
 				4156C30B1A139E40006A264C /* WidgetShape.cpp */,
 				4156C30C1A139E40006A264C /* WidgetShape.h */,
 				4156C30D1A139E40006A264C /* WidgetView.cpp */,
@@ -818,7 +813,6 @@
 				4156C3331A139E40006A264C /* Surface.cpp in Sources */,
 				4156C32D1A139E40006A264C /* BillboardTextureShape.cpp in Sources */,
 				63F55D81972105FD90CA832F /* OpenWarSurface.cpp in Sources */,
-				4156C33C1A139E40006A264C /* Widget.cpp in Sources */,
 				63F55BC7E8C99A6C96EE1A21 /* main.cpp in Sources */,
 				63F55932A50F5611BA25ED6F /* SamuraiModule.cpp in Sources */,
 				4156C3261A139E40006A264C /* VertexBuffer.cpp in Sources */,

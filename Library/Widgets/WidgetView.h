@@ -15,7 +15,6 @@ class WidgetView : public Renderable
 	GraphicsContext* _gc;
 	mutable ScrollerViewport* _viewport;
 	mutable WidgetShape* _widgetShape;
-	std::vector<Widget*> _widgets;
 
 public:
 	WidgetView(GraphicsContext* gc);
@@ -26,9 +25,6 @@ public:
 
 	virtual void Render();
 	virtual bool HasChangedSinceLastRender() const;
-
-	void AddWidget(Widget* widget);
-	void RemoveWidget(Widget* widget);
 };
 
 
