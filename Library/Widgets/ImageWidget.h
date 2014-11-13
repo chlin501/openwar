@@ -6,7 +6,6 @@
 #define ImageWidget_H
 
 #include "Widget.h"
-#include "WidgetShape.h"
 #include "TextureAtlas.h"
 
 
@@ -32,7 +31,7 @@ public:
 	float GetAlpha() const;
 	void SetAlpha(float value);
 
-	virtual void AppendVertices(WidgetShape* widgetShape, std::vector<Vertex_2f_2f_4f_1f>& vertices);
+	virtual void AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
 private:
 	void AppendRectangle(std::vector<Vertex_2f_2f_4f_1f>& vertices, bounds2f xy, bounds2f uv);

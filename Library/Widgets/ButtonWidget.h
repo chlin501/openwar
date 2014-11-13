@@ -46,7 +46,7 @@ public:
 	bool IsDisabled() const;
 	void SetDisabled(bool value);
 
-	virtual void AppendVertices(WidgetShape* widgetShape, std::vector<Vertex_2f_2f_4f_1f>& vertices);
+	virtual void AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices);
 };
 
 

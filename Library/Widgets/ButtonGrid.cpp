@@ -341,7 +341,7 @@ void ButtonGrid::Render()
 	{
 		buttonArea->backgroundImage.SetBounds(BorderBounds(buttonArea->_bounds).Outset(10).Inset(32));
 		buttonArea->backgroundImage.SetTextureImage(_buttonRendering->buttonBackground);
-		GetWidgetShape()->AddWidget(&buttonArea->backgroundImage);
+		AddWidget(&buttonArea->backgroundImage);
 
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
 		{
@@ -349,7 +349,7 @@ void ButtonGrid::Render()
 			{
 				buttonItem->selectedImage.SetBounds(BorderBounds(buttonItem->GetBounds()).Outset(10).Inset(32));
 				buttonItem->selectedImage.SetTextureImage(_buttonRendering->buttonSelected);
-				GetWidgetShape()->AddWidget(&buttonItem->selectedImage);
+				AddWidget(&buttonItem->selectedImage);
 			}
 
 			if (buttonItem->GetButtonIcon() != nullptr)
@@ -362,21 +362,21 @@ void ButtonGrid::Render()
 				buttonItem->buttonImage.SetTextureImage(buttonItem->GetButtonIcon());
 				buttonItem->buttonImage.SetAlpha(buttonItem->IsDisabled() ? 0.5f : 1.0f);
 
-				GetWidgetShape()->AddWidget(&buttonItem->buttonImage);
+				AddWidget(&buttonItem->buttonImage);
 			}
 
 			if (buttonItem->IsHighlight())
 			{
 				buttonItem->highlightImage.SetBounds(BorderBounds(buttonItem->GetBounds()).Center());
 				buttonItem->highlightImage.SetTextureImage(_buttonRendering->buttonHighlight);
-				GetWidgetShape()->AddWidget(&buttonItem->highlightImage);
+				AddWidget(&buttonItem->highlightImage);
 			}
 
 			if (buttonItem->GetButtonText() != nullptr)
 			{
 				buttonItem->buttonString.SetString(buttonItem->GetButtonText());
-				buttonItem->buttonString.SetPosition(buttonItem->GetBounds().center() - 0.5f * GetWidgetShape()->MeasureStringWidget(&buttonItem->buttonString));
-				GetWidgetShape()->AddWidget(&buttonItem->buttonString);
+				buttonItem->buttonString.SetPosition(buttonItem->GetBounds().center() - 0.5f * MeasureStringWidget(&buttonItem->buttonString));
+				AddWidget(&buttonItem->buttonString);
 			}
 		}
 	}

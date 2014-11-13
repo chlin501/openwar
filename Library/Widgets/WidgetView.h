@@ -6,27 +6,54 @@
 #define WidgetView_H
 
 #include <vector>
+#include "Algebra/bounds.h"
+#include "VertexBuffer.h"
 
 class GraphicsContext;
 class ScrollerViewport;
+class StringWidget;
+class TextureAtlas;
 class WidgetShape;
 class Widget;
 
 
 class WidgetView
 {
+	class WidgetVertexBuffer : public VertexBuffer<Vertex_2f_2f_4f_1f>
+	{
+		WidgetView* _widgetView;
+	public:
+		WidgetVertexBuffer(WidgetView* widgetView);
+		virtual void Update();
+	};
+
 	GraphicsContext* _gc;
 	ScrollerViewport* _viewport;
-	WidgetShape* _widgetShape;
+	TextureAtlas* _textureAtlas;
+	WidgetVertexBuffer _vertices;
+	std::vector<Widget*> _widgets;
 
 public:
 	WidgetView(GraphicsContext* gc);
 	virtual ~WidgetView();
 
 	ScrollerViewport* GetViewport() const;
-	WidgetShape* GetWidgetShape() const;
+
+	TextureAtlas* GetTextureAtlas() const;
+
+	void ClearWidgets();
+	void AddWidget(Widget* widget);
+	void RemoveWidget(Widget* widget);
+
+	glm::vec2 MeasureStringWidget(StringWidget* stringWidget) const;
 
 	virtual void Render();
+
+private:
+	void UpdateVertexBuffer();
+
+	WidgetView(const WidgetView&) : _vertices(nullptr) { }
+	WidgetView& operator=(const WidgetView&) { return *this; }
 };
 
 

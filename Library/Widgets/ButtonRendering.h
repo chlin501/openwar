@@ -7,7 +7,6 @@
 
 #include "Algebra/bounds.h"
 #include "Texture.h"
-#include "WidgetShape.h"
 #include "CommonShaders.h"
 
 class TextureFont;

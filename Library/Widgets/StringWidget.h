@@ -7,7 +7,7 @@
 
 #include "Widget.h"
 #include "FontAdapter.h"
-#include "WidgetShape.h"
+#include "WidgetView.h"
 
 #include <glm/gtx/transform.hpp>
 
@@ -47,10 +47,10 @@ public:
 	const float GetWidth() const;
 	void SetWidth(float value);
 
-	virtual void AppendVertices(WidgetShape* widgetShape, std::vector<Vertex_2f_2f_4f_1f>& vertices);
+	virtual void AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
 private:
-	void AppendVertices(WidgetShape* widgetShape, std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur);
+	void AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur);
 
 private:
 	StringWidget(const StringWidget&) { }

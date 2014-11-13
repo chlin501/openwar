@@ -142,16 +142,16 @@ void StringWidget::SetWidth(float value)
 }
 
 
-void StringWidget::AppendVertices(WidgetShape* widgetShape, std::vector<Vertex_2f_2f_4f_1f>& vertices)
+void StringWidget::AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	if (_glow.a != 0)
-		AppendVertices(widgetShape, vertices, _glow, 2);
+		AppendVertices(widgetView, vertices, _glow, 2);
 
-	AppendVertices(widgetShape, vertices, _color, 0);
+	AppendVertices(widgetView, vertices, _color, 0);
 }
 
 
-void StringWidget::AppendVertices(WidgetShape* widgetShape, std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur)
+void StringWidget::AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur)
 {
 	glm::vec2 p(0, 0);
 
@@ -168,7 +168,7 @@ void StringWidget::AppendVertices(WidgetShape* widgetShape, std::vector<Vertex_2
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv(".", L".");
 	std::wstring ws = conv.from_bytes(_string);
 
-	TextureFont* textureFont = widgetShape->GetTextureAtlas()->GetTextureFont(GetFontDescriptor());
+	TextureFont* textureFont = widgetView->GetTextureAtlas()->GetTextureFont(GetFontDescriptor());
 
 	if (ContainsArabic(ws))
 	{

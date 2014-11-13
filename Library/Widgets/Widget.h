@@ -8,20 +8,20 @@
 #include "Vertex.h"
 #include <vector>
 
-class WidgetShape;
+class WidgetView;
 
 
 class Widget
 {
-	friend class WidgetShape;
+	friend class WidgetView;
 
-	WidgetShape* _widgetShape;
+	WidgetView* _widgetView;
 
 public:
 	Widget();
 	virtual ~Widget();
 
-	virtual void AppendVertices(WidgetShape* widgetShape, std::vector<Vertex_2f_2f_4f_1f>& vertices) = 0;
+	virtual void AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices) = 0;
 
 private:
 	Widget(const Widget&) { }
