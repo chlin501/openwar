@@ -76,7 +76,7 @@ glm::vec2 ButtonItem::CalculateSize() const
 
 	if (_buttonIcon != nullptr)
 	{
-		glm::vec2 size = _buttonIcon->GetOuterBounds().size();
+		glm::vec2 size = _buttonIcon->GetBounds().outer.size();
 		if (size.x > 44 || size.y > 44)
 			return size;
 	}
@@ -340,8 +340,8 @@ void ButtonGrid::Render()
 	{
 		buttonArea->backgroundImage.outer_xy = buttonArea->_bounds.grow(10);
 		buttonArea->backgroundImage.inner_xy = buttonArea->_bounds.grow(-22);
-		buttonArea->backgroundImage.outer_uv = _buttonRendering->buttonBackground->GetOuterUV();
-		buttonArea->backgroundImage.inner_uv = _buttonRendering->buttonBackground->GetInnerUV();
+		buttonArea->backgroundImage.outer_uv = _buttonRendering->buttonBackground->GetCoords().outer;
+		buttonArea->backgroundImage.inner_uv = _buttonRendering->buttonBackground->GetCoords().inner;
 		GetWidgetShape()->AddWidget(&buttonArea->backgroundImage);
 
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
@@ -350,21 +350,21 @@ void ButtonGrid::Render()
 			{
 				buttonItem->selectedImage.outer_xy = buttonItem->GetBounds().grow(10);
 				buttonItem->selectedImage.inner_xy = buttonItem->GetBounds().grow(-22);
-				buttonItem->selectedImage.outer_uv = _buttonRendering->buttonSelected->GetOuterUV();
-				buttonItem->selectedImage.inner_uv = _buttonRendering->buttonSelected->GetInnerUV();
+				buttonItem->selectedImage.outer_uv = _buttonRendering->buttonSelected->GetCoords().outer;
+				buttonItem->selectedImage.inner_uv = _buttonRendering->buttonSelected->GetCoords().inner;
 				GetWidgetShape()->AddWidget(&buttonItem->selectedImage);
 			}
 
 			if (buttonItem->GetButtonIcon() != nullptr)
 			{
-				bounds2f bounds_xy = buttonItem->GetButtonIcon()->GetOuterBounds();
+				bounds2f bounds_xy = buttonItem->GetButtonIcon()->GetBounds().outer;
 				bounds_xy -= bounds_xy.center();
 				bounds_xy += buttonItem->GetBounds().center();
 
 				buttonItem->buttonImage.outer_xy = bounds_xy;
 				buttonItem->buttonImage.inner_xy = bounds_xy;
-				buttonItem->buttonImage.outer_uv = buttonItem->GetButtonIcon()->GetOuterUV();
-				buttonItem->buttonImage.inner_uv = buttonItem->GetButtonIcon()->GetInnerUV();
+				buttonItem->buttonImage.outer_uv = buttonItem->GetButtonIcon()->GetCoords().outer;
+				buttonItem->buttonImage.inner_uv = buttonItem->GetButtonIcon()->GetCoords().inner;
 				buttonItem->buttonImage._alpha = buttonItem->IsDisabled() ? 0.5f : 1.0f;
 
 				GetWidgetShape()->AddWidget(&buttonItem->buttonImage);
@@ -374,8 +374,8 @@ void ButtonGrid::Render()
 			{
 				buttonItem->highlightImage.outer_xy = buttonItem->GetBounds();
 				buttonItem->highlightImage.inner_xy = bounds2f(buttonItem->GetBounds().center());
-				buttonItem->highlightImage.outer_uv = _buttonRendering->buttonHighlight->GetOuterUV();
-				buttonItem->highlightImage.inner_uv = _buttonRendering->buttonHighlight->GetInnerUV();
+				buttonItem->highlightImage.outer_uv = _buttonRendering->buttonHighlight->GetCoords().outer;
+				buttonItem->highlightImage.inner_uv = _buttonRendering->buttonHighlight->GetCoords().inner;
 				GetWidgetShape()->AddWidget(&buttonItem->highlightImage);
 			}
 

@@ -140,14 +140,14 @@ std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, 
 	_textureAtlasImage->Copy(image, position.x, position.y);
 	_dirty = true;
 
-	return NewTextureImage(discardable, bounds, bounds);
+	return NewTextureImage(BorderBounds(bounds), discardable);
 }
 
 
 TextureSheet TextureAtlas::AddTextureSheet(const Image& image)
 {
 	std::shared_ptr<TextureImage> textureImage = AddTextureImage(image, TextureImageType::Permanent);
-	return TextureSheet(this, textureImage->GetOuterBounds());
+	return TextureSheet(this, textureImage->GetBounds().outer);
 }
 
 
@@ -157,14 +157,13 @@ TextureSheet TextureAtlas::GetTextureSheet(const bounds2f& bounds)
 }
 
 
-std::shared_ptr<TextureImage> TextureAtlas::NewTextureImage(bool discardable, const bounds2f& inner, const bounds2f& outer)
+std::shared_ptr<TextureImage> TextureAtlas::NewTextureImage(const BorderBounds& bounds, bool discardable)
 {
 	std::shared_ptr<TextureImage> result = std::make_shared<TextureImage>();
 
 	result->_textureAtlas = this;
+	result->_bounds = bounds;
 	result->_discardable = discardable;
-	result->_inner = inner;
-	result->_outer = outer;
 
 	_textureImages.push_back(result);
 
@@ -201,44 +200,36 @@ TextureImage::TextureImage() :
 }
 
 
-TextureImage::~TextureImage()
-{
-
-}
-
-
 bool TextureImage::IsDiscarded() const
 {
 	return _discarded;
 }
 
 
-bounds2f TextureImage::GetInnerBounds() const
+void TextureImage::SetBounds(const BorderBounds& value)
 {
-	return _inner;
+	_bounds = value;
+
 }
 
 
-bounds2f TextureImage::GetOuterBounds() const
+BorderBounds TextureImage::GetBounds() const
 {
-	return _outer;
+	return _bounds;
 }
 
 
-bounds2f TextureImage::GetInnerUV() const
+BorderBounds TextureImage::GetCoords() const
 {
-	return _inner / glm::vec2(_textureAtlas->_textureAtlasImage->GetWidth(), _textureAtlas->_textureAtlasImage->GetHeight());
-}
-
-
-bounds2f TextureImage::GetOuterUV() const
-{
-	return _outer / glm::vec2(_textureAtlas->_textureAtlasImage->GetWidth(), _textureAtlas->_textureAtlasImage->GetHeight());
+	glm::vec2 size = glm::vec2(_textureAtlas->_textureAtlasImage->GetWidth(), _textureAtlas->_textureAtlasImage->GetHeight());
+	BorderBounds result;
+	result.inner = _bounds.inner / size;
+	result.outer = _bounds.outer / size;
+	return result;
 }
 
 
 /***/
-
 
 
 TextureSheet::TextureSheet(TextureAtlas* textureAtlas, int size_u, int size_v) :
@@ -252,7 +243,6 @@ TextureSheet::TextureSheet(TextureAtlas* textureAtlas, const bounds2f& bounds) :
 	_textureAtlas(textureAtlas),
 	_sheetBounds(bounds)
 {
-
 }
 
 
@@ -262,18 +252,10 @@ glm::vec2 TextureSheet::MapCoord(int u, int v) const
 }
 
 
-std::shared_ptr<TextureImage> TextureSheet::NewTextureImage(int u0, int v0, int size_u, int size_v)
+std::shared_ptr<TextureImage> TextureSheet::NewTextureImage(const BorderBounds& bounds)
 {
-	bounds2f bounds = bounds2f(u0, v0, u0 + size_u, v0 + size_v) + _sheetBounds.min;
-
-	return _textureAtlas->NewTextureImage(false, bounds, bounds);
-}
-
-
-std::shared_ptr<TextureImage> TextureSheet::NewTexturePatch(int u0, int v0, int size_u, int size_v, int inset_u, int inset_v)
-{
-	bounds2f outer = bounds2f(u0, v0, u0 + size_u, v0 + size_v) + _sheetBounds.min;
-	bounds2f inner = outer.grow(-(float)inset_u, -(float)inset_v);
-
-	return _textureAtlas->NewTextureImage(false, inner, outer);
+	BorderBounds offsetBounds;
+	offsetBounds.inner = bounds.inner + _sheetBounds.min;
+	offsetBounds.outer = bounds.outer + _sheetBounds.min;
+	return _textureAtlas->NewTextureImage(offsetBounds, false);
 }

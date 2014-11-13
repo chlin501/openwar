@@ -115,19 +115,18 @@ bool TextureChar::CanColorize() const
 
 glm::vec2 TextureChar::GetInnerSize() const
 {
-	return _textureImage->GetInnerBounds().size();
+	return _textureImage->GetBounds().inner.size();
 }
 
 
 bounds2f TextureChar::GetOuterUV() const
 {
-	return _textureImage->GetOuterUV();
+	return _textureImage->GetCoords().outer;
 }
 
 
 bounds2f TextureChar::GetOuterXY(glm::vec2 position) const
 {
-	bounds2f inner_xy = _textureImage->GetInnerBounds();
-	bounds2f outer_xy = _textureImage->GetOuterBounds();
-	return outer_xy + position - inner_xy.min;
+	BorderBounds bounds = _textureImage->GetBounds();
+	return bounds.outer + position - bounds.inner.min;
 }

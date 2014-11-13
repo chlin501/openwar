@@ -14,8 +14,8 @@ ImageWidget::ImageWidget(std::shared_ptr<TextureImage> tile, bounds2f bounds, gl
 {
 	outer_xy = bounds;
 	inner_xy = bounds.grow(-inset.x, -inset.y);
-	outer_uv = tile->GetOuterUV();
-	inner_uv = tile->GetInnerUV();
+	outer_uv = tile->GetCoords().outer;
+	inner_uv = tile->GetCoords().inner;
 }
 
 
@@ -32,8 +32,8 @@ void ImageWidget::Reset(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm
 {
 	outer_xy = bounds;
 	inner_xy = bounds.grow(-inset.x, -inset.y);
-	outer_uv = tile->GetOuterUV();
-	inner_uv = tile->GetInnerUV();
+	outer_uv = tile->GetCoords().outer;
+	inner_uv = tile->GetCoords().inner;
 }
 
 
