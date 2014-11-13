@@ -24,13 +24,18 @@ const ButtonAlignment ButtonAlignment::BottomRight(ButtonAlignment::Vertical::Bo
 
 
 ButtonItem::ButtonItem(ButtonArea* buttonArea, const char* text) :
-_hotspot(),
-_buttonArea(buttonArea),
-_buttonText(text),
-_buttonIcon(nullptr),
-_keyboardShortcut('\0'),
-_selected(false),
-_disabled(false)
+	_hotspot(),
+	_buttonArea(buttonArea),
+	_buttonText(text),
+	_buttonIcon(nullptr),
+	_keyboardShortcut('\0'),
+	_selected(false),
+	_disabled(false),
+	selectedImage(buttonArea->GetButtonView()),
+	buttonImage(buttonArea->GetButtonView()),
+	highlightImage(buttonArea->GetButtonView()),
+	buttonString(buttonArea->GetButtonView())
+
 {
 	_hotspot = std::make_shared<ButtonHotspot>([buttonArea](Touch* touch) {
 		buttonArea->GetButtonView()->FindButtonHotspots(touch);
@@ -40,13 +45,17 @@ _disabled(false)
 
 
 ButtonItem::ButtonItem(ButtonArea* buttonArea, std::shared_ptr<TextureImage> icon) :
-_hotspot(),
-_buttonArea(buttonArea),
-_buttonText(),
-_buttonIcon(icon),
-_keyboardShortcut('\0'),
-_selected(false),
-_disabled(false)
+	_hotspot(),
+	_buttonArea(buttonArea),
+	_buttonText(),
+	_buttonIcon(icon),
+	_keyboardShortcut('\0'),
+	_selected(false),
+	_disabled(false),
+	selectedImage(buttonArea->GetButtonView()),
+	buttonImage(buttonArea->GetButtonView()),
+	highlightImage(buttonArea->GetButtonView()),
+	buttonString(buttonArea->GetButtonView())
 {
 	_hotspot = std::make_shared<ButtonHotspot>([buttonArea](Touch* touch) {
 		buttonArea->GetButtonView()->FindButtonHotspots(touch);
@@ -92,8 +101,9 @@ glm::vec2 ButtonItem::CalculateSize() const
 
 
 ButtonArea::ButtonArea(ButtonGrid* buttonView, int numberOfColumns) :
-_buttonView(buttonView),
-noaction([](){})
+	_buttonView(buttonView),
+	noaction([](){}),
+	backgroundImage(buttonView)
 {
 	if (numberOfColumns > 0)
 		columns.assign(numberOfColumns, 0);
@@ -341,7 +351,7 @@ void ButtonGrid::Render()
 	{
 		buttonArea->backgroundImage.SetBounds(BorderBounds(buttonArea->_bounds).Outset(10).Inset(32));
 		buttonArea->backgroundImage.SetTextureImage(_buttonRendering->buttonBackground);
-		AddWidget(&buttonArea->backgroundImage);
+		BringToFront(&buttonArea->backgroundImage);
 
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
 		{
@@ -349,7 +359,7 @@ void ButtonGrid::Render()
 			{
 				buttonItem->selectedImage.SetBounds(BorderBounds(buttonItem->GetBounds()).Outset(10).Inset(32));
 				buttonItem->selectedImage.SetTextureImage(_buttonRendering->buttonSelected);
-				AddWidget(&buttonItem->selectedImage);
+				BringToFront(&buttonItem->selectedImage);
 			}
 
 			if (buttonItem->GetButtonIcon() != nullptr)
@@ -362,21 +372,21 @@ void ButtonGrid::Render()
 				buttonItem->buttonImage.SetTextureImage(buttonItem->GetButtonIcon());
 				buttonItem->buttonImage.SetAlpha(buttonItem->IsDisabled() ? 0.5f : 1.0f);
 
-				AddWidget(&buttonItem->buttonImage);
+				BringToFront(&buttonItem->buttonImage);
 			}
 
 			if (buttonItem->IsHighlight())
 			{
 				buttonItem->highlightImage.SetBounds(BorderBounds(buttonItem->GetBounds()).Center());
 				buttonItem->highlightImage.SetTextureImage(_buttonRendering->buttonHighlight);
-				AddWidget(&buttonItem->highlightImage);
+				BringToFront(&buttonItem->highlightImage);
 			}
 
 			if (buttonItem->GetButtonText() != nullptr)
 			{
 				buttonItem->buttonString.SetString(buttonItem->GetButtonText());
 				buttonItem->buttonString.SetPosition(buttonItem->GetBounds().center() - 0.5f * MeasureStringWidget(&buttonItem->buttonString));
-				AddWidget(&buttonItem->buttonString);
+				BringToFront(&buttonItem->buttonString);
 			}
 		}
 	}

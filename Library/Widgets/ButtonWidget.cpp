@@ -2,10 +2,12 @@
 #include "ButtonHotspot.h"
 
 
-ButtonWidget::ButtonWidget() :
+ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
+	_borderImage(this),
+	_iconImage(this),
+	_titleString(this),
 	_disabled(false)
 {
-
 }
 
 
@@ -87,7 +89,7 @@ void ButtonWidget::SetDisabled(bool value)
 }
 
 
-void ButtonWidget::AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices)
+void ButtonWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	if (_disabled)
 	{
@@ -127,13 +129,11 @@ void ButtonWidget::AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_
 	}
 
 	_borderImage.SetBounds(BorderBounds(_bounds).Inset(_inset));
-	_borderImage.AppendVertices(widgetView, vertices);
-
 	_iconImage.SetBounds(BorderBounds(_bounds).Inset(_inset));
-	_iconImage.AppendVertices(widgetView, vertices);
 
-	_titleString.SetPosition(_bounds.center() - 0.5f * widgetView->MeasureStringWidget(&_titleString));
+	_titleString.SetPosition(_bounds.center() - 0.5f * GetWidgetView()->MeasureStringWidget(&_titleString));
 	_titleString.SetGlow(glm::vec4(0, 0, 0, 1));
 	_titleString.SetAlpha(_disabled ? 0.5f : 1.0f);
-	_titleString.AppendVertices(widgetView, vertices);
+
+	WidgetGroup::AppendVertices(vertices);
 }

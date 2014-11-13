@@ -45,8 +45,6 @@ WidgetView::WidgetView(GraphicsContext* gc) :
 
 WidgetView::~WidgetView()
 {
-	for (Widget* widget : _widgets)
-		widget->_widgetView = nullptr;
 }
 
 
@@ -60,33 +58,6 @@ ScrollerViewport* WidgetView::GetViewport() const
 TextureAtlas* WidgetView::GetTextureAtlas() const
 {
 	return _textureAtlas;
-}
-
-
-void WidgetView::ClearWidgets()
-{
-	for (Widget* widget : _widgets)
-		widget->_widgetView = nullptr;
-	_widgets.clear();
-}
-
-
-void WidgetView::AddWidget(Widget* widget)
-{
-	if (widget->_widgetView != nullptr)
-		widget->_widgetView->RemoveWidget(widget);
-
-	widget->_widgetView = this;
-	_widgets.push_back(widget);
-}
-
-
-void WidgetView::RemoveWidget(Widget* widget)
-{
-	widget->_widgetView = nullptr;
-	_widgets.erase(
-		std::remove(_widgets.begin(), _widgets.end(), widget),
-		_widgets.end());
 }
 
 
@@ -110,12 +81,19 @@ void WidgetView::Render()
 }
 
 
+WidgetView* WidgetView::GetWidgetView()
+{
+	return this;
+}
+
+
 void WidgetView::UpdateVertexBuffer()
 {
 	static std::vector<Vertex_2f_2f_4f_1f> vertices;
 
-	for (Widget* widget : _widgets)
-		widget->AppendVertices(this, vertices);
+	for (Widget* widget : GetWidgets())
+		if (widget->IsVisible())
+			widget->AppendVertices(vertices);
 
 	_vertices.UpdateVBO(GL_TRIANGLES, vertices.data(), vertices.size());
 	vertices.clear();

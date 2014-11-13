@@ -22,8 +22,8 @@ class StringWidget : public Widget
 	float _width;
 
 public:
-	StringWidget();
-	StringWidget(const char* string, glm::vec2 translate);
+	StringWidget(WidgetOwner* widgetOwner);
+	StringWidget(WidgetOwner* widgetOwner, const char* string, glm::vec2 translate);
 
 	const FontDescriptor& GetFontDescriptor() const;
 	void SetFontDescriptor(const FontDescriptor& fontDescriptor);
@@ -47,13 +47,13 @@ public:
 	const float GetWidth() const;
 	void SetWidth(float value);
 
-	virtual void AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices);
+	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
 private:
-	void AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur);
+	void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur);
 
 private:
-	StringWidget(const StringWidget&) { }
+	StringWidget(const StringWidget&) : Widget(nullptr) { }
 	StringWidget& operator=(const StringWidget&) { return *this; }
 };
 

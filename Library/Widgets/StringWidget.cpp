@@ -34,7 +34,7 @@ static bool ContainsArabic(const std::wstring& ws)
 
 
 
-StringWidget::StringWidget() :
+StringWidget::StringWidget(WidgetOwner* widgetOwner) : Widget(widgetOwner),
 	_string(),
 	_color(1, 1, 1, 1),
 	_width(0)
@@ -42,7 +42,7 @@ StringWidget::StringWidget() :
 }
 
 
-StringWidget::StringWidget(const char* string, glm::vec2 translate) :
+StringWidget::StringWidget(WidgetOwner* widgetOwner, const char* string, glm::vec2 translate) : Widget(widgetOwner),
 	_string(string),
 	_color(1, 1, 1, 1),
 	_width(0)
@@ -142,16 +142,16 @@ void StringWidget::SetWidth(float value)
 }
 
 
-void StringWidget::AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices)
+void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	if (_glow.a != 0)
-		AppendVertices(widgetView, vertices, _glow, 2);
+		AppendVertices(vertices, _glow, 2);
 
-	AppendVertices(widgetView, vertices, _color, 0);
+	AppendVertices(vertices, _color, 0);
 }
 
 
-void StringWidget::AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur)
+void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur)
 {
 	glm::vec2 p(0, 0);
 
@@ -168,7 +168,7 @@ void StringWidget::AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv(".", L".");
 	std::wstring ws = conv.from_bytes(_string);
 
-	TextureFont* textureFont = widgetView->GetTextureAtlas()->GetTextureFont(GetFontDescriptor());
+	TextureFont* textureFont = GetWidgetView()->GetTextureAtlas()->GetTextureFont(GetFontDescriptor());
 
 	if (ContainsArabic(ws))
 	{

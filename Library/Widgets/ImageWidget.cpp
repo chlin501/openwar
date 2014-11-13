@@ -6,7 +6,7 @@
 
 
 
-ImageWidget::ImageWidget() :
+ImageWidget::ImageWidget(WidgetOwner* widgetOwner) : Widget(widgetOwner),
 	_alpha(1)
 {
 }
@@ -60,7 +60,7 @@ void ImageWidget::SetAlpha(float value)
 }
 
 
-void ImageWidget::AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices)
+void ImageWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	if (_textureImage == nullptr || _bounds.outer.empty())
 		return;

@@ -8,7 +8,7 @@
 class ButtonHotspot;
 
 
-class ButtonWidget : public Widget
+class ButtonWidget : public WidgetGroup
 {
 public:
 	std::shared_ptr<ButtonHotspot> _hotspot;
@@ -25,7 +25,7 @@ private:
 	bool _disabled;
 
 public:
-	ButtonWidget();
+	ButtonWidget(WidgetOwner* widgetOwner);
 
 	void SetBackgroundNormal(std::shared_ptr<TextureImage> value);
 	void SetBackgroundHighlight(std::shared_ptr<TextureImage> value);
@@ -46,7 +46,7 @@ public:
 	bool IsDisabled() const;
 	void SetDisabled(bool value);
 
-	virtual void AppendVertices(WidgetView* widgetView, std::vector<Vertex_2f_2f_4f_1f>& vertices);
+	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
 };
 
 
