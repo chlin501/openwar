@@ -12,9 +12,9 @@
 
 class GraphicsContext;
 class WidgetShape;
-class StringGlyph;
-class PatchGlyph;
-class WidgetGlyph;
+class StringWidget;
+class ImageWidget;
+class Widget;
 
 
 class WidgetShader : public ShaderProgram
@@ -45,7 +45,7 @@ class WidgetShape
 
 	TextureAtlas* _textureAtlas;
 	WidgetVertexBuffer _vertices;
-	std::vector<WidgetGlyph*> _widgetGlyphs;
+	std::vector<Widget*> _widgets;
 
 public:
 	explicit WidgetShape(TextureAtlas* textureAtlas);
@@ -55,11 +55,11 @@ public:
 
 	VertexBuffer<Vertex_2f_2f_4f_1f>* GetVertices();
 
-	void ClearGlyphs();
-	void AddGlyph(WidgetGlyph* glyph);
-	void RemoveGlyph(WidgetGlyph* glyph);
+	void ClearWidgets();
+	void AddWidget(Widget* widget);
+	void RemoveWidget(Widget* widget);
 
-	glm::vec2 MeasureGlyph(StringGlyph* glyph) const;
+	glm::vec2 MeasureStringWidget(StringWidget* stringWidget) const;
 
 private:
 	void UpdateVertexBuffer();
@@ -69,33 +69,8 @@ private:
 };
 
 
-class WidgetGlyph
-{
-	friend class WidgetShape;
-
-	WidgetShape* _widgetShape;
-	glm::mat4x4 _transform;
-
-public:
-	WidgetGlyph();
-	virtual ~WidgetGlyph();
-
-	WidgetShape* GetWidgetShape() const;
-
-	const glm::mat4x4& GetTransform() const { return _transform; }
-	void SetTransform(glm::mat4x4 value) { _transform = value; }
-	void SetTranslate(glm::vec2 value) { _transform = glm::translate(glm::mat4(), glm::vec3(value, 0)); }
-
-private:
-	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices) = 0;
-
-private:
-	WidgetGlyph(const WidgetGlyph&) { }
-	WidgetGlyph& operator=(const WidgetGlyph&) { return *this; }
-};
-
-
-#include "PatchGlyph.h"
-#include "StringGlyph.h"
+#include "Widget.h"
+#include "ImageWidget.h"
+#include "StringWidget.h"
 
 #endif

@@ -1,4 +1,4 @@
-#include "StringGlyph.h"
+#include "StringWidget.h"
 #include <codecvt>
 #include <cstdlib>
 #include <locale>
@@ -28,7 +28,7 @@ static bool ContainsArabic(const std::wstring& ws)
 
 
 
-StringGlyph::StringGlyph() :
+StringWidget::StringWidget() :
 	_string(),
 	_color(1, 1, 1, 1),
 	_width(0)
@@ -36,7 +36,7 @@ StringGlyph::StringGlyph() :
 }
 
 
-StringGlyph::StringGlyph(const char* string, glm::vec2 translate) :
+StringWidget::StringWidget(const char* string, glm::vec2 translate) :
 	_string(string),
 	_color(1, 1, 1, 1),
 	_width(0)
@@ -45,7 +45,7 @@ StringGlyph::StringGlyph(const char* string, glm::vec2 translate) :
 }
 
 
-StringGlyph::StringGlyph(const char* string, glm::mat4x4 transform) :
+StringWidget::StringWidget(const char* string, glm::mat4x4 transform) :
 	_string(string),
 	_color(1, 1, 1, 1),
 	_width(0)
@@ -54,86 +54,86 @@ StringGlyph::StringGlyph(const char* string, glm::mat4x4 transform) :
 }
 
 
-const FontDescriptor& StringGlyph::GetFontDescriptor() const
+const FontDescriptor& StringWidget::GetFontDescriptor() const
 {
 	return _fontDescriptor;
 }
 
 
-void StringGlyph::SetFontDescriptor(const FontDescriptor& fontDescriptor)
+void StringWidget::SetFontDescriptor(const FontDescriptor& fontDescriptor)
 {
 	_fontDescriptor = fontDescriptor;
 }
 
 
-const char* StringGlyph::GetString() const
+const char* StringWidget::GetString() const
 {
 	return _string.c_str();
 }
 
 
-void StringGlyph::SetString(const char* value)
+void StringWidget::SetString(const char* value)
 {
 	_string = value;
 }
 
 
-const glm::vec4 StringGlyph::GetColor() const
+const glm::vec4 StringWidget::GetColor() const
 {
 	return _color;
 }
 
 
-void StringGlyph::SetColor(const glm::vec3& value)
+void StringWidget::SetColor(const glm::vec3& value)
 {
 	_color = glm::vec4(value, _color.a);
 }
 
 
-void StringGlyph::SetColor(const glm::vec4& value)
+void StringWidget::SetColor(const glm::vec4& value)
 {
 	_color = value;
 }
 
 
-const glm::vec4 StringGlyph::GetGlow() const
+const glm::vec4 StringWidget::GetGlow() const
 {
 	return _glow;
 }
 
 
-void StringGlyph::SetGlow(const glm::vec4& value)
+void StringWidget::SetGlow(const glm::vec4& value)
 {
 	_glow = value;
 }
 
 
-const float StringGlyph::GetAlpha() const
+const float StringWidget::GetAlpha() const
 {
 	return _color.a;
 }
 
 
-void StringGlyph::SetAlpha(float value)
+void StringWidget::SetAlpha(float value)
 {
 	_color.a = value;
 }
 
 
 
-const float StringGlyph::GetWidth() const
+const float StringWidget::GetWidth() const
 {
 	return _width;
 }
 
 
-void StringGlyph::SetWidth(float value)
+void StringWidget::SetWidth(float value)
 {
 	_width = value;
 }
 
 
-void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
+void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	if (_glow.a != 0)
 		AppendVertices(vertices, _glow, 2);
@@ -142,7 +142,7 @@ void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 }
 
 
-void StringGlyph::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur)
+void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur)
 {
 	glm::vec2 p(0, 0);
 

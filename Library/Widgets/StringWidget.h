@@ -5,18 +5,23 @@
 #include "WidgetShape.h"
 
 
-class StringGlyph : public WidgetGlyph
+class StringWidget : public Widget
 {
 	FontDescriptor _fontDescriptor;
 	std::string _string;
+	glm::mat4x4 _transform;
 	glm::vec4 _color;
 	glm::vec4 _glow;
 	float _width;
 
 public:
-	StringGlyph();
-	StringGlyph(const char* string, glm::vec2 translate);
-	StringGlyph(const char* string, glm::mat4x4 transform);
+	StringWidget();
+	StringWidget(const char* string, glm::vec2 translate);
+	StringWidget(const char* string, glm::mat4x4 transform);
+
+	const glm::mat4x4& GetTransform() const { return _transform; }
+	void SetTransform(glm::mat4x4 value) { _transform = value; }
+	void SetTranslate(glm::vec2 value) { _transform = glm::translate(glm::mat4(), glm::vec3(value, 0)); }
 
 	const FontDescriptor& GetFontDescriptor() const;
 	void SetFontDescriptor(const FontDescriptor& fontDescriptor);
@@ -43,8 +48,8 @@ private:
 	void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur);
 
 private:
-	StringGlyph(const StringGlyph&) { }
-	StringGlyph& operator=(const StringGlyph&) { return *this; }
+	StringWidget(const StringWidget&) { }
+	StringWidget& operator=(const StringWidget&) { return *this; }
 };
 
 

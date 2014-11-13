@@ -1,15 +1,15 @@
-#include "PatchGlyph.h"
+#include "ImageWidget.h"
 
 
 
-PatchGlyph::PatchGlyph() :
+ImageWidget::ImageWidget() :
 	_alpha(1)
 {
 
 }
 
 
-PatchGlyph::PatchGlyph(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm::vec2 inset) :
+ImageWidget::ImageWidget(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm::vec2 inset) :
 	_alpha(1)
 {
 	outer_xy = bounds;
@@ -19,7 +19,7 @@ PatchGlyph::PatchGlyph(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm:
 }
 
 
-void PatchGlyph::Reset()
+void ImageWidget::Reset()
 {
 	outer_xy = bounds2f();
 	inner_xy = bounds2f();
@@ -28,7 +28,7 @@ void PatchGlyph::Reset()
 }
 
 
-void PatchGlyph::Reset(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm::vec2 inset)
+void ImageWidget::Reset(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm::vec2 inset)
 {
 	outer_xy = bounds;
 	inner_xy = bounds.grow(-inset.x, -inset.y);
@@ -37,7 +37,7 @@ void PatchGlyph::Reset(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm:
 }
 
 
-void PatchGlyph::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
+void ImageWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	bounds2f ixy = inner_xy;
 	bounds2f oxy = outer_xy;
@@ -95,7 +95,7 @@ void PatchGlyph::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 }
 
 
-void PatchGlyph::AppendRectangle(std::vector<Vertex_2f_2f_4f_1f>& vertices, bounds2f xy, bounds2f uv)
+void ImageWidget::AppendRectangle(std::vector<Vertex_2f_2f_4f_1f>& vertices, bounds2f xy, bounds2f uv)
 {
 	vertices.push_back(Vertex_2f_2f_4f_1f(glm::vec2(xy.min.x, xy.min.y), glm::vec2(uv.min.x, uv.min.y), _colorize, _alpha));
 	vertices.push_back(Vertex_2f_2f_4f_1f(glm::vec2(xy.min.x, xy.max.y), glm::vec2(uv.min.x, uv.max.y), _colorize, _alpha));

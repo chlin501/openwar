@@ -70,10 +70,10 @@ class ButtonItem
 	bool _disabled;
 
 public:
-	PatchGlyph selectedGlyph;
-	PatchGlyph buttonIconGlyph;
-	PatchGlyph highlightGlyph;
-	StringGlyph buttonTextGlyph;
+	ImageWidget selectedImage;
+	ImageWidget buttonImage;
+	ImageWidget highlightImage;
+	StringWidget buttonString;
 
 	ButtonItem(ButtonArea* buttonArea, const char* text);
 	ButtonItem(ButtonArea* buttonArea, std::shared_ptr<TextureImage> icon);
@@ -123,7 +123,7 @@ public:
 	std::function<void()> noaction;
 	glm::vec2 _margin;
 
-	PatchGlyph backgroundGlyph;
+	ImageWidget backgroundImage;
 
 	ButtonArea(ButtonGrid* buttonView, int numberOfColumns);
 	~ButtonArea();

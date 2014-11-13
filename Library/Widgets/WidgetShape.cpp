@@ -80,8 +80,8 @@ WidgetShape::WidgetShape(TextureAtlas* textureAtlas) :
 
 WidgetShape::~WidgetShape()
 {
-	for (WidgetGlyph* glyph : _widgetGlyphs)
-		glyph->_widgetShape = nullptr;
+	for (Widget* widget : _widgets)
+		widget->_widgetShape = nullptr;
 }
 
 
@@ -97,38 +97,38 @@ VertexBuffer<Vertex_2f_2f_4f_1f>* WidgetShape::GetVertices()
 }
 
 
-void WidgetShape::ClearGlyphs()
+void WidgetShape::ClearWidgets()
 {
-	for (WidgetGlyph* glyph : _widgetGlyphs)
-		glyph->_widgetShape = nullptr;
-	_widgetGlyphs.clear();
+	for (Widget* widget : _widgets)
+		widget->_widgetShape = nullptr;
+	_widgets.clear();
 }
 
 
-void WidgetShape::AddGlyph(WidgetGlyph* glyph)
+void WidgetShape::AddWidget(Widget* widget)
 {
-	if (glyph->_widgetShape != nullptr)
-		glyph->_widgetShape->RemoveGlyph(glyph);
+	if (widget->_widgetShape != nullptr)
+		widget->_widgetShape->RemoveWidget(widget);
 
-	glyph->_widgetShape = this;
-	_widgetGlyphs.push_back(glyph);
+	widget->_widgetShape = this;
+	_widgets.push_back(widget);
 }
 
 
-void WidgetShape::RemoveGlyph(WidgetGlyph* glyph)
+void WidgetShape::RemoveWidget(Widget* widget)
 {
-	glyph->_widgetShape = nullptr;
-	_widgetGlyphs.erase(
-		std::remove(_widgetGlyphs.begin(), _widgetGlyphs.end(), glyph),
-		_widgetGlyphs.end());
+	widget->_widgetShape = nullptr;
+	_widgets.erase(
+		std::remove(_widgets.begin(), _widgets.end(), widget),
+		_widgets.end());
 }
 
 
-glm::vec2 WidgetShape::MeasureGlyph(StringGlyph* glyph) const
+glm::vec2 WidgetShape::MeasureStringWidget(StringWidget* stringWidget) const
 {
-	TextureFont* textureFont = _textureAtlas->GetTextureFont(glyph->GetFontDescriptor());
+	TextureFont* textureFont = _textureAtlas->GetTextureFont(stringWidget->GetFontDescriptor());
 
-	return textureFont->MeasureText(glyph->GetString());
+	return textureFont->MeasureText(stringWidget->GetString());
 }
 
 
@@ -136,31 +136,9 @@ void WidgetShape::UpdateVertexBuffer()
 {
 	static std::vector<Vertex_2f_2f_4f_1f> vertices;
 
-	for (WidgetGlyph* glyph : _widgetGlyphs)
-		glyph->AppendVertices(vertices);
+	for (Widget* widget : _widgets)
+		widget->AppendVertices(vertices);
 
 	_vertices.UpdateVBO(GL_TRIANGLES, vertices.data(), vertices.size());
 	vertices.clear();
-}
-
-
-/* WidgetGlyph */
-
-
-WidgetGlyph::WidgetGlyph()
-	: _widgetShape(nullptr)
-{
-}
-
-
-WidgetGlyph::~WidgetGlyph()
-{
-	if (_widgetShape != nullptr)
-		_widgetShape->RemoveGlyph(this);
-}
-
-
-WidgetShape* WidgetGlyph::GetWidgetShape() const
-{
-	return _widgetShape;
 }

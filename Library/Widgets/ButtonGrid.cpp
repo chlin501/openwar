@@ -338,21 +338,21 @@ void ButtonGrid::Render()
 {
 	for (ButtonArea* buttonArea : _buttonAreas)
 	{
-		buttonArea->backgroundGlyph.outer_xy = buttonArea->_bounds.grow(10);
-		buttonArea->backgroundGlyph.inner_xy = buttonArea->_bounds.grow(-22);
-		buttonArea->backgroundGlyph.outer_uv = _buttonRendering->buttonBackground->GetOuterUV();
-		buttonArea->backgroundGlyph.inner_uv = _buttonRendering->buttonBackground->GetInnerUV();
-		GetWidgetShape()->AddGlyph(&buttonArea->backgroundGlyph);
+		buttonArea->backgroundImage.outer_xy = buttonArea->_bounds.grow(10);
+		buttonArea->backgroundImage.inner_xy = buttonArea->_bounds.grow(-22);
+		buttonArea->backgroundImage.outer_uv = _buttonRendering->buttonBackground->GetOuterUV();
+		buttonArea->backgroundImage.inner_uv = _buttonRendering->buttonBackground->GetInnerUV();
+		GetWidgetShape()->AddWidget(&buttonArea->backgroundImage);
 
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
 		{
 			if (buttonItem->IsSelected())
 			{
-				buttonItem->selectedGlyph.outer_xy = buttonItem->GetBounds().grow(10);
-				buttonItem->selectedGlyph.inner_xy = buttonItem->GetBounds().grow(-22);
-				buttonItem->selectedGlyph.outer_uv = _buttonRendering->buttonSelected->GetOuterUV();
-				buttonItem->selectedGlyph.inner_uv = _buttonRendering->buttonSelected->GetInnerUV();
-				GetWidgetShape()->AddGlyph(&buttonItem->selectedGlyph);
+				buttonItem->selectedImage.outer_xy = buttonItem->GetBounds().grow(10);
+				buttonItem->selectedImage.inner_xy = buttonItem->GetBounds().grow(-22);
+				buttonItem->selectedImage.outer_uv = _buttonRendering->buttonSelected->GetOuterUV();
+				buttonItem->selectedImage.inner_uv = _buttonRendering->buttonSelected->GetInnerUV();
+				GetWidgetShape()->AddWidget(&buttonItem->selectedImage);
 			}
 
 			if (buttonItem->GetButtonIcon() != nullptr)
@@ -361,29 +361,29 @@ void ButtonGrid::Render()
 				bounds_xy -= bounds_xy.center();
 				bounds_xy += buttonItem->GetBounds().center();
 
-				buttonItem->buttonIconGlyph.outer_xy = bounds_xy;
-				buttonItem->buttonIconGlyph.inner_xy = bounds_xy;
-				buttonItem->buttonIconGlyph.outer_uv = buttonItem->GetButtonIcon()->GetOuterUV();
-				buttonItem->buttonIconGlyph.inner_uv = buttonItem->GetButtonIcon()->GetInnerUV();
-				buttonItem->buttonIconGlyph._alpha = buttonItem->IsDisabled() ? 0.5f : 1.0f;
+				buttonItem->buttonImage.outer_xy = bounds_xy;
+				buttonItem->buttonImage.inner_xy = bounds_xy;
+				buttonItem->buttonImage.outer_uv = buttonItem->GetButtonIcon()->GetOuterUV();
+				buttonItem->buttonImage.inner_uv = buttonItem->GetButtonIcon()->GetInnerUV();
+				buttonItem->buttonImage._alpha = buttonItem->IsDisabled() ? 0.5f : 1.0f;
 
-				GetWidgetShape()->AddGlyph(&buttonItem->buttonIconGlyph);
+				GetWidgetShape()->AddWidget(&buttonItem->buttonImage);
 			}
 
 			if (buttonItem->IsHighlight())
 			{
-				buttonItem->highlightGlyph.outer_xy = buttonItem->GetBounds();
-				buttonItem->highlightGlyph.inner_xy = bounds2f(buttonItem->GetBounds().center());
-				buttonItem->highlightGlyph.outer_uv = _buttonRendering->buttonHighlight->GetOuterUV();
-				buttonItem->highlightGlyph.inner_uv = _buttonRendering->buttonHighlight->GetInnerUV();
-				GetWidgetShape()->AddGlyph(&buttonItem->highlightGlyph);
+				buttonItem->highlightImage.outer_xy = buttonItem->GetBounds();
+				buttonItem->highlightImage.inner_xy = bounds2f(buttonItem->GetBounds().center());
+				buttonItem->highlightImage.outer_uv = _buttonRendering->buttonHighlight->GetOuterUV();
+				buttonItem->highlightImage.inner_uv = _buttonRendering->buttonHighlight->GetInnerUV();
+				GetWidgetShape()->AddWidget(&buttonItem->highlightImage);
 			}
 
 			if (buttonItem->GetButtonText() != nullptr)
 			{
-				buttonItem->buttonTextGlyph.SetString(buttonItem->GetButtonText());
-				buttonItem->buttonTextGlyph.SetTranslate(buttonItem->GetBounds().center() - 0.5f * GetWidgetShape()->MeasureGlyph(&buttonItem->buttonTextGlyph));
-				GetWidgetShape()->AddGlyph(&buttonItem->buttonTextGlyph);
+				buttonItem->buttonString.SetString(buttonItem->GetButtonText());
+				buttonItem->buttonString.SetTranslate(buttonItem->GetBounds().center() - 0.5f * GetWidgetShape()->MeasureStringWidget(&buttonItem->buttonString));
+				GetWidgetShape()->AddWidget(&buttonItem->buttonString);
 			}
 		}
 	}

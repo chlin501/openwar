@@ -70,12 +70,13 @@
 		4156C3371A139E40006A264C /* ButtonGrid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2FF1A139E3F006A264C /* ButtonGrid.cpp */; };
 		4156C3381A139E40006A264C /* ButtonHotspot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C3011A139E3F006A264C /* ButtonHotspot.cpp */; };
 		4156C3391A139E40006A264C /* ButtonRendering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C3031A139E3F006A264C /* ButtonRendering.cpp */; };
-		4156C33A1A139E40006A264C /* PatchGlyph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C3051A139E40006A264C /* PatchGlyph.cpp */; };
-		4156C33B1A139E40006A264C /* StringGlyph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C3071A139E40006A264C /* StringGlyph.cpp */; };
 		4156C33D1A139E40006A264C /* WidgetShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C30B1A139E40006A264C /* WidgetShape.cpp */; };
 		4156C33E1A139E40006A264C /* WidgetView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C30D1A139E40006A264C /* WidgetView.cpp */; };
 		4156F29619A5FEC300A9990D /* SDL2_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4156F29519A5FEC300A9990D /* SDL2_mixer.framework */; };
 		418FCC3E192DEE0700D7D476 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */; };
+		419B34331A149FF8005951CD /* ImageWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 419B342D1A149FF8005951CD /* ImageWidget.cpp */; };
+		419B34341A149FF8005951CD /* StringWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 419B342F1A149FF8005951CD /* StringWidget.cpp */; };
+		419B34351A149FF8005951CD /* Widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 419B34311A149FF8005951CD /* Widget.cpp */; };
 		41B2298F17EC730E00DFA0B6 /* Maps in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298B17EC730E00DFA0B6 /* Maps */; };
 		41B2299117EC730E00DFA0B6 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298D17EC730E00DFA0B6 /* Sounds */; };
 		41B2299217EC730E00DFA0B6 /* Textures in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298E17EC730E00DFA0B6 /* Textures */; };
@@ -238,16 +239,18 @@
 		4156C3021A139E3F006A264C /* ButtonHotspot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonHotspot.h; sourceTree = "<group>"; };
 		4156C3031A139E3F006A264C /* ButtonRendering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ButtonRendering.cpp; sourceTree = "<group>"; };
 		4156C3041A139E3F006A264C /* ButtonRendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonRendering.h; sourceTree = "<group>"; };
-		4156C3051A139E40006A264C /* PatchGlyph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatchGlyph.cpp; sourceTree = "<group>"; };
-		4156C3061A139E40006A264C /* PatchGlyph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatchGlyph.h; sourceTree = "<group>"; };
-		4156C3071A139E40006A264C /* StringGlyph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StringGlyph.cpp; sourceTree = "<group>"; };
-		4156C3081A139E40006A264C /* StringGlyph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringGlyph.h; sourceTree = "<group>"; };
 		4156C30B1A139E40006A264C /* WidgetShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WidgetShape.cpp; sourceTree = "<group>"; };
 		4156C30C1A139E40006A264C /* WidgetShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WidgetShape.h; sourceTree = "<group>"; };
 		4156C30D1A139E40006A264C /* WidgetView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WidgetView.cpp; sourceTree = "<group>"; };
 		4156C30E1A139E40006A264C /* WidgetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WidgetView.h; sourceTree = "<group>"; };
 		4156F29519A5FEC300A9990D /* SDL2_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_mixer.framework; path = ../../../../Library/Frameworks/SDL2_mixer.framework; sourceTree = "<group>"; };
 		418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = /Library/Frameworks/SDL2_ttf.framework; sourceTree = "<absolute>"; };
+		419B342D1A149FF8005951CD /* ImageWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageWidget.cpp; sourceTree = "<group>"; };
+		419B342E1A149FF8005951CD /* ImageWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageWidget.h; sourceTree = "<group>"; };
+		419B342F1A149FF8005951CD /* StringWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StringWidget.cpp; sourceTree = "<group>"; };
+		419B34301A149FF8005951CD /* StringWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringWidget.h; sourceTree = "<group>"; };
+		419B34311A149FF8005951CD /* Widget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Widget.cpp; sourceTree = "<group>"; };
+		419B34321A149FF8005951CD /* Widget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Widget.h; sourceTree = "<group>"; };
 		41B2298B17EC730E00DFA0B6 /* Maps */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Maps; sourceTree = "<group>"; };
 		41B2298D17EC730E00DFA0B6 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
 		41B2298E17EC730E00DFA0B6 /* Textures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Textures; sourceTree = "<group>"; };
@@ -545,10 +548,12 @@
 				4156C3021A139E3F006A264C /* ButtonHotspot.h */,
 				4156C3031A139E3F006A264C /* ButtonRendering.cpp */,
 				4156C3041A139E3F006A264C /* ButtonRendering.h */,
-				4156C3051A139E40006A264C /* PatchGlyph.cpp */,
-				4156C3061A139E40006A264C /* PatchGlyph.h */,
-				4156C3071A139E40006A264C /* StringGlyph.cpp */,
-				4156C3081A139E40006A264C /* StringGlyph.h */,
+				419B342D1A149FF8005951CD /* ImageWidget.cpp */,
+				419B342E1A149FF8005951CD /* ImageWidget.h */,
+				419B342F1A149FF8005951CD /* StringWidget.cpp */,
+				419B34301A149FF8005951CD /* StringWidget.h */,
+				419B34311A149FF8005951CD /* Widget.cpp */,
+				419B34321A149FF8005951CD /* Widget.h */,
 				4156C30B1A139E40006A264C /* WidgetShape.cpp */,
 				4156C30C1A139E40006A264C /* WidgetShape.h */,
 				4156C30D1A139E40006A264C /* WidgetView.cpp */,
@@ -763,7 +768,6 @@
 				41FE9BC619234E85002F6043 /* PracticeScript.cpp in Sources */,
 				4105FB331806D3970074C855 /* ShootingCounter.cpp in Sources */,
 				4105FB2C1806D3890074C855 /* TiledGroundMap.cpp in Sources */,
-				4156C33A1A139E40006A264C /* PatchGlyph.cpp in Sources */,
 				4156C3281A139E40006A264C /* resource.cpp in Sources */,
 				4105FB291806D3890074C855 /* HeightMap.cpp in Sources */,
 				63F5575DCDE438070E9DF48C /* BattleView.cpp in Sources */,
@@ -790,7 +794,6 @@
 				4156C3271A139E40006A264C /* Viewport.cpp in Sources */,
 				63F55D68A07CFDC7816F111A /* SmoothTerrainWater.cpp in Sources */,
 				4156C3301A139E40006A264C /* Animation.cpp in Sources */,
-				4156C33B1A139E40006A264C /* StringGlyph.cpp in Sources */,
 				4156C3171A139E40006A264C /* CommonShaders.cpp in Sources */,
 				63F55ECBBDB6C8631D7D8524 /* BillboardTerrainForest.cpp in Sources */,
 				4105FB2B1806D3890074C855 /* SmoothGroundMap.cpp in Sources */,
@@ -817,6 +820,7 @@
 				63F55932A50F5611BA25ED6F /* SamuraiModule.cpp in Sources */,
 				4156C3261A139E40006A264C /* VertexBuffer.cpp in Sources */,
 				4156C32C1A139E40006A264C /* BillboardColorShader.cpp in Sources */,
+				419B34341A149FF8005951CD /* StringWidget.cpp in Sources */,
 				4156C3161A139E40006A264C /* SoundPlayer.cpp in Sources */,
 				4156C30F1A139E40006A264C /* geometry.cpp in Sources */,
 				4156C3341A139E40006A264C /* Touch.cpp in Sources */,
@@ -828,8 +832,10 @@
 				4156C31C1A139E40006A264C /* Renderable.cpp in Sources */,
 				4156C3221A139E40006A264C /* TextureAtlas.cpp in Sources */,
 				63F55C0BC0B938B21CEB2D70 /* BattleHotspot.cpp in Sources */,
+				419B34331A149FF8005951CD /* ImageWidget.cpp in Sources */,
 				4156C32B1A139E40006A264C /* ScrollerViewport.cpp in Sources */,
 				4156C3311A139E40006A264C /* Gesture.cpp in Sources */,
+				419B34351A149FF8005951CD /* Widget.cpp in Sources */,
 				4156C3361A139E40006A264C /* ButtonGesture.cpp in Sources */,
 				4156C3381A139E40006A264C /* ButtonHotspot.cpp in Sources */,
 				4156C33D1A139E40006A264C /* WidgetShape.cpp in Sources */,
