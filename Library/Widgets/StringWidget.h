@@ -1,5 +1,9 @@
-#ifndef StringGlyph_H
-#define StringGlyph_H
+// Copyright (C) 2014 Felix Ungman
+//
+// This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
+
+#ifndef StringWidget_H
+#define StringWidget_H
 
 #include "FontAdapter.h"
 #include "WidgetShape.h"

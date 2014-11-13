@@ -1,5 +1,9 @@
-#ifndef STRINGSHAPE_H
-#define STRINGSHAPE_H
+// Copyright (C) 2014 Felix Ungman
+//
+// This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
+
+#ifndef WidgetShape_H
+#define WidgetShape_H
 
 #include <map>
 #include <glm/gtc/matrix_transform.hpp>

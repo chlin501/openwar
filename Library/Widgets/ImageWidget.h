@@ -1,5 +1,9 @@
-#ifndef PatchGlyph_H
-#define PatchGlyph_H
+// Copyright (C) 2014 Felix Ungman
+//
+// This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
+
+#ifndef ImageWidget_H
+#define ImageWidget_H
 
 #include "WidgetShape.h"
 
