@@ -96,7 +96,7 @@ void WidgetShape::UpdateVertexBuffer()
 	static std::vector<Vertex_2f_2f_4f_1f> vertices;
 
 	for (Widget* widget : _widgets)
-		widget->AppendVertices(vertices);
+		widget->AppendVertices(this, vertices);
 
 	_vertices.UpdateVBO(GL_TRIANGLES, vertices.data(), vertices.size());
 	vertices.clear();

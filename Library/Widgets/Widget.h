@@ -21,10 +21,7 @@ public:
 	Widget();
 	virtual ~Widget();
 
-	WidgetShape* GetWidgetShape() const;
-
-protected:
-	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices) = 0;
+	virtual void AppendVertices(WidgetShape* widgetShape, std::vector<Vertex_2f_2f_4f_1f>& vertices) = 0;
 
 private:
 	Widget(const Widget&) { }

@@ -47,11 +47,10 @@ public:
 	const float GetWidth() const;
 	void SetWidth(float value);
 
-protected:
-	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
+	virtual void AppendVertices(WidgetShape* widgetShape, std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
 private:
-	void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur);
+	void AppendVertices(WidgetShape* widgetShape, std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur);
 
 private:
 	StringWidget(const StringWidget&) { }

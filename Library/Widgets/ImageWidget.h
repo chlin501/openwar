@@ -32,8 +32,7 @@ public:
 	float GetAlpha() const;
 	void SetAlpha(float value);
 
-protected:
-	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
+	virtual void AppendVertices(WidgetShape* widgetShape, std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
 private:
 	void AppendRectangle(std::vector<Vertex_2f_2f_4f_1f>& vertices, bounds2f xy, bounds2f uv);

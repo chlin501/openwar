@@ -17,9 +17,3 @@ Widget::~Widget()
 	if (_widgetShape != nullptr)
 		_widgetShape->RemoveWidget(this);
 }
-
-
-WidgetShape* Widget::GetWidgetShape() const
-{
-	return _widgetShape;
-}

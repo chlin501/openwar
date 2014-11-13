@@ -21,14 +21,32 @@ class TextureImage;
 enum class TextureImageType { Permanent, Discardable };
 
 
+struct BorderInset
+{
+	glm::vec2 min, max;
+	BorderInset() { }
+	BorderInset(float d) : min(d), max(d) { }
+
+	BorderInset& MinX(float d) { min.x = d; return *this; }
+	BorderInset& MaxX(float d) { max.x = d; return *this; }
+	BorderInset& MinY(float d) { min.y = d; return *this; }
+	BorderInset& MaxY(float d) { max.y = d; return *this; }
+
+	BorderInset& X(float d) { min.x = max.x = d; return *this; }
+	BorderInset& Y(float d) { min.y = max.y = d; return *this; }
+};
+
+
 struct BorderBounds
 {
 	bounds2f inner;
 	bounds2f outer;
 
 	BorderBounds() { }
-	BorderBounds(bounds2f bounds) : inner(bounds), outer(bounds) { }
+	explicit BorderBounds(bounds2f bounds) : inner(bounds), outer(bounds) { }
 	BorderBounds(float x, float y, float sx, float sy) : inner(x, y, x + sx, y + sy), outer(inner) { }
+
+	BorderBounds& Inset(const BorderInset& inset) { inner.min = outer.min + inset.min; inner.max = outer.max - inset.max; return *this; }
 
 	BorderBounds& InsetMinX(float d) {inner.min.x = outer.min.x + d; return *this; }
 	BorderBounds& InsetMaxX(float d) {inner.max.x = outer.max.x - d; return *this; }
