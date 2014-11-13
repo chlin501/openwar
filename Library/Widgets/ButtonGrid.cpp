@@ -338,20 +338,16 @@ void ButtonGrid::Render()
 {
 	for (ButtonArea* buttonArea : _buttonAreas)
 	{
-		buttonArea->backgroundImage.outer_xy = buttonArea->_bounds.grow(10);
-		buttonArea->backgroundImage.inner_xy = buttonArea->_bounds.grow(-22);
-		buttonArea->backgroundImage.outer_uv = _buttonRendering->buttonBackground->GetCoords().outer;
-		buttonArea->backgroundImage.inner_uv = _buttonRendering->buttonBackground->GetCoords().inner;
+		buttonArea->backgroundImage.SetBounds(BorderBounds(buttonArea->_bounds).Outset(10).Inset(32));
+		buttonArea->backgroundImage.SetTextureImage(_buttonRendering->buttonBackground);
 		GetWidgetShape()->AddWidget(&buttonArea->backgroundImage);
 
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
 		{
 			if (buttonItem->IsSelected())
 			{
-				buttonItem->selectedImage.outer_xy = buttonItem->GetBounds().grow(10);
-				buttonItem->selectedImage.inner_xy = buttonItem->GetBounds().grow(-22);
-				buttonItem->selectedImage.outer_uv = _buttonRendering->buttonSelected->GetCoords().outer;
-				buttonItem->selectedImage.inner_uv = _buttonRendering->buttonSelected->GetCoords().inner;
+				buttonItem->selectedImage.SetBounds(BorderBounds(buttonItem->GetBounds()).Outset(10).Inset(32));
+				buttonItem->selectedImage.SetTextureImage(_buttonRendering->buttonSelected);
 				GetWidgetShape()->AddWidget(&buttonItem->selectedImage);
 			}
 
@@ -361,21 +357,17 @@ void ButtonGrid::Render()
 				bounds_xy -= bounds_xy.center();
 				bounds_xy += buttonItem->GetBounds().center();
 
-				buttonItem->buttonImage.outer_xy = bounds_xy;
-				buttonItem->buttonImage.inner_xy = bounds_xy;
-				buttonItem->buttonImage.outer_uv = buttonItem->GetButtonIcon()->GetCoords().outer;
-				buttonItem->buttonImage.inner_uv = buttonItem->GetButtonIcon()->GetCoords().inner;
-				buttonItem->buttonImage._alpha = buttonItem->IsDisabled() ? 0.5f : 1.0f;
+				buttonItem->buttonImage.SetBounds(BorderBounds(bounds_xy));
+				buttonItem->buttonImage.SetTextureImage(buttonItem->GetButtonIcon());
+				buttonItem->buttonImage.SetAlpha(buttonItem->IsDisabled() ? 0.5f : 1.0f);
 
 				GetWidgetShape()->AddWidget(&buttonItem->buttonImage);
 			}
 
 			if (buttonItem->IsHighlight())
 			{
-				buttonItem->highlightImage.outer_xy = buttonItem->GetBounds();
-				buttonItem->highlightImage.inner_xy = bounds2f(buttonItem->GetBounds().center());
-				buttonItem->highlightImage.outer_uv = _buttonRendering->buttonHighlight->GetCoords().outer;
-				buttonItem->highlightImage.inner_uv = _buttonRendering->buttonHighlight->GetCoords().inner;
+				buttonItem->highlightImage.SetBounds(BorderBounds(buttonItem->GetBounds()).Center());
+				buttonItem->highlightImage.SetTextureImage(_buttonRendering->buttonHighlight);
 				GetWidgetShape()->AddWidget(&buttonItem->highlightImage);
 			}
 

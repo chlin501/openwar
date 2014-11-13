@@ -8,3 +8,8 @@
 Surface::Surface(GraphicsContext* gc)
 {
 }
+
+
+Surface::~Surface()
+{
+}

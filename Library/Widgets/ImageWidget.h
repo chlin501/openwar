@@ -10,23 +10,30 @@
 
 class ImageWidget : public Widget
 {
-public:
-	bounds2f outer_xy;
-	bounds2f inner_xy;
-	bounds2f outer_uv;
-	bounds2f inner_uv;
+	std::shared_ptr<TextureImage> _textureImage;
+	BorderBounds _bounds;
 	glm::vec4 _colorize;
 	float _alpha;
 
+public:
 	ImageWidget();
-	ImageWidget(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm::vec2 inset);
 
-	void Reset();
-	void Reset(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm::vec2 inset);
+	std::shared_ptr<TextureImage> GetTextureImage() const;
+	void SetTextureImage(std::shared_ptr<TextureImage> textureImage);
 
-private:
+	BorderBounds GetBounds() const;
+	void SetBounds(const BorderBounds& value);
+
+	glm::vec4 GetColorize() const;
+	void SetColorize(const glm::vec4& value);
+
+	float GetAlpha() const;
+	void SetAlpha(float value);
+
+protected:
 	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
+private:
 	void AppendRectangle(std::vector<Vertex_2f_2f_4f_1f>& vertices, bounds2f xy, bounds2f uv);
 
 private:

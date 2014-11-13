@@ -9,93 +9,112 @@
 ImageWidget::ImageWidget() :
 	_alpha(1)
 {
-
 }
 
 
-ImageWidget::ImageWidget(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm::vec2 inset) :
-	_alpha(1)
+std::shared_ptr<TextureImage> ImageWidget::GetTextureImage() const
 {
-	outer_xy = bounds;
-	inner_xy = bounds.grow(-inset.x, -inset.y);
-	outer_uv = tile->GetCoords().outer;
-	inner_uv = tile->GetCoords().inner;
+	return _textureImage;
 }
 
 
-void ImageWidget::Reset()
+void ImageWidget::SetTextureImage(std::shared_ptr<TextureImage> textureImage)
 {
-	outer_xy = bounds2f();
-	inner_xy = bounds2f();
-	outer_uv = bounds2f();
-	inner_uv = bounds2f();
+	_textureImage = textureImage;
 }
 
 
-void ImageWidget::Reset(std::shared_ptr<TextureImage> tile, bounds2f bounds, glm::vec2 inset)
+BorderBounds ImageWidget::GetBounds() const
 {
-	outer_xy = bounds;
-	inner_xy = bounds.grow(-inset.x, -inset.y);
-	outer_uv = tile->GetCoords().outer;
-	inner_uv = tile->GetCoords().inner;
+	return _bounds;
+}
+
+
+void ImageWidget::SetBounds(const BorderBounds& value)
+{
+	_bounds = value;
+}
+
+
+glm::vec4 ImageWidget::GetColorize() const
+{
+	return _colorize;
+}
+
+
+void ImageWidget::SetColorize(const glm::vec4& value)
+{
+	_colorize = value;
+}
+
+
+float ImageWidget::GetAlpha() const
+{
+	return _alpha;
+}
+
+
+void ImageWidget::SetAlpha(float value)
+{
+	_alpha = value;
 }
 
 
 void ImageWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
-	bounds2f ixy = inner_xy;
-	bounds2f oxy = outer_xy;
-	bounds2f iuv = inner_uv;
-	bounds2f ouv = outer_uv;
+	if (_textureImage == nullptr || _bounds.outer.empty())
+		return;
 
-	bool min_x = oxy.min.x < ixy.min.x;
-	bool max_x = ixy.max.x < oxy.max.x;
-	bool min_y = oxy.min.y < ixy.min.y;
-	bool max_y = ixy.max.y < oxy.max.y;
+	BorderBounds texture = _textureImage->GetCoords();
+
+	bool min_x = _bounds.outer.min.x < _bounds.inner.min.x;
+	bool max_x = _bounds.inner.max.x < _bounds.outer.max.x;
+	bool min_y = _bounds.outer.min.y < _bounds.inner.min.y;
+	bool max_y = _bounds.inner.max.y < _bounds.outer.max.y;
 
 	if (min_x && min_y)
 		AppendRectangle(vertices,
-			bounds2f(oxy.min.x, oxy.min.y, ixy.min.x, ixy.min.y),
-			bounds2f(ouv.min.x, ouv.max.y, iuv.min.x, iuv.max.y));
+			bounds2f(_bounds.outer.min.x, _bounds.outer.min.y, _bounds.inner.min.x, _bounds.inner.min.y),
+			bounds2f(texture.outer.min.x, texture.outer.max.y, texture.inner.min.x, texture.inner.max.y));
 
 	if (min_x)
 		AppendRectangle(vertices,
-			bounds2f(oxy.min.x, ixy.min.y, ixy.min.x, ixy.max.y),
-			bounds2f(ouv.min.x, iuv.max.y, iuv.min.x, iuv.min.y));
+			bounds2f(_bounds.outer.min.x, _bounds.inner.min.y, _bounds.inner.min.x, _bounds.inner.max.y),
+			bounds2f(texture.outer.min.x, texture.inner.max.y, texture.inner.min.x, texture.inner.min.y));
 
 	if (min_x && max_y)
 		AppendRectangle(vertices,
-			bounds2f(oxy.min.x, ixy.max.y, ixy.min.x, oxy.max.y),
-			bounds2f(ouv.min.x, iuv.min.y, iuv.min.x, ouv.min.y));
+			bounds2f(_bounds.outer.min.x, _bounds.inner.max.y, _bounds.inner.min.x, _bounds.outer.max.y),
+			bounds2f(texture.outer.min.x, texture.inner.min.y, texture.inner.min.x, texture.outer.min.y));
 
 	if (min_y)
 		AppendRectangle(vertices,
-			bounds2f(ixy.min.x, oxy.min.y, ixy.max.x, ixy.min.y),
-			bounds2f(iuv.min.x, ouv.max.y, iuv.max.x, iuv.max.y));
+			bounds2f(_bounds.inner.min.x, _bounds.outer.min.y, _bounds.inner.max.x, _bounds.inner.min.y),
+			bounds2f(texture.inner.min.x, texture.outer.max.y, texture.inner.max.x, texture.inner.max.y));
 
 	AppendRectangle(vertices,
-		bounds2f(ixy.min.x, ixy.min.y, ixy.max.x, ixy.max.y),
-		bounds2f(iuv.min.x, iuv.max.y, iuv.max.x, iuv.min.y));
+		bounds2f(_bounds.inner.min.x, _bounds.inner.min.y, _bounds.inner.max.x, _bounds.inner.max.y),
+		bounds2f(texture.inner.min.x, texture.inner.max.y, texture.inner.max.x, texture.inner.min.y));
 
 	if (max_y)
 		AppendRectangle(vertices,
-			bounds2f(ixy.min.x, ixy.max.y, ixy.max.x, oxy.max.y),
-			bounds2f(iuv.min.x, iuv.min.y, iuv.max.x, ouv.min.y));
+			bounds2f(_bounds.inner.min.x, _bounds.inner.max.y, _bounds.inner.max.x, _bounds.outer.max.y),
+			bounds2f(texture.inner.min.x, texture.inner.min.y, texture.inner.max.x, texture.outer.min.y));
 
 	if (max_x && min_y)
 		AppendRectangle(vertices,
-			bounds2f(ixy.max.x, oxy.min.y, oxy.max.x, ixy.min.y),
-			bounds2f(iuv.max.x, ouv.max.y, ouv.max.x, iuv.max.y));
+			bounds2f(_bounds.inner.max.x, _bounds.outer.min.y, _bounds.outer.max.x, _bounds.inner.min.y),
+			bounds2f(texture.inner.max.x, texture.outer.max.y, texture.outer.max.x, texture.inner.max.y));
 
 	if (max_x)
 		AppendRectangle(vertices,
-			bounds2f(ixy.max.x, ixy.min.y, oxy.max.x, ixy.max.y),
-			bounds2f(iuv.max.x, iuv.max.y, ouv.max.x, iuv.min.y));
+			bounds2f(_bounds.inner.max.x, _bounds.inner.min.y, _bounds.outer.max.x, _bounds.inner.max.y),
+			bounds2f(texture.inner.max.x, texture.inner.max.y, texture.outer.max.x, texture.inner.min.y));
 
 	if (max_x && max_y)
 		AppendRectangle(vertices,
-			bounds2f(ixy.max.x, ixy.max.y, oxy.max.x, oxy.max.y),
-			bounds2f(iuv.max.x, iuv.min.y, ouv.max.x, ouv.min.y));
+			bounds2f(_bounds.inner.max.x, _bounds.inner.max.y, _bounds.outer.max.x, _bounds.outer.max.y),
+			bounds2f(texture.inner.max.x, texture.inner.min.y, texture.outer.max.x, texture.outer.min.y));
 }
 
 

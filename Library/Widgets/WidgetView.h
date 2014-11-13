@@ -21,7 +21,7 @@ class WidgetView
 
 public:
 	WidgetView(GraphicsContext* gc);
-	~WidgetView();
+	virtual ~WidgetView();
 
 	ScrollerViewport* GetViewport() const;
 	WidgetShape* GetWidgetShape() const;

@@ -23,7 +23,7 @@ public:
 
 	WidgetShape* GetWidgetShape() const;
 
-private:
+protected:
 	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices) = 0;
 
 private:

@@ -14,6 +14,7 @@ class Surface
 {
 public:
 	Surface(GraphicsContext* gc);
+	virtual ~Surface();
 
 	virtual Viewport* GetViewport() const = 0;
 	virtual void FindHotspots(Touch* touch) = 0;

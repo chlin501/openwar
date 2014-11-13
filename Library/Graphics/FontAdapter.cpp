@@ -253,7 +253,7 @@ std::shared_ptr<TextureImage> FontAdapter_SDL_ttf::AddTextureImage(TextureAtlas*
 	if (_font1 != nullptr)
 	{
 		SDL_Color color = {255, 255, 255, 255};
-		TTF_RenderUTF8_Blended(_font1, character.c_str(), color);
+		surface = TTF_RenderUTF8_Blended(_font1, character.c_str(), color);
 	}
 
 	if (surface == nullptr)
@@ -273,8 +273,10 @@ std::shared_ptr<TextureImage> FontAdapter_SDL_ttf::AddTextureImage(TextureAtlas*
 		filter(image2);
 
 	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image2, TextureImageType::Discardable);
-	textureImage->_inner.min = textureImage->_outer.min + glm::vec2(border, border);
-	textureImage->_inner.max = textureImage->_inner.min + glm::vec2(image.GetWidth(), image.GetHeight());
+	BorderBounds bounds = textureImage->GetBounds();
+	bounds.inner.min = bounds.outer.min + glm::vec2(border, border);
+	bounds.inner.max = bounds.inner.min + glm::vec2(image.GetWidth(), image.GetHeight());
+	textureImage->SetBounds(bounds);
 
 	return textureImage;
 }

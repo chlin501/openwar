@@ -40,7 +40,6 @@
 		4156C3191A139E40006A264C /* FrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2BD1A139E3F006A264C /* FrameBuffer.cpp */; };
 		4156C31A1A139E40006A264C /* GraphicsContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2BF1A139E3F006A264C /* GraphicsContext.cpp */; };
 		4156C31B1A139E40006A264C /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2C21A139E3F006A264C /* Image.cpp */; };
-		4156C31C1A139E40006A264C /* Renderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2C41A139E3F006A264C /* Renderable.cpp */; };
 		4156C31D1A139E40006A264C /* RenderBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2C61A139E3F006A264C /* RenderBuffer.cpp */; };
 		4156C31E1A139E40006A264C /* RenderCall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2C81A139E3F006A264C /* RenderCall.cpp */; };
 		4156C31F1A139E40006A264C /* RenderLoopObserver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2CA1A139E3F006A264C /* RenderLoopObserver.cpp */; };
@@ -178,8 +177,6 @@
 		4156C2C11A139E3F006A264C /* GraphicsOpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsOpenGL.h; sourceTree = "<group>"; };
 		4156C2C21A139E3F006A264C /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
 		4156C2C31A139E3F006A264C /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
-		4156C2C41A139E3F006A264C /* Renderable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderable.cpp; sourceTree = "<group>"; };
-		4156C2C51A139E3F006A264C /* Renderable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderable.h; sourceTree = "<group>"; };
 		4156C2C61A139E3F006A264C /* RenderBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderBuffer.cpp; sourceTree = "<group>"; };
 		4156C2C71A139E3F006A264C /* RenderBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderBuffer.h; sourceTree = "<group>"; };
 		4156C2C81A139E3F006A264C /* RenderCall.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderCall.cpp; sourceTree = "<group>"; };
@@ -461,8 +458,6 @@
 				4156C2C11A139E3F006A264C /* GraphicsOpenGL.h */,
 				4156C2C21A139E3F006A264C /* Image.cpp */,
 				4156C2C31A139E3F006A264C /* Image.h */,
-				4156C2C41A139E3F006A264C /* Renderable.cpp */,
-				4156C2C51A139E3F006A264C /* Renderable.h */,
 				4156C2C61A139E3F006A264C /* RenderBuffer.cpp */,
 				4156C2C71A139E3F006A264C /* RenderBuffer.h */,
 				4156C2C81A139E3F006A264C /* RenderCall.cpp */,
@@ -829,7 +824,6 @@
 				4156C3291A139E40006A264C /* ScrollerGesture.cpp in Sources */,
 				4156C3121A139E40006A264C /* GaussBlur.cpp in Sources */,
 				63F55E0A4ECCD6FE29C8406F /* BattleLayer.cpp in Sources */,
-				4156C31C1A139E40006A264C /* Renderable.cpp in Sources */,
 				4156C3221A139E40006A264C /* TextureAtlas.cpp in Sources */,
 				63F55C0BC0B938B21CEB2D70 /* BattleHotspot.cpp in Sources */,
 				419B34331A149FF8005951CD /* ImageWidget.cpp in Sources */,
