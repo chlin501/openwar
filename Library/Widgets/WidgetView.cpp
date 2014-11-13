@@ -10,6 +10,8 @@ WidgetView::WidgetView(GraphicsContext* gc) :
 	_viewport(nullptr),
 	_widgetShape(nullptr)
 {
+	_viewport = new ScrollerViewport(_gc);
+	_widgetShape = new WidgetShape(_gc->GetWidgetTextureAtlas());
 }
 
 
@@ -20,18 +22,12 @@ WidgetView::~WidgetView()
 
 ScrollerViewport* WidgetView::GetViewport() const
 {
-	if (_viewport == nullptr)
-		_viewport = new ScrollerViewport(_gc);
-
 	return _viewport;
 }
 
 
 WidgetShape* WidgetView::GetWidgetShape() const
 {
-	if (_widgetShape == nullptr)
-		_widgetShape = new WidgetShape(_gc->GetWidgetTextureAtlas());
-
 	return _widgetShape;
 }
 
@@ -45,10 +41,4 @@ void WidgetView::Render()
 		.SetUniform("transform", _viewport->GetTransform())
 		.SetTexture("texture", _widgetShape->GetTextureAtlas())
 		.Render();
-}
-
-
-bool WidgetView::HasChangedSinceLastRender() const
-{
-	return true;
 }

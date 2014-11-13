@@ -109,12 +109,6 @@ void OpenWarSurface::Render()
 }
 
 
-bool OpenWarSurface::HasChangedSinceLastRender() const
-{
-	return true;
-}
-
-
 void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 {
 	bounds2i viewportBounds = GetViewport()->GetBounds();

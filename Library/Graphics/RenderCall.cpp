@@ -199,12 +199,6 @@ void RenderCallBase::Render()
 }
 
 
-bool RenderCallBase::HasChangedSinceLastRender() const
-{
-	return true;
-}
-
-
 RenderCallTexture* RenderCallBase::GetTexture(const char* name)
 {
 	RenderCallTexture* result = 0;

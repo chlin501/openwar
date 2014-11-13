@@ -1,7 +1,6 @@
 #ifndef WidgetView_H
 #define WidgetView_H
 
-#include "Renderable.h"
 #include <vector>
 
 class GraphicsContext;
@@ -10,11 +9,11 @@ class WidgetShape;
 class Widget;
 
 
-class WidgetView : public Renderable
+class WidgetView
 {
 	GraphicsContext* _gc;
-	mutable ScrollerViewport* _viewport;
-	mutable WidgetShape* _widgetShape;
+	ScrollerViewport* _viewport;
+	WidgetShape* _widgetShape;
 
 public:
 	WidgetView(GraphicsContext* gc);
@@ -24,7 +23,6 @@ public:
 	WidgetShape* GetWidgetShape() const;
 
 	virtual void Render();
-	virtual bool HasChangedSinceLastRender() const;
 };
 
 

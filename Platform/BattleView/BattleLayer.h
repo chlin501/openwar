@@ -20,7 +20,7 @@ class SmoothTerrainWater;
 class SmoothTerrainSky;
 
 
-class BattleLayer : public Renderable, RenderLoopObserver, EditorModelObserver
+class BattleLayer : RenderLoopObserver, EditorModelObserver
 {
 	GraphicsContext* _gc;
 
@@ -49,7 +49,7 @@ public:
 	BattleView* GetPrimaryBattleView() const { return _battleViews.empty() ? nullptr : _battleViews.front(); }
 	EditorModel* GetEditorModel() const { return _editorModel; }
 
-	virtual void ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
+	void ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
 	void ResetEditor(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
 
 	void ResetCameraPosition();
@@ -59,11 +59,10 @@ public:
 	bool IsPlaying() const { return _playing; }
 	bool IsEditing() const { return _editing; }
 
+	void Render();
+
 	// RenderLoopObserver
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
-
-	virtual void Render();
-	virtual bool HasChangedSinceLastRender() const;
 
 	// EditorModelObserver
 	virtual void OnEditorModeChanged(EditorModel* editorModel);

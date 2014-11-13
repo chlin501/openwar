@@ -2,7 +2,6 @@
 #define RenderCall_H
 
 #include "GraphicsContext.h"
-#include "Renderable.h"
 
 
 template <class T> GLint GetVertexAttributeSize();
@@ -83,7 +82,7 @@ protected:
 };
 
 
-class RenderCallBase : public Renderable
+class RenderCallBase
 {
 protected:
 	ShaderProgram* _shaderprogram;
@@ -97,8 +96,7 @@ public:
 	RenderCallBase(ShaderProgram* shaderprogram);
 	virtual ~RenderCallBase();
 
-	virtual void Render();
-	virtual bool HasChangedSinceLastRender() const;
+	void Render();
 
 protected:
 	RenderCallTexture* GetTexture(const char* name);

@@ -5,20 +5,20 @@
 #ifndef SURFACE_H
 #define SURFACE_H
 
-#include "Renderable.h"
-
 class GraphicsContext;
 class Touch;
 class Viewport;
 
 
-class Surface : public Renderable
+class Surface
 {
 public:
 	Surface(GraphicsContext* gc);
 
 	virtual Viewport* GetViewport() const = 0;
 	virtual void FindHotspots(Touch* touch) = 0;
+
+	virtual void Render() = 0;
 };
 
 

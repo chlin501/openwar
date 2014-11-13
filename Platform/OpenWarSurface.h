@@ -46,7 +46,6 @@ public:
 	virtual void ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);    
 
 	virtual void Render();
-	virtual bool HasChangedSinceLastRender() const;
 
 	// Content
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
