@@ -54,6 +54,12 @@ void TerrainView::SetEditorHotspot(std::shared_ptr<EditorHotspot> hotspot)
 }
 
 
+Viewport* TerrainView::GetViewport() const
+{
+	return _terrainViewport;
+}
+
+
 void TerrainView::OnTouchEnter(Touch* touch)
 {
 }

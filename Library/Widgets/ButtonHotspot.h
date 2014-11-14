@@ -13,13 +13,13 @@
 class ButtonHotspot : public Hotspot
 {
 	ButtonGesture _gesture;
-	std::function<void(Touch*)> _findHotspots;
+	std::function<bool(glm::vec2)> _inside;
 	std::function<void()> _action;
 	bool _highlight;
 	bool _immediate;
 
 public:
-	ButtonHotspot(std::function<void(Touch*)> findHotspots);
+	ButtonHotspot(std::function<bool(glm::vec2)> inside);
 	virtual ~ButtonHotspot();
 
 	virtual Gesture* GetGesture() const;

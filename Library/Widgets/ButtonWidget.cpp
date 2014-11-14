@@ -1,6 +1,8 @@
 #include "ButtonWidget.h"
 #include "ButtonHotspot.h"
-#import "Touch.h"
+#include "Touch.h"
+#include "ScrollerViewport.h"
+
 
 
 ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
@@ -9,6 +11,22 @@ ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
 	_titleString(this),
 	_disabled(false)
 {
+	_hotspot = std::make_shared<ButtonHotspot>([this](glm::vec2 position) {
+		glm::vec2 p = GetWidgetView()->GetScrollerViewport()->GlobalToLocal(position);
+		return _bounds.contains(p);
+	});
+}
+
+
+std::function<void()> ButtonWidget::GetClickAction() const
+{
+	return _hotspot->GetClickAction();
+}
+
+
+void ButtonWidget::SetClickAction(std::function<void()> value)
+{
+	_hotspot->SetClickAction(value);
 }
 
 
@@ -97,6 +115,8 @@ void ButtonWidget::OnTouchEnter(Touch* touch)
 
 void ButtonWidget::OnTouchBegin(Touch* touch)
 {
+	if (_hotspot->IsInside(touch->GetCurrentPosition()))
+		_hotspot->SubscribeTouch(touch);
 }
 
 

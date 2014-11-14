@@ -57,10 +57,10 @@ public:
 protected:
 	const std::vector<Widget*>& GetWidgets();
 
-	void NotifyWidgetsOfTouchEnter(Touch* touch);
-	void NotifyWidgetsOfTouchBegin(Touch* touch);
+	void CallWidgets_OnTouchEnter(Touch* touch);
+	void CallWidgets_OnTouchBegin(Touch* touch);
 
-	void ExecuteWidgetsAppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
+	void CallWidgets_AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
 	virtual WidgetView* FindWidgetView() = 0;
 };

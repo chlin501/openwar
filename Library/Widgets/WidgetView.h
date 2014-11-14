@@ -12,6 +12,7 @@
 #include "Widget.h"
 
 class GraphicsContext;
+class ScrollerHotspot;
 class ScrollerViewport;
 class StringWidget;
 class TextureAtlas;
@@ -32,6 +33,7 @@ class WidgetView : public View, public WidgetOwner
 	ScrollerViewport* _viewport;
 	TextureAtlas* _textureAtlas;
 	WidgetVertexBuffer _vertices;
+	std::shared_ptr<ScrollerHotspot> _scrollerHotspot;
 
 public:
 	WidgetView(Surface* surface);
@@ -42,6 +44,8 @@ public:
 	TextureAtlas* GetTextureAtlas() const;
 
 	glm::vec2 MeasureStringWidget(StringWidget* stringWidget) const;
+
+	virtual Viewport* GetViewport() const;
 
 	virtual void OnTouchEnter(Touch* touch);
 	virtual void OnTouchBegin(Touch* touch);

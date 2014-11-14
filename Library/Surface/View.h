@@ -3,6 +3,7 @@
 
 class Surface;
 class Touch;
+class Viewport;
 
 
 class View
@@ -25,12 +26,13 @@ public:
 	void OrderBack();
 	void OrderBackOf(View* view);
 
+	virtual Viewport* GetViewport() const = 0;
+
 	virtual void OnTouchEnter(Touch* touch) = 0;
 	virtual void OnTouchBegin(Touch* touch) = 0;
 
 	virtual void Render() = 0;
 };
-
 
 
 #endif

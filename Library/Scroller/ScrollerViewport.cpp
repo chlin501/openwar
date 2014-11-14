@@ -40,18 +40,22 @@ void ScrollerViewport::SetContentOffset(glm::vec2 value)
 }
 
 
-static float ClampContentOffset(float value, bounds1f bounds)
+static float ClampContentOffset(float value, float contentSize, bounds1i viewportBounds)
 {
-	return !bounds.empty() ? bounds.clamp(value) : bounds.center();
+	if (contentSize == 0)
+		return 0;
+
+	bounds1f bounds = bounds1f(0, contentSize - viewportBounds.size());
+	return !viewportBounds.empty() ? bounds.clamp(value) : bounds.center();
 }
 
 
 glm::vec2 ScrollerViewport::ClampContentOffset(glm::vec2 value) const
 {
-	bounds2f bounds = bounds2f(0, 0, _contentSize - (glm::vec2)GetBounds().size());
+	bounds2f viewportBounds = GetBounds();
 	return glm::vec2(
-		::ClampContentOffset(value.x, bounds.x()),
-		::ClampContentOffset(value.y, bounds.y()));
+		::ClampContentOffset(value.x, _contentSize.x, viewportBounds.x()),
+		::ClampContentOffset(value.y, _contentSize.y, viewportBounds.y()));
 }
 
 

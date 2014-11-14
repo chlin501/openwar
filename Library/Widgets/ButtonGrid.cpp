@@ -37,9 +37,7 @@ ButtonItem::ButtonItem(ButtonArea* buttonArea, const char* text) :
 	buttonString(buttonArea->GetButtonView())
 
 {
-	_hotspot = std::make_shared<ButtonHotspot>([buttonArea](Touch* touch) {
-		buttonArea->GetButtonView()->FindButtonHotspots(touch);
-	});
+	_hotspot = std::make_shared<ButtonHotspot>([](glm::vec2){ return false; });
 }
 
 
@@ -57,9 +55,7 @@ ButtonItem::ButtonItem(ButtonArea* buttonArea, std::shared_ptr<TextureImage> ico
 	highlightImage(buttonArea->GetButtonView()),
 	buttonString(buttonArea->GetButtonView())
 {
-	_hotspot = std::make_shared<ButtonHotspot>([buttonArea](Touch* touch) {
-		buttonArea->GetButtonView()->FindButtonHotspots(touch);
-	});
+	_hotspot = std::make_shared<ButtonHotspot>([](glm::vec2){ return false; });
 }
 
 

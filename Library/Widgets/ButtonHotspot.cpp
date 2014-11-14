@@ -7,9 +7,9 @@
 #include "Surface.h"
 
 
-ButtonHotspot::ButtonHotspot(std::function<void(Touch*)> findHotspots) :
+ButtonHotspot::ButtonHotspot(std::function<bool(glm::vec2)> inside) :
 	_gesture(this),
-	_findHotspots(findHotspots),
+	_inside(inside),
 	_action(),
 	_highlight(false),
 	_immediate(false)
@@ -30,16 +30,7 @@ Gesture* ButtonHotspot::GetGesture() const
 
 bool ButtonHotspot::IsInside(glm::vec2 position) const
 {
-	if (_findHotspots)
-	{
-		Touch touch(1, position, 0, MouseButtons());
-		_findHotspots(&touch);
-		for (std::shared_ptr<Hotspot> hotspot : touch._subscribedHotspots)
-			if (hotspot.get() == this)
-				return true;
-	}
-
-	return false;
+	return _inside(position);
 }
 
 

@@ -39,7 +39,7 @@ WidgetOwner::~WidgetOwner()
 }
 
 
-void WidgetOwner::NotifyWidgetsOfTouchEnter(Touch* touch)
+void WidgetOwner::CallWidgets_OnTouchEnter(Touch* touch)
 {
 	for (Widget* widget : _widgets)
 		if (widget->IsVisible())
@@ -47,7 +47,7 @@ void WidgetOwner::NotifyWidgetsOfTouchEnter(Touch* touch)
 }
 
 
-void WidgetOwner::NotifyWidgetsOfTouchBegin(Touch* touch)
+void WidgetOwner::CallWidgets_OnTouchBegin(Touch* touch)
 {
 	for (Widget* widget : _widgets)
 		if (widget->IsVisible())
@@ -55,7 +55,7 @@ void WidgetOwner::NotifyWidgetsOfTouchBegin(Touch* touch)
 }
 
 
-void WidgetOwner::ExecuteWidgetsAppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
+void WidgetOwner::CallWidgets_AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	const std::vector<Widget*>& widgets = GetWidgets();
 	for (auto i = widgets.rbegin(); i != widgets.rend(); ++i)
@@ -168,19 +168,19 @@ WidgetGroup::WidgetGroup(WidgetOwner* widgetOwner) : Widget(widgetOwner)
 
 void WidgetGroup::OnTouchEnter(Touch* touch)
 {
-	NotifyWidgetsOfTouchEnter(touch);
+	CallWidgets_OnTouchEnter(touch);
 }
 
 
 void WidgetGroup::OnTouchBegin(Touch* touch)
 {
-	NotifyWidgetsOfTouchBegin(touch);
+	CallWidgets_OnTouchBegin(touch);
 }
 
 
 void WidgetGroup::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
-	ExecuteWidgetsAppendVertices(vertices);
+	CallWidgets_AppendVertices(vertices);
 }
 
 

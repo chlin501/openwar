@@ -5,14 +5,15 @@
 #include "WidgetView.h"
 #include "GraphicsContext.h"
 #include "RenderCall.h"
+#include "ScrollerHotspot.h"
 #include "ScrollerViewport.h"
 #include "StringWidget.h"
 #include "Widget.h"
 #include "WidgetShader.h"
 #include "TextureAtlas.h"
 #include "TextureFont.h"
-#import "Touch.h"
-#import "Surface.h"
+#include "Touch.h"
+#include "Surface.h"
 
 
 /* WidgetShape::WidgetVertexBuffer */
@@ -71,15 +72,32 @@ glm::vec2 WidgetView::MeasureStringWidget(StringWidget* stringWidget) const
 }
 
 
+Viewport* WidgetView::GetViewport() const
+{
+	return _viewport;
+}
+
+
 void WidgetView::OnTouchEnter(Touch* touch)
 {
-	NotifyWidgetsOfTouchEnter(touch);
+	CallWidgets_OnTouchEnter(touch);
 }
 
 
 void WidgetView::OnTouchBegin(Touch* touch)
 {
-	NotifyWidgetsOfTouchBegin(touch);
+	if (GetScrollerViewport()->GetContentSize() != glm::vec2(0, 0))
+	{
+		bounds2f viewportBounds = GetScrollerViewport()->GetBounds();
+		if (viewportBounds.contains(touch->GetOriginalPosition()))
+		{
+			if (_scrollerHotspot == nullptr)
+				_scrollerHotspot = std::make_shared<ScrollerHotspot>(GetScrollerViewport());
+			_scrollerHotspot->SubscribeTouch(touch);
+		}
+	}
+
+	CallWidgets_OnTouchBegin(touch);
 }
 
 
@@ -105,7 +123,7 @@ void WidgetView::UpdateVertexBuffer()
 {
 	static std::vector<Vertex_2f_2f_4f_1f> vertices;
 
-	ExecuteWidgetsAppendVertices(vertices);
+	CallWidgets_AppendVertices(vertices);
 
 	_vertices.UpdateVBO(GL_TRIANGLES, vertices.data(), vertices.size());
 	vertices.clear();
