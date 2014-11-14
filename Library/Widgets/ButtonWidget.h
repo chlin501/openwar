@@ -10,10 +10,10 @@ class ButtonHotspot;
 
 class ButtonWidget : public WidgetGroup
 {
-	std::shared_ptr<ButtonHotspot> _hotspot;
 public:
 	bounds2f _bounds;
 private:
+	std::shared_ptr<ButtonHotspot> _hotspot;
 	BorderInset _inset;
 	std::shared_ptr<TextureImage> _backgroundNormal;
 	std::shared_ptr<TextureImage> _backgroundHighlight;
