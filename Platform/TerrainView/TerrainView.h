@@ -9,6 +9,7 @@
 #include "BattleModel/HeightMap.h"
 #include "Algebra/geometry.h"
 #include "Shapes/VertexShape.h"
+#include "View.h"
 
 class EditorModel;
 class EditorHotspot;
@@ -19,7 +20,7 @@ class Touch;
 class ScrollerViewport;
 
 
-class TerrainView
+class TerrainView : public View
 {
 	TerrainViewport* _terrainViewport;
 	ScrollerViewport* _scrollerViewport;
@@ -34,7 +35,7 @@ protected:
 	HeightMap* _heightMap;
 
 public:
-	TerrainView(GraphicsContext* gc);
+	TerrainView(Surface* surface);
 	virtual ~TerrainView();
 
 	glm::vec2 GetScreenTop() const;
@@ -47,7 +48,9 @@ public:
 
 	void SetEditorHotspot(std::shared_ptr<EditorHotspot> hotspot);
 
-	void FindTerrainHotspots(Touch* touch);
+	virtual void OnTouchEnter(Touch* touch);
+	virtual void OnTouchBegin(Touch* touch);
+	virtual void Render() = 0;
 
 	void ShowMouseHint(glm::vec2 position);
 	void HideMouseHint();

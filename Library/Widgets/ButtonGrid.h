@@ -142,7 +142,7 @@ public:
 	ButtonRendering* _buttonRendering;
 
 public:
-	ButtonGrid(GraphicsContext* gc, ButtonRendering* buttonRendering, ButtonAlignment alignment);
+	ButtonGrid(Surface* surface, ButtonRendering* buttonRendering, ButtonAlignment alignment);
 
 	ButtonAlignment GetAlignment() const { return _alignment; }
 

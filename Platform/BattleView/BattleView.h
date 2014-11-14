@@ -67,7 +67,7 @@ class BattleView : public TerrainView, public BattleObserver, RenderLoopObserver
 	std::shared_ptr<BattleHotspot> _battleHotspot;
 
 public:
-	BattleView(GraphicsContext* gc);
+	BattleView(Surface* surface);
 	~BattleView();
 
 	BattleSimulator* GetSimulator() const { return _simulator; }
@@ -111,7 +111,7 @@ public:
 	virtual void Render();
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
-	void FindBattleHotspots(Touch* touch);
+	virtual void OnTouchBegin(Touch* touch);
 
 	bounds2f GetBillboardBounds(glm::vec3 position, float height);
 

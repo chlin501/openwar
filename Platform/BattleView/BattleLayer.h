@@ -18,10 +18,12 @@ class TerrainGesture;
 class SmoothTerrainRenderer;
 class SmoothTerrainWater;
 class SmoothTerrainSky;
+class Surface;
 
 
 class BattleLayer : RenderLoopObserver, EditorModelObserver
 {
+	Surface* _surface;
 	GraphicsContext* _gc;
 
 	bounds2i _viewportBounds;
@@ -38,7 +40,7 @@ class BattleLayer : RenderLoopObserver, EditorModelObserver
 	std::shared_ptr<EditorHotspot> _editorHotspot;
 
 public:
-	BattleLayer(GraphicsContext* gc);
+	BattleLayer(Surface* surface);
 	~BattleLayer();
 
 	bounds2i GetViewportBounds() const;

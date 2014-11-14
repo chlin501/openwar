@@ -4,6 +4,7 @@
 
 #include "Widget.h"
 #include "WidgetView.h"
+#import "Touch.h"
 
 
 /* Widget */
@@ -13,7 +14,7 @@ Widget::Widget(WidgetOwner* widgetOwner) :
 	_widgetOwner(widgetOwner),
 	_visible(true)
 {
-	_widgetOwner->_widgets.push_back(this);
+	_widgetOwner->_widgets.insert(_widgetOwner->_widgets.begin(), this);
 }
 
 
@@ -38,13 +39,30 @@ WidgetOwner::~WidgetOwner()
 }
 
 
-void WidgetOwner::BringToFront(Widget* widget)
+void WidgetOwner::NotifyWidgetsOfTouchEnter(Touch* touch)
 {
-	auto i = std::find(_widgets.begin(), _widgets.end(), widget);
-	if (i != _widgets.end())
+	for (Widget* widget : _widgets)
+		if (widget->IsVisible())
+			widget->OnTouchEnter(touch);
+}
+
+
+void WidgetOwner::NotifyWidgetsOfTouchBegin(Touch* touch)
+{
+	for (Widget* widget : _widgets)
+		if (widget->IsVisible())
+			widget->OnTouchBegin(touch);
+}
+
+
+void WidgetOwner::ExecuteWidgetsAppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
+{
+	const std::vector<Widget*>& widgets = GetWidgets();
+	for (auto i = widgets.rbegin(); i != widgets.rend(); ++i)
 	{
-		_widgets.erase(i);
-		_widgets.push_back(widget);
+		Widget* widget = *i;
+		if (widget->IsVisible())
+			widget->AppendVertices(vertices);
 	}
 }
 
@@ -57,7 +75,7 @@ WidgetOwner* Widget::GetWidgetOwner()
 
 WidgetView* Widget::GetWidgetView()
 {
-	return _widgetOwner != nullptr ? _widgetOwner->GetWidgetView() : nullptr;
+	return _widgetOwner != nullptr ? _widgetOwner->FindWidgetView() : nullptr;
 }
 
 
@@ -70,6 +88,64 @@ bool Widget::IsVisible() const
 void Widget::SetVisible(bool value)
 {
 	_visible = value;
+}
+
+
+void Widget::OrderFront()
+{
+	if (_widgetOwner != nullptr)
+	{
+		auto i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), this);
+		if (i != _widgetOwner->_widgets.end())
+		{
+			_widgetOwner->_widgets.erase(i);
+			_widgetOwner->_widgets.insert(_widgetOwner->_widgets.begin(), this);
+		}
+	}
+}
+
+
+void Widget::OrderFrontOf(Widget* widget)
+{
+	if (_widgetOwner != nullptr && _widgetOwner == widget->_widgetOwner)
+	{
+		auto i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), this);
+		if (i != _widgetOwner->_widgets.end())
+		{
+			_widgetOwner->_widgets.erase(i);
+			i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), widget);
+			_widgetOwner->_widgets.insert(i, this);
+		}
+	}
+}
+
+
+void Widget::OrderBack()
+{
+	if (_widgetOwner != nullptr)
+	{
+		auto i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), this);
+		if (i != _widgetOwner->_widgets.end())
+		{
+			_widgetOwner->_widgets.erase(i);
+			_widgetOwner->_widgets.insert(_widgetOwner->_widgets.end(), this);
+		}
+	}
+}
+
+
+void Widget::OrderBackOf(Widget* widget)
+{
+	if (_widgetOwner != nullptr && _widgetOwner == widget->_widgetOwner)
+	{
+		auto i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), this);
+		if (i != _widgetOwner->_widgets.end())
+		{
+			_widgetOwner->_widgets.erase(i);
+			i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), widget);
+			_widgetOwner->_widgets.insert(i + 1, this);
+		}
+	}
 }
 
 
@@ -90,16 +166,26 @@ WidgetGroup::WidgetGroup(WidgetOwner* widgetOwner) : Widget(widgetOwner)
 }
 
 
-WidgetView* WidgetGroup::GetWidgetView()
+void WidgetGroup::OnTouchEnter(Touch* touch)
 {
-	WidgetOwner* widgetOwner = GetWidgetOwner();
-	return widgetOwner != nullptr ? widgetOwner->GetWidgetView() : nullptr;
+	NotifyWidgetsOfTouchEnter(touch);
+}
+
+
+void WidgetGroup::OnTouchBegin(Touch* touch)
+{
+	NotifyWidgetsOfTouchBegin(touch);
 }
 
 
 void WidgetGroup::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
-	for (Widget* widget : GetWidgets())
-		if (widget->IsVisible())
-			widget->AppendVertices(vertices);
+	ExecuteWidgetsAppendVertices(vertices);
+}
+
+
+WidgetView* WidgetGroup::FindWidgetView()
+{
+	WidgetOwner* widgetOwner = GetWidgetOwner();
+	return widgetOwner != nullptr ? widgetOwner->FindWidgetView() : nullptr;
 }

@@ -11,6 +11,8 @@
 #include "WidgetShader.h"
 #include "TextureAtlas.h"
 #include "TextureFont.h"
+#import "Touch.h"
+#import "Surface.h"
 
 
 /* WidgetShape::WidgetVertexBuffer */
@@ -31,8 +33,8 @@ void WidgetView::WidgetVertexBuffer::Update()
 /* WidgetView */
 
 
-WidgetView::WidgetView(GraphicsContext* gc) :
-	_gc(gc),
+WidgetView::WidgetView(Surface* surface) : View(surface),
+	_gc(surface->GetGraphicsContext()),
 	_viewport(nullptr),
 	_textureAtlas(nullptr),
 	_vertices(this)
@@ -48,7 +50,7 @@ WidgetView::~WidgetView()
 }
 
 
-ScrollerViewport* WidgetView::GetViewport() const
+ScrollerViewport* WidgetView::GetScrollerViewport() const
 {
 	return _viewport;
 }
@@ -69,6 +71,18 @@ glm::vec2 WidgetView::MeasureStringWidget(StringWidget* stringWidget) const
 }
 
 
+void WidgetView::OnTouchEnter(Touch* touch)
+{
+	NotifyWidgetsOfTouchEnter(touch);
+}
+
+
+void WidgetView::OnTouchBegin(Touch* touch)
+{
+	NotifyWidgetsOfTouchBegin(touch);
+}
+
+
 void WidgetView::Render()
 {
 	_viewport->UseViewport();
@@ -81,7 +95,7 @@ void WidgetView::Render()
 }
 
 
-WidgetView* WidgetView::GetWidgetView()
+WidgetView* WidgetView::FindWidgetView()
 {
 	return this;
 }
@@ -91,9 +105,7 @@ void WidgetView::UpdateVertexBuffer()
 {
 	static std::vector<Vertex_2f_2f_4f_1f> vertices;
 
-	for (Widget* widget : GetWidgets())
-		if (widget->IsVisible())
-			widget->AppendVertices(vertices);
+	ExecuteWidgetsAppendVertices(vertices);
 
 	_vertices.UpdateVBO(GL_TRIANGLES, vertices.data(), vertices.size());
 	vertices.clear();

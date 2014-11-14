@@ -220,8 +220,8 @@ void ButtonArea::UpdateBounds(bounds2f bounds)
 
 
 
-ButtonGrid::ButtonGrid(GraphicsContext* gc, ButtonRendering* buttonRendering, ButtonAlignment alignment) : WidgetView(gc),
-	_gc(gc),
+ButtonGrid::ButtonGrid(Surface* surface, ButtonRendering* buttonRendering, ButtonAlignment alignment) : WidgetView(surface),
+	_gc(surface->GetGraphicsContext()),
 	_alignment(alignment),
 	_buttonRendering(buttonRendering)
 {
@@ -255,7 +255,7 @@ ButtonArea* ButtonGrid::AddButtonArea(int numberOfColumns)
 
 void ButtonGrid::UpdateLayout()
 {
-	bounds2f contentBounds = GetViewport()->GetVisibleBounds();
+	bounds2f contentBounds = GetScrollerViewport()->GetVisibleBounds();
 	glm::vec2 contentCenter = contentBounds.center();
 	float margin = 3;
 	float spacing = 20;
@@ -351,7 +351,7 @@ void ButtonGrid::Render()
 	{
 		buttonArea->backgroundImage.SetBounds(BorderBounds(buttonArea->_bounds).Outset(10).Inset(32));
 		buttonArea->backgroundImage.SetTextureImage(_buttonRendering->buttonBackground);
-		BringToFront(&buttonArea->backgroundImage);
+		buttonArea->backgroundImage.OrderFront();
 
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
 		{
@@ -359,7 +359,7 @@ void ButtonGrid::Render()
 			{
 				buttonItem->selectedImage.SetBounds(BorderBounds(buttonItem->GetBounds()).Outset(10).Inset(32));
 				buttonItem->selectedImage.SetTextureImage(_buttonRendering->buttonSelected);
-				BringToFront(&buttonItem->selectedImage);
+				buttonItem->selectedImage.OrderFront();
 			}
 
 			if (buttonItem->GetButtonIcon() != nullptr)
@@ -372,21 +372,21 @@ void ButtonGrid::Render()
 				buttonItem->buttonImage.SetTextureImage(buttonItem->GetButtonIcon());
 				buttonItem->buttonImage.SetAlpha(buttonItem->IsDisabled() ? 0.5f : 1.0f);
 
-				BringToFront(&buttonItem->buttonImage);
+				buttonItem->buttonImage.OrderFront();
 			}
 
 			if (buttonItem->IsHighlight())
 			{
 				buttonItem->highlightImage.SetBounds(BorderBounds(buttonItem->GetBounds()).Center());
 				buttonItem->highlightImage.SetTextureImage(_buttonRendering->buttonHighlight);
-				BringToFront(&buttonItem->highlightImage);
+				buttonItem->highlightImage.OrderFront();
 			}
 
 			if (buttonItem->GetButtonText() != nullptr)
 			{
 				buttonItem->buttonString.SetString(buttonItem->GetButtonText());
 				buttonItem->buttonString.SetPosition(buttonItem->GetBounds().center() - 0.5f * MeasureStringWidget(&buttonItem->buttonString));
-				BringToFront(&buttonItem->buttonString);
+				buttonItem->buttonString.OrderFront();
 			}
 		}
 	}
@@ -397,7 +397,7 @@ void ButtonGrid::Render()
 
 void ButtonGrid::FindButtonHotspots(Touch* touch)
 {
-	glm::vec2 position = GetViewport()->GlobalToLocal(touch->GetOriginalPosition());
+	glm::vec2 position = GetScrollerViewport()->GlobalToLocal(touch->GetOriginalPosition());
 
 	for (ButtonArea* buttonArea : _buttonAreas)
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)

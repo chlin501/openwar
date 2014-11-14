@@ -14,14 +14,16 @@
 #include "TerrainHotspot.h"
 #include "EditorModel.h"
 #include "TerrainViewport.h"
+#include "Surface.h"
 
 
-TerrainView::TerrainView(GraphicsContext* gc) :
+TerrainView::TerrainView(Surface* surface) : View(surface),
 	_terrainViewport(nullptr),
 	_scrollerViewport(nullptr),
 	_mouseHintVisible(false),
 	_heightMap(nullptr)
 {
+	GraphicsContext* gc = surface->GetGraphicsContext();
 	_terrainViewport = new TerrainViewport(gc);
 	_scrollerViewport = new ScrollerViewport(gc);
 }
@@ -52,13 +54,19 @@ void TerrainView::SetEditorHotspot(std::shared_ptr<EditorHotspot> hotspot)
 }
 
 
-void TerrainView::FindTerrainHotspots(Touch* touch)
+void TerrainView::OnTouchEnter(Touch* touch)
+{
+}
+
+
+void TerrainView::OnTouchBegin(Touch* touch)
 {
 	if (_editorHotspot != nullptr)
 		_editorHotspot->SubscribeTouch(touch);
 
 	if (_terrainHotspot == nullptr)
 		_terrainHotspot = std::make_shared<TerrainHotspot>(this);
+
 	_terrainHotspot->SubscribeTouch(touch);
 }
 

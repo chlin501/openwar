@@ -29,12 +29,12 @@ _buttonItemWater(nullptr),
 _buttonItemFords(nullptr),
 _battleLayer(nullptr)
 {
-	_battleLayer = new BattleLayer(gc);
+	_battleLayer = new BattleLayer(this);
 
 	_buttonRendering = new ButtonRendering(gc);
 
-	_buttonsTopLeft = new ButtonGrid(gc, _buttonRendering, ButtonAlignment::TopLeft);
-	_buttonsTopRight = new ButtonGrid(gc, _buttonRendering, ButtonAlignment::TopRight);
+	_buttonsTopLeft = new ButtonGrid(this, _buttonRendering, ButtonAlignment::TopLeft);
+	_buttonsTopRight = new ButtonGrid(this, _buttonRendering, ButtonAlignment::TopRight);
 
 	ButtonArea* toolButtonArea = _buttonsTopLeft->AddButtonArea(4);
 	_buttonItemHand = toolButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolHand);
@@ -115,8 +115,8 @@ void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 
 	_battleLayer->SetViewportBounds(viewportBounds);
 
-	_buttonsTopLeft->GetViewport()->SetBounds(viewportBounds);
-	_buttonsTopRight->GetViewport()->SetBounds(viewportBounds);
+	_buttonsTopLeft->GetScrollerViewport()->SetBounds(viewportBounds);
+	_buttonsTopRight->GetScrollerViewport()->SetBounds(viewportBounds);
 
 	if (_battleLayer->GetScenario() != nullptr && _battleLayer->IsPlaying())
 		_battleLayer->GetScenario()->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);
@@ -131,30 +131,8 @@ void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 
 Viewport* OpenWarSurface::GetViewport() const
 {
-	return _buttonsTopLeft->GetViewport();
+	return _buttonsTopLeft->GetScrollerViewport();
 }
-
-
-/*void OpenWarSurface::MouseHover(glm::vec2 position)
-{
-	//_battleView->ShowMouseHint(position);
-}*/
-
-
-void OpenWarSurface::FindHotspots(Touch* touch)
-{
-	_buttonsTopLeft->FindButtonHotspots(touch);
-	_buttonsTopRight->FindButtonHotspots(touch);
-
-	for (BattleView* battleView : _battleLayer->GetBattleViews())
-		battleView->FindBattleHotspots(touch);
-}
-
-
-/*void OpenWarSurface::MouseLeave(glm::vec2 position)
-{
-	//_battleView->HideMouseHint();
-}*/
 
 
 void OpenWarSurface::ClickedPlay()

@@ -5,6 +5,7 @@
 #include "StringWidget.h"
 #include "TextureAtlas.h"
 #include "TextureFont.h"
+#import "Touch.h"
 
 #include <codecvt>
 #include <cstdlib>
@@ -139,6 +140,16 @@ const float StringWidget::GetWidth() const
 void StringWidget::SetWidth(float value)
 {
 	_width = value;
+}
+
+
+void StringWidget::OnTouchEnter(Touch* touch)
+{
+}
+
+
+void StringWidget::OnTouchBegin(Touch* touch)
+{
 }
 
 

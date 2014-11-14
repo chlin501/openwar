@@ -8,6 +8,7 @@
 #include <vector>
 #include "Algebra/bounds.h"
 #include "VertexBuffer.h"
+#include "View.h"
 #include "Widget.h"
 
 class GraphicsContext;
@@ -17,7 +18,7 @@ class TextureAtlas;
 class WidgetShape;
 
 
-class WidgetView : public WidgetOwner
+class WidgetView : public View, public WidgetOwner
 {
 	class WidgetVertexBuffer : public VertexBuffer<Vertex_2f_2f_4f_1f>
 	{
@@ -33,23 +34,27 @@ class WidgetView : public WidgetOwner
 	WidgetVertexBuffer _vertices;
 
 public:
-	WidgetView(GraphicsContext* gc);
+	WidgetView(Surface* surface);
 	virtual ~WidgetView();
 
-	ScrollerViewport* GetViewport() const;
+	ScrollerViewport* GetScrollerViewport() const;
 
 	TextureAtlas* GetTextureAtlas() const;
 
 	glm::vec2 MeasureStringWidget(StringWidget* stringWidget) const;
 
+	virtual void OnTouchEnter(Touch* touch);
+	virtual void OnTouchBegin(Touch* touch);
+
 	virtual void Render();
 
-	virtual WidgetView* GetWidgetView();
+protected:
+	virtual WidgetView* FindWidgetView();
 
 private:
 	void UpdateVertexBuffer();
 
-	WidgetView(const WidgetView&) : _vertices(nullptr) { }
+	WidgetView(const WidgetView&) : View(nullptr), _vertices(nullptr) { }
 	WidgetView& operator=(const WidgetView&) { return *this; }
 };
 

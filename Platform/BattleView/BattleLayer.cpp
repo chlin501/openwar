@@ -20,8 +20,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-BattleLayer::BattleLayer(GraphicsContext* gc) :
-	_gc(gc),
+BattleLayer::BattleLayer(Surface* surface) :
+	_surface(surface),
+	_gc(surface->GetGraphicsContext()),
 	_playing(false),
 	_editing(false),
 	_scenario(nullptr),
@@ -180,7 +181,8 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 {
 	BattleSimulator* simulator = _scenario->GetSimulator();
 
-	BattleView* battleView = new BattleView(_gc);
+	BattleView* battleView = new BattleView(_surface);
+	battleView->OrderBack();
 
 	_battleViews.push_back(battleView);
 	UpdateBattleViewSize();

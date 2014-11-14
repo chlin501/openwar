@@ -2,24 +2,35 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef SURFACE_H
-#define SURFACE_H
+#ifndef Surface_H
+#define Surface_H
+
+#include <vector>
 
 class GraphicsContext;
 class Touch;
+class View;
 class Viewport;
 
 
 class Surface
 {
+	friend class View;
+	GraphicsContext* _gc;
+	std::vector<View*> _views;
+
 public:
 	Surface(GraphicsContext* gc);
 	virtual ~Surface();
 
-	virtual Viewport* GetViewport() const = 0;
-	virtual void FindHotspots(Touch* touch) = 0;
+	GraphicsContext* GetGraphicsContext() const;
 
-	virtual void Render() = 0;
+	virtual Viewport* GetViewport() const = 0;
+
+	void NotifyViewsOfTouchEnter(Touch* touch);
+	void NotifyViewsOfTouchBegin(Touch* touch);
+
+	virtual void Render();
 };
 
 

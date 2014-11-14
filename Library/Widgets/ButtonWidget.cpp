@@ -1,5 +1,6 @@
 #include "ButtonWidget.h"
 #include "ButtonHotspot.h"
+#import "Touch.h"
 
 
 ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
@@ -86,6 +87,16 @@ bool ButtonWidget::IsDisabled() const
 void ButtonWidget::SetDisabled(bool value)
 {
 	_disabled = value;
+}
+
+
+void ButtonWidget::OnTouchEnter(Touch* touch)
+{
+}
+
+
+void ButtonWidget::OnTouchBegin(Touch* touch)
+{
 }
 
 

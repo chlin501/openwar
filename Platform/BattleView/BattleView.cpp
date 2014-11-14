@@ -41,8 +41,8 @@ static affine2 billboard_texcoords(int x, int y, bool flip)
 
 
 
-BattleView::BattleView(GraphicsContext* gc) : TerrainView(gc),
-	_gc(gc),
+BattleView::BattleView(Surface* surface) : TerrainView(surface),
+	_gc(surface->GetGraphicsContext()),
 	_simulator(nullptr),
 	_commander(nullptr),
 	_lightNormal(),
@@ -67,10 +67,10 @@ BattleView::BattleView(GraphicsContext* gc) : TerrainView(gc),
 	_smoothTerrainSky(nullptr),
 	_tiledTerrainRenderer(nullptr)
 {
-	_textureUnitMarkers = new TextureResource(gc, resource("Textures/UnitMarkers.png"));
-	_textureTouchMarker = new TextureResource(gc, resource("Textures/TouchMarker.png"));
+	_textureUnitMarkers = new TextureResource(_gc, resource("Textures/UnitMarkers.png"));
+	_textureTouchMarker = new TextureResource(_gc, resource("Textures/TouchMarker.png"));
 
-	_billboardTexture = new BillboardTexture(gc);
+	_billboardTexture = new BillboardTexture(_gc);
 
 	Image image;
 	image.LoadFromResource(resource("Textures/Billboards.png"));
@@ -787,13 +787,13 @@ void BattleView::OnRenderLoop(double secondsSinceLastUpdate)
 }
 
 
-void BattleView::FindBattleHotspots(Touch* touch)
+void BattleView::OnTouchBegin(Touch* touch)
 {
 	if (_battleHotspot == nullptr)
 		_battleHotspot = std::make_shared<BattleHotspot>(this);
 	_battleHotspot->SubscribeTouch(touch);
 
-	FindTerrainHotspots(touch);
+	TerrainView::OnTouchBegin(touch);
 }
 
 

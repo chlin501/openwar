@@ -268,7 +268,7 @@ void Window::ProcessFingerDown(const SDL_TouchFingerEvent& event)
 
 	Touch* touch = new Touch(1, position, timestamp, MouseButtons());
 	_touches[MakeTouchKey(event)] = touch;
-	_surface->FindHotspots(touch);
+	_surface->TouchBegin(touch);
 
 	touch->TouchBegan();
 }
@@ -362,7 +362,7 @@ void Window::ProcessMouseButtonDown(const SDL_MouseButtonEvent& event)
 	if (_mouseTouch == nullptr)
 	{
 		_mouseTouch = new Touch(1, position, timestamp, buttons);
-		_surface->FindHotspots(_mouseTouch);
+		_surface->TouchBegin(_mouseTouch);
 	}
 	else
 	{

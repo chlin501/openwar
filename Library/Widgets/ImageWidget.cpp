@@ -3,6 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "ImageWidget.h"
+#import "Touch.h"
 
 
 
@@ -57,6 +58,16 @@ float ImageWidget::GetAlpha() const
 void ImageWidget::SetAlpha(float value)
 {
 	_alpha = value;
+}
+
+
+void ImageWidget::OnTouchEnter(Touch* touch)
+{
+}
+
+
+void ImageWidget::OnTouchBegin(Touch* touch)
+{
 }
 
 

@@ -8,6 +8,7 @@
 #include "Vertex.h"
 #include <vector>
 
+class Touch;
 class WidgetOwner;
 class WidgetView;
 
@@ -28,6 +29,14 @@ public:
 	bool IsVisible() const;
 	void SetVisible(bool value);
 
+	void OrderFront();
+	void OrderFrontOf(Widget* widget);
+	void OrderBack();
+	void OrderBackOf(Widget* widget);
+
+	virtual void OnTouchEnter(Touch* touch) = 0;
+	virtual void OnTouchBegin(Touch* touch) = 0;
+
 	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices) = 0;
 
 private:
@@ -39,28 +48,36 @@ private:
 class WidgetOwner
 {
 	friend class Widget;
+	friend class WidgetGroup;
 	std::vector<Widget*> _widgets;
 
 public:
 	virtual ~WidgetOwner();
 
-	virtual WidgetView* GetWidgetView() = 0;
-
-	void BringToFront(Widget* widget);
-
 protected:
 	const std::vector<Widget*>& GetWidgets();
+
+	void NotifyWidgetsOfTouchEnter(Touch* touch);
+	void NotifyWidgetsOfTouchBegin(Touch* touch);
+
+	void ExecuteWidgetsAppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
+
+	virtual WidgetView* FindWidgetView() = 0;
 };
 
 
-class WidgetGroup : public Widget, public WidgetOwner
+class WidgetGroup : public Widget, protected WidgetOwner
 {
 public:
 	WidgetGroup(WidgetOwner* widgetOwner);
 
-	virtual WidgetView* GetWidgetView();
+	virtual void OnTouchEnter(Touch* touch);
+	virtual void OnTouchBegin(Touch* touch);
 
 	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
+
+protected:
+	virtual WidgetView* FindWidgetView();
 };
 
 

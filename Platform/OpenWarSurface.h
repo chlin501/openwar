@@ -52,8 +52,6 @@ public:
 
 	virtual Viewport* GetViewport() const;
 
-	virtual void FindHotspots(Touch* touch);
-
 protected:
 	void ClickedPlay();
 	void ClickedPause();
