@@ -122,7 +122,7 @@ std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, 
 	if (!discardable)
 	{
 		if (_permamentPos.x + imageSize.x > atlasSize.x)
-			_discardablePos = glm::ivec2(0, _permanentHeight);
+			_permamentPos = glm::ivec2(0, _permanentHeight);
 
 		position = _permamentPos;
 
