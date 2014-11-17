@@ -58,6 +58,8 @@ BorderInset ButtonWidget::GetInset() const
 void ButtonWidget::SetInset(const BorderInset& value)
 {
 	_inset = value;
+	_borderImage.SetInset(_inset);
+	_iconImage.SetInset(_inset);
 }
 
 
@@ -111,6 +113,8 @@ void ButtonWidget::OnTouchBegin(Touch* touch)
 
 void ButtonWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
+	UpdateLayout();
+
 	if (_disabled)
 	{
 		if (_backgroundDisabled != nullptr)
@@ -148,16 +152,18 @@ void ButtonWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 		_borderImage.SetAlpha(1);
 	}
 
-	bounds2f bounds = Bounds.GetValue();
-
-	_borderImage.Bounds.SetValue(bounds);
-	_borderImage.SetInset(_inset);
-	_iconImage.Bounds.SetValue(bounds);
-	_iconImage.SetInset(_inset);
-
-	_titleString.Bounds_Min.SetValue(bounds.center() - 0.5f * GetWidgetView()->MeasureStringWidget(&_titleString));
 	_titleString.SetGlow(glm::vec4(0, 0, 0, 1));
 	_titleString.SetAlpha(_disabled ? 0.5f : 1.0f);
 
 	WidgetGroup::AppendVertices(vertices);
+}
+
+
+void ButtonWidget::UpdateLayout()
+{
+	bounds2f bounds = Bounds.GetValue();
+
+	_borderImage.Bounds.SetValue(bounds);
+	_iconImage.Bounds.SetValue(bounds);
+	_titleString.Bounds_Min.SetValue(bounds.center() - 0.5f * GetWidgetView()->MeasureStringWidget(&_titleString));
 }

@@ -2,7 +2,6 @@
 #define Layout_H
 
 #include "bounds.h"
-#include <functional>
 
 
 class LayoutContext
@@ -15,9 +14,9 @@ public:
 class LayoutPoint
 {
 	LayoutContext* _context;
-public:
 	glm::vec2 _value;
 
+public:
 	LayoutPoint(LayoutContext* context);
 
 	glm::vec2 GetValue() const;
@@ -32,9 +31,9 @@ private:
 class LayoutSize
 {
 	LayoutContext* _context;
-public:
 	glm::vec2 _value;
 
+public:
 	LayoutSize(LayoutContext* context);
 
 	glm::vec2 GetValue() const;
@@ -49,10 +48,9 @@ private:
 class LayoutBounds
 {
 	LayoutContext* _context;
-
-public:
 	bounds2f _value;
 
+public:
 	LayoutBounds(LayoutContext* context);
 
 	bounds2f GetValue() const;
