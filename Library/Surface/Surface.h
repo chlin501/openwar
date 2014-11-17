@@ -7,6 +7,8 @@
 
 #include <vector>
 
+#include "Layout.h"
+
 class GraphicsContext;
 class Touch;
 class View;
@@ -20,12 +22,12 @@ class Surface
 	std::vector<View*> _views;
 
 public:
+	LayoutSize Size;
+
 	Surface(GraphicsContext* gc);
 	virtual ~Surface();
 
 	GraphicsContext* GetGraphicsContext() const;
-
-	virtual Viewport* GetViewport() const = 0;
 
 	void NotifyViewsOfTouchEnter(Touch* touch);
 	void NotifyViewsOfTouchBegin(Touch* touch);

@@ -50,8 +50,6 @@ public:
 	// Content
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
-	virtual Viewport* GetViewport() const;
-
 protected:
 	void ClickedPlay();
 	void ClickedPause();

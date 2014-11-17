@@ -111,7 +111,7 @@ void OpenWarSurface::Render()
 
 void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 {
-	bounds2i viewportBounds = GetViewport()->GetBounds();
+	bounds2f viewportBounds = bounds2f(0, 0, Size.GetValue());
 
 	_battleLayer->SetViewportBounds(viewportBounds);
 
@@ -127,12 +127,6 @@ void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 {
 	//_battleView->ShowMouseHint(position);
 }*/
-
-
-Viewport* OpenWarSurface::GetViewport() const
-{
-	return _buttonsTopLeft->GetScrollerViewport();
-}
 
 
 void OpenWarSurface::ClickedPlay()
