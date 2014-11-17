@@ -26,8 +26,6 @@ class BattleLayer : RenderLoopObserver, EditorModelObserver
 	Surface* _surface;
 	GraphicsContext* _gc;
 
-	bounds2i _viewportBounds;
-
 	bool _playing;
 	bool _editing;
 
@@ -42,9 +40,6 @@ class BattleLayer : RenderLoopObserver, EditorModelObserver
 public:
 	BattleLayer(Surface* surface);
 	~BattleLayer();
-
-	bounds2i GetViewportBounds() const;
-	void SetViewportBounds(const bounds2i& value);
 
 	BattleScenario* GetScenario() const { return _scenario; }
 	const std::vector<BattleView*>& GetBattleViews() const { return _battleViews; }

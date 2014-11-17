@@ -15,7 +15,7 @@ class View;
 class Viewport;
 
 
-class Surface
+class Surface : public LayoutContext
 {
 	friend class View;
 	GraphicsContext* _gc;

@@ -113,10 +113,8 @@ void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 {
 	bounds2f viewportBounds = bounds2f(0, 0, Size.GetValue());
 
-	_battleLayer->SetViewportBounds(viewportBounds);
-
-	_buttonsTopLeft->GetScrollerViewport()->SetBounds(viewportBounds);
-	_buttonsTopRight->GetScrollerViewport()->SetBounds(viewportBounds);
+	_buttonsTopLeft->Bounds.SetValue(viewportBounds);
+	_buttonsTopRight->Bounds.SetValue(viewportBounds);
 
 	if (_battleLayer->GetScenario() != nullptr && _battleLayer->IsPlaying())
 		_battleLayer->GetScenario()->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);

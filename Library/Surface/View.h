@@ -1,6 +1,8 @@
 #ifndef View_H
 #define View_H
 
+#include "Layout.h"
+
 class Surface;
 class Touch;
 class Viewport;
@@ -13,6 +15,8 @@ class View
 	bool _visible;
 
 public:
+	LayoutBounds Bounds;
+
 	View(Surface* surface);
 	virtual ~View();
 

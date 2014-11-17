@@ -1,10 +1,12 @@
 #include "View.h"
 #include "Surface.h"
+#include "Viewport.h"
 
 
 View::View(Surface* surface) :
 	_surface(surface),
-	_visible(true)
+	_visible(true),
+	Bounds(surface)
 {
 	_surface->_views.insert(_surface->_views.begin(), this);
 }

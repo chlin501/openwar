@@ -9,7 +9,8 @@
 
 
 Surface::Surface(GraphicsContext* gc) :
-	_gc(gc)
+	_gc(gc),
+	Size(this)
 {
 }
 

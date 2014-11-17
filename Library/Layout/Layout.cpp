@@ -1,10 +1,20 @@
 #include "Layout.h"
 
 
+/* LayoutContext */
+
+
+LayoutContext::~LayoutContext()
+{
+
+}
+
+
 /* LayoutPoint */
 
 
-LayoutPoint::LayoutPoint()
+LayoutPoint::LayoutPoint(LayoutContext* context) :
+	_context(context)
 {
 }
 
@@ -24,7 +34,8 @@ void LayoutPoint::SetValue(const glm::vec2& value)
 /* LayoutSize */
 
 
-LayoutSize::LayoutSize()
+LayoutSize::LayoutSize(LayoutContext* context) :
+	_context(context)
 {
 }
 
@@ -44,7 +55,8 @@ void LayoutSize::SetValue(const glm::vec2& value)
 /* LayoutBounds */
 
 
-LayoutBounds::LayoutBounds()
+LayoutBounds::LayoutBounds(LayoutContext* context) :
+	_context(context)
 {
 }
 

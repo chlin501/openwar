@@ -490,6 +490,8 @@ void BattleView::InitializeCameraPosition()
 
 void BattleView::Render()
 {
+	GetScrollerViewport()->SetBounds(Bounds.GetValue());
+	GetTerrainViewport()->SetBounds(Bounds.GetValue());
 	GetTerrainViewport()->UseViewport();
 
 	glm::mat4 transform2D = GetScrollerViewport()->GetTransform();

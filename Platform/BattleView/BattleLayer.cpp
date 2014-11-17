@@ -38,18 +38,6 @@ BattleLayer::~BattleLayer()
 }
 
 
-bounds2i BattleLayer::GetViewportBounds() const
-{
-	return _viewportBounds;
-}
-
-
-void BattleLayer::SetViewportBounds(const bounds2i& value)
-{
-	_viewportBounds = value;
-}
-
-
 void BattleLayer::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
 {
 	delete _editorModel;
@@ -271,8 +259,9 @@ void BattleLayer::UpdateBattleViewSize()
 	{
 		float count = _battleViews.size();
 
-		bounds1i viewport_x = _viewportBounds.x();
-		bounds1f viewport_y = _viewportBounds.y();
+		glm::vec2 surface_size = _surface->Size._value;
+		bounds1f viewport_x = bounds1f(0, surface_size.x);
+		bounds1f viewport_y = bounds1f(0, surface_size.y);
 
 		int index = 0;
 		for (BattleView* battleView : _battleViews)
@@ -280,10 +269,9 @@ void BattleLayer::UpdateBattleViewSize()
 			float k1 = index / count;
 			float k2 = (index + 1) / count;
 
-			bounds2i viewport_bounds(viewport_x, (int)viewport_y.mix(k1), (int)viewport_y.mix(k2));
+			bounds2f viewport_bounds(viewport_x, viewport_y.mix(k1), viewport_y.mix(k2));
 
-			battleView->GetTerrainViewport()->SetBounds(viewport_bounds);
-			battleView->GetScrollerViewport()->SetBounds(viewport_bounds);
+			battleView->Bounds.SetValue(viewport_bounds);
 
 			++index;
 		}
