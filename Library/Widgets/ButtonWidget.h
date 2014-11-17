@@ -10,8 +10,6 @@ class ButtonHotspot;
 
 class ButtonWidget : public WidgetGroup
 {
-public:
-	bounds2f _bounds;
 private:
 	std::shared_ptr<ButtonHotspot> _hotspot;
 	BorderInset _inset;
@@ -24,6 +22,8 @@ private:
 	bool _disabled;
 
 public:
+	LayoutBounds Bounds;
+
 	ButtonWidget(WidgetOwner* widgetOwner);
 
 	std::function<void()> GetClickAction() const;
@@ -32,9 +32,6 @@ public:
 	void SetBackgroundNormal(std::shared_ptr<TextureImage> value);
 	void SetBackgroundHighlight(std::shared_ptr<TextureImage> value);
 	void SetBackgroundDisabled(std::shared_ptr<TextureImage> value);
-
-	bounds2f GetBounds() const;
-	void SetBounds(const bounds2f& value);
 
 	BorderInset GetInset() const;
 	void SetInset(const BorderInset& value);

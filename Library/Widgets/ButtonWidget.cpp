@@ -9,11 +9,12 @@ ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
 	_borderImage(this),
 	_iconImage(this),
 	_titleString(this),
-	_disabled(false)
+	_disabled(false),
+	Bounds(GetLayoutContext())
 {
 	_hotspot = std::make_shared<ButtonHotspot>([this](glm::vec2 position) {
 		glm::vec2 p = GetWidgetView()->GetScrollerViewport()->GlobalToLocal(position);
-		return _bounds.contains(p);
+		return Bounds.GetValue().contains(p);
 	});
 }
 
@@ -45,18 +46,6 @@ void ButtonWidget::SetBackgroundHighlight(std::shared_ptr<TextureImage> value)
 void ButtonWidget::SetBackgroundDisabled(std::shared_ptr<TextureImage> value)
 {
 	_backgroundDisabled = value;
-}
-
-
-bounds2f ButtonWidget::GetBounds() const
-{
-	return _bounds;
-}
-
-
-void ButtonWidget::SetBounds(const bounds2f& value)
-{
-	_bounds = value;
 }
 
 
@@ -159,12 +148,14 @@ void ButtonWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 		_borderImage.SetAlpha(1);
 	}
 
-	_borderImage.Bounds.SetValue(_bounds);
+	bounds2f bounds = Bounds.GetValue();
+
+	_borderImage.Bounds.SetValue(bounds);
 	_borderImage.SetInset(_inset);
-	_iconImage.Bounds.SetValue(_bounds);
+	_iconImage.Bounds.SetValue(bounds);
 	_iconImage.SetInset(_inset);
 
-	_titleString.Bounds_Min.SetValue(_bounds.center() - 0.5f * GetWidgetView()->MeasureStringWidget(&_titleString));
+	_titleString.Bounds_Min.SetValue(bounds.center() - 0.5f * GetWidgetView()->MeasureStringWidget(&_titleString));
 	_titleString.SetGlow(glm::vec4(0, 0, 0, 1));
 	_titleString.SetAlpha(_disabled ? 0.5f : 1.0f);
 
