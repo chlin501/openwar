@@ -4,7 +4,8 @@
 
 #include "Widget.h"
 #include "WidgetView.h"
-#import "Touch.h"
+#include "Touch.h"
+#include "Surface.h"
 
 
 /* Widget */
@@ -76,6 +77,13 @@ WidgetOwner* Widget::GetWidgetOwner()
 WidgetView* Widget::GetWidgetView()
 {
 	return _widgetOwner != nullptr ? _widgetOwner->FindWidgetView() : nullptr;
+}
+
+
+LayoutContext* Widget::GetLayoutContext()
+{
+	WidgetView* widgetView = GetWidgetView();
+	return widgetView != nullptr ? widgetView->GetSurface() : nullptr;
 }
 
 

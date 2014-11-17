@@ -8,6 +8,7 @@
 #include "Vertex.h"
 #include <vector>
 
+class LayoutContext;
 class Touch;
 class WidgetOwner;
 class WidgetView;
@@ -25,6 +26,7 @@ public:
 
 	WidgetOwner* GetWidgetOwner();
 	WidgetView* GetWidgetView();
+	LayoutContext* GetLayoutContext();
 
 	bool IsVisible() const;
 	void SetVisible(bool value);

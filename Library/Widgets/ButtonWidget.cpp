@@ -159,10 +159,12 @@ void ButtonWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 		_borderImage.SetAlpha(1);
 	}
 
-	_borderImage.SetBounds(BorderBounds(_bounds).Inset(_inset));
-	_iconImage.SetBounds(BorderBounds(_bounds).Inset(_inset));
+	_borderImage.Bounds.SetValue(_bounds);
+	_borderImage.SetInset(_inset);
+	_iconImage.Bounds.SetValue(_bounds);
+	_iconImage.SetInset(_inset);
 
-	_titleString.SetPosition(_bounds.center() - 0.5f * GetWidgetView()->MeasureStringWidget(&_titleString));
+	_titleString.Bounds_Min.SetValue(_bounds.center() - 0.5f * GetWidgetView()->MeasureStringWidget(&_titleString));
 	_titleString.SetGlow(glm::vec4(0, 0, 0, 1));
 	_titleString.SetAlpha(_disabled ? 0.5f : 1.0f);
 

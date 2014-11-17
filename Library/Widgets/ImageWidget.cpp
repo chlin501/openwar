@@ -8,7 +8,8 @@
 
 
 ImageWidget::ImageWidget(WidgetOwner* widgetOwner) : Widget(widgetOwner),
-	_alpha(1)
+	_alpha(1),
+	Bounds(GetLayoutContext())
 {
 }
 
@@ -25,15 +26,9 @@ void ImageWidget::SetTextureImage(std::shared_ptr<TextureImage> textureImage)
 }
 
 
-BorderBounds ImageWidget::GetBounds() const
+void ImageWidget::SetInset(BorderInset value)
 {
-	return _bounds;
-}
-
-
-void ImageWidget::SetBounds(const BorderBounds& value)
-{
-	_bounds = value;
+	_inset = value;
 }
 
 
@@ -73,58 +68,64 @@ void ImageWidget::OnTouchBegin(Touch* touch)
 
 void ImageWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
-	if (_textureImage == nullptr || _bounds.outer.empty())
+	if (_textureImage == nullptr)
 		return;
+
+	bounds2f outer = Bounds.GetValue();
+	if (outer.empty())
+		return;
+
+	bounds2f inner(outer.min + _inset.min, outer.max - _inset.max);
 
 	BorderBounds texture = _textureImage->GetCoords();
 
-	bool min_x = _bounds.outer.min.x < _bounds.inner.min.x;
-	bool max_x = _bounds.inner.max.x < _bounds.outer.max.x;
-	bool min_y = _bounds.outer.min.y < _bounds.inner.min.y;
-	bool max_y = _bounds.inner.max.y < _bounds.outer.max.y;
+	bool min_x = outer.min.x < inner.min.x;
+	bool max_x = inner.max.x < outer.max.x;
+	bool min_y = outer.min.y < inner.min.y;
+	bool max_y = inner.max.y < outer.max.y;
 
 	if (min_x && min_y)
 		AppendRectangle(vertices,
-			bounds2f(_bounds.outer.min.x, _bounds.outer.min.y, _bounds.inner.min.x, _bounds.inner.min.y),
+			bounds2f(outer.min.x, outer.min.y, inner.min.x, inner.min.y),
 			bounds2f(texture.outer.min.x, texture.outer.max.y, texture.inner.min.x, texture.inner.max.y));
 
 	if (min_x)
 		AppendRectangle(vertices,
-			bounds2f(_bounds.outer.min.x, _bounds.inner.min.y, _bounds.inner.min.x, _bounds.inner.max.y),
+			bounds2f(outer.min.x, inner.min.y, inner.min.x, inner.max.y),
 			bounds2f(texture.outer.min.x, texture.inner.max.y, texture.inner.min.x, texture.inner.min.y));
 
 	if (min_x && max_y)
 		AppendRectangle(vertices,
-			bounds2f(_bounds.outer.min.x, _bounds.inner.max.y, _bounds.inner.min.x, _bounds.outer.max.y),
+			bounds2f(outer.min.x, inner.max.y, inner.min.x, outer.max.y),
 			bounds2f(texture.outer.min.x, texture.inner.min.y, texture.inner.min.x, texture.outer.min.y));
 
 	if (min_y)
 		AppendRectangle(vertices,
-			bounds2f(_bounds.inner.min.x, _bounds.outer.min.y, _bounds.inner.max.x, _bounds.inner.min.y),
+			bounds2f(inner.min.x, outer.min.y, inner.max.x, inner.min.y),
 			bounds2f(texture.inner.min.x, texture.outer.max.y, texture.inner.max.x, texture.inner.max.y));
 
 	AppendRectangle(vertices,
-		bounds2f(_bounds.inner.min.x, _bounds.inner.min.y, _bounds.inner.max.x, _bounds.inner.max.y),
+		bounds2f(inner.min.x, inner.min.y, inner.max.x, inner.max.y),
 		bounds2f(texture.inner.min.x, texture.inner.max.y, texture.inner.max.x, texture.inner.min.y));
 
 	if (max_y)
 		AppendRectangle(vertices,
-			bounds2f(_bounds.inner.min.x, _bounds.inner.max.y, _bounds.inner.max.x, _bounds.outer.max.y),
+			bounds2f(inner.min.x, inner.max.y, inner.max.x, outer.max.y),
 			bounds2f(texture.inner.min.x, texture.inner.min.y, texture.inner.max.x, texture.outer.min.y));
 
 	if (max_x && min_y)
 		AppendRectangle(vertices,
-			bounds2f(_bounds.inner.max.x, _bounds.outer.min.y, _bounds.outer.max.x, _bounds.inner.min.y),
+			bounds2f(inner.max.x, outer.min.y, outer.max.x, inner.min.y),
 			bounds2f(texture.inner.max.x, texture.outer.max.y, texture.outer.max.x, texture.inner.max.y));
 
 	if (max_x)
 		AppendRectangle(vertices,
-			bounds2f(_bounds.inner.max.x, _bounds.inner.min.y, _bounds.outer.max.x, _bounds.inner.max.y),
+			bounds2f(inner.max.x, inner.min.y, outer.max.x, inner.max.y),
 			bounds2f(texture.inner.max.x, texture.inner.max.y, texture.outer.max.x, texture.inner.min.y));
 
 	if (max_x && max_y)
 		AppendRectangle(vertices,
-			bounds2f(_bounds.inner.max.x, _bounds.inner.max.y, _bounds.outer.max.x, _bounds.outer.max.y),
+			bounds2f(inner.max.x, inner.max.y, outer.max.x, outer.max.y),
 			bounds2f(texture.inner.max.x, texture.inner.min.y, texture.outer.max.x, texture.outer.min.y));
 }
 

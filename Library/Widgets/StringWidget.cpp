@@ -5,7 +5,7 @@
 #include "StringWidget.h"
 #include "TextureAtlas.h"
 #include "TextureFont.h"
-#import "Touch.h"
+#include "Touch.h"
 
 #include <codecvt>
 #include <cstdlib>
@@ -38,17 +38,9 @@ static bool ContainsArabic(const std::wstring& ws)
 StringWidget::StringWidget(WidgetOwner* widgetOwner) : Widget(widgetOwner),
 	_string(),
 	_color(1, 1, 1, 1),
-	_width(0)
+	_width(0),
+	Bounds_Min(GetLayoutContext())
 {
-}
-
-
-StringWidget::StringWidget(WidgetOwner* widgetOwner, const char* string, glm::vec2 translate) : Widget(widgetOwner),
-	_string(string),
-	_color(1, 1, 1, 1),
-	_width(0)
-{
-	SetPosition(translate);
 }
 
 
@@ -61,18 +53,6 @@ const FontDescriptor& StringWidget::GetFontDescriptor() const
 void StringWidget::SetFontDescriptor(const FontDescriptor& fontDescriptor)
 {
 	_fontDescriptor = fontDescriptor;
-}
-
-
-glm::vec2 StringWidget::GetPosition() const
-{
-	return _position;
-}
-
-
-void StringWidget::SetPosition(glm::vec2 value)
-{
-	_position = value;
 }
 
 
@@ -164,6 +144,7 @@ void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 
 void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur)
 {
+	glm::vec2 offset = Bounds_Min.GetValue();
 	glm::vec2 p(0, 0);
 
 	float alpha = color.a;
@@ -195,7 +176,7 @@ void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm
 
 		glm::vec2 s = textureChar->GetInnerSize();
 
-		bounds2f bounds = item_xy + _position;
+		bounds2f bounds = item_xy + offset;
 
 		float next_alpha = alpha + delta * s.x;
 
@@ -229,7 +210,7 @@ void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm
 
 			glm::vec2 s = textureChar->GetInnerSize();
 
-			bounds2f bounds = item_xy + _position;
+			bounds2f bounds = item_xy + offset;
 
 			float next_alpha = alpha + delta * s.x;
 

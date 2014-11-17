@@ -345,7 +345,8 @@ void ButtonGrid::Render()
 {
 	for (ButtonArea* buttonArea : _buttonAreas)
 	{
-		buttonArea->backgroundImage.SetBounds(BorderBounds(buttonArea->_bounds).Outset(10).Inset(32));
+		buttonArea->backgroundImage.Bounds.SetValue(buttonArea->_bounds.grow(10));
+		buttonArea->backgroundImage.SetInset(BorderInset(32));
 		buttonArea->backgroundImage.SetTextureImage(_buttonRendering->buttonBackground);
 		buttonArea->backgroundImage.OrderFront();
 
@@ -353,7 +354,8 @@ void ButtonGrid::Render()
 		{
 			if (buttonItem->IsSelected())
 			{
-				buttonItem->selectedImage.SetBounds(BorderBounds(buttonItem->GetBounds()).Outset(10).Inset(32));
+				buttonItem->selectedImage.Bounds.SetValue(buttonItem->GetBounds().grow(10));
+				buttonItem->selectedImage.SetInset(BorderInset(32));
 				buttonItem->selectedImage.SetTextureImage(_buttonRendering->buttonSelected);
 				buttonItem->selectedImage.OrderFront();
 			}
@@ -364,7 +366,7 @@ void ButtonGrid::Render()
 				bounds_xy -= bounds_xy.center();
 				bounds_xy += buttonItem->GetBounds().center();
 
-				buttonItem->buttonImage.SetBounds(BorderBounds(bounds_xy));
+				buttonItem->buttonImage.Bounds.SetValue(bounds_xy);
 				buttonItem->buttonImage.SetTextureImage(buttonItem->GetButtonIcon());
 				buttonItem->buttonImage.SetAlpha(buttonItem->IsDisabled() ? 0.5f : 1.0f);
 
@@ -373,7 +375,8 @@ void ButtonGrid::Render()
 
 			if (buttonItem->IsHighlight())
 			{
-				buttonItem->highlightImage.SetBounds(BorderBounds(buttonItem->GetBounds()).Center());
+				buttonItem->highlightImage.Bounds.SetValue(buttonItem->GetBounds());
+				buttonArea->backgroundImage.SetInset(BorderInset(32));
 				buttonItem->highlightImage.SetTextureImage(_buttonRendering->buttonHighlight);
 				buttonItem->highlightImage.OrderFront();
 			}
@@ -381,7 +384,7 @@ void ButtonGrid::Render()
 			if (buttonItem->GetButtonText() != nullptr)
 			{
 				buttonItem->buttonString.SetString(buttonItem->GetButtonText());
-				buttonItem->buttonString.SetPosition(buttonItem->GetBounds().center() - 0.5f * MeasureStringWidget(&buttonItem->buttonString));
+				buttonItem->buttonString.Bounds_Min.SetValue(buttonItem->GetBounds().center() - 0.5f * MeasureStringWidget(&buttonItem->buttonString));
 				buttonItem->buttonString.OrderFront();
 			}
 		}

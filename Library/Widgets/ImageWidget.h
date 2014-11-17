@@ -7,23 +7,25 @@
 
 #include "Widget.h"
 #include "TextureAtlas.h"
+#include "Layout.h"
 
 
 class ImageWidget : public Widget
 {
 	std::shared_ptr<TextureImage> _textureImage;
-	BorderBounds _bounds;
+	BorderInset _inset;
 	glm::vec4 _colorize;
 	float _alpha;
 
 public:
+	LayoutBounds Bounds;
+
 	ImageWidget(WidgetOwner* widgetOwner);
 
 	std::shared_ptr<TextureImage> GetTextureImage() const;
 	void SetTextureImage(std::shared_ptr<TextureImage> textureImage);
 
-	BorderBounds GetBounds() const;
-	void SetBounds(const BorderBounds& value);
+	void SetInset(BorderInset value);
 
 	glm::vec4 GetColorize() const;
 	void SetColorize(const glm::vec4& value);
@@ -42,7 +44,7 @@ private:
 	void AppendRectangle(std::vector<Vertex_2f_2f_4f_1f>& vertices, bounds2f xy, bounds2f uv);
 
 private:
-	ImageWidget(const ImageWidget&) : Widget(nullptr) { }
+	ImageWidget(const ImageWidget&) : Widget(nullptr), Bounds(nullptr) { }
 	ImageWidget& operator=(const ImageWidget&) { return *this; }
 };
 

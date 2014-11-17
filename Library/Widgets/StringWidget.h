@@ -16,20 +16,17 @@ class StringWidget : public Widget
 {
 	FontDescriptor _fontDescriptor;
 	std::string _string;
-	glm::vec2 _position;
 	glm::vec4 _color;
 	glm::vec4 _glow;
 	float _width;
 
 public:
+	LayoutPoint Bounds_Min;
+
 	StringWidget(WidgetOwner* widgetOwner);
-	StringWidget(WidgetOwner* widgetOwner, const char* string, glm::vec2 translate);
 
 	const FontDescriptor& GetFontDescriptor() const;
 	void SetFontDescriptor(const FontDescriptor& fontDescriptor);
-
-	glm::vec2 GetPosition() const;
-	void SetPosition(glm::vec2 value);
 
 	const char* GetString() const;
 	void SetString(const char* value);
@@ -56,7 +53,7 @@ private:
 	void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur);
 
 private:
-	StringWidget(const StringWidget&) : Widget(nullptr) { }
+	StringWidget(const StringWidget&) : Widget(nullptr), Bounds_Min(nullptr) { }
 	StringWidget& operator=(const StringWidget&) { return *this; }
 };
 
