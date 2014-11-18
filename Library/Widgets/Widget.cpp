@@ -6,6 +6,7 @@
 #include "WidgetView.h"
 #include "Touch.h"
 #include "Surface.h"
+#include "GraphicsContext.h"
 
 
 /* Widget */
@@ -68,22 +69,29 @@ void WidgetOwner::CallWidgets_AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& ve
 }
 
 
-WidgetOwner* Widget::GetWidgetOwner()
+WidgetOwner* Widget::GetWidgetOwner() const
 {
 	return _widgetOwner;
 }
 
 
-WidgetView* Widget::GetWidgetView()
+WidgetView* Widget::GetWidgetView() const
 {
 	return _widgetOwner != nullptr ? _widgetOwner->FindWidgetView() : nullptr;
 }
 
 
-LayoutContext* Widget::GetLayoutContext()
+LayoutContext* Widget::GetLayoutContext() const
 {
 	WidgetView* widgetView = GetWidgetView();
 	return widgetView != nullptr ? widgetView->GetSurface() : nullptr;
+}
+
+
+GraphicsContext* Widget::GetGraphicsContext() const
+{
+	WidgetView* widgetView = GetWidgetView();
+	return widgetView != nullptr ? widgetView->GetGraphicsContext() : nullptr;
 }
 
 

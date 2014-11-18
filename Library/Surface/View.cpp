@@ -1,6 +1,7 @@
 #include "View.h"
 #include "Surface.h"
 #include "Viewport.h"
+#include "GraphicsContext.h"
 
 
 View::View(Surface* surface) :
@@ -26,6 +27,12 @@ View::~View()
 Surface* View::GetSurface() const
 {
 	return _surface;
+}
+
+
+GraphicsContext* View::GetGraphicsContext() const
+{
+	return _surface != nullptr ? _surface->GetGraphicsContext() : nullptr;
 }
 
 

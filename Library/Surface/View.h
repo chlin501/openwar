@@ -3,6 +3,7 @@
 
 #include "Layout.h"
 
+class GraphicsContext;
 class Surface;
 class Touch;
 class Viewport;
@@ -21,6 +22,7 @@ public:
 	virtual ~View();
 
 	Surface* GetSurface() const;
+	GraphicsContext* GetGraphicsContext() const;
 
 	bool IsVisible() const;
 	void SetVisible(bool value);
