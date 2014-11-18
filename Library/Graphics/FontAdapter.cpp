@@ -86,7 +86,7 @@ std::shared_ptr<TextureImage> FontAdapter_NSFont::AddTextureImage(TextureAtlas* 
 	if (filter)
 		filter(image);
 
-	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image, TextureImageType::Discardable);
+	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image, TextureDiscardability::Discardable);
 
 	BorderBounds bounds = textureImage->GetBounds();
 	bounds.inner.min = bounds.outer.min + glm::vec2(border, border);

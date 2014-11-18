@@ -96,7 +96,7 @@ void TextureAtlas::UpdateTexture()
 }
 
 
-std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, TextureImageType textureImageType)
+std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, TextureDiscardability discardability)
 {
 	if (_textureAtlasImage == nullptr)
 		_textureAtlasImage = new Image(glm::max(512, image.GetWidth()), glm::max(256, image.GetHeight()));
@@ -116,7 +116,7 @@ std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, 
 	glm::ivec2 atlasSize(_textureAtlasImage->GetWidth(), _textureAtlasImage->GetHeight());
 	glm::ivec2 imageSize(image.GetWidth(), image.GetHeight());
 
-	bool discardable = textureImageType == TextureImageType::Discardable;
+	bool discardable = discardability == TextureDiscardability::Discardable;
 	glm::ivec2 position;
 
 	if (!discardable)
@@ -144,13 +144,13 @@ std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, 
 	_textureAtlasImage->Copy(image, position.x, position.y);
 	_dirty = true;
 
-	return NewTextureImage(BorderBounds(bounds), discardable);
+	return NewTextureImage(BorderBounds(bounds), discardability);
 }
 
 
 TextureSheet TextureAtlas::AddTextureSheet(const Image& image)
 {
-	std::shared_ptr<TextureImage> textureImage = AddTextureImage(image, TextureImageType::Permanent);
+	std::shared_ptr<TextureImage> textureImage = AddTextureImage(image, TextureDiscardability::NonDiscardable);
 	return TextureSheet(this, textureImage->GetBounds().outer);
 }
 
@@ -161,13 +161,13 @@ TextureSheet TextureAtlas::GetTextureSheet(const bounds2f& bounds)
 }
 
 
-std::shared_ptr<TextureImage> TextureAtlas::NewTextureImage(const BorderBounds& bounds, bool discardable)
+std::shared_ptr<TextureImage> TextureAtlas::NewTextureImage(const BorderBounds& bounds, TextureDiscardability discardability)
 {
 	std::shared_ptr<TextureImage> result = std::make_shared<TextureImage>();
 
 	result->_textureAtlas = this;
 	result->_bounds = bounds;
-	result->_discardable = discardable;
+	result->_discardable = discardability == TextureDiscardability::Discardable;
 
 	_textureImages.push_back(result);
 
@@ -261,5 +261,5 @@ std::shared_ptr<TextureImage> TextureSheet::NewTextureImage(const BorderBounds& 
 	BorderBounds offsetBounds;
 	offsetBounds.inner = bounds.inner + _sheetBounds.min;
 	offsetBounds.outer = bounds.outer + _sheetBounds.min;
-	return _textureAtlas->NewTextureImage(offsetBounds, false);
+	return _textureAtlas->NewTextureImage(offsetBounds, TextureDiscardability::NonDiscardable);
 }

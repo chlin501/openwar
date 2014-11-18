@@ -18,7 +18,7 @@ class TextureFont;
 class TextureImage;
 
 
-enum class TextureImageType { Permanent, Discardable };
+enum class TextureDiscardability { NonDiscardable, Discardable };
 
 
 struct BorderInset
@@ -124,12 +124,13 @@ public:
 
 	virtual void UpdateTexture();
 
-	std::shared_ptr<TextureImage> AddTextureImage(const Image& image, TextureImageType textureImageType);
+	std::shared_ptr<TextureImage> AddTextureImage(const Image& image, TextureDiscardability discardability);
 	TextureSheet AddTextureSheet(const Image& image);
 	TextureSheet GetTextureSheet(const bounds2f& bounds);
 
+	std::shared_ptr<TextureImage> NewTextureImage(const BorderBounds& bounds, TextureDiscardability discardability);
+
 private:
-	std::shared_ptr<TextureImage> NewTextureImage(const BorderBounds& bounds, bool discardable);
 	void DiscardTextureImages();
 
 private:
