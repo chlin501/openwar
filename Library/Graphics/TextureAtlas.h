@@ -69,13 +69,13 @@ struct BorderBounds
 	BorderBounds& Inset(float d) { InsetX(d); InsetY(d); return *this; }
 	BorderBounds& Outset(float d) { OutsetX(d); OutsetY(d); return *this; }
 
-	BorderBounds& Center() { inner = bounds2f(outer.center()); return *this; }
-	BorderBounds& CenterX() { inner.min.x = inner.max.x = outer.x().center(); return *this; }
-	BorderBounds& CenterY() { inner.min.y = inner.max.y = outer.y().center(); return *this; }
-	BorderBounds& CenterMinX() { inner.min.x = outer.x().center(); return *this; }
-	BorderBounds& CenterMaxX() { inner.max.x = outer.x().center(); return *this; }
-	BorderBounds& CenterMinY() { inner.min.y = outer.y().center(); return *this; }
-	BorderBounds& CenterMaxY() { inner.max.y = outer.y().center(); return *this; }
+	BorderBounds& Center() { inner = bounds2f(outer.mid()); return *this; }
+	BorderBounds& CenterX() { inner.min.x = inner.max.x = outer.x().mid(); return *this; }
+	BorderBounds& CenterY() { inner.min.y = inner.max.y = outer.y().mid(); return *this; }
+	BorderBounds& CenterMinX() { inner.min.x = outer.x().mid(); return *this; }
+	BorderBounds& CenterMaxX() { inner.max.x = outer.x().mid(); return *this; }
+	BorderBounds& CenterMinY() { inner.min.y = outer.y().mid(); return *this; }
+	BorderBounds& CenterMaxY() { inner.max.y = outer.y().mid(); return *this; }
 };
 
 

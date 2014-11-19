@@ -124,7 +124,7 @@ void TerrainView::SetHeightMap(HeightMap* heightMap)
 	_terrainViewport->SetTerrainBounds(heightMap->GetBounds());
 
 	/*
-	glm::vec2 center = _contentBounds.center();
+	glm::vec2 center = _contentBounds.mid();
 	glm::vec2 size = _contentBounds.size();
 
 	_cameraPosition = glm::vec3(center - 0.2f * size, 0.2f * size.y);
@@ -136,7 +136,7 @@ void TerrainView::SetHeightMap(HeightMap* heightMap)
 
 glm::vec2 TerrainView::GetScreenTop() const
 {
-	glm::vec2 center = _terrainViewport->GetTerrainBounds().center();
+	glm::vec2 center = _terrainViewport->GetTerrainBounds().mid();
 	float angle = _terrainViewport->GetCameraFacing();
 	if (_terrainViewport->GetFlip())
 		angle += (float)M_PI;
@@ -148,7 +148,7 @@ glm::vec2 TerrainView::GetScreenTop() const
 
 glm::vec2 TerrainView::GetScreenLeft() const
 {
-	glm::vec2 center = _terrainViewport->GetTerrainBounds().center();
+	glm::vec2 center = _terrainViewport->GetTerrainBounds().mid();
 	float angle = _terrainViewport->GetCameraFacing();
 	if (_terrainViewport->GetFlip())
 		angle += (float)M_PI;
@@ -171,7 +171,7 @@ glm::vec2 TerrainView::GetScreenLeft() const
 
 glm::vec2 TerrainView::GetScreenBottom() const
 {
-	glm::vec2 center = _terrainViewport->GetTerrainBounds().center();
+	glm::vec2 center = _terrainViewport->GetTerrainBounds().mid();
 	float angle = _terrainViewport->GetCameraFacing() + (float)M_PI;
 	if (_terrainViewport->GetFlip())
 		angle += (float)M_PI;
@@ -188,7 +188,7 @@ glm::vec2 TerrainView::GetScreenBottom() const
 
 glm::vec2 TerrainView::GetScreenRight() const
 {
-	glm::vec2 center = _terrainViewport->GetTerrainBounds().center();
+	glm::vec2 center = _terrainViewport->GetTerrainBounds().mid();
 	float angle = _terrainViewport->GetCameraFacing();
 	if (_terrainViewport->GetFlip())
 		angle += (float)M_PI;
@@ -307,7 +307,7 @@ void TerrainView::MoveCamera(glm::vec3 position)
 	position.z = (bounds1f(0.05f, 2) * contentRadius).clamp(position.z);
 
 	float h = position.z;
-	glm::vec2 p = (glm::vec2)position.xy() - contentBounds.center();
+	glm::vec2 p = (glm::vec2)position.xy() - contentBounds.mid();
 	p = ::rotate(p, -_terrainViewport->GetCameraFacing());
 	float w = contentRadius - p.x;
 	float pitch = -atan2f(h, w) - (0.125f - 0.02f) * (float)M_PI;
@@ -328,9 +328,9 @@ void TerrainView::MoveCamera(glm::vec3 position)
 
 void TerrainView::ClampCameraPosition()
 {
-	glm::vec2 centerScreen = (glm::vec2)GetScrollerViewport()->GetVisibleBounds().center();
+	glm::vec2 centerScreen = (glm::vec2)GetScrollerViewport()->GetVisibleBounds().mid();
 	glm::vec2 contentCamera = GetTerrainPosition2(centerScreen).xy();
-	glm::vec2 contentCenter = _terrainViewport->GetTerrainBounds().center();
+	glm::vec2 contentCenter = _terrainViewport->GetTerrainBounds().mid();
 	float contentRadius = _heightMap->GetBounds().x().size() / 2;
 
 	glm::vec2 offset = contentCamera - contentCenter;

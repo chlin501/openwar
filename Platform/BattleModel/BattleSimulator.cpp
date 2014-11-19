@@ -693,7 +693,7 @@ void BattleSimulator::ResolveProjectileCasualties()
 void BattleSimulator::RemoveCasualties()
 {
 	bounds2f bounds = _heightMap->GetBounds();
-	glm::vec2 center = bounds.center();
+	glm::vec2 center = bounds.mid();
 	float radius = bounds.x().size() / 2;
 	float radius_squared = radius * radius;
 

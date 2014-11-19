@@ -20,7 +20,6 @@ struct bounds1
 
 	template <class T2> operator bounds1<T2, P>() const { return bounds1<T2, P>((T2)min, (T2)max); }
 
-	T center() const {return (min + max) / 2;}
 	T size() const {return max - min;}
 	T radius() const {return (max - min) / 2;}
 
@@ -37,6 +36,7 @@ struct bounds1
 
 	bounds1<T, P> grow(T d) const {return bounds1<T, P>(min - d, max + d);}
 
+	T mid() const {return (min + max) / 2;}
 	T mix(T v) const {return min + v * (max - min);}
 	T unmix(T v) const {return (v - min) / (max - min);}
 
@@ -71,14 +71,13 @@ struct bounds2
 	bounds1<T, P> x() const {return bounds1<T, P>(min.x, max.x);}
 	bounds1<T, P> y() const {return bounds1<T, P>(min.y, max.y);}
 
+	glm::tvec2<T, P> mid() const {return glm::tvec2<T, P>((min.x + max.x) / 2, (min.y + max.y) / 2);}
 	glm::tvec2<T, P> mix(T kx, T ky) const {return glm::tvec2<T, P>(x().mix(kx), y().mix(ky));}
-
 	glm::tvec2<T, P> mix_00() const {return glm::tvec2<T, P>(min.x, min.y);}
 	glm::tvec2<T, P> mix_01() const {return glm::tvec2<T, P>(min.x, max.y);}
 	glm::tvec2<T, P> mix_10() const {return glm::tvec2<T, P>(max.x, min.y);}
 	glm::tvec2<T, P> mix_11() const {return glm::tvec2<T, P>(max.x, max.y);}
 
-	glm::tvec2<T, P> center() const {return glm::tvec2<T, P>((min.x + max.x) / 2, (min.y + max.y) / 2);}
 	glm::tvec2<T, P> size() const {return glm::tvec2<T, P>(max.x - min.x, max.y - min.y);}
 	glm::tvec2<T, P> radius() const {return glm::tvec2<T, P>((max.x - min.x) / 2, (max.y - min.y) / 2);}
 

@@ -147,7 +147,7 @@ void TerrainGesture::ScrollWheel(glm::vec2 position, glm::vec2 delta)
 
 void TerrainGesture::Magnify(glm::vec2 position, float magnification)
 {
-	glm::vec2 p = (glm::vec2)_hotspot->GetTerrainView()->GetTerrainViewport()->GetBounds().center();
+	glm::vec2 p = (glm::vec2)_hotspot->GetTerrainView()->GetTerrainViewport()->GetBounds().mid();
 	glm::vec2 d1 = glm::vec2(0, 64);
 	glm::vec2 d2 = d1 * glm::exp(magnification);
 
@@ -202,7 +202,7 @@ static float GetOrbitFactor(Touch* touch, bounds2f bounds)
 	float circularSteadiness = 0;
 	if (currentSpeed > 0.01)
 	{
-		glm::vec2 centerDirection = glm::normalize(bounds.center() - touch->GetCurrentPosition());
+		glm::vec2 centerDirection = glm::normalize(bounds.mid() - touch->GetCurrentPosition());
 		circularSteadiness = 1 - fabsf(glm::dot(currentVelocity, centerDirection)) / currentSpeed;
 		circularSteadiness = adjust_toward_one(circularSteadiness);
 	}
@@ -215,7 +215,7 @@ static float GetOrbitFactor(Touch* touch, bounds2f bounds)
 		rectangularStediness = fabsf(glm::dot(currentVelocity, previousVelocity)) / currentSpeed / previousSpeed;
 	}
 
-	float positionFactor = glm::length((touch->GetCurrentPosition() - bounds.center()) / bounds.size());
+	float positionFactor = glm::length((touch->GetCurrentPosition() - bounds.mid()) / bounds.size());
 	positionFactor = bounds1f(0, 1).clamp(14 * (positionFactor - 0.36f));
 
 	//NSLog(@"circular: %f,  rectangular: %f,  position: %f", circularSteadiness, rectangularStediness, positionFactor);

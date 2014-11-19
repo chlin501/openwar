@@ -426,7 +426,7 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 		int treeType = 0;
 		random_iterator random(*_randoms);
 		bounds2f mapbounds = _simulator->GetGroundMap()->GetBounds();
-		glm::vec2 center = mapbounds.center();
+		glm::vec2 center = mapbounds.mid();
 		float radius = mapbounds.x().size() / 2;
 
 		float d = 5 * mapbounds.x().size() / 1024;
@@ -924,7 +924,7 @@ bounds2f BattleView::GetUnitFacingMarkerBounds(glm::vec2 center, float direction
 {
 	bounds2f iconBounds = GetBillboardBounds(GetTerrainPosition(center, 0), 32);
 
-	glm::vec2 position = iconBounds.center();
+	glm::vec2 position = iconBounds.mid();
 	float size = iconBounds.y().size();
 	float adjust = GetTerrainViewport()->GetFlip() ? 3 * glm::half_pi<float>() : glm::half_pi<float>();
 

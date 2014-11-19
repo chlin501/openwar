@@ -252,7 +252,7 @@ ButtonArea* ButtonGrid::AddButtonArea(int numberOfColumns)
 void ButtonGrid::UpdateLayout()
 {
 	bounds2f contentBounds = GetScrollerViewport()->GetVisibleBounds();
-	glm::vec2 contentCenter = contentBounds.center();
+	glm::vec2 contentCenter = contentBounds.mid();
 	float margin = 3;
 	float spacing = 20;
 	std::vector<bounds2f> bounds;
@@ -273,17 +273,17 @@ void ButtonGrid::UpdateLayout()
 		{
 			case ButtonAlignment::Vertical::Top:
 				for (bounds2f& b : bounds)
-					b += glm::vec2(contentCenter.x - b.x().center(), contentBounds.max.y - margin);
+					b += glm::vec2(contentCenter.x - b.x().mid(), contentBounds.max.y - margin);
 				break;
 
 			case ButtonAlignment::Vertical::Center:
 		        for (bounds2f& b : bounds)
-	                b += glm::vec2(contentCenter.x - b.x().center(), contentCenter.y - position.y / 2);
+	                b += glm::vec2(contentCenter.x - b.x().mid(), contentCenter.y - position.y / 2);
 				break;
 
 			case ButtonAlignment::Vertical::Bottom:
 		        for (bounds2f& b : bounds)
-	                b += glm::vec2(contentCenter.x - b.x().center(), contentBounds.min.y + margin - position.y);
+	                b += glm::vec2(contentCenter.x - b.x().mid(), contentBounds.min.y + margin - position.y);
 				break;
 		}
 	}
@@ -314,7 +314,7 @@ void ButtonGrid::UpdateLayout()
 
 			case ButtonAlignment::Vertical::Center:
 		        for (bounds2f& b : bounds)
-	                b += glm::vec2(0, contentCenter.y - b.y().center());
+	                b += glm::vec2(0, contentCenter.y - b.y().mid());
 				break;
 
 			case ButtonAlignment::Vertical::Bottom:
@@ -363,8 +363,8 @@ void ButtonGrid::Render()
 			if (buttonItem->GetButtonIcon() != nullptr)
 			{
 				bounds2f bounds_xy = buttonItem->GetButtonIcon()->GetBounds().outer;
-				bounds_xy -= bounds_xy.center();
-				bounds_xy += buttonItem->GetBounds().center();
+				bounds_xy -= bounds_xy.mid();
+				bounds_xy += buttonItem->GetBounds().mid();
 
 				buttonItem->buttonImage.Bounds.SetValue(bounds_xy);
 				buttonItem->buttonImage.SetTextureImage(buttonItem->GetButtonIcon());
@@ -384,7 +384,7 @@ void ButtonGrid::Render()
 			if (buttonItem->GetButtonText() != nullptr)
 			{
 				buttonItem->buttonString.SetString(buttonItem->GetButtonText());
-				buttonItem->buttonString.Bounds_Min.SetValue(buttonItem->GetBounds().center() - 0.5f * MeasureStringWidget(&buttonItem->buttonString));
+				buttonItem->buttonString.Bounds_Min.SetValue(buttonItem->GetBounds().mid() - 0.5f * MeasureStringWidget(&buttonItem->buttonString));
 				buttonItem->buttonString.OrderFront();
 			}
 		}

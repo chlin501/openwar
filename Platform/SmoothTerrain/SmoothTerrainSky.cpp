@@ -54,9 +54,9 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f bounds, float
 	glm::mat4 t = transform;
 	if (flip)
 	{
-		t = glm::translate(t, glm::vec3(bounds.center(), 0));
+		t = glm::translate(t, glm::vec3(bounds.mid(), 0));
 		t = glm::scale(t, glm::vec3(-1, -1, 1));
-		t = glm::translate(t, glm::vec3(-bounds.center(), 0));
+		t = glm::translate(t, glm::vec3(-bounds.mid(), 0));
 	}
 
 	RenderCall<GradientShader_2f>(_gc)

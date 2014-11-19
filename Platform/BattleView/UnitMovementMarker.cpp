@@ -65,7 +65,7 @@ void UnitMovementMarker::AppendFacingMarker(VertexShape_3f_2f* vertices, BattleV
 	const UnitCommand& command = _unit->GetCommand();
 
 	bounds2f b = battleView->GetUnitFutureFacingMarkerBounds(_unit);
-	glm::vec2 p = b.center();
+	glm::vec2 p = b.mid();
 	float size = b.y().size();
 	float direction = command.bearing - battleView->GetTerrainViewport()->GetCameraFacing();
 	if (battleView->GetTerrainViewport()->GetFlip())

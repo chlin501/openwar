@@ -225,7 +225,7 @@ void SmoothTerrainRenderer::UpdateDepthTextureSize()
 void SmoothTerrainRenderer::InitializeShadow()
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
-	glm::vec2 center = bounds.center();
+	glm::vec2 center = bounds.mid();
 	float radius1 = bounds.x().size() / 2;
 	float radius2 = radius1 * 1.075f;
 
@@ -256,7 +256,7 @@ void SmoothTerrainRenderer::InitializeShadow()
 void SmoothTerrainRenderer::InitializeSkirt()
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
-	glm::vec2 center = bounds.center();
+	glm::vec2 center = bounds.mid();
 	float radius = bounds.x().size() / 2;
 
 	_skirtVertices._mode = GL_TRIANGLE_STRIP;
@@ -439,7 +439,7 @@ void SmoothTerrainRenderer::InitializeLines()
 
 static int inside_circle(bounds2f bounds, glm::vec2 p)
 {
-	return glm::length(p - bounds.center()) <= bounds.x().size() / 2 ? 1 : 0;
+	return glm::length(p - bounds.mid()) <= bounds.x().size() / 2 ? 1 : 0;
 }
 
 

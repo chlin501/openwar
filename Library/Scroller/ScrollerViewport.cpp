@@ -46,7 +46,7 @@ static float ClampContentOffset(float value, float contentSize, bounds1i viewpor
 		return 0;
 
 	bounds1f bounds = bounds1f(0, contentSize - viewportBounds.size());
-	return !viewportBounds.empty() ? bounds.clamp(value) : bounds.center();
+	return !viewportBounds.empty() ? bounds.clamp(value) : bounds.mid();
 }
 
 

@@ -168,9 +168,9 @@ void BattleGesture::TouchBegan(Touch* touch)
 			_allowTargetEnemyUnit = unit->stats.missileType != MissileType::None;
 			_trackingMarker = _hotspot->GetBattleView()->AddTrackingMarker(unit);
 
-			float distanceToUnitCenter = glm::distance(GetUnitCurrentBounds(unit).center(), screenPosition);
-			float distanceToDestination = glm::distance(GetUnitFutureBounds(unit).center(), screenPosition);
-			float distanceToModifierArea = glm::distance(GetUnitModifierBounds(unit).center(), screenPosition);
+			float distanceToUnitCenter = glm::distance(GetUnitCurrentBounds(unit).mid(), screenPosition);
+			float distanceToDestination = glm::distance(GetUnitFutureBounds(unit).mid(), screenPosition);
+			float distanceToModifierArea = glm::distance(GetUnitModifierBounds(unit).mid(), screenPosition);
 			float distanceMinimum = glm::min(distanceToUnitCenter, glm::min(distanceToDestination, distanceToModifierArea));
 
 			_tappedUnitCenter = distanceToUnitCenter == distanceMinimum;
@@ -443,7 +443,7 @@ void BattleGesture::UpdateTrackingMarker()
 		glm::vec2 currentDestination = path.size() != 0 ? *(path.end() - 1) : unit->state.center;
 
 		bounds2f contentBounds = _hotspot->GetBattleView()->GetTerrainViewport()->GetTerrainBounds();
-		glm::vec2 contentCenter = contentBounds.center();
+		glm::vec2 contentCenter = contentBounds.mid();
 		float contentRadius = contentBounds.x().size() / 2;
 
 		glm::vec2 differenceToCenter = contentCenter - markerPosition;
@@ -513,7 +513,7 @@ void BattleGesture::UpdateTrackingMarker()
 		if (_trackingMarker->GetUnit()->state.unitMode == UnitMode_Standing && _trackingMarker->GetUnit()->stats.maximumRange > 0)
 		{
 			bounds2f unitCurrentBounds = GetUnitCurrentBounds(_trackingMarker->GetUnit());
-			holdFire = glm::distance(screenMarkerPosition, unitCurrentBounds.center()) <= unitCurrentBounds.x().radius();
+			holdFire = glm::distance(screenMarkerPosition, unitCurrentBounds.mid()) <= unitCurrentBounds.x().radius();
 		}
 
 		if (holdFire)
