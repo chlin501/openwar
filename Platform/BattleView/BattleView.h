@@ -126,8 +126,6 @@ public:
 
 	/***/
 
-	void AnimateMarkers(float seconds);
-
 	void AddShootingAndSmokeCounters(const Shooting& shooting);
 
 	void AddShootingCounter(const Shooting& shooting);
@@ -139,6 +137,8 @@ public:
 	void RemoveAllSmokeMarkers();
 
 	UnitCounter* GetNearestUnitCounter(glm::vec2 position, int team, BattleCommander* commander);
+
+	void UpdateSoundPlayer();
 };
 
 

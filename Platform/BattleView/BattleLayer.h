@@ -71,8 +71,6 @@ private:
 	void RemoveBattleView(BattleView* battleView);
 
 	void UpdateBattleViewSize();
-
-	void UpdateSoundPlayer();
 };
 
 

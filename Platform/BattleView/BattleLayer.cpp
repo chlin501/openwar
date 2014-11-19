@@ -1,6 +1,5 @@
 #include "BattleModel/BattleScenario.h"
 #include "BattleModel/BattleSimulator.h"
-#include "Audio/SoundPlayer.h"
 #include "Surface/Surface.h"
 #include "BattleHotspot.h"
 #include "BattleView.h"
@@ -22,8 +21,6 @@ BattleLayer::BattleLayer(Surface* surface) :
 	_scenario(nullptr),
 	_editorModel(nullptr)
 {
-	SoundPlayer::Initialize();
-	SoundPlayer::singleton->Pause();
 }
 
 
@@ -95,11 +92,6 @@ void BattleLayer::ResetCameraPosition()
 void BattleLayer::SetPlaying(bool value)
 {
 	_playing = value;
-
-	if (_playing)
-		SoundPlayer::singleton->Resume();
-	else
-		SoundPlayer::singleton->Pause();
 }
 
 
@@ -135,14 +127,6 @@ void BattleLayer::OnRenderLoop(double secondsSinceLastUpdate)
 			_scenario->Tick(secondsSinceLastUpdate);
 		else
 			_scenario->Tick(0);
-
-		if (_playing)
-			UpdateSoundPlayer();
-	}
-
-	for (BattleView* battleView : _battleViews)
-	{
-		battleView->AnimateMarkers((float)secondsSinceLastUpdate);
 	}
 }
 
@@ -219,51 +203,5 @@ void BattleLayer::UpdateBattleViewSize()
 
 			++index;
 		}
-	}
-}
-
-
-void BattleLayer::UpdateSoundPlayer()
-{
-	if (_playing && !_battleViews.empty())
-	{
-		int horseGallop = 0;
-		int horseTrot = 0;
-		int fighting = 0;
-		int infantryMarching = 0;
-		int infantryRunning = 0;
-
-		for (UnitCounter* unitMarker : _battleViews.front()->GetUnitCounters())
-		{
-			Unit* unit = unitMarker->_unit;
-			if (glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)
-			{
-				if (unit->stats.platformType == PlatformType::Cavalry)
-				{
-					if (unit->command.running)
-						++horseGallop;
-					else
-						++horseTrot;
-				}
-				else
-				{
-					if (unit->command.running)
-						++infantryRunning;
-					else
-						++infantryMarching;
-				}
-			}
-
-			if (unit->command.meleeTarget != nullptr)
-				++fighting;
-		}
-
-		SoundPlayer::singleton->UpdateInfantryWalking(infantryMarching != 0);
-		SoundPlayer::singleton->UpdateInfantryRunning(infantryRunning != 0);
-
-		SoundPlayer::singleton->UpdateCavalryWalking(horseTrot != 0);
-		SoundPlayer::singleton->UpdateCavalryRunning(horseGallop != 0);
-
-		SoundPlayer::singleton->UpdateFighting(_scenario->GetSimulator()->IsMelee());
 	}
 }

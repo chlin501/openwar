@@ -25,6 +25,7 @@
 #include "TextureResource.h"
 #include "BattleHotspot.h"
 #include "TerrainViewport.h"
+#include "Audio/SoundPlayer.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -789,9 +790,14 @@ template <class T> void AnimateMarkers(std::vector<T*>& markers, float seconds)
 
 void BattleView::OnRenderLoop(double secondsSinceLastUpdate)
 {
+	UpdateSoundPlayer();
+
 	_casualtyMarker->Animate((float)secondsSinceLastUpdate);
 
 	::AnimateMarkers(_movementMarkers, (float)secondsSinceLastUpdate);
+	::AnimateMarkers(_unitMarkers, (float)secondsSinceLastUpdate);
+	::AnimateMarkers(_shootingCounters, (float)secondsSinceLastUpdate);
+	::AnimateMarkers(_smokeMarkers, (float)secondsSinceLastUpdate);
 }
 
 
@@ -980,15 +986,6 @@ bounds1f BattleView::GetUnitIconSizeLimit() const
 
 
 
-
-void BattleView::AnimateMarkers(float seconds)
-{
-	::AnimateMarkers(_unitMarkers, seconds);
-	::AnimateMarkers(_shootingCounters, seconds);
-	::AnimateMarkers(_smokeMarkers, seconds);
-}
-
-
 void BattleView::AddShootingAndSmokeCounters(const Shooting& shooting)
 {
 	AddShootingCounter(shooting);
@@ -1082,4 +1079,47 @@ UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int team, Bat
 	}
 
 	return result;
+}
+
+
+void BattleView::UpdateSoundPlayer()
+{
+	int horseGallop = 0;
+	int horseTrot = 0;
+	int fighting = 0;
+	int infantryMarching = 0;
+	int infantryRunning = 0;
+
+	for (UnitCounter* unitMarker : GetUnitCounters())
+	{
+		Unit* unit = unitMarker->_unit;
+		if (glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)
+		{
+			if (unit->stats.platformType == PlatformType::Cavalry)
+			{
+				if (unit->command.running)
+					++horseGallop;
+				else
+					++horseTrot;
+			}
+			else
+			{
+				if (unit->command.running)
+					++infantryRunning;
+				else
+					++infantryMarching;
+			}
+		}
+
+		if (unit->command.meleeTarget != nullptr)
+			++fighting;
+	}
+
+	SoundPlayer::singleton->UpdateInfantryWalking(infantryMarching != 0);
+	SoundPlayer::singleton->UpdateInfantryRunning(infantryRunning != 0);
+
+	SoundPlayer::singleton->UpdateCavalryWalking(horseTrot != 0);
+	SoundPlayer::singleton->UpdateCavalryRunning(horseGallop != 0);
+
+	SoundPlayer::singleton->UpdateFighting(_simulator->IsMelee());
 }
