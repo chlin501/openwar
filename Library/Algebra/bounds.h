@@ -83,8 +83,8 @@ struct bounds2
 	glm::tvec2<T, P> radius() const {return glm::tvec2<T, P>((max.x - min.x) / 2, (max.y - min.y) / 2);}
 
 	bool empty() const {return min.x >= max.x || min.y >= max.y;}
-	bool contains(T x, T y) const {return min.x <= x && x <= max.x && min.y <= y && y <= max.y;}
 	bool contains(glm::tvec2<T, P> p) const {return min.x <= p.x && p.x <= max.x && min.y <= p.y && p.y <= max.y;}
+	bool contains(T x, T y) const {return min.x <= x && x <= max.x && min.y <= y && y <= max.y;}
 	bool intersects(const bounds2<T, P>& b) const {return x().intersects(b.x()) && y().intersects(b.y());}
 
 	bounds2 grow(T d) const {return bounds2<T, P>(min.x - d, min.y - d, max.x + d, max.y + d);}

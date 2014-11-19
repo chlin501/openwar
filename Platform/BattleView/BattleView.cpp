@@ -71,7 +71,7 @@ BattleView::BattleView(Surface* surface) : TerrainView(surface),
 	_textureUnitMarkers = new TextureResource(_gc, resource("Textures/UnitMarkers.png"));
 	_textureTouchMarker = new TextureResource(_gc, resource("Textures/TouchMarker.png"));
 
-	_billboardTexture = new BillboardTexture(_gc);
+	_billboardTexture = new BillboardTextureSheet(_gc);
 
 	Image image;
 	image.LoadFromResource(resource("Textures/Billboards.png"));
@@ -86,51 +86,51 @@ BattleView::BattleView(Surface* surface) : TerrainView(surface),
 
 	for (int i = 0; i < 8; ++i)
 	{
-		_billboardModel->_billboardTreeShapes[i] = _billboardTexture->AddShape(1);
+		_billboardModel->_billboardTreeShapes[i] = _billboardTexture->AddShape();
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardTreeShapes[i], 0, billboard_texcoords(i, 0, false));
 
-		_billboardModel->_billboardTreeShapes[i + 8] = _billboardTexture->AddShape(1);
+		_billboardModel->_billboardTreeShapes[i + 8] = _billboardTexture->AddShape();
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardTreeShapes[i + 8], 0, billboard_texcoords(i, 0, true));
 
-		_billboardModel->_billboardShapeCasualtyCav[i] = _billboardTexture->AddShape(1);
+		_billboardModel->_billboardShapeCasualtyCav[i] = _billboardTexture->AddShape();
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeCasualtyCav[i], 0, billboard_texcoords(i, 4, false));
 
-		_billboardModel->_billboardShapeCasualtyCav[i + 8] = _billboardTexture->AddShape(1);
+		_billboardModel->_billboardShapeCasualtyCav[i + 8] = _billboardTexture->AddShape();
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeCasualtyCav[i + 8], 0, billboard_texcoords(i, 4, true));
 	}
 
 	for (int i = 0; i < 4; ++i)
 	{
-		_billboardModel->_billboardShapeCasualtyAsh[i] = _billboardTexture->AddShape(1);
+		_billboardModel->_billboardShapeCasualtyAsh[i] = _billboardTexture->AddShape();
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeCasualtyAsh[i], 0, billboard_texcoords(i, 3, false));
 
-		_billboardModel->_billboardShapeCasualtyAsh[i + 4] = _billboardTexture->AddShape(1);
+		_billboardModel->_billboardShapeCasualtyAsh[i + 4] = _billboardTexture->AddShape();
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeCasualtyAsh[i + 4], 0, billboard_texcoords(i, 3, false));
 
-		_billboardModel->_billboardShapeCasualtySam[i] = _billboardTexture->AddShape(1);
+		_billboardModel->_billboardShapeCasualtySam[i] = _billboardTexture->AddShape();
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeCasualtySam[i], 0, billboard_texcoords(i + 4, 3, false));
 
-		_billboardModel->_billboardShapeCasualtySam[i + 4] = _billboardTexture->AddShape(1);
+		_billboardModel->_billboardShapeCasualtySam[i + 4] = _billboardTexture->AddShape();
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeCasualtySam[i + 4], 0, billboard_texcoords(i + 4, 3, false));
 	}
 
-	_billboardModel->_billboardShapeFighterSamBlue = _billboardTexture->AddShape(1);
+	_billboardModel->_billboardShapeFighterSamBlue = _billboardTexture->AddShape();
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterSamBlue, 0, billboard_texcoords(1, 1, false));
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterSamBlue, 180, billboard_texcoords(2, 1, false));
 
-	_billboardModel->_billboardShapeFighterSamRed = _billboardTexture->AddShape(1);
+	_billboardModel->_billboardShapeFighterSamRed = _billboardTexture->AddShape();
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterSamRed, 0, billboard_texcoords(1, 2, false));
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterSamRed, 180, billboard_texcoords(2, 2, false));
 
-	_billboardModel->_billboardShapeFighterAshBlue = _billboardTexture->AddShape(1);
+	_billboardModel->_billboardShapeFighterAshBlue = _billboardTexture->AddShape();
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterAshBlue, 0, billboard_texcoords(3, 1, false));
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterAshBlue, 180, billboard_texcoords(4, 1, false));
 
-	_billboardModel->_billboardShapeFighterAshRed = _billboardTexture->AddShape(1);
+	_billboardModel->_billboardShapeFighterAshRed = _billboardTexture->AddShape();
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterAshRed, 0, billboard_texcoords(3, 2, false));
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterAshRed, 180, billboard_texcoords(4, 2, false));
 
-	_billboardModel->_billboardShapeFighterCavBlue = _billboardTexture->AddShape(1);
+	_billboardModel->_billboardShapeFighterCavBlue = _billboardTexture->AddShape();
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterCavBlue,  45, billboard_texcoords(7, 1, false));
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterCavBlue,  90, billboard_texcoords(6, 1, false));
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterCavBlue, 135, billboard_texcoords(5, 1, false));
@@ -138,7 +138,7 @@ BattleView::BattleView(Surface* surface) : TerrainView(surface),
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterCavBlue, 270, billboard_texcoords(6, 1, true));
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterCavBlue, 315, billboard_texcoords(7, 1, true));
 
-	_billboardModel->_billboardShapeFighterCavRed = _billboardTexture->AddShape(1);
+	_billboardModel->_billboardShapeFighterCavRed = _billboardTexture->AddShape();
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterCavRed,  45, billboard_texcoords(7, 2, false));
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterCavRed,  90, billboard_texcoords(6, 2, false));
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterCavRed, 135, billboard_texcoords(5, 2, false));
@@ -149,7 +149,7 @@ BattleView::BattleView(Surface* surface) : TerrainView(surface),
 
 	for (int i = 0; i < 8; ++i)
 	{
-		_billboardModel->_billboardShapeSmoke[i] = _billboardTexture->AddShape(1);
+		_billboardModel->_billboardShapeSmoke[i] = _billboardTexture->AddShape();
 		_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeSmoke[i], 0, billboard_texcoords(i, 7, false));
 	}
 

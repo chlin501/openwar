@@ -36,7 +36,7 @@ class BattleView : public TerrainView, public BattleObserver, RenderLoopObserver
 
 	glm::vec3 _lightNormal;
 
-	BillboardTexture* _billboardTexture;
+	BillboardTextureSheet* _billboardTexture;
 	BillboardModel* _billboardModel;
 	BillboardTextureShape* _textureBillboardShape;
 	BillboardTextureShape* _textureBillboardShape1;

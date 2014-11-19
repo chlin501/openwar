@@ -6,10 +6,11 @@
 #include "BillboardTextureShape.h"
 #include "Graphics/RenderCall.h"
 #include "Algebra/geometry.h"
+#include "BillboardTextureShader.h"
 
 
 
-BillboardTexture::BillboardTexture(GraphicsContext* gc) :
+BillboardTextureSheet::BillboardTextureSheet(GraphicsContext* gc) :
 	_texture(nullptr),
 	_shapeCount(0)
 {
@@ -17,13 +18,13 @@ BillboardTexture::BillboardTexture(GraphicsContext* gc) :
 }
 
 
-BillboardTexture::~BillboardTexture()
+BillboardTextureSheet::~BillboardTextureSheet()
 {
 	delete _texture;
 }
 
 
-int BillboardTexture::AddSheet(const Image& image)
+int BillboardTextureSheet::AddSheet(const Image& image)
 {
 	_texture->LoadTextureFromImage(image);
 
@@ -31,13 +32,13 @@ int BillboardTexture::AddSheet(const Image& image)
 }
 
 
-int BillboardTexture::AddShape(int sheet)
+int BillboardTextureSheet::AddShape()
 {
 	return ++_shapeCount;
 }
 
 
-void BillboardTexture::SetTexCoords(int shape, float facing, affine2 const & texcoords)
+void BillboardTextureSheet::SetTexCoords(int shape, float facing, affine2 const & texcoords)
 {
 	if (_items.find(shape) != _items.end())
 		_items[shape].push_back(item(shape, facing, texcoords));
@@ -46,7 +47,7 @@ void BillboardTexture::SetTexCoords(int shape, float facing, affine2 const & tex
 }
 
 
-affine2 BillboardTexture::GetTexCoords(int shape, float facing)
+affine2 BillboardTextureSheet::GetTexCoords(int shape, float facing)
 {
 	affine2 result;
 	float diff = 360;
@@ -70,54 +71,6 @@ affine2 BillboardTexture::GetTexCoords(int shape, float facing)
 	}
 
 	return result;
-}
-
-
-BillboardTextureShader::BillboardTextureShader(GraphicsContext* gc) : ShaderProgram(
-	VERTEX_SHADER
-	({
-		uniform mat4 transform;
-		uniform vec3 upvector;
-		uniform float viewport_height;
-		uniform float min_point_size;
-		uniform float max_point_size;
-		attribute vec3 position;
-		attribute float height;
-		attribute vec2 texcoord;
-		attribute vec2 texsize;
-		varying vec2 _texcoord;
-		varying vec2 _texsize;
-
-		void main()
-		{
-			vec3 position2 = position + height * 0.5 * viewport_height * upvector;
-			vec4 p = transform * vec4(position, 1);
-			vec4 q = transform * vec4(position2, 1);
-			float s = clamp(abs(q.y / q.w - p.y / p.w), min_point_size, max_point_size);
-
-			_texcoord = texcoord;
-			_texsize = texsize;
-
-			gl_Position = p;
-			gl_PointSize = s;
-		}
-	}),
-	FRAGMENT_SHADER
-	({
-		uniform sampler2D texture;
-		varying vec2 _texcoord;
-		varying vec2 _texsize;
-
-		void main()
-		{
-			vec4 color = texture2D(texture, _texcoord + gl_PointCoord * _texsize);
-
-			gl_FragColor = color;
-		}
-	}))
-{
-	_blend_sfactor = GL_ONE;
-	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }
 
 

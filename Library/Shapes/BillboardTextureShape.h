@@ -16,7 +16,7 @@
 #include "VertexShape.h"
 
 
-class BillboardTexture
+class BillboardTextureSheet
 {
 	struct item
 	{
@@ -31,13 +31,13 @@ class BillboardTexture
 	int _shapeCount;
 
 public:
-	BillboardTexture(GraphicsContext* gc);
-	~BillboardTexture();
+	BillboardTextureSheet(GraphicsContext* gc);
+	~BillboardTextureSheet();
 
 	Texture* GetTexture() const { return _texture; }
 
 	int AddSheet(const Image& image);
-	int AddShape(int sheet);
+	int AddShape();
 
 	void SetTexCoords(int shape, float facing, const affine2& texcoords);
 
@@ -59,7 +59,7 @@ struct Billboard
 
 struct BillboardModel
 {
-	BillboardTexture* texture;
+	BillboardTextureSheet* texture;
 	std::vector<Billboard> staticBillboards;
 	std::vector<Billboard> dynamicBillboards;
 
@@ -74,25 +74,6 @@ struct BillboardModel
 	int _billboardShapeFighterCavBlue;
 	int _billboardShapeFighterCavRed;
 	int _billboardShapeSmoke[8];
-};
-
-
-class BillboardTextureShader : public ShaderProgram
-{
-	friend class GraphicsContext;
-	/*
-		attribute vec3 position;
-		attribute float height;
-		attribute vec2 texcoord;
-		attribute vec2 texsize;
-
-		uniform mat4 transform;
-		uniform vec3 upvector;
-		uniform float viewport_height;
-		uniform float min_point_size;
-		uniform float max_point_size;
-	 */
-	BillboardTextureShader(GraphicsContext* gc);
 };
 
 
