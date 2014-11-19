@@ -384,7 +384,7 @@ void ButtonGrid::Render()
 			if (buttonItem->GetButtonText() != nullptr)
 			{
 				buttonItem->buttonString.SetString(buttonItem->GetButtonText());
-				buttonItem->buttonString.Bounds_Min.SetValue(buttonItem->GetBounds().mid() - 0.5f * MeasureStringWidget(&buttonItem->buttonString));
+				buttonItem->buttonString.SetPosition(buttonItem->GetBounds().mid() - 0.5f * MeasureStringWidget(&buttonItem->buttonString));
 				buttonItem->buttonString.OrderFront();
 			}
 		}

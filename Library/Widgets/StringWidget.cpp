@@ -38,9 +38,20 @@ static bool ContainsArabic(const std::wstring& ws)
 StringWidget::StringWidget(WidgetOwner* widgetOwner) : Widget(widgetOwner),
 	_string(),
 	_color(1, 1, 1, 1),
-	_width(0),
-	Bounds_Min(GetLayoutContext())
+	_width(0)
 {
+}
+
+
+glm::vec2 StringWidget::GetPosition() const
+{
+	return _position;
+}
+
+
+void StringWidget::SetPosition(glm::vec2 value)
+{
+	_position = value;
 }
 
 
@@ -144,7 +155,7 @@ void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 
 void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur)
 {
-	glm::vec2 offset = Bounds_Min.GetValue();
+	glm::vec2 offset = _position;
 	glm::vec2 p(0, 0);
 
 	float alpha = color.a;
