@@ -103,7 +103,7 @@ void WidgetView::OnTouchBegin(Touch* touch)
 
 void WidgetView::Render()
 {
-	_viewport->SetBounds(Bounds.GetValue());
+	_viewport->SetBounds(GetBounds());
 	_viewport->UseViewport();
 
 	RenderCall<WidgetShader>(_gc)

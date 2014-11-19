@@ -8,9 +8,20 @@
 
 
 ImageWidget::ImageWidget(WidgetOwner* widgetOwner) : Widget(widgetOwner),
-	_alpha(1),
-	Bounds(GetLayoutContext())
+	_alpha(1)
 {
+}
+
+
+bounds2f ImageWidget::GetBounds() const
+{
+	return _bounds;
+}
+
+
+void ImageWidget::SetBounds(const bounds2f& value)
+{
+	_bounds = value;
 }
 
 
@@ -71,7 +82,7 @@ void ImageWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 	if (_textureImage == nullptr)
 		return;
 
-	bounds2f outer = Bounds.GetValue();
+	bounds2f outer = _bounds;
 	if (outer.empty())
 		return;
 

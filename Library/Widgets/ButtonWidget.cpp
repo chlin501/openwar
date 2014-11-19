@@ -9,13 +9,24 @@ ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
 	_borderImage(this),
 	_iconImage(this),
 	_titleString(this),
-	_disabled(false),
-	Bounds(GetLayoutContext())
+	_disabled(false)
 {
 	_hotspot = std::make_shared<ButtonHotspot>([this](glm::vec2 position) {
 		glm::vec2 p = GetWidgetView()->GetScrollerViewport()->GlobalToLocal(position);
-		return Bounds.GetValue().contains(p);
+		return _bounds.contains(p);
 	});
+}
+
+
+bounds2f ButtonWidget::GetBounds() const
+{
+	return _bounds;
+}
+
+
+void ButtonWidget::SetBounds(const bounds2f& value)
+{
+	_bounds = value;
 }
 
 
@@ -161,9 +172,7 @@ void ButtonWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 
 void ButtonWidget::UpdateLayout()
 {
-	bounds2f bounds = Bounds.GetValue();
-
-	_borderImage.Bounds.SetValue(bounds);
-	_iconImage.Bounds.SetValue(bounds);
-	_titleString.SetPosition(bounds.mid() - 0.5f * GetWidgetView()->MeasureStringWidget(&_titleString));
+	_borderImage.SetBounds(_bounds);
+	_iconImage.SetBounds(_bounds);
+	_titleString.SetPosition(_bounds.mid() - 0.5f * GetWidgetView()->MeasureStringWidget(&_titleString));
 }

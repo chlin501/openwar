@@ -13,16 +13,18 @@ class View
 {
 	friend class Surface;
 	Surface* _surface;
+	bounds2f _bounds;
 	bool _visible;
 
 public:
-	LayoutBounds Bounds;
-
 	View(Surface* surface);
 	virtual ~View();
 
 	Surface* GetSurface() const;
 	GraphicsContext* GetGraphicsContext() const;
+
+	bounds2f GetBounds() const;
+	void SetBounds(const bounds2f& value);
 
 	bool IsVisible() const;
 	void SetVisible(bool value);

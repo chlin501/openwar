@@ -6,8 +6,7 @@
 
 View::View(Surface* surface) :
 	_surface(surface),
-	_visible(true),
-	Bounds(surface)
+	_visible(true)
 {
 	_surface->_views.insert(_surface->_views.begin(), this);
 }
@@ -33,6 +32,18 @@ Surface* View::GetSurface() const
 GraphicsContext* View::GetGraphicsContext() const
 {
 	return _surface != nullptr ? _surface->GetGraphicsContext() : nullptr;
+}
+
+
+bounds2f View::GetBounds() const
+{
+	return _bounds;
+}
+
+
+void View::SetBounds(const bounds2f& value)
+{
+	_bounds = value;
 }
 
 

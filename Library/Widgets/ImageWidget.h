@@ -12,15 +12,17 @@
 
 class ImageWidget : public Widget
 {
+	bounds2f _bounds;
 	std::shared_ptr<TextureImage> _textureImage;
 	BorderInset _inset;
 	glm::vec4 _colorize;
 	float _alpha;
 
 public:
-	LayoutBounds Bounds;
-
 	ImageWidget(WidgetOwner* widgetOwner);
+
+	bounds2f GetBounds() const;
+	void SetBounds(const bounds2f& value);
 
 	std::shared_ptr<TextureImage> GetTextureImage() const;
 	void SetTextureImage(std::shared_ptr<TextureImage> textureImage);
@@ -44,7 +46,7 @@ private:
 	void AppendRectangle(std::vector<Vertex_2f_2f_4f_1f>& vertices, bounds2f xy, bounds2f uv);
 
 private:
-	ImageWidget(const ImageWidget&) : Widget(nullptr), Bounds(nullptr) { }
+	ImageWidget(const ImageWidget&) : Widget(nullptr) { }
 	ImageWidget& operator=(const ImageWidget&) { return *this; }
 };
 

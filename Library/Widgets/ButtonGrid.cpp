@@ -345,7 +345,7 @@ void ButtonGrid::Render()
 {
 	for (ButtonArea* buttonArea : _buttonAreas)
 	{
-		buttonArea->backgroundImage.Bounds.SetValue(buttonArea->_bounds.grow(10));
+		buttonArea->backgroundImage.SetBounds(buttonArea->_bounds.grow(10));
 		buttonArea->backgroundImage.SetInset(BorderInset(32));
 		buttonArea->backgroundImage.SetTextureImage(_buttonRendering->buttonBackground);
 		buttonArea->backgroundImage.OrderFront();
@@ -354,7 +354,7 @@ void ButtonGrid::Render()
 		{
 			if (buttonItem->IsSelected())
 			{
-				buttonItem->selectedImage.Bounds.SetValue(buttonItem->GetBounds().grow(10));
+				buttonItem->selectedImage.SetBounds(buttonItem->GetBounds().grow(10));
 				buttonItem->selectedImage.SetInset(BorderInset(32));
 				buttonItem->selectedImage.SetTextureImage(_buttonRendering->buttonSelected);
 				buttonItem->selectedImage.OrderFront();
@@ -366,7 +366,7 @@ void ButtonGrid::Render()
 				bounds_xy -= bounds_xy.mid();
 				bounds_xy += buttonItem->GetBounds().mid();
 
-				buttonItem->buttonImage.Bounds.SetValue(bounds_xy);
+				buttonItem->buttonImage.SetBounds(bounds_xy);
 				buttonItem->buttonImage.SetTextureImage(buttonItem->GetButtonIcon());
 				buttonItem->buttonImage.SetAlpha(buttonItem->IsDisabled() ? 0.5f : 1.0f);
 
@@ -375,7 +375,7 @@ void ButtonGrid::Render()
 
 			if (buttonItem->IsHighlight())
 			{
-				buttonItem->highlightImage.Bounds.SetValue(buttonItem->GetBounds());
+				buttonItem->highlightImage.SetBounds(buttonItem->GetBounds());
 				buttonArea->backgroundImage.SetInset(BorderInset(32));
 				buttonItem->highlightImage.SetTextureImage(_buttonRendering->buttonHighlight);
 				buttonItem->highlightImage.OrderFront();

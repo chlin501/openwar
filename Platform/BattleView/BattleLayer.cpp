@@ -271,7 +271,7 @@ void BattleLayer::UpdateBattleViewSize()
 
 			bounds2f viewport_bounds(viewport_x, viewport_y.mix(k1), viewport_y.mix(k2));
 
-			battleView->Bounds.SetValue(viewport_bounds);
+			battleView->SetBounds(viewport_bounds);
 
 			++index;
 		}

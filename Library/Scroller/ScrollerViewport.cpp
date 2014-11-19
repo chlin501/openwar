@@ -52,7 +52,7 @@ static float ClampContentOffset(float value, float contentSize, bounds1i viewpor
 
 glm::vec2 ScrollerViewport::ClampContentOffset(glm::vec2 value) const
 {
-	bounds2f viewportBounds = GetBounds();
+	bounds2i viewportBounds = GetBounds();
 	return glm::vec2(
 		::ClampContentOffset(value.x, _contentSize.x, viewportBounds.x()),
 		::ClampContentOffset(value.y, _contentSize.y, viewportBounds.y()));
@@ -73,7 +73,8 @@ void ScrollerViewport::SetContentSize(glm::vec2 value)
 
 bounds2f ScrollerViewport::GetVisibleBounds() const
 {
-	return bounds2f(0, 0, GetBounds().x().size(), GetBounds().y().size()) + _contentOffset;
+	bounds2i bounds = GetBounds();
+	return bounds2f(0, 0, bounds.x().size(), bounds.y().size()) + _contentOffset;
 }
 
 
