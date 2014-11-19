@@ -27,6 +27,8 @@ public:
 	glm::vec2 GetPosition() const;
 	void SetPosition(glm::vec2 value);
 
+	glm::vec2 MeasureSize() const;
+
 	const FontDescriptor& GetFontDescriptor() const;
 	void SetFontDescriptor(const FontDescriptor& fontDescriptor);
 

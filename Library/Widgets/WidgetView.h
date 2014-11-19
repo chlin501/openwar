@@ -14,9 +14,7 @@
 class GraphicsContext;
 class ScrollerHotspot;
 class ScrollerViewport;
-class StringWidget;
 class TextureAtlas;
-class WidgetShape;
 
 
 class WidgetView : public View, public WidgetOwner
@@ -42,8 +40,6 @@ public:
 	ScrollerViewport* GetScrollerViewport() const;
 
 	TextureAtlas* GetTextureAtlas() const;
-
-	glm::vec2 MeasureStringWidget(StringWidget* stringWidget) const;
 
 	virtual Viewport* GetViewport() const;
 

@@ -7,13 +7,12 @@
 #include "RenderCall.h"
 #include "ScrollerHotspot.h"
 #include "ScrollerViewport.h"
-#include "StringWidget.h"
-#include "Widget.h"
-#include "WidgetShader.h"
+#include "Surface.h"
 #include "TextureAtlas.h"
 #include "TextureFont.h"
 #include "Touch.h"
-#include "Surface.h"
+#include "Widget.h"
+#include "WidgetShader.h"
 
 
 /* WidgetShape::WidgetVertexBuffer */
@@ -61,14 +60,6 @@ ScrollerViewport* WidgetView::GetScrollerViewport() const
 TextureAtlas* WidgetView::GetTextureAtlas() const
 {
 	return _textureAtlas;
-}
-
-
-glm::vec2 WidgetView::MeasureStringWidget(StringWidget* stringWidget) const
-{
-	TextureFont* textureFont = _textureAtlas->GetTextureFont(stringWidget->GetFontDescriptor());
-
-	return textureFont->MeasureText(stringWidget->GetString());
 }
 
 

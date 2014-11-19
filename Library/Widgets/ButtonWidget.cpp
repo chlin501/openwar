@@ -174,5 +174,5 @@ void ButtonWidget::UpdateLayout()
 {
 	_borderImage.SetBounds(_bounds);
 	_iconImage.SetBounds(_bounds);
-	_titleString.SetPosition(_bounds.mid() - 0.5f * GetWidgetView()->MeasureStringWidget(&_titleString));
+	_titleString.SetPosition(_bounds.mid() - 0.5f * _titleString.MeasureSize());
 }

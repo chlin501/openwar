@@ -55,6 +55,14 @@ void StringWidget::SetPosition(glm::vec2 value)
 }
 
 
+glm::vec2 StringWidget::MeasureSize() const
+{
+	TextureFont* textureFont = GetWidgetView()->GetTextureAtlas()->GetTextureFont(_fontDescriptor);
+
+	return textureFont->MeasureText(_string.c_str());
+}
+
+
 const FontDescriptor& StringWidget::GetFontDescriptor() const
 {
 	return _fontDescriptor;
