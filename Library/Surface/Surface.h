@@ -6,8 +6,7 @@
 #define Surface_H
 
 #include <vector>
-
-#include "Layout.h"
+#include <glm/glm.hpp>
 
 class GraphicsContext;
 class Touch;
@@ -15,7 +14,7 @@ class View;
 class Viewport;
 
 
-class Surface : public LayoutContext
+class Surface
 {
 	friend class View;
 	GraphicsContext* _gc;

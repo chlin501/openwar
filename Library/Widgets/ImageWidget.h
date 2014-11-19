@@ -7,7 +7,6 @@
 
 #include "Widget.h"
 #include "TextureAtlas.h"
-#include "Layout.h"
 
 
 class ImageWidget : public Widget

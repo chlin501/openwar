@@ -9,7 +9,6 @@
 #include <vector>
 
 class GraphicsContext;
-class LayoutContext;
 class Touch;
 class WidgetOwner;
 class WidgetView;
@@ -28,7 +27,6 @@ public:
 	WidgetOwner* GetWidgetOwner() const;
 	WidgetView* GetWidgetView() const;
 	GraphicsContext* GetGraphicsContext() const;
-	LayoutContext* GetLayoutContext() const;
 
 	bool IsVisible() const;
 	void SetVisible(bool value);

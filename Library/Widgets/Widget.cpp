@@ -81,13 +81,6 @@ WidgetView* Widget::GetWidgetView() const
 }
 
 
-LayoutContext* Widget::GetLayoutContext() const
-{
-	WidgetView* widgetView = GetWidgetView();
-	return widgetView != nullptr ? widgetView->GetSurface() : nullptr;
-}
-
-
 GraphicsContext* Widget::GetGraphicsContext() const
 {
 	WidgetView* widgetView = GetWidgetView();
