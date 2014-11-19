@@ -152,7 +152,7 @@ void StringWidget::OnTouchBegin(Touch* touch)
 }
 
 
-void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
+void StringWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	if (_glow.a != 0)
 		AppendVertices(vertices, _glow, 2);

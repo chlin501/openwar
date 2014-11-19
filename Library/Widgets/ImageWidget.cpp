@@ -77,7 +77,7 @@ void ImageWidget::OnTouchBegin(Touch* touch)
 }
 
 
-void ImageWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
+void ImageWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	if (_textureImage == nullptr)
 		return;

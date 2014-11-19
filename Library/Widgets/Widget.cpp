@@ -64,7 +64,7 @@ void WidgetOwner::CallWidgets_AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& ve
 	{
 		Widget* widget = *i;
 		if (widget->IsVisible())
-			widget->AppendVertices(vertices);
+			widget->RenderVertices(vertices);
 	}
 }
 
@@ -187,7 +187,7 @@ void WidgetGroup::OnTouchBegin(Touch* touch)
 }
 
 
-void WidgetGroup::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
+void WidgetGroup::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	CallWidgets_AppendVertices(vertices);
 }

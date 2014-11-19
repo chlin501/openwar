@@ -39,7 +39,7 @@ public:
 	virtual void OnTouchEnter(Touch* touch) = 0;
 	virtual void OnTouchBegin(Touch* touch) = 0;
 
-	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices) = 0;
+	virtual void RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices) = 0;
 
 private:
 	Widget(const Widget&) { }
@@ -76,7 +76,7 @@ public:
 	virtual void OnTouchEnter(Touch* touch);
 	virtual void OnTouchBegin(Touch* touch);
 
-	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
+	virtual void RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
 protected:
 	virtual WidgetView* FindWidgetView();

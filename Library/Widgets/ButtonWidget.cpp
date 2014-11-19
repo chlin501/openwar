@@ -15,6 +15,8 @@ ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
 		glm::vec2 p = GetWidgetView()->GetScrollerViewport()->GlobalToLocal(position);
 		return _bounds.contains(p);
 	});
+
+	_titleString.SetGlow(glm::vec4(0, 0, 0, 1));
 }
 
 
@@ -122,10 +124,16 @@ void ButtonWidget::OnTouchBegin(Touch* touch)
 }
 
 
-void ButtonWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
+void ButtonWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
-	UpdateLayout();
+	RefreshContent();
+	WidgetGroup::RenderVertices(vertices);
+}
 
+
+void ButtonWidget::RefreshContent()
+{
+	_borderImage.SetBounds(_bounds);
 	if (_disabled)
 	{
 		if (_backgroundDisabled != nullptr)
@@ -163,16 +171,8 @@ void ButtonWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 		_borderImage.SetAlpha(1);
 	}
 
-	_titleString.SetGlow(glm::vec4(0, 0, 0, 1));
-	_titleString.SetAlpha(_disabled ? 0.5f : 1.0f);
-
-	WidgetGroup::AppendVertices(vertices);
-}
-
-
-void ButtonWidget::UpdateLayout()
-{
-	_borderImage.SetBounds(_bounds);
 	_iconImage.SetBounds(_bounds);
+
 	_titleString.SetPosition(_bounds.mid() - 0.5f * _titleString.MeasureSize());
+	_titleString.SetAlpha(_disabled ? 0.5f : 1.0f);
 }

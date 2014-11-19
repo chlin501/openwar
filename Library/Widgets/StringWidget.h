@@ -51,7 +51,7 @@ public:
 	virtual void OnTouchEnter(Touch* touch);
 	virtual void OnTouchBegin(Touch* touch);
 
-	virtual void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
+	virtual void RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
 private:
 	void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur);
