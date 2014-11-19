@@ -92,11 +92,19 @@ glm::vec2 ScrollerViewport::GlobalToLocal(glm::vec2 value) const
 
 glm::vec2 ScrollerViewport::LocalToNormalized(glm::vec2 value) const
 {
-	return 2.0f * (value - _contentOffset) / (glm::vec2)GetBounds().size() - 1.0f;
+	glm::ivec2 size = GetBounds().size();
+	if (size.x == 0 || size.y == 0)
+		return glm::vec2(-1, -1);
+
+	return 2.0f * (value - _contentOffset) / (glm::vec2)size - 1.0f;
 }
 
 
 glm::vec2 ScrollerViewport::NormalizedToLocal(glm::vec2 value) const
 {
-	return _contentOffset + (value + 1.0f) / 2.0f * (glm::vec2)GetBounds().size();
+	glm::ivec2 size = GetBounds().size();
+	if (size.x == 0 || size.y == 0)
+		return glm::vec2(0, 0);
+
+	return _contentOffset + (value + 1.0f) / 2.0f * (glm::vec2)size;
 }

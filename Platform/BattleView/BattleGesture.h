@@ -34,8 +34,6 @@ class BattleGesture : public Gesture
 	bool _allowTargetEnemyUnit;
 
 public:
-	static bool disableUnitTracking;
-
 	BattleGesture(BattleHotspot* hotspot);
 	virtual ~BattleGesture();
 

@@ -25,9 +25,6 @@
 #define MODIFIER_AREA_RADIUS_MAX 25.0f // meters
 
 
-bool BattleGesture::disableUnitTracking = false;
-
-
 BattleGesture::BattleGesture(BattleHotspot* hotspot) :
 	_hotspot(hotspot),
 	_tappedUnitCenter(false),
@@ -546,9 +543,6 @@ int BattleGesture::GetFlipSign() const
 
 Unit* BattleGesture::FindCommandableUnit(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
-	if (disableUnitTracking)
-		return nullptr;
-
 	Unit* unitByPosition = FindCommandableUnitByCurrentPosition(screenPosition, terrainPosition);
 	Unit* unitByDestination = FindCommandableUnitByFuturePosition(screenPosition, terrainPosition);
 	Unit* unitByModifier = FindCommandableUnitByModifierArea(screenPosition, terrainPosition);

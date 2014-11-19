@@ -370,8 +370,14 @@ static float random_float()
 
 void BattleView::Initialize()
 {
-	InitializeTerrainTrees();
+	bounds2f terrainBounds = _simulator->GetHeightMap()->GetBounds();
 
+	GetTerrainViewport()->SetBounds(GetBounds());
+	GetScrollerViewport()->SetBounds(GetBounds());
+	GetTerrainViewport()->SetTerrainBounds(_simulator->GetHeightMap()->GetBounds());
+	GetTerrainViewport()->SetCameraPosition(glm::vec3(terrainBounds.mid(), 0.3f * glm::length(terrainBounds.size())));
+
+	InitializeTerrainTrees();
 	InitializeCameraPosition();
 }
 
