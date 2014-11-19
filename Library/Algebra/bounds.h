@@ -65,6 +65,7 @@ struct bounds2
 	bounds2(bounds1<T, P> x, T min_y, T max_y) : min(x.min, min_y), max(x.max, max_y) {}
 	bounds2(glm::tvec2<T, P> min_, glm::tvec2<T, P> max_) : min(min_), max(max_) {}
 	bounds2(bounds1<T, P> x, bounds1<T, P> y) : min(x.min, y.min), max(x.max, y.max) {}
+	bounds2(T x, T y) : min(x, y), max(x, y) {}
 
 	template <class T2> operator bounds2<T2, P>() const { return bounds2<T2, P>((glm::tvec2<T2, P>)min, (glm::tvec2<T2, P>)max); }
 
