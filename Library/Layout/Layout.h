@@ -11,40 +11,6 @@ public:
 };
 
 
-class LayoutPoint
-{
-	LayoutContext* _context;
-	glm::vec2 _value;
-
-public:
-	LayoutPoint(LayoutContext* context);
-
-	glm::vec2 GetValue() const;
-	void SetValue(const glm::vec2& value);
-
-private:
-	LayoutPoint(const LayoutPoint&) { }
-	LayoutPoint& operator=(const LayoutPoint&) { return *this; }
-};
-
-
-class LayoutSize
-{
-	LayoutContext* _context;
-	glm::vec2 _value;
-
-public:
-	LayoutSize(LayoutContext* context);
-
-	glm::vec2 GetValue() const;
-	void SetValue(const glm::vec2& value);
-
-private:
-	LayoutSize(const LayoutSize&) { }
-	LayoutSize& operator=(const LayoutSize&) { return *this; }
-};
-
-
 class LayoutBounds
 {
 	LayoutContext* _context;

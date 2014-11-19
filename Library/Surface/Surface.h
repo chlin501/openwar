@@ -20,19 +20,25 @@ class Surface : public LayoutContext
 	friend class View;
 	GraphicsContext* _gc;
 	std::vector<View*> _views;
+	glm::vec2 _size;
 
 public:
-	LayoutSize Size;
-
 	Surface(GraphicsContext* gc);
 	virtual ~Surface();
 
 	GraphicsContext* GetGraphicsContext() const;
 
+	glm::vec2 GetSize() const;
+	void SetSize(glm::vec2 value);
+
 	void NotifyViewsOfTouchEnter(Touch* touch);
 	void NotifyViewsOfTouchBegin(Touch* touch);
 
 	virtual void Render();
+
+private:
+	Surface(const Surface&) { }
+	Surface& operator=(const Surface&) { return *this; }
 };
 
 

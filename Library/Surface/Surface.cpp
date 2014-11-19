@@ -9,8 +9,7 @@
 
 
 Surface::Surface(GraphicsContext* gc) :
-	_gc(gc),
-	Size(this)
+	_gc(gc)
 {
 }
 
@@ -25,6 +24,18 @@ Surface::~Surface()
 GraphicsContext* Surface::GetGraphicsContext() const
 {
 	return _gc;
+}
+
+
+glm::vec2 Surface::GetSize() const
+{
+	return _size;
+}
+
+
+void Surface::SetSize(glm::vec2 value)
+{
+	_size = value;
 }
 
 

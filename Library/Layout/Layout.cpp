@@ -10,48 +10,6 @@ LayoutContext::~LayoutContext()
 }
 
 
-/* LayoutPoint */
-
-
-LayoutPoint::LayoutPoint(LayoutContext* context) :
-	_context(context)
-{
-}
-
-
-glm::vec2 LayoutPoint::GetValue() const
-{
-	return _value;
-}
-
-
-void LayoutPoint::SetValue(const glm::vec2& value)
-{
-	_value = value;
-}
-
-
-/* LayoutSize */
-
-
-LayoutSize::LayoutSize(LayoutContext* context) :
-	_context(context)
-{
-}
-
-
-glm::vec2 LayoutSize::GetValue() const
-{
-	return _value;
-}
-
-
-void LayoutSize::SetValue(const glm::vec2& value)
-{
-	_value = value;
-}
-
-
 /* LayoutBounds */
 
 

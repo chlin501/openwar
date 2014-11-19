@@ -205,7 +205,7 @@ void Window::ProcessWindow(const SDL_WindowEvent& event)
 	SDL_GetWindowPosition(_window, &x, &y);
 	SDL_GetWindowSize(_window, &w, &h);
 
-	_surface->Size.SetValue(glm::vec2(w, h));
+	_surface->SetSize(glm::vec2(w, h));
 }
 
 
@@ -423,7 +423,7 @@ void Window::ProcessMouseWheel(const SDL_MouseWheelEvent& event)
 
 void Window::Update()
 {
-	_surface->Size.SetValue((glm::vec2)GetWindowSize());
+	_surface->SetSize((glm::vec2)GetWindowSize());
 
 	std::chrono::system_clock::time_point timestamp = std::chrono::system_clock::now();
 	double secondsSinceTimeStart = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(timestamp - _timestart).count();
@@ -474,7 +474,7 @@ glm::vec2 Window::ToPosition(const SDL_TouchFingerEvent& event)
 	if (_surface == nullptr)
 		return glm::vec2();
 
-	return _surface->Size.GetValue() * glm::vec2(event.x, 1.0f - event.y);
+	return _surface->GetSize() * glm::vec2(event.x, 1.0f - event.y);
 }
 
 
