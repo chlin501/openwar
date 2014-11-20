@@ -146,7 +146,6 @@ BattleView::BattleView(Surface* surface) : TerrainView(surface),
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterCavRed, 270, billboard_texcoords(6, 2, true));
 	_billboardTexture->SetTexCoords(_billboardModel->_billboardShapeFighterCavRed, 315, billboard_texcoords(7, 2, true));
 
-
 	for (int i = 0; i < 8; ++i)
 	{
 		_billboardModel->_billboardShapeSmoke[i] = _billboardTexture->AddShape();
@@ -163,6 +162,8 @@ BattleView::BattleView(Surface* surface) : TerrainView(surface),
 	_gradientTriangleStripVertices = new VertexShape_3f_4f();
 	_colorBillboardVertices = new VertexShape_3f_4f_1f();
 	_textureTriangleVertices = new VertexShape_3f_2f();
+
+	_smoothTerrainSky = new SmoothTerrainSky(_gc);
 }
 
 
@@ -228,10 +229,6 @@ void BattleView::SetSimulator(BattleSimulator* simulator)
 	delete _casualtyMarker;
 	_casualtyMarker = new CasualtyMarker(_simulator);
 
-	GroundMap* groundMap = simulator->GetGroundMap();
-	if (groundMap != nullptr)
-		OnSetGroundMap(simulator->GetGroundMap());
-
 	_simulator->AddObserver(this);
 }
 
@@ -248,7 +245,10 @@ static bool ShouldEnableRenderEdges(GraphicsContext* gc)
 
 void BattleView::OnSetGroundMap(GroundMap* groundMap)
 {
-	SmoothGroundMap* smoothGroundMap = dynamic_cast<SmoothGroundMap*>(groundMap);
+	SmoothGroundMap*  smoothGroundMap = dynamic_cast<SmoothGroundMap*>(groundMap);
+	if (smoothGroundMap == nullptr)
+		return;
+
 	/*if (smoothGroundMap != nullptr
 		&& _smoothTerrainSurface != nullptr
 		&& smoothGroundMap->GetImage() == _smoothTerrainSurface->GetSmoothGroundMap()->GetImage())
@@ -261,9 +261,6 @@ void BattleView::OnSetGroundMap(GroundMap* groundMap)
 
 	delete _smoothTerrainWater;
 	_smoothTerrainWater = nullptr;
-
-	delete _smoothTerrainSky;
-	_smoothTerrainSky = nullptr;
 
 	delete _tiledTerrainRenderer;
 	_tiledTerrainRenderer = nullptr;
@@ -283,8 +280,6 @@ void BattleView::OnSetGroundMap(GroundMap* groundMap)
 		tiledGroundMap->UpdateHeightMap();
 		_tiledTerrainRenderer = new TiledTerrainRenderer(_gc, tiledGroundMap);
 	}
-
-	_smoothTerrainSky = new SmoothTerrainSky(_gc);
 
 	UpdateTerrainTrees(groundMap->GetBounds());
 }
@@ -380,6 +375,8 @@ void BattleView::Initialize()
 
 	InitializeTerrainTrees();
 	InitializeCameraPosition();
+
+	OnSetGroundMap(_simulator->GetGroundMap());
 }
 
 
@@ -509,10 +506,11 @@ void BattleView::Render()
 	_lightNormal = glm::normalize(glm::vec3(facing, -1));
 
 	glClear(GL_DEPTH_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+
 
 	// Terrain Sky
 
-	glDisable(GL_DEPTH_TEST);
 	if (_smoothTerrainSky != nullptr)
 	{
 		_smoothTerrainSky->RenderBackgroundLinen(transform2D, GetScrollerViewport()->GetVisibleBounds());

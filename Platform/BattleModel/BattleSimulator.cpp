@@ -217,6 +217,9 @@ void BattleSimulator::AddObserver(BattleObserver* observer)
 {
 	_observers.insert(observer);
 
+	if (_groundMap != nullptr)
+		observer->OnSetGroundMap(_groundMap);
+
 	for (Unit* unit : _units)
 	{
 		observer->OnAddUnit(unit);
@@ -236,7 +239,7 @@ void BattleSimulator::SetGroundMap(GroundMap* groundMap)
 	_groundMap = groundMap;
 
 	for (BattleObserver* observer : _observers)
-		observer->OnSetGroundMap(groundMap);
+		observer->OnSetGroundMap(_groundMap);
 }
 
 
