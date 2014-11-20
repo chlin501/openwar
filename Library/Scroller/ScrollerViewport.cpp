@@ -50,12 +50,18 @@ static float ClampContentOffset(float value, float contentSize, bounds1i viewpor
 }
 
 
-glm::vec2 ScrollerViewport::ClampContentOffset(glm::vec2 value) const
+glm::vec2 ScrollerViewport::GetClampedOffset(glm::vec2 value) const
 {
 	bounds2i viewportBounds = GetBounds();
 	return glm::vec2(
 		::ClampContentOffset(value.x, _contentSize.x, viewportBounds.x()),
 		::ClampContentOffset(value.y, _contentSize.y, viewportBounds.y()));
+}
+
+
+void ScrollerViewport::ClampContentOffset()
+{
+	_contentOffset = GetClampedOffset(_contentOffset);
 }
 
 

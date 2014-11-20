@@ -53,7 +53,7 @@ void ScrollerGesture::TouchMoved(Touch* touch)
 	{
 		glm::vec2 original = _hotspot->GetViewport()->GlobalToLocal(touch->GetOriginalPosition());
 		glm::vec2 position = _hotspot->GetViewport()->GlobalToLocal(touch->GetCurrentPosition());
-		glm::vec2 offset = _hotspot->GetViewport()->ClampContentOffset(_originalContentOffset + original - position);
+		glm::vec2 offset = _hotspot->GetViewport()->GetClampedOffset(_originalContentOffset + original - position);
 
 		if (!_hotspot->HasCapturedTouch(touch) && touch->HasMoved() && offset != _originalContentOffset)
 		{

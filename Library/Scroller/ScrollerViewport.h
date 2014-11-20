@@ -21,7 +21,9 @@ public:
 
 	glm::vec2 GetContentOffset() const;
 	void SetContentOffset(glm::vec2 value);
-	glm::vec2 ClampContentOffset(glm::vec2 value) const;
+
+	glm::vec2 GetClampedOffset(glm::vec2 value) const;
+	void ClampContentOffset();
 
 	glm::vec2 GetContentSize() const;
 	void SetContentSize(glm::vec2 value);
