@@ -5,7 +5,6 @@
 #ifndef Image_h
 #define Image_h
 
-#include "GraphicsOpenGL.h"
 #include <glm/glm.hpp>
 #include "resource.h"
 #include "bounds.h"

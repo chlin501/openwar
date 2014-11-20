@@ -9,7 +9,7 @@
 #include <string>
 #include "GroundMap.h"
 #include "Algebra/bounds.h"
-#include "Image.h"
+#include "Graphics/Image.h"
 
 class HeightMap;
 

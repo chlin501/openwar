@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "Image.h"
+#include "Graphics/Image.h"
 #include "BattleCommander.h"
 
 class BattleScript;

@@ -3,15 +3,13 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "Image.h"
-#include "bounds.h"
-#include "GraphicsContext.h"
 #include "Algorithms/GaussBlur.h"
 
 #ifdef OPENWAR_IMAGE_ENABLE_SDL
 #include <SDL2_image/SDL_image.h>
 #endif
 
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #else
