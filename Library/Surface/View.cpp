@@ -116,5 +116,3 @@ void View::OrderBackOf(View* view)
 		}
 	}
 }
-
-

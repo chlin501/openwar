@@ -124,6 +124,8 @@ RenderCallBase::~RenderCallBase()
 {
 	for (RenderCallUniformBase* uniform : _uniforms)
 		delete uniform;
+	for (RenderCallTexture* texture : _textures)
+		delete texture;
 }
 
 
