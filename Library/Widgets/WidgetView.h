@@ -43,6 +43,8 @@ public:
 
 	virtual Viewport* GetViewport() const;
 
+	virtual void SetBounds(const bounds2f& value);
+
 	virtual void OnTouchEnter(Touch* touch);
 	virtual void OnTouchBegin(Touch* touch);
 

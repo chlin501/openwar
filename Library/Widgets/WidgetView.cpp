@@ -69,6 +69,13 @@ Viewport* WidgetView::GetViewport() const
 }
 
 
+void WidgetView::SetBounds(const bounds2f& value)
+{
+	View::SetBounds(value);
+	_viewport->SetBounds(value);
+}
+
+
 void WidgetView::OnTouchEnter(Touch* touch)
 {
 	CallWidgets_OnTouchEnter(touch);
@@ -77,13 +84,13 @@ void WidgetView::OnTouchEnter(Touch* touch)
 
 void WidgetView::OnTouchBegin(Touch* touch)
 {
-	if (GetScrollerViewport()->GetContentSize() != glm::vec2(0, 0))
+	if (_viewport->GetContentSize() != glm::vec2(0, 0))
 	{
-		bounds2f viewportBounds = GetScrollerViewport()->GetBounds();
+		bounds2f viewportBounds = _viewport->GetBounds();
 		if (viewportBounds.contains(touch->GetOriginalPosition()))
 		{
 			if (_scrollerHotspot == nullptr)
-				_scrollerHotspot = std::make_shared<ScrollerHotspot>(GetScrollerViewport());
+				_scrollerHotspot = std::make_shared<ScrollerHotspot>(_viewport);
 			_scrollerHotspot->SubscribeTouch(touch);
 		}
 	}
@@ -94,7 +101,6 @@ void WidgetView::OnTouchBegin(Touch* touch)
 
 void WidgetView::Render()
 {
-	_viewport->SetBounds(GetBounds());
 	_viewport->UseViewport();
 
 	RenderCall<WidgetShader>(_gc)
