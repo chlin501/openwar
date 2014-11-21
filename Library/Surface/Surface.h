@@ -16,6 +16,9 @@ class Viewport;
 #ifdef ENABLE_SURFACE_ADAPTER_MAC
 @class NSView;
 #endif
+#ifdef ENABLE_SURFACE_ADAPTER_IOS
+@class UIView;
+#endif
 
 
 class Surface
@@ -24,6 +27,10 @@ class Surface
 #ifdef ENABLE_SURFACE_ADAPTER_MAC
 	NSView* _nsview;
 #endif
+#ifdef ENABLE_SURFACE_ADAPTER_IOS
+	UIView* _uiview;
+#endif
+
 	GraphicsContext* _gc;
 	std::vector<View*> _views;
 	glm::vec2 _size;
@@ -45,6 +52,10 @@ public:
 #ifdef ENABLE_SURFACE_ADAPTER_MAC
 	void SetNSView(NSView* value);
 	NSView* GetNSView() const;
+#endif
+#ifdef ENABLE_SURFACE_ADAPTER_IOS
+	void SetUIView(UIView* value);
+	UIView* GetUIView() const;
 #endif
 
 private:

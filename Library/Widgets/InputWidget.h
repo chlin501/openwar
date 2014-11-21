@@ -39,7 +39,7 @@ private:
 	void ShowInputEditor();
 	void HideInputEditor();
 
-	void RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const;
+	//void RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const;
 };
 
 

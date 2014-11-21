@@ -71,14 +71,15 @@ void InputWidget::SetBounds(const bounds2f& value)
 
 void InputWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
-	RenderSolid(GetViewport()->GetTransform(), GetBounds(), glm::vec4(1, 1, 1, 0.7f));
+	//RenderSolid(GetViewport()->GetTransform(), GetBounds(), glm::vec4(1, 1, 1, 0.7f));
 
 	if (_editing && _inputEditor == nullptr)
 		ShowInputEditor();
 	else if (!_editing && _inputEditor != nullptr)
 		HideInputEditor();
 
-	StringWidget::RenderVertices(vertices);
+	if (_inputEditor == nullptr)
+		StringWidget::RenderVertices(vertices);
 }
 
 
@@ -97,8 +98,10 @@ void InputWidget::ShowInputEditor()
 {
 	if (_inputEditor == nullptr)
 	{
-#ifdef ENABLE_SURFACE_ADAPTER_MAC
-		_inputEditor = new InputEditorMac(this);
+#if defined(ENABLE_SURFACE_ADAPTER_MAC)
+		_inputEditor = new InputEditor_Mac(this);
+#elif defined(ENABLE_SURFACE_ADAPTER_IOS)
+		_inputEditor = new InputEditor_iOS(this);
 #endif
 	}
 	else
@@ -115,7 +118,7 @@ void InputWidget::HideInputEditor()
 }
 
 
-
+/*
 #include "CommonShaders.h"
 #include "VertexShape.h"
 
@@ -136,3 +139,4 @@ void InputWidget::RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::
 		.SetUniform("color", color)
 		.Render();
 }
+*/

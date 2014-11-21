@@ -31,34 +31,37 @@ void InputEditor::NotifyEnterKey()
 #ifdef ENABLE_SURFACE_ADAPTER_MAC
 
 
-InputEditorMac::InputEditorMac(InputWidget* inputWidget) : InputEditor(inputWidget),
-	_textField(nil)
+InputEditor_Mac::InputEditor_Mac(InputWidget* inputWidget) : InputEditor(inputWidget),
+	_textField(nil),
+	_delegate(nil),
+	_observer(nil)
 {
 	if (_textField == nil)
 	{
 		NSView* view = inputWidget->GetWidgetView()->GetSurface()->GetNSView();
 
-		_delegate = [[InputEditorMacDelegate alloc] initWithInputAdapter:this];
+		_delegate = [[InputEditorDelegate_Mac alloc] initWithInputEditor:this];
 
 
 		_textField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
 		_textField.stringValue = [NSString stringWithUTF8String:inputWidget->GetString()];
 		_textField.delegate = _delegate;
 		_textField.wantsLayer = YES;
-		_textField.bordered = YES;
 		_textField.drawsBackground = NO;
+		_textField.bordered = NO;
 
 		UpdateNSTextFieldFont();
 		UpdateNSTextFieldFrame();
 		UpdateNSTextFieldColor();
 
-		[[NSNotificationCenter defaultCenter] addObserverForName:NSControlTextDidEndEditingNotification
+		_observer = [[[NSNotificationCenter defaultCenter] addObserverForName:NSControlTextDidEndEditingNotification
 											  object:_textField
 											  queue:[NSOperationQueue mainQueue]
 											  usingBlock:^(NSNotification*) {
-												  inputWidget->SetString(_textField.stringValue.UTF8String);
+												  NSString* value = _textField.stringValue;
+												  inputWidget->SetString(value.UTF8String);
 												  inputWidget->SetEditing(false);
-											  }];
+											  }] retain];
 
 		[view addSubview:_textField];
 
@@ -67,8 +70,11 @@ InputEditorMac::InputEditorMac(InputWidget* inputWidget) : InputEditor(inputWidg
 }
 
 
-InputEditorMac::~InputEditorMac()
+InputEditor_Mac::~InputEditor_Mac()
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:_observer];
+	[_observer release];
+
 	_textField.delegate = nil;
 	[_textField removeFromSuperview];
 	[_textField release];
@@ -76,14 +82,14 @@ InputEditorMac::~InputEditorMac()
 }
 
 
-void InputEditorMac::OnInputWidgetChanged()
+void InputEditor_Mac::OnInputWidgetChanged()
 {
 	UpdateNSTextFieldFont();
 	UpdateNSTextFieldFrame();
 	UpdateNSTextFieldColor();
 }
 
-void InputEditorMac::UpdateNSTextFieldFont()
+void InputEditor_Mac::UpdateNSTextFieldFont()
 {
 	FontDescriptor fontDescriptor = GetInputWidget()->GetFontDescriptor();
 	if (fontDescriptor.name.empty())
@@ -100,34 +106,34 @@ void InputEditorMac::UpdateNSTextFieldFont()
 }
 
 
-void InputEditorMac::UpdateNSTextFieldFrame()
+void InputEditor_Mac::UpdateNSTextFieldFrame()
 {
 	bounds2f bounds = GetInputWidget()->GetBounds();
-	float height = (float)_textField.font.pointSize + 8;
+	float height = (float)_textField.font.pointSize + 6;
 	float width = bounds.x().size() + 2;
-	_textField.frame = NSMakeRect(bounds.min.x - 2, bounds.min.y - 2, width, height);
+	_textField.frame = NSMakeRect(bounds.min.x - 1, bounds.min.y - 1, width, height);
 }
 
 
-void InputEditorMac::UpdateNSTextFieldColor()
+void InputEditor_Mac::UpdateNSTextFieldColor()
 {
 	glm::vec4 color = GetInputWidget()->GetColor();
 	_textField.textColor = [NSColor colorWithRed:color.r green:color.g blue:color.b alpha:color.a];
 }
 
 
-@implementation InputEditorMacDelegate
+@implementation InputEditorDelegate_Mac
 {
-	InputEditor* _inputAdapter;
+	InputEditor_Mac* _inputEditor;
 }
 
 
-- (id)initWithInputAdapter:(InputEditor*)inputAdapter
+- (id)initWithInputEditor:(InputEditor_Mac*)inputEditor
 {
 	self = [super init];
 	if (self != nil)
 	{
-		_inputAdapter = inputAdapter;
+		_inputEditor = inputEditor;
 	}
 	return self;
 }
@@ -138,11 +144,139 @@ void InputEditorMac::UpdateNSTextFieldColor()
 	if (commandSelector == @selector(insertNewline:)
 		|| commandSelector == @selector(insertLineBreak:))
 	{
-		_inputAdapter->NotifyEnterKey();
+		InputWidget* inputWidget = _inputEditor->GetInputWidget();
+		inputWidget->SetString(textView.string.UTF8String);
+
+		_inputEditor->NotifyEnterKey();
 		return YES;
 	}
 
 	return NO;
+}
+
+
+@end
+
+
+#endif
+
+
+#ifdef ENABLE_SURFACE_ADAPTER_IOS
+
+
+InputEditor_iOS::InputEditor_iOS(InputWidget* inputWidget) : InputEditor(inputWidget),
+	_textField(nil),
+	_delegate(nil)
+{
+	if (_textField == nil)
+	{
+		UIView* view = inputWidget->GetWidgetView()->GetSurface()->GetUIView();
+
+		_delegate = [[InputEditorDelegate_iOS alloc] initWithInputEditor:this];
+
+
+		_textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+		_textField.text = [NSString stringWithUTF8String:inputWidget->GetString()];
+		_textField.delegate = _delegate;
+		_textField.clearButtonMode = UITextFieldViewModeAlways;
+
+		//_textField.borderStyle = UITextBorderStyleLine; // TESTING
+
+		UpdateNSTextFieldFont();
+		UpdateNSTextFieldFrame();
+		UpdateNSTextFieldColor();
+
+		[view addSubview:_textField];
+
+		[_textField becomeFirstResponder];
+	}
+}
+
+
+InputEditor_iOS::~InputEditor_iOS()
+{
+	_textField.delegate = nil;
+	[_textField removeFromSuperview];
+	[_textField release];
+	[_delegate release];
+}
+
+
+void InputEditor_iOS::OnInputWidgetChanged()
+{
+	UpdateNSTextFieldFont();
+	UpdateNSTextFieldFrame();
+	UpdateNSTextFieldColor();
+}
+
+void InputEditor_iOS::UpdateNSTextFieldFont()
+{
+	FontDescriptor fontDescriptor = GetInputWidget()->GetFontDescriptor();
+	if (fontDescriptor.name.empty())
+	{
+		if (fontDescriptor.bold)
+			_textField.font = [UIFont boldSystemFontOfSize:fontDescriptor.size];
+		else
+			_textField.font = [UIFont systemFontOfSize:fontDescriptor.size];
+	}
+	else
+	{
+		_textField.font = [UIFont fontWithName:[NSString stringWithUTF8String:fontDescriptor.name.c_str()] size:fontDescriptor.size];
+	}
+}
+
+
+void InputEditor_iOS::UpdateNSTextFieldFrame()
+{
+	InputWidget* intputWidget = GetInputWidget();
+	Surface* surface = intputWidget->GetWidgetView()->GetSurface();
+	bounds2f bounds = intputWidget->GetBounds();
+	float height = (float)_textField.font.pointSize + 2;
+	float width = bounds.x().size();
+	_textField.frame = CGRectMake(bounds.min.x, surface->GetSize().y - bounds.min.y - height, width, height);
+}
+
+
+void InputEditor_iOS::UpdateNSTextFieldColor()
+{
+	glm::vec4 color = GetInputWidget()->GetColor();
+	_textField.textColor = [UIColor colorWithRed:color.r green:color.g blue:color.b alpha:color.a];
+}
+
+
+@implementation InputEditorDelegate_iOS
+{
+	InputEditor_iOS* _inputEditor;
+}
+
+
+- (id)initWithInputEditor:(InputEditor_iOS*)inputEditor
+{
+	self = [super init];
+	if (self != nil)
+	{
+		_inputEditor = inputEditor;
+	}
+	return self;
+}
+
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+	InputWidget* inputWidget = _inputEditor->GetInputWidget();
+	inputWidget->SetString(textField.text.UTF8String);
+
+	_inputEditor->NotifyEnterKey();
+	return NO;
+}
+
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+	InputWidget* inputWidget = _inputEditor->GetInputWidget();
+
+	inputWidget->SetString(textField.text.UTF8String);
+	inputWidget->SetEditing(false);
 }
 
 

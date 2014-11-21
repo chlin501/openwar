@@ -10,11 +10,17 @@
 #ifdef ENABLE_SURFACE_ADAPTER_MAC
 #import <AppKit/AppKit.h>
 #endif
+#ifdef ENABLE_SURFACE_ADAPTER_IOS
+#import <UIKit/UIKit.h>
+#endif
 
 
 Surface::Surface(GraphicsContext* gc) :
 #ifdef ENABLE_SURFACE_ADAPTER_MAC
 	_nsview(nil),
+#endif
+#ifdef ENABLE_SURFACE_ADAPTER_IOS
+	_uiview(nil),
 #endif
 	_gc(gc)
 {
@@ -89,5 +95,21 @@ void Surface::SetNSView(NSView* value)
 NSView* Surface::GetNSView() const
 {
 	return _nsview;
+}
+#endif
+
+
+#ifdef ENABLE_SURFACE_ADAPTER_IOS
+void Surface::SetUIView(UIView* value)
+{
+	_uiview = value;
+}
+#endif
+
+
+#ifdef ENABLE_SURFACE_ADAPTER_IOS
+UIView* Surface::GetUIView() const
+{
+	return _uiview;
 }
 #endif

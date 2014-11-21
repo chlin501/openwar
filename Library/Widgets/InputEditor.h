@@ -24,21 +24,23 @@ public:
 #ifdef ENABLE_SURFACE_ADAPTER_MAC
 
 #include <AppKit/AppKit.h>
+class InputEditor_Mac;
 
-@interface InputEditorMacDelegate : NSObject<NSTextFieldDelegate>
+@interface InputEditorDelegate_Mac : NSObject<NSTextFieldDelegate>
 
-- (id)initWithInputAdapter:(InputEditor*)inputAdapter;
+- (id)initWithInputEditor:(InputEditor_Mac*)inputEditor;
 
 @end
 
-class InputEditorMac : public InputEditor
+class InputEditor_Mac : public InputEditor
 {
 	NSTextField* _textField;
-	InputEditorMacDelegate* _delegate;
+	InputEditorDelegate_Mac* _delegate;
+	id <NSObject> _observer;
 
 public:
-	InputEditorMac(InputWidget* inputWidget);
-	virtual ~InputEditorMac();
+	InputEditor_Mac(InputWidget* inputWidget);
+	virtual ~InputEditor_Mac();
 
 	virtual void OnInputWidgetChanged();
 
@@ -48,6 +50,36 @@ private:
 	void UpdateNSTextFieldColor();
 };
 
+#endif
+
+
+#ifdef ENABLE_SURFACE_ADAPTER_IOS
+
+#include <UIKit/UIKit.h>
+class InputEditor_iOS;
+
+@interface InputEditorDelegate_iOS : NSObject<UITextFieldDelegate>
+
+- (id)initWithInputEditor:(InputEditor_iOS*)inputEditor;
+
+@end
+
+class InputEditor_iOS : public InputEditor
+{
+	UITextField* _textField;
+	InputEditorDelegate_iOS* _delegate;
+
+public:
+	InputEditor_iOS(InputWidget* inputWidget);
+	virtual ~InputEditor_iOS();
+
+	virtual void OnInputWidgetChanged();
+
+private:
+	void UpdateNSTextFieldFont();
+	void UpdateNSTextFieldFrame();
+	void UpdateNSTextFieldColor();
+};
 
 #endif
 
