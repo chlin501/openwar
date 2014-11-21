@@ -22,7 +22,7 @@ class ScrollerHotspot : public Hotspot
 public:
 	ScrollerHotspot(ScrollerViewport* viewport);
 
-	virtual Gesture* GetGesture() const;
+	virtual Gesture* GetGesture();
 
 	ScrollerViewport* GetViewport() const;
 };

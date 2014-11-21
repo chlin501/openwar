@@ -22,7 +22,7 @@ public:
 	ButtonHotspot(std::function<bool(glm::vec2)> inside);
 	virtual ~ButtonHotspot();
 
-	virtual Gesture* GetGesture() const;
+	virtual Gesture* GetGesture();
 
 	virtual bool IsInside(glm::vec2 position) const;
 

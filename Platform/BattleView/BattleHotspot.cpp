@@ -9,9 +9,9 @@ BattleHotspot::BattleHotspot(BattleView* battleView) :
 }
 
 
-Gesture* BattleHotspot::GetGesture() const
+Gesture* BattleHotspot::GetGesture()
 {
-	return const_cast<BattleGesture*>(&_gesture);
+	return &_gesture;
 }
 
 

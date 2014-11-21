@@ -11,9 +11,9 @@ EditorHotspot::EditorHotspot(BattleView* battleView, EditorModel* editorModel) :
 }
 
 
-Gesture* EditorHotspot::GetGesture() const
+Gesture* EditorHotspot::GetGesture()
 {
-	return const_cast<EditorGesture*>(&_gesture);
+	return &_gesture;
 }
 
 

@@ -14,7 +14,7 @@ public:
 	BattleHotspot(BattleView* battleView);
 	virtual ~BattleHotspot();
 
-	virtual Gesture* GetGesture() const;
+	virtual Gesture* GetGesture();
 
 	BattleView* GetBattleView() const;
 };

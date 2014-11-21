@@ -12,9 +12,9 @@ ScrollerHotspot::ScrollerHotspot(ScrollerViewport* viewport) :
 }
 
 
-Gesture* ScrollerHotspot::GetGesture() const
+Gesture* ScrollerHotspot::GetGesture()
 {
-	return const_cast<ScrollerGesture*>(&_gesture);
+	return &_gesture;
 }
 
 

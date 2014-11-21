@@ -22,9 +22,9 @@ ButtonHotspot::~ButtonHotspot()
 }
 
 
-Gesture* ButtonHotspot::GetGesture() const
+Gesture* ButtonHotspot::GetGesture()
 {
-	return const_cast<ButtonGesture*>(&_gesture);
+	return &_gesture;
 }
 
 

@@ -9,9 +9,9 @@ TerrainHotspot::TerrainHotspot(TerrainView* terrainView) :
 }
 
 
-Gesture* TerrainHotspot::GetGesture() const
+Gesture* TerrainHotspot::GetGesture()
 {
-	return const_cast<TerrainGesture*>(&_gesture);
+	return &_gesture;
 }
 
 

@@ -21,7 +21,7 @@ class Hotspot : public std::enable_shared_from_this<Hotspot>
 public:
 	virtual ~Hotspot();
 
-	virtual Gesture* GetGesture() const = 0;
+	virtual Gesture* GetGesture() = 0;
 
 	void SubscribeSurface(Surface* surface);
 	void UnsubscribeSurface(Surface* surface);
