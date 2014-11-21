@@ -3,23 +3,29 @@
 
 #include "StringWidget.h"
 
-class InputAdapter;
+class InputEditor;
 class InputHotspot;
 
 
 class InputWidget : public StringWidget
 {
-	InputAdapter* _inputAdater;
+	friend class InputEditor;
+	bounds2f _bounds;
+	bool _editing;
+	std::function<void()> _enterAction;
 	std::shared_ptr<InputHotspot> _inputHotspot;
+	InputEditor* _inputEditor;
 
 public:
 	InputWidget(WidgetOwner* widgetOwner);
 	virtual ~InputWidget();
 
-	virtual glm::vec2 GetPosition() const;
-	virtual void SetPosition(glm::vec2 value);
+	void SetEnterAction(std::function<void()> value);
 
-	virtual const float GetWidth() const;
+	bool IsEditing() const;
+	void SetEditing(bool value);
+
+	virtual void SetPosition(glm::vec2 value);
 	virtual void SetWidth(float value);
 
 	virtual bounds2f GetBounds() const;
@@ -29,9 +35,11 @@ public:
 
 	virtual void RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
-	void ShowInputAdapter();
-
 private:
+	void ShowInputEditor();
+	void HideInputEditor();
+
+	void RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::vec4 color) const;
 };
 
 

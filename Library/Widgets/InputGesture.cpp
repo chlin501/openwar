@@ -22,7 +22,7 @@ void InputGesture::TouchBegan(Touch* touch)
 	glm::vec2 p = inputWidget->GetViewport()->GlobalToLocal(touch->GetCurrentPosition());
 	if (inputWidget->GetBounds().contains(p) &&_inputHotspot->TryCaptureTouch(touch))
 	{
-		inputWidget->ShowInputAdapter();
+		inputWidget->SetEditing(true);
 	}
 }
 
