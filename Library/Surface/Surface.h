@@ -13,10 +13,17 @@ class Touch;
 class View;
 class Viewport;
 
+#ifdef ENABLE_SURFACE_ADAPTER_MAC
+@class NSView;
+#endif
+
 
 class Surface
 {
 	friend class View;
+#ifdef ENABLE_SURFACE_ADAPTER_MAC
+	NSView* _nsview;
+#endif
 	GraphicsContext* _gc;
 	std::vector<View*> _views;
 	glm::vec2 _size;
@@ -34,6 +41,11 @@ public:
 	void NotifyViewsOfTouchBegin(Touch* touch);
 
 	virtual void Render();
+
+#ifdef ENABLE_SURFACE_ADAPTER_MAC
+	void SetNSView(NSView* value);
+	NSView* GetNSView() const;
+#endif
 
 private:
 	Surface(const Surface&) { }

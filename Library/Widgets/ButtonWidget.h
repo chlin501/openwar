@@ -25,27 +25,27 @@ private:
 public:
 	ButtonWidget(WidgetOwner* widgetOwner);
 
-	bounds2f GetBounds() const;
-	void SetBounds(const bounds2f& value);
+	virtual bounds2f GetBounds() const;
+	virtual void SetBounds(const bounds2f& value);
 
-	std::function<void()> GetClickAction() const;
-	void SetClickAction(std::function<void()> value);
+	virtual std::function<void()> GetClickAction() const;
+	virtual void SetClickAction(std::function<void()> value);
 
-	void SetBackgroundNormal(std::shared_ptr<TextureImage> value);
-	void SetBackgroundHighlight(std::shared_ptr<TextureImage> value);
-	void SetBackgroundDisabled(std::shared_ptr<TextureImage> value);
+	virtual void SetBackgroundNormal(std::shared_ptr<TextureImage> value);
+	virtual void SetBackgroundHighlight(std::shared_ptr<TextureImage> value);
+	virtual void SetBackgroundDisabled(std::shared_ptr<TextureImage> value);
 
-	BorderInset GetInset() const;
-	void SetInset(const BorderInset& value);
+	virtual BorderInset GetInset() const;
+	virtual void SetInset(const BorderInset& value);
 
-	const char* GetTitle() const;
-	void SetTitle(const char* value);
+	virtual const char* GetTitle() const;
+	virtual void SetTitle(const char* value);
 
-	std::shared_ptr<TextureImage> GetIcon() const;
-	void SetIcon(std::shared_ptr<TextureImage> value);
+	virtual std::shared_ptr<TextureImage> GetIcon() const;
+	virtual void SetIcon(std::shared_ptr<TextureImage> value);
 
-	bool IsDisabled() const;
-	void SetDisabled(bool value);
+	virtual bool IsDisabled() const;
+	virtual void SetDisabled(bool value);
 
 	virtual void OnTouchEnter(Touch* touch);
 	virtual void OnTouchBegin(Touch* touch);

@@ -7,6 +7,7 @@
 #include "Touch.h"
 #include "Surface.h"
 #include "GraphicsContext.h"
+#import "ScrollerViewport.h"
 
 
 /* Widget */
@@ -78,6 +79,13 @@ WidgetOwner* Widget::GetWidgetOwner() const
 WidgetView* Widget::GetWidgetView() const
 {
 	return _widgetOwner != nullptr ? _widgetOwner->FindWidgetView() : nullptr;
+}
+
+
+ScrollerViewport* Widget::GetViewport() const
+{
+	WidgetView* widgetView = GetWidgetView();
+	return widgetView != nullptr ? widgetView->GetScrollerViewport() : nullptr;
 }
 
 

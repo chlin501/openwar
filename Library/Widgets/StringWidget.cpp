@@ -63,6 +63,18 @@ glm::vec2 StringWidget::MeasureSize() const
 }
 
 
+const float StringWidget::GetWidth() const
+{
+	return _width;
+}
+
+
+void StringWidget::SetWidth(float value)
+{
+	_width = value;
+}
+
+
 const FontDescriptor& StringWidget::GetFontDescriptor() const
 {
 	return _fontDescriptor;
@@ -126,19 +138,6 @@ const float StringWidget::GetAlpha() const
 void StringWidget::SetAlpha(float value)
 {
 	_color.a = value;
-}
-
-
-
-const float StringWidget::GetWidth() const
-{
-	return _width;
-}
-
-
-void StringWidget::SetWidth(float value)
-{
-	_width = value;
 }
 
 

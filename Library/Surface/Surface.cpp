@@ -7,8 +7,15 @@
 #include "Touch.h"
 #include "GraphicsContext.h"
 
+#ifdef ENABLE_SURFACE_ADAPTER_MAC
+#import <AppKit/AppKit.h>
+#endif
+
 
 Surface::Surface(GraphicsContext* gc) :
+#ifdef ENABLE_SURFACE_ADAPTER_MAC
+	_nsview(nil),
+#endif
 	_gc(gc)
 {
 }
@@ -18,6 +25,10 @@ Surface::~Surface()
 {
 	for (View* view : _views)
 		view->_surface = nullptr;
+
+#ifdef ENABLE_SURFACE_ADAPTER_MAC
+	[_nsview release];
+#endif
 }
 
 
@@ -64,3 +75,19 @@ void Surface::Render()
 			view->Render();
 	}
 }
+
+
+#ifdef ENABLE_SURFACE_ADAPTER_MAC
+void Surface::SetNSView(NSView* value)
+{
+	_nsview = [value retain];
+}
+#endif
+
+
+#ifdef ENABLE_SURFACE_ADAPTER_MAC
+NSView* Surface::GetNSView() const
+{
+	return _nsview;
+}
+#endif

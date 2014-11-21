@@ -9,6 +9,7 @@
 #include <vector>
 
 class GraphicsContext;
+class ScrollerViewport;
 class Touch;
 class WidgetOwner;
 class WidgetView;
@@ -24,17 +25,18 @@ public:
 	Widget(WidgetOwner* widgetOwner);
 	virtual ~Widget();
 
-	WidgetOwner* GetWidgetOwner() const;
-	WidgetView* GetWidgetView() const;
-	GraphicsContext* GetGraphicsContext() const;
+	virtual WidgetOwner* GetWidgetOwner() const;
+	virtual WidgetView* GetWidgetView() const;
+	virtual ScrollerViewport* GetViewport() const;
+	virtual GraphicsContext* GetGraphicsContext() const;
 
-	bool IsVisible() const;
-	void SetVisible(bool value);
+	virtual bool IsVisible() const;
+	virtual void SetVisible(bool value);
 
-	void OrderFront();
-	void OrderFrontOf(Widget* widget);
-	void OrderBack();
-	void OrderBackOf(Widget* widget);
+	virtual void OrderFront();
+	virtual void OrderFrontOf(Widget* widget);
+	virtual void OrderBack();
+	virtual void OrderBackOf(Widget* widget);
 
 	virtual void OnTouchEnter(Touch* touch) = 0;
 	virtual void OnTouchBegin(Touch* touch) = 0;

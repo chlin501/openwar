@@ -20,19 +20,19 @@ class ImageWidget : public Widget
 public:
 	ImageWidget(WidgetOwner* widgetOwner);
 
-	bounds2f GetBounds() const;
-	void SetBounds(const bounds2f& value);
+	virtual bounds2f GetBounds() const;
+	virtual void SetBounds(const bounds2f& value);
 
-	std::shared_ptr<TextureImage> GetTextureImage() const;
-	void SetTextureImage(std::shared_ptr<TextureImage> textureImage);
+	virtual std::shared_ptr<TextureImage> GetTextureImage() const;
+	virtual void SetTextureImage(std::shared_ptr<TextureImage> textureImage);
 
-	void SetInset(BorderInset value);
+	virtual void SetInset(BorderInset value);
 
-	glm::vec4 GetColorize() const;
-	void SetColorize(const glm::vec4& value);
+	virtual glm::vec4 GetColorize() const;
+	virtual void SetColorize(const glm::vec4& value);
 
-	float GetAlpha() const;
-	void SetAlpha(float value);
+	virtual float GetAlpha() const;
+	virtual void SetAlpha(float value);
 
 	// Widget
 

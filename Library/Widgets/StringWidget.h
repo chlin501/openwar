@@ -24,29 +24,29 @@ class StringWidget : public Widget
 public:
 	StringWidget(WidgetOwner* widgetOwner);
 
-	glm::vec2 GetPosition() const;
-	void SetPosition(glm::vec2 value);
+	virtual glm::vec2 GetPosition() const;
+	virtual void SetPosition(glm::vec2 value);
 
-	glm::vec2 MeasureSize() const;
+	virtual glm::vec2 MeasureSize() const;
 
-	const FontDescriptor& GetFontDescriptor() const;
-	void SetFontDescriptor(const FontDescriptor& fontDescriptor);
+	virtual const float GetWidth() const;
+	virtual void SetWidth(float value);
 
-	const char* GetString() const;
-	void SetString(const char* value);
+	virtual const FontDescriptor& GetFontDescriptor() const;
+	virtual void SetFontDescriptor(const FontDescriptor& fontDescriptor);
 
-	const glm::vec4 GetColor() const;
-	void SetColor(const glm::vec3& value);
-	void SetColor(const glm::vec4& value);
+	virtual const char* GetString() const;
+	virtual void SetString(const char* value);
 
-	const glm::vec4 GetGlow() const;
-	void SetGlow(const glm::vec4& value);
+	virtual const glm::vec4 GetColor() const;
+	virtual void SetColor(const glm::vec3& value);
+	virtual void SetColor(const glm::vec4& value);
 
-	const float GetAlpha() const;
-	void SetAlpha(float value);
+	virtual const glm::vec4 GetGlow() const;
+	virtual void SetGlow(const glm::vec4& value);
 
-	const float GetWidth() const;
-	void SetWidth(float value);
+	virtual const float GetAlpha() const;
+	virtual void SetAlpha(float value);
 
 	virtual void OnTouchEnter(Touch* touch);
 	virtual void OnTouchBegin(Touch* touch);
