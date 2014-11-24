@@ -11,6 +11,7 @@
 #include "TerrainView/EditorGesture.h"
 #include "TerrainView/EditorHotspot.h"
 #include "Scroller/ScrollerViewport.h"
+#include "Audio/SoundPlayer.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 
@@ -29,6 +30,8 @@ _buttonItemWater(nullptr),
 _buttonItemFords(nullptr),
 _battleLayer(nullptr)
 {
+	SoundPlayer::Initialize();
+
 	_battleLayer = new BattleLayer(this);
 
 	_buttonRendering = new ButtonRendering(gc);

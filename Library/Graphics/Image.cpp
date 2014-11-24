@@ -17,6 +17,12 @@
 #endif
 #endif
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#define LOGERR(err) __android_log_print(ANDROID_LOG_INFO, "openwar", "Image: %s", err);
+#else
+#define LOGERR(err)
+#endif
 
 
 Image::Image() :
@@ -176,7 +182,7 @@ SDL_Surface* Image::GetSurface() const
 {
 	if (_surface == nullptr)
 	{
-		_surface = SDL_CreateRGBSurfaceFrom(_pixels, _width, _height, 32, _width * 4, 0, 0, 0, 0);
+		_surface = SDL_CreateRGBSurfaceFrom(_pixels, _width, _height, 32, _width * 4, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
 	}
 
 	return _surface;
@@ -358,20 +364,46 @@ void Image::Blur(float r)
 
 void Image::Copy(const Image& image, int x, int y)
 {
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#if defined(OPENWAR_IMAGE_ENABLE_COREGRAPHICS)
+
 	CGContextRef context = GetCGContext();
 	int width = image.GetWidth();
 	int height = image.GetHeight();
 	CGRect rect = CGRectMake(x, _height - y - height, width, height);
 	CGContextClearRect(context, rect);
 	CGContextDrawImage(context, rect, image.GetCGImage());
+
+#elif defined(OPENWAR_IMAGE_ENABLE_SDL)
+
+	SDL_Surface* src = image.GetSurface();
+	SDL_Surface* dst = GetSurface();
+
+	SDL_Rect srcRect;
+	srcRect.x = 0;
+	srcRect.y = 0;
+	srcRect.w = src->w;
+	srcRect.h = src->h;
+
+	SDL_Rect dstRect;
+	dstRect.x = x;
+	dstRect.y = y;
+	dstRect.w = src->w;
+	dstRect.h = src->h;
+
+	SDL_BlendMode oldBlendMode;
+	SDL_GetSurfaceBlendMode(src, &oldBlendMode);
+	SDL_SetSurfaceBlendMode(src, SDL_BLENDMODE_NONE);
+	SDL_BlitSurface(src, &srcRect, dst, &dstRect);
+	SDL_SetSurfaceBlendMode(src, oldBlendMode);
+
 #endif
 }
 
 
 void Image::Fill(const glm::vec4& color, const bounds2f& bounds)
 {
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#if defined(OPENWAR_IMAGE_ENABLE_COREGRAPHICS)
+
 	CGContextRef context = GetCGContext();
 
 	//NSGraphicsContext* gc = [NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:YES];
@@ -384,6 +416,25 @@ void Image::Fill(const glm::vec4& color, const bounds2f& bounds)
 	CGContextFillRect(context, rect);
 
 	//[NSGraphicsContext restoreGraphicsState];
+
+#elif defined(OPENWAR_IMAGE_ENABLE_SDL)
+
+	SDL_Surface* dst = GetSurface();
+
+	SDL_Rect rect;
+	rect.x = 0;
+	rect.y = 0;
+	rect.w = dst->w;
+	rect.h = dst->h;
+
+	Uint8 r = (Uint8)glm::round(255 * color.r);
+	Uint8 g = (Uint8)glm::round(255 * color.g);
+	Uint8 b = (Uint8)glm::round(255 * color.b);
+	Uint8 a = (Uint8)glm::round(255 * color.a);
+	Uint32 c = SDL_MapRGBA(dst->format, r, g, b, a);
+
+	SDL_FillRect(dst, &rect, c);
+
 #endif
 }
 

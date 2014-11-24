@@ -61,8 +61,8 @@ int main(int argc, char *argv[])
     
     GraphicsContext* gc = new GraphicsContext(1);
 	OpenWarSurface* surface = new OpenWarSurface(gc);
-	surface->GetViewport()->SetBounds(bounds2i(0, 0, 640, 480));
-	surface->OnRenderLoop(0);
+    surface->SetSize(glm::vec2(640, 480));
+    RenderLoopObserver::NotifyRenderLoop(0);
 
 	window->SetSurface(surface);
 

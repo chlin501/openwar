@@ -261,7 +261,7 @@ std::shared_ptr<TextureImage> FontAdapter_SDL_ttf::AddTextureImage(TextureAtlas*
 
 	if (surface == nullptr)
 	{
-		return textureAtlas->AddTextureImage(Image(4, 4), TextureImageType::Discardable);
+		return textureAtlas->AddTextureImage(Image(4, 4), TextureDiscardability::Discardable);
 	}
 
 	Image image;
@@ -275,7 +275,7 @@ std::shared_ptr<TextureImage> FontAdapter_SDL_ttf::AddTextureImage(TextureAtlas*
 	if (filter)
 		filter(image2);
 
-	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image2, TextureImageType::Discardable);
+	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image2, TextureDiscardability::Discardable);
 	BorderBounds bounds = textureImage->GetBounds();
 	bounds.inner.min = bounds.outer.min + glm::vec2(border, border);
 	bounds.inner.max = bounds.inner.min + glm::vec2(image.GetWidth(), image.GetHeight());
