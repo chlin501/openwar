@@ -155,7 +155,10 @@ public:
 
 	void UpdateLayout();
 
+private: // RenderLoopObserver
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
+
+public:
 	virtual void Render();
 
 	void FindButtonHotspots(Touch* touch);

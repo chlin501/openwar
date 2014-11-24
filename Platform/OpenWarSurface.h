@@ -47,7 +47,7 @@ public:
 
 	virtual void Render();
 
-	// Content
+private: // RenderLoopObserver
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
 protected:

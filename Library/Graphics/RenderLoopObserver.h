@@ -18,6 +18,7 @@ public:
 
 	static void NotifyRenderLoop(double secondsSinceLastLoop);
 
+private:
 	virtual void OnRenderLoop(double secondsSinceLastLoop) = 0;
 };
 

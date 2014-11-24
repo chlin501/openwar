@@ -39,8 +39,10 @@ public:
 	TerrainGesture(TerrainHotspot* hotspot);
 	virtual ~TerrainGesture();
 
+private: // RenderLoopObserver
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
+public:
 	virtual void KeyDown(char key);
 	virtual void KeyUp(char key);
 

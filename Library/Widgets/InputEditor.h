@@ -15,9 +15,12 @@ public:
 
 	InputWidget* GetInputWidget() const;
 
+	virtual const char* GetString() const = 0;
+	virtual void SetString(const char* value) = 0;
+
 	virtual void OnInputWidgetChanged() = 0;
 
-	void NotifyEnterKey();
+	void NotifyEnter();
 };
 
 
@@ -41,6 +44,9 @@ class InputEditor_Mac : public InputEditor
 public:
 	InputEditor_Mac(InputWidget* inputWidget);
 	virtual ~InputEditor_Mac();
+
+	virtual const char* GetString() const;
+	virtual void SetString(const char* value);
 
 	virtual void OnInputWidgetChanged();
 
@@ -72,6 +78,9 @@ class InputEditor_iOS : public InputEditor
 public:
 	InputEditor_iOS(InputWidget* inputWidget);
 	virtual ~InputEditor_iOS();
+
+	virtual const char* GetString() const;
+	virtual void SetString(const char* value);
 
 	virtual void OnInputWidgetChanged();
 

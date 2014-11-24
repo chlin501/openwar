@@ -55,6 +55,24 @@ void InputWidget::SetWidth(float value)
 }
 
 
+const char* InputWidget::GetString() const
+{
+	if (_inputEditor != nullptr)
+		return _inputEditor->GetString();
+	else
+		return StringWidget::GetString();
+}
+
+
+void InputWidget::SetString(const char* value)
+{
+	if (_inputEditor != nullptr)
+		_inputEditor->SetString(value);
+	else
+		StringWidget::SetString(value);
+}
+
+
 bounds2f InputWidget::GetBounds() const
 {
 	return _bounds;
@@ -73,11 +91,6 @@ void InputWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	//RenderSolid(GetViewport()->GetTransform(), GetBounds(), glm::vec4(1, 1, 1, 0.7f));
 
-	if (_editing && _inputEditor == nullptr)
-		ShowInputEditor();
-	else if (!_editing && _inputEditor != nullptr)
-		HideInputEditor();
-
 	if (_inputEditor == nullptr)
 		StringWidget::RenderVertices(vertices);
 }
@@ -91,6 +104,15 @@ void InputWidget::OnTouchBegin(Touch* touch)
 			_inputHotspot = std::make_shared<InputHotspot>(this);
 		_inputHotspot->SubscribeTouch(touch);
 	}
+}
+
+
+void InputWidget::OnRenderLoop(double secondsSinceLastLoop)
+{
+	if (_editing && _inputEditor == nullptr)
+		ShowInputEditor();
+	else if (!_editing && _inputEditor != nullptr)
+		HideInputEditor();
 }
 
 
@@ -113,6 +135,7 @@ void InputWidget::ShowInputEditor()
 
 void InputWidget::HideInputEditor()
 {
+	StringWidget::SetString(_inputEditor->GetString());
 	delete _inputEditor;
 	_inputEditor = nullptr;
 }

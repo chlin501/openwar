@@ -21,8 +21,10 @@ public:
 	ScrollerGesture(ScrollerHotspot* hotspot);
 	virtual ~ScrollerGesture();
 
+private: // RenderLoopObserver
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
+public:
 	virtual void TouchWasCaptured(Touch* touch);
 	virtual void TouchWillBeReleased(Touch* touch);
 

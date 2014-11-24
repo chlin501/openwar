@@ -109,8 +109,11 @@ public:
 	void InitializeCameraPosition();
 
 	virtual void Render();
+
+private: // RenderLoopObserver
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
+public:
 	virtual void OnTouchBegin(Touch* touch);
 
 	bounds2f GetBillboardBounds(glm::vec3 position, float height);

@@ -58,10 +58,10 @@ public:
 
 	void Render();
 
-	// RenderLoopObserver
+private: // RenderLoopObserver
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
-	// EditorModelObserver
+public: // EditorModelObserver
 	virtual void OnEditorModeChanged(EditorModel* editorModel);
 	virtual void OnTerrainFeatureChanged(EditorModel* editorModel);
 

@@ -20,11 +20,10 @@ InputWidget* InputEditor::GetInputWidget() const
 }
 
 
-void InputEditor::NotifyEnterKey()
+void InputEditor::NotifyEnter()
 {
 	if (_inputWidget->_enterAction)
 		_inputWidget->_enterAction();
-	_inputWidget->SetEditing(false);
 }
 
 
@@ -58,8 +57,6 @@ InputEditor_Mac::InputEditor_Mac(InputWidget* inputWidget) : InputEditor(inputWi
 											  object:_textField
 											  queue:[NSOperationQueue mainQueue]
 											  usingBlock:^(NSNotification*) {
-												  NSString* value = _textField.stringValue;
-												  inputWidget->SetString(value.UTF8String);
 												  inputWidget->SetEditing(false);
 											  }] retain];
 
@@ -82,12 +79,25 @@ InputEditor_Mac::~InputEditor_Mac()
 }
 
 
+const char* InputEditor_Mac::GetString() const
+{
+	return _textField.stringValue.UTF8String;
+}
+
+
+void InputEditor_Mac::SetString(const char* value)
+{
+	_textField.stringValue = [NSString stringWithUTF8String:value];
+}
+
+
 void InputEditor_Mac::OnInputWidgetChanged()
 {
 	UpdateNSTextFieldFont();
 	UpdateNSTextFieldFrame();
 	UpdateNSTextFieldColor();
 }
+
 
 void InputEditor_Mac::UpdateNSTextFieldFont()
 {
@@ -144,10 +154,7 @@ void InputEditor_Mac::UpdateNSTextFieldColor()
 	if (commandSelector == @selector(insertNewline:)
 		|| commandSelector == @selector(insertLineBreak:))
 	{
-		InputWidget* inputWidget = _inputEditor->GetInputWidget();
-		inputWidget->SetString(textView.string.UTF8String);
-
-		_inputEditor->NotifyEnterKey();
+		_inputEditor->NotifyEnter();
 		return YES;
 	}
 
@@ -178,8 +185,8 @@ InputEditor_iOS::InputEditor_iOS(InputWidget* inputWidget) : InputEditor(inputWi
 		_textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
 		_textField.text = [NSString stringWithUTF8String:inputWidget->GetString()];
 		_textField.delegate = _delegate;
+		_textField.autocorrectionType = UITextAutocorrectionTypeNo;
 		_textField.clearButtonMode = UITextFieldViewModeAlways;
-
 		//_textField.borderStyle = UITextBorderStyleLine; // TESTING
 
 		UpdateNSTextFieldFont();
@@ -199,6 +206,18 @@ InputEditor_iOS::~InputEditor_iOS()
 	[_textField removeFromSuperview];
 	[_textField release];
 	[_delegate release];
+}
+
+
+const char* InputEditor_iOS::GetString() const
+{
+	return _textField.text.UTF8String;
+}
+
+
+void InputEditor_iOS::SetString(const char* value)
+{
+	_textField.text = [NSString stringWithUTF8String:value];
 }
 
 
@@ -263,10 +282,7 @@ void InputEditor_iOS::UpdateNSTextFieldColor()
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-	InputWidget* inputWidget = _inputEditor->GetInputWidget();
-	inputWidget->SetString(textField.text.UTF8String);
-
-	_inputEditor->NotifyEnterKey();
+	_inputEditor->NotifyEnter();
 	return NO;
 }
 
@@ -275,7 +291,6 @@ void InputEditor_iOS::UpdateNSTextFieldColor()
 {
 	InputWidget* inputWidget = _inputEditor->GetInputWidget();
 
-	inputWidget->SetString(textField.text.UTF8String);
 	inputWidget->SetEditing(false);
 }
 
