@@ -1,7 +1,7 @@
 #ifndef TerrainHotspot_H
 #define TerrainHotspot_H
 
-#include "Hotspot.h"
+#include "Surface/Hotspot.h"
 #include "TerrainGesture.h"
 
 

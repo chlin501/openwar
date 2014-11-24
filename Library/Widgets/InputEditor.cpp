@@ -1,6 +1,6 @@
 #include "InputEditor.h"
 #include "InputWidget.h"
-#include "Surface.h"
+#include "Surface/Surface.h"
 
 
 InputEditor::InputEditor(InputWidget* inputWidget) :

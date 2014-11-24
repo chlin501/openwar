@@ -5,7 +5,7 @@
 #include "Surface.h"
 #include "View.h"
 #include "Touch.h"
-#include "GraphicsContext.h"
+#include "Graphics/GraphicsContext.h"
 
 #ifdef ENABLE_SURFACE_ADAPTER_MAC
 #import <AppKit/AppKit.h>

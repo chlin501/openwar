@@ -2,7 +2,7 @@
 #define InputWidget_H
 
 #include "StringWidget.h"
-#include "RenderLoopObserver.h"
+#include "Graphics/RenderLoopObserver.h"
 
 class InputEditor;
 class InputHotspot;

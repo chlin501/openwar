@@ -7,9 +7,9 @@
 
 #include <functional>
 #include <glm/glm.hpp>
-#include "Hotspot.h"
+#include "Surface/Hotspot.h"
 #include "ScrollerGesture.h"
-#include "bounds.h"
+#include "Algebra/bounds.h"
 
 class ScrollerViewport;
 

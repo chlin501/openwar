@@ -5,7 +5,7 @@
 #include "Hotspot.h"
 #include "Gesture.h"
 #include "Touch.h"
-#import "Surface.h"
+#include "Surface.h"
 
 
 Hotspot::~Hotspot()

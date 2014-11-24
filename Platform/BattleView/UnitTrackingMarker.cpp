@@ -5,12 +5,12 @@
 #include <glm/gtc/constants.hpp>
 
 #include "BattleModel/BattleCommander.h"
-#include "BillboardTextureShape.h"
+#include "Shapes/BillboardTextureShape.h"
 #include "Shapes/PathRenderer.h"
-#include "BillboardColorShader.h"
+#include "Shapes/BillboardColorShader.h"
 #include "BattleView.h"
 #include "UnitTrackingMarker.h"
-#include "TerrainViewport.h"
+#include "TerrainView/TerrainViewport.h"
 
 
 UnitTrackingMarker::UnitTrackingMarker(BattleView* battleView, Unit* unit) : UnitMarker(battleView, unit),

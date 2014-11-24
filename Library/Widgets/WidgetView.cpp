@@ -3,14 +3,14 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "WidgetView.h"
-#include "GraphicsContext.h"
-#include "RenderCall.h"
-#include "ScrollerHotspot.h"
-#include "ScrollerViewport.h"
-#include "Surface.h"
-#include "TextureAtlas.h"
-#include "TextureFont.h"
-#include "Touch.h"
+#include "Graphics/GraphicsContext.h"
+#include "Graphics/RenderCall.h"
+#include "Scroller/ScrollerHotspot.h"
+#include "Scroller/ScrollerViewport.h"
+#include "Surface/Surface.h"
+#include "Graphics/TextureAtlas.h"
+#include "Graphics/TextureFont.h"
+#include "Surface/Touch.h"
 #include "Widget.h"
 #include "WidgetShader.h"
 

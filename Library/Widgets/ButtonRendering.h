@@ -6,8 +6,8 @@
 #define ButtonRendering_H
 
 #include "Algebra/bounds.h"
-#include "Texture.h"
-#include "CommonShaders.h"
+#include "Graphics/Texture.h"
+#include "Graphics/CommonShaders.h"
 
 class TextureFont;
 

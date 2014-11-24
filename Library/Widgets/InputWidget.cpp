@@ -1,9 +1,9 @@
 #include "InputWidget.h"
 #include "InputEditor.h"
 #include "InputHotspot.h"
-#include "ScrollerViewport.h"
-#include "Surface.h"
-#include "Touch.h"
+#include "Scroller/ScrollerViewport.h"
+#include "Surface/Surface.h"
+#include "Surface/Touch.h"
 
 
 

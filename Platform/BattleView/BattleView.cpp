@@ -9,7 +9,7 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "BillboardColorShader.h"
+#include "Shapes/BillboardColorShader.h"
 #include "Surface/Surface.h"
 #include "BattleModel/BattleCommander.h"
 #include "SmoothTerrain/SmoothTerrainWater.h"
@@ -22,9 +22,9 @@
 #include "UnitCounter.h"
 #include "UnitMovementMarker.h"
 #include "UnitTrackingMarker.h"
-#include "TextureResource.h"
+#include "Graphics/TextureResource.h"
 #include "BattleHotspot.h"
-#include "TerrainViewport.h"
+#include "TerrainView/TerrainViewport.h"
 #include "Audio/SoundPlayer.h"
 
 #include <glm/gtc/matrix_transform.hpp>

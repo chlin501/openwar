@@ -3,8 +3,8 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "ButtonHotspot.h"
-#include "Touch.h"
-#include "Surface.h"
+#include "Surface/Touch.h"
+#include "Surface/Surface.h"
 
 
 ButtonHotspot::ButtonHotspot(std::function<bool(glm::vec2)> inside) :

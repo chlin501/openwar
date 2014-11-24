@@ -5,8 +5,8 @@
 #ifndef ScrollerGesture_H
 #define ScrollerGesture_H
 
-#include "Gesture.h"
-#include "RenderLoopObserver.h"
+#include "Surface/Gesture.h"
+#include "Graphics/RenderLoopObserver.h"
 
 class ScrollerHotspot;
 

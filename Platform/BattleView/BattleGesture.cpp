@@ -16,7 +16,7 @@
 #include "UnitTrackingMarker.h"
 #include "Surface/Surface.h"
 #include "BattleHotspot.h"
-#include "TerrainViewport.h"
+#include "TerrainView/TerrainViewport.h"
 
 
 #define SNAP_TO_UNIT_TRESHOLD 22 // meters

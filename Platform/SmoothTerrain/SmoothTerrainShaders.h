@@ -5,9 +5,9 @@
 #ifndef SmoothTerrainShaders_H
 #define SmoothTerrainShaders_H
 
-#include "FrameBuffer.h"
-#include "RenderBuffer.h"
-#include "ShaderProgram.h"
+#include "Graphics/FrameBuffer.h"
+#include "Graphics/RenderBuffer.h"
+#include "Graphics/ShaderProgram.h"
 #include "Shapes/VertexShape.h"
 
 class GraphicsContext;

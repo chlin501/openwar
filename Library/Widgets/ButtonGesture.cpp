@@ -5,8 +5,8 @@
 #include "ButtonGesture.h"
 #include "ButtonHotspot.h"
 #include "ButtonGrid.h"
-#include "Surface.h"
-#include "Touch.h"
+#include "Surface/Surface.h"
+#include "Surface/Touch.h"
 
 
 ButtonGesture::ButtonGesture(ButtonHotspot* hotspot) :

@@ -6,7 +6,7 @@
 #define ImageWidget_H
 
 #include "Widget.h"
-#include "TextureAtlas.h"
+#include "Graphics/TextureAtlas.h"
 
 
 class ImageWidget : public Widget

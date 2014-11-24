@@ -1,7 +1,7 @@
 #ifndef BattleHotspot_H
 #define BattleHotspot_H
 
-#include "Hotspot.h"
+#include "Surface/Hotspot.h"
 #include "BattleGesture.h"
 
 

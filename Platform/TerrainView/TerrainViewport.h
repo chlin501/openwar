@@ -1,8 +1,8 @@
 #ifndef TerrainViewport_H
 #define TerrainViewport_H
 
-#include "Viewport.h"
-#include "ScrollerViewport.h"
+#include "Graphics/Viewport.h"
+#include "Scroller/ScrollerViewport.h"
 
 
 class TerrainViewport : public Viewport

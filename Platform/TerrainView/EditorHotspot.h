@@ -1,7 +1,7 @@
 #ifndef EditorHotspot_H
 #define EditorHotspot_H
 
-#include "Hotspot.h"
+#include "Surface/Hotspot.h"
 #include "EditorGesture.h"
 
 class BattleView;

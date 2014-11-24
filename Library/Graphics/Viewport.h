@@ -5,7 +5,7 @@
 #ifndef Viewport_H
 #define Viewport_H
 
-#include "bounds.h"
+#include "Algebra/bounds.h"
 
 class GraphicsContext;
 

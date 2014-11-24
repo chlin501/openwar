@@ -5,7 +5,7 @@
 #ifndef VertexShape_H
 #define VertexShape_H
 
-#include "VertexBuffer.h"
+#include "Graphics/VertexBuffer.h"
 #include <functional>
 #include <vector>
 

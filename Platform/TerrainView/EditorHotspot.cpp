@@ -1,5 +1,5 @@
 #include "EditorHotspot.h"
-#include "BattleView.h"
+#include "BattleView/BattleView.h"
 #include "EditorModel.h"
 
 

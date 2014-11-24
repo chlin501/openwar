@@ -1,7 +1,7 @@
 #ifndef View_H
 #define View_H
 
-#include "bounds.h"
+#include "Algebra/bounds.h"
 
 class GraphicsContext;
 class Surface;

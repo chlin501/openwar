@@ -2,16 +2,16 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
+#include "OpenWarSurface.h"
 #include "BattleModel/BattleScenario.h"
 #include "Widgets/ButtonGrid.h"
 #include "Widgets/ButtonGesture.h"
 #include "BattleView/BattleGesture.h"
 #include "BattleView/BattleView.h"
 #include "TerrainView/EditorGesture.h"
-#include "OpenWarSurface.h"
+#include "TerrainView/EditorHotspot.h"
+#include "Scroller/ScrollerViewport.h"
 #include <glm/gtc/matrix_transform.hpp>
-#include "EditorHotspot.h"
-#include "ScrollerViewport.h"
 
 
 OpenWarSurface::OpenWarSurface(GraphicsContext* gc) : Surface(gc),

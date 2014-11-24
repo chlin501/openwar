@@ -6,7 +6,7 @@
 #define StringWidget_H
 
 #include "Widget.h"
-#include "FontAdapter.h"
+#include "Graphics/FontAdapter.h"
 #include "WidgetView.h"
 
 #include <glm/gtx/transform.hpp>

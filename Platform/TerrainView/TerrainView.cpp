@@ -9,12 +9,12 @@
 
 #include "BattleModel/HeightMap.h"
 #include "TerrainView.h"
-#include "Touch.h"
+#include "Surface/Touch.h"
 #include "EditorHotspot.h"
 #include "TerrainHotspot.h"
 #include "EditorModel.h"
 #include "TerrainViewport.h"
-#include "Surface.h"
+#include "Surface/Surface.h"
 
 
 TerrainView::TerrainView(Surface* surface) : View(surface),

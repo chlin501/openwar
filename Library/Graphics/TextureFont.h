@@ -7,7 +7,7 @@
 
 #include <map>
 #include <string>
-#include "bounds.h"
+#include "Algebra/bounds.h"
 
 class GraphicsContext;
 class FontAdapter;

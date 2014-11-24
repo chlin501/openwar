@@ -3,9 +3,9 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "StringWidget.h"
-#include "TextureAtlas.h"
-#include "TextureFont.h"
-#include "Touch.h"
+#include "Graphics/TextureAtlas.h"
+#include "Graphics/TextureFont.h"
+#include "Surface/Touch.h"
 
 #include <codecvt>
 #include <cstdlib>

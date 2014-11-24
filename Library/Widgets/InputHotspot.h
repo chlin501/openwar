@@ -1,7 +1,7 @@
 #ifndef InputHotspot_H
 #define InputHotspot_H
 
-#include "Hotspot.h"
+#include "Surface/Hotspot.h"
 #include "InputGesture.h"
 
 class InputWidget;

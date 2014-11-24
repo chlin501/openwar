@@ -1,7 +1,7 @@
 #ifndef BillboardTextureShader_H
 #define BillboardTextureShader_H
 
-#include "ShaderProgram.h"
+#include "Graphics/ShaderProgram.h"
 
 
 class BillboardTextureShader : public ShaderProgram

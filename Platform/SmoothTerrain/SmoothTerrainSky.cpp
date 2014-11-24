@@ -5,9 +5,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "SmoothTerrainSky.h"
-#include "GraphicsContext.h"
+#include "Graphics/GraphicsContext.h"
+#include "Graphics/TextureResource.h"
 #include "Shapes/VertexShape.h"
-#include "TextureResource.h"
 
 
 SmoothTerrainSky::SmoothTerrainSky(GraphicsContext* gc) :

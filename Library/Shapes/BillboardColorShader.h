@@ -5,8 +5,8 @@
 #ifndef ColorBillboardRenderer_H
 #define ColorBillboardRenderer_H
 
-#include "GraphicsContext.h"
-#include "ShaderProgram.h"
+#include "Graphics/GraphicsContext.h"
+#include "Graphics/ShaderProgram.h"
 
 
 class BillboardColorShader : public ShaderProgram

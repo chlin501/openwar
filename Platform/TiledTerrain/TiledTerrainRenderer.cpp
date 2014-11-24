@@ -3,13 +3,13 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "BattleModel/HeightMap.h"
-#include "ShaderProgram.h"
+#include "Graphics/ShaderProgram.h"
 #include "Shapes/VertexShape.h"
 #include "TiledTerrainRenderer.h"
-#include "CommonShaders.h"
-#include "GraphicsContext.h"
-#include "Image.h"
-#include "TextureAtlas.h"
+#include "Graphics/CommonShaders.h"
+#include "Graphics/GraphicsContext.h"
+#include "Graphics/Image.h"
+#include "Graphics/TextureAtlas.h"
 
 
 TiledTerrainRenderer::TiledTerrainRenderer(GraphicsContext* gc, TiledGroundMap* tiledGroundMap) :

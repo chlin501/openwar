@@ -7,12 +7,12 @@
 
 #include "BattleModel/BattleSimulator.h"
 #include "Shapes/VertexShape.h"
-#include "BillboardTextureShape.h"
+#include "Shapes/BillboardTextureShape.h"
 #include "TerrainView/TerrainView.h"
 #include "TiledTerrain/TiledTerrainRenderer.h"
 #include "SmoothTerrain/SmoothTerrainRenderer.h"
-#include "CommonShaders.h"
-#include "RenderLoopObserver.h"
+#include "Graphics/CommonShaders.h"
+#include "Graphics/RenderLoopObserver.h"
 
 class BattleCommander;
 class CasualtyMarker;

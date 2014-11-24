@@ -6,7 +6,7 @@
 #define ButtonHotspot_H
 
 #include <functional>
-#include "Hotspot.h"
+#include "Surface/Hotspot.h"
 #include "ButtonGesture.h"
 
 

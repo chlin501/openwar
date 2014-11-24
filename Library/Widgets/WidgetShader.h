@@ -1,7 +1,7 @@
 #ifndef WidgetShader_H
 #define WidgetShader_H
 
-#include "ShaderProgram.h"
+#include "Graphics/ShaderProgram.h"
 
 
 class WidgetShader : public ShaderProgram

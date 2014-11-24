@@ -4,12 +4,12 @@
 
 #include <glm/gtc/constants.hpp>
 
-#include "BillboardTextureShape.h"
+#include "Shapes/BillboardTextureShape.h"
 #include "BattleModel/BattleSimulator.h"
 #include "BattleModel/BattleCommander.h"
 #include "BattleView.h"
 #include "UnitCounter.h"
-#include "TerrainViewport.h"
+#include "TerrainView/TerrainViewport.h"
 
 
 UnitCounter::UnitCounter(BattleView* battleView, Unit* unit) :

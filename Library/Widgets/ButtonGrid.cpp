@@ -3,10 +3,10 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "ButtonGrid.h"
-#include "Surface.h"
-#include "Touch.h"
-#include "ScrollerViewport.h"
-#include "TextureFont.h"
+#include "Surface/Surface.h"
+#include "Surface/Touch.h"
+#include "Scroller/ScrollerViewport.h"
+#include "Graphics/TextureFont.h"
 
 
 const ButtonAlignment ButtonAlignment::TopLeft(ButtonAlignment::Vertical::Top, ButtonAlignment::Horizontal::Left);

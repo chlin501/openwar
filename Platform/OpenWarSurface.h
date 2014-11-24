@@ -8,7 +8,7 @@
 #include "Surface/Surface.h"
 #include "BattleView/BattleLayer.h"
 #include "TerrainView/EditorModel.h"
-#include "RenderLoopObserver.h"
+#include "Graphics/RenderLoopObserver.h"
 
 class ButtonGesture;
 class ButtonItem;

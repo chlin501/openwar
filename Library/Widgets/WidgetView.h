@@ -7,8 +7,8 @@
 
 #include <vector>
 #include "Algebra/bounds.h"
-#include "VertexBuffer.h"
-#include "View.h"
+#include "Graphics/VertexBuffer.h"
+#include "Surface/View.h"
 #include "Widget.h"
 
 class GraphicsContext;

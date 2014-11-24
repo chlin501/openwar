@@ -4,8 +4,8 @@
 
 #include "ScrollerGesture.h"
 #include "ScrollerHotspot.h"
-#include "Touch.h"
 #include "ScrollerViewport.h"
+#include "Surface/Touch.h"
 
 
 ScrollerGesture::ScrollerGesture(ScrollerHotspot* hotspot) :

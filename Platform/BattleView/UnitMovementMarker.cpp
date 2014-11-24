@@ -6,12 +6,12 @@
 
 #include "BattleModel/BattleSimulator.h"
 #include "BattleModel/BattleCommander.h"
-#include "BillboardColorShader.h"
+#include "Shapes/BillboardColorShader.h"
 #include "Shapes/PathRenderer.h"
-#include "BillboardTextureShape.h"
+#include "Shapes/BillboardTextureShape.h"
 #include "BattleView.h"
 #include "UnitMovementMarker.h"
-#include "TerrainViewport.h"
+#include "TerrainView/TerrainViewport.h"
 
 
 UnitMovementMarker::UnitMovementMarker(BattleView* battleView, Unit* unit) : UnitMarker(battleView, unit)

@@ -1,5 +1,5 @@
 #include "TerrainHotspot.h"
-#import "TerrainView.h"
+#include "TerrainView.h"
 
 
 TerrainHotspot::TerrainHotspot(TerrainView* terrainView) :

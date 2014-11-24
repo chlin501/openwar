@@ -1,10 +1,10 @@
 #ifndef BattleSurface_H
 #define BattleSurface_H
 
-#include "ShaderProgram.h"
+#include "Graphics/ShaderProgram.h"
+#include "Graphics/CommonShaders.h"
+#include "Graphics/RenderLoopObserver.h"
 #include "TerrainView/EditorModel.h"
-#include "CommonShaders.h"
-#include "RenderLoopObserver.h"
 
 class BattleCommander;
 class BattleGesture;

@@ -3,10 +3,10 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "SmoothTerrainShaders.h"
-#include "Image.h"
-#include "GraphicsContext.h"
-#include "RenderCall.h"
-#include "TextureAtlas.h"
+#include "Graphics/Image.h"
+#include "Graphics/GraphicsContext.h"
+#include "Graphics/RenderCall.h"
+#include "Graphics/TextureAtlas.h"
 
 
 TerrainInsideShader::TerrainInsideShader(GraphicsContext* gc) : ShaderProgram(

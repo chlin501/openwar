@@ -6,7 +6,7 @@
 #define ShootingMarker_H
 
 #include "BattleModel/BattleSimulator.h"
-#include "VertexShape.h"
+#include "Shapes/VertexShape.h"
 
 
 class ShootingCounter

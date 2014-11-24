@@ -7,11 +7,11 @@
 
 #include <string>
 #include "Algebra/bounds.h"
-#include "Texture.h"
+#include "Graphics/Texture.h"
 #include "WidgetView.h"
 #include "ButtonRendering.h"
 #include "ButtonHotspot.h"
-#include "RenderLoopObserver.h"
+#include "Graphics/RenderLoopObserver.h"
 #include "ImageWidget.h"
 #include "StringWidget.h"
 

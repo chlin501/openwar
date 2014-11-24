@@ -11,7 +11,7 @@
 #include "Algebra/affine2.h"
 #include "Graphics/GraphicsContext.h"
 #include "Graphics/ShaderProgram.h"
-#include "TextureAtlas.h"
+#include "Graphics/TextureAtlas.h"
 #include "Graphics/Image.h"
 #include "VertexShape.h"
 

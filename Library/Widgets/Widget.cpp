@@ -4,10 +4,10 @@
 
 #include "Widget.h"
 #include "WidgetView.h"
-#include "Touch.h"
-#include "Surface.h"
-#include "GraphicsContext.h"
-#import "ScrollerViewport.h"
+#include "Surface/Touch.h"
+#include "Surface/Surface.h"
+#include "Graphics/GraphicsContext.h"
+#include "Scroller/ScrollerViewport.h"
 
 
 /* Widget */

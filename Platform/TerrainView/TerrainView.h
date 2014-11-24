@@ -9,7 +9,7 @@
 #include "BattleModel/HeightMap.h"
 #include "Algebra/geometry.h"
 #include "Shapes/VertexShape.h"
-#include "View.h"
+#include "Surface/View.h"
 
 class EditorModel;
 class EditorHotspot;

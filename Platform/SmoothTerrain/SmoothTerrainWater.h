@@ -5,8 +5,8 @@
 #ifndef SmoothTerrainWater_H
 #define SmoothTerrainWater_H
 
-#include "ShaderProgram.h"
-#include "Image.h"
+#include "Graphics/ShaderProgram.h"
+#include "Graphics/Image.h"
 #include "Shapes/VertexShape.h"
 
 class GraphicsContext;

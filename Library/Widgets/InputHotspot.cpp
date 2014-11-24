@@ -1,5 +1,5 @@
 #include "InputHotspot.h"
-#import "InputWidget.h"
+#include "InputWidget.h"
 
 
 InputHotspot::InputHotspot(InputWidget* inputWidget) :

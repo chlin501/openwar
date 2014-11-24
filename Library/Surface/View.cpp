@@ -1,7 +1,7 @@
 #include "View.h"
 #include "Surface.h"
-#include "Viewport.h"
-#include "GraphicsContext.h"
+#include "Graphics/Viewport.h"
+#include "Graphics/GraphicsContext.h"
 
 
 View::View(Surface* surface) :

@@ -1,7 +1,7 @@
 #ifndef InputGesture_H
 #define InputGesture_H
 
-#include "Gesture.h"
+#include "Surface/Gesture.h"
 
 class InputHotspot;
 

@@ -1,8 +1,8 @@
 #include "InputGesture.h"
 #include "InputHotspot.h"
 #include "InputWidget.h"
-#include "ScrollerViewport.h"
-#include "Touch.h"
+#include "Scroller/ScrollerViewport.h"
+#include "Surface/Touch.h"
 
 
 InputGesture::InputGesture(InputHotspot* inputHotspot) :

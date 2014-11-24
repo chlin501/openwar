@@ -2,12 +2,12 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "Graphics/GraphicsOpenGL.h"
 #include "Window.h"
 #include "Surface.h"
 #include "Gesture.h"
-#include "RenderLoopObserver.h"
-#include "Viewport.h"
+#include "Graphics/GraphicsOpenGL.h"
+#include "Graphics/RenderLoopObserver.h"
+#include "Graphics/Viewport.h"
 
 
 bool Window::_done = false;
@@ -268,7 +268,7 @@ void Window::ProcessFingerDown(const SDL_TouchFingerEvent& event)
 
 	Touch* touch = new Touch(1, position, timestamp, MouseButtons());
 	_touches[MakeTouchKey(event)] = touch;
-	_surface->TouchBegin(touch);
+	_surface->NotifyViewsOfTouchBegin(touch);
 
 	touch->TouchBegan();
 }
@@ -362,7 +362,7 @@ void Window::ProcessMouseButtonDown(const SDL_MouseButtonEvent& event)
 	if (_mouseTouch == nullptr)
 	{
 		_mouseTouch = new Touch(1, position, timestamp, buttons);
-		_surface->TouchBegin(_mouseTouch);
+		_surface->NotifyViewsOfTouchBegin(_mouseTouch);
 	}
 	else
 	{

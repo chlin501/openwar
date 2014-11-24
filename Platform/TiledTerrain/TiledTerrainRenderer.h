@@ -10,9 +10,9 @@ class GraphicsContext;
 #include <map>
 #include "BattleModel/TiledGroundMap.h"
 #include "Algebra/bounds.h"
-#include "Image.h"
+#include "Graphics/Image.h"
 #include "Algorithms/bspline_patch.h"
-#include "Texture.h"
+#include "Graphics/Texture.h"
 
 
 class TiledTerrainRenderer

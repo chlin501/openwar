@@ -6,7 +6,7 @@
 #define TERRAINGESTURE_H
 
 #include "Surface/Gesture.h"
-#include "RenderLoopObserver.h"
+#include "Graphics/RenderLoopObserver.h"
 #include "Algorithms/sampler.h"
 
 class TerrainView;

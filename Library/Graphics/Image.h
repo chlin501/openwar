@@ -7,7 +7,7 @@
 
 #include <glm/glm.hpp>
 #include "resource.h"
-#include "bounds.h"
+#include "Algebra/bounds.h"
 
 
 #ifdef OPENWAR_IMAGE_ENABLE_SDL

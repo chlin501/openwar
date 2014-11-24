@@ -2,11 +2,11 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "Image.h"
 #include "SmoothTerrainRenderer.h"
-#include "CommonShaders.h"
-#include "GraphicsContext.h"
-#include "TextureAtlas.h"
+#include "Graphics/Image.h"
+#include "Graphics/CommonShaders.h"
+#include "Graphics/GraphicsContext.h"
+#include "Graphics/TextureAtlas.h"
 
 
 SmoothTerrainRenderer::SmoothTerrainRenderer(GraphicsContext* gc, SmoothGroundMap* smoothGroundMap) :

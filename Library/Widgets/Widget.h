@@ -5,7 +5,7 @@
 #ifndef Widget_H
 #define Widget_H
 
-#include "Vertex.h"
+#include "Graphics/Vertex.h"
 #include <vector>
 
 class GraphicsContext;

@@ -4,7 +4,7 @@
 #include "BattleHotspot.h"
 #include "BattleView.h"
 #include "BattleLayer.h"
-#include "EditorHotspot.h"
+#include "TerrainView/EditorHotspot.h"
 #include "UnitCounter.h"
 #include "SmoothTerrain/SmoothTerrainWater.h"
 #include "TerrainView/TerrainGesture.h"

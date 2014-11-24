@@ -4,12 +4,12 @@
 
 #include "TerrainGesture.h"
 #include "TerrainView.h"
-#include "Surface/Touch.h"
-#include "ShaderProgram.h"
-#include "CommonShaders.h"
-#include "Surface.h"
 #include "TerrainHotspot.h"
 #include "TerrainViewport.h"
+#include "Graphics/ShaderProgram.h"
+#include "Graphics/CommonShaders.h"
+#include "Surface/Surface.h"
+#include "Surface/Touch.h"
 
 
 TerrainGesture::TerrainGesture(TerrainHotspot* hotspot) :
