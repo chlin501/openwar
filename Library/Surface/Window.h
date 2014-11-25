@@ -33,7 +33,7 @@ public:
 	Window();
 	~Window();
 
-	void SetSurface(Surface* surface) { _surface = surface; }
+	void SetSurface(Surface* surface);
 
 	static bool IsDone();
 	static void ProcessEvents();

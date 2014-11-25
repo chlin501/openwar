@@ -187,7 +187,7 @@ void BattleLayer::UpdateBattleViewSize()
 	{
 		float count = _battleViews.size();
 
-		glm::vec2 surface_size = _surface->GetSize();
+		glm::vec2 surface_size = _surface->GetVirtualSize();
 		bounds1f viewport_x = bounds1f(0, surface_size.x);
 		bounds1f viewport_y = bounds1f(0, surface_size.y);
 

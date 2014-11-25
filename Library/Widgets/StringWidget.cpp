@@ -3,6 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "StringWidget.h"
+#include "Graphics/GraphicsContext.h"
 #include "Graphics/TextureAtlas.h"
 #include "Graphics/TextureFont.h"
 #include "Surface/Touch.h"
@@ -154,7 +155,11 @@ void StringWidget::OnTouchBegin(Touch* touch)
 void StringWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	if (_glow.a != 0)
-		AppendVertices(vertices, _glow, 2);
+	{
+		GraphicsContext* gc = GetGraphicsContext();
+		float blur = 2 * gc->GetCombinedScaling();
+		AppendVertices(vertices, _glow, blur);
+	}
 
 	AppendVertices(vertices, _color, 0);
 }

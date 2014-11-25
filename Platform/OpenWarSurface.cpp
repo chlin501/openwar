@@ -114,7 +114,7 @@ void OpenWarSurface::Render()
 
 void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 {
-	bounds2f viewportBounds = bounds2f(0, 0, GetSize());
+	bounds2f viewportBounds = bounds2f(0, 0, GetVirtualSize());
 
 	_buttonsTopLeft->SetBounds(viewportBounds);
 	_buttonsTopRight->SetBounds(viewportBounds);

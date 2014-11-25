@@ -44,15 +44,21 @@ GraphicsContext* Surface::GetGraphicsContext() const
 }
 
 
-glm::vec2 Surface::GetSize() const
+void Surface::SetNativeSize(glm::vec2 value)
 {
-	return _size;
+	_nativeSize = value;
 }
 
 
-void Surface::SetSize(glm::vec2 value)
+glm::vec2 Surface::GetNativeSize() const
 {
-	_size = value;
+	return _nativeSize;
+}
+
+
+glm::vec2 Surface::GetVirtualSize() const
+{
+	return _nativeSize / _gc->GetVirtualScaling();
 }
 
 

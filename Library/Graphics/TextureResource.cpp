@@ -55,7 +55,7 @@ void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const resourc
 			}
 		}
 
-		if (gc->GetPixelDensity() > 1)
+		if (gc->GetNativeScaling() > 1)
 		{
 			NSString* name2x = [NSString stringWithFormat:@"%@@2x.png", stem];
 			image = [UIImage imageNamed:name2x];

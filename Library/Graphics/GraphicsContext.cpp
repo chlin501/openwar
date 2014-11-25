@@ -6,8 +6,9 @@
 #include "TextureAtlas.h"
 
 
-GraphicsContext::GraphicsContext(float pixelDensity) :
-	_pixeldensity(pixelDensity),
+GraphicsContext::GraphicsContext(float nativeScaling, float virtualScaling) :
+	_nativeScaling(nativeScaling),
+	_virtualScaling(virtualScaling),
 	_widgetTextureAtlas(nullptr)
 {
 }
@@ -20,9 +21,21 @@ GraphicsContext::~GraphicsContext()
 }
 
 
-float GraphicsContext::GetPixelDensity() const
+float GraphicsContext::GetNativeScaling() const
 {
-	return _pixeldensity;
+	return _nativeScaling;
+}
+
+
+float GraphicsContext::GetVirtualScaling() const
+{
+	return _virtualScaling;
+}
+
+
+float GraphicsContext::GetCombinedScaling() const
+{
+	return _nativeScaling * _virtualScaling;
 }
 
 

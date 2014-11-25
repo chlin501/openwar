@@ -33,7 +33,7 @@ class Surface
 
 	GraphicsContext* _gc;
 	std::vector<View*> _views;
-	glm::vec2 _size;
+	glm::vec2 _nativeSize;
 
 public:
 	Surface(GraphicsContext* gc);
@@ -41,8 +41,9 @@ public:
 
 	GraphicsContext* GetGraphicsContext() const;
 
-	glm::vec2 GetSize() const;
-	void SetSize(glm::vec2 value);
+	void SetNativeSize(glm::vec2 value);
+	glm::vec2 GetNativeSize() const;
+	glm::vec2 GetVirtualSize() const;
 
 	void NotifyViewsOfTouchEnter(Touch* touch);
 	void NotifyViewsOfTouchBegin(Touch* touch);

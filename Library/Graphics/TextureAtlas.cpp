@@ -144,7 +144,7 @@ std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, 
 	_textureAtlasImage->Copy(image, position.x, position.y);
 	_dirty = true;
 
-	return NewTextureImage(BorderBounds(bounds), discardability);
+	return NewTextureImage(BorderBounds(bounds), discardability, image.GetPixelDensity());
 }
 
 
@@ -161,13 +161,14 @@ TextureSheet TextureAtlas::GetTextureSheet(const bounds2f& bounds)
 }
 
 
-std::shared_ptr<TextureImage> TextureAtlas::NewTextureImage(const BorderBounds& bounds, TextureDiscardability discardability)
+std::shared_ptr<TextureImage> TextureAtlas::NewTextureImage(const BorderBounds& bounds, TextureDiscardability discardability, float density)
 {
 	std::shared_ptr<TextureImage> result = std::make_shared<TextureImage>();
 
 	result->_textureAtlas = this;
 	result->_bounds = bounds;
 	result->_discardable = discardability == TextureDiscardability::Discardable;
+	result->_density = density;
 
 	_textureImages.push_back(result);
 
@@ -199,7 +200,8 @@ void TextureAtlas::DiscardTextureImages()
 TextureImage::TextureImage() :
 	_textureAtlas(nullptr),
 	_discardable(false),
-	_discarded(false)
+	_discarded(false),
+	_density(1)
 {
 }
 
@@ -207,6 +209,12 @@ TextureImage::TextureImage() :
 bool TextureImage::IsDiscarded() const
 {
 	return _discarded;
+}
+
+
+float TextureImage::GetDensity() const
+{
+	return _density;
 }
 
 
@@ -238,14 +246,16 @@ BorderBounds TextureImage::GetCoords() const
 
 TextureSheet::TextureSheet(TextureAtlas* textureAtlas, int size_u, int size_v) :
 	_textureAtlas(textureAtlas),
-	_sheetBounds(0, 0, size_u, size_v)
+	_sheetBounds(0, 0, size_u, size_v),
+	_density(1)
 {
 }
 
 
 TextureSheet::TextureSheet(TextureAtlas* textureAtlas, const bounds2f& bounds) :
 	_textureAtlas(textureAtlas),
-	_sheetBounds(bounds)
+	_sheetBounds(bounds),
+	_density(1)
 {
 }
 
@@ -261,5 +271,5 @@ std::shared_ptr<TextureImage> TextureSheet::NewTextureImage(const BorderBounds& 
 	BorderBounds offsetBounds;
 	offsetBounds.inner = bounds.inner + _sheetBounds.min;
 	offsetBounds.outer = bounds.outer + _sheetBounds.min;
-	return _textureAtlas->NewTextureImage(offsetBounds, TextureDiscardability::NonDiscardable);
+	return _textureAtlas->NewTextureImage(offsetBounds, TextureDiscardability::NonDiscardable, _density);
 }

@@ -59,12 +59,12 @@ int main(int argc, char *argv[])
 	}
 #endif
     
-    GraphicsContext* gc = new GraphicsContext(1);
+    GraphicsContext* gc = new GraphicsContext(1, 1);
 	OpenWarSurface* surface = new OpenWarSurface(gc);
-    surface->SetSize(glm::vec2(640, 480));
-    RenderLoopObserver::NotifyRenderLoop(0);
 
 	window->SetSurface(surface);
+
+    RenderLoopObserver::NotifyRenderLoop(0);
 
 	BattleScenario* scenario = CreateBattleScenario();
 	std::vector<BattleCommander*> commanders(1, scenario->GetCommanders().front());

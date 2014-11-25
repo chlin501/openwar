@@ -83,6 +83,7 @@ struct TextureSheet
 {
 	TextureAtlas* _textureAtlas;
 	bounds2f _sheetBounds;
+	float _density;
 
 	TextureSheet(TextureAtlas* textureAtlas, int size_u, int size_v);
 	TextureSheet(TextureAtlas* textureAtlas, const bounds2f& bounds);
@@ -128,7 +129,7 @@ public:
 	TextureSheet AddTextureSheet(const Image& image);
 	TextureSheet GetTextureSheet(const bounds2f& bounds);
 
-	std::shared_ptr<TextureImage> NewTextureImage(const BorderBounds& bounds, TextureDiscardability discardability);
+	std::shared_ptr<TextureImage> NewTextureImage(const BorderBounds& bounds, TextureDiscardability discardability, float density);
 
 private:
 	void DiscardTextureImages();
@@ -147,11 +148,14 @@ class TextureImage
 	BorderBounds _bounds;
 	bool _discardable;
 	bool _discarded;
+	float _density;
 
 public:
 	TextureImage();
 
 	bool IsDiscarded() const;
+
+	float GetDensity() const;
 
 	void SetBounds(const BorderBounds& value);
 

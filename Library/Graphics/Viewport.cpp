@@ -32,7 +32,7 @@ void Viewport::SetBounds(const bounds2i& value)
 
 void Viewport::UseViewport()
 {
-	bounds2f bounds = (bounds2f)_bounds * _gc->GetPixelDensity();
+	bounds2f bounds = (bounds2f)_bounds * _gc->GetCombinedScaling();
 	glViewport((GLint)bounds.min.x, (GLint)bounds.min.y, (GLsizei)bounds.x().size(), (GLsizei)bounds.y().size());
 }
 

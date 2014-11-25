@@ -119,7 +119,7 @@ bool TextureChar::CanColorize() const
 
 glm::vec2 TextureChar::GetInnerSize() const
 {
-	return _textureImage->GetBounds().inner.size();
+	return _textureImage->GetBounds().inner.size() / _textureImage->GetDensity();
 }
 
 
@@ -132,5 +132,6 @@ bounds2f TextureChar::GetOuterUV() const
 bounds2f TextureChar::GetOuterXY(glm::vec2 position) const
 {
 	BorderBounds bounds = _textureImage->GetBounds();
-	return bounds.outer + position - bounds.inner.min;
+	float density = _textureImage->GetDensity();
+	return (bounds.outer - bounds.inner.min) / density + position;
 }

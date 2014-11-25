@@ -32,9 +32,9 @@ FontAdapter_NSFont::FontAdapter_NSFont(GraphicsContext* gc, const FontDescriptor
 	_font(nil),
 	_attributes(nil)
 {
-	float size = fontDescriptor.size * gc->GetPixelDensity();
+	float size = fontDescriptor.size * gc->GetCombinedScaling();
 	if (size == 0)
-		size = 12 * gc->GetPixelDensity();
+		size = 12 * gc->GetCombinedScaling();
 
 	if (!fontDescriptor.name.empty())
 		_font = [[NSFont fontWithName:[NSString stringWithUTF8String:fontDescriptor.name.c_str()] size:size] retain];
@@ -70,10 +70,8 @@ std::shared_ptr<TextureImage> FontAdapter_NSFont::AddTextureImage(TextureAtlas* 
 	Image image(width, height);
 
 	CGContextRef context = image.GetCGContext();
-
-	NSGraphicsContext* gc = [NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:NO];
 	[NSGraphicsContext saveGraphicsState];
-	[NSGraphicsContext setCurrentContext:gc];
+	[NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:NO]];
 
 	CGContextSetRGBFillColor(context, 1, 1, 1, 1);
 	CGContextSetRGBStrokeColor(context, 1, 1, 1, 1);
@@ -85,6 +83,9 @@ std::shared_ptr<TextureImage> FontAdapter_NSFont::AddTextureImage(TextureAtlas* 
 
 	if (filter)
 		filter(image);
+
+	GraphicsContext* gc = textureAtlas->GetGraphicsContext();
+	image.SetPixelDensity(gc->GetCombinedScaling());
 
 	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image, TextureDiscardability::Discardable);
 
@@ -110,9 +111,9 @@ FontAdapter_UIFont::FontAdapter_UIFont(GraphicsContext* gc, const FontDescriptor
 	_font(nil),
 	_attributes(nil)
 {
-	float size = fontDescriptor.size * gc->GetPixelDensity();
+	float size = fontDescriptor.size * gc->GetCombinedScaling();
 	if (size == 0)
-		size = 12 * gc->GetPixelDensity();
+		size = 12 * gc->GetCombinedScaling();
 
 	if (!fontDescriptor.name.empty())
 		_font = [[UIFont fontWithName:[NSString stringWithUTF8String:fontDescriptor.name.c_str()] size:size] retain];
@@ -166,6 +167,9 @@ std::shared_ptr<TextureImage> FontAdapter_UIFont::AddTextureImage(TextureAtlas* 
 
 	if (filter)
 		filter(image);
+
+	GraphicsContext* gc = textureAtlas->GetGraphicsContext();
+	image.SetPixelDensity(gc->GetCombinedScaling());
 
 	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image, TextureDiscardability::Discardable);
 
@@ -274,6 +278,9 @@ std::shared_ptr<TextureImage> FontAdapter_SDL_ttf::AddTextureImage(TextureAtlas*
 
 	if (filter)
 		filter(image2);
+
+	GraphicsContext* gc = textureAtlas->GetGraphicsContext();
+	image.SetPixelDensity(gc->GetCombinedScaling());
 
 	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image2, TextureDiscardability::Discardable);
 	BorderBounds bounds = textureImage->GetBounds();

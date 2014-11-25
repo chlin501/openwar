@@ -16,16 +16,19 @@ class TextureAtlas;
 
 class GraphicsContext
 {
-	float _pixeldensity;
+	float _nativeScaling;
+	float _virtualScaling;
 	std::map<std::string, ShaderProgram*> _shaders;
 	mutable TextureAtlas* _widgetTextureAtlas;
 	std::map<FontDescriptor, FontAdapter*> _fontAdapters;
 
 public:
-	GraphicsContext(float pixelDensity);
+	GraphicsContext(float nativeScaling, float virtualScaling);
 	~GraphicsContext();
 
-	float GetPixelDensity() const;
+	float GetNativeScaling() const;
+	float GetVirtualScaling() const;
+	float GetCombinedScaling() const;
 
 	TextureAtlas* GetWidgetTextureAtlas() const;
 
@@ -42,7 +45,6 @@ public:
 		}
 		return result;
 	}
-
 
 private:
 	GraphicsContext(const GraphicsContext&) { }

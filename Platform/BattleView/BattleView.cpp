@@ -236,7 +236,7 @@ void BattleView::SetSimulator(BattleSimulator* simulator)
 static bool ShouldEnableRenderEdges(GraphicsContext* gc)
 {
 #if TARGET_OS_IPHONE
-	return gc->GetPixelDensity() > 1;
+	return gc->GetNativeScaling() > 1;
 #else
 	return true;
 #endif
@@ -562,7 +562,7 @@ void BattleView::Render()
 		.SetVertices(_colorBillboardVertices, "position", "color", "height")
 		.SetUniform("transform", transform3D)
 		.SetUniform("upvector", GetTerrainViewport()->GetCameraUpVector())
-		.SetUniform("viewport_height", 0.25f * _gc->GetPixelDensity() * GetTerrainViewport()->GetBounds().y().size())
+		.SetUniform("viewport_height", 0.25f * _gc->GetCombinedScaling() * GetTerrainViewport()->GetBounds().y().size())
 		.Render();
 
 
@@ -715,7 +715,7 @@ void BattleView::Render()
 		.SetVertices(_colorBillboardVertices, "position", "color", "height")
 		.SetUniform("transform", transform3D)
 		.SetUniform("upvector", GetTerrainViewport()->GetCameraUpVector())
-		.SetUniform("viewport_height", 0.25f * _gc->GetPixelDensity() * GetTerrainViewport()->GetBounds().y().size())
+		.SetUniform("viewport_height", 0.25f * _gc->GetCombinedScaling() * GetTerrainViewport()->GetBounds().y().size())
 		.Render();
 
 
@@ -729,7 +729,7 @@ void BattleView::Render()
 		.SetVertices(_colorBillboardVertices, "position", "color", "height")
 		.SetUniform("transform", transform3D)
 		.SetUniform("upvector", GetTerrainViewport()->GetCameraUpVector())
-		.SetUniform("viewport_height", 0.25f * _gc->GetPixelDensity() * GetTerrainViewport()->GetBounds().y().size())
+		.SetUniform("viewport_height", 0.25f * _gc->GetCombinedScaling() * GetTerrainViewport()->GetBounds().y().size())
 		.Render();
 
 
@@ -904,7 +904,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 	glm::mat4x4 transform = GetTerrainViewport()->GetTransform();
 	glm::vec3 upvector = GetTerrainViewport()->GetCameraUpVector();
 	float viewport_height = GetTerrainViewport()->GetBounds().y().size();
-	bounds1f sizeLimit = GetUnitIconSizeLimit() / _gc->GetPixelDensity();
+	bounds1f sizeLimit = GetUnitIconSizeLimit() / (_gc->GetCombinedScaling());
 
 	glm::vec3 position2 = position + height * 0.5f * viewport_height * upvector;
 	glm::vec4 p = transform * glm::vec4(position, 1);
@@ -966,7 +966,7 @@ bounds1f BattleView::GetUnitIconSizeLimit() const
 	float x = sqrtf(1 - y * y);
 	float a = 1 - fabsf(atan2f(y, x) / (float)M_PI_2);
 
-	float pixelsPerPoint = _gc->GetPixelDensity();
+	float pixelsPerPoint = _gc->GetCombinedScaling();
 
 	bounds1f result(0, 0);
 	result.min = (32 - 8 * a) * pixelsPerPoint;

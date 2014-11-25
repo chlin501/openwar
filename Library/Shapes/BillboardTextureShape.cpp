@@ -144,7 +144,7 @@ void BillboardTextureShape::Draw(GraphicsContext* gc, Texture* tex, const glm::m
 		.SetUniform("transform", transform)
 		.SetTexture("texture", tex)
 		.SetUniform("upvector", cameraUp)
-		.SetUniform("viewport_height", gc->GetPixelDensity() * viewportHeight)
+		.SetUniform("viewport_height", gc->GetCombinedScaling() * viewportHeight)
 		.SetUniform("min_point_size", sizeLimit.min)
 		.SetUniform("max_point_size", sizeLimit.max)
 		.Render();

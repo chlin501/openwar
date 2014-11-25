@@ -35,6 +35,7 @@ Image::Image() :
 #endif
 	_width(0),
 	_height(0),
+	_pixelDensity(1),
 	_pixels(nullptr),
 	_owner(false)
 {
@@ -51,6 +52,7 @@ Image::Image(const Image& image) :
 #endif
 	_width(image._width),
 	_height(image._height),
+	_pixelDensity(1),
 	_pixels(nullptr),
 	_owner(false)
 {
@@ -70,6 +72,7 @@ Image::Image(int width, int height) :
 #endif
 	_width(width),
 	_height(height),
+	_pixelDensity(1),
 	_pixels(nullptr),
 	_owner(false)
 {
@@ -99,6 +102,18 @@ Image::~Image()
 
 	if (_owner)
 		free(_pixels);
+}
+
+
+float Image::GetPixelDensity() const
+{
+	return _pixelDensity;
+}
+
+
+void Image::SetPixelDensity(float value)
+{
+	_pixelDensity = value;
 }
 
 

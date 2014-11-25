@@ -31,6 +31,7 @@ class Image
 
 	int _width;
 	int _height;
+	float _pixelDensity;
 	unsigned char* _pixels;
 	bool _owner;
 
@@ -39,6 +40,9 @@ public:
 	Image(const Image& image);
 	Image(int width, int height);
 	~Image();
+
+	float GetPixelDensity() const;
+	void SetPixelDensity(float value);
 
 	Image& LoadFromResource(const resource& r);
 
