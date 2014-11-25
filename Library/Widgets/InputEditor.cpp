@@ -27,8 +27,12 @@ void InputEditor::NotifyEnter()
 }
 
 
-#ifdef ENABLE_SURFACE_ADAPTER_MAC
+/******************************************************************************/
+/* InputEditor_Mac */
+/******************************************************************************/
 
+
+#ifdef ENABLE_INPUT_EDITOR_MAC
 
 InputEditor_Mac::InputEditor_Mac(InputWidget* inputWidget) : InputEditor(inputWidget),
 	_textField(nil),
@@ -164,12 +168,15 @@ void InputEditor_Mac::UpdateNSTextFieldColor()
 
 @end
 
-
 #endif
 
 
-#ifdef ENABLE_SURFACE_ADAPTER_IOS
+/******************************************************************************/
+/* InputEditor_iOS */
+/******************************************************************************/
 
+
+#ifdef ENABLE_INPUT_EDITOR_IOS
 
 InputEditor_iOS::InputEditor_iOS(InputWidget* inputWidget) : InputEditor(inputWidget),
 	_textField(nil),
@@ -296,6 +303,191 @@ void InputEditor_iOS::UpdateNSTextFieldColor()
 
 
 @end
+
+#endif
+
+
+/******************************************************************************/
+/* InputEditor_Android */
+/******************************************************************************/
+
+
+#ifdef ENABLE_INPUT_EDITOR_ANDROID
+
+#include <codecvt>
+#include <cstring>
+#include <locale>
+
+JNIEnv* InputEditor_Android::_env = 0;
+static InputEditor_Android* _instance = nullptr;
+
+
+/*JNIEXPORT*/ void /*JNICALL*/ Java_org_openwar_InputEditor_notifyEnter(JNIEnv* env, jclass jcls)
+{
+	if (_instance != nullptr)
+		_instance->CallbackNotifyEnter();
+}
+
+
+void InputEditor_Android::Initialize(JNIEnv* env)
+{
+	_env = env;
+}
+
+
+InputEditor_Android::InputEditor_Android(InputWidget* inputWidget) : InputEditor(inputWidget)
+{
+	_instance = this;
+
+	UpdateBounds();
+	CallShow();
+}
+
+
+InputEditor_Android::~InputEditor_Android()
+{
+	if (_instance == this)
+		_instance = nullptr;
+
+	CallHide();
+}
+
+
+const char* InputEditor_Android::GetString() const
+{
+	_string = CallGetString();
+	return _string.c_str();
+}
+
+
+void InputEditor_Android::SetString(const char* value)
+{
+	CallSetString(value);
+}
+
+
+void InputEditor_Android::OnInputWidgetChanged()
+{
+	UpdateBounds();
+}
+
+
+void InputEditor_Android::UpdateBounds()
+{
+	InputWidget* inputWidget = GetInputWidget();
+
+	bounds2f bounds = inputWidget->GetBounds();
+	int x = (int)bounds.min.x;
+	int y = (int)bounds.min.y;
+	int width = (int)bounds.x().size();
+	int height = (int)bounds.y().size();
+
+	CallSetBounds(x, y, width, height);
+}
+
+
+std::string InputEditor_Android::CallGetString()
+{
+	jclass clazz = _env->FindClass("org/openwar/InputEditor");
+	if (clazz == 0)
+		return "";
+
+	jmethodID method = _env->GetStaticMethodID(clazz, "getString", "()Ljava/lang/String;");
+	if (method == 0)
+		return "";
+
+	jstring string = (jstring)_env->CallStaticObjectMethod(clazz, method);
+
+	return ConvertFromJavaString(string);
+}
+
+
+void InputEditor_Android::CallSetString(const char* value)
+{
+	jclass clazz = _env->FindClass("org/openwar/InputEditor");
+	if (clazz == 0)
+		return;
+
+	jmethodID method = _env->GetStaticMethodID(clazz, "setString", "(Ljava/lang/String;)V");
+	if (method == 0)
+		return;
+
+	jstring string = ConvertToJavaString(value);
+
+	_env->CallStaticVoidMethod(clazz, method, string);
+}
+
+
+void InputEditor_Android::CallSetBounds(int x, int y, int width, int height)
+{
+	jclass clazz = _env->FindClass("org/openwar/InputEditor");
+	if (clazz == 0)
+		return;
+
+	jmethodID method = _env->GetStaticMethodID(clazz, "setBounds", "(IIII)V");
+	if (method == 0)
+		return;
+
+	_env->CallStaticVoidMethod(clazz, method, x, y, width, height);
+}
+
+
+void InputEditor_Android::CallShow()
+{
+	jclass clazz = _env->FindClass("org/openwar/InputEditor");
+	if (clazz == 0)
+		return;
+
+	jmethodID method = _env->GetStaticMethodID(clazz, "show", "()V");
+	if (method == 0)
+		return;
+
+	_env->CallStaticVoidMethod(clazz, method);
+}
+
+
+void InputEditor_Android::CallHide()
+{
+	jclass clazz = _env->FindClass("org/openwar/InputEditor");
+	if (clazz == 0)
+		return;
+
+	jmethodID method = _env->GetStaticMethodID(clazz, "hide", "()V");
+	if (method == 0)
+		return;
+
+	_env->CallStaticVoidMethod(clazz, method);
+}
+
+
+void InputEditor_Android::CallbackNotifyEnter()
+{
+	NotifyEnter();
+}
+
+
+std::string InputEditor_Android::ConvertFromJavaString(jstring value)
+{
+	const jchar* data = _env->GetStringChars(value, 0);
+	jsize size = _env->GetStringLength(value);
+
+	std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> conv(".");
+	std::string result = conv.to_bytes((const char16_t*)data, (const char16_t*)data + size);
+
+	_env->ReleaseStringChars(value, data);
+
+	return result;
+}
+
+
+jstring InputEditor_Android::ConvertToJavaString(const char* value)
+{
+	std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> conv(".");
+	std::u16string result = conv.from_bytes(value, value + std::strlen(value));
+
+	return _env->NewString((const jchar*)result.data(), (jsize)result.size());
+}
+
 
 
 #endif

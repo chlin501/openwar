@@ -24,7 +24,7 @@ public:
 };
 
 
-#ifdef ENABLE_SURFACE_ADAPTER_MAC
+#ifdef ENABLE_INPUT_EDITOR_MAC
 
 #include <AppKit/AppKit.h>
 class InputEditor_Mac;
@@ -59,7 +59,7 @@ private:
 #endif
 
 
-#ifdef ENABLE_SURFACE_ADAPTER_IOS
+#ifdef ENABLE_INPUT_EDITOR_IOS
 
 #include <UIKit/UIKit.h>
 class InputEditor_iOS;
@@ -88,6 +88,48 @@ private:
 	void UpdateNSTextFieldFont();
 	void UpdateNSTextFieldFrame();
 	void UpdateNSTextFieldColor();
+};
+
+#endif
+
+
+#ifdef ENABLE_INPUT_EDITOR_ANDROID
+
+#include <jni.h>
+#include <string>
+
+extern "C" void /*JNICALL*/ Java_org_openwar_InputEditor_notifyEnter(JNIEnv* env, jclass jcls);
+
+class InputEditor_Android : public InputEditor
+{
+	static JNIEnv* _env;
+	mutable std::string _string;
+
+public:
+	static void Initialize(JNIEnv* env);
+
+	InputEditor_Android(InputWidget* inputWidget);
+	virtual ~InputEditor_Android();
+
+	virtual const char* GetString() const;
+	virtual void SetString(const char* value);
+
+	virtual void OnInputWidgetChanged();
+
+private:
+	void UpdateBounds();
+
+	static std::string CallGetString();
+	static void CallSetString(const char* value);
+	static void CallSetBounds(int x, int y, int width, int height);
+	static void CallShow();
+	static void CallHide();
+
+	friend /*JNIEXPORT*/ void /*JNICALL*/ ::Java_org_openwar_InputEditor_notifyEnter(JNIEnv*, jclass);
+	void CallbackNotifyEnter();
+
+	static std::string ConvertFromJavaString(jstring value);
+	static jstring ConvertToJavaString(const char* value);
 };
 
 #endif

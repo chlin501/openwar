@@ -120,10 +120,12 @@ void InputWidget::ShowInputEditor()
 {
 	if (_inputEditor == nullptr)
 	{
-#if defined(ENABLE_SURFACE_ADAPTER_MAC)
+#if defined(ENABLE_INPUT_EDITOR_MAC)
 		_inputEditor = new InputEditor_Mac(this);
-#elif defined(ENABLE_SURFACE_ADAPTER_IOS)
+#elif defined(ENABLE_INPUT_EDITOR_IOS)
 		_inputEditor = new InputEditor_iOS(this);
+#elif defined(ENABLE_INPUT_EDITOR_ANDROID)
+		_inputEditor = new InputEditor_Android(this);
 #endif
 	}
 	else
