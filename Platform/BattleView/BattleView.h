@@ -52,6 +52,7 @@ class BattleView : public TerrainView, public BattleObserver, RenderLoopObserver
 	VertexShape_3f_4f* _gradientTriangleStripVertices;
 	VertexShape_3f_4f_1f* _colorBillboardVertices;
 	VertexShape_3f_2f* _textureTriangleVertices;
+	VertexShape_2f_2f* _textureTriangleVertices2;
 
 	Texture* _textureUnitMarkers;
 	Texture* _textureTouchMarker;

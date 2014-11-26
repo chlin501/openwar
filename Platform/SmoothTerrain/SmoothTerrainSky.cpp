@@ -23,7 +23,7 @@ SmoothTerrainSky::~SmoothTerrainSky()
 }
 
 
-void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f bounds, float cameraDirectionZ, bool flip)
+void SmoothTerrainSky::Render(float cameraDirectionZ)
 {
 	VertexShape_2f_4f vertices;
 
@@ -39,36 +39,23 @@ void SmoothTerrainSky::Render(const glm::mat4& transform, bounds2f bounds, float
 	glm::vec4 c2 = glm::vec4(160, 207, 243, 255) / 255.0f;
 	c2.a = blend;
 
-	float x0 = bounds.min.x;
-	float x1 = bounds.max.x;
-	float y0 = bounds.y().mix(0.2f);
-	float y1 = bounds.max.y;
-
-	vertices.AddVertex(Vertex_2f_4f(glm::vec2(x0, y0), c1));
-	vertices.AddVertex(Vertex_2f_4f(glm::vec2(x0, y1), c2));
-	vertices.AddVertex(Vertex_2f_4f(glm::vec2(x1, y1), c2));
-	vertices.AddVertex(Vertex_2f_4f(glm::vec2(x1, y1), c2));
-	vertices.AddVertex(Vertex_2f_4f(glm::vec2(x1, y0), c1));
-	vertices.AddVertex(Vertex_2f_4f(glm::vec2(x0, y0), c1));
-
-	glm::mat4 t = transform;
-	if (flip)
-	{
-		t = glm::translate(t, glm::vec3(bounds.mid(), 0));
-		t = glm::scale(t, glm::vec3(-1, -1, 1));
-		t = glm::translate(t, glm::vec3(-bounds.mid(), 0));
-	}
+	vertices.AddVertex(Vertex_2f_4f(glm::vec2(-1, -0.6f), c1));
+	vertices.AddVertex(Vertex_2f_4f(glm::vec2(-1,  1),    c2));
+	vertices.AddVertex(Vertex_2f_4f(glm::vec2( 1,  1),    c2));
+	vertices.AddVertex(Vertex_2f_4f(glm::vec2( 1,  1),    c2));
+	vertices.AddVertex(Vertex_2f_4f(glm::vec2( 1, -0.6f), c1));
+	vertices.AddVertex(Vertex_2f_4f(glm::vec2(-1, -0.6f), c1));
 
 	RenderCall<GradientShader_2f>(_gc)
 		.SetVertices(&vertices, "position", "color")
-		.SetUniform("transform", t)
+		.SetUniform("transform", glm::mat4())
 		.SetUniform("point_size", 1)
 		.Render();
 }
 
 
 
-void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, bounds2f bounds)
+void SmoothTerrainSky::RenderBackgroundLinen(const bounds2f& bounds)
 {
 	VertexShape_2f_2f vertices;
 
@@ -79,21 +66,16 @@ void SmoothTerrainSky::RenderBackgroundLinen(const glm::mat4& transform, bounds2
 	glm::vec2 vt0 = glm::vec2();
 	glm::vec2 vt1 = size / 128.0f;
 
-	float x0 = bounds.min.x;
-	float x1 = bounds.max.x;
-	float y0 = bounds.min.y;
-	float y1 = bounds.max.y;
-
-	vertices.AddVertex(Vertex_2f_2f(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
-	vertices.AddVertex(Vertex_2f_2f(glm::vec2(x0, y1), glm::vec2(vt0.x, vt1.y)));
-	vertices.AddVertex(Vertex_2f_2f(glm::vec2(x1, y1), glm::vec2(vt1.x, vt1.y)));
-	vertices.AddVertex(Vertex_2f_2f(glm::vec2(x1, y1), glm::vec2(vt1.x, vt1.y)));
-	vertices.AddVertex(Vertex_2f_2f(glm::vec2(x1, y0), glm::vec2(vt1.x, vt0.y)));
-	vertices.AddVertex(Vertex_2f_2f(glm::vec2(x0, y0), glm::vec2(vt0.x, vt0.y)));
+	vertices.AddVertex(Vertex_2f_2f(glm::vec2(-1, -1), glm::vec2(vt0.x, vt0.y)));
+	vertices.AddVertex(Vertex_2f_2f(glm::vec2(-1,  1), glm::vec2(vt0.x, vt1.y)));
+	vertices.AddVertex(Vertex_2f_2f(glm::vec2( 1,  1), glm::vec2(vt1.x, vt1.y)));
+	vertices.AddVertex(Vertex_2f_2f(glm::vec2( 1,  1), glm::vec2(vt1.x, vt1.y)));
+	vertices.AddVertex(Vertex_2f_2f(glm::vec2( 1, -1), glm::vec2(vt1.x, vt0.y)));
+	vertices.AddVertex(Vertex_2f_2f(glm::vec2(-1, -1), glm::vec2(vt0.x, vt0.y)));
 
 	RenderCall<TextureShader_2f>(_gc)
 		.SetVertices(&vertices, "position", "texcoord")
-		.SetUniform("transform", transform)
+		.SetUniform("transform", glm::mat4())
 		.SetTexture("texture", _textureBackgroundLinen)
 		.Render();
 }

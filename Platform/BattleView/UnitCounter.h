@@ -36,7 +36,7 @@ public:
 	bool Animate(float seconds);
 
 	void AppendUnitMarker(BillboardTextureShape* renderer, bool flip);
-	void AppendFacingMarker(VertexShape_3f_2f* vertices, BattleView* battleView);
+	void AppendFacingMarker(VertexShape_2f_2f* vertices, BattleView* battleView);
 
 	void AppendFighterWeapons(VertexShape_3f* vertices);
 	void AppendFighterBillboards(BillboardModel* billboardModel);

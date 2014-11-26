@@ -41,6 +41,11 @@ public:
 	bool GetFlip() const;
 	void SetFlip(bool value);
 
+	glm::vec2 LocalToGlobal(glm::vec2 value) const;
+	glm::vec2 GlobalToLocal(glm::vec2 value) const;
+
+	glm::vec2 LocalToNormalized(glm::vec2 value) const;
+	glm::vec2 NormalizedToLocal(glm::vec2 value) const;
 };
 
 

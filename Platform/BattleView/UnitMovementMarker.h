@@ -21,7 +21,7 @@ public:
 	bool Animate(float seconds);
 
 	void RenderMovementMarker(BillboardTextureShape* renderer);
-	void AppendFacingMarker(VertexShape_3f_2f* vertices, BattleView* battleView);
+	void AppendFacingMarker(VertexShape_2f_2f* vertices, BattleView* battleView);
 	void RenderMovementFighters(VertexShape_3f_4f_1f* vertices);
 	void RenderMovementPath(VertexShape_3f_4f* vertices);
 };

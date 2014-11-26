@@ -126,3 +126,35 @@ void TerrainViewport::SetFlip(bool value)
 {
 	_flip = value;
 }
+
+
+glm::vec2 TerrainViewport::LocalToGlobal(glm::vec2 value) const
+{
+	return NormalizedToGlobal(LocalToNormalized(value));
+}
+
+
+glm::vec2 TerrainViewport::GlobalToLocal(glm::vec2 value) const
+{
+	return NormalizedToLocal(GlobalToNormalized(value));
+}
+
+
+glm::vec2 TerrainViewport::LocalToNormalized(glm::vec2 value) const
+{
+	glm::ivec2 size = GetBounds().size();
+	if (size.x == 0 || size.y == 0)
+		return glm::vec2(-1, -1);
+
+	return 2.0f * value / (glm::vec2)size - 1.0f;
+}
+
+
+glm::vec2 TerrainViewport::NormalizedToLocal(glm::vec2 value) const
+{
+	glm::ivec2 size = GetBounds().size();
+	if (size.x == 0 || size.y == 0)
+		return glm::vec2(0, 0);
+
+	return (value + 1.0f) / 2.0f * (glm::vec2)size;
+}

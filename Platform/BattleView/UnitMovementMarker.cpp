@@ -55,7 +55,7 @@ void UnitMovementMarker::RenderMovementMarker(BillboardTextureShape* renderer)
 }
 
 
-void UnitMovementMarker::AppendFacingMarker(VertexShape_3f_2f* vertices, BattleView* battleView)
+void UnitMovementMarker::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleView* battleView)
 {
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
@@ -64,11 +64,13 @@ void UnitMovementMarker::AppendFacingMarker(VertexShape_3f_2f* vertices, BattleV
 
 	const UnitCommand& command = _unit->GetCommand();
 
+	TerrainViewport* terrainViewport = battleView->GetTerrainViewport();
+
 	bounds2f b = battleView->GetUnitFutureFacingMarkerBounds(_unit);
 	glm::vec2 p = b.mid();
 	float size = b.y().size();
-	float direction = command.bearing - battleView->GetTerrainViewport()->GetCameraFacing();
-	if (battleView->GetTerrainViewport()->GetFlip())
+	float direction = command.bearing - terrainViewport->GetCameraFacing();
+	if (terrainViewport->GetFlip())
 		direction += glm::pi<float>();
 
 	glm::vec2 d1 = size * vector2_from_angle(direction - glm::half_pi<float>() / 2.0f);
@@ -82,13 +84,12 @@ void UnitMovementMarker::AppendFacingMarker(VertexShape_3f_2f* vertices, BattleV
 	float ty1 = 0.75f;
 	float ty2 = 0.75f + 0.125f;
 
-	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d1, 0), glm::vec2(tx1, ty1)));
-	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d2, 0), glm::vec2(tx1, ty2)));
-	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d3, 0), glm::vec2(tx2, ty2)));
-
-	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d3, 0), glm::vec2(tx2, ty2)));
-	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d4, 0), glm::vec2(tx2, ty1)));
-	vertices->AddVertex(Vertex_3f_2f(glm::vec3(p + d1, 0), glm::vec2(tx1, ty1)));
+	vertices->AddVertex(Vertex_2f_2f(terrainViewport->LocalToNormalized(p + d1), glm::vec2(tx1, ty1)));
+	vertices->AddVertex(Vertex_2f_2f(terrainViewport->LocalToNormalized(p + d2), glm::vec2(tx1, ty2)));
+	vertices->AddVertex(Vertex_2f_2f(terrainViewport->LocalToNormalized(p + d3), glm::vec2(tx2, ty2)));
+	vertices->AddVertex(Vertex_2f_2f(terrainViewport->LocalToNormalized(p + d3), glm::vec2(tx2, ty2)));
+	vertices->AddVertex(Vertex_2f_2f(terrainViewport->LocalToNormalized(p + d4), glm::vec2(tx2, ty1)));
+	vertices->AddVertex(Vertex_2f_2f(terrainViewport->LocalToNormalized(p + d1), glm::vec2(tx1, ty1)));
 }
 
 
