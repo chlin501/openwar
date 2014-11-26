@@ -18,7 +18,8 @@ class StringWidget : public Widget
 	FontDescriptor _fontDescriptor;
 	std::string _string;
 	glm::vec4 _color;
-	glm::vec4 _glow;
+	glm::vec4 _glowColor;
+	float _glowRadius;
 	float _width;
 
 public:
@@ -42,8 +43,11 @@ public:
 	virtual void SetColor(const glm::vec3& value);
 	virtual void SetColor(const glm::vec4& value);
 
-	virtual const glm::vec4 GetGlow() const;
-	virtual void SetGlow(const glm::vec4& value);
+	virtual const glm::vec4 GetGlowColor() const;
+	virtual void SetGlowColor(const glm::vec4& value);
+
+	virtual const float GetGlowRadius() const;
+	virtual void SetGlowRadius(float value);
 
 	virtual const float GetAlpha() const;
 	virtual void SetAlpha(float value);
@@ -54,7 +58,7 @@ public:
 	virtual void RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
 private:
-	void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur);
+	void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blurRadius);
 
 private:
 	StringWidget(const StringWidget&) : Widget(nullptr) { }

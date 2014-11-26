@@ -39,6 +39,7 @@ static bool ContainsArabic(const std::wstring& ws)
 StringWidget::StringWidget(WidgetOwner* widgetOwner) : Widget(widgetOwner),
 	_string(),
 	_color(1, 1, 1, 1),
+	_glowRadius(2),
 	_width(0)
 {
 }
@@ -118,15 +119,27 @@ void StringWidget::SetColor(const glm::vec4& value)
 }
 
 
-const glm::vec4 StringWidget::GetGlow() const
+const glm::vec4 StringWidget::GetGlowColor() const
 {
-	return _glow;
+	return _glowColor;
 }
 
 
-void StringWidget::SetGlow(const glm::vec4& value)
+void StringWidget::SetGlowColor(const glm::vec4& value)
 {
-	_glow = value;
+	_glowColor = value;
+}
+
+
+const float StringWidget::GetGlowRadius() const
+{
+	return _glowRadius;
+}
+
+
+void StringWidget::SetGlowRadius(float value)
+{
+	_glowRadius = value;
 }
 
 
@@ -154,18 +167,18 @@ void StringWidget::OnTouchBegin(Touch* touch)
 
 void StringWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
-	if (_glow.a != 0)
+	if (_glowColor.a != 0)
 	{
 		GraphicsContext* gc = GetGraphicsContext();
-		float blur = 2 * gc->GetCombinedScaling();
-		AppendVertices(vertices, _glow, blur);
+		float blurRadius = _glowRadius * gc->GetCombinedScaling();
+		AppendVertices(vertices, _glowColor, blurRadius);
 	}
 
 	AppendVertices(vertices, _color, 0);
 }
 
 
-void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blur)
+void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blurRadius)
 {
 	glm::vec2 offset = _position;
 	glm::vec2 p(0, 0);
@@ -187,7 +200,7 @@ void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm
 
 	if (ContainsArabic(ws))
 	{
-		TextureChar* textureChar = textureFont->GetTextureChar(_string.c_str(), blur);
+		TextureChar* textureChar = textureFont->GetTextureChar(_string.c_str(), blurRadius);
 		glm::vec4 colorize = textureChar->CanColorize() ? glm::vec4(color.rgb(), 1) : glm::vec4();
 
 		bounds2f item_xy = textureChar->GetOuterXY(p);
@@ -221,7 +234,7 @@ void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm
 			if (character.empty())
 				continue;
 
-			TextureChar* textureChar = textureFont->GetTextureChar(character, blur);
+			TextureChar* textureChar = textureFont->GetTextureChar(character, blurRadius);
 			glm::vec4 colorize = textureChar->CanColorize() ? glm::vec4(color.rgb(), 1) : glm::vec4();
 
 			bounds2f item_xy = textureChar->GetOuterXY(p);

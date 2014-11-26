@@ -347,7 +347,7 @@ void Image::PremultiplyAlpha()
 }
 
 
-void Image::Blur(float r)
+void Image::ApplyBlurFilter(float radius)
 {
 	int w = GetWidth();
 	int h = GetHeight();
@@ -362,7 +362,7 @@ void Image::Blur(float r)
 			++i;
 		}
 
-	GaussBlur(scl, tcl, w, h, r);
+	GaussBlur(scl, tcl, w, h, radius);
 
 	i = 0;
 	for (int y = 0; y < h; ++y)
@@ -375,6 +375,28 @@ void Image::Blur(float r)
 }
 
 
+void Image::ApplyPixelFilter(std::function<glm::vec4(glm::vec4)> filter)
+{
+	for (int y = 0; y < _height; ++y)
+		for (int x = 0; x < _width; ++x)
+			SetPixel(x, y, filter(GetPixel(x, y)));
+}
+
+
+void Image::ApplyCircleMask()
+{
+	glm::vec2 center = 0.5f * glm::vec2(_width - 1, _height - 1);
+	float radius = 0.3f + 0.5f * glm::max(_width, _height);
+
+	for (int y = 0; y < _height; ++y)
+		for (int x = 0; x < _width; ++x)
+		{
+			float r = glm::length(glm::vec2(x, y) - center);
+			float a = glm::clamp(radius - r, 0.0f, 1.0f);
+			glm::vec4 c = GetPixel(x, y);
+			SetPixel(x, y, c * a);
+		}
+}
 
 
 void Image::Copy(const Image& image, int x, int y)

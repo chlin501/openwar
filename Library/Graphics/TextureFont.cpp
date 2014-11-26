@@ -30,23 +30,32 @@ TextureFont::~TextureFont()
 }
 
 
-TextureChar* TextureFont::GetTextureChar(const std::string& character, float blur)
+TextureChar* TextureFont::GetTextureChar(const std::string& character, float blurRadius)
 {
-	CharacterKey key(character, blur);
+	CharacterKey key(character, blurRadius);
 
 	auto i = _textureChars.find(key);
 	if (i != _textureChars.end() && !i->second->GetTextureImage()->IsDiscarded())
 		return i->second;
 
 	bool canColorize = false;
-	std::function<void(Image&)> filter = [&canColorize, blur](Image& image) {
+	std::function<void(Image&)> filter = [&canColorize, blurRadius](Image& image) {
 		canColorize = image.IsGrayscale();
-		if (blur != 0)
-			image.Blur(blur);
+		if (blurRadius != 0)
+		{
+			image.ApplyBlurFilter(glm::abs(blurRadius));
+			if (blurRadius < 0)
+			{
+				image.ApplyPixelFilter([](glm::vec4 c) {
+					float a = 1 - c.a;
+					return glm::vec4(c.r, c.g, c.b, 1 - a * a);
+				});
+			}
+		}
 		image.PremultiplyAlpha();
 	};
 
-	int border = (int)glm::ceil(blur) + 1;
+	int border = 2 + (int)glm::ceil(glm::abs(blurRadius));
 
 	std::shared_ptr<TextureImage> textureImage = _fontAdapter->AddTextureImage(_textureAtlas, character, border, filter);
 	if (textureImage == nullptr)
