@@ -60,32 +60,18 @@ void Hotspot::UnsubscribeTouch(Touch* touch)
 }
 
 
-bool Hotspot::CanCaptureTouch(Touch* touch) const
-{
-	if (touch->_capturedByHotspot == nullptr)
-		return true;
-	if (touch->_capturedByHotspot.get() == this)
-		return false;
-
-	for (std::shared_ptr<Hotspot> hotspot : touch->_subscribedHotspots)
-	{
-		if (hotspot.get() == this)
-			return true;
-		if (hotspot == touch->_capturedByHotspot)
-			return false;
-	}
-
-	return false;
-}
-
-
 bool Hotspot::TryCaptureTouch(Touch* touch)
 {
-	if (!CanCaptureTouch(touch))
-		return false;
+	if (touch->_capturedByHotspot.get() == this)
+		return true;
 
 	if (touch->_capturedByHotspot != nullptr)
-		touch->_capturedByHotspot->ReleaseTouch(touch);
+	{
+		Gesture* gesture = touch->_capturedByHotspot->GetGesture();
+		gesture->AskReleaseTouchToAnotherHotspot(touch, this);
+		if (touch->_capturedByHotspot != nullptr)
+			return false;
+	}
 
 	_capturedTouches.push_back(touch);
 	touch->_capturedByHotspot = shared_from_this();

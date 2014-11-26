@@ -27,6 +27,7 @@ public:
 
 	virtual void TouchWasCaptured(Touch* touch);
 	virtual void TouchWillBeReleased(Touch* touch);
+	virtual void AskReleaseTouchToAnotherHotspot(Touch* touch, Hotspot* anotherHotspot);
 
 	virtual void TouchBegan(Touch* touch);
 	virtual void TouchMoved(Touch* touch);

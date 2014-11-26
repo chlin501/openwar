@@ -11,9 +11,12 @@ ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
 	_titleString(this),
 	_disabled(false)
 {
-	_hotspot = std::make_shared<ButtonHotspot>([this](glm::vec2 position) {
-		glm::vec2 p = GetWidgetView()->GetScrollerViewport()->GlobalToLocal(position);
-		return glm::length(_bounds.distance(p));
+	_hotspot = std::make_shared<ButtonHotspot>();
+	_hotspot->SetDistance([this](glm::vec2 position) {
+		return _bounds.distance(GetViewport()->GlobalToLocal(position));
+	});
+	_hotspot->SetTolerance([this](Touch* touch) {
+		return ButtonHotspot::GetDefaultTolerance(touch, _bounds.size());
 	});
 
 	_titleString.SetGlow(glm::vec4(0, 0, 0, 1));
@@ -119,7 +122,7 @@ void ButtonWidget::OnTouchEnter(Touch* touch)
 
 void ButtonWidget::OnTouchBegin(Touch* touch)
 {
-	if (_hotspot->IsInside(touch->GetCurrentPosition()))
+	if (_hotspot->IsTouchInside(touch))
 		_hotspot->SubscribeTouch(touch);
 }
 

@@ -13,18 +13,24 @@
 class ButtonHotspot : public Hotspot
 {
 	ButtonGesture _gesture;
-	std::function<float(glm::vec2)> _distance;
+	std::function<glm::vec2(glm::vec2)> _distance;
+	std::function<glm::vec2(Touch*)> _tolerance;
 	std::function<void()> _action;
 	bool _highlight;
 	bool _immediate;
 
 public:
-	ButtonHotspot(std::function<float(glm::vec2)> distance);
+	ButtonHotspot();
 	virtual ~ButtonHotspot();
 
 	virtual Gesture* GetGesture();
 
-	virtual bool IsInside(glm::vec2 position) const;
+	virtual void SetDistance(std::function<glm::vec2(glm::vec2)> distance);
+	virtual void SetTolerance(std::function<glm::vec2(Touch*)> tolerance);
+
+	static glm::vec2 GetDefaultTolerance(Touch* touch, glm::vec2 size);
+	virtual float GetDistance(glm::vec2 position) const;
+	virtual bool IsTouchInside(Touch* touch) const;
 
 	virtual std::function<void()> GetClickAction() const;
 	virtual void SetClickAction(std::function<void()> value);

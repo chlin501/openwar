@@ -29,7 +29,6 @@ public:
 	void SubscribeTouch(Touch* touch);
 	void UnsubscribeTouch(Touch* touch);
 
-	bool CanCaptureTouch(Touch* touch) const;
 	bool TryCaptureTouch(Touch* touch);
 	void ReleaseTouch(Touch* touch);
 

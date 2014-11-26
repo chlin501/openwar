@@ -48,9 +48,28 @@ void ButtonGesture::TouchWillBeReleased(Touch* touch)
 }
 
 
+void ButtonGesture::AskReleaseTouchToAnotherHotspot(Touch* touch, Hotspot* anotherHotspot)
+{
+	bool release = false;
+	ButtonHotspot* buttonHotspot = dynamic_cast<ButtonHotspot*>(anotherHotspot);
+	if (buttonHotspot != nullptr)
+	{
+		glm::vec2 position = touch->GetCurrentPosition();
+		release = buttonHotspot->GetDistance(position) < _hotspot->GetDistance(position);
+	}
+	else
+	{
+		release = true;
+	}
+
+	if (release)
+		_hotspot->ReleaseTouch(touch);
+}
+
+
 void ButtonGesture::TouchBegan(Touch* touch)
 {
-	if (touch->IsCaptured() || _hotspot->HasCapturedTouch())
+	if (_hotspot->HasCapturedTouch())
 		return;
 
 	if (_hotspot->TryCaptureTouch(touch))
@@ -72,7 +91,7 @@ void ButtonGesture::TouchMoved(Touch* touch)
 	if (_hotspot->HasCapturedTouch())
 	{
 		Touch* touch = _hotspot->GetCapturedTouch();
-		bool inside = _hotspot->IsInside(touch->GetCurrentPosition());
+		bool inside = _hotspot->IsTouchInside(touch);
 		_hotspot->SetHighlight(inside);
 	}
 }
@@ -83,7 +102,7 @@ void ButtonGesture::TouchEnded(Touch* touch)
 {
 	if (_hotspot->HasCapturedTouch(touch))
 	{
-		bool inside = _hotspot->IsInside(touch->GetCurrentPosition());
+		bool inside = _hotspot->IsTouchInside(touch);
 
 		if (inside && !_hotspot->IsImmediateClick() && _hotspot->GetClickAction())
 			_hotspot->GetClickAction()();
