@@ -38,6 +38,9 @@ public:
 	virtual BorderInset GetInset() const;
 	virtual void SetInset(const BorderInset& value);
 
+	virtual const FontDescriptor& GetFontDescriptor() const;
+	virtual void SetFontDescriptor(const FontDescriptor& fontDescriptor);
+
 	virtual const char* GetTitle() const;
 	virtual void SetTitle(const char* value);
 

@@ -79,6 +79,18 @@ void ButtonWidget::SetInset(const BorderInset& value)
 }
 
 
+const FontDescriptor& ButtonWidget::GetFontDescriptor() const
+{
+	return _titleString.GetFontDescriptor();
+}
+
+
+void ButtonWidget::SetFontDescriptor(const FontDescriptor& fontDescriptor)
+{
+	_titleString.SetFontDescriptor(fontDescriptor);
+}
+
+
 const char* ButtonWidget::GetTitle() const
 {
 	return _titleString.GetString();
