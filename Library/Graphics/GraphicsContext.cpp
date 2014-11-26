@@ -8,8 +8,7 @@
 
 GraphicsContext::GraphicsContext(float nativeScaling, float virtualScaling) :
 	_nativeScaling(nativeScaling),
-	_virtualScaling(virtualScaling),
-	_widgetTextureAtlas(nullptr)
+	_virtualScaling(virtualScaling)
 {
 }
 
@@ -17,6 +16,9 @@ GraphicsContext::GraphicsContext(float nativeScaling, float virtualScaling) :
 GraphicsContext::~GraphicsContext()
 {
 	for (auto i : _fontAdapters)
+		delete i.second;
+
+	for (auto i : _textureAtlases)
 		delete i.second;
 }
 
@@ -39,12 +41,15 @@ float GraphicsContext::GetCombinedScaling() const
 }
 
 
-TextureAtlas* GraphicsContext::GetWidgetTextureAtlas() const
+TextureAtlas* GraphicsContext::GetTextureAtlas(const char* name)
 {
-	if (_widgetTextureAtlas == nullptr)
-		_widgetTextureAtlas = new TextureAtlas(const_cast<GraphicsContext*>(this));
+	auto i = _textureAtlases.find(name);
+	if (i != _textureAtlases.end())
+		return i->second;
 
-	return _widgetTextureAtlas;
+	TextureAtlas* result = new TextureAtlas(this);
+	_textureAtlases[name] = result;
+	return result;
 }
 
 

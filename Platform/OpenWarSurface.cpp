@@ -34,7 +34,7 @@ _battleLayer(nullptr)
 
 	_battleLayer = new BattleLayer(this);
 
-	_buttonRendering = new ButtonRendering(gc);
+	_buttonRendering = new ButtonRendering(gc->GetTextureAtlas(WIDGET_TEXTURE_ATLAS));
 
 	_buttonsTopLeft = new ButtonGrid(this, _buttonRendering, ButtonAlignment::TopLeft);
 	_buttonsTopRight = new ButtonGrid(this, _buttonRendering, ButtonAlignment::TopRight);

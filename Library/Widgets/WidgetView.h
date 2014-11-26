@@ -39,7 +39,7 @@ public:
 
 	ScrollerViewport* GetScrollerViewport() const;
 
-	TextureAtlas* GetTextureAtlas() const;
+	TextureAtlas* GetWidgetTextureAtlas() const;
 
 	virtual Viewport* GetViewport() const;
 

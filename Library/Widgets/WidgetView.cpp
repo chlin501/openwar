@@ -41,7 +41,7 @@ WidgetView::WidgetView(Surface* surface) : View(surface),
 {
 	_vertices._mode = GL_TRIANGLES;
 	_viewport = new ScrollerViewport(_gc);
-	_textureAtlas = _gc->GetWidgetTextureAtlas();
+	_textureAtlas = _gc->GetTextureAtlas(WIDGET_TEXTURE_ATLAS);
 }
 
 
@@ -57,7 +57,7 @@ ScrollerViewport* WidgetView::GetScrollerViewport() const
 
 
 
-TextureAtlas* WidgetView::GetTextureAtlas() const
+TextureAtlas* WidgetView::GetWidgetTextureAtlas() const
 {
 	return _textureAtlas;
 }

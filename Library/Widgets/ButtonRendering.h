@@ -5,19 +5,12 @@
 #ifndef ButtonRendering_H
 #define ButtonRendering_H
 
-#include "Algebra/bounds.h"
-#include "Graphics/Texture.h"
-#include "Graphics/CommonShaders.h"
-
-class TextureFont;
+class TextureAtlas;
+class TextureImage;
 
 
 struct ButtonRendering
 {
-	GraphicsContext* _gc;
-
-	TextureFont* _string_font;
-
 	std::shared_ptr<TextureImage> buttonBackground;
 	std::shared_ptr<TextureImage> buttonHighlight;
 	std::shared_ptr<TextureImage> buttonSelected;
@@ -34,7 +27,7 @@ struct ButtonRendering
 	std::shared_ptr<TextureImage> buttonEditorToolWater;
 	std::shared_ptr<TextureImage> buttonEditorToolFords;
 
-	ButtonRendering(GraphicsContext* gc);
+	ButtonRendering(TextureAtlas* textureAtlas);
 };
 
 

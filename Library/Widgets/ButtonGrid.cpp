@@ -26,7 +26,6 @@ const ButtonAlignment ButtonAlignment::BottomRight(ButtonAlignment::Vertical::Bo
 ButtonItem::ButtonItem(ButtonArea* buttonArea, const char* text) :
 	_hotspot(),
 	_buttonArea(buttonArea),
-	_buttonText(text),
 	_buttonIcon(nullptr),
 	_keyboardShortcut('\0'),
 	_selected(false),
@@ -37,6 +36,7 @@ ButtonItem::ButtonItem(ButtonArea* buttonArea, const char* text) :
 	buttonString(buttonArea->GetButtonView())
 
 {
+	buttonString.SetString(text);
 	_hotspot = std::make_shared<ButtonHotspot>([](glm::vec2){ return false; });
 }
 
@@ -45,7 +45,6 @@ ButtonItem::ButtonItem(ButtonArea* buttonArea, const char* text) :
 ButtonItem::ButtonItem(ButtonArea* buttonArea, std::shared_ptr<TextureImage> icon) :
 	_hotspot(),
 	_buttonArea(buttonArea),
-	_buttonText(),
 	_buttonIcon(icon),
 	_keyboardShortcut('\0'),
 	_selected(false),
@@ -67,16 +66,16 @@ ButtonItem::~ButtonItem()
 
 void ButtonItem::SetButtonText(const char* value)
 {
-	_buttonText = value != nullptr ? value : "";
+	buttonString.SetString(value ?: "");
 	_buttonArea->GetButtonView()->UpdateLayout();
 }
 
 
 glm::vec2 ButtonItem::CalculateSize() const
 {
-	if (!_buttonText.empty())
+	if (buttonString.GetString()[0] != '\0')
 	{
-		glm::vec2 size = _buttonArea->GetButtonView()->_buttonRendering->_string_font->MeasureText(_buttonText.c_str());
+		glm::vec2 size = buttonString.MeasureSize();
 		return glm::vec2(38 + size.x, fmaxf(44, size.y));
 	}
 

@@ -49,7 +49,6 @@ class ButtonItem
 {
 	std::shared_ptr<ButtonHotspot> _hotspot;
 	ButtonArea* _buttonArea;
-	std::string _buttonText;
 	std::shared_ptr<TextureImage> _buttonIcon;
 	char _keyboardShortcut;
 	bounds2f _bounds;
@@ -69,7 +68,7 @@ public:
 	std::shared_ptr<ButtonHotspot> GetHotspot() const { return _hotspot; }
 	ButtonArea* GetButtonArea() const { return _buttonArea; }
 
-	const char* GetButtonText() const { return _buttonText.empty() ? nullptr : _buttonText.c_str(); }
+	const char* GetButtonText() const { return buttonString.GetString()[0] == '\0' ? nullptr : buttonString.GetString(); }
 	void SetButtonText(const char* value);
 
 	std::shared_ptr<TextureImage> GetButtonIcon() const { return _buttonIcon; }

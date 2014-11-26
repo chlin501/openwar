@@ -13,13 +13,15 @@
 
 class TextureAtlas;
 
+#define WIDGET_TEXTURE_ATLAS "WIDGET"
+
 
 class GraphicsContext
 {
 	float _nativeScaling;
 	float _virtualScaling;
 	std::map<std::string, ShaderProgram*> _shaders;
-	mutable TextureAtlas* _widgetTextureAtlas;
+	std::map<std::string, TextureAtlas*> _textureAtlases;
 	std::map<FontDescriptor, FontAdapter*> _fontAdapters;
 
 public:
@@ -29,10 +31,6 @@ public:
 	float GetNativeScaling() const;
 	float GetVirtualScaling() const;
 	float GetCombinedScaling() const;
-
-	TextureAtlas* GetWidgetTextureAtlas() const;
-
-	FontAdapter* GetFontAdapter(const FontDescriptor& fontDescriptor);
 
 	template <class _ShaderProgram> _ShaderProgram* GetShaderProgram()
 	{
@@ -45,6 +43,10 @@ public:
 		}
 		return result;
 	}
+
+	TextureAtlas* GetTextureAtlas(const char* name);
+
+	FontAdapter* GetFontAdapter(const FontDescriptor& fontDescriptor);
 
 private:
 	GraphicsContext(const GraphicsContext&) { }

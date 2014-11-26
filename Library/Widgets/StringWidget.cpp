@@ -58,7 +58,7 @@ void StringWidget::SetPosition(glm::vec2 value)
 
 glm::vec2 StringWidget::MeasureSize() const
 {
-	TextureFont* textureFont = GetWidgetView()->GetTextureAtlas()->GetTextureFont(_fontDescriptor);
+	TextureFont* textureFont = GetWidgetView()->GetWidgetTextureAtlas()->GetTextureFont(_fontDescriptor);
 
 	return textureFont->MeasureText(_string.c_str());
 }
@@ -183,7 +183,7 @@ void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv(".", L".");
 	std::wstring ws = conv.from_bytes(_string);
 
-	TextureFont* textureFont = GetWidgetView()->GetTextureAtlas()->GetTextureFont(GetFontDescriptor());
+	TextureFont* textureFont = GetWidgetView()->GetWidgetTextureAtlas()->GetTextureFont(GetFontDescriptor());
 
 	if (ContainsArabic(ws))
 	{
