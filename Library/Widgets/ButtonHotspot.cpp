@@ -7,9 +7,9 @@
 #include "Surface/Surface.h"
 
 
-ButtonHotspot::ButtonHotspot(std::function<bool(glm::vec2)> inside) :
+ButtonHotspot::ButtonHotspot(std::function<float(glm::vec2)> distance) :
 	_gesture(this),
-	_inside(inside),
+	_distance(distance),
 	_action(),
 	_highlight(false),
 	_immediate(false)
@@ -30,7 +30,7 @@ Gesture* ButtonHotspot::GetGesture()
 
 bool ButtonHotspot::IsInside(glm::vec2 position) const
 {
-	return _inside(position);
+	return _distance(position) <= 0;
 }
 
 

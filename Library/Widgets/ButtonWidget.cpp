@@ -13,7 +13,7 @@ ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
 {
 	_hotspot = std::make_shared<ButtonHotspot>([this](glm::vec2 position) {
 		glm::vec2 p = GetWidgetView()->GetScrollerViewport()->GlobalToLocal(position);
-		return _bounds.contains(p);
+		return glm::length(_bounds.distance(p));
 	});
 
 	_titleString.SetGlow(glm::vec4(0, 0, 0, 1));
