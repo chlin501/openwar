@@ -194,6 +194,7 @@ InputEditor_iOS::InputEditor_iOS(InputWidget* inputWidget) : InputEditor(inputWi
 		_textField.delegate = _delegate;
 		_textField.autocorrectionType = UITextAutocorrectionTypeNo;
 		_textField.clearButtonMode = UITextFieldViewModeAlways;
+		_textField.returnKeyType = UIReturnKeySend;
 		//_textField.borderStyle = UITextBorderStyleLine; // TESTING
 
 		UpdateNSTextFieldFont();
@@ -259,7 +260,7 @@ void InputEditor_iOS::UpdateNSTextFieldFrame()
 	bounds2f bounds = intputWidget->GetBounds();
 	float height = (float)_textField.font.pointSize + 2;
 	float width = bounds.x().size();
-	_textField.frame = CGRectMake(bounds.min.x, surface->GetSize().y - bounds.min.y - height, width, height);
+	_textField.frame = CGRectMake(bounds.min.x, surface->GetVirtualSize().y - bounds.min.y - height, width, height);
 }
 
 
