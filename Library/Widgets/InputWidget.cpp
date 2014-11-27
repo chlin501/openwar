@@ -1,7 +1,5 @@
 #include "InputWidget.h"
 #include "InputEditor.h"
-#include "InputHotspot.h"
-#include "Scroller/ScrollerViewport.h"
 #include "Surface/Surface.h"
 #include "Surface/Touch.h"
 
@@ -9,8 +7,19 @@
 
 InputWidget::InputWidget(WidgetOwner* widgetOwner) : StringWidget(widgetOwner),
 	_editing(false),
+	_inputHotspot(),
 	_inputEditor(nullptr)
 {
+	_inputHotspot.SetDistance([this](glm::vec2 position) {
+		return _bounds.distance(GetViewport()->GlobalToLocal(position));
+	});
+	_inputHotspot.SetTolerance([this](Touch* touch) {
+		return ButtonHotspot::GetDefaultTolerance(touch, _bounds.size());
+	});
+	_inputHotspot.SetClickAction([this]() {
+		SetEditing(true);
+	});
+	_inputHotspot.SetImmediateClick(true);
 }
 
 
@@ -98,12 +107,8 @@ void InputWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 
 void InputWidget::OnTouchBegin(Touch* touch)
 {
-	if (GetBounds().contains(GetViewport()->GlobalToLocal(touch->GetCurrentPosition())))
-	{
-		if (_inputHotspot == nullptr)
-			_inputHotspot = std::make_shared<InputHotspot>(this);
-		_inputHotspot->SubscribeTouch(touch);
-	}
+	if (_inputHotspot.IsTouchInside(touch))
+		_inputHotspot.SubscribeTouch(touch);
 }
 
 

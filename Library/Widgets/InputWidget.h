@@ -3,9 +3,9 @@
 
 #include "StringWidget.h"
 #include "Graphics/RenderLoopObserver.h"
+#include "ButtonHotspot.h"
 
 class InputEditor;
-class InputHotspot;
 
 
 class InputWidget : public StringWidget, RenderLoopObserver
@@ -14,7 +14,7 @@ class InputWidget : public StringWidget, RenderLoopObserver
 	bounds2f _bounds;
 	bool _editing;
 	std::function<void()> _enterAction;
-	std::shared_ptr<InputHotspot> _inputHotspot;
+	ButtonHotspot _inputHotspot;
 	InputEditor* _inputEditor;
 
 public:
