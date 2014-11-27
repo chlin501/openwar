@@ -5,8 +5,6 @@
 #include "WidgetView.h"
 #include "Graphics/GraphicsContext.h"
 #include "Graphics/RenderCall.h"
-#include "Scroller/ScrollerHotspot.h"
-#include "Scroller/ScrollerViewport.h"
 #include "Surface/Surface.h"
 #include "Graphics/TextureAtlas.h"
 #include "Graphics/TextureFont.h"
@@ -35,12 +33,12 @@ void WidgetView::WidgetVertexBuffer::Update()
 
 WidgetView::WidgetView(Surface* surface) : View(surface),
 	_gc(surface->GetGraphicsContext()),
-	_viewport(nullptr),
+	_viewport(_gc),
+	_scrollerHotspot(&_viewport),
 	_textureAtlas(nullptr),
 	_vertices(this)
 {
 	_vertices._mode = GL_TRIANGLES;
-	_viewport = new ScrollerViewport(_gc);
 	_textureAtlas = _gc->GetTextureAtlas(WIDGET_TEXTURE_ATLAS);
 }
 
@@ -50,9 +48,9 @@ WidgetView::~WidgetView()
 }
 
 
-ScrollerViewport* WidgetView::GetScrollerViewport() const
+ScrollerViewport* WidgetView::GetScrollerViewport()
 {
-	return _viewport;
+	return &_viewport;
 }
 
 
@@ -63,16 +61,16 @@ TextureAtlas* WidgetView::GetWidgetTextureAtlas() const
 }
 
 
-Viewport* WidgetView::GetViewport() const
+const Viewport* WidgetView::GetViewport() const
 {
-	return _viewport;
+	return &_viewport;
 }
 
 
 void WidgetView::SetBounds(const bounds2f& value)
 {
 	View::SetBounds(value);
-	_viewport->SetBounds(value);
+	_viewport.SetBounds(value);
 }
 
 
@@ -84,14 +82,12 @@ void WidgetView::OnTouchEnter(Touch* touch)
 
 void WidgetView::OnTouchBegin(Touch* touch)
 {
-	if (_viewport->GetContentSize() != glm::vec2(0, 0))
+	if (_viewport.GetContentSize() != glm::vec2(0, 0))
 	{
-		bounds2f viewportBounds = _viewport->GetBounds();
+		bounds2f viewportBounds = _viewport.GetBounds();
 		if (viewportBounds.contains(touch->GetOriginalPosition()))
 		{
-			if (_scrollerHotspot == nullptr)
-				_scrollerHotspot = std::make_shared<ScrollerHotspot>(_viewport);
-			_scrollerHotspot->SubscribeTouch(touch);
+			_scrollerHotspot.SubscribeTouch(touch);
 		}
 	}
 
@@ -101,11 +97,11 @@ void WidgetView::OnTouchBegin(Touch* touch)
 
 void WidgetView::Render()
 {
-	_viewport->UseViewport();
+	_viewport.UseViewport();
 
 	RenderCall<WidgetShader>(_gc)
 		.SetVertices(&_vertices, "position", "texcoord", "colorize", "alpha")
-		.SetUniform("transform", _viewport->GetTransform())
+		.SetUniform("transform", _viewport.GetTransform())
 		.SetTexture("texture", _textureAtlas)
 		.Render();
 }

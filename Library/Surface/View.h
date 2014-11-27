@@ -34,7 +34,7 @@ public:
 	virtual void OrderBack();
 	virtual void OrderBackOf(View* view);
 
-	virtual Viewport* GetViewport() const = 0;
+	virtual const Viewport* GetViewport() const = 0;
 
 	virtual void OnTouchEnter(Touch* touch) = 0;
 	virtual void OnTouchBegin(Touch* touch) = 0;

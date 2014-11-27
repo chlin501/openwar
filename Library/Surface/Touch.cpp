@@ -31,7 +31,7 @@ Touch::~Touch()
 
 	while (!_subscribedHotspots.empty())
 	{
-		std::shared_ptr<Hotspot> hotspot = _subscribedHotspots.back();
+		Hotspot* hotspot = _subscribedHotspots.back();
 		hotspot->UnsubscribeTouch(this);
 	}
 }
@@ -51,24 +51,24 @@ int Touch::GetTapCount() const
 
 void Touch::TouchBegan()
 {
-	std::vector<std::shared_ptr<Hotspot>> hotspots(_subscribedHotspots);
-	for (std::shared_ptr<Hotspot> hotspot : hotspots)
+	std::vector<Hotspot*> hotspots(_subscribedHotspots);
+	for (Hotspot* hotspot : hotspots)
 		hotspot->GetGesture()->TouchBegan(this);
 }
 
 
 void Touch::TouchMoved()
 {
-	std::vector<std::shared_ptr<Hotspot>> hotspots(_subscribedHotspots);
-	for (std::shared_ptr<Hotspot> hotspot : hotspots)
+	std::vector<Hotspot*> hotspots(_subscribedHotspots);
+	for (Hotspot* hotspot : hotspots)
 		hotspot->GetGesture()->TouchMoved(this);
 }
 
 
 void Touch::TouchEnded()
 {
-	std::vector<std::shared_ptr<Hotspot>> hotspots(_subscribedHotspots);
-	for (std::shared_ptr<Hotspot> hotspot : hotspots)
+	std::vector<Hotspot*> hotspots(_subscribedHotspots);
+	for (Hotspot* hotspot : hotspots)
 		hotspot->GetGesture()->TouchEnded(this);
 }
 

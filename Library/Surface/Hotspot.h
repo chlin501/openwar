@@ -12,7 +12,7 @@ class Surface;
 class Touch;
 
 
-class Hotspot : public std::enable_shared_from_this<Hotspot>
+class Hotspot
 {
 	friend class Touch;
 	std::vector<Touch*> _subscribedTouches;

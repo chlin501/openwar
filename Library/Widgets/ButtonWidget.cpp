@@ -11,11 +11,10 @@ ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
 	_titleString(this),
 	_disabled(false)
 {
-	_hotspot = std::make_shared<ButtonHotspot>();
-	_hotspot->SetDistance([this](glm::vec2 position) {
+	_hotspot.SetDistance([this](glm::vec2 position) {
 		return _bounds.distance(GetViewport()->GlobalToLocal(position));
 	});
-	_hotspot->SetTolerance([this](Touch* touch) {
+	_hotspot.SetTolerance([this](Touch* touch) {
 		return ButtonHotspot::GetDefaultTolerance(touch, _bounds.size());
 	});
 
@@ -38,13 +37,13 @@ void ButtonWidget::SetBounds(const bounds2f& value)
 
 std::function<void()> ButtonWidget::GetClickAction() const
 {
-	return _hotspot->GetClickAction();
+	return _hotspot.GetClickAction();
 }
 
 
 void ButtonWidget::SetClickAction(std::function<void()> value)
 {
-	_hotspot->SetClickAction(value);
+	_hotspot.SetClickAction(value);
 }
 
 
@@ -135,8 +134,8 @@ void ButtonWidget::OnTouchEnter(Touch* touch)
 
 void ButtonWidget::OnTouchBegin(Touch* touch)
 {
-	if (_hotspot->IsTouchInside(touch))
-		_hotspot->SubscribeTouch(touch);
+	if (_hotspot.IsTouchInside(touch))
+		_hotspot.SubscribeTouch(touch);
 }
 
 
@@ -165,7 +164,7 @@ void ButtonWidget::RefreshContent()
 			_borderImage.SetAlpha(0.5f);
 		}
 	}
-	else if (_hotspot != nullptr && _hotspot->IsHighlight())
+	else if (_hotspot.IsHighlight())
 	{
 		if (_backgroundHighlight != nullptr)
 		{

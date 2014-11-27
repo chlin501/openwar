@@ -2,12 +2,11 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef GESTURE_H
-#define GESTURE_H
+#ifndef Gesture_H
+#define Gesture_H
 
 #include <vector>
 #include <glm/glm.hpp>
-#import "Hotspot.h"
 
 class Hotspot;
 class Surface;

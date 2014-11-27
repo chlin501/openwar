@@ -13,7 +13,7 @@ Hotspot::~Hotspot()
 	for (Touch* touch : _subscribedTouches)
 	{
 		touch->_subscribedHotspots.erase(
-			std::remove(touch->_subscribedHotspots.begin(), touch->_subscribedHotspots.end(), shared_from_this()),
+			std::remove(touch->_subscribedHotspots.begin(), touch->_subscribedHotspots.end(), this),
 			touch->_subscribedHotspots.end());
 	}
 
@@ -41,7 +41,7 @@ void Hotspot::SubscribeTouch(Touch* touch)
 		return;
 
 	_subscribedTouches.push_back(touch);
-	touch->_subscribedHotspots.push_back(shared_from_this());
+	touch->_subscribedHotspots.push_back(this);
 }
 
 
@@ -55,14 +55,14 @@ void Hotspot::UnsubscribeTouch(Touch* touch)
 		_subscribedTouches.end());
 
 	touch->_subscribedHotspots.erase(
-		std::remove(touch->_subscribedHotspots.begin(), touch->_subscribedHotspots.end(), shared_from_this()),
+		std::remove(touch->_subscribedHotspots.begin(), touch->_subscribedHotspots.end(), this),
 		touch->_subscribedHotspots.end());
 }
 
 
 bool Hotspot::TryCaptureTouch(Touch* touch)
 {
-	if (touch->_capturedByHotspot.get() == this)
+	if (touch->_capturedByHotspot == this)
 		return true;
 
 	if (touch->_capturedByHotspot != nullptr)
@@ -74,10 +74,10 @@ bool Hotspot::TryCaptureTouch(Touch* touch)
 	}
 
 	_capturedTouches.push_back(touch);
-	touch->_capturedByHotspot = shared_from_this();
+	touch->_capturedByHotspot = this;
 
-	std::vector<std::shared_ptr<Hotspot>> hotspots(touch->_subscribedHotspots);
-	for (std::shared_ptr<Hotspot> hotspot : hotspots)
+	std::vector<Hotspot*> hotspots(touch->_subscribedHotspots);
+	for (Hotspot* hotspot : hotspots)
 		hotspot->GetGesture()->TouchWasCaptured(touch);
 
 	return true;
@@ -89,8 +89,8 @@ void Hotspot::ReleaseTouch(Touch* touch)
 	if (!HasCapturedTouch(touch))
 		return;
 
-	std::vector<std::shared_ptr<Hotspot>> hotspots(touch->_subscribedHotspots);
-	for (std::shared_ptr<Hotspot> hotspot : hotspots)
+	std::vector<Hotspot*> hotspots(touch->_subscribedHotspots);
+	for (Hotspot* hotspot : hotspots)
 		hotspot->GetGesture()->TouchWillBeReleased(touch);
 
 	_capturedTouches.erase(

@@ -8,12 +8,13 @@
 #include <vector>
 #include "Algebra/bounds.h"
 #include "Graphics/VertexBuffer.h"
+#include "Scroller/ScrollerHotspot.h"
+#include "Scroller/ScrollerViewport.h"
 #include "Surface/View.h"
 #include "Widget.h"
 
 class GraphicsContext;
 class ScrollerHotspot;
-class ScrollerViewport;
 class TextureAtlas;
 
 
@@ -28,20 +29,20 @@ class WidgetView : public View, public WidgetOwner
 	};
 
 	GraphicsContext* _gc;
-	ScrollerViewport* _viewport;
+	ScrollerViewport _viewport;
+	ScrollerHotspot _scrollerHotspot;
 	TextureAtlas* _textureAtlas;
 	WidgetVertexBuffer _vertices;
-	std::shared_ptr<ScrollerHotspot> _scrollerHotspot;
 
 public:
 	WidgetView(Surface* surface);
 	virtual ~WidgetView();
 
-	ScrollerViewport* GetScrollerViewport() const;
+	ScrollerViewport* GetScrollerViewport();
 
 	TextureAtlas* GetWidgetTextureAtlas() const;
 
-	virtual Viewport* GetViewport() const;
+	virtual const Viewport* GetViewport() const;
 
 	virtual void SetBounds(const bounds2f& value);
 
@@ -56,7 +57,7 @@ protected:
 private:
 	void UpdateVertexBuffer();
 
-	WidgetView(const WidgetView&) : View(nullptr), _vertices(nullptr) { }
+	WidgetView(const WidgetView&) : View(nullptr), _viewport(nullptr), _scrollerHotspot(nullptr), _vertices(nullptr) { }
 	WidgetView& operator=(const WidgetView&) { return *this; }
 };
 

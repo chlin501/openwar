@@ -5,7 +5,6 @@
 #include <algorithm>
 #include "Gesture.h"
 #include "Touch.h"
-#include "Surface.h"
 #include "Hotspot.h"
 
 

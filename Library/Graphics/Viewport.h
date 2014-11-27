@@ -21,7 +21,7 @@ public:
 
 	virtual bounds2i GetBounds() const;
 	virtual void SetBounds(const bounds2i& value);
-	virtual void UseViewport();
+	virtual void UseViewport() const;
 
 	virtual glm::mat4 GetTransform() const = 0;
 

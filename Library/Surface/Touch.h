@@ -2,8 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef TOUCH_H
-#define TOUCH_H
+#ifndef Touch_H
+#define Touch_H
 
 #include <memory>
 #include <vector>
@@ -31,10 +31,9 @@ class Touch
 {
 	friend class Gesture;
 	friend class Hotspot;
-	friend class ButtonHotspot; // fulhack
 
-	std::vector<std::shared_ptr<Hotspot>> _subscribedHotspots;
-	std::shared_ptr<Hotspot> _capturedByHotspot;
+	std::vector<Hotspot*> _subscribedHotspots;
+	Hotspot* _capturedByHotspot;
 
 	int _tapCount;
 	bool _hasMoved;
