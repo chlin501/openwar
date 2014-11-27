@@ -2,17 +2,17 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef ButtonHotspot_H
-#define ButtonHotspot_H
+#ifndef ClickHotspot_H
+#define ClickHotspot_H
 
 #include <functional>
 #include "Surface/Hotspot.h"
-#include "ButtonGesture.h"
+#include "ClickGesture.h"
 
 
-class ButtonHotspot : public Hotspot
+class ClickHotspot : public Hotspot
 {
-	ButtonGesture _gesture;
+	ClickGesture _gesture;
 	std::function<glm::vec2(glm::vec2)> _distance;
 	std::function<glm::vec2(Touch*)> _tolerance;
 	std::function<void()> _action;
@@ -20,8 +20,8 @@ class ButtonHotspot : public Hotspot
 	bool _immediate;
 
 public:
-	ButtonHotspot();
-	virtual ~ButtonHotspot();
+	ClickHotspot();
+	virtual ~ClickHotspot();
 
 	virtual Gesture* GetGesture();
 

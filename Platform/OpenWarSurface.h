@@ -10,7 +10,7 @@
 #include "TerrainView/EditorModel.h"
 #include "Graphics/RenderLoopObserver.h"
 
-class ButtonGesture;
+class ClickGesture;
 class ButtonItem;
 class ButtonRendering;
 class ButtonGrid;

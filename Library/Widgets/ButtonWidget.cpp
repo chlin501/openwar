@@ -1,5 +1,5 @@
 #include "ButtonWidget.h"
-#include "ButtonHotspot.h"
+#include "Surface/ClickHotspot.h"
 #include "Surface/Touch.h"
 #include "Scroller/ScrollerViewport.h"
 
@@ -15,7 +15,7 @@ ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
 		return _bounds.distance(GetViewport()->GlobalToLocal(position));
 	});
 	_hotspot.SetTolerance([this](Touch* touch) {
-		return ButtonHotspot::GetDefaultTolerance(touch, _bounds.size());
+		return ClickHotspot::GetDefaultTolerance(touch, _bounds.size());
 	});
 
 	_titleString.SetGlowColor(glm::vec4(0, 0, 0, 0.5f));

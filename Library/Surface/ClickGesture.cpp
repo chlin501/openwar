@@ -2,25 +2,25 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "ButtonGesture.h"
-#include "ButtonHotspot.h"
+#include "ClickGesture.h"
+#include "ClickHotspot.h"
 #include "ButtonGrid.h"
 #include "Surface/Surface.h"
 #include "Surface/Touch.h"
 
 
-ButtonGesture::ButtonGesture(ButtonHotspot* hotspot) :
+ClickGesture::ClickGesture(ClickHotspot* hotspot) :
 	_hotspot(hotspot)
 {
 }
 
 
-ButtonGesture::~ButtonGesture()
+ClickGesture::~ClickGesture()
 {
 }
 
 
-void ButtonGesture::KeyDown(char key)
+void ClickGesture::KeyDown(char key)
 {
 	for (ButtonGrid* buttonView : _buttonViews)
 		for (ButtonArea* buttonArea : buttonView->GetButtonAreas())
@@ -34,12 +34,12 @@ void ButtonGesture::KeyDown(char key)
 }
 
 
-void ButtonGesture::TouchWasCaptured(Touch* touch)
+void ClickGesture::TouchWasCaptured(Touch* touch)
 {
 }
 
 
-void ButtonGesture::TouchWillBeReleased(Touch* touch)
+void ClickGesture::TouchWillBeReleased(Touch* touch)
 {
 	if (_hotspot->HasCapturedTouch(touch))
 	{
@@ -48,10 +48,10 @@ void ButtonGesture::TouchWillBeReleased(Touch* touch)
 }
 
 
-void ButtonGesture::AskReleaseTouchToAnotherHotspot(Touch* touch, Hotspot* anotherHotspot)
+void ClickGesture::AskReleaseTouchToAnotherHotspot(Touch* touch, Hotspot* anotherHotspot)
 {
 	bool release = false;
-	ButtonHotspot* buttonHotspot = dynamic_cast<ButtonHotspot*>(anotherHotspot);
+	ClickHotspot* buttonHotspot = dynamic_cast<ClickHotspot*>(anotherHotspot);
 	if (buttonHotspot != nullptr)
 	{
 		glm::vec2 position = touch->GetCurrentPosition();
@@ -67,7 +67,7 @@ void ButtonGesture::AskReleaseTouchToAnotherHotspot(Touch* touch, Hotspot* anoth
 }
 
 
-void ButtonGesture::TouchBegan(Touch* touch)
+void ClickGesture::TouchBegan(Touch* touch)
 {
 	if (_hotspot->HasCapturedTouch())
 		return;
@@ -86,7 +86,7 @@ void ButtonGesture::TouchBegan(Touch* touch)
 
 
 
-void ButtonGesture::TouchMoved(Touch* touch)
+void ClickGesture::TouchMoved(Touch* touch)
 {
 	if (_hotspot->HasCapturedTouch())
 	{
@@ -98,7 +98,7 @@ void ButtonGesture::TouchMoved(Touch* touch)
 
 
 
-void ButtonGesture::TouchEnded(Touch* touch)
+void ClickGesture::TouchEnded(Touch* touch)
 {
 	if (_hotspot->HasCapturedTouch(touch))
 	{

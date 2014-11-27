@@ -5,7 +5,6 @@
 #include "OpenWarSurface.h"
 #include "BattleModel/BattleScenario.h"
 #include "Widgets/ButtonGrid.h"
-#include "Widgets/ButtonGesture.h"
 #include "BattleView/BattleGesture.h"
 #include "BattleView/BattleView.h"
 #include "TerrainView/EditorGesture.h"

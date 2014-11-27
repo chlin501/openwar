@@ -2,7 +2,7 @@
 #define ButtonWidget_H
 
 #include "Widget.h"
-#include "ButtonHotspot.h"
+#include "Surface/ClickHotspot.h"
 #include "ImageWidget.h"
 #include "StringWidget.h"
 
@@ -11,7 +11,7 @@ class ButtonWidget : public WidgetGroup
 {
 private:
 	bounds2f _bounds;
-	ButtonHotspot _hotspot;
+	ClickHotspot _hotspot;
 	BorderInset _inset;
 	std::shared_ptr<TextureImage> _backgroundNormal;
 	std::shared_ptr<TextureImage> _backgroundHighlight;

@@ -37,7 +37,7 @@ ButtonItem::ButtonItem(ButtonArea* buttonArea, const char* text) :
 
 {
 	buttonString.SetString(text);
-	_hotspot = std::make_shared<ButtonHotspot>();
+	_hotspot = std::make_shared<ClickHotspot>();
 }
 
 
@@ -54,7 +54,7 @@ ButtonItem::ButtonItem(ButtonArea* buttonArea, std::shared_ptr<TextureImage> ico
 	highlightImage(buttonArea->GetButtonView()),
 	buttonString(buttonArea->GetButtonView())
 {
-	_hotspot = std::make_shared<ButtonHotspot>();
+	_hotspot = std::make_shared<ClickHotspot>();
 }
 
 

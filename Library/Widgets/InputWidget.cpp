@@ -14,7 +14,7 @@ InputWidget::InputWidget(WidgetOwner* widgetOwner) : StringWidget(widgetOwner),
 		return _bounds.distance(GetViewport()->GlobalToLocal(position));
 	});
 	_inputHotspot.SetTolerance([this](Touch* touch) {
-		return ButtonHotspot::GetDefaultTolerance(touch, _bounds.size());
+		return ClickHotspot::GetDefaultTolerance(touch, _bounds.size());
 	});
 	_inputHotspot.SetClickAction([this]() {
 		SetEditing(true);

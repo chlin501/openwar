@@ -10,7 +10,7 @@
 #include "Graphics/Texture.h"
 #include "WidgetView.h"
 #include "ButtonRendering.h"
-#include "ButtonHotspot.h"
+#include "Surface/ClickHotspot.h"
 #include "Graphics/RenderLoopObserver.h"
 #include "ImageWidget.h"
 #include "StringWidget.h"
@@ -47,7 +47,7 @@ struct ButtonAlignment
 
 class ButtonItem
 {
-	std::shared_ptr<ButtonHotspot> _hotspot;
+	std::shared_ptr<ClickHotspot> _hotspot;
 	ButtonArea* _buttonArea;
 	std::shared_ptr<TextureImage> _buttonIcon;
 	char _keyboardShortcut;
@@ -65,7 +65,7 @@ public:
 	ButtonItem(ButtonArea* buttonArea, std::shared_ptr<TextureImage> icon);
 	~ButtonItem();
 
-	std::shared_ptr<ButtonHotspot> GetHotspot() const { return _hotspot; }
+	std::shared_ptr<ClickHotspot> GetHotspot() const { return _hotspot; }
 	ButtonArea* GetButtonArea() const { return _buttonArea; }
 
 	const char* GetButtonText() const { return buttonString.GetString()[0] == '\0' ? nullptr : buttonString.GetString(); }

@@ -2,26 +2,26 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef ButtonGridGesture_H
-#define ButtonGridGesture_H
+#ifndef ClickGesture_H
+#define ClickGesture_H
 
 #include <memory>
 #include "Surface/Gesture.h"
 
-class ButtonHotspot;
+class ClickHotspot;
 class ButtonItem;
 class ButtonGrid;
 
 
-class ButtonGesture : public Gesture
+class ClickGesture : public Gesture
 {
-	ButtonHotspot* _hotspot;
+	ClickHotspot* _hotspot;
 
 public:
 	std::vector<ButtonGrid*> _buttonViews;
 
-	ButtonGesture(ButtonHotspot* hotspot);
-	virtual ~ButtonGesture();
+	ClickGesture(ClickHotspot* hotspot);
+	virtual ~ClickGesture();
 
 	virtual void KeyDown(char key);
 
