@@ -117,27 +117,28 @@ std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, 
 	glm::ivec2 imageSize(image.GetWidth(), image.GetHeight());
 
 	bool discardable = discardability == TextureDiscardability::Discardable;
+	const int spacing = 2;
 	glm::ivec2 position;
 
 	if (!discardable)
 	{
-		if (_permamentPos.x + imageSize.x > atlasSize.x)
+		if (_permamentPos.x + imageSize.x + spacing > atlasSize.x)
 			_permamentPos = glm::ivec2(0, _permanentHeight);
 
 		position = _permamentPos;
 
-		_permamentPos.x += imageSize.x;
-		_permanentHeight = glm::max(_permanentHeight, _permamentPos.y + imageSize.y);
+		_permamentPos.x += imageSize.x + spacing;
+		_permanentHeight = glm::max(_permanentHeight, _permamentPos.y + imageSize.y + spacing);
 	}
 	else
 	{
-		if (_discardablePos.x + imageSize.x > atlasSize.x)
+		if (_discardablePos.x + imageSize.x + spacing > atlasSize.x)
 			_discardablePos = glm::ivec2(0, _discardableHeight);
 
 		position = glm::ivec2(_discardablePos.x, atlasSize.y - _discardablePos.y - imageSize.y);
 
-		_discardablePos.x += imageSize.x;
-		_discardableHeight = glm::max(_discardableHeight, _discardablePos.y + imageSize.y);
+		_discardablePos.x += imageSize.x + spacing;
+		_discardableHeight = glm::max(_discardableHeight, _discardablePos.y + imageSize.y + spacing);
 	}
 
 	bounds2i bounds = bounds2i(position, position + imageSize);
