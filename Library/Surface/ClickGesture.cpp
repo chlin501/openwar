@@ -50,63 +50,73 @@ void ClickGesture::TouchWillBeReleased(Touch* touch)
 
 void ClickGesture::AskReleaseTouchToAnotherHotspot(Touch* touch, Hotspot* anotherHotspot)
 {
-	bool release = false;
-	ClickHotspot* buttonHotspot = dynamic_cast<ClickHotspot*>(anotherHotspot);
-	if (buttonHotspot != nullptr)
-	{
-		glm::vec2 position = touch->GetCurrentPosition();
-		release = buttonHotspot->GetDistance(position) < _hotspot->GetDistance(position);
-	}
-	else
-	{
-		release = true;
-	}
-
-	if (release)
+	if (ShouldReleaseTouchToAnotherHotspot(touch, anotherHotspot))
 		_hotspot->ReleaseTouch(touch);
+}
+
+
+void ClickGesture::TouchBegin(Touch* touch)
+{
+	if (!_hotspot->HasCapturedTouch())
+		_hotspot->TryCaptureTouch(touch);
 }
 
 
 void ClickGesture::TouchBegan(Touch* touch)
 {
-	if (_hotspot->HasCapturedTouch())
-		return;
-
-	if (_hotspot->TryCaptureTouch(touch))
+	if (_hotspot->HasCapturedTouch(touch))
 	{
-		_hotspot->SetHighlight(true);
-
-		if (_hotspot->IsImmediateClick() && _hotspot->GetClickAction())
+		if (_hotspot->IsImmediateClick())
 		{
-			_hotspot->GetClickAction()();
-			_hotspot->ReleaseTouch(touch);
+			if (_hotspot->GetClickAction())
+				_hotspot->GetClickAction()();
+		}
+		else
+		{
+			_hotspot->SetHighlight(true);
 		}
 	}
 }
 
 
-
 void ClickGesture::TouchMoved(Touch* touch)
 {
-	if (_hotspot->HasCapturedTouch())
+	if (_hotspot->HasCapturedTouch(touch))
 	{
-		Touch* touch = _hotspot->GetCapturedTouch();
-		bool inside = _hotspot->IsTouchInside(touch);
-		_hotspot->SetHighlight(inside);
+		if (!_hotspot->IsImmediateClick())
+		{
+			bool inside = _hotspot->IsTouchInside(touch);
+			_hotspot->SetHighlight(inside);
+		}
 	}
 }
-
 
 
 void ClickGesture::TouchEnded(Touch* touch)
 {
 	if (_hotspot->HasCapturedTouch(touch))
 	{
-		bool inside = _hotspot->IsTouchInside(touch);
+		if (!_hotspot->IsImmediateClick())
+		{
+			bool inside = _hotspot->IsTouchInside(touch);
 
-		if (inside && !_hotspot->IsImmediateClick() && _hotspot->GetClickAction())
-			_hotspot->GetClickAction()();
-
+			if (inside && !_hotspot->IsImmediateClick() && _hotspot->GetClickAction())
+				_hotspot->GetClickAction()();
+		}
 		_hotspot->ReleaseTouch(touch);
 	}
+}
+
+
+bool ClickGesture::ShouldReleaseTouchToAnotherHotspot(Touch* touch, Hotspot* anotherHotspot)
+{
+	ClickHotspot* clickHotspot = dynamic_cast<ClickHotspot*>(anotherHotspot);
+	if (clickHotspot == nullptr)
+		return true;
+
+	if (_hotspot->IsImmediateClick() && !clickHotspot->IsImmediateClick())
+		return true;
+
+	glm::vec2 position = touch->GetCurrentPosition();
+	return clickHotspot->GetDistance(position) < _hotspot->GetDistance(position);
 }

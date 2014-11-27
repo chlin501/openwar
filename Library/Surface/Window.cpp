@@ -277,6 +277,7 @@ void Window::ProcessFingerDown(const SDL_TouchFingerEvent& event)
 	_touches[MakeTouchKey(event)] = touch;
 	_surface->NotifyViewsOfTouchBegin(touch);
 
+	touch->TouchBegin();
 	touch->TouchBegan();
 }
 
@@ -376,6 +377,7 @@ void Window::ProcessMouseButtonDown(const SDL_MouseButtonEvent& event)
 		_mouseTouch->Update(position, timestamp, buttons);
 	}
 
+	_mouseTouch->TouchBegin();
 	_mouseTouch->TouchBegan();
 }
 

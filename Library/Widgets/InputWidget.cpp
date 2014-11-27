@@ -17,7 +17,7 @@ InputWidget::InputWidget(WidgetOwner* widgetOwner) : StringWidget(widgetOwner),
 		return ClickHotspot::GetDefaultTolerance(touch, _bounds.size());
 	});
 	_inputHotspot.SetClickAction([this]() {
-		SetEditing(true);
+		SetEditing(!IsEditing());
 	});
 	_inputHotspot.SetImmediateClick(true);
 }
@@ -107,7 +107,7 @@ void InputWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 
 void InputWidget::OnTouchBegin(Touch* touch)
 {
-	if (_inputHotspot.IsTouchInside(touch))
+	if (_inputHotspot.IsTouchInside(touch) != IsEditing())
 		_inputHotspot.SubscribeTouch(touch);
 }
 

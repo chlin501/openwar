@@ -35,6 +35,7 @@ public:
 	virtual void TouchWillBeReleased(Touch* touch) { }
 	virtual void AskReleaseTouchToAnotherHotspot(Touch* touch, Hotspot* anotherHotspot) { }
 
+	virtual void TouchBegin(Touch* touch) { }
 	virtual void TouchBegan(Touch* touch) { }
 	virtual void TouchMoved(Touch* touch) { }
 	virtual void TouchEnded(Touch* touch) { }

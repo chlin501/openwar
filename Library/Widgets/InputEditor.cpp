@@ -57,12 +57,14 @@ InputEditor_Mac::InputEditor_Mac(InputWidget* inputWidget) : InputEditor(inputWi
 		UpdateNSTextFieldFrame();
 		UpdateNSTextFieldColor();
 
+		/* is this needed ???
 		_observer = [[[NSNotificationCenter defaultCenter] addObserverForName:NSControlTextDidEndEditingNotification
 											  object:_textField
 											  queue:[NSOperationQueue mainQueue]
 											  usingBlock:^(NSNotification*) {
 												  inputWidget->SetEditing(false);
 											  }] retain];
+		*/
 
 		[view addSubview:_textField];
 

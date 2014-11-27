@@ -49,6 +49,14 @@ int Touch::GetTapCount() const
 }
 
 
+void Touch::TouchBegin()
+{
+	std::vector<Hotspot*> hotspots(_subscribedHotspots);
+	for (Hotspot* hotspot : hotspots)
+		hotspot->GetGesture()->TouchBegin(this);
+}
+
+
 void Touch::TouchBegan()
 {
 	std::vector<Hotspot*> hotspots(_subscribedHotspots);

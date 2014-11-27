@@ -54,6 +54,7 @@ public:
 
 	int GetTapCount() const;
 
+	void TouchBegin();
 	void TouchBegan();
 	void TouchMoved();
 	void TouchEnded();
