@@ -125,7 +125,7 @@ void InputEditor_Mac::UpdateNSTextFieldFrame()
 	bounds2f bounds = GetInputWidget()->GetBounds();
 	float height = (float)_textField.font.pointSize + 6;
 	float width = bounds.x().size() + 2;
-	_textField.frame = NSMakeRect(bounds.min.x - 1, bounds.min.y - 1, width, height);
+	_textField.frame = NSMakeRect(bounds.min.x - 1, bounds.min.y - 2, width, height);
 }
 
 
