@@ -69,6 +69,7 @@ public:
 	bool IsGrayscale() const;
 
 	void PremultiplyAlpha();
+	void NormalizeAlpha();
 	void ApplyBlurFilter(float radius);
 	void ApplyPixelFilter(std::function<glm::vec4(glm::vec4)> filter);
 	void ApplyCircleMask();

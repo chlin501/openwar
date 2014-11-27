@@ -39,7 +39,7 @@ static bool ContainsArabic(const std::wstring& ws)
 StringWidget::StringWidget(WidgetOwner* widgetOwner) : Widget(widgetOwner),
 	_string(),
 	_color(1, 1, 1, 1),
-	_glowRadius(2),
+	_glowRadius(1),
 	_width(0)
 {
 }
@@ -167,11 +167,9 @@ void StringWidget::OnTouchBegin(Touch* touch)
 
 void StringWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
-	if (_glowColor.a != 0)
+	if (_glowColor.a != 0 && _glowRadius > 0)
 	{
-		GraphicsContext* gc = GetGraphicsContext();
-		float blurRadius = _glowRadius * gc->GetCombinedScaling();
-		AppendVertices(vertices, _glowColor, blurRadius);
+		AppendVertices(vertices, _glowColor, _glowRadius);
 	}
 
 	AppendVertices(vertices, _color, 0);

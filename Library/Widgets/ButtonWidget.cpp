@@ -19,7 +19,8 @@ ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
 		return ButtonHotspot::GetDefaultTolerance(touch, _bounds.size());
 	});
 
-	_titleString.SetGlowColor(glm::vec4(0, 0, 0, 1));
+	_titleString.SetGlowColor(glm::vec4(0, 0, 0, 0.5f));
+	_titleString.SetGlowRadius(1.5f);
 }
 
 

@@ -347,6 +347,28 @@ void Image::PremultiplyAlpha()
 }
 
 
+void Image::NormalizeAlpha()
+{
+	float alpha = 0;
+
+	for (int y = 0; y < _height; ++y)
+		for (int x = 0; x < _width; ++x)
+			alpha = glm::max(alpha, GetPixel(x, y).a);
+
+	if (alpha > 0.01f)
+	{
+		alpha = glm::pow(alpha, 0.9f);
+		for (int y = 0; y < _height; ++y)
+			for (int x = 0; x < _width; ++x)
+			{
+				glm::vec4 c = GetPixel(x, y);
+				c.a /= alpha;
+				SetPixel(x, y, c);
+			}
+	}
+}
+
+
 void Image::ApplyBlurFilter(float radius)
 {
 	int w = GetWidth();
@@ -362,7 +384,7 @@ void Image::ApplyBlurFilter(float radius)
 			++i;
 		}
 
-	GaussBlur(scl, tcl, w, h, radius);
+	GaussBlur(scl, tcl, w, h, _pixelDensity * radius);
 
 	i = 0;
 	for (int y = 0; y < h; ++y)

@@ -43,19 +43,13 @@ TextureChar* TextureFont::GetTextureChar(const std::string& character, float blu
 		canColorize = image.IsGrayscale();
 		if (blurRadius != 0)
 		{
-			image.ApplyBlurFilter(glm::abs(blurRadius));
-			if (blurRadius < 0)
-			{
-				image.ApplyPixelFilter([](glm::vec4 c) {
-					float a = 1 - c.a;
-					return glm::vec4(c.r, c.g, c.b, 1 - a * a);
-				});
-			}
+			image.ApplyBlurFilter(blurRadius);
+			image.NormalizeAlpha();
 		}
 		image.PremultiplyAlpha();
 	};
 
-	int border = 2 + (int)glm::ceil(glm::abs(blurRadius));
+	int border = 2 + (int)glm::ceil(2 * blurRadius);
 
 	std::shared_ptr<TextureImage> textureImage = _fontAdapter->AddTextureImage(_textureAtlas, character, border, filter);
 	if (textureImage == nullptr)

@@ -64,10 +64,13 @@ std::shared_ptr<TextureImage> FontAdapter_NSFont::AddTextureImage(TextureAtlas* 
 
 	CGSize size = [string sizeWithAttributes:_attributes];
 
-	int width = (int)glm::ceil(size.width) + border * 2;
-	int height = (int)glm::ceil(size.height) + border * 2;
+	float scaling = textureAtlas->GetGraphicsContext()->GetCombinedScaling();
+	int offset = (int)glm::ceil(scaling * border);
+	int width = (int)glm::ceil(size.width) + offset * 2;
+	int height = (int)glm::ceil(size.height) + offset * 2;
 
 	Image image(width, height);
+	image.SetPixelDensity(textureAtlas->GetGraphicsContext()->GetCombinedScaling());
 
 	CGContextRef context = image.GetCGContext();
 	[NSGraphicsContext saveGraphicsState];
@@ -76,7 +79,7 @@ std::shared_ptr<TextureImage> FontAdapter_NSFont::AddTextureImage(TextureAtlas* 
 	CGContextSetRGBFillColor(context, 1, 1, 1, 1);
 	CGContextSetRGBStrokeColor(context, 1, 1, 1, 1);
 
-	CGPoint p = CGPointMake(border, border);
+	CGPoint p = CGPointMake(offset, offset);
 	[string drawAtPoint:p withAttributes:_attributes];
 
 	[NSGraphicsContext restoreGraphicsState];
@@ -84,13 +87,10 @@ std::shared_ptr<TextureImage> FontAdapter_NSFont::AddTextureImage(TextureAtlas* 
 	if (filter)
 		filter(image);
 
-	GraphicsContext* gc = textureAtlas->GetGraphicsContext();
-	image.SetPixelDensity(gc->GetCombinedScaling());
-
 	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image, TextureDiscardability::Discardable);
 
 	BorderBounds bounds = textureImage->GetBounds();
-	bounds.inner.min = bounds.outer.min + glm::vec2(border, border);
+	bounds.inner.min = bounds.outer.min + glm::vec2(offset, offset);
 	bounds.inner.max = bounds.inner.min + glm::vec2(size.width, size.height);
 	textureImage->SetBounds(bounds);
 
@@ -143,10 +143,13 @@ std::shared_ptr<TextureImage> FontAdapter_UIFont::AddTextureImage(TextureAtlas* 
 	CGSize size = [string sizeWithFont:_font];
 	//CGSize size = [string sizeWithAttributes:_attributes];
 
-	int width = (int)glm::ceil(size.width) + border * 2;
-	int height = (int)glm::ceil(size.height) + border * 2;
+	float scaling = textureAtlas->GetGraphicsContext()->GetCombinedScaling();
+	int offset = (int)glm::ceil(scaling * border);
+	int width = (int)glm::ceil(size.width) + offset * 2;
+	int height = (int)glm::ceil(size.height) + offset * 2;
 
 	Image image(width, height);
+	image.SetPixelDensity(scaling);
 
 	CGContextRef context = image.GetCGContext();
 
@@ -158,7 +161,7 @@ std::shared_ptr<TextureImage> FontAdapter_UIFont::AddTextureImage(TextureAtlas* 
 	CGContextSetRGBFillColor(context, 1, 1, 1, 1);
 	CGContextSetRGBStrokeColor(context, 1, 1, 1, 1);
 
-	CGPoint p = CGPointMake(border, border);
+	CGPoint p = CGPointMake(offset, offset);
 
 	[string drawAtPoint:p withFont:_font];
 	//[string drawAtPoint:p withAttributes:_attributes];
@@ -168,13 +171,10 @@ std::shared_ptr<TextureImage> FontAdapter_UIFont::AddTextureImage(TextureAtlas* 
 	if (filter)
 		filter(image);
 
-	GraphicsContext* gc = textureAtlas->GetGraphicsContext();
-	image.SetPixelDensity(gc->GetCombinedScaling());
-
 	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image, TextureDiscardability::Discardable);
 
 	BorderBounds bounds = textureImage->GetBounds();
-	bounds.inner.min = bounds.outer.min + glm::vec2(border, border);
+	bounds.inner.min = bounds.outer.min + glm::vec2(offset, offset);
 	bounds.inner.max = bounds.inner.min + glm::vec2(size.width, size.height);
 	textureImage->SetBounds(bounds);
 
@@ -271,20 +271,22 @@ std::shared_ptr<TextureImage> FontAdapter_SDL_ttf::AddTextureImage(TextureAtlas*
 	Image image;
 	image.LoadFromSurface(surface);
 
-	Image image2(image.GetWidth() + border * 2, image.GetHeight() + border * 2);
-	image2.Copy(image, border, border);
+	float scaling = textureAtlas->GetGraphicsContext()->GetCombinedScaling();
+	int offset = (int)glm::ceil(scaling * border);
+
+	Image image2(image.GetWidth() + offset * 2, image.GetHeight() + offset * 2);
+	image2.Copy(image, offset, offset);
 
 	SDL_FreeSurface(surface);
+
+  	image2.SetPixelDensity(scaling);
 
 	if (filter)
 		filter(image2);
 
-	GraphicsContext* gc = textureAtlas->GetGraphicsContext();
-	image.SetPixelDensity(gc->GetCombinedScaling());
-
 	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image2, TextureDiscardability::Discardable);
 	BorderBounds bounds = textureImage->GetBounds();
-	bounds.inner.min = bounds.outer.min + glm::vec2(border, border);
+	bounds.inner.min = bounds.outer.min + glm::vec2(offset, offset);
 	bounds.inner.max = bounds.inner.min + glm::vec2(image.GetWidth(), image.GetHeight());
 	textureImage->SetBounds(bounds);
 
