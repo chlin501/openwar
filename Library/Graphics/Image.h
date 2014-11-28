@@ -2,9 +2,10 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef Image_h
-#define Image_h
+#ifndef Image_H
+#define Image_H
 
+#include <functional>
 #include <glm/glm.hpp>
 #include "resource.h"
 #include "Algebra/bounds.h"

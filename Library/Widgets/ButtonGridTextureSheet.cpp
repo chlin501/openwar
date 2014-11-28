@@ -2,11 +2,11 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "ButtonRendering.h"
+#include "ButtonGridTextureSheet.h"
 #include "Graphics/TextureAtlas.h"
 
 
-ButtonRendering::ButtonRendering(TextureAtlas* textureAtlas)
+ButtonGridTextureSheet::ButtonGridTextureSheet(TextureAtlas* textureAtlas)
 {
 	TextureSheet buttonBackgroundSheet = textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonNormal.png")));
 	TextureSheet buttonHighlightSheet = textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonHighlight.png")));

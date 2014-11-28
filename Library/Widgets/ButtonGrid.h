@@ -9,7 +9,7 @@
 #include "Algebra/bounds.h"
 #include "Graphics/Texture.h"
 #include "WidgetView.h"
-#include "ButtonRendering.h"
+#include "ButtonGridTextureSheet.h"
 #include "Surface/ClickHotspot.h"
 #include "Graphics/RenderLoopObserver.h"
 #include "ImageWidget.h"
@@ -47,7 +47,7 @@ struct ButtonAlignment
 
 class ButtonItem
 {
-	std::shared_ptr<ClickHotspot> _hotspot;
+	ClickHotspot _hotspot;
 	ButtonArea* _buttonArea;
 	std::shared_ptr<TextureImage> _buttonIcon;
 	char _keyboardShortcut;
@@ -65,7 +65,7 @@ public:
 	ButtonItem(ButtonArea* buttonArea, std::shared_ptr<TextureImage> icon);
 	~ButtonItem();
 
-	std::shared_ptr<ClickHotspot> GetHotspot() const { return _hotspot; }
+	ClickHotspot* GetHotspot() { return &_hotspot; }
 	ButtonArea* GetButtonArea() const { return _buttonArea; }
 
 	const char* GetButtonText() const { return buttonString.GetString()[0] == '\0' ? nullptr : buttonString.GetString(); }
@@ -74,9 +74,9 @@ public:
 	std::shared_ptr<TextureImage> GetButtonIcon() const { return _buttonIcon; }
 	void SetButtonIcon(std::shared_ptr<TextureImage> value) { _buttonIcon = value; }
 
-	ButtonItem* SetAction(std::function<void()> action) { _hotspot->SetClickAction(action); return this; }
-	bool HasAction() const { return (bool)_hotspot->GetClickAction(); }
-	void CallAction() const { _hotspot->GetClickAction()(); }
+	ButtonItem* SetAction(std::function<void()> action) { _hotspot.SetClickAction(action); return this; }
+	bool HasAction() const { return (bool)_hotspot.GetClickAction(); }
+	void CallAction() const { _hotspot.GetClickAction()(); }
 
 	char GetKeyboardShortcut() const { return _keyboardShortcut; }
 	void SetKeyboardShortcut(char value) { _keyboardShortcut = value; }
@@ -84,8 +84,8 @@ public:
 	bounds2f GetBounds() const { return _bounds; }
 	void SetBounds(bounds2f value) { _bounds = value; }
 
-	bool IsHighlight() const { return _hotspot->IsHighlight(); }
-	void SetHighlight(bool value) { _hotspot->SetHighlight(value); }
+	bool IsHighlight() const { return _hotspot.IsHighlight(); }
+	void SetHighlight(bool value) { _hotspot.SetHighlight(value); }
 
 	bool IsSelected() const { return _selected; }
 	void SetSelected(bool value) { _selected = value; }
@@ -117,7 +117,7 @@ public:
 	glm::vec2 GetMargin() const { return _margin; }
 	void SetMargin(glm::vec2 value) { _margin = value; }
 
-	ButtonGrid* GetButtonView() const { return _buttonView; }
+	ButtonGrid* GetButtonGrid() const { return _buttonView; }
 
 	ButtonItem* AddButtonItem(const char* buttonText);
 	ButtonItem* AddButtonItem(std::shared_ptr<TextureImage> buttonIcon);
@@ -138,10 +138,10 @@ private:
 	std::vector<ButtonArea*> _obsolete;
 
 public:
-	ButtonRendering* _buttonRendering;
+	ButtonGridTextureSheet* _textureSheet;
 
 public:
-	ButtonGrid(Surface* surface, ButtonRendering* buttonRendering, ButtonAlignment alignment);
+	ButtonGrid(Surface* surface, ButtonGridTextureSheet* textureSheet, ButtonAlignment alignment);
 
 	ButtonAlignment GetAlignment() const { return _alignment; }
 
@@ -158,9 +158,10 @@ private: // RenderLoopObserver
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);
 
 public:
+	virtual void OnTouchBegin(Touch* touch);
+
 	virtual void Render();
 
-	void FindButtonHotspots(Touch* touch);
 };
 
 

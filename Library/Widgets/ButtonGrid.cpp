@@ -30,14 +30,16 @@ ButtonItem::ButtonItem(ButtonArea* buttonArea, const char* text) :
 	_keyboardShortcut('\0'),
 	_selected(false),
 	_disabled(false),
-	selectedImage(buttonArea->GetButtonView()),
-	buttonImage(buttonArea->GetButtonView()),
-	highlightImage(buttonArea->GetButtonView()),
-	buttonString(buttonArea->GetButtonView())
-
+	selectedImage(buttonArea->GetButtonGrid()),
+	buttonImage(buttonArea->GetButtonGrid()),
+	highlightImage(buttonArea->GetButtonGrid()),
+	buttonString(buttonArea->GetButtonGrid())
 {
+	_hotspot.SetDistance([this](glm::vec2 position) {
+		return _bounds.distance(_buttonArea->GetButtonGrid()->GetScrollerViewport()->GlobalToLocal(position));
+	});
+
 	buttonString.SetString(text);
-	_hotspot = std::make_shared<ClickHotspot>();
 }
 
 
@@ -49,12 +51,14 @@ ButtonItem::ButtonItem(ButtonArea* buttonArea, std::shared_ptr<TextureImage> ico
 	_keyboardShortcut('\0'),
 	_selected(false),
 	_disabled(false),
-	selectedImage(buttonArea->GetButtonView()),
-	buttonImage(buttonArea->GetButtonView()),
-	highlightImage(buttonArea->GetButtonView()),
-	buttonString(buttonArea->GetButtonView())
+	selectedImage(buttonArea->GetButtonGrid()),
+	buttonImage(buttonArea->GetButtonGrid()),
+	highlightImage(buttonArea->GetButtonGrid()),
+	buttonString(buttonArea->GetButtonGrid())
 {
-	_hotspot = std::make_shared<ClickHotspot>();
+	_hotspot.SetDistance([this](glm::vec2 position) {
+		return _bounds.distance(_buttonArea->GetButtonGrid()->GetScrollerViewport()->GlobalToLocal(position));
+	});
 }
 
 
@@ -67,7 +71,7 @@ ButtonItem::~ButtonItem()
 void ButtonItem::SetButtonText(const char* value)
 {
 	buttonString.SetString(value ?: "");
-	_buttonArea->GetButtonView()->UpdateLayout();
+	_buttonArea->GetButtonGrid()->UpdateLayout();
 }
 
 
@@ -215,10 +219,10 @@ void ButtonArea::UpdateBounds(bounds2f bounds)
 
 
 
-ButtonGrid::ButtonGrid(Surface* surface, ButtonRendering* buttonRendering, ButtonAlignment alignment) : WidgetView(surface),
+ButtonGrid::ButtonGrid(Surface* surface, ButtonGridTextureSheet* textureSheet, ButtonAlignment alignment) : WidgetView(surface),
 	_gc(surface->GetGraphicsContext()),
 	_alignment(alignment),
-	_buttonRendering(buttonRendering)
+	_textureSheet(textureSheet)
 {
 }
 
@@ -340,60 +344,7 @@ void ButtonGrid::OnRenderLoop(double secondsSinceLastUpdate)
 }
 
 
-void ButtonGrid::Render()
-{
-	for (ButtonArea* buttonArea : _buttonAreas)
-	{
-		buttonArea->backgroundImage.SetBounds(buttonArea->_bounds.grow(10));
-		buttonArea->backgroundImage.SetInset(BorderInset(32));
-		buttonArea->backgroundImage.SetTextureImage(_buttonRendering->buttonBackground);
-		buttonArea->backgroundImage.OrderFront();
-
-		for (ButtonItem* buttonItem : buttonArea->buttonItems)
-		{
-			if (buttonItem->IsSelected())
-			{
-				buttonItem->selectedImage.SetBounds(buttonItem->GetBounds().grow(10));
-				buttonItem->selectedImage.SetInset(BorderInset(32));
-				buttonItem->selectedImage.SetTextureImage(_buttonRendering->buttonSelected);
-				buttonItem->selectedImage.OrderFront();
-			}
-
-			if (buttonItem->GetButtonIcon() != nullptr)
-			{
-				bounds2f bounds_xy = buttonItem->GetButtonIcon()->GetBounds().outer;
-				bounds_xy -= bounds_xy.mid();
-				bounds_xy += buttonItem->GetBounds().mid();
-
-				buttonItem->buttonImage.SetBounds(bounds_xy);
-				buttonItem->buttonImage.SetTextureImage(buttonItem->GetButtonIcon());
-				buttonItem->buttonImage.SetAlpha(buttonItem->IsDisabled() ? 0.5f : 1.0f);
-
-				buttonItem->buttonImage.OrderFront();
-			}
-
-			if (buttonItem->IsHighlight())
-			{
-				buttonItem->highlightImage.SetBounds(buttonItem->GetBounds());
-				buttonArea->backgroundImage.SetInset(BorderInset(32));
-				buttonItem->highlightImage.SetTextureImage(_buttonRendering->buttonHighlight);
-				buttonItem->highlightImage.OrderFront();
-			}
-
-			if (buttonItem->GetButtonText() != nullptr)
-			{
-				buttonItem->buttonString.SetString(buttonItem->GetButtonText());
-				buttonItem->buttonString.SetPosition(buttonItem->GetBounds().mid() - 0.5f * buttonItem->buttonString.MeasureSize());
-				buttonItem->buttonString.OrderFront();
-			}
-		}
-	}
-
-	WidgetView::Render();
-}
-
-
-void ButtonGrid::FindButtonHotspots(Touch* touch)
+void ButtonGrid::OnTouchBegin(Touch* touch)
 {
 	glm::vec2 position = GetScrollerViewport()->GlobalToLocal(touch->GetOriginalPosition());
 
@@ -405,4 +356,42 @@ void ButtonGrid::FindButtonHotspots(Touch* touch)
 			{
 				buttonItem->GetHotspot()->SubscribeTouch(touch);
 			}
+}
+
+
+void ButtonGrid::Render()
+{
+	for (ButtonArea* buttonArea : _buttonAreas)
+	{
+		buttonArea->backgroundImage.SetBounds(buttonArea->_bounds.grow(10));
+		buttonArea->backgroundImage.SetInset(BorderInset(32));
+		buttonArea->backgroundImage.SetTextureImage(_textureSheet->buttonBackground);
+
+		for (ButtonItem* buttonItem : buttonArea->buttonItems)
+		{
+			buttonItem->selectedImage.SetBounds(buttonItem->GetBounds().grow(10));
+			buttonItem->selectedImage.SetInset(BorderInset(32));
+			buttonItem->selectedImage.SetTextureImage(buttonItem->IsSelected() ? _textureSheet->buttonSelected : nullptr);
+
+			if (buttonItem->GetButtonIcon() != nullptr)
+			{
+				bounds2f bounds_xy = buttonItem->GetButtonIcon()->GetBounds().outer;
+				bounds_xy -= bounds_xy.mid();
+				bounds_xy += buttonItem->GetBounds().mid();
+				buttonItem->buttonImage.SetBounds(bounds_xy);
+			}
+
+			buttonItem->buttonImage.SetTextureImage(buttonItem->GetButtonIcon());
+			buttonItem->buttonImage.SetAlpha(buttonItem->IsDisabled() ? 0.5f : 1.0f);
+
+			buttonItem->highlightImage.SetBounds(buttonItem->GetBounds());
+			buttonItem->highlightImage.SetInset(BorderInset(32));
+			buttonItem->highlightImage.SetTextureImage(buttonItem->IsHighlight() ? _textureSheet->buttonHighlight : nullptr);
+
+			buttonItem->buttonString.SetString(buttonItem->GetButtonText() ?: "");
+			buttonItem->buttonString.SetPosition(buttonItem->GetBounds().mid() - 0.5f * buttonItem->buttonString.MeasureSize());
+		}
+	}
+
+	WidgetView::Render();
 }

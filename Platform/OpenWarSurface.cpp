@@ -15,7 +15,7 @@
 
 
 OpenWarSurface::OpenWarSurface(GraphicsContext* gc) : Surface(gc),
-_buttonRendering(nullptr),
+_buttonGridTextureSheet(nullptr),
 _editorModel(nullptr),
 _buttonsTopLeft(nullptr),
 _buttonsTopRight(nullptr),
@@ -33,28 +33,28 @@ _battleLayer(nullptr)
 
 	_battleLayer = new BattleLayer(this);
 
-	_buttonRendering = new ButtonRendering(gc->GetTextureAtlas(WIDGET_TEXTURE_ATLAS));
+	_buttonGridTextureSheet = new ButtonGridTextureSheet(gc->GetTextureAtlas(WIDGET_TEXTURE_ATLAS));
 
-	_buttonsTopLeft = new ButtonGrid(this, _buttonRendering, ButtonAlignment::TopLeft);
-	_buttonsTopRight = new ButtonGrid(this, _buttonRendering, ButtonAlignment::TopRight);
+	_buttonsTopLeft = new ButtonGrid(this, _buttonGridTextureSheet, ButtonAlignment::TopLeft);
+	_buttonsTopRight = new ButtonGrid(this, _buttonGridTextureSheet, ButtonAlignment::TopRight);
 
 	ButtonArea* toolButtonArea = _buttonsTopLeft->AddButtonArea(4);
-	_buttonItemHand = toolButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolHand);
-	_buttonItemSmear = toolButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolSmear);
-	_buttonItemPaint = toolButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolPaint);
-	_buttonItemErase = toolButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolErase);
+	_buttonItemHand = toolButtonArea->AddButtonItem(_buttonGridTextureSheet->buttonEditorToolHand);
+	_buttonItemSmear = toolButtonArea->AddButtonItem(_buttonGridTextureSheet->buttonEditorToolSmear);
+	_buttonItemPaint = toolButtonArea->AddButtonItem(_buttonGridTextureSheet->buttonEditorToolPaint);
+	_buttonItemErase = toolButtonArea->AddButtonItem(_buttonGridTextureSheet->buttonEditorToolErase);
 
 	ButtonArea* featureButtonArea = _buttonsTopLeft->AddButtonArea(4);
-	_buttonItemHills = featureButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolHills);
-	_buttonItemTrees = featureButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolTrees);
-	_buttonItemWater = featureButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolWater);
-	_buttonItemFords = featureButtonArea->AddButtonItem(_buttonRendering->buttonEditorToolFords);
+	_buttonItemHills = featureButtonArea->AddButtonItem(_buttonGridTextureSheet->buttonEditorToolHills);
+	_buttonItemTrees = featureButtonArea->AddButtonItem(_buttonGridTextureSheet->buttonEditorToolTrees);
+	_buttonItemWater = featureButtonArea->AddButtonItem(_buttonGridTextureSheet->buttonEditorToolWater);
+	_buttonItemFords = featureButtonArea->AddButtonItem(_buttonGridTextureSheet->buttonEditorToolFords);
 
 	ButtonArea* xxx = _buttonsTopLeft->AddButtonArea(2);
-	ButtonItem* item1 = xxx->AddButtonItem(_buttonRendering->buttonEditorToolHand);
-	ButtonItem* item2 = xxx->AddButtonItem(_buttonRendering->buttonEditorToolHand);
-	ButtonItem* item3 = xxx->AddButtonItem(_buttonRendering->buttonEditorToolHand);
-	ButtonItem* item4 = xxx->AddButtonItem(_buttonRendering->buttonEditorToolHand);
+	ButtonItem* item1 = xxx->AddButtonItem(_buttonGridTextureSheet->buttonEditorToolHand);
+	ButtonItem* item2 = xxx->AddButtonItem(_buttonGridTextureSheet->buttonEditorToolHand);
+	ButtonItem* item3 = xxx->AddButtonItem(_buttonGridTextureSheet->buttonEditorToolHand);
+	ButtonItem* item4 = xxx->AddButtonItem(_buttonGridTextureSheet->buttonEditorToolHand);
 
 	item1->SetButtonText("Test");
 	/*item2->SetButtonText("Selected");
@@ -199,7 +199,7 @@ void OpenWarSurface::UpdateButtons()
 
 	_buttonsTopRight->Reset();
 	if (playing)
-		_buttonsTopRight->AddButtonArea()->AddButtonItem(_buttonRendering->buttonIconPause)->SetAction([this](){ ClickedPause(); });
+		_buttonsTopRight->AddButtonArea()->AddButtonItem(_buttonGridTextureSheet->buttonIconPause)->SetAction([this](){ ClickedPause(); });
 	else
-		_buttonsTopRight->AddButtonArea()->AddButtonItem(_buttonRendering->buttonIconPlay)->SetAction([this](){ ClickedPlay(); });
+		_buttonsTopRight->AddButtonArea()->AddButtonItem(_buttonGridTextureSheet->buttonIconPlay)->SetAction([this](){ ClickedPlay(); });
 }

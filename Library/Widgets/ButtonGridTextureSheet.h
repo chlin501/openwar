@@ -2,14 +2,16 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef ButtonRendering_H
-#define ButtonRendering_H
+#ifndef ButtonGridTextureSheet_H
+#define ButtonGridTextureSheet_H
+
+#include <memory>
 
 class TextureAtlas;
 class TextureImage;
 
 
-struct ButtonRendering
+struct ButtonGridTextureSheet
 {
 	std::shared_ptr<TextureImage> buttonBackground;
 	std::shared_ptr<TextureImage> buttonHighlight;
@@ -27,7 +29,7 @@ struct ButtonRendering
 	std::shared_ptr<TextureImage> buttonEditorToolWater;
 	std::shared_ptr<TextureImage> buttonEditorToolFords;
 
-	ButtonRendering(TextureAtlas* textureAtlas);
+	ButtonGridTextureSheet(TextureAtlas* textureAtlas);
 };
 
 

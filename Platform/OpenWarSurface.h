@@ -12,7 +12,7 @@
 
 class ClickGesture;
 class ButtonItem;
-class ButtonRendering;
+class ButtonGridTextureSheet;
 class ButtonGrid;
 class EditorHotspot;
 
@@ -20,7 +20,7 @@ class EditorHotspot;
 class OpenWarSurface : public Surface, RenderLoopObserver
 {
 public:
-	ButtonRendering* _buttonRendering;
+	ButtonGridTextureSheet* _buttonGridTextureSheet;
 
 	EditorModel* _editorModel;
 
