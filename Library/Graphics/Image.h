@@ -53,7 +53,7 @@ public:
 #endif
 
 #ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
-	void LoadFromCGImage(CGImageRef image);
+	void LoadFromCGImage(CGImageRef image, float pixelDensity);
 
 	CGContextRef GetCGContext() const;
 	CGImageRef GetCGImage() const;

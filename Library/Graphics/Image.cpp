@@ -126,7 +126,7 @@ Image& Image::LoadFromResource(const resource& r)
 	UIImage* image = [UIImage imageNamed:name];
 	if (image != nil)
 	{
-		LoadFromCGImage(image.CGImage);
+		LoadFromCGImage(image.CGImage, image.scale);
 	}
 	else
 	{
@@ -138,7 +138,7 @@ Image& Image::LoadFromResource(const resource& r)
 	NSImage* image = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:r.path()]];
 	if (image != nil)
 	{
-		LoadFromCGImage([image CGImageForProposedRect:nil context:nil hints:nil]);
+		LoadFromCGImage([image CGImageForProposedRect:nil context:nil hints:nil], 1);
 		[image release];
 	}
 	else
@@ -206,10 +206,11 @@ SDL_Surface* Image::GetSurface() const
 
 
 #ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
-void Image::LoadFromCGImage(CGImageRef image)
+void Image::LoadFromCGImage(CGImageRef image, float pixelDensity)
 {
 	_width = CGImageGetWidth(image);
 	_height = CGImageGetHeight(image);
+	_pixelDensity = pixelDensity;
 	_pixels = (unsigned char*)calloc((size_t)(_width * _height), 4);
 	_owner = true;
 
@@ -528,14 +529,14 @@ Image* ConvertTiffToImage(NSData* data)
 {
 #if TARGET_OS_IPHONE
 	Image* result = new Image();
-	result->LoadFromCGImage([[UIImage imageWithData:data] CGImage]);
+	result->LoadFromCGImage([[UIImage imageWithData:data] CGImage], 1);
 	return result;
 #else
 	NSImage* img = [[NSImage alloc] initWithData:data];
 	NSSize size = img.size;
 	NSRect rect = NSMakeRect(0, 0, size.width, size.height);
 	Image* result = new Image();
-	result->LoadFromCGImage([img CGImageForProposedRect:&rect context:nil hints:nil]);
+	result->LoadFromCGImage([img CGImageForProposedRect:&rect context:nil hints:nil], 1);
 	[img release];
 	return result;
 #endif

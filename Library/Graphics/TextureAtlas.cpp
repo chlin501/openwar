@@ -15,6 +15,12 @@ TextureAtlas::TextureAtlas(GraphicsContext* gc) : Texture(gc),
 	_discardableHeight(0),
 	_dirty(false)
 {
+	glBindTexture(GL_TEXTURE_2D, _id);
+	CHECK_ERROR_GL();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	CHECK_ERROR_GL();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	CHECK_ERROR_GL();
 }
 
 
@@ -35,14 +41,6 @@ TextureFont* TextureAtlas::GetTextureFont(const FontDescriptor& fontDescriptor)
 	TextureFont* result = new TextureFont(this, fontAdapter);
 	_textureFonts[fontAdapter] = result;
 	return result;
-}
-
-
-void TextureAtlas::LoadAtlasFromResource(const resource& r)
-{
-	_textureAtlasImage = new Image();
-	_textureAtlasImage->LoadFromResource(r);
-	LoadTextureFromImage(*_textureAtlasImage);
 }
 
 
@@ -152,13 +150,13 @@ std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, 
 TextureSheet TextureAtlas::AddTextureSheet(const Image& image)
 {
 	std::shared_ptr<TextureImage> textureImage = AddTextureImage(image, TextureDiscardability::NonDiscardable);
-	return TextureSheet(this, textureImage->GetBounds().outer);
+	return TextureSheet(this, textureImage->GetBounds().outer.min, image.GetPixelDensity());
 }
 
 
 TextureSheet TextureAtlas::GetTextureSheet(const bounds2f& bounds)
 {
-	return TextureSheet(this, bounds);
+	return TextureSheet(this, bounds.min, 1);
 }
 
 
@@ -245,32 +243,24 @@ BorderBounds TextureImage::GetCoords() const
 /***/
 
 
-TextureSheet::TextureSheet(TextureAtlas* textureAtlas, int size_u, int size_v) :
+TextureSheet::TextureSheet(TextureAtlas* textureAtlas, glm::vec2 offset, float density) :
 	_textureAtlas(textureAtlas),
-	_sheetBounds(0, 0, size_u, size_v),
-	_density(1)
-{
-}
-
-
-TextureSheet::TextureSheet(TextureAtlas* textureAtlas, const bounds2f& bounds) :
-	_textureAtlas(textureAtlas),
-	_sheetBounds(bounds),
-	_density(1)
+	_offset(offset),
+	_density(density)
 {
 }
 
 
 glm::vec2 TextureSheet::MapCoord(int u, int v) const
 {
-	return (_sheetBounds.min + glm::vec2(u, v)) / (glm::vec2)_textureAtlas->_textureAtlasImage->size();
+	return (glm::vec2(u, v) * _density + _offset) / (glm::vec2)_textureAtlas->_textureAtlasImage->size();
 }
 
 
 std::shared_ptr<TextureImage> TextureSheet::NewTextureImage(const BorderBounds& bounds)
 {
 	BorderBounds offsetBounds;
-	offsetBounds.inner = bounds.inner + _sheetBounds.min;
-	offsetBounds.outer = bounds.outer + _sheetBounds.min;
+	offsetBounds.inner = bounds.inner * _density + _offset;
+	offsetBounds.outer = bounds.outer * _density + _offset;
 	return _textureAtlas->NewTextureImage(offsetBounds, TextureDiscardability::NonDiscardable, _density);
 }

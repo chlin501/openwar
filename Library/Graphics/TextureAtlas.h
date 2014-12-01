@@ -82,11 +82,10 @@ struct BorderBounds
 struct TextureSheet
 {
 	TextureAtlas* _textureAtlas;
-	bounds2f _sheetBounds;
+	glm::vec2 _offset;
 	float _density;
 
-	TextureSheet(TextureAtlas* textureAtlas, int size_u, int size_v);
-	TextureSheet(TextureAtlas* textureAtlas, const bounds2f& bounds);
+	TextureSheet(TextureAtlas* textureAtlas, glm::vec2 offset, float density);
 
 	glm::vec2 MapCoord(int u, int v) const;
 
@@ -116,7 +115,6 @@ public:
 
 	TextureFont* GetTextureFont(const FontDescriptor& fontDescriptor);
 
-	void LoadAtlasFromResource(const resource& r);
 	void LoadTextureFromImage(const Image& image);
 
 #ifdef OPENWAR_IMAGE_USE_SDL
