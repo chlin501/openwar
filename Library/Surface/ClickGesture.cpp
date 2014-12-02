@@ -4,7 +4,7 @@
 
 #include "ClickGesture.h"
 #include "ClickHotspot.h"
-#include "ButtonGrid.h"
+#include "Widgets/ButtonGrid.h"
 #include "Surface/Surface.h"
 #include "Surface/Touch.h"
 

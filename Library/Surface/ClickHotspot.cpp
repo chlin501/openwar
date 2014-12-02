@@ -5,7 +5,6 @@
 #include "ClickHotspot.h"
 #include "Surface/Touch.h"
 #include "Surface/Surface.h"
-#import "geometry.h"
 
 
 ClickHotspot::ClickHotspot() :
