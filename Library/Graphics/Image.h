@@ -45,6 +45,7 @@ public:
 	float GetPixelDensity() const;
 	void SetPixelDensity(float value);
 
+	Image& LoadFromData(const void* data, size_t size);
 	Image& LoadFromResource(const resource& r);
 
 #ifdef OPENWAR_IMAGE_ENABLE_SDL

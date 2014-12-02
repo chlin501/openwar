@@ -117,6 +117,29 @@ void Image::SetPixelDensity(float value)
 }
 
 
+Image& Image::LoadFromData(const void* data, size_t size)
+{
+#if defined(OPENWAR_IMAGE_ENABLE_COREGRAPHICS)
+
+	CGDataProviderRef dataProvider = CGDataProviderCreateWithData(NULL, data, size, NULL);
+	CGImageRef image = CGImageCreateWithPNGDataProvider(dataProvider, nil, true, kCGRenderingIntentDefault);
+	LoadFromCGImage(image, 1);
+
+#elif defined(OPENWAR_IMAGE_ENABLE_SDL)
+
+	SDL_RWops* src = SDL_RWFromConstMem(data, size);
+	SDL_Surface* surface = IMG_Load_RW(src, 0);
+	if (surface != nullptr)
+		LoadFromSurface(surface);
+	SDL_FreeRW(src);
+	_surface = surface;
+
+#endif
+
+	return *this;
+}
+
+
 Image& Image::LoadFromResource(const resource& r)
 {
 #ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
