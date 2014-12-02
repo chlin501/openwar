@@ -1,5 +1,6 @@
 #include "InputEditor.h"
 #include "InputWidget.h"
+#include "Graphics/GraphicsContext.h"
 #include "Surface/Surface.h"
 
 
@@ -380,10 +381,11 @@ void InputEditor_Android::UpdateBounds()
 	InputWidget* inputWidget = GetInputWidget();
 
 	bounds2f bounds = inputWidget->GetBounds();
-	int x = (int)bounds.min.x;
-	int y = (int)bounds.min.y;
-	int width = (int)bounds.x().size();
-	int height = (int)bounds.y().size();
+	float scaling = inputWidget->GetGraphicsContext()->GetVirtualScaling();
+	int x = (int)(bounds.min.x * scaling);
+	int y = (int)((bounds.min.y + 12) * scaling);
+	int width = (int)(bounds.x().size() * scaling);
+	int height = (int)(bounds.y().size() * scaling);
 
 	CallSetBounds(x, y, width, height);
 }
