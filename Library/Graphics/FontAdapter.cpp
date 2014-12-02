@@ -205,36 +205,39 @@ FontAdapter_SDL_ttf::FontAdapter_SDL_ttf(GraphicsContext* gc, const FontDescript
 	if (!TTF_WasInit())
 		TTF_Init();
 
-	int size = (int)fontDescriptor.size;
+	int size = (int)(fontDescriptor.size * gc->GetCombinedScaling());
 	if (size == 0)
-		size = 12;
+		size = (int)(12 * gc->GetCombinedScaling());
 
 	_font1 = TTF_OpenFont(ANDROID_FONT1, size);
 	_font2 = TTF_OpenFont(ANDROID_FONT2, size);
 	_emoji = TTF_OpenFont(ANDROID_EMOJI, size);
 
+	int style = fontDescriptor.bold ? TTF_STYLE_BOLD : TTF_STYLE_NORMAL;
+	int hinting = TTF_HINTING_NORMAL;
+
 	if (_font1 != NULL)
 	{
-		TTF_SetFontStyle(_font1, TTF_STYLE_NORMAL);
+		TTF_SetFontStyle(_font1, style);
 		TTF_SetFontOutline(_font1, 0);
 		TTF_SetFontKerning(_font1, 1);
-		TTF_SetFontHinting(_font1, TTF_HINTING_LIGHT);
+		TTF_SetFontHinting(_font1, hinting);
 	}
 
 	if (_font2 != NULL)
 	{
-		TTF_SetFontStyle(_font2, TTF_STYLE_NORMAL);
+		TTF_SetFontStyle(_font2, style);
 		TTF_SetFontOutline(_font2, 0);
 		TTF_SetFontKerning(_font2, 1);
-		TTF_SetFontHinting(_font2, TTF_HINTING_LIGHT);
+		TTF_SetFontHinting(_font2, hinting);
 	}
 
 	if (_emoji != NULL)
 	{
-		TTF_SetFontStyle(_emoji, TTF_STYLE_NORMAL);
+		TTF_SetFontStyle(_emoji, style);
 		TTF_SetFontOutline(_emoji, 0);
 		TTF_SetFontKerning(_emoji, 1);
-		TTF_SetFontHinting(_emoji, TTF_HINTING_LIGHT);
+		TTF_SetFontHinting(_emoji, hinting);
 	}
 }
 
