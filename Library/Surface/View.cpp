@@ -2,36 +2,44 @@
 #include "Surface.h"
 #include "Graphics/Viewport.h"
 #include "Graphics/GraphicsContext.h"
+#include "Touch.h"
 
 
-View::View(Surface* surface) :
-	_surface(surface),
+View::View(ViewOwner* viewOwner) :
+	_viewOwner(viewOwner),
 	_visible(true)
 {
-	_surface->_views.insert(_surface->_views.begin(), this);
+	_viewOwner->_views.insert(_viewOwner->_views.begin(), this);
 }
 
 
 View::~View()
 {
-	if (_surface != nullptr)
+	if (_viewOwner != nullptr)
 	{
-		_surface->_views.erase(
-			std::find(_surface->_views.begin(), _surface->_views.end(), this),
-			_surface->_views.end());
+		_viewOwner->_views.erase(
+			std::find(_viewOwner->_views.begin(), _viewOwner->_views.end(), this),
+			_viewOwner->_views.end());
 	}
+}
+
+
+ViewOwner* View::GetViewOwner() const
+{
+	return _viewOwner;
 }
 
 
 Surface* View::GetSurface() const
 {
-	return _surface;
+	return dynamic_cast<Surface*>(_viewOwner);
 }
 
 
 GraphicsContext* View::GetGraphicsContext() const
 {
-	return _surface != nullptr ? _surface->GetGraphicsContext() : nullptr;
+	Surface* surface = GetSurface();
+	return surface != nullptr ? surface->GetGraphicsContext() : nullptr;
 }
 
 
@@ -62,13 +70,13 @@ void View::SetVisible(bool value)
 
 void View::OrderFront()
 {
-	if (_surface != nullptr)
+	if (_viewOwner != nullptr)
 	{
-		auto i = std::find(_surface->_views.begin(), _surface->_views.end(), this);
-		if (i != _surface->_views.end())
+		auto i = std::find(_viewOwner->_views.begin(), _viewOwner->_views.end(), this);
+		if (i != _viewOwner->_views.end())
 		{
-			_surface->_views.erase(i);
-			_surface->_views.insert(_surface->_views.begin(), this);
+			_viewOwner->_views.erase(i);
+			_viewOwner->_views.insert(_viewOwner->_views.begin(), this);
 		}
 	}
 }
@@ -76,14 +84,14 @@ void View::OrderFront()
 
 void View::OrderFrontOf(View* view)
 {
-	if (_surface != nullptr && _surface == view->_surface)
+	if (_viewOwner != nullptr &_viewOwner == view->_viewOwner)
 	{
-		auto i = std::find(_surface->_views.begin(), _surface->_views.end(), this);
-		if (i != _surface->_views.end())
+		auto i = std::find(_viewOwner->_views.begin(), _viewOwner->_views.end(), this);
+		if (i != _viewOwner->_views.end())
 		{
-			_surface->_views.erase(i);
-			i = std::find(_surface->_views.begin(), _surface->_views.end(), view);
-			_surface->_views.insert(i, this);
+			_viewOwner->_views.erase(i);
+			i = std::find(_viewOwner->_views.begin(), _viewOwner->_views.end(), view);
+			_viewOwner->_views.insert(i, this);
 		}
 	}
 }
@@ -91,13 +99,13 @@ void View::OrderFrontOf(View* view)
 
 void View::OrderBack()
 {
-	if (_surface != nullptr)
+	if (_viewOwner != nullptr)
 	{
-		auto i = std::find(_surface->_views.begin(), _surface->_views.end(), this);
-		if (i != _surface->_views.end())
+		auto i = std::find(_viewOwner->_views.begin(), _viewOwner->_views.end(), this);
+		if (i != _viewOwner->_views.end())
 		{
-			_surface->_views.erase(i);
-			_surface->_views.insert(_surface->_views.end(), this);
+			_viewOwner->_views.erase(i);
+			_viewOwner->_views.insert(_viewOwner->_views.end(), this);
 		}
 	}
 }
@@ -105,14 +113,83 @@ void View::OrderBack()
 
 void View::OrderBackOf(View* view)
 {
-	if (_surface != nullptr && _surface == view->_surface)
+	if (_viewOwner != nullptr && _viewOwner == view->_viewOwner)
 	{
-		auto i = std::find(_surface->_views.begin(), _surface->_views.end(), this);
-		if (i != _surface->_views.end())
+		auto i = std::find(_viewOwner->_views.begin(), _viewOwner->_views.end(), this);
+		if (i != _viewOwner->_views.end())
 		{
-			_surface->_views.erase(i);
-			i = std::find(_surface->_views.begin(), _surface->_views.end(), view);
-			_surface->_views.insert(i + 1, this);
+			_viewOwner->_views.erase(i);
+			i = std::find(_viewOwner->_views.begin(), _viewOwner->_views.end(), view);
+			_viewOwner->_views.insert(i + 1, this);
 		}
 	}
+}
+
+
+/* ViewOwner */
+
+
+ViewOwner::~ViewOwner()
+{
+	for (View* view : _views)
+		view->_viewOwner = nullptr;
+}
+
+
+const std::vector<View*>& ViewOwner::GetViews()
+{
+	return _views;
+}
+
+
+void ViewOwner::NotifyViewsOfTouchEnter(Touch* touch)
+{
+	for (View* view : _views)
+		if (view->IsVisible())
+			view->OnTouchEnter(touch);
+}
+
+
+void ViewOwner::NotifyViewsOfTouchBegin(Touch* touch)
+{
+	for (View* view : _views)
+		if (view->IsVisible())
+			view->OnTouchBegin(touch);
+}
+
+
+void ViewOwner::RenderViews()
+{
+	for (auto i = _views.rbegin(); i != _views.rend(); ++i)
+	{
+		View* view = *i;
+		if (view->IsVisible())
+			view->Render();
+	}
+}
+
+
+/* ViewGroup */
+
+
+ViewGroup::ViewGroup(ViewOwner* viewOwner) : View(viewOwner)
+{
+}
+
+
+void ViewGroup::OnTouchEnter(Touch* touch)
+{
+	NotifyViewsOfTouchEnter(touch);
+}
+
+
+void ViewGroup::OnTouchBegin(Touch* touch)
+{
+	NotifyViewsOfTouchBegin(touch);
+}
+
+
+void ViewGroup::Render()
+{
+	RenderViews();
 }

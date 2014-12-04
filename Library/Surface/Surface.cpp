@@ -29,9 +29,6 @@ Surface::Surface(GraphicsContext* gc) :
 
 Surface::~Surface()
 {
-	for (View* view : _views)
-		view->_surface = nullptr;
-
 #ifdef ENABLE_SURFACE_ADAPTER_MAC
 	[_nsview release];
 #endif
@@ -59,33 +56,6 @@ glm::vec2 Surface::GetNativeSize() const
 glm::vec2 Surface::GetVirtualSize() const
 {
 	return _nativeSize / _gc->GetVirtualScaling();
-}
-
-
-void Surface::NotifyViewsOfTouchEnter(Touch* touch)
-{
-	for (View* view : _views)
-		if (view->IsVisible())
-			view->OnTouchEnter(touch);
-}
-
-
-void Surface::NotifyViewsOfTouchBegin(Touch* touch)
-{
-	for (View* view : _views)
-		if (view->IsVisible())
-			view->OnTouchBegin(touch);
-}
-
-
-void Surface::Render()
-{
-	for (auto i = _views.rbegin(); i != _views.rend(); ++i)
-	{
-		View* view = *i;
-		if (view->IsVisible())
-			view->Render();
-	}
 }
 
 

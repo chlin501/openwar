@@ -103,7 +103,7 @@ void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vecto
 }
 
 
-void OpenWarSurface::Render()
+void OpenWarSurface::RenderViews()
 {
 	_battleLayer->Render();
 	_buttonsTopLeft->Render();

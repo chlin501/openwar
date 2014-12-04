@@ -7,10 +7,10 @@
 
 #include <vector>
 #include <glm/glm.hpp>
+#include "View.h"
 
 class GraphicsContext;
 class Touch;
-class View;
 class Viewport;
 
 #ifdef ENABLE_SURFACE_ADAPTER_MAC
@@ -21,9 +21,8 @@ class Viewport;
 #endif
 
 
-class Surface
+class Surface : public ViewOwner
 {
-	friend class View;
 #ifdef ENABLE_SURFACE_ADAPTER_MAC
 	NSView* _nsview;
 #endif
@@ -32,7 +31,6 @@ class Surface
 #endif
 
 	GraphicsContext* _gc;
-	std::vector<View*> _views;
 	glm::vec2 _nativeSize;
 
 public:
@@ -44,11 +42,6 @@ public:
 	void SetNativeSize(glm::vec2 value);
 	glm::vec2 GetNativeSize() const;
 	glm::vec2 GetVirtualSize() const;
-
-	void NotifyViewsOfTouchEnter(Touch* touch);
-	void NotifyViewsOfTouchBegin(Touch* touch);
-
-	virtual void Render();
 
 #ifdef ENABLE_SURFACE_ADAPTER_MAC
 	void SetNSView(NSView* value);
