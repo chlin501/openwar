@@ -45,7 +45,6 @@ public:
 
 	void SetEditorHotspot(std::shared_ptr<EditorHotspot> hotspot);
 
-	virtual const Viewport* GetViewport() const;
 	virtual void OnTouchEnter(Touch* touch);
 	virtual void OnTouchBegin(Touch* touch);
 	virtual void Render() = 0;

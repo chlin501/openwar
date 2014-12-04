@@ -52,6 +52,9 @@ public:
 	UIView* GetUIView() const;
 #endif
 
+private: // ViewOwner
+	virtual Surface* FindSurface();
+
 private:
 	Surface(const Surface&) { }
 	Surface& operator=(const Surface&) { return *this; }

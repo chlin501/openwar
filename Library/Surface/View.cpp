@@ -32,7 +32,7 @@ ViewOwner* View::GetViewOwner() const
 
 Surface* View::GetSurface() const
 {
-	return dynamic_cast<Surface*>(_viewOwner);
+	return _viewOwner != nullptr ? _viewOwner->FindSurface() : nullptr;
 }
 
 
@@ -192,4 +192,11 @@ void ViewGroup::OnTouchBegin(Touch* touch)
 void ViewGroup::Render()
 {
 	RenderViews();
+}
+
+
+Surface* ViewGroup::FindSurface()
+{
+	ViewOwner* viewOwner = GetViewOwner();
+	return viewOwner != nullptr ? viewOwner->FindSurface() : nullptr;
 }

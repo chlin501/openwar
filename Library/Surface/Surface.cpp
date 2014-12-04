@@ -89,3 +89,9 @@ UIView* Surface::GetUIView() const
 	return _uiview;
 }
 #endif
+
+
+Surface* Surface::FindSurface()
+{
+	return this;
+}

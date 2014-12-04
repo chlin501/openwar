@@ -6,7 +6,6 @@
 class GraphicsContext;
 class Surface;
 class Touch;
-class Viewport;
 class ViewOwner;
 
 
@@ -36,8 +35,6 @@ public:
 	virtual void OrderBack();
 	virtual void OrderBackOf(View* view);
 
-	//virtual const Viewport* GetViewport() const = 0;
-
 	virtual void OnTouchEnter(Touch* touch) = 0;
 	virtual void OnTouchBegin(Touch* touch) = 0;
 
@@ -59,6 +56,9 @@ public:
 	virtual void NotifyViewsOfTouchEnter(Touch* touch);
 	virtual void NotifyViewsOfTouchBegin(Touch* touch);
 	virtual void RenderViews();
+
+private:
+	virtual Surface* FindSurface() = 0;
 };
 
 
@@ -71,6 +71,9 @@ public:
 	virtual void OnTouchBegin(Touch* touch);
 
 	virtual void Render();
+
+private:
+	virtual Surface* FindSurface();
 };
 
 

@@ -42,8 +42,6 @@ public:
 
 	TextureAtlas* GetWidgetTextureAtlas() const;
 
-	virtual const Viewport* GetViewport() const;
-
 	virtual void SetBounds(const bounds2f& value);
 
 	virtual void OnTouchEnter(Touch* touch);

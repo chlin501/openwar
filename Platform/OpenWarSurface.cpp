@@ -11,6 +11,7 @@
 #include "TerrainView/EditorHotspot.h"
 #include "Scroller/ScrollerViewport.h"
 #include "Audio/SoundPlayer.h"
+#include "Widgets/ButtonGrid.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 

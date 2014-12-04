@@ -61,12 +61,6 @@ TextureAtlas* WidgetView::GetWidgetTextureAtlas() const
 }
 
 
-const Viewport* WidgetView::GetViewport() const
-{
-	return &_viewport;
-}
-
-
 void WidgetView::SetBounds(const bounds2f& value)
 {
 	View::SetBounds(value);
