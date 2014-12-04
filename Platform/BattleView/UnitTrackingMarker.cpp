@@ -85,7 +85,7 @@ void UnitTrackingMarker::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleV
 	if (_path.empty())
 		return;
 
-	TerrainViewport* terrainViewport = battleView->GetTerrainViewport();
+	TerrainViewport* terrainViewport = battleView->GetViewport();
 
 	float facing = GetFacing();
 

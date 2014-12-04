@@ -35,10 +35,10 @@ class WidgetView : public View, public WidgetOwner
 	WidgetVertexBuffer _vertices;
 
 public:
-	WidgetView(Surface* surface);
+	WidgetView(ViewOwner* viewOwner);
 	virtual ~WidgetView();
 
-	ScrollerViewport* GetScrollerViewport();
+	ScrollerViewport* GetViewport();
 
 	TextureAtlas* GetWidgetTextureAtlas() const;
 

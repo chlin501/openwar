@@ -85,7 +85,7 @@ WidgetView* Widget::GetWidgetView() const
 ScrollerViewport* Widget::GetViewport() const
 {
 	WidgetView* widgetView = GetWidgetView();
-	return widgetView != nullptr ? widgetView->GetScrollerViewport() : nullptr;
+	return widgetView != nullptr ? widgetView->GetViewport() : nullptr;
 }
 
 

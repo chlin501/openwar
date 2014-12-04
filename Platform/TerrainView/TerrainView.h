@@ -41,7 +41,7 @@ public:
 	glm::vec2 GetScreenBottom() const;
 	glm::vec2 GetScreenRight() const;
 
-	TerrainViewport* GetTerrainViewport() const;
+	TerrainViewport* GetViewport() const;
 
 	void SetEditorHotspot(std::shared_ptr<EditorHotspot> hotspot);
 

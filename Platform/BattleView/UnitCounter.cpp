@@ -127,7 +127,7 @@ void UnitCounter::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleView* ba
 	float ty1 = 0.75f + yindex * 0.125f;
 	float ty2 = ty1 + 0.125f;
 
-	TerrainViewport* terrainViewport = battleView->GetTerrainViewport();
+	TerrainViewport* terrainViewport = battleView->GetViewport();
 
 	bounds2f bounds = battleView->GetUnitCurrentFacingMarkerBounds(_unit);
 	glm::vec2 p = bounds.mid();

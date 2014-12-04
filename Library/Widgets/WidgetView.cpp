@@ -31,8 +31,8 @@ void WidgetView::WidgetVertexBuffer::Update()
 /* WidgetView */
 
 
-WidgetView::WidgetView(Surface* surface) : View(surface),
-	_gc(surface->GetGraphicsContext()),
+WidgetView::WidgetView(ViewOwner* viewOwner) : View(viewOwner),
+	_gc(GetGraphicsContext()),
 	_viewport(_gc),
 	_scrollerHotspot(&_viewport),
 	_textureAtlas(nullptr),
@@ -48,7 +48,7 @@ WidgetView::~WidgetView()
 }
 
 
-ScrollerViewport* WidgetView::GetScrollerViewport()
+ScrollerViewport* WidgetView::GetViewport()
 {
 	return &_viewport;
 }

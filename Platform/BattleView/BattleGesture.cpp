@@ -145,7 +145,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 	if (touch->IsCaptured() || _hotspot->HasCapturedTouch())
 		return;
 
-	bounds2f viewportBounds = (bounds2f)_hotspot->GetBattleView()->GetTerrainViewport()->GetBounds();
+	bounds2f viewportBounds = (bounds2f)_hotspot->GetBattleView()->GetViewport()->GetBounds();
 	if (!viewportBounds.contains(touch->GetCurrentPosition()))
 		return;
 
@@ -439,7 +439,7 @@ void BattleGesture::UpdateTrackingMarker()
 
 		glm::vec2 currentDestination = path.size() != 0 ? *(path.end() - 1) : unit->state.center;
 
-		bounds2f contentBounds = _hotspot->GetBattleView()->GetTerrainViewport()->GetTerrainBounds();
+		bounds2f contentBounds = _hotspot->GetBattleView()->GetViewport()->GetTerrainBounds();
 		glm::vec2 contentCenter = contentBounds.mid();
 		float contentRadius = contentBounds.x().size() / 2;
 
@@ -537,7 +537,7 @@ void BattleGesture::UpdateTrackingMarker()
 
 int BattleGesture::GetFlipSign() const
 {
-	return _hotspot->GetBattleView()->GetTerrainViewport()->GetFlip() ? -1 : 1;
+	return _hotspot->GetBattleView()->GetViewport()->GetFlip() ? -1 : 1;
 }
 
 
