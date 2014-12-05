@@ -75,6 +75,8 @@ struct bounds2
 	bounds2(T min_x, T min_y, glm::tvec2<T, P> max_) : min(min_x, min_y), max(max_) { }
 	bounds2(T min_x, T max_x, bounds1<T, P> y) : min(min_x, y.min), max(max_x, y.max) { }
 	bounds2(bounds1<T, P> x, T min_y, T max_y) : min(x.min, min_y), max(x.max, max_y) { }
+	bounds2(T x, bounds1<T, P> y) : min(x, y.min), max(x, y.max) { }
+	bounds2(bounds1<T, P> x, T y) : min(x.min, y), max(x.max, y) { }
 	bounds2(glm::tvec2<T, P> min_, glm::tvec2<T, P> max_) : min(min_), max(max_) { }
 	bounds2(bounds1<T, P> x, bounds1<T, P> y) : min(x.min, y.min), max(x.max, y.max) { }
 	bounds2(T x, T y) : min(x, y), max(x, y) { }
@@ -129,6 +131,11 @@ struct bounds2
 	bounds2<T, P>& grow(glm::tvec2<T, P> d, T ax, T ay) { return grow(d.x, d.y, ax, ay); }
 	bounds2<T, P>& grow(T dx, T dy, T ax, T ay) { return *this = bounds2<T, P>(x().grow(dx, ax), y().grow(dy, ay)); }
 
+	bounds2<T, P>& grow_x(T d) { return *this = bounds2<T, P>(x().grow(d), y()); }
+	bounds2<T, P>& grow_y(T d) { return *this = bounds2<T, P>(x(), y().grow(d)); }
+	bounds2<T, P>& grow_x(T d, T a) { return *this = bounds2<T, P>(x().grow(d, a), y()); }
+	bounds2<T, P>& grow_y(T d, T a) { return *this = bounds2<T, P>(x(), y().grow(d, a)); }
+
 	bounds2<T, P>& resize(T s) { return resize(s, s); }
 	bounds2<T, P>& resize(glm::tvec2<T, P> s) { return resize(s.x, s.y); }
 	bounds2<T, P>& resize(T sx, T sy) { return *this = bounds2<T, P>(x().resize(sx), y().resize(sy)); }
@@ -140,6 +147,11 @@ struct bounds2
 	bounds2<T, P>& resize(T s, T ax, T ay) { return resize(s, s, ax, ay); }
 	bounds2<T, P>& resize(T sx, T sy, glm::tvec2<T, P> a) { return resize(sx, sy, a.x, a.y); }
 	bounds2<T, P>& resize(T sx, T sy, T ax, T ay) { return *this = bounds2<T, P>(x().resize(sx, ax), y().resize(sy, ay)); }
+
+	bounds2<T, P>& resize_x(T s) { return *this = bounds2<T, P>(x().resize(s), y()); }
+	bounds2<T, P>& resize_y(T s) { return *this = bounds2<T, P>(x(), y().resize(s)); }
+	bounds2<T, P>& resize_x(T s, T a) { return *this = bounds2<T, P>(x().resize(s, a), y()); }
+	bounds2<T, P>& resize_y(T s, T a) { return *this = bounds2<T, P>(x(), y().resize(s, a)); }
 
 	glm::tvec2<T, P> clamp(glm::tvec2<T, P> p) const { return glm::tvec2<T, P>(x().clamp(p.x), y().clamp(p.y)); }
 
