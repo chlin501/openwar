@@ -125,7 +125,13 @@ void InputEditor_Mac::UpdateNSTextFieldFont()
 
 void InputEditor_Mac::UpdateNSTextFieldFrame()
 {
-	bounds2f bounds = GetInputWidget()->GetBounds();
+	InputWidget* inputWidget = GetInputWidget();
+	ScrollerViewport* viewport = inputWidget->GetViewport();
+
+	bounds2f bounds = inputWidget->GetBounds();
+	bounds.min = viewport->LocalToGlobal(bounds.min);
+	bounds.max = viewport->LocalToGlobal(bounds.max);
+
 	float height = (float)_textField.font.pointSize + 6;
 	float width = bounds.x().size() + 2;
 	_textField.frame = NSMakeRect(bounds.min.x - 1, bounds.min.y - 2, width, height);
@@ -260,7 +266,13 @@ void InputEditor_iOS::UpdateNSTextFieldFrame()
 {
 	InputWidget* intputWidget = GetInputWidget();
 	Surface* surface = intputWidget->GetWidgetView()->GetSurface();
-	bounds2f bounds = intputWidget->GetBounds();
+	ScrollerViewport* viewport = inputWidget->GetViewport();
+
+	bounds2f bounds = inputWidget->GetBounds();
+	bounds.min = viewport->LocalToGlobal(bounds.min);
+	bounds.max = viewport->LocalToGlobal(bounds.max);
+
+
 	float height = (float)_textField.font.pointSize + 2;
 	float width = bounds.x().size();
 	_textField.frame = CGRectMake(bounds.min.x, surface->GetVirtualSize().y - bounds.min.y - height, width, height);
@@ -379,8 +391,12 @@ void InputEditor_Android::OnInputWidgetChanged()
 void InputEditor_Android::UpdateBounds()
 {
 	InputWidget* inputWidget = GetInputWidget();
+	ScrollerViewport* viewport = inputWidget->GetViewport();
 
 	bounds2f bounds = inputWidget->GetBounds();
+	bounds.min = viewport->LocalToGlobal(bounds.min);
+	bounds.max = viewport->LocalToGlobal(bounds.max);
+
 	float scaling = inputWidget->GetGraphicsContext()->GetVirtualScaling();
 	int x = (int)(bounds.min.x * scaling);
 	int y = (int)((bounds.min.y + 12) * scaling);
