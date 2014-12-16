@@ -2,6 +2,7 @@
 #define View_H
 
 #include "Algebra/bounds.h"
+#include <vector>
 
 class GraphicsContext;
 class Surface;
