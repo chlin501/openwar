@@ -456,7 +456,7 @@ void Window::Render()
 {
 	if (_surface != nullptr)
 	{
-		_surface->Render();
+		_surface->RenderViews();
 		SDL_GL_SwapWindow(_window);
 	}
 }
