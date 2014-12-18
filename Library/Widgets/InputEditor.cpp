@@ -264,8 +264,8 @@ void InputEditor_iOS::UpdateNSTextFieldFont()
 
 void InputEditor_iOS::UpdateNSTextFieldFrame()
 {
-	InputWidget* intputWidget = GetInputWidget();
-	Surface* surface = intputWidget->GetWidgetView()->GetSurface();
+	InputWidget* inputWidget = GetInputWidget();
+	Surface* surface = inputWidget->GetWidgetView()->GetSurface();
 	ScrollerViewport* viewport = inputWidget->GetViewport();
 
 	bounds2f bounds = inputWidget->GetBounds();
