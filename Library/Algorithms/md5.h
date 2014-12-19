@@ -89,5 +89,6 @@ private:
 };
 
 std::string md5(const std::string str);
+std::string md5(const void* data, size_t size);
 
 #endif

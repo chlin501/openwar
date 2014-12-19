@@ -379,3 +379,12 @@ std::string md5(const std::string str)
 
 	return md5.hexdigest();
 }
+
+
+std::string md5(const void* data, size_t size)
+{
+	MD5 md5 = MD5();
+	md5.update((const unsigned char*)data, size);
+	md5.finalize();
+	return md5.hexdigest();
+}
