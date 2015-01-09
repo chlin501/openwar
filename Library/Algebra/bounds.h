@@ -11,23 +11,24 @@
 template<class T, glm::precision P>
 struct bounds1
 {
-	T min, max;
+	using val_t = T;
+	using b_1_t = bounds1<T, P>;
+	val_t min, max;
 
-	bounds1() : min(0), max(0) { }
-	bounds1(const bounds1<T, P>& b) : min(b.min), max(b.max) { }
-	explicit bounds1(T v) : min(v), max(v) { }
-	bounds1(T min_, T max_) : min(min_), max(max_) { }
+	bounds1() : min{}, max{} { }
+	explicit bounds1(val_t v) : min{v}, max{v} { }
+	bounds1(val_t min_, val_t max_) : min{min_}, max{max_} { }
 
-	template<class T2>
-	operator bounds1<T2, P>() const { return bounds1<T2, P>((T2)min, (T2)max); }
+	template<class T2, glm::precision P2 = P>
+	operator bounds1<T2, P2>() const { return {static_cast<T2>(min), static_cast<T2>(max)}; }
 
-	T size() const { return max - min; }
-	T radius() const { return (max - min) / 2; }
+	val_t size() const { return max - min; }
+	val_t radius() const { return (max - min) / 2; }
 
 	bool empty() const { return min >= max; }
-	bool contains(T v) const { return min <= v && v <= max; }
+	bool contains(val_t v) const { return min <= v && v <= max; }
 
-	bool intersects(const bounds1<T, P>& b) const
+	bool intersects(const b_1_t& b) const
 	{
 		bool disjoint_left = max < b.min;
 		bool disjoint_right = b.max < min;
@@ -35,29 +36,29 @@ struct bounds1
 		return !disjoint;
 	}
 
-	T distance(T v) const { return v < min ? v - min : v > max ? v - max : 0; }
+	val_t distance(val_t v) const { return v < min ? v - min : v > max ? v - max : val_t{}; };
 
-	bounds1<T, P> add(T v) const { return bounds1<T, P>(min + v, max + v); }
-	bounds1<T, P> sub(T v) const { return bounds1<T, P>(min - v, max - v); }
-	bounds1<T, P> mul(T v) const { return bounds1<T, P>(min * v, max * v); }
-	bounds1<T, P> div(T v) const { return bounds1<T, P>(min / v, max / v); }
+	b_1_t add(val_t v) const { return {min + v, max + v}; }
+	b_1_t sub(val_t v) const { return {min - v, max - v}; }
+	b_1_t mul(val_t v) const { return {min * v, max * v}; }
+	b_1_t div(val_t v) const { return {min / v, max / v}; }
 
-	bounds1<T, P> grow(T d) const { return bounds1<T, P>(min - d, max + d); }
-	bounds1<T, P> grow(T d, T a) const { T m(mix(a)); T s = size(); return bounds1<T, P>(m - s * a - d, m + s * (1 - a) + d); }
+	b_1_t grow(val_t d) const { return {min - d, max + d}; }
+	b_1_t grow(val_t d, val_t a) const { val_t m{mix(a)}; val_t s{size()}; return {m - s * a - d, m + s * (1 - a) + d}; };
 
-	bounds1<T, P> resize(T s) const { T m(mid() - s / 2); return bounds1<T, P>(m, m + s); }
-	bounds1<T, P> resize(T s, T a) const { T m(mix(a) - s * a); return bounds1<T, P>(m, m + s); }
+	b_1_t resize(val_t s) const { val_t m{mid() - s / 2}; return {m, m + s}; };
+	b_1_t resize(val_t s, val_t a) const { val_t m{mix(a) - s * a}; return {m, m + s}; };
 
-	T mid() const { return (min + max) / 2; }
-	T mix(T v) const { return min + v * (max - min); }
-	T unmix(T v) const { return (v - min) / (max - min); }
+	val_t mid() const { return (min + max) / 2; }
+	val_t mix(val_t v) const { return min + v * (max - min); }
+	val_t unmix(val_t v) const { return (v - min) / (max - min); }
 
-	T clamp(T v) const
+	val_t clamp(val_t v) const
 	{
-		if (min > max) return (min + max) / 2;
-		if (v < min) return min;
-		if (v > max) return max;
-		return v;
+		return min > max ? (min + max) / 2 :
+			v < min ? min :
+			v > max ? max :
+			v;
 	}
 };
 
@@ -65,160 +66,164 @@ struct bounds1
 template<class T, glm::precision P>
 struct bounds2
 {
-	glm::tvec2<T, P> min, max;
+	using val_t = T;
+	using vec_t = glm::tvec2<T, P>;
+	using b_1_t = bounds1<T, P>;
+	using b_2_t = bounds2<T, P>;
+
+	vec_t min, max;
 
 	bounds2() { }
-	bounds2(const bounds2<T, P>& b) : min(b.min), max(b.max) { }
-	explicit bounds2(glm::tvec2<T, P> v) : min(v), max(v) { }
+	explicit bounds2(vec_t v) : min{v}, max{v} { }
 
-	bounds2(T min_x, T min_y, T max_x, T max_y) : min(min_x, min_y), max(max_x, max_y) { }
-	bounds2(T min_x, T min_y, glm::tvec2<T, P> max_) : min(min_x, min_y), max(max_) { }
-	bounds2(T min_x, T max_x, bounds1<T, P> y) : min(min_x, y.min), max(max_x, y.max) { }
-	bounds2(bounds1<T, P> x, T min_y, T max_y) : min(x.min, min_y), max(x.max, max_y) { }
-	bounds2(T x, bounds1<T, P> y) : min(x, y.min), max(x, y.max) { }
-	bounds2(bounds1<T, P> x, T y) : min(x.min, y), max(x.max, y) { }
-	bounds2(glm::tvec2<T, P> min_, glm::tvec2<T, P> max_) : min(min_), max(max_) { }
-	bounds2(bounds1<T, P> x, bounds1<T, P> y) : min(x.min, y.min), max(x.max, y.max) { }
-	bounds2(T x, T y) : min(x, y), max(x, y) { }
+	bounds2(val_t min_x, val_t min_y, val_t max_x, val_t max_y) : min{min_x, min_y}, max{max_x, max_y} { }
+	bounds2(val_t min_x, val_t min_y, vec_t max_) : min{min_x, min_y}, max{max_} { }
+	bounds2(val_t min_x, val_t max_x, b_1_t y) : min{min_x, y.min}, max{max_x, y.max} { }
+	bounds2(b_1_t x, val_t min_y, val_t max_y) : min{x.min, min_y}, max{x.max, max_y} { }
+	bounds2(val_t x, b_1_t y) : min{x, y.min}, max{x, y.max} { }
+	bounds2(b_1_t x, val_t y) : min{x.min, y}, max{x.max, y} { }
+	bounds2(vec_t min_, vec_t max_) : min{min_}, max{max_} { }
+	bounds2(b_1_t x, b_1_t y) : min{x.min, y.min}, max{x.max, y.max} { }
+	bounds2(val_t x, val_t y) : min{x, y}, max{x, y} { }
 
-	template<class T2>
-	operator bounds2<T2, P>() const { return bounds2<T2, P>((glm::tvec2<T2, P>)min, (glm::tvec2<T2, P>)max); }
+	template<class T2, glm::precision P2 = P>
+	operator bounds2<T2, P2>() const { return {static_cast<glm::tvec2<T2, P2>>(min), static_cast<glm::tvec2<T2, P2>>(max)}; }
 
-	bounds1<T, P> x() const { return bounds1<T, P>(min.x, max.x); }
-	bounds1<T, P> y() const { return bounds1<T, P>(min.y, max.y); }
+	b_1_t x() const { return {min.x, max.x}; }
+	b_1_t y() const { return {min.y, max.y}; }
 
-	glm::tvec2<T, P> mid() const { return glm::tvec2<T, P>((min.x + max.x) / 2, (min.y + max.y) / 2); }
-	glm::tvec2<T, P> mix(T kx, T ky) const { return glm::tvec2<T, P>(x().mix(kx), y().mix(ky)); }
-	glm::tvec2<T, P> mix_00() const { return glm::tvec2<T, P>(min.x, min.y); }
-	glm::tvec2<T, P> mix_01() const { return glm::tvec2<T, P>(min.x, max.y); }
-	glm::tvec2<T, P> mix_10() const { return glm::tvec2<T, P>(max.x, min.y); }
-	glm::tvec2<T, P> mix_11() const { return glm::tvec2<T, P>(max.x, max.y); }
+	vec_t mid() const { return {(min.x + max.x) / 2, (min.y + max.y) / 2}; }
+	vec_t mix(val_t kx, val_t ky) const { return {x().mix(kx), y().mix(ky)}; }
+	vec_t mix_00() const { return {min.x, min.y}; }
+	vec_t mix_01() const { return {min.x, max.y}; }
+	vec_t mix_10() const { return {max.x, min.y}; }
+	vec_t mix_11() const { return {max.x, max.y}; }
 
-	glm::tvec2<T, P> size() const { return glm::tvec2<T, P>(max.x - min.x, max.y - min.y); }
-	glm::tvec2<T, P> radius() const { return glm::tvec2<T, P>((max.x - min.x) / 2, (max.y - min.y) / 2); }
+	vec_t size() const { return {max.x - min.x, max.y - min.y}; }
+	vec_t radius() const { return {(max.x - min.x) / 2, (max.y - min.y) / 2}; }
 
 	bool empty() const { return min.x >= max.x || min.y >= max.y; }
-	bool contains(glm::tvec2<T, P> p) const { return min.x <= p.x && p.x <= max.x && min.y <= p.y && p.y <= max.y; }
-	bool contains(T x, T y) const { return min.x <= x && x <= max.x && min.y <= y && y <= max.y; }
-	bool intersects(const bounds2<T, P>& b) const { return x().intersects(b.x()) && y().intersects(b.y()); }
+	bool contains(vec_t p) const { return min.x <= p.x && p.x <= max.x && min.y <= p.y && p.y <= max.y; }
+	bool contains(val_t x, val_t y) const { return min.x <= x && x <= max.x && min.y <= y && y <= max.y; }
+	bool intersects(const b_2_t& b) const { return x().intersects(b.x()) && y().intersects(b.y()); }
 
-	glm::tvec2<T, P> distance(glm::tvec2<T, P> p) const { return glm::tvec2<T, P>(x().distance(p.x), y().distance(p.y)); }
+	vec_t distance(vec_t p) const { return {x().distance(p.x), y().distance(p.y)}; }
 
-	bounds2<T, P> set_min(glm::tvec2<T, P> v) const { return bounds2<T, P>(v, max); }
-	bounds2<T, P> set_max(glm::tvec2<T, P> v) const { return bounds2<T, P>(min, v); }
-	bounds2<T, P> set_mid(glm::tvec2<T, P> v) const { return sub(mid()).add(v); }
+	b_2_t set_min(vec_t v) const { return {v, max}; }
+	b_2_t set_max(vec_t v) const { return {min, v}; }
+	b_2_t set_mid(vec_t v) const { return sub(mid()).add(v); }
 
-	bounds2<T, P> set_min_x(T v) const { return bounds2<T, P>(v, min.y, max.x, max.y); }
-	bounds2<T, P> set_min_y(T v) const { return bounds2<T, P>(min.x, v, max.x, max.y); }
-	bounds2<T, P> set_max_x(T v) const { return bounds2<T, P>(min.x, min.y, v, max.y); }
-	bounds2<T, P> set_max_y(T v) const { return bounds2<T, P>(min.x, min.y, max.x, v); }
+	b_2_t set_min_x(val_t v) const { return {v, min.y, max.x, max.y}; }
+	b_2_t set_min_y(val_t v) const { return {min.x, v, max.x, max.y}; }
+	b_2_t set_max_x(val_t v) const { return {min.x, min.y, v, max.y}; }
+	b_2_t set_max_y(val_t v) const { return {min.x, min.y, max.x, v}; }
 
-	bounds2<T, P> set_x(T v) const { return bounds2<T, P>(v, y()); }
-	bounds2<T, P> set_x(T x_min, T x_max) const { return bounds2<T, P>(x_min, x_max, y()); }
-	bounds2<T, P> set_x(bounds1<T, P> v) const { return bounds2<T, P>(v, y()); }
+	b_2_t set_x(val_t v) const { return {v, y()}; }
+	b_2_t set_x(val_t x_min, val_t x_max) const { return {x_min, x_max, y()}; }
+	b_2_t set_x(b_1_t v) const { return {v, y()}; }
 
-	bounds2<T, P> set_y(T v) const { return bounds2<T, P>(x(), v); }
-	bounds2<T, P> set_y(T y_min, T y_max) const { return bounds2<T, P>(x(), y_min, y_max); }
-	bounds2<T, P> set_y(bounds1<T, P> v) const { return bounds2<T, P>(x(), v); }
+	b_2_t set_y(val_t v) const { return {x(), v}; }
+	b_2_t set_y(val_t y_min, val_t y_max) const { return {x(), y_min, y_max}; }
+	b_2_t set_y(b_1_t v) const { return {x(), v}; }
 
-	bounds2<T, P> add_x(T v) const { return bounds2<T, P>(min.x + v, min.y, max.x + v, max.y); }
-	bounds2<T, P> add_y(T v) const { return bounds2<T, P>(min.x, min.y + v, max.x, max.y + v); }
-	bounds2<T, P> sub_x(T v) const { return bounds2<T, P>(min.x - v, min.y, max.x - v, max.y); }
-	bounds2<T, P> sub_y(T v) const { return bounds2<T, P>(min.x, min.y - v, max.x, max.y - v); }
+	b_2_t add_x(val_t v) const { return {min.x + v, min.y, max.x + v, max.y}; }
+	b_2_t add_y(val_t v) const { return {min.x, min.y + v, max.x, max.y + v}; }
+	b_2_t sub_x(val_t v) const { return {min.x - v, min.y, max.x - v, max.y}; }
+	b_2_t sub_y(val_t v) const { return {min.x, min.y - v, max.x, max.y - v}; }
 
-	bounds2<T, P> add_min_x(T v) const { return bounds2<T, P>(min.x + v, min.y, max.x, max.y); }
-	bounds2<T, P> add_min_y(T v) const { return bounds2<T, P>(min.x, min.y + v, max.x, max.y); }
-	bounds2<T, P> add_max_x(T v) const { return bounds2<T, P>(min.x, min.y, max.x + v, max.y); }
-	bounds2<T, P> add_max_y(T v) const { return bounds2<T, P>(min.x, min.y, max.x, max.y + v); }
+	b_2_t add_min_x(val_t v) const { return {min.x + v, min.y, max.x, max.y}; }
+	b_2_t add_min_y(val_t v) const { return {min.x, min.y + v, max.x, max.y}; }
+	b_2_t add_max_x(val_t v) const { return {min.x, min.y, max.x + v, max.y}; }
+	b_2_t add_max_y(val_t v) const { return {min.x, min.y, max.x, max.y + v}; }
 
-	bounds2<T, P> sub_min_x(T v) const { return bounds2<T, P>(min.x - v, min.y, max.x, max.y); }
-	bounds2<T, P> sub_min_y(T v) const { return bounds2<T, P>(min.x, min.y - v, max.x, max.y); }
-	bounds2<T, P> sub_max_x(T v) const { return bounds2<T, P>(min.x, min.y, max.x - v, max.y); }
-	bounds2<T, P> sub_max_y(T v) const { return bounds2<T, P>(min.x, min.y, max.x, max.y - v); }
+	b_2_t sub_min_x(val_t v) const { return {min.x - v, min.y, max.x, max.y}; }
+	b_2_t sub_min_y(val_t v) const { return {min.x, min.y - v, max.x, max.y}; }
+	b_2_t sub_max_x(val_t v) const { return {min.x, min.y, max.x - v, max.y}; }
+	b_2_t sub_max_y(val_t v) const { return {min.x, min.y, max.x, max.y - v}; }
 
-	bounds2<T, P> add(T v) const { return bounds2<T, P>(min + v, max + v); }
-	bounds2<T, P> sub(T v) const { return bounds2<T, P>(min - v, max - v); }
-	bounds2<T, P> mul(T v) const { return bounds2<T, P>(min * v, max * v); }
-	bounds2<T, P> div(T v) const { return bounds2<T, P>(min / v, max / v); }
+	b_2_t add(val_t v) const { return {min + v, max + v}; }
+	b_2_t sub(val_t v) const { return {min - v, max - v}; }
+	b_2_t mul(val_t v) const { return {min * v, max * v}; }
+	b_2_t div(val_t v) const { return {min / v, max / v}; }
 
-	bounds2<T, P> add(glm::tvec2<T, P> v) const { return bounds2<T, P>(min + v, max + v); }
-	bounds2<T, P> sub(glm::tvec2<T, P> v) const { return bounds2<T, P>(min - v, max - v); }
-	bounds2<T, P> mul(glm::tvec2<T, P> v) const { return bounds2<T, P>(min * v, max * v); }
-	bounds2<T, P> div(glm::tvec2<T, P> v) const { return bounds2<T, P>(min / v, max / v); }
+	b_2_t add(vec_t v) const { return {min + v, max + v}; }
+	b_2_t sub(vec_t v) const { return {min - v, max - v}; }
+	b_2_t mul(vec_t v) const { return {min * v, max * v}; }
+	b_2_t div(vec_t v) const { return {min / v, max / v}; }
 
-	bounds2<T, P> add(T x, T y) const { return bounds2<T, P>(min.x + x, min.y + y, max.x + x, max.y + y); }
-	bounds2<T, P> sub(T x, T y) const { return bounds2<T, P>(min.x - x, min.y - y, max.x - x, max.y - y); }
-	bounds2<T, P> mul(T x, T y) const { return bounds2<T, P>(min.x * x, min.y * y, max.x * x, max.y * y); }
-	bounds2<T, P> div(T x, T y) const { return bounds2<T, P>(min.x / x, min.y / y, max.x / x, max.y / y); }
+	b_2_t add(val_t x, val_t y) const { return {min.x + x, min.y + y, max.x + x, max.y + y}; }
+	b_2_t sub(val_t x, val_t y) const { return {min.x - x, min.y - y, max.x - x, max.y - y}; }
+	b_2_t mul(val_t x, val_t y) const { return {min.x * x, min.y * y, max.x * x, max.y * y}; }
+	b_2_t div(val_t x, val_t y) const { return {min.x / x, min.y / y, max.x / x, max.y / y}; }
 
-	bounds2<T, P> grow(T d) const { return bounds2<T, P>(min - d, max + d); }
-	bounds2<T, P> grow(glm::tvec2<T, P> d) const { return bounds2<T, P>(min - d, max + d); }
-	bounds2<T, P> grow(T dx, T dy) const { return bounds2<T, P>(min.x - dx, min.y - dy, max.x + dx, max.y + dy); }
+	b_2_t grow(val_t d) const { return {min - d, max + d}; }
+	b_2_t grow(vec_t d) const { return {min - d, max + d}; }
+	b_2_t grow(val_t dx, val_t dy) const { return {min.x - dx, min.y - dy, max.x + dx, max.y + dy}; }
 
-	bounds2<T, P> grow(T d, glm::tvec2<T, P> a) const { return grow(d, d, a.x, a.y); }
-	bounds2<T, P> grow(glm::tvec2<T, P> d, glm::tvec2<T, P> a) const { return grow(d.x, d.y, a.x, a.y); }
-	bounds2<T, P> grow(T dx, T dy, glm::tvec2<T, P> a) const { return grow(dx, dy, a.x, a.y); }
+	b_2_t grow(val_t d, vec_t a) const { return grow(d, d, a.x, a.y); }
+	b_2_t grow(vec_t d, vec_t a) const { return grow(d.x, d.y, a.x, a.y); }
+	b_2_t grow(val_t dx, val_t dy, vec_t a) const { return grow(dx, dy, a.x, a.y); }
 
-	bounds2<T, P> grow(T d, T ax, T ay) const { return grow(d, d, ax, ay); }
-	bounds2<T, P> grow(glm::tvec2<T, P> d, T ax, T ay)  const { return grow(d.x, d.y, ax, ay); }
-	bounds2<T, P> grow(T dx, T dy, T ax, T ay) const { return bounds2<T, P>(x().grow(dx, ax), y().grow(dy, ay)); }
+	b_2_t grow(val_t d, val_t ax, val_t ay) const { return grow(d, d, ax, ay); }
+	b_2_t grow(vec_t d, val_t ax, val_t ay)  const { return grow(d.x, d.y, ax, ay); }
+	b_2_t grow(val_t dx, val_t dy, val_t ax, val_t ay) const { return {x().grow(dx, ax), y().grow(dy, ay)}; }
 
-	bounds2<T, P> grow_x(T d) const { return bounds2<T, P>(x().grow(d), y()); }
-	bounds2<T, P> grow_y(T d) const { return bounds2<T, P>(x(), y().grow(d)); }
-	bounds2<T, P> grow_x(T d, T a) const { return bounds2<T, P>(x().grow(d, a), y()); }
-	bounds2<T, P> grow_y(T d, T a) const { return bounds2<T, P>(x(), y().grow(d, a)); }
+	b_2_t grow_x(val_t d) const { return {x().grow(d), y()}; }
+	b_2_t grow_y(val_t d) const { return {x(), y().grow(d)}; }
+	b_2_t grow_x(val_t d, val_t a) const { return {x().grow(d, a), y()}; }
+	b_2_t grow_y(val_t d, val_t a) const { return {x(), y().grow(d, a)}; }
 
-	bounds2<T, P> resize(T s) const { return resize(s, s); }
-	bounds2<T, P> resize(glm::tvec2<T, P> s) const { return resize(s.x, s.y); }
-	bounds2<T, P> resize(T sx, T sy) const { return bounds2<T, P>(x().resize(sx), y().resize(sy)); }
+	b_2_t resize(val_t s) const { return resize(s, s); }
+	b_2_t resize(vec_t s) const { return resize(s.x, s.y); }
+	b_2_t resize(val_t sx, val_t sy) const { return {x().resize(sx), y().resize(sy)}; }
 
-	bounds2<T, P> resize(T s, glm::tvec2<T, P> a) const { return resize(s, s, a.x, a.y); }
-	bounds2<T, P> resize(glm::tvec2<T, P> s, glm::tvec2<T, P> a) const { return resize(s.x, s.y, a.x, a.y); }
-	bounds2<T, P> resize(glm::tvec2<T, P> s, T ax, T ay) const { return resize(s.x, s.y, ax, ay); }
+	b_2_t resize(val_t s, vec_t a) const { return resize(s, s, a.x, a.y); }
+	b_2_t resize(vec_t s, vec_t a) const { return resize(s.x, s.y, a.x, a.y); }
+	b_2_t resize(vec_t s, val_t ax, val_t ay) const { return resize(s.x, s.y, ax, ay); }
 
-	bounds2<T, P> resize(T s, T ax, T ay) const { return resize(s, s, ax, ay); }
-	bounds2<T, P> resize(T sx, T sy, glm::tvec2<T, P> a) const { return resize(sx, sy, a.x, a.y); }
-	bounds2<T, P> resize(T sx, T sy, T ax, T ay) const { return bounds2<T, P>(x().resize(sx, ax), y().resize(sy, ay)); }
+	b_2_t resize(val_t s, val_t ax, val_t ay) const { return resize(s, s, ax, ay); }
+	b_2_t resize(val_t sx, val_t sy, vec_t a) const { return resize(sx, sy, a.x, a.y); }
+	b_2_t resize(val_t sx, val_t sy, val_t ax, val_t ay) const { return {x().resize(sx, ax), y().resize(sy, ay)}; }
 
-	bounds2<T, P> resize_x(T s) const { return bounds2<T, P>(x().resize(s), y()); }
-	bounds2<T, P> resize_y(T s) const { return bounds2<T, P>(x(), y().resize(s)); }
-	bounds2<T, P> resize_x(T s, T a) const { return bounds2<T, P>(x().resize(s, a), y()); }
-	bounds2<T, P> resize_y(T s, T a) const { return bounds2<T, P>(x(), y().resize(s, a)); }
+	b_2_t resize_x(val_t s) const { return {x().resize(s), y()}; }
+	b_2_t resize_y(val_t s) const { return {x(), y().resize(s)}; }
+	b_2_t resize_x(val_t s, val_t a) const { return {x().resize(s, a), y()}; }
+	b_2_t resize_y(val_t s, val_t a) const { return {x(), y().resize(s, a)}; }
 
-	glm::tvec2<T, P> clamp(glm::tvec2<T, P> p) const { return glm::tvec2<T, P>(x().clamp(p.x), y().clamp(p.y)); }
+	vec_t clamp(vec_t p) const { return {x().clamp(p.x), y().clamp(p.y)}; }
 
-	bounds2& operator+=(glm::tvec2<T, P> v)
+	bounds2& operator+=(vec_t v)
 	{
 		min += v;
 		max += v;
 		return *this;
 	}
-	bounds2& operator-=(glm::tvec2<T, P> v)
+	bounds2& operator-=(vec_t v)
 	{
 		min -= v;
 		max -= v;
 		return *this;
 	}
-	bounds2& operator*=(glm::tvec2<T, P> v)
+	bounds2& operator*=(vec_t v)
 	{
 		min *= v;
 		max *= v;
 		return *this;
 	}
-	bounds2& operator/=(glm::tvec2<T, P> v)
+	bounds2& operator/=(vec_t v)
 	{
 		min /= v;
 		max /= v;
 		return *this;
 	}
 
-	bounds2& operator*=(T k)
+	bounds2& operator*=(val_t k)
 	{
 		min *= k;
 		max *= k;
 		return *this;
 	}
-	bounds2& operator/=(T k)
+	bounds2& operator/=(val_t k)
 	{
 		min /= k;
 		max /= k;
@@ -230,23 +235,27 @@ struct bounds2
 template<class T, glm::precision P>
 struct bounds3
 {
-	glm::tvec3<T, P> min, max;
+	using V = glm::tvec3<T, P>;
+	using b_1_t = bounds1<T, P>;
+	using b_2_t = bounds2<T, P>;
+	using b_3_t = bounds3<T, P>;
+
+	V min, max;
 
 	bounds3() { }
-	bounds3(const bounds3<T, P>& b) : min(b.min), max(b.max) { }
-	explicit bounds3(glm::tvec3<T, P> v) : min(v), max(v) { }
+	explicit bounds3(V v) : min{v}, max{v} { }
 
-	bounds3(glm::tvec3<T, P> min_, glm::tvec3<T, P> max_) : min(min_), max(max_) { }
-	bounds3(bounds2<T, P> b, bounds1<T, P> z) : min(b.min, z.min), max(b.max, z.max) { }
-	bounds3(bounds1<T, P> x, bounds1<T, P> y, bounds1<T, P> z) : min(x.min, y.min, z.min), max(x.max, y.max, z.max) { }
+	bounds3(V min_, V max_) : min{min_}, max{max_} { }
+	bounds3(b_2_t b, b_1_t z) : min{b.min, z.min}, max{b.max, z.max} { }
+	bounds3(b_1_t x, b_1_t y, b_1_t z) : min{x.min, y.min, z.min}, max{x.max, y.max, z.max} { }
 
-	template<class T2>
-	operator bounds3<T2, P>() const { return bounds3<T2, P>((glm::tvec3<T2, P>)min, (glm::tvec3<T2, P>)max); }
+	template<class T2, glm::precision P2 = P>
+	operator bounds3<T2, P2>() const { return {static_cast<glm::tvec3<T2, P2>>(min), static_cast<glm::tvec3<T2, P2>>(max)}; }
 
 	bool empty() const { return min.x >= max.x || min.y >= max.y || min.z >= max.z; }
-	bool contains(glm::tvec3<T, P> p) const { return min.x <= p.x && p.x <= max.x && min.y <= p.y && p.y <= max.y && min.z <= p.z && p.z <= max.z; }
+	bool contains(V p) const { return min.x <= p.x && p.x <= max.x && min.y <= p.y && p.y <= max.y && min.z <= p.z && p.z <= max.z; }
 
-	bounds2<T, P> xy() const { return bounds2<T, P>(min.x, min.y, max.x, max.y); }
+	b_2_t xy() const { return {min.x, min.y, max.x, max.y}; }
 };
 
 
@@ -275,124 +284,124 @@ inline bool operator!=(bounds3<T, P> a, bounds3<T, P> b) { return a.min != b.min
 
 
 template<class T, glm::precision P>
-inline bounds1<T, P> operator+(bounds1<T, P> b, T k) { return bounds1<T, P>(b.min + k, b.max + k); }
+inline bounds1<T, P> operator+(bounds1<T, P> b, T k) { return {b.min + k, b.max + k}; }
 
 
 template<class T, glm::precision P>
-inline bounds2<T, P> operator+(bounds2<T, P> b, glm::tvec2<T, P> v) { return bounds2<T, P>(b.min + v, b.max + v); }
+inline bounds2<T, P> operator+(bounds2<T, P> b, glm::tvec2<T, P> v) { return {b.min + v, b.max + v}; }
 
 
 template<class T, glm::precision P>
-inline bounds3<T, P> operator+(bounds3<T, P> b, glm::tvec3<T, P> v) { return bounds3<T, P>(b.min + v, b.max + v); }
+inline bounds3<T, P> operator+(bounds3<T, P> b, glm::tvec3<T, P> v) { return {b.min + v, b.max + v}; }
 
 
 template<class T, glm::precision P>
-inline bounds1<T, P> operator+(bounds1<T, P> b1, bounds1<T, P> b2) { return bounds1<T, P>(b1.min + b2.min, b1.max + b2.max); }
+inline bounds1<T, P> operator+(bounds1<T, P> b1, bounds1<T, P> b2) { return {b1.min + b2.min, b1.max + b2.max}; }
 
 
 template<class T, glm::precision P>
-inline bounds2<T, P> operator+(bounds2<T, P> b1, bounds2<T, P> b2) { return bounds2<T, P>(b1.min + b2.min, b1.max + b2.max); }
+inline bounds2<T, P> operator+(bounds2<T, P> b1, bounds2<T, P> b2) { return {b1.min + b2.min, b1.max + b2.max}; }
 
 
 template<class T, glm::precision P>
-inline bounds3<T, P> operator+(bounds3<T, P> b1, bounds3<T, P> b2) { return bounds3<T, P>(b1.min + b2.min, b1.max + b2.max); }
+inline bounds3<T, P> operator+(bounds3<T, P> b1, bounds3<T, P> b2) { return {b1.min + b2.min, b1.max + b2.max}; }
 
 
 template<class T, glm::precision P>
-inline bounds1<T, P> operator-(bounds1<T, P> b, T k) { return bounds1<T, P>(b.min - k, b.max - k); }
+inline bounds1<T, P> operator-(bounds1<T, P> b, T k) { return {b.min - k, b.max - k}; }
 
 
 template<class T, glm::precision P>
-inline bounds2<T, P> operator-(bounds2<T, P> b, glm::tvec2<T, P> v) { return bounds2<T, P>(b.min - v, b.max - v); }
+inline bounds2<T, P> operator-(bounds2<T, P> b, glm::tvec2<T, P> v) { return {b.min - v, b.max - v}; }
 
 
 template<class T, glm::precision P>
-inline bounds3<T, P> operator-(bounds3<T, P> b, glm::tvec3<T, P> v) { return bounds3<T, P>(b.min - v, b.max - v); }
+inline bounds3<T, P> operator-(bounds3<T, P> b, glm::tvec3<T, P> v) { return {b.min - v, b.max - v}; }
 
 
 template<class T, glm::precision P>
-inline bounds1<T, P> operator-(bounds1<T, P> b1, bounds1<T, P> b2) { return bounds1<T, P>(b1.min - b2.min, b1.max - b2.max); }
+inline bounds1<T, P> operator-(bounds1<T, P> b1, bounds1<T, P> b2) { return {b1.min - b2.min, b1.max - b2.max}; }
 
 
 template<class T, glm::precision P>
-inline bounds2<T, P> operator-(bounds2<T, P> b1, bounds2<T, P> b2) { return bounds2<T, P>(b1.min - b2.min, b1.max - b2.max); }
+inline bounds2<T, P> operator-(bounds2<T, P> b1, bounds2<T, P> b2) { return {b1.min - b2.min, b1.max - b2.max}; }
 
 
 template<class T, glm::precision P>
-inline bounds3<T, P> operator-(bounds3<T, P> b1, bounds3<T, P> b2) { return bounds3<T, P>(b1.min - b2.min, b1.max - b2.max); }
+inline bounds3<T, P> operator-(bounds3<T, P> b1, bounds3<T, P> b2) { return {b1.min - b2.min, b1.max - b2.max}; }
 
 
 template<class T, glm::precision P>
-inline bounds1<T, P> operator*(bounds1<T, P> b, T k) { return bounds1<T, P>(b.min * k, b.max * k); }
+inline bounds1<T, P> operator*(bounds1<T, P> b, T k) { return {b.min * k, b.max * k}; }
 
 
 template<class T, glm::precision P>
-inline bounds2<T, P> operator*(bounds2<T, P> b, T k) { return bounds2<T, P>(b.min * k, b.max * k); }
+inline bounds2<T, P> operator*(bounds2<T, P> b, T k) { return {b.min * k, b.max * k}; }
 
 
 template<class T, glm::precision P>
-inline bounds3<T, P> operator*(bounds3<T, P> b, T k) { return bounds3<T, P>(b.min * k, b.max * k); }
+inline bounds3<T, P> operator*(bounds3<T, P> b, T k) { return {b.min * k, b.max * k}; }
 
 
 template<class T, glm::precision P>
-inline bounds2<T, P> operator*(bounds2<T, P> b, glm::tvec2<T, P> v) { return bounds2<T, P>(b.min * v, b.max * v); }
+inline bounds2<T, P> operator*(bounds2<T, P> b, glm::tvec2<T, P> v) { return {b.min * v, b.max * v}; }
 
 
 template<class T, glm::precision P>
-inline bounds3<T, P> operator*(bounds3<T, P> b, glm::tvec3<T, P> v) { return bounds3<T, P>(b.min * v, b.max * v); }
+inline bounds3<T, P> operator*(bounds3<T, P> b, glm::tvec3<T, P> v) { return {b.min * v, b.max * v}; }
 
 
 template<class T, glm::precision P>
-inline bounds1<T, P> operator*(T k, bounds1<T, P> b) { return bounds1<T, P>(k * b.min, k * b.max); }
+inline bounds1<T, P> operator*(T k, bounds1<T, P> b) { return {k * b.min, k * b.max}; }
 
 
 template<class T, glm::precision P>
-inline bounds2<T, P> operator*(T k, bounds2<T, P> b) { return bounds2<T, P>(k * b.min, k * b.max); }
+inline bounds2<T, P> operator*(T k, bounds2<T, P> b) { return {k * b.min, k * b.max}; }
 
 
 template<class T, glm::precision P>
-inline bounds3<T, P> operator*(T k, bounds3<T, P> b) { return bounds3<T, P>(k * b.min, k * b.max); }
+inline bounds3<T, P> operator*(T k, bounds3<T, P> b) { return {k * b.min, k * b.max}; }
 
 
 template<class T, glm::precision P>
-inline bounds2<T, P> operator*(glm::tvec2<T, P> v, bounds2<T, P> b) { return bounds2<T, P>(v * b.min, v * b.max); }
+inline bounds2<T, P> operator*(glm::tvec2<T, P> v, bounds2<T, P> b) { return {v * b.min, v * b.max}; }
 
 
 template<class T, glm::precision P>
-inline bounds3<T, P> operator*(glm::tvec3<T, P> v, bounds3<T, P> b) { return bounds3<T, P>(v * b.min, v * b.max); }
+inline bounds3<T, P> operator*(glm::tvec3<T, P> v, bounds3<T, P> b) { return {v * b.min, v * b.max}; }
 
 
 template<class T, glm::precision P>
-inline bounds1<T, P> operator/(bounds1<T, P> b, T k) { return bounds1<T, P>(b.min / k, b.max / k); }
+inline bounds1<T, P> operator/(bounds1<T, P> b, T k) { return {b.min / k, b.max / k}; }
 
 
 template<class T, glm::precision P>
-inline bounds2<T, P> operator/(bounds2<T, P> b, T k) { return bounds2<T, P>(b.min / k, b.max / k); }
+inline bounds2<T, P> operator/(bounds2<T, P> b, T k) { return {b.min / k, b.max / k}; }
 
 
 template<class T, glm::precision P>
-inline bounds3<T, P> operator/(bounds3<T, P> b, T k) { return bounds3<T, P>(b.min / k, b.max / k); }
+inline bounds3<T, P> operator/(bounds3<T, P> b, T k) { return {b.min / k, b.max / k}; }
 
 
 template<class T, glm::precision P>
-inline bounds2<T, P> operator/(bounds2<T, P> b, glm::tvec2<T, P> v) { return bounds2<T, P>(b.min / v, b.max / v); }
+inline bounds2<T, P> operator/(bounds2<T, P> b, glm::tvec2<T, P> v) { return {b.min / v, b.max / v}; }
 
 
 template<class T, glm::precision P>
-inline bounds3<T, P> operator/(bounds3<T, P> b, glm::tvec3<T, P> v) { return bounds3<T, P>(b.min / v, b.max / v); }
+inline bounds3<T, P> operator/(bounds3<T, P> b, glm::tvec3<T, P> v) { return {b.min / v, b.max / v}; }
 
 
-typedef bounds1<double, glm::highp> bounds1d;
-typedef bounds2<double, glm::highp> bounds2d;
-typedef bounds3<double, glm::highp> bounds3d;
+using bounds1d = bounds1<double, glm::highp>;
+using bounds2d = bounds2<double, glm::highp>;
+using bounds3d = bounds3<double, glm::highp>;
 
-typedef bounds1<float, glm::highp> bounds1f;
-typedef bounds2<float, glm::highp> bounds2f;
-typedef bounds3<float, glm::highp> bounds3f;
+using bounds1f = bounds1<float, glm::highp>;
+using bounds2f = bounds2<float, glm::highp>;
+using bounds3f = bounds3<float, glm::highp>;
 
-typedef bounds1<int, glm::highp> bounds1i;
-typedef bounds2<int, glm::highp> bounds2i;
-typedef bounds3<int, glm::highp> bounds3i;
+using bounds1i = bounds1<int, glm::highp>;
+using bounds2i = bounds2<int, glm::highp>;
+using bounds3i = bounds3<int, glm::highp>;
 
 
 #endif
