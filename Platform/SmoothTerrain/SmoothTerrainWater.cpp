@@ -90,11 +90,11 @@ static int inside_circle(bounds2f bounds, glm::vec2 p)
 }
 
 
-static int inside_circle(bounds2f bounds, Vertex_2f v1, Vertex_2f v2, Vertex_2f v3)
+static int inside_circle(bounds2f bounds, glm::vec2 p1, glm::vec2 p2, glm::vec2 p3)
 {
-	return inside_circle(bounds, v1._1)
-		+ inside_circle(bounds, v2._1)
-		+ inside_circle(bounds, v3._1);
+	return inside_circle(bounds, p1)
+		+ inside_circle(bounds, p2)
+		+ inside_circle(bounds, p3);
 
 }
 
@@ -133,25 +133,25 @@ void SmoothTerrainWater::Update()
 			glm::vec2 p = bounds.min + s * glm::vec2(x, y);
 			if (_groundMap->ContainsWater(bounds2f(p, p + s)))
 			{
-				Vertex_2f v11 = Vertex_2f(p);
-				Vertex_2f v12 = Vertex_2f(p + glm::vec2(0, s.y));
-				Vertex_2f v21 = Vertex_2f(p + glm::vec2(s.x, 0));
-				Vertex_2f v22 = Vertex_2f(p + s);
+				glm::vec2 v11 = p;
+				glm::vec2 v12 = p + glm::vec2(0, s.y);
+				glm::vec2 v21 = p + glm::vec2(s.x, 0);
+				glm::vec2 v22 = p + s;
 
 				VertexShape_2f* s = choose_shape(inside_circle(bounds, v11, v22, v12), &_waterInsideVertices, &_waterBorderVertices);
 				if (s != nullptr)
 				{
-					s->AddVertex(v11);
-					s->AddVertex(v22);
-					s->AddVertex(v12);
+					s->AddVertex(Vertex_2f(v11));
+					s->AddVertex(Vertex_2f(v22));
+					s->AddVertex(Vertex_2f(v12));
 				}
 
 				s = choose_shape(inside_circle(bounds, v22, v11, v21), &_waterInsideVertices, &_waterBorderVertices);
 				if (s != nullptr)
 				{
-					s->AddVertex(v22);
-					s->AddVertex(v11);
-					s->AddVertex(v21);
+					s->AddVertex(Vertex_2f(v22));
+					s->AddVertex(Vertex_2f(v11));
+					s->AddVertex(Vertex_2f(v21));
 				}
 			}
 		}

@@ -6,73 +6,112 @@
 #define Vertex_H
 
 #include <glm/glm.hpp>
+#include <vector>
 
 
-template <class _T1>
-struct Vertex1
+template <typename... T>
+struct Vertex
 {
-	typedef _T1 T1;
-	T1 _1;
-	Vertex1() { }
-	Vertex1(const T1& __1) : _1(__1) { }
+	static std::vector<std::size_t> GetSizes()
+	{
+		return { };
+	}
+
+	static std::vector<std::ptrdiff_t> GetOffsets()
+	{
+		return { };
+	}
 };
-typedef Vertex1<float> Vertex_1f;
-typedef Vertex1<glm::vec2> Vertex_2f;
-typedef Vertex1<glm::vec3> Vertex_3f;
-typedef Vertex1<glm::vec4> Vertex_4f;
 
-
-template <class _T1, class _T2>
-struct Vertex2
+template <typename T, typename... Ts>
+struct Vertex<T, Ts...> : Vertex<Ts...>
 {
-	typedef _T1 T1;
-	typedef _T2 T2;
-	T1 _1;
-	T2 _2;
-	Vertex2() { }
-	Vertex2(const T1& v1, const T2& v2) : _1(v1), _2(v2) { }
+	T _v {};
+
+	Vertex() {}
+	Vertex(T v, Ts... vs) : Vertex<Ts...> {vs...}, _v {v} {}
+
+
+	static std::vector<std::size_t> GetSizes()
+	{
+		std::vector<std::size_t> s = Vertex<Ts...>::GetSizes();
+		s.insert(s.begin(), sizeof(T));
+		return s;
+	}
+
+	static std::vector<std::ptrdiff_t> GetOffsets()
+	{
+		auto s = Vertex<Ts...>::GetOffsets();
+		Vertex<T, Ts...>* p {nullptr};
+		s.insert(s.begin(), reinterpret_cast<char*>(&p->_v) - reinterpret_cast<char*>(p));
+		return s;
+	};
+
 };
-typedef Vertex2<glm::vec2, glm::vec4> Vertex_2f_4f;
-typedef Vertex2<glm::vec2, glm::vec2> Vertex_2f_2f;
-typedef Vertex2<glm::vec3, glm::vec2> Vertex_3f_2f;
-typedef Vertex2<glm::vec3, float> Vertex_3f_1f;
-typedef Vertex2<glm::vec3, glm::vec3> Vertex_3f_3f;
-typedef Vertex2<glm::vec3, glm::vec4> Vertex_3f_4f;
 
 
-template <class _T1, class _T2, class _T3>
-struct Vertex3
+template <int k, class... Ts>
+struct VertexAttributeType;
+
+template <class T, class... Ts>
+struct VertexAttributeType<0, T, Ts...>
 {
-	typedef _T1 T1;
-	typedef _T2 T2;
-	typedef _T3 T3;
-	T1 _1;
-	T2 _2;
-	T3 _3;
-	Vertex3() { }
-	Vertex3(const T1& v1, const T2& v2, const T3& v3) : _1(v1), _2(v2), _3(v3) { }
+	typedef T type;
+	typedef const T const_type;
 };
-typedef Vertex3<glm::vec2, glm::vec2, float> Vertex_2f_2f_1f;
-typedef Vertex3<glm::vec3, glm::vec4, float> Vertex_3f_4f_1f;
-typedef Vertex3<glm::vec2, glm::vec2, glm::vec2> Vertex_2f_2f_2f;
 
-
-template <class _T1, class _T2, class _T3, class _T4>
-struct Vertex4
+template <int k, class T, class... Ts>
+struct VertexAttributeType<k, T, Ts...>
 {
-	typedef _T1 T1;
-	typedef _T2 T2;
-	typedef _T3 T3;
-	typedef _T4 T4;
-	T1 _1;
-	T2 _2;
-	T3 _3;
-	T4 _4;
-	Vertex4() { }
-	Vertex4(const T1& v1, const T2& v2, const T3& v3, const T4& v4) : _1(v1), _2(v2), _3(v3), _4(v4) { }
+	typedef typename std::enable_if<k != 0, typename VertexAttributeType<k - 1, Ts...>::type>::type type;
 };
-typedef Vertex4<glm::vec2, glm::vec2, glm::vec4, float> Vertex_2f_2f_4f_1f;
-typedef Vertex4<glm::vec3, float, glm::vec2, glm::vec2> Vertex_3f_1f_2f_2f;
+
+
+template <int k, class... Ts>
+typename std::enable_if<k == 0, typename VertexAttributeType<0, Ts...>::type&>::type GetVertexAttribute(Vertex<Ts...>& vertex)
+{
+	return vertex._v;
+}
+
+template <int k, class... Ts>
+typename std::enable_if<k == 0, typename VertexAttributeType<0, Ts...>::const_type&>::type GetVertexAttribute(const Vertex<Ts...>& vertex)
+{
+	return vertex._v;
+}
+
+template <int k, class T, class... Ts>
+typename std::enable_if<k != 0, typename VertexAttributeType<k, T, Ts...>::type&>::type GetVertexAttribute(Vertex<T, Ts...>& vertex)
+{
+	Vertex<Ts...>& base = vertex;
+	return GetVertexAttribute<k - 1, Ts...>(base);
+}
+
+template <int k, class T, class... Ts>
+typename std::enable_if<k != 0, typename VertexAttributeType<k, T, Ts...>::const_type&>::type GetVertexAttribute(const Vertex<T, Ts...>& vertex)
+{
+	Vertex<Ts...>& base = vertex;
+	return GetVertexAttribute<k - 1, Ts...>(base);
+}
+
+
+typedef Vertex<float> Vertex_1f;
+typedef Vertex<glm::vec2> Vertex_2f;
+typedef Vertex<glm::vec3> Vertex_3f;
+typedef Vertex<glm::vec4> Vertex_4f;
+
+typedef Vertex<glm::vec2, glm::vec4> Vertex_2f_4f;
+typedef Vertex<glm::vec2, glm::vec2> Vertex_2f_2f;
+typedef Vertex<glm::vec3, glm::vec2> Vertex_3f_2f;
+typedef Vertex<glm::vec3, float> Vertex_3f_1f;
+typedef Vertex<glm::vec3, glm::vec3> Vertex_3f_3f;
+typedef Vertex<glm::vec3, glm::vec4> Vertex_3f_4f;
+
+typedef Vertex<glm::vec2, glm::vec2, float> Vertex_2f_2f_1f;
+typedef Vertex<glm::vec3, glm::vec4, float> Vertex_3f_4f_1f;
+typedef Vertex<glm::vec2, glm::vec2, glm::vec2> Vertex_2f_2f_2f;
+
+typedef Vertex<glm::vec2, glm::vec2, glm::vec4, float> Vertex_2f_2f_4f_1f;
+typedef Vertex<glm::vec3, float, glm::vec2, glm::vec2> Vertex_3f_1f_2f_2f;
 
 
 #endif

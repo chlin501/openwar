@@ -131,40 +131,44 @@ public:
 	}
 
 	template <class T1>
-	RenderCall<ShaderProgramT>& SetVertices(VertexBuffer<Vertex1<T1>>* vertices, const char* name1)
+	RenderCall<ShaderProgramT>& SetVertices(VertexBuffer<Vertex<T1>>* vertices, const char* name1)
 	{
 		_vertices = vertices;
-		_attributes.push_back(MakeRenderCallAttribute<Vertex1<T1>, T1>(name1, &((Vertex1<T1>*)nullptr)->_1));
+		auto offsets = Vertex<T1>::GetOffsets();
+		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1>, T1>(name1, (char*){nullptr} + offsets[0]));
 		return *this;
 	}
 
 	template <class T1, class T2>
-	RenderCall<ShaderProgramT>& SetVertices(VertexBuffer<Vertex2<T1, T2>>* vertices, const char* name1, const char* name2)
+	RenderCall<ShaderProgramT>& SetVertices(VertexBuffer<Vertex<T1, T2>>* vertices, const char* name1, const char* name2)
 	{
 		_vertices = vertices;
-		_attributes.push_back(MakeRenderCallAttribute<Vertex2<T1, T2>, T1>(name1, &((Vertex2<T1, T2>*)nullptr)->_1));
-		_attributes.push_back(MakeRenderCallAttribute<Vertex2<T1, T2>, T2>(name2, &((Vertex2<T1, T2>*)nullptr)->_2));
+		auto offsets = Vertex<T1, T2>::GetOffsets();
+		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2>, T1>(name1, (char*){nullptr} + offsets[0]));
+		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2>, T2>(name2, (char*){nullptr} + offsets[1]));
 		return *this;
 	}
 
 	template <class T1, class T2, class T3>
-	RenderCall<ShaderProgramT>& SetVertices(VertexBuffer<Vertex3<T1, T2, T3>>* vertices, const char* name1, const char* name2, const char* name3)
+	RenderCall<ShaderProgramT>& SetVertices(VertexBuffer<Vertex<T1, T2, T3>>* vertices, const char* name1, const char* name2, const char* name3)
 	{
 		_vertices = vertices;
-		_attributes.push_back(MakeRenderCallAttribute<Vertex3<T1, T2, T3>, T1>(name1, &((Vertex3<T1, T2, T3>*)nullptr)->_1));
-		_attributes.push_back(MakeRenderCallAttribute<Vertex3<T1, T2, T3>, T2>(name2, &((Vertex3<T1, T2, T3>*)nullptr)->_2));
-		_attributes.push_back(MakeRenderCallAttribute<Vertex3<T1, T2, T3>, T3>(name3, &((Vertex3<T1, T2, T3>*)nullptr)->_3));
+		auto offsets = Vertex<T1, T2, T3>::GetOffsets();
+		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3>, T1>(name1, (char*){nullptr} + offsets[0]));
+		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3>, T2>(name2, (char*){nullptr} + offsets[1]));
+		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3>, T3>(name3, (char*){nullptr} + offsets[2]));
 		return *this;
 	}
 
 	template <class T1, class T2, class T3, class T4>
-	RenderCall<ShaderProgramT>& SetVertices(VertexBuffer<Vertex4<T1, T2, T3, T4>>* vertices, const char* name1, const char* name2, const char* name3, const char* name4)
+	RenderCall<ShaderProgramT>& SetVertices(VertexBuffer<Vertex<T1, T2, T3, T4>>* vertices, const char* name1, const char* name2, const char* name3, const char* name4)
 	{
 		_vertices = vertices;
-		_attributes.push_back(MakeRenderCallAttribute<Vertex4<T1, T2, T3, T4>, T1>(name1, &((Vertex4<T1, T2, T3, T4>*)nullptr)->_1));
-		_attributes.push_back(MakeRenderCallAttribute<Vertex4<T1, T2, T3, T4>, T2>(name2, &((Vertex4<T1, T2, T3, T4>*)nullptr)->_2));
-		_attributes.push_back(MakeRenderCallAttribute<Vertex4<T1, T2, T3, T4>, T3>(name3, &((Vertex4<T1, T2, T3, T4>*)nullptr)->_3));
-		_attributes.push_back(MakeRenderCallAttribute<Vertex4<T1, T2, T3, T4>, T4>(name4, &((Vertex4<T1, T2, T3, T4>*)nullptr)->_4));
+		auto offsets = Vertex<T1, T2, T3, T4>::GetOffsets();
+		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3, T4>, T1>(name1, (char*){nullptr} + offsets[0]));
+		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3, T4>, T2>(name2, (char*){nullptr} + offsets[1]));
+		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3, T4>, T3>(name3, (char*){nullptr} + offsets[2]));
+		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3, T4>, T4>(name4, (char*){nullptr} + offsets[3]));
 		return *this;
 	}
 

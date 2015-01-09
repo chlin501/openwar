@@ -121,9 +121,10 @@ void BillboardTextureShape::Draw(GraphicsContext* gc, Texture* tex, const glm::m
 	int index = 0;
 	for (Vertex_3f_1f_2f_2f& v : _vertices._vertices)
 	{
+		glm::vec3 p = GetVertexAttribute<0>(v);
 		billboard_index i;
 		i.index = index++;
-		i.order = cos_a * v._1.x - sin_a * v._1.y;
+		i.order = cos_a * p.x - sin_a * p.y;
 		indices.push_back(i);
 	}
 

@@ -326,24 +326,24 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 		// inside
 		for (Vertex_3f_3f& vertex : _insideVertices._vertices)
 		{
-			glm::vec2 p = vertex._1.xy();
+			glm::vec2 p = GetVertexAttribute<0>(vertex).xy();
 			if (bounds.contains(p))
 			{
 				glm::ivec2 i = _smoothGroundMap->ToGroundmapCoordinate(p);
-				vertex._1.z = _smoothGroundMap->GetHeightMap()->GetHeight(i.x, i.y);
-				vertex._2 = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
+				GetVertexAttribute<0>(vertex).z = _smoothGroundMap->GetHeightMap()->GetHeight(i.x, i.y);
+				GetVertexAttribute<1>(vertex) = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
 			}
 		}
 
 		// border
 		for (Vertex_3f_3f& vertex : _borderVertices._vertices)
 		{
-			glm::vec2 p = vertex._1.xy();
+			glm::vec2 p = GetVertexAttribute<0>(vertex).xy();
 			if (bounds.contains(p))
 			{
 				glm::ivec2 i = _smoothGroundMap->ToGroundmapCoordinate(p);
-				vertex._1.z = _smoothGroundMap->GetHeightMap()->GetHeight(i.x, i.y);
-				vertex._2 = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
+				GetVertexAttribute<0>(vertex).z = _smoothGroundMap->GetHeightMap()->GetHeight(i.x, i.y);
+				GetVertexAttribute<1>(vertex) = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
 			}
 		}
 	}
@@ -353,10 +353,10 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 	{
 		for (Vertex_3f& vertex : _lineVertices._vertices)
 		{
-			glm::vec2 p = vertex._1.xy();
+			glm::vec2 p = vertex._v.xy();
 			if (bounds.contains(p))
 			{
-				vertex._1.z = _smoothGroundMap->GetHeightMap()->InterpolateHeight(p);
+				vertex._v.z = _smoothGroundMap->GetHeightMap()->InterpolateHeight(p);
 			}
 		}
 	}
@@ -364,12 +364,12 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 	// skirt
 	for (size_t i = 0; i < _skirtVertices._vertices.size(); i += 2)
 	{
-		glm::vec2 p = _skirtVertices._vertices[i]._1.xy();
+		glm::vec2 p = GetVertexAttribute<0>(_skirtVertices._vertices[i]).xy();
 		if (bounds.contains(p))
 		{
 			float h = fmaxf(0, _smoothGroundMap->GetHeightMap()->InterpolateHeight(p));
-			_skirtVertices._vertices[i]._2 = h;
-			_skirtVertices._vertices[i]._1.z = h;
+			GetVertexAttribute<1>(_skirtVertices._vertices[i]) = h;
+			GetVertexAttribute<0>(_skirtVertices._vertices[i]).z = h;
 		}
 	}
 }
@@ -400,16 +400,16 @@ void SmoothTerrainRenderer::InitializeLines()
 				{
 					x2 = corner.x + size.x * ((x + 2) / k);
 					h20 = _smoothGroundMap->GetHeightMap()->GetHeight(x + 2, y);
-					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x0, y0, h00)));
-					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x2, y0, h20)));
+					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x0, y0, h00)));
+					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x2, y0, h20)));
 				}
 				float y2, h02;
 				if (y != n)
 				{
 					y2 = corner.y + size.y * ((y + 2) / k);
 					h02 = _smoothGroundMap->GetHeightMap()->GetHeight(x, y + 2);
-					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x0, y0, h00)));
-					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x0, y2, h02)));
+					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x0, y0, h00)));
+					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x0, y2, h02)));
 				}
 
 				if (x != n && y != n)
@@ -419,17 +419,17 @@ void SmoothTerrainRenderer::InitializeLines()
 					float h11 = _smoothGroundMap->GetHeightMap()->GetHeight(x + 1, y + 1);
 					float h22 = _smoothGroundMap->GetHeightMap()->GetHeight(x + 2, y + 2);
 
-					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x0, y0, h00)));
-					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
+					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x0, y0, h00)));
+					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x1, y1, h11)));
 
-					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x2, y0, h20)));
-					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
+					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x2, y0, h20)));
+					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x1, y1, h11)));
 
-					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x0, y2, h02)));
-					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
+					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x0, y2, h02)));
+					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x1, y1, h11)));
 
-					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x2, y2, h22)));
-					_lineVertices.AddVertex(Vertex1<glm::vec3>(glm::vec3(x1, y1, h11)));
+					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x2, y2, h22)));
+					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x1, y1, h11)));
 				}
 			}
 		}
@@ -443,11 +443,11 @@ static int inside_circle(bounds2f bounds, glm::vec2 p)
 }
 
 
-static int inside_circle(bounds2f bounds, Vertex_3f_3f v1, Vertex_3f_3f v2, Vertex_3f_3f v3)
+static int inside_circle(bounds2f bounds, glm::vec2 v1, glm::vec2 v2, glm::vec2 v3)
 {
-	return inside_circle(bounds, v1._1.xy())
-		+ inside_circle(bounds, v2._1.xy())
-		+ inside_circle(bounds, v3._1.xy());
+	return inside_circle(bounds, v1)
+		+ inside_circle(bounds, v2)
+		+ inside_circle(bounds, v3);
 
 }
 
@@ -517,7 +517,11 @@ void SmoothTerrainRenderer::BuildTriangles()
 void SmoothTerrainRenderer::PushTriangle(const Vertex_3f_3f& v0, const Vertex_3f_3f& v1, const Vertex_3f_3f& v2)
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
-	VertexShape_3f_3f* vertices = SelectTerrainVertexBuffer(inside_circle(bounds, v0, v1, v2));
+	bool inside = inside_circle(bounds,
+		GetVertexAttribute<0>(v0).xy(),
+		GetVertexAttribute<0>(v1).xy(),
+		GetVertexAttribute<0>(v2).xy());
+	VertexShape_3f_3f* vertices = SelectTerrainVertexBuffer(inside);
 	if (vertices != nullptr)
 	{
 		vertices->AddVertex(v0);
