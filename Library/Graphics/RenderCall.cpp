@@ -5,17 +5,6 @@
 #include "RenderCall.h"
 
 
-template<> GLint GetVertexAttributeSize<float>() { return 1; }
-template<> GLint GetVertexAttributeSize<glm::vec2>() { return 2; }
-template<> GLint GetVertexAttributeSize<glm::vec3>() { return 3; }
-template<> GLint GetVertexAttributeSize<glm::vec4>() { return 4; }
-
-template<> GLenum GetVertexAttributeType<float>() { return GL_FLOAT; }
-template<> GLenum GetVertexAttributeType<glm::vec2>() { return GL_FLOAT; }
-template<> GLenum GetVertexAttributeType<glm::vec3>() { return GL_FLOAT; }
-template<> GLenum GetVertexAttributeType<glm::vec4>() { return GL_FLOAT; }
-
-
 RenderCallUniformBase::RenderCallUniformBase(GLint location) :
 	_location(location)
 {

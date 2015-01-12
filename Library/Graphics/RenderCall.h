@@ -6,10 +6,8 @@
 #define RenderCall_H
 
 #include "GraphicsContext.h"
+#include "Vertex.h"
 
-
-template <class T> GLint GetVertexAttributeSize();
-template <class T> GLenum GetVertexAttributeType();
 
 
 struct RenderCallAttribute
@@ -106,7 +104,37 @@ public:
 	void Render();
 
 protected:
+	template <class T>
+	RenderCallUniform<T>* GetUniform(const char* name)
+	{
+		RenderCallUniform<T>* result = 0;
+		GLint location = glGetUniformLocation(_shaderprogram->_program, name);
+		for (RenderCallUniformBase* uniform : _uniforms)
+			if (uniform->_location == location)
+			{
+				result = dynamic_cast<RenderCallUniform<T>*>(uniform);
+				break;
+			}
+		if (result == nullptr)
+		{
+			result = new RenderCallUniform<T>(location);
+			_uniforms.push_back(result);
+		}
+		return result;
+	}
+
 	RenderCallTexture* GetTexture(const char* name);
+
+	RenderCallAttribute MakeRenderCallAttribute(const VertexAttributeTraits& traits, GLsizei stride)
+	{
+		return RenderCallAttribute{
+			glGetAttribLocation(_shaderprogram->_program, traits.name),
+			traits.size,
+			traits.type,
+			stride,
+			traits.offset
+		};
+	}
 };
 
 
@@ -133,78 +161,19 @@ public:
 		return *this;
 	}
 
-	template <class T1>
-	RenderCall<ShaderProgramT>& SetVertices(VertexBuffer<Vertex<T1>>* vertices, const char* name1)
+	template <typename VertexT, typename... N>
+	RenderCall<ShaderProgramT>& SetVertices(VertexBuffer<VertexT>* vertices, N... names)
 	{
+		static_assert(VertexT::count == sizeof...(N), "incorrect number of names");
+
 		_vertices = vertices;
-		auto offsets = Vertex<T1>::GetOffsets();
-		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1>, T1>(name1, (char*){nullptr} + offsets[0]));
+		_attributes.clear();
+
+		GLsizei stride = static_cast<GLsizei>(sizeof(VertexT));
+		for (const auto& traits : VertexT::GetVertexAttributeTraits(names...))
+			_attributes.push_back(MakeRenderCallAttribute(traits, stride));
+
 		return *this;
-	}
-
-	template <class T1, class T2>
-	RenderCall<ShaderProgramT>& SetVertices(VertexBuffer<Vertex<T1, T2>>* vertices, const char* name1, const char* name2)
-	{
-		_vertices = vertices;
-		auto offsets = Vertex<T1, T2>::GetOffsets();
-		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2>, T1>(name1, (char*){nullptr} + offsets[0]));
-		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2>, T2>(name2, (char*){nullptr} + offsets[1]));
-		return *this;
-	}
-
-	template <class T1, class T2, class T3>
-	RenderCall<ShaderProgramT>& SetVertices(VertexBuffer<Vertex<T1, T2, T3>>* vertices, const char* name1, const char* name2, const char* name3)
-	{
-		_vertices = vertices;
-		auto offsets = Vertex<T1, T2, T3>::GetOffsets();
-		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3>, T1>(name1, (char*){nullptr} + offsets[0]));
-		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3>, T2>(name2, (char*){nullptr} + offsets[1]));
-		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3>, T3>(name3, (char*){nullptr} + offsets[2]));
-		return *this;
-	}
-
-	template <class T1, class T2, class T3, class T4>
-	RenderCall<ShaderProgramT>& SetVertices(VertexBuffer<Vertex<T1, T2, T3, T4>>* vertices, const char* name1, const char* name2, const char* name3, const char* name4)
-	{
-		_vertices = vertices;
-		auto offsets = Vertex<T1, T2, T3, T4>::GetOffsets();
-		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3, T4>, T1>(name1, (char*){nullptr} + offsets[0]));
-		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3, T4>, T2>(name2, (char*){nullptr} + offsets[1]));
-		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3, T4>, T3>(name3, (char*){nullptr} + offsets[2]));
-		_attributes.push_back(MakeRenderCallAttribute<Vertex<T1, T2, T3, T4>, T4>(name4, (char*){nullptr} + offsets[3]));
-		return *this;
-	}
-
-private:
-	template <class T>
-	RenderCallUniform<T>* GetUniform(const char* name)
-	{
-		RenderCallUniform<T>* result = 0;
-		GLint location = glGetUniformLocation(_shaderprogram->_program, name);
-		for (RenderCallUniformBase* uniform : _uniforms)
-			if (uniform->_location == location)
-			{
-				result = dynamic_cast<RenderCallUniform<T>*>(uniform);
-				break;
-			}
-		if (result == nullptr)
-		{
-			result = new RenderCallUniform<T>(location);
-			_uniforms.push_back(result);
-		}
-		return result;
-	}
-
-	template <class VertexT, class AttributeT>
-	RenderCallAttribute MakeRenderCallAttribute(const char* name, void* offset)
-	{
-		return RenderCallAttribute(
-			glGetAttribLocation(_shaderprogram->_program, name),
-			GetVertexAttributeSize<AttributeT>(),
-			GetVertexAttributeType<AttributeT>(),
-			sizeof(VertexT),
-			(GLintptr)offset
-		);
 	}
 };
 

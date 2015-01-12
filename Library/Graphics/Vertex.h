@@ -5,13 +5,62 @@
 #ifndef Vertex_H
 #define Vertex_H
 
+#include "GraphicsOpenGL.h"
 #include <glm/glm.hpp>
 #include <vector>
 
 
-template <typename... T>
-struct Vertex
+template <typename T> struct GetVertexAttributeSize;
+
+template <> struct GetVertexAttributeSize<GLbyte> { static const GLint value {1}; };
+template <> struct GetVertexAttributeSize<GLubyte> { static const GLint value {1}; };
+template <> struct GetVertexAttributeSize<GLshort> { static const GLint value {1}; };
+template <> struct GetVertexAttributeSize<GLushort> { static const GLint value {1}; };
+template <> struct GetVertexAttributeSize<GLfloat> { static const GLint value {1}; };
+
+template <typename T> struct GetVertexAttributeSize<glm::tvec1<T, glm::highp>> { static const GLint value {1}; };
+template <typename T> struct GetVertexAttributeSize<glm::tvec2<T, glm::highp>> { static const GLint value {2}; };
+template <typename T> struct GetVertexAttributeSize<glm::tvec3<T, glm::highp>> { static const GLint value {3}; };
+template <typename T> struct GetVertexAttributeSize<glm::tvec4<T, glm::highp>> { static const GLint value {4}; };
+
+
+template <typename T> struct GetVertexAttributeType;
+
+template <> struct GetVertexAttributeType<GLbyte> { static const GLenum value {GL_BYTE}; };
+template <> struct GetVertexAttributeType<GLubyte> { static const GLenum value {GL_UNSIGNED_BYTE}; };
+template <> struct GetVertexAttributeType<GLshort> { static const GLenum value {GL_SHORT}; };
+template <> struct GetVertexAttributeType<GLushort> { static const GLenum value {GL_UNSIGNED_SHORT}; };
+template <> struct GetVertexAttributeType<GLfloat> { static const GLenum value {GL_FLOAT}; };
+
+template <typename T> struct GetVertexAttributeType<glm::tvec1<T, glm::highp>> { static const GLenum value {GetVertexAttributeType<T>::value}; };
+template <typename T> struct GetVertexAttributeType<glm::tvec2<T, glm::highp>> { static const GLenum value {GetVertexAttributeType<T>::value}; };
+template <typename T> struct GetVertexAttributeType<glm::tvec3<T, glm::highp>> { static const GLenum value {GetVertexAttributeType<T>::value}; };
+template <typename T> struct GetVertexAttributeType<glm::tvec4<T, glm::highp>> { static const GLenum value {GetVertexAttributeType<T>::value}; };
+
+
+
+struct VertexAttributeTraits
 {
+	const GLchar* name;
+	GLint size;
+	GLenum type;
+	GLintptr offset;
+};
+
+
+template <typename... T>
+struct Vertex;
+
+
+template <>
+struct Vertex<>
+{
+	static const int count = 0;
+	static std::vector<VertexAttributeTraits> GetVertexAttributeTraits()
+	{
+		return { };
+	}
+
 	static std::vector<std::size_t> GetSizes()
 	{
 		return { };
@@ -23,30 +72,30 @@ struct Vertex
 	}
 };
 
+
 template <typename T, typename... Ts>
 struct Vertex<T, Ts...> : Vertex<Ts...>
 {
+	static const int count = sizeof...(Ts) + 1;
 	T _v {};
 
 	Vertex() {}
 	Vertex(T v, Ts... vs) : Vertex<Ts...> {vs...}, _v {v} {}
 
-
-	static std::vector<std::size_t> GetSizes()
+	template <typename... N>
+	static std::vector<VertexAttributeTraits> GetVertexAttributeTraits(const GLchar* name, N... names)
 	{
-		std::vector<std::size_t> s = Vertex<Ts...>::GetSizes();
-		s.insert(s.begin(), sizeof(T));
-		return s;
+		auto result = Vertex<Ts...>::GetVertexAttributeTraits(names...);
+		using Vertex_ptr = Vertex<T, Ts...>*;
+		result.push_back({
+			name,
+			GetVertexAttributeSize<T>::value,
+			GetVertexAttributeType<T>::value,
+			reinterpret_cast<GLintptr>(&Vertex_ptr{}->_v)
+		});
+
+		return result;
 	}
-
-	static std::vector<std::ptrdiff_t> GetOffsets()
-	{
-		auto s = Vertex<Ts...>::GetOffsets();
-		Vertex<T, Ts...>* p {nullptr};
-		s.insert(s.begin(), reinterpret_cast<char*>(&p->_v) - reinterpret_cast<char*>(p));
-		return s;
-	};
-
 };
 
 
