@@ -8,6 +8,11 @@
 #include "Surface.h"
 
 
+Hotspot::Hotspot()
+{
+}
+
+
 Hotspot::~Hotspot()
 {
 	for (Touch* touch : _subscribedTouches)

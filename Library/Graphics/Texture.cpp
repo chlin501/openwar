@@ -7,7 +7,8 @@
 
 
 
-Texture::Texture(GraphicsContext* gc)
+Texture::Texture(GraphicsContext* gc) :
+	_id{0}
 {
 	glGenTextures(1, &_id);
 	CHECK_ERROR_GL();
@@ -26,6 +27,22 @@ Texture::Texture(GraphicsContext* gc)
 
 Texture::~Texture()
 {
-	glDeleteTextures(1, &_id);
-	CHECK_ERROR_GL();
+	if (_id != 0)
+	{
+		glDeleteTextures(1, &_id);
+		CHECK_ERROR_GL();
+	}
+}
+
+
+Texture::Texture(Texture&& rhs)
+{
+	std::swap(_id, rhs._id);
+}
+
+
+Texture& Texture::operator=(Texture&& rhs)
+{
+	std::swap(_id, rhs._id);
+	return *this;
 }

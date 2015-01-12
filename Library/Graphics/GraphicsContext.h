@@ -28,6 +28,9 @@ public:
 	GraphicsContext(float nativeScaling, float virtualScaling);
 	~GraphicsContext();
 
+	GraphicsContext(const GraphicsContext&) = delete;
+	GraphicsContext& operator=(const GraphicsContext&) = delete;
+
 	float GetNativeScaling() const;
 	float GetVirtualScaling() const;
 	float GetCombinedScaling() const;
@@ -47,10 +50,6 @@ public:
 	TextureAtlas* GetTextureAtlas(const char* name);
 
 	FontAdapter* GetFontAdapter(const FontDescriptor& fontDescriptor);
-
-private:
-	GraphicsContext(const GraphicsContext&) { }
-	GraphicsContext& operator=(const GraphicsContext&) { return *this; }
 };
 
 

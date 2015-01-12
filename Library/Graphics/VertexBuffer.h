@@ -20,11 +20,10 @@ public:
 	VertexBufferBase();
 	virtual ~VertexBufferBase();
 
-	virtual void Update() = 0;
+	VertexBufferBase(const VertexBufferBase&) = delete;
+	VertexBufferBase& operator=(const VertexBufferBase&) = delete;
 
-private:
-	VertexBufferBase(const VertexBufferBase&) {}
-	VertexBufferBase& operator=(const VertexBufferBase&) { return *this; }
+	virtual void Update() = 0;
 };
 
 
@@ -61,10 +60,6 @@ public:
 
 		VertexBufferBase::_count = (GLsizei)count;
 	}
-
-private:
-	VertexBuffer(const VertexBuffer&) { }
-	VertexBuffer& operator=(const VertexBuffer&) { return *this; }
 };
 
 

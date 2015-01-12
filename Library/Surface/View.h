@@ -21,6 +21,9 @@ public:
 	View(ViewOwner* viewOwner);
 	virtual ~View();
 
+	View(const View&) = delete;
+	View& operator=(const View&) = delete;
+
 	virtual ViewOwner* GetViewOwner() const;
 	virtual Surface* GetSurface() const;
 	virtual GraphicsContext* GetGraphicsContext() const;
@@ -50,7 +53,11 @@ class ViewOwner
 	std::vector<View*> _views;
 
 public:
+	ViewOwner();
 	virtual ~ViewOwner();
+
+	ViewOwner(const ViewOwner&) = delete;
+	ViewOwner& operator=(const ViewOwner&) = delete;
 
 	virtual const std::vector<View*>& GetViews();
 

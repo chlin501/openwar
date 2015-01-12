@@ -21,6 +21,9 @@ public:
 	Gesture();
 	virtual ~Gesture();
 
+	Gesture(const Gesture&) = delete;
+	Gesture& operator=(const Gesture&) = delete;
+
 	virtual void KeyDown(char key) { }
 	virtual void KeyUp(char key) { }
 

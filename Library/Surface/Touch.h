@@ -50,6 +50,9 @@ public:
 	Touch(int tapCount, glm::vec2 position, double timestamp, MouseButtons buttons);
 	~Touch();
 
+	Touch(const Touch&) = delete;
+	Touch& operator=(const Touch&) = delete;
+
 	bool IsCaptured() const;
 
 	int GetTapCount() const;
@@ -81,7 +84,6 @@ public:
 	void ResetVelocity();
 	glm::vec2 GetVelocity() const;
 	glm::vec2 GetVelocity(double timestamp) const;
-
 };
 
 

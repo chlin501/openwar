@@ -59,10 +59,6 @@ public:
 
 private:
 	void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blurRadius);
-
-private:
-	StringWidget(const StringWidget&) : Widget(nullptr) { }
-	StringWidget& operator=(const StringWidget&) { return *this; }
 };
 
 

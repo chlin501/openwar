@@ -38,9 +38,11 @@ class Image
 
 public:
 	Image();
-	Image(const Image& image);
 	Image(int width, int height);
 	~Image();
+
+	Image(const Image&);
+	Image& operator=(const Image&) = delete;
 
 	float GetPixelDensity() const;
 	void SetPixelDensity(float value);
@@ -78,9 +80,6 @@ public:
 
 	void Copy(const Image& image, int x, int y);
 	void Fill(const glm::vec4& color, const bounds2f& bounds);
-
-private:
-	Image& operator=(const Image&) { return *this; }
 };
 
 

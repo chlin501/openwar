@@ -32,15 +32,14 @@ public:
 	ShaderProgram(const char* vertexshader, const char* fragmentshader);
 	virtual ~ShaderProgram();
 
+	ShaderProgram(const ShaderProgram&) = delete;
+	ShaderProgram& operator=(const ShaderProgram&) = delete;
+
 private:
 	static GLuint CompileShader(GLenum type, const char* source);
 
 	static bool LinkProgram(GLuint program);
 	static bool ValidateProgram(GLuint program);
-
-protected:
-	ShaderProgram(const ShaderProgram&) { }
-	ShaderProgram& operator=(const ShaderProgram&) { return *this; }
 };
 
 

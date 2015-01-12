@@ -19,7 +19,11 @@ class Hotspot
 	std::vector<Touch*> _capturedTouches;
 
 public:
+	Hotspot();
 	virtual ~Hotspot();
+
+	Hotspot(const Hotspot&) = delete;
+	Hotspot& operator=(const Hotspot&) = delete;
 
 	virtual Gesture* GetGesture() = 0;
 

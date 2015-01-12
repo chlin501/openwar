@@ -25,6 +25,9 @@ public:
 	Widget(WidgetOwner* widgetOwner);
 	virtual ~Widget();
 
+	Widget(const Widget&) = delete;
+	Widget& operator=(const Widget&) = delete;
+
 	virtual WidgetOwner* GetWidgetOwner() const;
 	virtual WidgetView* GetWidgetView() const;
 	virtual ScrollerViewport* GetViewport() const;
@@ -42,10 +45,6 @@ public:
 	virtual void OnTouchBegin(Touch* touch) = 0;
 
 	virtual void RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices) = 0;
-
-private:
-	Widget(const Widget&) { }
-	Widget& operator=(const Widget&) { return *this; }
 };
 
 
@@ -56,7 +55,11 @@ class WidgetOwner
 	std::vector<Widget*> _widgets;
 
 public:
+	WidgetOwner();
 	virtual ~WidgetOwner();
+
+	WidgetOwner(const WidgetOwner&) = delete;
+	WidgetOwner& operator=(const WidgetOwner&) = delete;
 
 protected:
 	const std::vector<Widget*>& GetWidgets();

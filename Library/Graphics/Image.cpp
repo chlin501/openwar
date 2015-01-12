@@ -42,26 +42,6 @@ Image::Image() :
 }
 
 
-Image::Image(const Image& image) :
-#ifdef OPENWAR_IMAGE_ENABLE_SDL
-	_surface(nullptr),
-#endif
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
-	_context(NULL),
-	_image(NULL),
-#endif
-	_width(image._width),
-	_height(image._height),
-	_pixelDensity(1),
-	_pixels(nullptr),
-	_owner(false)
-{
-	_pixels = (unsigned char*) calloc((size_t)(_width * _height), 4);
-	std::memcpy(_pixels, image._pixels, (size_t)(_width * _height) * 4);
-	_owner = true;
-}
-
-
 Image::Image(int width, int height) :
 #ifdef OPENWAR_IMAGE_ENABLE_SDL
 	_surface(nullptr),
@@ -102,6 +82,26 @@ Image::~Image()
 
 	if (_owner)
 		free(_pixels);
+}
+
+
+Image::Image(const Image& image) :
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
+	_surface(nullptr),
+#endif
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+	_context(NULL),
+	_image(NULL),
+#endif
+	_width(image._width),
+	_height(image._height),
+	_pixelDensity(1),
+	_pixels(nullptr),
+	_owner(false)
+{
+	_pixels = (unsigned char*) calloc((size_t)(_width * _height), 4);
+	std::memcpy(_pixels, image._pixels, (size_t)(_width * _height) * 4);
+	_owner = true;
 }
 
 

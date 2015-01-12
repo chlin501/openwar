@@ -13,6 +13,9 @@ public:
 	InputEditor(InputWidget* inputWidget);
 	virtual ~InputEditor();
 
+	InputEditor(const InputEditor&) = delete;
+	InputEditor& operator=(const InputEditor&) = delete;
+
 	InputWidget* GetInputWidget() const;
 
 	virtual const char* GetString() const = 0;

@@ -126,7 +126,13 @@ void View::OrderBackOf(View* view)
 }
 
 
+
 /* ViewOwner */
+
+
+ViewOwner::ViewOwner()
+{
+}
 
 
 ViewOwner::~ViewOwner()

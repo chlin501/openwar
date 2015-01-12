@@ -15,11 +15,10 @@ struct RenderBuffer
 	RenderBuffer(GLenum internalformat, GLsizei width, GLsizei height);
 	~RenderBuffer();
 
-	void Resize(GLenum internalformat, GLsizei width, GLsizei height);
+	RenderBuffer(const RenderBuffer&) = delete;
+	RenderBuffer& operator=(const RenderBuffer&) = delete;
 
-private:
-	RenderBuffer(const RenderBuffer&) {}
-	RenderBuffer& operator=(const RenderBuffer&) { return *this; }
+	void Resize(GLenum internalformat, GLsizei width, GLsizei height);
 };
 
 

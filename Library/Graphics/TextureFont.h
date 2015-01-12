@@ -27,6 +27,9 @@ public:
 	TextureFont(TextureAtlas* textureAtlas, FontAdapter* fontAdapter);
 	~TextureFont();
 
+	TextureFont(const TextureFont&) = delete;
+	TextureFont& operator=(const TextureFont&) = delete;
+
 	TextureChar* GetTextureChar(const std::string& character, float blurRadius);
 	glm::vec2 MeasureText(const char* text);
 };

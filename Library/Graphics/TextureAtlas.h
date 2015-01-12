@@ -111,6 +111,9 @@ class TextureAtlas : public Texture
 public:
 	explicit TextureAtlas(GraphicsContext* gc);
 
+	TextureAtlas(const TextureAtlas&) = delete;
+	TextureAtlas& operator=(const TextureAtlas&) = delete;
+
 	GraphicsContext* GetGraphicsContext() const;
 
 	TextureFont* GetTextureFont(const FontDescriptor& fontDescriptor);
@@ -131,10 +134,6 @@ public:
 
 private:
 	void DiscardTextureImages();
-
-private:
-	TextureAtlas(const TextureAtlas&) : Texture(nullptr) { }
-	TextureAtlas& operator=(const TextureAtlas&) { return *this; }
 };
 
 
@@ -151,6 +150,9 @@ class TextureImage
 public:
 	TextureImage();
 
+	TextureImage(const TextureImage&) = delete;
+	TextureImage& operator=(const TextureImage&) = delete;
+
 	bool IsDiscarded() const;
 
 	float GetDensity() const;
@@ -159,10 +161,6 @@ public:
 
 	BorderBounds GetBounds() const;
 	BorderBounds GetCoords() const;
-
-private:
-	TextureImage(const TextureImage&) { }
-	TextureImage& operator=(const TextureImage&) { return *this; }
 };
 
 

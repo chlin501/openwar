@@ -54,9 +54,6 @@ protected:
 
 private:
 	void UpdateVertexBuffer();
-
-	WidgetView(const WidgetView&) : View(nullptr), _viewport(nullptr), _scrollerHotspot(nullptr), _vertices(nullptr) { }
-	WidgetView& operator=(const WidgetView&) { return *this; }
 };
 
 

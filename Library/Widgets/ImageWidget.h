@@ -43,10 +43,6 @@ public:
 
 private:
 	void AppendRectangle(std::vector<Vertex_2f_2f_4f_1f>& vertices, bounds2f xy, bounds2f uv);
-
-private:
-	ImageWidget(const ImageWidget&) : Widget(nullptr) { }
-	ImageWidget& operator=(const ImageWidget&) { return *this; }
 };
 
 

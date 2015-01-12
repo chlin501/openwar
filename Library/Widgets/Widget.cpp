@@ -35,6 +35,11 @@ Widget::~Widget()
 /* WidgetOwner */
 
 
+WidgetOwner::WidgetOwner()
+{
+}
+
+
 WidgetOwner::~WidgetOwner()
 {
 	for (Widget* widget : _widgets)

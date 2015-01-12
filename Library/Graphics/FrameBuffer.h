@@ -22,6 +22,9 @@ struct FrameBuffer
 	FrameBuffer();
 	~FrameBuffer();
 
+	FrameBuffer(const FrameBuffer&) = delete;
+	FrameBuffer& operator=(const FrameBuffer&) = delete;
+
 	void AttachColor(RenderBuffer* value);
 	void AttachColor(Texture* value);
 
@@ -29,10 +32,6 @@ struct FrameBuffer
 	void AttachDepth(Texture* value);
 
 	void AttachStencil(RenderBuffer* value);
-
-private:
-	FrameBuffer(const FrameBuffer&) {}
-	FrameBuffer& operator=(const FrameBuffer&) { return *this; }
 };
 
 

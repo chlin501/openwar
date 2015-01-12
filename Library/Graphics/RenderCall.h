@@ -100,6 +100,9 @@ public:
 	RenderCallBase(ShaderProgram* shaderprogram);
 	virtual ~RenderCallBase();
 
+	RenderCallBase(const RenderCallBase&) = delete;
+	RenderCallBase& operator=(const RenderCallBase&) = delete;
+
 	void Render();
 
 protected:
