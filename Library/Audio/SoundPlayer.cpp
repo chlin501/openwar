@@ -8,6 +8,9 @@
 
 #include <cstdlib>
 
+#ifdef OPENWAR_USE_OPENAL
+#import <AVFoundation/AVFoundation.h>
+#endif
 
 SoundPlayer* SoundPlayer::singleton = nullptr;
 
@@ -60,7 +63,7 @@ SoundPlayer::SoundPlayer() :
 	_isPaused(false)
 {
 #ifdef OPENWAR_USE_OPENAL
-	ALenum error;
+	[[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryAmbient error: nil];
 
 	_device = alcOpenDevice(nullptr); // select the "preferred device"
 	if (_device != nullptr)
@@ -73,14 +76,14 @@ SoundPlayer::SoundPlayer() :
 	// Generate Buffers
 	alGetError(); // clear error code
 	alGenBuffers(NUMBER_OF_SOUND_BUFFERS, _buffers);
-	if ((error = alGetError()) != AL_NO_ERROR)
+	if (ALenum error = alGetError())
 	{
 		//DisplayALError("alGenBuffers :", error);
 		return;
 	}
 
 	alGenSources(NUMBER_OF_SOUND_SOURCES, _sources);
-	if ((error = alGetError()) != AL_NO_ERROR)
+	if (ALenum error = alGetError())
 	{
 		return;
 	}
