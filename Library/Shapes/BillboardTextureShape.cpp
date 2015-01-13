@@ -107,7 +107,7 @@ struct billboard_index
 	float order;
 };
 
-void BillboardTextureShape::Draw(GraphicsContext* gc, Texture* tex, const glm::mat4x4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
+void BillboardTextureShape::Draw(GraphicsContext* gc, Texture* tex, const glm::mat4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
 {
 	static std::vector<Vertex_3f_1f_2f_2f> vertices;
 	static std::vector<billboard_index> indices;
@@ -160,7 +160,7 @@ static affine2 FlipY(const affine2& texcoords)
 }
 
 
-void BillboardTextureShape::Render(GraphicsContext* gc, BillboardModel* billboardModel, glm::mat4x4 const & transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bool flip)
+void BillboardTextureShape::Render(GraphicsContext* gc, BillboardModel* billboardModel, glm::mat4 const & transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bool flip)
 {
 	Reset();
 

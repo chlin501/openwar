@@ -19,8 +19,8 @@ public:
 
 	virtual glm::mat4 GetTransform() const;
 
-	glm::mat4x4 GetProjectionMatrix() const;
-	glm::mat4x4 GetViewMatrix() const;
+	glm::mat4 GetProjectionMatrix() const;
+	glm::mat4 GetViewMatrix() const;
 
 	bounds2f GetTerrainBounds() const;
 	void SetTerrainBounds(const bounds2f& value);

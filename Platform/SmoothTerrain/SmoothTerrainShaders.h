@@ -15,7 +15,7 @@ class GraphicsContext;
 
 struct terrain_uniforms
 {
-	glm::mat4x4 _transform;
+	glm::mat4 _transform;
 	glm::vec3 _light_normal;
 	glm::vec4 _map_bounds;
 	Texture* _colormap;
@@ -25,7 +25,7 @@ struct terrain_uniforms
 
 struct sobel_uniforms
 {
-	glm::mat4x4 _transform;
+	glm::mat4 _transform;
 	Texture* _depth;
 };
 

@@ -23,7 +23,7 @@ public:
 	void set_height(int x, int y, float value);
 
 	float interpolate(glm::vec2 position) const;
-	const float* intersect(ray r) const;
+	std::pair<bool, float> intersect(ray r) const;
 };
 
 

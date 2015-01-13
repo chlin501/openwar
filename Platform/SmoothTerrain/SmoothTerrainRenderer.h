@@ -43,7 +43,7 @@ public:
 
 	SmoothGroundMap* GetSmoothGroundMap() const { return _smoothGroundMap; }
 
-	void Render(const glm::mat4x4& transform, const glm::vec3& lightNormal);
+	void Render(const glm::mat4& transform, const glm::vec3& lightNormal);
 
 	void EnableRenderEdges();
 

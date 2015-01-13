@@ -52,7 +52,7 @@ public:
 	virtual ~SmoothTerrainWater();
 
 	void Update();
-	void Render(GraphicsContext* gc, const glm::mat4x4& transform);
+	void Render(GraphicsContext* gc, const glm::mat4& transform);
 };
 
 

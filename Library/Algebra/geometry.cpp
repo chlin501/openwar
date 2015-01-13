@@ -26,7 +26,7 @@ plane::plane(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3)
 }
 
 
-glm::vec3 plane::project(const glm::vec3& v) const
+/*glm::vec3 plane::project(const glm::vec3& v) const
 {
 	glm::mat3x3 m;
 	glm::vec3::value_type* mm = glm::value_ptr(m);
@@ -40,7 +40,7 @@ glm::vec3 plane::project(const glm::vec3& v) const
 	mm[7] = -c * b;
 	mm[8] = 1.0f - c * c;
 	return m * v;
-}
+}*/
 
 
 static bool almost_zero(float value)
@@ -56,36 +56,32 @@ float distance(glm::vec3 v, plane p)
 }
 
 
-const float* intersect(ray r, plane p)
+std::pair<bool, float> intersect(ray r, plane p)
 {
-	static float result;
+	float result;
 
 	float denom = glm::dot(p.normal(), r.direction);
 	if (almost_zero(denom))
-		return nullptr;
+		return std::make_pair(false, 0.0f);
 
 	float nom = glm::dot(p.normal(), r.origin) + p.d;
 	result = -(nom / denom);
-	return &result;
+	return std::make_pair(true, result);
 }
 
 
-const float* intersect(ray r, bounds3f b)
+std::pair<bool, float> intersect(ray r, bounds3f b)
 {
-	static float result;
-
 	if (b.empty())
-		return nullptr;
+		return std::make_pair(false, 0.0f);
 
 	if (b.contains(r.origin))
-	{
-		result = 0;
-		return &result;
-	}
+		return std::make_pair(true, 0.0f);
 
 	glm::vec3 e = glm::vec3(0.001, 0.001, 0.001);
 	bounds3f b2(b.min - e, b.max + e);
 	bool hit = false;
+	float result = 0;
 
 	if (r.origin.x <= b.min.x && r.direction.x > 0) // min x
 	{
@@ -183,5 +179,5 @@ const float* intersect(ray r, bounds3f b)
 		}
 	}
 
-	return hit ? &result : nullptr;
+	return std::make_pair(hit, result);
 }

@@ -59,7 +59,7 @@ SmoothTerrainRenderer::~SmoothTerrainRenderer()
 }*/
 
 
-void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3& lightNormal)
+void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& lightNormal)
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
 	glm::vec4 map_bounds = glm::vec4(bounds.min, bounds.size());
@@ -130,7 +130,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3
 		vertices.AddVertex(Vertex_2f_2f(glm::vec2(1, -1), glm::vec2(1, 0)));
 
 		sobel_uniforms su;
-		su._transform = glm::mat4x4();
+		su._transform = glm::mat4();
 		su._depth = _depth;
 		_renderers->render_sobel_filter(_gc, vertices, su);
 

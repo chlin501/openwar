@@ -119,35 +119,32 @@ static bool almost_zero(float value)
 }
 
 
-const float* HeightMap::Intersect(ray r)
+std::pair<bool, float> HeightMap::Intersect(ray r)
 {
 	glm::vec3 offset = glm::vec3(_bounds.min, 0);
 	glm::vec3 scale = glm::vec3(glm::vec2(_cacheStride, _cacheStride) / _bounds.size(), 1);
 
 	ray r2 = ray(scale * (r.origin - offset), glm::normalize(scale * r.direction));
-	const float* d = InternalIntersect(r2);
-	if (d == nullptr)
-		return nullptr;
+	std::pair<bool, float> d = InternalIntersect(r2);
+	if (!d.first)
+		return std::make_pair(false, 0.0f);
 
-	static float result;
-	result = glm::length((r2.point(*d) - r2.origin) / scale);
-	return &result;
+	float result = glm::length((r2.point(d.second) - r2.origin) / scale);
+	return std::make_pair(true, result);
 }
 
 
-const float* HeightMap::InternalIntersect(ray r)
+std::pair<bool, float> HeightMap::InternalIntersect(ray r)
 {
-	static float result;
-
 	bounds1f height = bounds1f(-2.5f, 250);
 	bounds2f bounds(0, 0, _cacheMaxIndex, _cacheMaxIndex);
 	bounds2f quad(-0.01f, -0.01f, 1.01f, 1.01f);
 
-	const float* d = ::intersect(r, bounds3f(bounds, height));
-	if (d == nullptr)
-		return nullptr;
+	std::pair<bool, float> d = ::intersect(r, bounds3f(bounds, height));
+	if (!d.first)
+		return std::make_pair(false, 0.0f);
 
-	glm::vec3 p = r.point(*d);
+	glm::vec3 p = r.point(d.second);
 
 	bounds2f bounds_2(0, 0, _cacheMaxIndex - 1, _cacheMaxIndex - 1);
 
@@ -170,48 +167,44 @@ const float* HeightMap::InternalIntersect(ray r)
 		if ((x & 1) == (y & 1))
 		{
 			d = ::intersect(r, plane(p00, p10, p11));
-			if (d != nullptr)
+			if (d.first)
 			{
-				glm::vec2 rel = (r.point(*d) - p00).xy();
+				glm::vec2 rel = (r.point(d.second) - p00).xy();
 				if (quad.contains(rel) && rel.x >= rel.y)
 				{
-					result = *d;
-					return &result;
+					return std::make_pair(true, d.second);
 				}
 			}
 
 			d = ::intersect(r, plane(p00, p11, p01));
-			if (d != nullptr)
+			if (d.first)
 			{
-				glm::vec2 rel = (r.point(*d) - p00).xy();
+				glm::vec2 rel = (r.point(d.second) - p00).xy();
 				if (quad.contains(rel) && rel.x <= rel.y)
 				{
-					result = *d;
-					return &result;
+					return std::make_pair(true, d.second);
 				}
 			}
 		}
 		else
 		{
 			d = ::intersect(r, plane(p11, p01, p10));
-			if (d != nullptr)
+			if (d.first)
 			{
-				glm::vec2 rel = (r.point(*d) - p00).xy();
+				glm::vec2 rel = (r.point(d.second) - p00).xy();
 				if (quad.contains(rel) && rel.x >= 1 - rel.y)
 				{
-					result = *d;
-					return &result;
+					return std::make_pair(true, d.second);
 				}
 			}
 
 			d = ::intersect(r, plane(p00, p10, p01));
-			if (d != nullptr)
+			if (d.first)
 			{
-				glm::vec2 rel = (r.point(*d) - p00).xy();
+				glm::vec2 rel = (r.point(d.second) - p00).xy();
 				if (quad.contains(rel) && rel.x <= 1 - rel.y)
 				{
-					result = *d;
-					return &result;
+					return std::make_pair(true, d.second);
 				}
 			}
 		}
@@ -231,7 +224,7 @@ const float* HeightMap::InternalIntersect(ray r)
 		}
 	}
 
-	return nullptr;
+	return std::make_pair(false, 0.0f);
 }
 
 

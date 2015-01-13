@@ -20,11 +20,11 @@ TerrainViewport::~TerrainViewport()
 
 glm::mat4 TerrainViewport::GetTransform() const
 {
-	return GetProjectionMatrix() * GetViewMatrix();;
+	return GetProjectionMatrix() * GetViewMatrix();
 }
 
 
-glm::mat4x4 TerrainViewport::GetProjectionMatrix() const
+glm::mat4 TerrainViewport::GetProjectionMatrix() const
 {
 	float r = 2 * glm::length(_terrainBounds.size());
 
@@ -35,11 +35,11 @@ glm::mat4x4 TerrainViewport::GetProjectionMatrix() const
 }
 
 
-glm::mat4x4 TerrainViewport::GetViewMatrix() const
+glm::mat4 TerrainViewport::GetViewMatrix() const
 {
-	glm::mat4x4 result = glm::lookAt(_cameraPosition, _cameraPosition + GetCameraDirection(), GetCameraUpVector());
+	glm::mat4 result = glm::lookAt(_cameraPosition, _cameraPosition + GetCameraDirection(), GetCameraUpVector());
 	if (_flip)
-		result = glm::scale(glm::mat4x4(), glm::vec3(-1.0f, -1.0f, 1.0f)) * result;
+		result = glm::scale(glm::mat4(), glm::vec3(-1.0f, -1.0f, 1.0f)) * result;
 	return result;
 }
 

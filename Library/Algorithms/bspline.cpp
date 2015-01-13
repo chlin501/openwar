@@ -6,8 +6,8 @@
 #include "Algebra/geometry.h"
 
 
-const glm::mat4x4 bspline_matrix(
-	glm::mat4x4(
+const glm::mat4 bspline_matrix(
+	glm::mat4(
 		-1, 3, -3, 1,
 		3, -6, 3, 0,
 		-3, 0, 3, 0,
@@ -15,8 +15,8 @@ const glm::mat4x4 bspline_matrix(
 );
 
 
-const glm::mat4x4 bspline_matrix_transpose(
-	glm::mat4x4(
+const glm::mat4 bspline_matrix_transpose(
+	glm::mat4(
 		-1, 3, -3, 1,
 		3, -6, 0, 4,
 		-3, 3, 3, 1,
@@ -24,8 +24,8 @@ const glm::mat4x4 bspline_matrix_transpose(
 );
 
 
-const glm::mat4x4 bspline_split_right(
-	glm::mat4x4(
+const glm::mat4 bspline_split_right(
+	glm::mat4(
 		0, 1, 6, 1,
 		0, 4, 4, 0,
 		1, 6, 1, 0,
@@ -34,8 +34,8 @@ const glm::mat4x4 bspline_split_right(
 );
 
 
-const glm::mat4x4 bspline_split_left(
-	glm::mat4x4(
+const glm::mat4 bspline_split_left(
+	glm::mat4(
 		0, 0, 4, 4,
 		0, 1, 6, 1,
 		0, 4, 4, 0,
@@ -44,7 +44,7 @@ const glm::mat4x4 bspline_split_left(
 );
 
 
-glm::mat4x4 bspline_matrix_product(const glm::mat4x4& p)
+glm::mat4 bspline_matrix_product(const glm::mat4& p)
 {
 	return bspline_matrix_transpose * p * bspline_matrix;
 }

@@ -158,7 +158,7 @@ void SmoothTerrainWater::Update()
 }
 
 
-void SmoothTerrainWater::Render(GraphicsContext* gc, const glm::mat4x4& transform)
+void SmoothTerrainWater::Render(GraphicsContext* gc, const glm::mat4& transform)
 {
 	bounds2f bounds = _groundMap->GetBounds();
 

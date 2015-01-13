@@ -43,7 +43,7 @@ TiledTerrainRenderer::~TiledTerrainRenderer()
 
 
 
-void TiledTerrainRenderer::Render(const glm::mat4x4& transform, const glm::vec3& lightNormal)
+void TiledTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& lightNormal)
 {
 	//HeightMap* heightMap = _tiledGroundMap->GetHeightMap();
 	bounds2f bounds = _tiledGroundMap->GetBounds();

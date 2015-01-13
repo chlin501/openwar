@@ -40,7 +40,7 @@ float bspline_patch::interpolate(glm::vec2 position) const
 	int x = (int)glm::floor(position.x);
 	int y = (int)glm::floor(position.y);
 
-	glm::mat4x4 p(
+	glm::mat4 p(
 			get_height(x - 1, y - 1), get_height(x + 0, y - 1), get_height(x + 1, y - 1), get_height(x + 2, y - 1),
 			get_height(x - 1, y + 0), get_height(x + 0, y + 0), get_height(x + 1, y + 0), get_height(x + 2, y + 0),
 			get_height(x - 1, y + 1), get_height(x + 0, y + 1), get_height(x + 1, y + 1), get_height(x + 2, y + 1),
@@ -63,19 +63,17 @@ static bool almost_zero(float value)
 }
 
 
-const float* bspline_patch::intersect(ray r) const
+std::pair<bool, float> bspline_patch::intersect(ray r) const
 {
-	static float result;
-
 	bounds1f height = bounds1f(-100, 1000); //min(m), max(m));
 	bounds2f bounds(0, 0, _size.x - 1, _size.y - 1);
 	bounds2f quad(-0.01f, -0.01f, 1.01f, 1.01f);
 
-	const float* d = ::intersect(r, bounds3f(bounds, height));
-	if (d == nullptr)
-		return nullptr;
+	std::pair<bool, float> d = ::intersect(r, bounds3f(bounds, height));
+	if (!d.first)
+		return d;
 
-	glm::vec3 p = r.point(*d);
+	glm::vec3 p = r.point(d.second);
 
 	bounds2f bounds_2(0, 0, _size.x - 2, _size.y - 2);
 
@@ -94,24 +92,22 @@ const float* bspline_patch::intersect(ray r) const
 		glm::vec3 v4 = glm::vec3(x + 1, y + 1, get_height(x + 1, y + 1));
 
 		d = ::intersect(r, plane(v2, v4, v3));
-		if (d != nullptr)
+		if (d.first)
 		{
-			glm::vec2 rel = (r.point(*d) - v1).xy();
+			glm::vec2 rel = (r.point(d.second) - v1).xy();
 			if (quad.contains(rel) && rel.x >= 1 - rel.y)
 			{
-				result = *d;
-				return &result;
+				return std::make_pair(true, d.second);
 			}
 		}
 
 		d = ::intersect(r, plane(v1, v2, v3));
-		if (d != nullptr)
+		if (d.first)
 		{
-			glm::vec2 rel = (r.point(*d) - v1).xy();
+			glm::vec2 rel = (r.point(d.second) - v1).xy();
 			if (quad.contains(rel) && rel.x <= 1 - rel.y)
 			{
-				result = *d;
-				return &result;
+				return std::make_pair(true, d.second);
 			}
 		}
 
@@ -130,5 +126,5 @@ const float* bspline_patch::intersect(ray r) const
 		}
 	}
 
-	return nullptr;
+	return std::make_pair(false, 0.0f);
 }

@@ -33,10 +33,10 @@ public:
 	float InterpolateHeight(glm::vec2 position) const;
 	glm::vec3 GetPosition(glm::vec2 p, float h) { return glm::vec3(p, InterpolateHeight(p) + h); }
 
-	const float* Intersect(ray r);
+	std::pair<bool, float> Intersect(ray r);
 
 private:
-	const float* InternalIntersect(ray r);
+	std::pair<bool, float> InternalIntersect(ray r);
 
 	void UpdateHeights(std::function<float(int, int)> calculateHeight);
 	void UpdateNormals();

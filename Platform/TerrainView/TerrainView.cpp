@@ -5,7 +5,6 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "BattleModel/HeightMap.h"
 #include "Surface/Touch.h"
@@ -197,7 +196,7 @@ glm::vec2 TerrainView::GetScreenRight() const
 ray TerrainView::GetCameraRay(glm::vec2 screenPosition) const
 {
 	glm::vec2 viewPosition = _terrainViewport->LocalToNormalized(screenPosition);
-	glm::mat4x4 inverse = glm::inverse(_terrainViewport->GetTransform());
+	glm::mat4 inverse = glm::inverse(_terrainViewport->GetTransform());
 	glm::vec4 p1 = inverse * glm::vec4(viewPosition, 0, 1.0f);
 	glm::vec4 p2 = inverse * glm::vec4(viewPosition, 0.5f, 1.0f);
 
@@ -213,8 +212,8 @@ ray TerrainView::GetCameraRay(glm::vec2 screenPosition) const
 glm::vec3 TerrainView::GetTerrainPosition2(glm::vec2 screenPosition) const
 {
 	ray r = GetCameraRay(screenPosition);
-	const float* d = intersect(r, plane(glm::vec3(0, 0, 1), 0));
-	return r.point(d != nullptr ? *d : 0);
+	std::pair<bool, float> d = intersect(r, plane(glm::vec3(0, 0, 1), 0));
+	return r.point(d.first ? d.second : 0);
 }
 
 
@@ -224,8 +223,8 @@ glm::vec3 TerrainView::GetTerrainPosition3(glm::vec2 screenPosition) const
 		return glm::vec3();
 
 	ray r = GetCameraRay(screenPosition);
-	const float* d = _heightMap->Intersect(r);
-	return r.point(d != nullptr ? *d : 0);
+	std::pair<bool, float> d = _heightMap->Intersect(r);
+	return r.point(d.first ? d.second : 0);
 }
 
 
@@ -235,10 +234,10 @@ void TerrainView::Move(glm::vec3 originalContentPosition, glm::vec2 currentScree
 	ray ray2 = ray(originalContentPosition, -ray1.direction);
 
 	plane cameraPlane(glm::vec3(0, 0, 1), _terrainViewport->GetCameraPosition());
-	const float* d = intersect(ray2, cameraPlane);
-	if (d != nullptr)
+	std::pair<bool, float> d = intersect(ray2, cameraPlane);
+	if (d.first)
 	{
-		MoveCamera(ray2.point(*d));
+		MoveCamera(ray2.point(d.second));
 	}
 }
 
@@ -327,25 +326,9 @@ void TerrainView::ClampCameraPosition()
 }
 
 
-static glm::vec3 transform_d(const glm::mat4x4& m, glm::vec3 v)
-{
-	const glm::mat4x4::value_type* mm = glm::value_ptr(m);
-	double x = v.x;
-	double y = v.y;
-	double z = v.z;
-	double w = 1;
-	double x1 = mm[0] * x + mm[4] * y + mm[8] * z + mm[12] * w;
-	double y1 = mm[1] * x + mm[5] * y + mm[9] * z + mm[13] * w;
-	double z1 = mm[2] * x + mm[6] * y + mm[10] * z + mm[14] * w;
-	double w1 = mm[3] * x + mm[7] * y + mm[11] * z + mm[15] * w;
-
-	return glm::vec3((float)(x1 / w1), (float)(y1 / w1), (float)(z1 / w1));
-}
-
-
 glm::vec2 TerrainView::ContentToScreen(glm::vec3 value) const
 {
-	glm::mat4x4 transform = _terrainViewport->GetTransform();
-	glm::vec3 v = transform_d(transform, value);
-	return _terrainViewport->NormalizedToLocal(v.xy());
-}
+	glm::mat4 transform = _terrainViewport->GetTransform();
+	glm::vec4 p = transform * glm::vec4{value, 1};
+	return _terrainViewport->NormalizedToLocal({p.x / p.w, p.y / p.w});
+};

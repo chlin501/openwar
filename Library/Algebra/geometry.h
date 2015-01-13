@@ -45,11 +45,9 @@ inline float diff_degrees(float a1, float a2)
 
 struct plane
 {
-	union
-	{
-		struct { float a, b, c; };
-		//struct { glm::vec3 normal; };
-	};
+	float a;
+	float b;
+	float c;
 	float d;
 
 	plane() : a(0), b(0), c(0), d(0) {}
@@ -60,7 +58,7 @@ struct plane
 
 	glm::vec3 normal() const { return glm::vec3(a, b, c); }
 
-	glm::vec3 project(const glm::vec3& v) const;
+	//glm::vec3 project(const glm::vec3& v) const;
 
 };
 
@@ -79,8 +77,8 @@ struct ray
 
 
 float distance(glm::vec3 v, plane p);
-const float* intersect(ray r, plane p);
-const float* intersect(ray r, bounds3f b);
+std::pair<bool, float> intersect(ray r, plane p);
+std::pair<bool, float> intersect(ray r, bounds3f b);
 
 
 #endif

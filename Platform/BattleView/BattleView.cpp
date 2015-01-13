@@ -901,7 +901,7 @@ static bool is_iphone()
 
 bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 {
-	glm::mat4x4 transform = GetViewport()->GetTransform();
+	glm::mat4 transform = GetViewport()->GetTransform();
 	glm::vec3 upvector = GetViewport()->GetCameraUpVector();
 	float viewport_height = GetViewport()->GetBounds().y().size();
 	bounds1f sizeLimit = GetUnitIconSizeLimit() / (_gc->GetCombinedScaling());
