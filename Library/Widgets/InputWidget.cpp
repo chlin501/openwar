@@ -5,10 +5,7 @@
 
 
 
-InputWidget::InputWidget(WidgetOwner* widgetOwner) : StringWidget(widgetOwner),
-	_editing(false),
-	_inputHotspot(),
-	_inputEditor(nullptr)
+InputWidget::InputWidget(WidgetOwner* widgetOwner) : StringWidget{widgetOwner}
 {
 	_inputHotspot.SetDistance([this](glm::vec2 position) {
 		return _bounds.distance(GetViewport()->GlobalToLocal(position));
@@ -99,6 +96,7 @@ void InputWidget::SetBounds(const bounds2f& value)
 void InputWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
 	//RenderSolid(GetViewport()->GetTransform(), GetBounds(), glm::vec4(1, 1, 1, 0.7f));
+	RefreshContent();
 
 	if (_inputEditor == nullptr)
 		StringWidget::RenderVertices(vertices);
@@ -109,6 +107,13 @@ void InputWidget::OnTouchBegin(Touch* touch)
 {
 	if (_inputHotspot.IsTouchInside(touch) != IsEditing())
 		_inputHotspot.SubscribeTouch(touch);
+}
+
+
+void InputWidget::RefreshContent()
+{
+	if (_inputEditor != nullptr)
+		_inputEditor->OnInputWidgetChanged();
 }
 
 

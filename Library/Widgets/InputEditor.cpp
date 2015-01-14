@@ -201,6 +201,7 @@ InputEditor_iOS::InputEditor_iOS(InputWidget* inputWidget) : InputEditor(inputWi
 		_textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
 		_textField.text = [NSString stringWithUTF8String:inputWidget->GetString()];
 		_textField.delegate = _delegate;
+		_textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 		_textField.autocorrectionType = UITextAutocorrectionTypeNo;
 		_textField.clearButtonMode = UITextFieldViewModeAlways;
 		_textField.returnKeyType = UIReturnKeySend;
@@ -419,6 +420,8 @@ std::string InputEditor_Android::CallGetString()
 
 	jstring string = (jstring)_env->CallStaticObjectMethod(clazz, method);
 
+	_env->DeleteLocalRef(clazz);
+
 	return ConvertFromJavaString(string);
 }
 
@@ -436,6 +439,9 @@ void InputEditor_Android::CallSetString(const char* value)
 	jstring string = ConvertToJavaString(value);
 
 	_env->CallStaticVoidMethod(clazz, method, string);
+
+	_env->DeleteLocalRef(string);
+	_env->DeleteLocalRef(clazz);
 }
 
 
@@ -450,6 +456,8 @@ void InputEditor_Android::CallSetBounds(int x, int y, int width, int height)
 		return;
 
 	_env->CallStaticVoidMethod(clazz, method, x, y, width, height);
+
+	_env->DeleteLocalRef(clazz);
 }
 
 
@@ -464,6 +472,8 @@ void InputEditor_Android::CallShow()
 		return;
 
 	_env->CallStaticVoidMethod(clazz, method);
+
+	_env->DeleteLocalRef(clazz);
 }
 
 
@@ -478,6 +488,8 @@ void InputEditor_Android::CallHide()
 		return;
 
 	_env->CallStaticVoidMethod(clazz, method);
+
+	_env->DeleteLocalRef(clazz);
 }
 
 

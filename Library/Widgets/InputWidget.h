@@ -12,10 +12,10 @@ class InputWidget : public StringWidget, RenderLoopObserver
 {
 	friend class InputEditor;
 	bounds2f _bounds;
-	bool _editing;
+	bool _editing{};
 	std::function<void()> _enterAction;
 	ClickHotspot _inputHotspot;
-	InputEditor* _inputEditor;
+	InputEditor* _inputEditor{};
 
 public:
 	InputWidget(WidgetOwner* widgetOwner);
@@ -40,9 +40,10 @@ public:
 	virtual void RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
 private:
+	void RefreshContent();
+
 	virtual void OnRenderLoop(double secondsSinceLastLoop);
 
-private:
 	void ShowInputEditor();
 	void HideInputEditor();
 
