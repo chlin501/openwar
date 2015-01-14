@@ -26,6 +26,8 @@ public:
 	bool IsEditing() const;
 	void SetEditing(bool value);
 
+	size_t GetMaxLength() const { return 140; } // hard coded to 140 for now (chat message limit)
+
 	virtual void SetPosition(glm::vec2 value);
 	virtual void SetWidth(float value);
 

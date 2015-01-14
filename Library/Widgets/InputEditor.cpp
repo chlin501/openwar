@@ -35,6 +35,21 @@ void InputEditor::NotifyEnter()
 
 #ifdef ENABLE_INPUT_EDITOR_MAC
 
+
+@interface InputEditorDelegate_Mac : NSObject<NSTextFieldDelegate>
+
+- (id)initWithInputEditor:(InputEditor_Mac*)inputEditor;
+
+@end
+
+
+@interface InputEditorFormatter : NSFormatter
+
+- (id)initWithInputEditor:(InputEditor_Mac*)inputEditor;
+
+@end
+
+
 InputEditor_Mac::InputEditor_Mac(InputWidget* inputWidget) : InputEditor(inputWidget),
 	_textField(nil),
 	_delegate(nil),
@@ -45,11 +60,12 @@ InputEditor_Mac::InputEditor_Mac(InputWidget* inputWidget) : InputEditor(inputWi
 		NSView* view = inputWidget->GetWidgetView()->GetSurface()->GetNSView();
 
 		_delegate = [[InputEditorDelegate_Mac alloc] initWithInputEditor:this];
-
+		_formatter = [[InputEditorFormatter alloc] initWithInputEditor:this];
 
 		_textField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
 		_textField.stringValue = [NSString stringWithUTF8String:inputWidget->GetString()];
 		_textField.delegate = _delegate;
+		_textField.formatter = _formatter;
 		_textField.wantsLayer = YES;
 		_textField.drawsBackground = NO;
 		_textField.bordered = NO;
@@ -83,6 +99,7 @@ InputEditor_Mac::~InputEditor_Mac()
 	[_textField removeFromSuperview];
 	[_textField release];
 	[_delegate release];
+	[_formatter release];
 }
 
 
@@ -174,6 +191,56 @@ void InputEditor_Mac::UpdateNSTextFieldColor()
 	return NO;
 }
 
+@end
+
+
+@implementation InputEditorFormatter
+{
+	InputEditor_Mac* _inputEditor;
+}
+
+- (id)initWithInputEditor:(InputEditor_Mac*)inputEditor
+{
+	self = [super init];
+	if (self != nil)
+	{
+		_inputEditor = inputEditor;
+	}
+	return self;
+}
+
+
+- (NSString *)stringForObjectValue:(id)object
+{
+	return (NSString *)object;
+}
+
+
+- (BOOL)getObjectValue:(id *)object forString:(NSString *)string errorDescription:(NSString **)error
+{
+	*object = string;
+	return YES;
+}
+
+
+- (BOOL)isPartialStringValid:(NSString **)partialStringPtr
+	proposedSelectedRange:(NSRangePointer)proposedSelRangePtr
+	originalString:(NSString *)origString
+	originalSelectedRange:(NSRange)origSelRange
+	errorDescription:(NSString **)error
+{
+	size_t maxLength = _inputEditor->GetInputWidget()->GetMaxLength();
+	if (maxLength == 0)
+		return YES;
+
+	return [*partialStringPtr length] < maxLength;
+}
+
+
+- (NSAttributedString *)attributedStringForObjectValue:(id)anObject withDefaultAttributes:(NSDictionary *)attributes
+{
+	return nil;
+}
 
 @end
 
@@ -304,18 +371,41 @@ void InputEditor_iOS::UpdateNSTextFieldColor()
 }
 
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-	_inputEditor->NotifyEnter();
-	return NO;
-}
-
-
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
 	InputWidget* inputWidget = _inputEditor->GetInputWidget();
 
 	inputWidget->SetEditing(false);
+}
+
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+	if (range.location + range.length > textField.text.length)
+	{
+		// http://stackoverflow.com/questions/433337/set-the-maximum-character-length-of-a-uitextfield
+		// there is a bug with UITextField that can lead to a crash.
+		// If you paste in to the field, but the paste is prevented by your validation implementation, the paste
+		// operation is still recorded in the application's undo buffer. If you then fire an undo (by shaking the
+		// device and confirming an Undo), the UITextField will attempt to replace the string it thinks it pasted
+		// in to itself with an empty string. This will crash because it never actually pasted the string in to
+		// itself. It will try to replace a part of the string that doesn't exist.
+		return NO;
+	}
+
+	size_t maxLength = _inputEditor->GetInputWidget()->GetMaxLength();
+	if (maxLength == 0)
+		return YES;
+
+	size_t newLength = [textField.text length] + [string length] - range.length;
+	return newLength <= maxLength;
+}
+
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+	_inputEditor->NotifyEnter();
+	return NO;
 }
 
 
@@ -357,7 +447,7 @@ InputEditor_Android::InputEditor_Android(InputWidget* inputWidget) : InputEditor
 	_instance = this;
 
 	UpdateBounds();
-	CallShow();
+	CallShow(inputWidget->GetMaxLength());
 }
 
 
@@ -461,17 +551,17 @@ void InputEditor_Android::CallSetBounds(int x, int y, int width, int height)
 }
 
 
-void InputEditor_Android::CallShow()
+void InputEditor_Android::CallShow(int maxLength)
 {
 	jclass clazz = _env->FindClass("org/openwar/InputEditor");
 	if (clazz == 0)
 		return;
 
-	jmethodID method = _env->GetStaticMethodID(clazz, "show", "()V");
+	jmethodID method = _env->GetStaticMethodID(clazz, "show", "(I)V");
 	if (method == 0)
 		return;
 
-	_env->CallStaticVoidMethod(clazz, method);
+	_env->CallStaticVoidMethod(clazz, method, maxLength);
 
 	_env->DeleteLocalRef(clazz);
 }

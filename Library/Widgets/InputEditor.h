@@ -30,18 +30,16 @@ public:
 #ifdef ENABLE_INPUT_EDITOR_MAC
 
 #include <AppKit/AppKit.h>
+
 class InputEditor_Mac;
-
-@interface InputEditorDelegate_Mac : NSObject<NSTextFieldDelegate>
-
-- (id)initWithInputEditor:(InputEditor_Mac*)inputEditor;
-
-@end
+@class InputEditorDelegate_Mac;
+@class InputEditorFormatter;
 
 class InputEditor_Mac : public InputEditor
 {
 	NSTextField* _textField;
 	InputEditorDelegate_Mac* _delegate;
+	InputEditorFormatter* _formatter;
 	id <NSObject> _observer;
 
 public:
@@ -125,7 +123,7 @@ private:
 	static std::string CallGetString();
 	static void CallSetString(const char* value);
 	static void CallSetBounds(int x, int y, int width, int height);
-	static void CallShow();
+	static void CallShow(int maxLength);
 	static void CallHide();
 
 	friend /*JNIEXPORT*/ void /*JNICALL*/ ::Java_org_openwar_InputEditor_notifyEnter(JNIEnv*, jclass);
