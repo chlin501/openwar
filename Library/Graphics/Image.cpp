@@ -505,10 +505,10 @@ void Image::Fill(const glm::vec4& color, const bounds2f& bounds)
 	SDL_Surface* dst = GetSurface();
 
 	SDL_Rect rect;
-	rect.x = 0;
-	rect.y = 0;
-	rect.w = dst->w;
-	rect.h = dst->h;
+	rect.x = bounds.min.x;
+	rect.y = bounds.min.y;
+	rect.w = bounds.x().size();
+	rect.h = bounds.y().size();
 
 	Uint8 r = (Uint8)glm::round(255 * color.r);
 	Uint8 g = (Uint8)glm::round(255 * color.g);
