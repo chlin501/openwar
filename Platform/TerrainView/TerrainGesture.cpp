@@ -418,8 +418,7 @@ void TerrainGesture::AdjustToKeepInView(float adjustmentFactor, float secondsSin
 {
 	_hotspot->GetTerrainView()->ClampCameraPosition();
 
-	if (this != nullptr)
-		return;
+#if false
 
 	bool is_scrolling = glm::length(_scrollVelocity) > 16;
 	bool brake_scrolling = false;
@@ -495,4 +494,6 @@ void TerrainGesture::AdjustToKeepInView(float adjustmentFactor, float secondsSin
 	{
 		_scrollVelocity = _scrollVelocity * exp2f(-16 * secondsSinceLastUpdate);
 	}
+
+#endif
 }
