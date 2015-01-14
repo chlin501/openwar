@@ -6,6 +6,7 @@
 #define GEOMETRY_H
 
 #include "bounds.h"
+#include <utility>
 
 
 inline float mix_factor(float v0, float v1, float v)
