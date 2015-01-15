@@ -127,7 +127,7 @@ Image& Image::LoadFromData(const void* data, size_t size)
 
 #elif defined(OPENWAR_IMAGE_ENABLE_SDL)
 
-	SDL_RWops* src = SDL_RWFromConstMem(data, size);
+	SDL_RWops* src = SDL_RWFromConstMem(data, static_cast<int>(size));
 	SDL_Surface* surface = IMG_Load_RW(src, 0);
 	if (surface != nullptr)
 		LoadFromSurface(surface);
@@ -505,10 +505,10 @@ void Image::Fill(const glm::vec4& color, const bounds2f& bounds)
 	SDL_Surface* dst = GetSurface();
 
 	SDL_Rect rect;
-	rect.x = bounds.min.x;
-	rect.y = bounds.min.y;
-	rect.w = bounds.x().size();
-	rect.h = bounds.y().size();
+	rect.x = static_cast<int>(bounds.min.x);
+	rect.y = static_cast<int>(bounds.min.y);
+	rect.w = static_cast<int>(bounds.x().size());
+	rect.h = static_cast<int>(bounds.y().size());
 
 	Uint8 r = (Uint8)glm::round(255 * color.r);
 	Uint8 g = (Uint8)glm::round(255 * color.g);

@@ -2,7 +2,7 @@
 #include <array>
 
 
-std::array<int, 3> BoxesForGauss(float sigma, int n)
+static std::array<int, 3> BoxesForGauss(float sigma, int n)
 {
 	float wIdeal = glm::sqrt((12 * sigma * sigma / n) + 1);
 	int wl = (int)glm::floor(wIdeal);
