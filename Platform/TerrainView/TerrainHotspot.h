@@ -14,7 +14,7 @@ public:
 	TerrainHotspot(TerrainView* terrainView);
 	virtual ~TerrainHotspot();
 
-	virtual Gesture* GetGesture();
+	Gesture* GetGesture() override;
 
 	TerrainView* GetTerrainView() const;
 };

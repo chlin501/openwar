@@ -18,7 +18,7 @@ public:
 	EditorHotspot(BattleView* battleView, EditorModel* editorModel);
 	virtual ~EditorHotspot();
 
-	virtual Gesture* GetGesture();
+	Gesture* GetGesture() override;
 
 	BattleView* GetBattleView() const;
 	EditorModel* GetEditorModel() const;

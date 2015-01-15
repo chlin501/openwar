@@ -30,6 +30,42 @@ Hotspot::~Hotspot()
 }
 
 
+bool Hotspot::HasCapturedTouch(Touch* touch) const
+{
+	return std::find(_capturedTouches.begin(), _capturedTouches.end(), touch) != _capturedTouches.end();
+}
+
+
+bool Hotspot::HasCapturedTouch() const
+{
+	return _capturedTouches.size() == 1;
+}
+
+
+bool Hotspot::HasCapturedTouches() const
+{
+	return !_capturedTouches.empty();
+}
+
+
+Touch* Hotspot::GetCapturedTouch() const
+{
+	return _capturedTouches.size() == 1 ? _capturedTouches.front() : nullptr;
+}
+
+
+const std::vector<Touch*>& Hotspot::GetCapturedTouches() const
+{
+	return _capturedTouches;
+}
+
+
+const std::vector<Touch*>& Hotspot::GetSubscribedTouches() const
+{
+	return _subscribedTouches;
+}
+
+
 void Hotspot::SubscribeSurface(Surface* surface)
 {
 }
@@ -103,40 +139,4 @@ void Hotspot::ReleaseTouch(Touch* touch)
 		_capturedTouches.end());
 
 	touch->_capturedByHotspot = nullptr;
-}
-
-
-bool Hotspot::HasCapturedTouch(Touch* touch) const
-{
-	return std::find(_capturedTouches.begin(), _capturedTouches.end(), touch) != _capturedTouches.end();
-}
-
-
-bool Hotspot::HasCapturedTouch() const
-{
-	return _capturedTouches.size() == 1;
-}
-
-
-bool Hotspot::HasCapturedTouches() const
-{
-	return !_capturedTouches.empty();
-}
-
-
-Touch* Hotspot::GetCapturedTouch() const
-{
-	return _capturedTouches.size() == 1 ? _capturedTouches.front() : nullptr;
-}
-
-
-const std::vector<Touch*>& Hotspot::GetCapturedTouches() const
-{
-	return _capturedTouches;
-}
-
-
-const std::vector<Touch*>& Hotspot::GetSubscribedTouches() const
-{
-	return _subscribedTouches;
 }

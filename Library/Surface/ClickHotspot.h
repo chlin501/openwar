@@ -23,7 +23,7 @@ public:
 	ClickHotspot();
 	virtual ~ClickHotspot();
 
-	virtual Gesture* GetGesture();
+	Gesture* GetGesture() override;
 
 	virtual void SetDistance(std::function<glm::vec2(glm::vec2)> distance);
 	virtual void SetTolerance(std::function<glm::vec2(Touch*)> tolerance);
