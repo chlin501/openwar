@@ -114,9 +114,9 @@ void RangeMarker::RenderMissileTarget(VertexShape_3f_4f* vertices, glm::vec2 tar
 
 	glm::vec2 delta = thickness * vector2_from_angle(angle_left + glm::half_pi<float>());
 
-	if (!vertices->_vertices.empty())
+	if (!vertices->GetVertices().empty())
 	{
-		vertices->AddVertex(vertices->_vertices.back());
+		vertices->AddVertex(vertices->GetVertices().back());
 		vertices->AddVertex(Vertex_3f_4f(GetPosition(left + delta), c0));
 	}
 	vertices->AddVertex(Vertex_3f_4f(GetPosition(left + delta), c0));
@@ -147,7 +147,7 @@ void RangeMarker::RenderMissileTarget(VertexShape_3f_4f* vertices, glm::vec2 tar
 		float a = angle_left - i * (angle_left - angle_right) / 24;
 		if (i == 0)
 		{
-			vertices->AddVertex(vertices->_vertices.back());
+			vertices->AddVertex(vertices->GetVertices().back());
 			vertices->AddVertex(Vertex_3f_4f(GetPosition(target + radius_outer * vector2_from_angle(a)), c1));
 		}
 		vertices->AddVertex(Vertex_3f_4f(GetPosition(target + radius_outer * vector2_from_angle(a)), c1));

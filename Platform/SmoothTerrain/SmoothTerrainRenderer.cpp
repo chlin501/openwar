@@ -274,8 +274,8 @@ void SmoothTerrainRenderer::InitializeSkirt()
 		_skirtVertices.AddVertex(Vertex_3f_1f(glm::vec3(p, -2.5), h));
 	}
 
-	_skirtVertices.AddVertex(_skirtVertices._vertices[0]);
-	_skirtVertices.AddVertex(_skirtVertices._vertices[1]);
+	_skirtVertices.AddVertex(_skirtVertices.GetVertices()[0]);
+	_skirtVertices.AddVertex(_skirtVertices.GetVertices()[1]);
 }
 
 
@@ -316,7 +316,7 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 	InitializeSkirt();
 	UpdateSplatmap();
 
-	if (_insideVertices._vertices.empty())
+	if (_insideVertices.GetVertices().empty())
 	{
 		_editMode = true;
 		BuildTriangles();
@@ -324,7 +324,7 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 	else
 	{
 		// inside
-		for (Vertex_3f_3f& vertex : _insideVertices._vertices)
+		for (Vertex_3f_3f& vertex : _insideVertices.GetMutableVertices())
 		{
 			glm::vec2 p = GetVertexAttribute<0>(vertex).xy();
 			if (bounds.contains(p))
@@ -336,7 +336,7 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 		}
 
 		// border
-		for (Vertex_3f_3f& vertex : _borderVertices._vertices)
+		for (Vertex_3f_3f& vertex : _borderVertices.GetMutableVertices())
 		{
 			glm::vec2 p = GetVertexAttribute<0>(vertex).xy();
 			if (bounds.contains(p))
@@ -351,7 +351,7 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 	// lines
 	if (_showLines)
 	{
-		for (Vertex_3f& vertex : _lineVertices._vertices)
+		for (Vertex_3f& vertex : _lineVertices.GetMutableVertices())
 		{
 			glm::vec2 p = vertex._v.xy();
 			if (bounds.contains(p))
@@ -362,14 +362,14 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 	}
 
 	// skirt
-	for (size_t i = 0; i < _skirtVertices._vertices.size(); i += 2)
+	for (size_t i = 0; i < _skirtVertices.GetMutableVertices().size(); i += 2)
 	{
-		glm::vec2 p = GetVertexAttribute<0>(_skirtVertices._vertices[i]).xy();
+		glm::vec2 p = GetVertexAttribute<0>(_skirtVertices.GetMutableVertices()[i]).xy();
 		if (bounds.contains(p))
 		{
 			float h = fmaxf(0, _smoothGroundMap->GetHeightMap()->InterpolateHeight(p));
-			GetVertexAttribute<1>(_skirtVertices._vertices[i]) = h;
-			GetVertexAttribute<0>(_skirtVertices._vertices[i]).z = h;
+			GetVertexAttribute<1>(_skirtVertices.GetMutableVertices()[i]) = h;
+			GetVertexAttribute<0>(_skirtVertices.GetMutableVertices()[i]).z = h;
 		}
 	}
 }

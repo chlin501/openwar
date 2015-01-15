@@ -143,24 +143,24 @@ typename std::enable_if<k != 0, typename VertexAttributeType<k, T, Ts...>::const
 }
 
 
-typedef Vertex<float> Vertex_1f;
-typedef Vertex<glm::vec2> Vertex_2f;
-typedef Vertex<glm::vec3> Vertex_3f;
-typedef Vertex<glm::vec4> Vertex_4f;
+using Vertex_1f = Vertex<float>;
+using Vertex_2f = Vertex<glm::vec2>;
+using Vertex_3f = Vertex<glm::vec3>;
+using Vertex_4f = Vertex<glm::vec4>;
 
-typedef Vertex<glm::vec2, glm::vec4> Vertex_2f_4f;
-typedef Vertex<glm::vec2, glm::vec2> Vertex_2f_2f;
-typedef Vertex<glm::vec3, glm::vec2> Vertex_3f_2f;
-typedef Vertex<glm::vec3, float> Vertex_3f_1f;
-typedef Vertex<glm::vec3, glm::vec3> Vertex_3f_3f;
-typedef Vertex<glm::vec3, glm::vec4> Vertex_3f_4f;
+using Vertex_2f_4f = Vertex<glm::vec2, glm::vec4>;
+using Vertex_2f_2f = Vertex<glm::vec2, glm::vec2>;
+using Vertex_3f_2f = Vertex<glm::vec3, glm::vec2>;
+using Vertex_3f_1f = Vertex<glm::vec3, float>;
+using Vertex_3f_3f = Vertex<glm::vec3, glm::vec3>;
+using Vertex_3f_4f = Vertex<glm::vec3, glm::vec4>;
 
-typedef Vertex<glm::vec2, glm::vec2, float> Vertex_2f_2f_1f;
-typedef Vertex<glm::vec3, glm::vec4, float> Vertex_3f_4f_1f;
-typedef Vertex<glm::vec2, glm::vec2, glm::vec2> Vertex_2f_2f_2f;
+using Vertex_2f_2f_1f = Vertex<glm::vec2, glm::vec2, float>;
+using Vertex_3f_4f_1f = Vertex<glm::vec3, glm::vec4, float>;
+using Vertex_2f_2f_2f = Vertex<glm::vec2, glm::vec2, glm::vec2>;
 
-typedef Vertex<glm::vec2, glm::vec2, glm::vec4, float> Vertex_2f_2f_4f_1f;
-typedef Vertex<glm::vec3, float, glm::vec2, glm::vec2> Vertex_3f_1f_2f_2f;
+using Vertex_2f_2f_4f_1f = Vertex<glm::vec2, glm::vec2, glm::vec4, float>;
+using Vertex_3f_1f_2f_2f = Vertex<glm::vec3, float, glm::vec2, glm::vec2>;
 
 
 #endif

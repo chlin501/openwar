@@ -112,14 +112,14 @@ void BillboardTextureShape::Draw(GraphicsContext* gc, Texture* tex, const glm::m
 	static std::vector<Vertex_3f_1f_2f_2f> vertices;
 	static std::vector<billboard_index> indices;
 
-	vertices.insert(vertices.end(), _vertices._vertices.begin(), _vertices._vertices.end());
+	vertices.insert(vertices.end(), _vertices.GetVertices().begin(), _vertices.GetVertices().end());
 
 	float a = -glm::radians(cameraFacingDegrees);
 	float cos_a = cosf(a);
 	float sin_a = sinf(a);
 
 	int index = 0;
-	for (Vertex_3f_1f_2f_2f& v : _vertices._vertices)
+	for (const Vertex_3f_1f_2f_2f& v : _vertices.GetVertices())
 	{
 		glm::vec3 p = GetVertexAttribute<0>(v);
 		billboard_index i;

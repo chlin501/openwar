@@ -15,51 +15,67 @@ template <class _Vertex> class VertexBuffer;
 template <class _Vertex>
 class VertexShape : public VertexBuffer<_Vertex>
 {
+	std::vector<_Vertex> _vertices;
+	bool _dirty{};
+
 public:
-	typedef _Vertex VertexT;
-
-	std::vector<VertexT> _vertices;
-
 	VertexShape() { }
 
+	const std::vector<_Vertex>& GetVertices() const
+	{
+		return _vertices;
+	}
+
+	std::vector<_Vertex>& GetMutableVertices()
+	{
+		_dirty = true;
+		return _vertices;
+	}
 
 	virtual void Update()
 	{
-		VertexBuffer<_Vertex>::UpdateVBO(VertexBufferBase::_mode, _vertices.data(), _vertices.size());
+		if (_dirty)
+		{
+			VertexBuffer<_Vertex>::UpdateVBO(VertexBufferBase::_mode, _vertices.data(), _vertices.size());
+			_dirty = false;
+		}
 	}
-
 
 	void Reset(GLenum mode)
 	{
 		VertexBufferBase::_mode = mode;
 		_vertices.clear();
+		_dirty = true;
 	}
 
 	void Clear()
 	{
 		_vertices.clear();
+		_dirty = true;
 	}
 
-	void AddVertex(const VertexT& vertex)
+	void AddVertex(const _Vertex& vertex)
 	{
 		_vertices.push_back(vertex);
+		_dirty = true;
 	}
 };
 
-typedef VertexShape<Vertex_2f> VertexShape_2f;
-typedef VertexShape<Vertex_3f> VertexShape_3f;
 
-typedef VertexShape<Vertex_2f_2f> VertexShape_2f_2f;
-typedef VertexShape<Vertex_2f_4f> VertexShape_2f_4f;
-typedef VertexShape<Vertex_3f_1f> VertexShape_3f_1f;
-typedef VertexShape<Vertex_3f_2f> VertexShape_3f_2f;
-typedef VertexShape<Vertex_3f_3f> VertexShape_3f_3f;
-typedef VertexShape<Vertex_3f_4f> VertexShape_3f_4f;
+using VertexShape_2f = VertexShape<Vertex_2f>;
+using VertexShape_3f = VertexShape<Vertex_3f>;
 
-typedef VertexShape<Vertex_3f_4f_1f> VertexShape_3f_4f_1f;
-typedef VertexShape<Vertex_2f_2f_2f> VertexShape_2f_2f_2f;
+using VertexShape_2f_2f = VertexShape<Vertex_2f_2f>;
+using VertexShape_2f_4f = VertexShape<Vertex_2f_4f>;
+using VertexShape_3f_1f = VertexShape<Vertex_3f_1f>;
+using VertexShape_3f_2f = VertexShape<Vertex_3f_2f>;
+using VertexShape_3f_3f = VertexShape<Vertex_3f_3f>;
+using VertexShape_3f_4f = VertexShape<Vertex_3f_4f>;
 
-typedef VertexShape<Vertex_3f_1f_2f_2f> VertexShape_3f_1f_2f_2f;
+using VertexShape_3f_4f_1f = VertexShape<Vertex_3f_4f_1f>;
+using VertexShape_2f_2f_2f = VertexShape<Vertex_2f_2f_2f>;
+
+using VertexShape_3f_1f_2f_2f = VertexShape<Vertex_3f_1f_2f_2f>;
 
 
 #endif
