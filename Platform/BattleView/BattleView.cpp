@@ -488,7 +488,10 @@ void BattleView::InitializeCameraPosition()
 	glm::vec2 friendlyScreen = GetViewport()->NormalizedToLocal(glm::vec2(0, flip ? 0.4 : -0.4));
 	glm::vec2 enemyScreen = GetViewport()->NormalizedToLocal(glm::vec2(0, flip ? -0.4 : 0.4));
 
-	Zoom(GetTerrainPosition(friendlyCenter, 0), GetTerrainPosition(enemyCenter, 0), friendlyScreen, enemyScreen, 0);
+	auto contentPositions = std::make_pair(GetTerrainPosition(friendlyCenter, 0), GetTerrainPosition(enemyCenter, 0));
+	auto screenPositions = std::make_pair(friendlyScreen, enemyScreen);
+
+	Zoom(contentPositions, screenPositions, 0);
 
 	//ClampCameraPosition();
 }

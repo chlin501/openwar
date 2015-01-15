@@ -15,7 +15,7 @@ class TerrainHotspot;
 
 class TerrainGesture : public Gesture, RenderLoopObserver
 {
-	TerrainHotspot* _hotspot;
+	TerrainHotspot* _hotspot{};
 	glm::vec3 _contentPosition1;
 	glm::vec3 _contentPosition2;
 	glm::vec2 _previousTouchPosition;
@@ -23,16 +23,16 @@ class TerrainGesture : public Gesture, RenderLoopObserver
 	sampler _scrollSampler;
 	sampler _orbitSampler;
 	glm::vec2 _scrollVelocity;
-	float _previousCameraDirection;
-	float _orbitAccumulator;
-	float _orbitVelocity;
-	bool _keyScrollLeft;
-	bool _keyScrollRight;
-	bool _keyScrollForward;
-	bool _keyScrollBackward;
-	bool _keyOrbitLeft;
-	bool _keyOrbitRight;
-	float _keyOrbitMomentum;
+	float _previousCameraDirection{};
+	float _orbitAccumulator{};
+	float _orbitVelocity{};
+	bool _keyScrollLeft{};
+	bool _keyScrollRight{};
+	bool _keyScrollForward{};
+	bool _keyScrollBackward{};
+	bool _keyOrbitLeft{};
+	bool _keyOrbitRight{};
+	float _keyOrbitMomentum{};
 	glm::vec2 _keyScrollMomentum;
 
 public:

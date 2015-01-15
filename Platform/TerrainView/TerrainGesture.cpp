@@ -13,18 +13,7 @@
 
 
 TerrainGesture::TerrainGesture(TerrainHotspot* hotspot) :
-	_hotspot(hotspot),
-	_previousCameraDirection(0),
-	_orbitAccumulator(0),
-	_orbitVelocity(0),
-	_keyScrollLeft(false),
-	_keyScrollRight(false),
-	_keyScrollForward(false),
-	_keyScrollBackward(false),
-	_keyOrbitLeft(false),
-	_keyOrbitRight(false),
-	_keyOrbitMomentum(0),
-	_keyScrollMomentum()
+	_hotspot{hotspot}
 {
 }
 
@@ -35,77 +24,23 @@ TerrainGesture::~TerrainGesture()
 }
 
 
-/*void TerrainGesture::RenderHints()
-{
-	if (this != nullptr)
-		return;
-
-	//_hotspot->GetTerrainView()->UseViewport();
-
-	VertexShape_2f vertices;
-	vertices._mode = GL_LINES;
-
-	glm::vec2 left = _hotspot->GetTerrainView()->GetScreenLeft();
-	glm::vec2 bottom = _hotspot->GetTerrainView()->GetScreenBottom();
-	glm::vec2 top = _hotspot->GetTerrainView()->GetScreenTop();
-	glm::vec2 right = _hotspot->GetTerrainView()->GetScreenRight();
-
-	bounds2f bounds(left.x, bottom.y, right.x, top.y);
-
-	vertices.AddVertex(Vertex_2f(bounds.mix_01() + glm::vec2(0, 4)));
-	vertices.AddVertex(Vertex_2f(bounds.mix_11() + glm::vec2(0, 4)));
-
-	vertices.AddVertex(Vertex_2f(bounds.mix_00()));
-	vertices.AddVertex(Vertex_2f(bounds.mix_01()));
-	vertices.AddVertex(Vertex_2f(bounds.mix_01()));
-	vertices.AddVertex(Vertex_2f(bounds.mix_11()));
-	vertices.AddVertex(Vertex_2f(bounds.mix_11()));
-	vertices.AddVertex(Vertex_2f(bounds.mix_10()));
-	vertices.AddVertex(Vertex_2f(bounds.mix_10()));
-	vertices.AddVertex(Vertex_2f(bounds.mix_00()));
-
-	if (this != nullptr)
-	{
-		vertices.AddVertex(Vertex_2f(top + glm::vec2(0, 5)));
-		vertices.AddVertex(Vertex_2f(top - glm::vec2(0, 5)));
-		vertices.AddVertex(Vertex_2f(left + glm::vec2(5, 0)));
-		vertices.AddVertex(Vertex_2f(left - glm::vec2(5, 0)));
-		vertices.AddVertex(Vertex_2f(bottom + glm::vec2(0, 5)));
-		vertices.AddVertex(Vertex_2f(bottom - glm::vec2(0, 5)));
-		vertices.AddVertex(Vertex_2f(right + glm::vec2(5, 0)));
-		vertices.AddVertex(Vertex_2f(right - glm::vec2(5, 0)));
-	}
-
-	glLineWidth(2);
-
-	GraphicsContext* gc = _hotspot->GetTerrainView()->GetGraphicsContext();
-	RenderCall<PlainShader_2f>(gc)
-		.SetVertices(&vertices)
-		.SetUniform("transform", _hotspot->GetTerrainView()->GetRenderTransform())
-		.SetUniform("point_size", 1)
-		.SetUniform("color", glm::vec4(0, 0, 0, 1))
-		.Render();
-
-	glLineWidth(1);
-}*/
-
-
 void TerrainGesture::OnRenderLoop(double secondsSinceLastUpdate)
 {
 	if (!_hotspot->HasCapturedTouches())
 	{
 		UpdateMomentumOrbit(secondsSinceLastUpdate);
 		UpdateMomentumScroll(secondsSinceLastUpdate);
-		UpdateKeyOrbit(secondsSinceLastUpdate);
-		UpdateKeyScroll(secondsSinceLastUpdate);
 	}
 	else
 	{
 		_orbitVelocity = 0;
 		_scrollVelocity = glm::vec2();
-		_keyOrbitMomentum = 0;
-		_keyScrollMomentum = glm::vec2();
+		//_keyOrbitMomentum = 0;
+		//_keyScrollMomentum = glm::vec2();
 	}
+
+	UpdateKeyOrbit(secondsSinceLastUpdate);
+	UpdateKeyScroll(secondsSinceLastUpdate);
 }
 
 
@@ -151,7 +86,13 @@ void TerrainGesture::Magnify(glm::vec2 position, float magnification)
 	glm::vec2 d1 = glm::vec2(0, 64);
 	glm::vec2 d2 = d1 * glm::exp(magnification);
 
-	_hotspot->GetTerrainView()->Zoom(_hotspot->GetTerrainView()->GetTerrainPosition3(p - d1), _hotspot->GetTerrainView()->GetTerrainPosition3(p + d1), p - d2, p + d2, 0);
+	auto contentPositions = std::make_pair(
+		_hotspot->GetTerrainView()->GetTerrainPosition3(p - d1),
+		_hotspot->GetTerrainView()->GetTerrainPosition3(p + d1));
+
+	auto screenPositions = std::make_pair(p - d2, p + d2);
+
+	_hotspot->GetTerrainView()->Zoom(contentPositions, screenPositions, 0);
 }
 
 
@@ -226,7 +167,7 @@ static float GetOrbitFactor(Touch* touch, bounds2f bounds)
 
 void TerrainGesture::TouchMoved(Touch* touch)
 {
-	int touchCount = _hotspot->GetCapturedTouches().size();
+	size_t touchCount = _hotspot->GetCapturedTouches().size();
 	if (touchCount != 0)
 	{
 		if (touchCount == 1)
@@ -356,7 +297,10 @@ void TerrainGesture::ZoomAndOrbit(Touch* touch1, Touch* touch2)
 	float k = k1 * k2;
 	float orbitFactor = 1 - k * k;
 
-	_hotspot->GetTerrainView()->Zoom(_contentPosition1, _contentPosition2, touch1->GetCurrentPosition(), touch2->GetCurrentPosition(), orbitFactor);
+	auto contentPositions = std::make_pair(_contentPosition1, _contentPosition2);
+	auto screenPositions = std::make_pair(touch1->GetCurrentPosition(), touch2->GetCurrentPosition());
+
+	_hotspot->GetTerrainView()->Zoom(contentPositions, screenPositions, orbitFactor);
 
 	AdjustToKeepInView(0.5, 0);
 }

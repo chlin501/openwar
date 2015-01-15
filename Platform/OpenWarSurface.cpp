@@ -124,12 +124,6 @@ void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 }
 
 
-/*void OpenWarSurface::MouseEnter(glm::vec2 position)
-{
-	//_battleView->ShowMouseHint(position);
-}*/
-
-
 void OpenWarSurface::ClickedPlay()
 {
 	_battleLayer->SetPlaying(true);

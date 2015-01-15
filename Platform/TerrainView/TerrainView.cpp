@@ -14,12 +14,10 @@
 #include "TerrainHotspot.h"
 #include "TerrainView.h"
 #include "TerrainViewport.h"
+#include "CommonShaders.h"
 
 
-TerrainView::TerrainView(Surface* surface) : View(surface),
-	_terrainViewport(nullptr),
-	_mouseHintVisible(false),
-	_heightMap(nullptr)
+TerrainView::TerrainView(Surface* surface) : View(surface)
 {
 	GraphicsContext* gc = surface->GetGraphicsContext();
 	_terrainViewport = new TerrainViewport(gc);
@@ -61,42 +59,33 @@ void TerrainView::OnTouchBegin(Touch* touch)
 }
 
 
-void TerrainView::ShowMouseHint(glm::vec2 position)
-{
-	_mouseHintPosition = position;
-	_mouseHintVisible = true;
-}
-
-
-void TerrainView::HideMouseHint()
-{
-	_mouseHintVisible = false;
-}
-
-
 void TerrainView::RenderMouseHint(VertexShape_3f* vertices)
 {
-	if (_mouseHintVisible)
+	if (_terrainHotspot && _terrainHotspot->HasCapturedTouches())
 	{
-		glm::vec3 p = GetTerrainPosition3(_mouseHintPosition);
-		if (p.z < 0)
-			p.z = 0;
-		float d = 5;
+		Touch* touch = _terrainHotspot->GetCapturedTouch();
+		if (touch != nullptr)
+		{
+			glm::vec3 p = GetTerrainPosition3(touch->GetCurrentPosition());
+			if (p.z < 0)
+				p.z = 0;
+			float d = 5;
 
-		vertices->AddVertex(Vertex_3f(p + glm::vec3(0, 0, -d)));
-		vertices->AddVertex(Vertex_3f(p + glm::vec3(0, 0, d)));
+			vertices->AddVertex(Vertex_3f(p + glm::vec3(0, 0, -d)));
+			vertices->AddVertex(Vertex_3f(p + glm::vec3(0, 0, d)));
 
-		vertices->AddVertex(Vertex_3f(p + glm::vec3(-d, 0, -d)));
-		vertices->AddVertex(Vertex_3f(p + glm::vec3(d, 0, d)));
+			vertices->AddVertex(Vertex_3f(p + glm::vec3(-d, 0, -d)));
+			vertices->AddVertex(Vertex_3f(p + glm::vec3(d, 0, d)));
 
-		vertices->AddVertex(Vertex_3f(p + glm::vec3(d, 0, -d)));
-		vertices->AddVertex(Vertex_3f(p + glm::vec3(-d, 0, d)));
+			vertices->AddVertex(Vertex_3f(p + glm::vec3(d, 0, -d)));
+			vertices->AddVertex(Vertex_3f(p + glm::vec3(-d, 0, d)));
 
-		vertices->AddVertex(Vertex_3f(p + glm::vec3(0, d, -d)));
-		vertices->AddVertex(Vertex_3f(p + glm::vec3(0, -d, d)));
+			vertices->AddVertex(Vertex_3f(p + glm::vec3(0, d, -d)));
+			vertices->AddVertex(Vertex_3f(p + glm::vec3(0, -d, d)));
 
-		vertices->AddVertex(Vertex_3f(p + glm::vec3(0, -d, -d)));
-		vertices->AddVertex(Vertex_3f(p + glm::vec3(0, d, d)));
+			vertices->AddVertex(Vertex_3f(p + glm::vec3(0, -d, -d)));
+			vertices->AddVertex(Vertex_3f(p + glm::vec3(0, d, d)));
+		}
 	}
 }
 
@@ -242,18 +231,18 @@ void TerrainView::Move(glm::vec3 originalContentPosition, glm::vec2 currentScree
 }
 
 
-void TerrainView::Zoom(glm::vec3 originalContentPosition1, glm::vec3 originalContentPosition2, glm::vec2 currentScreenPosition1, glm::vec2 currentScreenPosition2, float orbitFactor)
+void TerrainView::Zoom(std::pair<glm::vec3, glm::vec3> originalContentPositions, std::pair<glm::vec2, glm::vec2> currentScreenPositions, float orbitFactor)
 {
-	glm::vec3 originalContentCenter = (originalContentPosition1 + originalContentPosition2) / 2.0f;
-	glm::vec2 currentScreenCenter = (currentScreenPosition1 + currentScreenPosition2) / 2.0f;
+	glm::vec3 originalContentCenter = (originalContentPositions.first + originalContentPositions.second) / 2.0f;
+	glm::vec2 currentScreenCenter = (currentScreenPositions.first + currentScreenPositions.second) / 2.0f;
 
 	float delta = (1 - orbitFactor) * glm::length(_terrainViewport->GetTerrainBounds().size()) / 20.0f;
 	for (int i = 0; i < 18; ++i)
 	{
-		glm::vec3 currentContentPosition1 = GetTerrainPosition3(currentScreenPosition1);
-		glm::vec3 currentContentPosition2 = GetTerrainPosition3(currentScreenPosition2);
+		glm::vec3 currentContentPosition1 = GetTerrainPosition3(currentScreenPositions.first);
+		glm::vec3 currentContentPosition2 = GetTerrainPosition3(currentScreenPositions.second);
 		glm::vec3 currentDelta = currentContentPosition2 - currentContentPosition1;
-		glm::vec3 originalDelta = originalContentPosition2 - originalContentPosition1;
+		glm::vec3 originalDelta = originalContentPositions.second - originalContentPositions.first;
 
 		float currentAngle = angle(currentDelta.xy());
 		float originalAngle = angle(originalDelta.xy());

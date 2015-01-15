@@ -21,16 +21,13 @@ class Touch;
 
 class TerrainView : public View
 {
-	TerrainViewport* _terrainViewport;
-
-	bool _mouseHintVisible;
-	glm::vec2 _mouseHintPosition;
+	TerrainViewport* _terrainViewport{};
 
 	std::shared_ptr<EditorHotspot> _editorHotspot;
 	std::shared_ptr<TerrainHotspot> _terrainHotspot;
 
 protected:
-	HeightMap* _heightMap;
+	HeightMap* _heightMap{};
 
 public:
 	TerrainView(Surface* surface);
@@ -49,8 +46,6 @@ public:
 	virtual void OnTouchBegin(Touch* touch);
 	virtual void Render() = 0;
 
-	void ShowMouseHint(glm::vec2 position);
-	void HideMouseHint();
 	void RenderMouseHint(VertexShape_3f* vertices);
 
 	void SetHeightMap(HeightMap* heightMap);
@@ -60,7 +55,7 @@ public:
 	glm::vec3 GetTerrainPosition3(glm::vec2 screenPosition) const;
 
 	void Move(glm::vec3 originalContentPosition, glm::vec2 currentScreenPosition);
-	void Zoom(glm::vec3 originalContentPosition1, glm::vec3 originalContentPosition2, glm::vec2 currentScreenPosition1, glm::vec2 currentScreenPosition2, float orbitFactor);
+	void Zoom(std::pair<glm::vec3, glm::vec3> originalContentPositions, std::pair<glm::vec2, glm::vec2> currentScreenPositions, float orbitFactor);
 	void Orbit(glm::vec2 originalContentPosition, float angle);
 
 	void MoveCamera(glm::vec3 position);
