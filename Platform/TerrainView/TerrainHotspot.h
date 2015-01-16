@@ -43,7 +43,6 @@ public:
 	glm::vec3 GetOrbitAnchor() const;
 	float GetOrbitFactor() const;
 	float GetOrbitAngle() const;
-	float GetZoomFactor() const;
 
 	void RenderMouseHint(VertexShape_3f& vertices);
 

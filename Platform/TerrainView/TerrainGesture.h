@@ -66,6 +66,8 @@ private:
 
 	glm::vec2 GetScrollVelocity() const;
 	float GetOrbitVelocity() const;
+	float CalculateOrbitFactor() const;
+	float NormalizeScrollSpeed(float value) const;
 
 	void AdjustToKeepInView(float adjustmentFactor, float secondsSinceLastUpdate);
 };

@@ -132,29 +132,15 @@ glm::vec3 TerrainHotspot::GetOrbitAnchor() const
 }
 
 
-static float OrbitSigmoid(float value)
-{
-	const float min = 0.3f;
-	if (value <= min)
-		return 0;
-	const float max = 0.5f;
-	if (value >= max)
-		return 1;
-	return glm::sin(bounds1f{0, max}.unmix(value) * glm::pi<float>());
-};
-
-
 float TerrainHotspot::GetOrbitFactor() const
 {
 	glm::vec2 pos = GetCapturedTouches().size() == 1
 		? GetCurrentScreenPosition1()
 		: 0.5f * (GetCurrentScreenPosition1() + GetCurrentScreenPosition2());
 
-	bounds2f b = static_cast<bounds2f>(_terrainView->GetViewport()->GetBounds());
-	glm::vec2 m = b.mid();
-	glm::vec2 p = glm::abs(pos - m);
-	return OrbitSigmoid(glm::max(p.x, p.y) / glm::max(m.x, m.y));
-}
+	float value = glm::length(_terrainView->GetViewport()->LocalToNormalized(pos));
+	return bounds1f{0, 1}.clamp(bounds1f{0.33f, 0.66f}.unmix(value));
+};
 
 
 float TerrainHotspot::GetOrbitAngle() const
@@ -167,20 +153,6 @@ float TerrainHotspot::GetOrbitAngle() const
 
 	return contentAngle - currentAngle;
 }
-
-
-float TerrainHotspot::GetZoomFactor() const
-{
-	return 0.8f;
-	/*
-	const auto& touches = GetCapturedTouches();
-	if (touches.size() != 2)
-		return 0;
-
-	float d1 = glm::distance(touches[0]->GetCurrentPosition(), touches[1]->GetCurrentPosition());
-	float d2 = glm::distance(touches[0]->GetPreviousPosition(), touches[1]->GetPreviousPosition());
-	return bounds1f{0, 1}.clamp(glm::abs(d1 - d2) / 32.0f);*/
-};
 
 
 void TerrainHotspot::RenderMouseHint(VertexShape_3f& vertices)

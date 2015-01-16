@@ -10,6 +10,7 @@
 #include "Graphics/CommonShaders.h"
 #include "Surface/Surface.h"
 #include "Surface/Touch.h"
+#include <glm/gtc/constants.hpp>
 
 
 TerrainGesture::TerrainGesture(TerrainHotspot* hotspot) :
@@ -131,7 +132,7 @@ void TerrainGesture::TouchMoved(Touch* touch)
 			case TerrainHotspotMode::Move:
 				terrainView->Orbit(
 					_hotspot->GetOrbitAnchor(),
-					_hotspot->GetOrbitFactor() * _hotspot->GetOrbitAngle());
+					CalculateOrbitFactor() * _hotspot->GetOrbitAngle());
 
 				terrainView->Move(
 					_hotspot->GetContentPosition1(),
@@ -207,7 +208,6 @@ void TerrainGesture::UpdateKeyScroll(double secondsSinceLastUpdate)
 	glm::vec2 delta = (float)secondsSinceLastUpdate * glm::log(2.0f + glm::max(0.0f, pos.z)) * rotate(_keyScrollMomentum, angle(dir.xy()));
 	terrainView->MoveCamera(pos + glm::vec3(delta, 0));
 
-
 	_keyScrollMomentum *= exp2f(-25 * (float)secondsSinceLastUpdate);
 }
 
@@ -280,6 +280,39 @@ float TerrainGesture::GetOrbitVelocity() const
 
 	return (float)((v2 - v1) / dt);
 }
+
+
+float TerrainGesture::CalculateOrbitFactor() const
+{
+	float orbitSpeed = glm::abs(GetOrbitVelocity());
+	float scrollSpeed = NormalizeScrollSpeed(glm::length(GetScrollVelocity()));
+
+	float orbitFactor = bounds1f{0, 1}.clamp(orbitSpeed * 0.8f);
+	float scrollFactor = bounds1f{0, 1}.clamp(scrollSpeed * 6.0f);
+	float combinedFactor = bounds1f{0, 1}.clamp(1.0f + orbitFactor - scrollFactor);
+
+	//NSLog(@"orbit factor = %g, scroll speed = %g, combined factor = %g", orbitFactor, scrollFactor, combinedFactor);
+	//NSLog(@"orbit factor %g", _hotspot->GetOrbitFactor());
+
+	return combinedFactor * _hotspot->GetOrbitFactor();
+};
+
+
+float TerrainGesture::NormalizeScrollSpeed(float value) const
+{
+	TerrainView* terrainView = _hotspot->GetTerrainView();
+
+	glm::vec2 screenCenter = terrainView->GetViewport()->NormalizedToLocal(glm::vec2{});
+	glm::vec3 contentCenter = terrainView->GetTerrainPosition3(screenCenter);
+	float angle = terrainView->GetViewport()->GetCameraFacing() + 0.5f * glm::pi<float>();
+	glm::vec3 contentPos = contentCenter + glm::vec3{value * vector2_from_angle(angle), 0};
+	glm::vec2 screenPos = terrainView->ContentToScreen(contentPos);
+
+	glm::ivec2 viewportSize = terrainView->GetViewport()->GetBounds().size();
+	float viewportScale = glm::max(viewportSize.x, viewportSize.y);
+
+	return glm::distance(screenCenter, screenPos) / viewportScale;
+};
 
 
 void TerrainGesture::AdjustToKeepInView(float adjustmentFactor, float secondsSinceLastUpdate)
