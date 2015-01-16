@@ -189,7 +189,15 @@ glm::vec3 TerrainView::GetTerrainPosition3(glm::vec2 screenPosition) const
 
 	ray r = GetCameraRay(screenPosition);
 	std::pair<bool, float> d = _heightMap->Intersect(r);
-	return r.point(d.first ? d.second : 0);
+
+	if (d.first)
+	{
+		glm::vec3 p = r.point(d.first ? d.second : 0);
+		if (p.z > 0 && glm::distance(_heightMap->GetBounds().unmix(p.xy()), glm::vec2{0.5f}) < 0.5f)
+			return p;
+	}
+
+	return GetTerrainPosition2(screenPosition);
 }
 
 

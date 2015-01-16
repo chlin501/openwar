@@ -99,6 +99,8 @@ struct bounds2
 	vec_t mix_10() const { return {max.x, min.y}; }
 	vec_t mix_11() const { return {max.x, max.y}; }
 
+	vec_t unmix(vec_t p) const { return {x().unmix(p.x), y().unmix(p.y)}; }
+
 	vec_t size() const { return {max.x - min.x, max.y - min.y}; }
 	vec_t radius() const { return {(max.x - min.x) / 2, (max.y - min.y) / 2}; }
 
