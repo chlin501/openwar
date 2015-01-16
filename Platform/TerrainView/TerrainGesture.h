@@ -15,10 +15,9 @@ class TerrainHotspot;
 
 class TerrainGesture : public Gesture, RenderLoopObserver
 {
+	enum class MoveAndOrbitLock { None, Move, Orbit };
+
 	TerrainHotspot* _hotspot{};
-	glm::vec3 _contentPosition1;
-	glm::vec3 _contentPosition2;
-	glm::vec2 _previousTouchPosition;
 
 	sampler _scrollSampler;
 	sampler _orbitSampler;
@@ -61,9 +60,6 @@ private:
 	void UpdateMomentumScroll(double secondsSinceLastUpdate);
 	void UpdateKeyScroll(double secondsSinceLastUpdate);
 	void UpdateKeyOrbit(double secondsSinceLastUpdate);
-
-	void MoveAndOrbit(Touch* touch);
-	void ZoomAndOrbit(Touch* touch1, Touch* touch2);
 
 	void ResetSamples(double timestamp);
 	void UpdateSamples(double timestamp);

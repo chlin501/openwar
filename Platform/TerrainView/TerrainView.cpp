@@ -59,34 +59,10 @@ void TerrainView::OnTouchBegin(Touch* touch)
 }
 
 
-void TerrainView::RenderMouseHint(VertexShape_3f* vertices)
+void TerrainView::RenderMouseHint(VertexShape_3f& vertices)
 {
-	if (_terrainHotspot && _terrainHotspot->HasCapturedTouches())
-	{
-		Touch* touch = _terrainHotspot->GetCapturedTouch();
-		if (touch != nullptr)
-		{
-			glm::vec3 p = GetTerrainPosition3(touch->GetCurrentPosition());
-			if (p.z < 0)
-				p.z = 0;
-			float d = 5;
-
-			vertices->AddVertex(Vertex_3f(p + glm::vec3(0, 0, -d)));
-			vertices->AddVertex(Vertex_3f(p + glm::vec3(0, 0, d)));
-
-			vertices->AddVertex(Vertex_3f(p + glm::vec3(-d, 0, -d)));
-			vertices->AddVertex(Vertex_3f(p + glm::vec3(d, 0, d)));
-
-			vertices->AddVertex(Vertex_3f(p + glm::vec3(d, 0, -d)));
-			vertices->AddVertex(Vertex_3f(p + glm::vec3(-d, 0, d)));
-
-			vertices->AddVertex(Vertex_3f(p + glm::vec3(0, d, -d)));
-			vertices->AddVertex(Vertex_3f(p + glm::vec3(0, -d, d)));
-
-			vertices->AddVertex(Vertex_3f(p + glm::vec3(0, -d, -d)));
-			vertices->AddVertex(Vertex_3f(p + glm::vec3(0, d, d)));
-		}
-	}
+	if (_terrainHotspot)
+		_terrainHotspot->RenderMouseHint(vertices);
 }
 
 
@@ -198,10 +174,10 @@ ray TerrainView::GetCameraRay(glm::vec2 screenPosition) const
 }
 
 
-glm::vec3 TerrainView::GetTerrainPosition2(glm::vec2 screenPosition) const
+glm::vec3 TerrainView::GetTerrainPosition2(glm::vec2 screenPosition, float height) const
 {
 	ray r = GetCameraRay(screenPosition);
-	std::pair<bool, float> d = intersect(r, plane(glm::vec3(0, 0, 1), 0));
+	std::pair<bool, float> d = intersect(r, plane(glm::vec3(0, 0, 1), height));
 	return r.point(d.first ? d.second : 0);
 }
 
@@ -231,12 +207,12 @@ void TerrainView::Move(glm::vec3 originalContentPosition, glm::vec2 currentScree
 }
 
 
-void TerrainView::Zoom(std::pair<glm::vec3, glm::vec3> originalContentPositions, std::pair<glm::vec2, glm::vec2> currentScreenPositions, float orbitFactor)
+void TerrainView::Zoom(std::pair<glm::vec3, glm::vec3> originalContentPositions, std::pair<glm::vec2, glm::vec2> currentScreenPositions)
 {
-	glm::vec3 originalContentCenter = (originalContentPositions.first + originalContentPositions.second) / 2.0f;
+	glm::vec3 contentAnchor = (originalContentPositions.first + originalContentPositions.second) / 2.0f;
 	glm::vec2 currentScreenCenter = (currentScreenPositions.first + currentScreenPositions.second) / 2.0f;
 
-	float delta = (1 - orbitFactor) * glm::length(_terrainViewport->GetTerrainBounds().size()) / 20.0f;
+	float delta = glm::length(_terrainViewport->GetTerrainBounds().size()) / 20.0f;
 	for (int i = 0; i < 18; ++i)
 	{
 		glm::vec3 currentContentPosition1 = GetTerrainPosition3(currentScreenPositions.first);
@@ -247,8 +223,8 @@ void TerrainView::Zoom(std::pair<glm::vec3, glm::vec3> originalContentPositions,
 		float currentAngle = angle(currentDelta.xy());
 		float originalAngle = angle(originalDelta.xy());
 
-		Move(originalContentCenter, currentScreenCenter);
-		Orbit(originalContentCenter.xy(), originalAngle - currentAngle);
+		Move(contentAnchor, currentScreenCenter);
+		Orbit(contentAnchor, originalAngle - currentAngle);
 
 		float k = glm::dot(originalDelta, originalDelta) < glm::dot(currentDelta, currentDelta) ? delta : -delta;
 		MoveCamera(_terrainViewport->GetCameraPosition() + k * _terrainViewport->GetCameraDirection());
@@ -257,17 +233,16 @@ void TerrainView::Zoom(std::pair<glm::vec3, glm::vec3> originalContentPositions,
 }
 
 
-void TerrainView::Orbit(glm::vec2 originalContentPosition, float angle)
+void TerrainView::Orbit(glm::vec3 anchor, float angle)
 {
 	glm::quat rotation = glm::angleAxis(angle, glm::vec3(0, 0, 1));
-
-	glm::vec3 center(originalContentPosition.x, originalContentPosition.y, 0);
-	glm::vec3 delta = _terrainViewport->GetCameraPosition() - center;
-
-	_terrainViewport->SetCameraPosition(center + rotation * delta);
+	glm::vec3 pos = _terrainViewport->GetCameraPosition();
+	glm::vec3 value = anchor + rotation * (pos - anchor);
+	
+	_terrainViewport->SetCameraPosition(value);
 	_terrainViewport->SetCameraFacing(_terrainViewport->GetCameraFacing() + angle);
 
-	MoveCamera(_terrainViewport->GetCameraPosition());
+	//MoveCamera(_terrainViewport->GetCameraPosition());
 }
 
 

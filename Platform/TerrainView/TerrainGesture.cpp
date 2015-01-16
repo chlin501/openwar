@@ -20,7 +20,6 @@ TerrainGesture::TerrainGesture(TerrainHotspot* hotspot) :
 
 TerrainGesture::~TerrainGesture()
 {
-
 }
 
 
@@ -82,17 +81,18 @@ void TerrainGesture::ScrollWheel(glm::vec2 position, glm::vec2 delta)
 
 void TerrainGesture::Magnify(glm::vec2 position, float magnification)
 {
-	glm::vec2 p = (glm::vec2)_hotspot->GetTerrainView()->GetViewport()->GetBounds().mid();
+	TerrainView* terrainView = _hotspot->GetTerrainView();
+	glm::vec2 p = (glm::vec2)terrainView->GetViewport()->GetBounds().mid();
 	glm::vec2 d1 = glm::vec2(0, 64);
 	glm::vec2 d2 = d1 * glm::exp(magnification);
 
 	auto contentPositions = std::make_pair(
-		_hotspot->GetTerrainView()->GetTerrainPosition3(p - d1),
-		_hotspot->GetTerrainView()->GetTerrainPosition3(p + d1));
+		terrainView->GetTerrainPosition3(p - d1),
+		terrainView->GetTerrainPosition3(p + d1));
 
 	auto screenPositions = std::make_pair(p - d2, p + d2);
 
-	_hotspot->GetTerrainView()->Zoom(contentPositions, screenPositions, 0);
+	terrainView->Zoom(contentPositions, screenPositions);
 }
 
 
@@ -108,115 +108,84 @@ void TerrainGesture::TouchWillBeReleased(Touch* touch)
 
 void TerrainGesture::TouchBegan(Touch* touch)
 {
-	if (touch->IsCaptured() || _hotspot->GetCapturedTouches().size() == 2)
-		return;
-
-	bounds2f viewportBounds = (bounds2f)_hotspot->GetTerrainView()->GetViewport()->GetBounds();
+	TerrainView* terrainView = _hotspot->GetTerrainView();
+	bounds2f viewportBounds = (bounds2f)terrainView->GetViewport()->GetBounds();
 	if (!viewportBounds.contains(touch->GetCurrentPosition()))
 		return;
 
 	if (_hotspot->TryCaptureTouch(touch))
 	{
-		_contentPosition1 = _hotspot->GetTerrainView()->GetTerrainPosition3(_hotspot->GetCapturedTouches()[0]->GetCurrentPosition());
-		if (_hotspot->GetCapturedTouches().size() == 2)
-			_contentPosition2 = _hotspot->GetTerrainView()->GetTerrainPosition3(_hotspot->GetCapturedTouches()[1]->GetCurrentPosition());
-
-		_previousTouchPosition = touch->GetCurrentPosition();
-
 		ResetSamples(touch->GetTimestamp());
 	}
 }
 
 
-static float adjust_toward_one(float value)
-{
-	float v2 = 1 - value;
-	return 1 - v2 * v2;
-}
-
-
-static float GetOrbitFactor(Touch* touch, bounds2f bounds)
-{
-	glm::vec2 currentVelocity = touch->GetVelocity();
-	float currentSpeed = glm::length(currentVelocity);
-
-	float circularSteadiness = 0;
-	if (currentSpeed > 0.01)
-	{
-		glm::vec2 centerDirection = glm::normalize(bounds.mid() - touch->GetCurrentPosition());
-		circularSteadiness = 1 - fabsf(glm::dot(currentVelocity, centerDirection)) / currentSpeed;
-		circularSteadiness = adjust_toward_one(circularSteadiness);
-	}
-
-	float rectangularStediness = 0;
-	glm::vec2 previousVelocity = touch->GetVelocity(touch->GetTimestamp() - 0.3);
-	float previousSpeed = glm::length(previousVelocity);
-	if (currentSpeed > 0.01 && previousSpeed > 0.01)
-	{
-		rectangularStediness = fabsf(glm::dot(currentVelocity, previousVelocity)) / currentSpeed / previousSpeed;
-	}
-
-	float positionFactor = glm::length((touch->GetCurrentPosition() - bounds.mid()) / bounds.size());
-	positionFactor = bounds1f(0, 1).clamp(14 * (positionFactor - 0.36f));
-
-	//NSLog(@"circular: %f,  rectangular: %f,  position: %f", circularSteadiness, rectangularStediness, positionFactor);
-
-	return circularSteadiness * (1 - rectangularStediness) * positionFactor;
-}
-
-
 void TerrainGesture::TouchMoved(Touch* touch)
 {
-	size_t touchCount = _hotspot->GetCapturedTouches().size();
-	if (touchCount != 0)
+	if (_hotspot->HasCapturedTouch(touch))
 	{
-		if (touchCount == 1)
+		TerrainView* terrainView = _hotspot->GetTerrainView();
+
+		switch (_hotspot->GetTerrainHotspotMode())
 		{
-			MoveAndOrbit(_hotspot->GetCapturedTouches()[0]);
-		}
-		else if (touchCount == 2)
-		{
-			ZoomAndOrbit(_hotspot->GetCapturedTouches()[0], _hotspot->GetCapturedTouches()[1]);
+			case TerrainHotspotMode::Move:
+				terrainView->Orbit(
+					_hotspot->GetOrbitAnchor(),
+					_hotspot->GetOrbitFactor() * _hotspot->GetOrbitAngle());
+
+				terrainView->Move(
+					_hotspot->GetContentPosition1(),
+					_hotspot->GetCurrentScreenPosition1());
+				break;
+
+			case TerrainHotspotMode::Zoom:
+				terrainView->Zoom(
+					_hotspot->GetContentPositions(),
+					_hotspot->GetCurrentScreenPositions());
+				break;
+
+			default:
+				break;
 		}
 
-		UpdateSamples(_hotspot->GetCapturedTouches()[0]->GetTimestamp());
+		AdjustToKeepInView(0.5, 0);
+		UpdateSamples(touch->GetTimestamp());
 	}
 }
 
 
 void TerrainGesture::TouchEnded(Touch* touch)
 {
-	if (_hotspot->GetCapturedTouches().size() == 1)
+	if (_hotspot->HasCapturedTouch(touch))
 	{
-		_scrollVelocity = GetScrollVelocity();
-		_orbitVelocity = GetOrbitVelocity();
-	}
-	else if (_hotspot->GetCapturedTouches().size() == 2)
-	{
-		Touch* other = touch == _hotspot->GetCapturedTouches()[0] ? _hotspot->GetCapturedTouches()[1] : _hotspot->GetCapturedTouches()[0];
-		_previousTouchPosition = other->GetCurrentPosition();
-		_contentPosition1 = _hotspot->GetTerrainView()->GetTerrainPosition3(_previousTouchPosition);
+		if (_hotspot->GetCapturedTouches().size() == 1)
+		{
+			_scrollVelocity = GetScrollVelocity();
+			_orbitVelocity = GetOrbitVelocity();
+		}
 	}
 }
 
 
 void TerrainGesture::UpdateMomentumOrbit(double secondsSinceLastUpdate)
 {
-	glm::vec2 screenPosition = _hotspot->GetTerrainView()->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
-	glm::vec3 contentPosition = _hotspot->GetTerrainView()->GetTerrainPosition2(screenPosition);
+	TerrainView* terrainView = _hotspot->GetTerrainView();
+	glm::vec2 screenPosition = terrainView->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
+	glm::vec3 contentAnchor = terrainView->GetTerrainPosition2(screenPosition);
 
-	_hotspot->GetTerrainView()->Orbit(contentPosition.xy(), (float)secondsSinceLastUpdate * _orbitVelocity);
+	terrainView->Orbit(contentAnchor, (float)secondsSinceLastUpdate * _orbitVelocity);
 	_orbitVelocity = _orbitVelocity * exp2f(-4 * (float)secondsSinceLastUpdate);
 }
 
 
 void TerrainGesture::UpdateMomentumScroll(double secondsSinceLastUpdate)
 {
-	glm::vec2 screenPosition = _hotspot->GetTerrainView()->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
-	glm::vec3 contentPosition = _hotspot->GetTerrainView()->GetTerrainPosition2(screenPosition);
+	TerrainView* terrainView = _hotspot->GetTerrainView();
+	glm::vec2 screenPosition = terrainView->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
+	glm::vec3 contentPosition = terrainView->GetTerrainPosition2(screenPosition);
 
 	contentPosition += (float)secondsSinceLastUpdate * glm::vec3(_scrollVelocity, 0);
-	_hotspot->GetTerrainView()->Move(contentPosition, screenPosition);
+	terrainView->Move(contentPosition, screenPosition);
 
 	_scrollVelocity = _scrollVelocity * exp2f(-4 * (float)secondsSinceLastUpdate);
 
@@ -232,10 +201,11 @@ void TerrainGesture::UpdateKeyScroll(double secondsSinceLastUpdate)
 	if (_keyScrollForward) _keyScrollMomentum.x += limit;
 	if (_keyScrollBackward) _keyScrollMomentum.x -= limit;
 
-	glm::vec3 pos = _hotspot->GetTerrainView()->GetViewport()->GetCameraPosition();
-	glm::vec3 dir = _hotspot->GetTerrainView()->GetViewport()->GetCameraDirection();
+	TerrainView* terrainView = _hotspot->GetTerrainView();
+	glm::vec3 pos = terrainView->GetViewport()->GetCameraPosition();
+	glm::vec3 dir = terrainView->GetViewport()->GetCameraDirection();
 	glm::vec2 delta = (float)secondsSinceLastUpdate * glm::log(2.0f + glm::max(0.0f, pos.z)) * rotate(_keyScrollMomentum, angle(dir.xy()));
-	_hotspot->GetTerrainView()->MoveCamera(pos + glm::vec3(delta, 0));
+	terrainView->MoveCamera(pos + glm::vec3(delta, 0));
 
 
 	_keyScrollMomentum *= exp2f(-25 * (float)secondsSinceLastUpdate);
@@ -247,72 +217,24 @@ void TerrainGesture::UpdateKeyOrbit(double secondsSinceLastUpdate)
 	if (_keyOrbitLeft) _keyOrbitMomentum -= 32 * (float)secondsSinceLastUpdate;
 	if (_keyOrbitRight) _keyOrbitMomentum += 32 * (float)secondsSinceLastUpdate;
 
-	glm::vec2 centerScreen = _hotspot->GetTerrainView()->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
-	glm::vec2 centerContent = _hotspot->GetTerrainView()->GetTerrainPosition3(centerScreen).xy();
-	_hotspot->GetTerrainView()->Orbit(centerContent, (float)secondsSinceLastUpdate * _keyOrbitMomentum);
+	TerrainView* terrainView = _hotspot->GetTerrainView();
+	glm::vec2 centerScreen = terrainView->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
+	glm::vec3 contentAnchor = terrainView->GetTerrainPosition3(centerScreen);
+	terrainView->Orbit(contentAnchor, (float)secondsSinceLastUpdate * _keyOrbitMomentum);
 
 	_keyOrbitMomentum *= exp2f(-25 * (float)secondsSinceLastUpdate);
 }
 
 
-void TerrainGesture::MoveAndOrbit(Touch* touch)
-{
-	bounds2f viewportBounds = _hotspot->GetTerrainView()->GetViewport()->GetBounds();
-	glm::vec2 touchPosition = touch->GetCurrentPosition();
-
-	glm::vec2 centerScreen = _hotspot->GetTerrainView()->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
-	glm::vec2 centerContent = _hotspot->GetTerrainView()->GetTerrainPosition3(centerScreen).xy();
-	glm::vec2 previousContent = _hotspot->GetTerrainView()->GetTerrainPosition3(_previousTouchPosition).xy();
-	glm::vec2 currentContent = _hotspot->GetTerrainView()->GetTerrainPosition3(touchPosition).xy();
-
-	glm::vec2 diff1 = currentContent - centerContent;
-	glm::vec2 diff2 = previousContent - centerContent;
-
-	float orbitFactor = GetOrbitFactor(touch, viewportBounds);
-	float orbitAngle = orbitFactor * (angle(diff2) - angle(diff1));
-
-	_hotspot->GetTerrainView()->Orbit(centerContent, orbitAngle);
-	_hotspot->GetTerrainView()->Move(_contentPosition1, touchPosition);
-
-	_contentPosition1 = _hotspot->GetTerrainView()->GetTerrainPosition3(touchPosition);
-	_previousTouchPosition = touch->GetCurrentPosition();
-
-	AdjustToKeepInView(0.5, 0);
-}
-
-
-void TerrainGesture::ZoomAndOrbit(Touch* touch1, Touch* touch2)
-{
-	glm::vec2 v = glm::normalize(touch2->GetCurrentPosition() - touch1->GetCurrentPosition());
-	glm::vec2 velocity1 = touch1->GetVelocity();
-	glm::vec2 velocity2 = touch2->GetVelocity();
-	float speed1 = glm::length(velocity1);
-	float speed2 = glm::length(velocity2);
-	float k1 = 1;
-	float k2 = 1;
-	if (speed1 > 0.01)
-		k1 = glm::dot(v, velocity1) / speed1;
-	if (speed2 > 0.01)
-		k2 = glm::dot(v, velocity2) / speed2;
-	float k = k1 * k2;
-	float orbitFactor = 1 - k * k;
-
-	auto contentPositions = std::make_pair(_contentPosition1, _contentPosition2);
-	auto screenPositions = std::make_pair(touch1->GetCurrentPosition(), touch2->GetCurrentPosition());
-
-	_hotspot->GetTerrainView()->Zoom(contentPositions, screenPositions, orbitFactor);
-
-	AdjustToKeepInView(0.5, 0);
-}
-
-
 void TerrainGesture::ResetSamples(double timestamp)
 {
-	_previousCameraDirection = angle(_hotspot->GetTerrainView()->GetViewport()->GetCameraDirection().xy());
+	TerrainView* terrainView = _hotspot->GetTerrainView();
+
+	_previousCameraDirection = angle(terrainView->GetViewport()->GetCameraDirection().xy());
 	_orbitAccumulator = 0;
 
-	glm::vec2 screenPosition = _hotspot->GetTerrainView()->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
-	glm::vec3 contentPosition = _hotspot->GetTerrainView()->GetTerrainPosition2(screenPosition);
+	glm::vec2 screenPosition = terrainView->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
+	glm::vec3 contentPosition = terrainView->GetTerrainPosition2(screenPosition);
 
 	_scrollSampler.clear();
 	_scrollSampler.add(timestamp, contentPosition.xy());
@@ -323,14 +245,16 @@ void TerrainGesture::ResetSamples(double timestamp)
 
 void TerrainGesture::UpdateSamples(double timestamp)
 {
-	float currentCameraDirection = angle(_hotspot->GetTerrainView()->GetViewport()->GetCameraDirection().xy());
+	TerrainView* terrainView = _hotspot->GetTerrainView();
+
+	float currentCameraDirection = angle(terrainView->GetViewport()->GetCameraDirection().xy());
 	float orbitDelta = diff_radians(currentCameraDirection, _previousCameraDirection);
 
 	_previousCameraDirection = currentCameraDirection;
 
 	_orbitAccumulator += orbitDelta;
-	glm::vec2 screenPosition = _hotspot->GetTerrainView()->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
-	glm::vec3 contentPosition = _hotspot->GetTerrainView()->GetTerrainPosition2(screenPosition);
+	glm::vec2 screenPosition = terrainView->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
+	glm::vec3 contentPosition = terrainView->GetTerrainPosition2(screenPosition);
 
 	_scrollSampler.add(timestamp, contentPosition.xy());
 	_orbitSampler.add(timestamp, glm::vec2(_orbitAccumulator, 0));
@@ -360,16 +284,18 @@ float TerrainGesture::GetOrbitVelocity() const
 
 void TerrainGesture::AdjustToKeepInView(float adjustmentFactor, float secondsSinceLastUpdate)
 {
-	_hotspot->GetTerrainView()->ClampCameraPosition();
+	TerrainView* terrainView = _hotspot->GetTerrainView();
+
+	terrainView->ClampCameraPosition();
 
 #if false
 
 	bool is_scrolling = glm::length(_scrollVelocity) > 16;
 	bool brake_scrolling = false;
 
-	bounds2f viewportBounds = _hotspot->GetTerrainView()->GetViewport()->GetBounds();
-	glm::vec2 left = _hotspot->GetTerrainView()->GetScreenLeft();
-	glm::vec2 right = _hotspot->GetTerrainView()->GetScreenRight();
+	bounds2f viewportBounds = terrainView->GetViewport()->GetBounds();
+	glm::vec2 left = terrainView->GetScreenLeft();
+	glm::vec2 right = terrainView->GetScreenRight();
 	float dx1 = left.x - viewportBounds.min.x;
 	float dx2 = viewportBounds.max.x - right.x;
 
@@ -381,28 +307,28 @@ void TerrainGesture::AdjustToKeepInView(float adjustmentFactor, float secondsSin
 		}
 		else if (dx1 > 0 && dx2 > 0)
 		{
-			glm::vec3 contentPosition1 = _hotspot->GetTerrainView()->GetTerrainPosition2(left);
-			glm::vec3 contentPosition2 = _hotspot->GetTerrainView()->GetTerrainPosition2(right);
+			glm::vec3 contentPosition1 = terrainView->GetTerrainPosition2(left);
+			glm::vec3 contentPosition2 = terrainView->GetTerrainPosition2(right);
 			left.x -= adjustmentFactor * dx1;
 			right.x += adjustmentFactor * dx2;
-			_hotspot->GetTerrainView()->Zoom(contentPosition1, contentPosition2, left, right, 0);
+			terrainView->Zoom(contentPosition1, contentPosition2, left, right);
 		}
 		else if (dx1 > 0)
 		{
-			glm::vec3 contentPosition = _hotspot->GetTerrainView()->GetTerrainPosition2(left);
+			glm::vec3 contentPosition = terrainView->GetTerrainPosition2(left);
 			left.x -= adjustmentFactor * dx1;
-			_hotspot->GetTerrainView()->Move(contentPosition, left);
+			terrainView->Move(contentPosition, left);
 		}
 		else if (dx2 > 0)
 		{
-			glm::vec3 contentPosition = _hotspot->GetTerrainView()->GetTerrainPosition2(right);
+			glm::vec3 contentPosition = terrainView->GetTerrainPosition2(right);
 			right.x += adjustmentFactor * dx2;
-			_hotspot->GetTerrainView()->Move(contentPosition, right);
+			terrainView->Move(contentPosition, right);
 		}
 	}
 
-	glm::vec2 bottom = _hotspot->GetTerrainView()->GetScreenBottom();
-	glm::vec2 top = _hotspot->GetTerrainView()->GetScreenTop();
+	glm::vec2 bottom = terrainView->GetScreenBottom();
+	glm::vec2 top = terrainView->GetScreenTop();
 	float dy1 = bottom.y - viewportBounds.min.y;
 	float dy2 = viewportBounds.min.y + 0.85f * viewportBounds.max.y - top.y;
 
@@ -414,23 +340,23 @@ void TerrainGesture::AdjustToKeepInView(float adjustmentFactor, float secondsSin
 		}
 		else if (dy1 > 0 && dy2 > 0)
 		{
-			glm::vec3 contentPosition1 = _hotspot->GetTerrainView()->GetTerrainPosition2(bottom);
-			glm::vec3 contentPosition2 = _hotspot->GetTerrainView()->GetTerrainPosition2(top);
+			glm::vec3 contentPosition1 = terrainView->GetTerrainPosition2(bottom);
+			glm::vec3 contentPosition2 = terrainView->GetTerrainPosition2(top);
 			bottom.y -= adjustmentFactor * dy1;
 			top.y += adjustmentFactor * dy2;
-			_hotspot->GetTerrainView()->Zoom(contentPosition1, contentPosition2, bottom, top, 0);
+			terrainView->Zoom(contentPosition1, contentPosition2, bottom, top);
 		}
 		else if (dy1 > 0)
 		{
-			glm::vec3 contentPosition = _hotspot->GetTerrainView()->GetTerrainPosition2(bottom);
+			glm::vec3 contentPosition = terrainView->GetTerrainPosition2(bottom);
 			bottom.y -= adjustmentFactor * dy1;
-			_hotspot->GetTerrainView()->Move(contentPosition, bottom);
+			terrainView->Move(contentPosition, bottom);
 		}
 		else if (dy2 > 0)
 		{
-			glm::vec3 contentPosition = _hotspot->GetTerrainView()->GetTerrainPosition2(top);
+			glm::vec3 contentPosition = terrainView->GetTerrainPosition2(top);
 			top.y += adjustmentFactor * dy2;
-			_hotspot->GetTerrainView()->Move(contentPosition, top);
+			terrainView->Move(contentPosition, top);
 		}
 	}
 

@@ -491,7 +491,7 @@ void BattleView::InitializeCameraPosition()
 	auto contentPositions = std::make_pair(GetTerrainPosition(friendlyCenter, 0), GetTerrainPosition(enemyCenter, 0));
 	auto screenPositions = std::make_pair(friendlyScreen, enemyScreen);
 
-	Zoom(contentPositions, screenPositions, 0);
+	Zoom(contentPositions, screenPositions);
 
 	//ClampCameraPosition();
 }
@@ -752,20 +752,25 @@ void BattleView::Render()
 	// Mouse Hint
 
 	_plainLineVertices->Reset(GL_LINES);
-	RenderMouseHint(_plainLineVertices);
+	RenderMouseHint(*_plainLineVertices);
 
 	glLineWidth(1);
-	RenderCall<PlainShader_3f>(_gc)
+	RenderCall<PlainShader_3f> renderMouseHints{_gc};
+	renderMouseHints
 		.SetVertices(_plainLineVertices, "position")
 		.SetUniform("transform", transform)
 		.SetUniform("point_size", 1)
-		.SetUniform("color", glm::vec4(0, 0, 0, 0.5f))
+		.SetUniform("color", glm::vec4(0, 0, 0, 0.8f))
 		.Render();
 
+	glDisable(GL_DEPTH_TEST);
+
+	renderMouseHints
+		.SetUniform("color", glm::vec4(1, 1, 1, 0.2f))
+		.Render();
 
 	glDepthMask(true);
-	glDisable(GL_DEPTH_TEST);
-}
+};
 
 
 template <class T> void AnimateMarkers(std::vector<T*>& markers, float seconds)

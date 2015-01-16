@@ -46,17 +46,17 @@ public:
 	virtual void OnTouchBegin(Touch* touch);
 	virtual void Render() = 0;
 
-	void RenderMouseHint(VertexShape_3f* vertices);
+	void RenderMouseHint(VertexShape_3f& vertices);
 
 	void SetHeightMap(HeightMap* heightMap);
 
 	ray GetCameraRay(glm::vec2 screenPosition) const;
-	glm::vec3 GetTerrainPosition2(glm::vec2 screenPosition) const;
+	glm::vec3 GetTerrainPosition2(glm::vec2 screenPosition, float height = 0) const;
 	glm::vec3 GetTerrainPosition3(glm::vec2 screenPosition) const;
 
 	void Move(glm::vec3 originalContentPosition, glm::vec2 currentScreenPosition);
-	void Zoom(std::pair<glm::vec3, glm::vec3> originalContentPositions, std::pair<glm::vec2, glm::vec2> currentScreenPositions, float orbitFactor);
-	void Orbit(glm::vec2 originalContentPosition, float angle);
+	void Zoom(std::pair<glm::vec3, glm::vec3> originalContentPositions, std::pair<glm::vec2, glm::vec2> currentScreenPositions);
+	void Orbit(glm::vec3 anchor, float angle);
 
 	void MoveCamera(glm::vec3 position);
 	void ClampCameraPosition();
