@@ -1,7 +1,7 @@
 #include "TerrainHotspot.h"
 #include "TerrainView.h"
-#include "Touch.h"
 #include "TerrainViewport.h"
+#include "Surface/Touch.h"
 
 #include <glm/gtc/constants.hpp>
 

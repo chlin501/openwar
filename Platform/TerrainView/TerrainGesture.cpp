@@ -164,6 +164,10 @@ void TerrainGesture::TouchEnded(Touch* touch)
 			_scrollVelocity = GetScrollVelocity();
 			_orbitVelocity = GetOrbitVelocity();
 		}
+		else
+		{
+			ResetSamples(touch->GetTimestamp());
+		}
 	}
 }
 

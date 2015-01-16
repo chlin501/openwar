@@ -7,6 +7,7 @@
 #include <glm/gtc/quaternion.hpp>
 
 #include "BattleModel/HeightMap.h"
+#include "Graphics/CommonShaders.h"
 #include "Surface/Touch.h"
 #include "Surface/Surface.h"
 #include "EditorHotspot.h"
@@ -14,7 +15,6 @@
 #include "TerrainHotspot.h"
 #include "TerrainView.h"
 #include "TerrainViewport.h"
-#include "CommonShaders.h"
 
 
 TerrainView::TerrainView(Surface* surface) : View(surface)
@@ -248,29 +248,12 @@ void TerrainView::Orbit(glm::vec3 anchor, float angle)
 
 void TerrainView::MoveCamera(glm::vec3 position)
 {
-	bounds2f contentBounds = _terrainViewport->GetTerrainBounds();
-	float contentRadius = 0.5f * glm::length(contentBounds.size());
-
-	position.z = (bounds1f(0.05f, 2) * contentRadius).clamp(position.z);
-
-	float h = position.z;
-	glm::vec2 p = (glm::vec2)position.xy() - contentBounds.mid();
-	p = ::rotate(p, -_terrainViewport->GetCameraFacing());
-	float w = contentRadius - p.x;
-	float pitch = -atan2f(h, w) - (0.125f - 0.02f) * (float)M_PI;
-
-	if (pitch < -(float)M_PI_2)
-		pitch = -(float)M_PI_2;
-
-	float height1 = 0.1f * contentRadius;
-	float height2 = 5.0f * contentRadius;
-	float t = mix_factor(height1, height2, h);
-	t = bounds1f(0, 1).clamp(t);
-	pitch = glm::mix(pitch, (float)-M_PI_2, t);
+	position.z = ClampCameraHeight(position.z);
+	float tilt = CalculateCameraTilt(position.z);
 
 	_terrainViewport->SetCameraPosition(position);
-	_terrainViewport->SetCameraTilt(-pitch);
-}
+	_terrainViewport->SetCameraTilt(tilt);
+};
 
 
 void TerrainView::ClampCameraPosition()
@@ -278,7 +261,7 @@ void TerrainView::ClampCameraPosition()
 	glm::vec2 centerScreen = (glm::vec2)_terrainViewport->NormalizedToLocal(glm::vec2(0, 0));
 	glm::vec2 contentCamera = GetTerrainPosition2(centerScreen).xy();
 	glm::vec2 contentCenter = _terrainViewport->GetTerrainBounds().mid();
-	float contentRadius = _heightMap->GetBounds().x().size() / 2;
+	float contentRadius = 0.5f * _heightMap->GetBounds().x().size();
 
 	glm::vec2 offset = contentCamera - contentCenter;
 	float distance = glm::length(offset);
@@ -288,6 +271,28 @@ void TerrainView::ClampCameraPosition()
 		_terrainViewport->SetCameraPosition(_terrainViewport->GetCameraPosition() - glm::vec3(direction * (distance - contentRadius), 0));
 	}
 }
+
+
+const float mininum_height = 75;
+
+
+float TerrainView::ClampCameraHeight(float height) const
+{
+	bounds2f bounds = _terrainViewport->GetTerrainBounds();
+	float radius = 0.5f * glm::length(bounds.size());
+	return bounds1f{mininum_height, 1.0f * radius}.clamp(height);
+}
+
+
+float TerrainView::CalculateCameraTilt(float height) const
+{
+	bounds2f bounds = _terrainViewport->GetTerrainBounds();
+	float radius = 0.5f * glm::length(bounds.size());
+
+	float t = bounds1f{0, 1}.clamp((height - mininum_height) / (radius - mininum_height));
+
+	return bounds1f{0.17f * glm::pi<float>(), 0.40f * glm::pi<float>()}.mix(t);
+};
 
 
 glm::vec2 TerrainView::ContentToScreen(glm::vec3 value) const

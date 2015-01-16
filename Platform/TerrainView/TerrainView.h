@@ -60,6 +60,8 @@ public:
 
 	void MoveCamera(glm::vec3 position);
 	void ClampCameraPosition();
+	float ClampCameraHeight(float height) const;
+	float CalculateCameraTilt(float height) const;
 
 	glm::vec2 ContentToScreen(glm::vec3 value) const;
 

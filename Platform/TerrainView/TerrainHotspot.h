@@ -2,8 +2,8 @@
 #define TerrainHotspot_H
 
 #include "Surface/Hotspot.h"
+#include "Shapes/VertexShape.h"
 #include "TerrainGesture.h"
-#include "VertexShape.h"
 
 
 enum class TerrainHotspotMode { None, Move, Zoom };
