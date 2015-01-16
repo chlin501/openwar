@@ -139,7 +139,7 @@ float TerrainHotspot::GetOrbitFactor() const
 		: 0.5f * (GetCurrentScreenPosition1() + GetCurrentScreenPosition2());
 
 	float value = glm::length(_terrainView->GetViewport()->LocalToNormalized(pos));
-	return bounds1f{0, 1}.clamp(bounds1f{0.33f, 0.66f}.unmix(value));
+	return bounds1f{0, 1}.clamp(bounds1f{0.33f, 0.66f}.unmix(value * value));
 };
 
 

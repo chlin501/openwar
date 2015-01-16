@@ -291,9 +291,6 @@ float TerrainGesture::CalculateOrbitFactor() const
 	float scrollFactor = bounds1f{0, 1}.clamp(scrollSpeed * 6.0f);
 	float combinedFactor = bounds1f{0, 1}.clamp(1.0f + orbitFactor - scrollFactor);
 
-	//NSLog(@"orbit factor = %g, scroll speed = %g, combined factor = %g", orbitFactor, scrollFactor, combinedFactor);
-	//NSLog(@"orbit factor %g", _hotspot->GetOrbitFactor());
-
 	return combinedFactor * _hotspot->GetOrbitFactor();
 };
 
