@@ -219,6 +219,8 @@ void TerrainView::Zoom(std::pair<glm::vec3, glm::vec3> originalContentPositions,
 {
 	glm::vec3 contentAnchor = (originalContentPositions.first + originalContentPositions.second) / 2.0f;
 	glm::vec2 currentScreenCenter = (currentScreenPositions.first + currentScreenPositions.second) / 2.0f;
+	glm::vec3 originalDelta = originalContentPositions.second - originalContentPositions.first;
+	float originalAngle = angle(originalDelta.xy());
 
 	float delta = glm::length(_terrainViewport->GetTerrainBounds().size()) / 20.0f;
 	for (int i = 0; i < 18; ++i)
@@ -226,17 +228,16 @@ void TerrainView::Zoom(std::pair<glm::vec3, glm::vec3> originalContentPositions,
 		glm::vec3 currentContentPosition1 = GetTerrainPosition3(currentScreenPositions.first);
 		glm::vec3 currentContentPosition2 = GetTerrainPosition3(currentScreenPositions.second);
 		glm::vec3 currentDelta = currentContentPosition2 - currentContentPosition1;
-		glm::vec3 originalDelta = originalContentPositions.second - originalContentPositions.first;
 
 		float currentAngle = angle(currentDelta.xy());
-		float originalAngle = angle(originalDelta.xy());
-
-		Move(contentAnchor, currentScreenCenter);
-		Orbit(contentAnchor, originalAngle - currentAngle);
+		if (glm::abs(diff_radians(originalAngle, currentAngle)) < glm::pi<float>() / 2)
+			Orbit(contentAnchor, originalAngle - currentAngle);
 
 		float k = glm::dot(originalDelta, originalDelta) < glm::dot(currentDelta, currentDelta) ? delta : -delta;
 		MoveCamera(_terrainViewport->GetCameraPosition() + k * _terrainViewport->GetCameraDirection());
 		delta *= 0.75;
+
+		Move(contentAnchor, currentScreenCenter);
 	}
 }
 
@@ -249,8 +250,6 @@ void TerrainView::Orbit(glm::vec3 anchor, float angle)
 	
 	_terrainViewport->SetCameraPosition(value);
 	_terrainViewport->SetCameraFacing(_terrainViewport->GetCameraFacing() + angle);
-
-	//MoveCamera(_terrainViewport->GetCameraPosition());
 }
 
 

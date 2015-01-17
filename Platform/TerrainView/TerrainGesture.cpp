@@ -83,8 +83,9 @@ void TerrainGesture::ScrollWheel(glm::vec2 position, glm::vec2 delta)
 void TerrainGesture::Magnify(glm::vec2 position, float magnification)
 {
 	TerrainView* terrainView = _hotspot->GetTerrainView();
-	glm::vec2 p = (glm::vec2)terrainView->GetViewport()->GetBounds().mid();
-	glm::vec2 d1 = glm::vec2(0, 64);
+	bounds2i bounds = terrainView->GetViewport()->GetBounds();
+	glm::vec2 p = (glm::vec2)bounds.mid();
+	glm::vec2 d1 = glm::vec2(0, 0.1f * bounds.y().size());
 	glm::vec2 d2 = d1 * glm::exp(magnification);
 
 	auto contentPositions = std::make_pair(
