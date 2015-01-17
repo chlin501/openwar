@@ -6,7 +6,7 @@
 #include "TerrainGesture.h"
 
 
-enum class TerrainHotspotMode { None, Move, Zoom };
+enum class TerrainHotspotMode { None, MoveAndOrbit, Zoom };
 
 
 class TerrainHotspot : public Hotspot

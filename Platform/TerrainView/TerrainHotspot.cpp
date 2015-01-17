@@ -57,9 +57,12 @@ void TerrainHotspot::ReleaseTouch(Touch* touch)
 
 TerrainHotspotMode TerrainHotspot::GetTerrainHotspotMode() const
 {
-	return GetCapturedTouches().size() == 1
-		? TerrainHotspotMode::Move
-		: TerrainHotspotMode::Zoom;
+	switch (GetCapturedTouches().size())
+	{
+		case 1: return TerrainHotspotMode::MoveAndOrbit;
+		case 2: return TerrainHotspotMode::Zoom;
+		default: return TerrainHotspotMode::None;
+	}
 }
 
 

@@ -26,18 +26,18 @@ TerrainGesture::~TerrainGesture()
 
 void TerrainGesture::OnRenderLoop(double secondsSinceLastUpdate)
 {
-	if (!_hotspot->HasCapturedTouches())
-	{
+	if (_hotspot->GetTerrainHotspotMode() != TerrainHotspotMode::Zoom)
 		UpdateMomentumOrbit(secondsSinceLastUpdate);
-		UpdateMomentumScroll(secondsSinceLastUpdate);
-	}
 	else
-	{
 		_orbitVelocity = 0;
-		_scrollVelocity = glm::vec2();
-		//_keyOrbitMomentum = 0;
-		//_keyScrollMomentum = glm::vec2();
-	}
+
+	if (_hotspot->GetTerrainHotspotMode() == TerrainHotspotMode::None)
+		UpdateMomentumScroll(secondsSinceLastUpdate);
+	else
+		_scrollVelocity = glm::vec2{};
+
+	//_keyOrbitMomentum = 0;
+	//_keyScrollMomentum = glm::vec2{};
 
 	UpdateKeyOrbit(secondsSinceLastUpdate);
 	UpdateKeyScroll(secondsSinceLastUpdate);
@@ -118,6 +118,8 @@ void TerrainGesture::TouchBegan(Touch* touch)
 	if (_hotspot->TryCaptureTouch(touch))
 	{
 		ResetSamples(touch->GetTimestamp());
+		_orbitVelocity = 0;
+		_scrollVelocity = glm::vec2{};
 	}
 }
 
@@ -130,7 +132,7 @@ void TerrainGesture::TouchMoved(Touch* touch)
 
 		switch (_hotspot->GetTerrainHotspotMode())
 		{
-			case TerrainHotspotMode::Move:
+			case TerrainHotspotMode::MoveAndOrbit:
 				terrainView->Orbit(
 					_hotspot->GetOrbitAnchor(),
 					CalculateOrbitFactor() * _hotspot->GetOrbitAngle());
@@ -160,15 +162,8 @@ void TerrainGesture::TouchEnded(Touch* touch)
 {
 	if (_hotspot->HasCapturedTouch(touch))
 	{
-		if (_hotspot->GetCapturedTouches().size() == 1)
-		{
-			_scrollVelocity = GetScrollVelocity();
-			_orbitVelocity = GetOrbitVelocity();
-		}
-		else
-		{
-			ResetSamples(touch->GetTimestamp());
-		}
+		_scrollVelocity = GetScrollVelocity();
+		_orbitVelocity = GetOrbitVelocity();
 	}
 }
 
@@ -176,8 +171,8 @@ void TerrainGesture::TouchEnded(Touch* touch)
 void TerrainGesture::UpdateMomentumOrbit(double secondsSinceLastUpdate)
 {
 	TerrainView* terrainView = _hotspot->GetTerrainView();
-	glm::vec2 screenPosition = terrainView->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
-	glm::vec3 contentAnchor = terrainView->GetTerrainPosition2(screenPosition);
+	glm::vec2 screenPosition = _hotspot->GetCurrentScreenPosition1();
+	glm::vec3 contentAnchor = terrainView->GetTerrainPosition3(screenPosition);
 
 	terrainView->Orbit(contentAnchor, (float)secondsSinceLastUpdate * _orbitVelocity);
 	_orbitVelocity = _orbitVelocity * exp2f(-4 * (float)secondsSinceLastUpdate);
@@ -187,13 +182,13 @@ void TerrainGesture::UpdateMomentumOrbit(double secondsSinceLastUpdate)
 void TerrainGesture::UpdateMomentumScroll(double secondsSinceLastUpdate)
 {
 	TerrainView* terrainView = _hotspot->GetTerrainView();
-	glm::vec2 screenPosition = terrainView->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
+	glm::vec2 screenPosition = terrainView->GetViewport()->NormalizedToLocal(glm::vec2{});
 	glm::vec3 contentPosition = terrainView->GetTerrainPosition2(screenPosition);
 
 	contentPosition += (float)secondsSinceLastUpdate * glm::vec3(_scrollVelocity, 0);
 	terrainView->Move(contentPosition, screenPosition);
 
-	_scrollVelocity = _scrollVelocity * exp2f(-4 * (float)secondsSinceLastUpdate);
+	_scrollVelocity = _scrollVelocity * glm::exp2(-4.0f * (float)secondsSinceLastUpdate);
 
 	AdjustToKeepInView(0.35f, (float)secondsSinceLastUpdate);
 }
@@ -213,7 +208,7 @@ void TerrainGesture::UpdateKeyScroll(double secondsSinceLastUpdate)
 	glm::vec2 delta = (float)secondsSinceLastUpdate * glm::log(2.0f + glm::max(0.0f, pos.z)) * rotate(_keyScrollMomentum, angle(dir.xy()));
 	terrainView->MoveCamera(pos + glm::vec3(delta, 0));
 
-	_keyScrollMomentum *= exp2f(-25 * (float)secondsSinceLastUpdate);
+	_keyScrollMomentum *= glm::exp2(-25.0f * (float)secondsSinceLastUpdate);
 }
 
 
@@ -223,7 +218,7 @@ void TerrainGesture::UpdateKeyOrbit(double secondsSinceLastUpdate)
 	if (_keyOrbitRight) _keyOrbitMomentum += 32 * (float)secondsSinceLastUpdate;
 
 	TerrainView* terrainView = _hotspot->GetTerrainView();
-	glm::vec2 centerScreen = terrainView->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
+	glm::vec2 centerScreen = terrainView->GetViewport()->NormalizedToLocal(glm::vec2{});
 	glm::vec3 contentAnchor = terrainView->GetTerrainPosition3(centerScreen);
 	terrainView->Orbit(contentAnchor, (float)secondsSinceLastUpdate * _keyOrbitMomentum);
 
@@ -238,7 +233,7 @@ void TerrainGesture::ResetSamples(double timestamp)
 	_previousCameraDirection = angle(terrainView->GetViewport()->GetCameraDirection().xy());
 	_orbitAccumulator = 0;
 
-	glm::vec2 screenPosition = terrainView->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
+	glm::vec2 screenPosition = terrainView->GetViewport()->NormalizedToLocal(glm::vec2{});
 	glm::vec3 contentPosition = terrainView->GetTerrainPosition2(screenPosition);
 
 	_scrollSampler.clear();
@@ -258,7 +253,7 @@ void TerrainGesture::UpdateSamples(double timestamp)
 	_previousCameraDirection = currentCameraDirection;
 
 	_orbitAccumulator += orbitDelta;
-	glm::vec2 screenPosition = terrainView->GetViewport()->NormalizedToLocal(glm::vec2(0, 0));
+	glm::vec2 screenPosition = terrainView->GetViewport()->NormalizedToLocal(glm::vec2{});
 	glm::vec3 contentPosition = terrainView->GetTerrainPosition2(screenPosition);
 
 	_scrollSampler.add(timestamp, contentPosition.xy());
