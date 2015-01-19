@@ -512,7 +512,11 @@ std::string InputEditor_Android::CallGetString()
 
 	_env->DeleteLocalRef(clazz);
 
-	return ConvertFromJavaString(string);
+	std::string result = ConvertFromJavaString(string);
+
+	_env->DeleteLocalRef(string);
+
+	return result;
 }
 
 
