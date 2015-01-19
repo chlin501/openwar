@@ -195,18 +195,20 @@ std::shared_ptr<TextureImage> FontAdapter_UIFont::AddTextureImage(TextureAtlas* 
 #ifdef ENABLE_FONTADAPTER_SDL_TTF
 
 #ifdef OPENWAR_USE_XCODE_FRAMEWORKS
-#define ANDROID_FONT1 "Roboto-Regular.ttf"
-#define ANDROID_FONT2 "Roboto-Regular.ttf"
-#define ANDROID_EMOJI "Roboto-Regular.ttf"
+#define FONTNAME_REGULAR "Roboto-Regular.ttf"
+#define FONTNAME_BOLD "Roboto-Regular.ttf"
+#define FONTNAME_FALLBACK "Roboto-Regular.ttf"
+#define FONTNAME_EMOJI "Roboto-Regular.ttf"
 #else
-#define ANDROID_FONT1 "/system/fonts/Roboto-Regular.ttf"
-#define ANDROID_FONT2 "/system/fonts/DroidSansFallback.ttf"
-#define ANDROID_EMOJI "/system/fonts/AndroidEmoji.ttf"
+#define FONTNAME_REGULAR "/system/fonts/Roboto-Regular.ttf"
+#define FONTNAME_BOLD "/system/fonts/Roboto-Bold.ttf"
+#define FONTNAME_FALLBACK "/system/fonts/DroidSansFallback.ttf"
+#define FONTNAME_EMOJI "/system/fonts/AndroidEmoji.ttf"
 #endif
 
 FontAdapter_SDL_ttf::FontAdapter_SDL_ttf(GraphicsContext* gc, const FontDescriptor& fontDescriptor)
 {
-	const float scaling = 1.3f;
+	const float scaling = 1.2f;
 
 	if (!TTF_WasInit())
 		TTF_Init();
@@ -215,16 +217,16 @@ FontAdapter_SDL_ttf::FontAdapter_SDL_ttf(GraphicsContext* gc, const FontDescript
 	if (size == 0)
 		size = (int)(scaling * 12 * gc->GetCombinedScaling());
 
-	_font1 = TTF_OpenFont(ANDROID_FONT1, size);
-	_font2 = TTF_OpenFont(ANDROID_FONT2, size);
-	//_emoji = TTF_OpenFont(ANDROID_EMOJI, size);
+	_font1 = TTF_OpenFont(fontDescriptor.bold ? FONTNAME_BOLD : FONTNAME_REGULAR, size);
+	_font2 = TTF_OpenFont(FONTNAME_FALLBACK, size);
+	//_emoji = TTF_OpenFont(FONTNAME_EMOJI, size);
 
 	int style = fontDescriptor.bold ? TTF_STYLE_BOLD : TTF_STYLE_NORMAL;
 	int hinting = TTF_HINTING_NORMAL;
 
 	if (_font1 != NULL)
 	{
-		TTF_SetFontStyle(_font1, style);
+		//TTF_SetFontStyle(_font1, style);
 		TTF_SetFontOutline(_font1, 0);
 		TTF_SetFontKerning(_font1, 1);
 		TTF_SetFontHinting(_font1, hinting);
@@ -232,7 +234,7 @@ FontAdapter_SDL_ttf::FontAdapter_SDL_ttf(GraphicsContext* gc, const FontDescript
 
 	if (_font2 != NULL)
 	{
-		TTF_SetFontStyle(_font2, style);
+		//TTF_SetFontStyle(_font2, style);
 		TTF_SetFontOutline(_font2, 0);
 		TTF_SetFontKerning(_font2, 1);
 		TTF_SetFontHinting(_font2, hinting);
@@ -240,7 +242,7 @@ FontAdapter_SDL_ttf::FontAdapter_SDL_ttf(GraphicsContext* gc, const FontDescript
 
 	if (_emoji != NULL)
 	{
-		TTF_SetFontStyle(_emoji, style);
+		//TTF_SetFontStyle(_emoji, style);
 		TTF_SetFontOutline(_emoji, 0);
 		TTF_SetFontKerning(_emoji, 1);
 		TTF_SetFontHinting(_emoji, hinting);
