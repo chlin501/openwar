@@ -28,6 +28,9 @@ public:
 	Widget(const Widget&) = delete;
 	Widget& operator=(const Widget&) = delete;
 
+	Widget(Widget&&) = default;
+	Widget& operator=(Widget&&) = default;
+
 	virtual WidgetOwner* GetWidgetOwner() const;
 	virtual WidgetView* GetWidgetView() const;
 	virtual ScrollerViewport* GetViewport() const;
@@ -60,6 +63,9 @@ public:
 
 	WidgetOwner(const WidgetOwner&) = delete;
 	WidgetOwner& operator=(const WidgetOwner&) = delete;
+
+	WidgetOwner(WidgetOwner&&) = default;
+	WidgetOwner& operator=(WidgetOwner&&) = default;
 
 protected:
 	const std::vector<Widget*>& GetWidgets();
