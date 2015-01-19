@@ -88,14 +88,17 @@ public:
 #include <SDL2_ttf/SDL_ttf.h>
 class FontAdapter_SDL_ttf : public FontAdapter
 {
-	TTF_Font* _font1;
-	TTF_Font* _font2;
-	TTF_Font* _emoji;
+	TTF_Font* _font1{};
+	TTF_Font* _font2{};
+	TTF_Font* _emoji{};
 
 public:
 	FontAdapter_SDL_ttf(GraphicsContext* gc, const FontDescriptor& fontDescriptor);
 	virtual ~FontAdapter_SDL_ttf();
 	virtual std::shared_ptr<TextureImage> AddTextureImage(TextureAtlas* textureAtlas, const std::string& character, int border, std::function<void(Image&)> filter);
+
+private:
+	TTF_Font* FindFontForCharacter(const std::string& character) const;
 };
 #endif
 

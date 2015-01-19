@@ -15,6 +15,10 @@
 #import <UIKit/UIKit.h>
 #endif
 
+#ifdef ENABLE_FONTADAPTER_SDL_TTF
+#include <locale>
+#include <codecvt>
+#endif
 
 
 FontAdapter::~FontAdapter()
@@ -202,16 +206,18 @@ std::shared_ptr<TextureImage> FontAdapter_UIFont::AddTextureImage(TextureAtlas* 
 
 FontAdapter_SDL_ttf::FontAdapter_SDL_ttf(GraphicsContext* gc, const FontDescriptor& fontDescriptor)
 {
+	const float scaling = 1.3f;
+
 	if (!TTF_WasInit())
 		TTF_Init();
 
-	int size = (int)(fontDescriptor.size * gc->GetCombinedScaling());
+	int size = (int)(scaling * fontDescriptor.size * gc->GetCombinedScaling());
 	if (size == 0)
-		size = (int)(12 * gc->GetCombinedScaling());
+		size = (int)(scaling * 12 * gc->GetCombinedScaling());
 
 	_font1 = TTF_OpenFont(ANDROID_FONT1, size);
 	_font2 = TTF_OpenFont(ANDROID_FONT2, size);
-	_emoji = TTF_OpenFont(ANDROID_EMOJI, size);
+	//_emoji = TTF_OpenFont(ANDROID_EMOJI, size);
 
 	int style = fontDescriptor.bold ? TTF_STYLE_BOLD : TTF_STYLE_NORMAL;
 	int hinting = TTF_HINTING_NORMAL;
@@ -260,10 +266,11 @@ std::shared_ptr<TextureImage> FontAdapter_SDL_ttf::AddTextureImage(TextureAtlas*
 {
 	SDL_Surface* surface = nullptr;
 
-	if (_font1 != nullptr)
+	TTF_Font* font = FindFontForCharacter(character);
+	if (font != nullptr)
 	{
 		SDL_Color color = {255, 255, 255, 255};
-		surface = TTF_RenderUTF8_Blended(_font1, character.c_str(), color);
+		surface = TTF_RenderUTF8_Blended(font, character.c_str(), color);
 	}
 
 	if (surface == nullptr)
@@ -294,6 +301,23 @@ std::shared_ptr<TextureImage> FontAdapter_SDL_ttf::AddTextureImage(TextureAtlas*
 	textureImage->SetBounds(bounds);
 
 	return textureImage;
+}
+
+
+TTF_Font* FontAdapter_SDL_ttf::FindFontForCharacter(const std::string& character) const
+{
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv(".", L".");
+	auto result = conv.from_bytes(character);
+	if (!result.empty())
+	{
+		if (_emoji != nullptr && TTF_GlyphIsProvided(_emoji, result[0]))
+			return _emoji;
+
+		if (_font1 != nullptr && TTF_GlyphIsProvided(_font1, result[0]))
+			return _font1;
+	}
+
+	return _font2;
 }
 
 
