@@ -508,7 +508,7 @@ std::string InputEditor_Android::CallGetString()
 	if (method == 0)
 		return "";
 
-	jstring string = (jstring)_env->CallStaticObjectMethod(clazz, method);
+	jstring string = static_cast<jstring>(_env->CallStaticObjectMethod(clazz, method));
 
 	_env->DeleteLocalRef(clazz);
 
