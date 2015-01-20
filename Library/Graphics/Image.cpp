@@ -140,7 +140,7 @@ Image& Image::LoadFromData(const void* data, size_t size)
 }
 
 
-Image& Image::LoadFromResource(const resource& r)
+Image& Image::LoadFromResource(const Resource& r)
 {
 #ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 #if TARGET_OS_IPHONE

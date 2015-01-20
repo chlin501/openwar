@@ -6,14 +6,14 @@
 #define TextureResource_H
 
 #include "Texture.h"
-#include "resource.h"
+#include "Storage/Resource.h"
 
 
 class TextureResource : public Texture
 {
 public:
-	TextureResource(GraphicsContext* gc, const resource& r);
-	void LoadTextureFromResource(GraphicsContext* gc, const resource& r);
+	TextureResource(GraphicsContext* gc, const Resource& r);
+	void LoadTextureFromResource(GraphicsContext* gc, const Resource& r);
 
 	virtual void UpdateTexture();
 };

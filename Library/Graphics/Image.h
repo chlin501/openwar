@@ -7,7 +7,7 @@
 
 #include <functional>
 #include <glm/glm.hpp>
-#include "resource.h"
+#include "Storage/Resource.h"
 #include "Algebra/bounds.h"
 
 
@@ -48,7 +48,7 @@ public:
 	void SetPixelDensity(float value);
 
 	Image& LoadFromData(const void* data, size_t size);
-	Image& LoadFromResource(const resource& r);
+	Image& LoadFromResource(const Resource& r);
 
 #ifdef OPENWAR_IMAGE_ENABLE_SDL
 	void LoadFromSurface(SDL_Surface* surface);

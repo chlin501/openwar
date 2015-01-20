@@ -69,13 +69,13 @@ BattleView::BattleView(Surface* surface) : TerrainView(surface),
 	_smoothTerrainSky(nullptr),
 	_tiledTerrainRenderer(nullptr)
 {
-	_textureUnitMarkers = new TextureResource(_gc, resource("Textures/UnitMarkers.png"));
-	_textureTouchMarker = new TextureResource(_gc, resource("Textures/TouchMarker.png"));
+	_textureUnitMarkers = new TextureResource(_gc, Resource("Textures/UnitMarkers.png"));
+	_textureTouchMarker = new TextureResource(_gc, Resource("Textures/TouchMarker.png"));
 
 	_billboardTexture = new BillboardTextureSheet(_gc);
 
 	Image image;
-	image.LoadFromResource(resource("Textures/Billboards.png"));
+	image.LoadFromResource(Resource("Textures/Billboards.png"));
 #ifndef OPENWAR_USE_NSBUNDLE_RESOURCES
 	image.PremultiplyAlpha(); // TODO: how to handle this ???
 #endif

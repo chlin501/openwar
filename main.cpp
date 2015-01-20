@@ -23,6 +23,7 @@
 #include "BattleModel/PracticeScript.h"
 #include "Viewport.h"
 
+
 static BattleScenario* CreateBattleScenario()
 {
 	BattleScenario* scenario = new BattleScenario();
@@ -37,7 +38,7 @@ static BattleScenario* CreateBattleScenario()
 
 int main(int argc, char *argv[])
 {
-    resource::init(argv[0]);
+    Resource::init(argv[0]);
 
 #ifdef OPENWAR_USE_SDL
 	SDL_Init(SDL_INIT_EVERYTHING);

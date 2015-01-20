@@ -11,7 +11,7 @@
 #endif
 
 
-TextureResource::TextureResource(GraphicsContext* gc, const resource& r) : Texture(gc)
+TextureResource::TextureResource(GraphicsContext* gc, const Resource& r) : Texture(gc)
 {
 	LoadTextureFromResource(gc, r);
 }
@@ -37,7 +37,7 @@ static bool HasSupportForTextureCompressionPvrtc()
 
 
 
-void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const resource& r)
+void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const Resource& r)
 {
 #if TARGET_OS_IPHONE
 

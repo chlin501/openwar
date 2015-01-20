@@ -2,8 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef resource_H
-#define resource_H
+#ifndef Resource_H
+#define Resource_H
 
 #include <string>
 
@@ -12,7 +12,7 @@
 #endif
 
 
-class resource
+class Resource
 {
 	static std::string _resources_path;
 
@@ -29,9 +29,9 @@ public:
 	static void init_path(const char* path);
     static void init(const char* argv0);
     
-	explicit resource(const char* name);
+	explicit Resource(const char* name);
 	//resource(const char* name, const char* type);
-	~resource();
+	~Resource();
 
 	const char* name() const { return _name.c_str(); }
 	const char* type() const { return _type.c_str(); }

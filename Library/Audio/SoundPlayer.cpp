@@ -4,7 +4,7 @@
 
 #include "SoundPlayer.h"
 #include "SoundLoader.h"
-#include "resource.h"
+#include "Storage/Resource.h"
 
 #include <cstdlib>
 
@@ -23,7 +23,7 @@ static void _LoadSound(SoundPlayer* soundPlayer, SoundBuffer soundBuffer, const 
 #endif
 
 #ifdef OPENWAR_USE_SDL_MIXER
-	std::string path = resource((std::string("Sounds/") + name + std::string(".wav")).c_str()).path();
+	std::string path = Resource((std::string("Sounds/") + name + std::string(".wav")).c_str()).path();
 	soundPlayer->LoadSound(soundBuffer, Mix_LoadWAV(path.c_str()));
 #endif
 }

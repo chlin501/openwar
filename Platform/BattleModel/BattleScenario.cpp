@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <cstring>
-#include "resource.h"
+#include "Storage/Resource.h"
 #include "GroundMap.h"
 #include "BattleScenario.h"
 #include "BattleSimulator.h"
@@ -119,10 +119,10 @@ void BattleScenario::SetSmoothMap(const char* path, const char* hash, float size
 	if (_smoothMapHash == hash)
 		return;
 
-    resource res(path);
+    Resource res(path);
 	if (!res.load())
 	{
-		res = resource("Maps/DefaultMap.png");
+		res = Resource("Maps/DefaultMap.png");
 		if (!res.load())
 			return;
 	}

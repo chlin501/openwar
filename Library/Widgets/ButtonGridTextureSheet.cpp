@@ -8,11 +8,11 @@
 
 ButtonGridTextureSheet::ButtonGridTextureSheet(TextureAtlas* textureAtlas)
 {
-	TextureSheet buttonBackgroundSheet = textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonNormal.png")));
-	TextureSheet buttonHighlightSheet = textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonHighlight.png")));
-	TextureSheet buttonSelectedSheet = textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonSelected.png")));
-	TextureSheet buttonIcons = textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/ButtonIcons.png")));
-	TextureSheet editorTools = textureAtlas->AddTextureSheet(Image().LoadFromResource(resource("Textures/EditorTools.png")));
+	TextureSheet buttonBackgroundSheet = textureAtlas->AddTextureSheet(Image().LoadFromResource(Resource("Textures/ButtonNormal.png")));
+	TextureSheet buttonHighlightSheet = textureAtlas->AddTextureSheet(Image().LoadFromResource(Resource("Textures/ButtonHighlight.png")));
+	TextureSheet buttonSelectedSheet = textureAtlas->AddTextureSheet(Image().LoadFromResource(Resource("Textures/ButtonSelected.png")));
+	TextureSheet buttonIcons = textureAtlas->AddTextureSheet(Image().LoadFromResource(Resource("Textures/ButtonIcons.png")));
+	TextureSheet editorTools = textureAtlas->AddTextureSheet(Image().LoadFromResource(Resource("Textures/EditorTools.png")));
 
 	buttonBackground = buttonBackgroundSheet.NewTextureImage(BorderBounds(0, 0, 64, 64).Inset(32));
 	buttonHighlight = buttonHighlightSheet.NewTextureImage(BorderBounds(0, 0, 64, 64).Inset(32));

@@ -6,7 +6,7 @@
 #include <SDL2/SDL.h>
 #endif
 
-#include "resource.h"
+#include "Resource.h"
 
 
 
@@ -31,16 +31,16 @@ static NSString* GetPath(const char* name, const char* type)
 #endif
 
 
-std::string resource::_resources_path;
+std::string Resource::_resources_path;
 
 
-void resource::init_path(const char* path)
+void Resource::init_path(const char* path)
 {
 	_resources_path = path;
 }
 
 
-void resource::init(const char* argv0)
+void Resource::init(const char* argv0)
 {
 	std::string app_path(argv0);
 
@@ -61,7 +61,7 @@ void resource::init(const char* argv0)
 
 
 
-resource:: resource(const char* name) :
+Resource::Resource(const char* name) :
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
 _nsdata(nil),
 #endif
@@ -109,7 +109,7 @@ _size(0)
 }*/
 
 
-resource::~resource()
+Resource::~Resource()
 {
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
 	[_nsdata release];
@@ -117,7 +117,7 @@ resource::~resource()
 }
 
 
-const char* resource::path() const
+const char* Resource::path() const
 {
 /*#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
 
@@ -141,7 +141,7 @@ const char* resource::path() const
 }
 
 
-bool resource::load(char const* type)
+bool Resource::load(char const* type)
 {
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
 

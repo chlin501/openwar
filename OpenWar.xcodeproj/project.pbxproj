@@ -35,7 +35,6 @@
 		4156C3141A139E40006A264C /* sampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2B11A139E3F006A264C /* sampler.cpp */; };
 		4156C3151A139E40006A264C /* SoundLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2B41A139E3F006A264C /* SoundLoader.cpp */; };
 		4156C3161A139E40006A264C /* SoundPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2B61A139E3F006A264C /* SoundPlayer.cpp */; };
-		4156C3281A139E40006A264C /* resource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2DC1A139E3F006A264C /* resource.cpp */; };
 		4156C3291A139E40006A264C /* ScrollerGesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2DF1A139E3F006A264C /* ScrollerGesture.cpp */; };
 		4156C32A1A139E40006A264C /* ScrollerHotspot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2E11A139E3F006A264C /* ScrollerHotspot.cpp */; };
 		4156C32B1A139E40006A264C /* ScrollerViewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2E31A139E3F006A264C /* ScrollerViewport.cpp */; };
@@ -82,6 +81,7 @@
 		41B2298F17EC730E00DFA0B6 /* Maps in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298B17EC730E00DFA0B6 /* Maps */; };
 		41B2299117EC730E00DFA0B6 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298D17EC730E00DFA0B6 /* Sounds */; };
 		41B2299217EC730E00DFA0B6 /* Textures in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298E17EC730E00DFA0B6 /* Textures */; };
+		41F104611A6E48C500DE76DE /* Resource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41F1045F1A6E48C500DE76DE /* Resource.cpp */; };
 		41FE9BC619234E85002F6043 /* PracticeScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41FE9BC419234E85002F6043 /* PracticeScript.cpp */; };
 		41FE9BC819235642002F6043 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41FE9BC719235641002F6043 /* SDL2_image.framework */; };
 		63F550B662BEEAAA8D48C2A8 /* TerrainForest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F551DA89F0EC589EAF7E01 /* TerrainForest.cpp */; };
@@ -171,8 +171,6 @@
 		4156C2B51A139E3F006A264C /* SoundLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundLoader.h; sourceTree = "<group>"; };
 		4156C2B61A139E3F006A264C /* SoundPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundPlayer.cpp; sourceTree = "<group>"; };
 		4156C2B71A139E3F006A264C /* SoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundPlayer.h; sourceTree = "<group>"; };
-		4156C2DC1A139E3F006A264C /* resource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = resource.cpp; sourceTree = "<group>"; };
-		4156C2DD1A139E3F006A264C /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = resource.h; sourceTree = "<group>"; };
 		4156C2DF1A139E3F006A264C /* ScrollerGesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollerGesture.cpp; sourceTree = "<group>"; };
 		4156C2E01A139E3F006A264C /* ScrollerGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollerGesture.h; sourceTree = "<group>"; };
 		4156C2E11A139E3F006A264C /* ScrollerHotspot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollerHotspot.cpp; sourceTree = "<group>"; };
@@ -263,6 +261,8 @@
 		41B2298D17EC730E00DFA0B6 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
 		41B2298E17EC730E00DFA0B6 /* Textures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Textures; sourceTree = "<group>"; };
 		41C0B59817E63DA300C52270 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = /Library/Frameworks/SDL2.framework; sourceTree = "<absolute>"; };
+		41F1045F1A6E48C500DE76DE /* Resource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Resource.cpp; sourceTree = "<group>"; };
+		41F104601A6E48C500DE76DE /* Resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Resource.h; sourceTree = "<group>"; };
 		41FE9BC419234E85002F6043 /* PracticeScript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PracticeScript.cpp; sourceTree = "<group>"; };
 		41FE9BC519234E85002F6043 /* PracticeScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PracticeScript.h; sourceTree = "<group>"; };
 		41FE9BC719235641002F6043 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = /Library/Frameworks/SDL2_image.framework; sourceTree = "<absolute>"; };
@@ -655,6 +655,15 @@
 			path = SmoothTerrain;
 			sourceTree = "<group>";
 		};
+		63F5559084040FC443F651C1 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				41F1045F1A6E48C500DE76DE /* Resource.cpp */,
+				41F104601A6E48C500DE76DE /* Resource.h */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
 		63F5583EE4EC35D3F54CFCF1 /* Library */ = {
 			isa = PBXGroup;
 			children = (
@@ -664,10 +673,9 @@
 				4156C2B81A139E3F006A264C /* Graphics */,
 				4156C2DE1A139E3F006A264C /* Scroller */,
 				4156C2E51A139E3F006A264C /* Shapes */,
+				63F5559084040FC443F651C1 /* Storage */,
 				4156C2EE1A139E3F006A264C /* Surface */,
 				4156C2FC1A139E3F006A264C /* Widgets */,
-				4156C2DD1A139E3F006A264C /* resource.h */,
-				4156C2DC1A139E3F006A264C /* resource.cpp */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -796,7 +804,6 @@
 				4105FB331806D3970074C855 /* ShootingCounter.cpp in Sources */,
 				4105FB2C1806D3890074C855 /* TiledGroundMap.cpp in Sources */,
 				4168CC9B1A2387AF007C4509 /* RenderLoopObserver.cpp in Sources */,
-				4156C3281A139E40006A264C /* resource.cpp in Sources */,
 				4105FB291806D3890074C855 /* HeightMap.cpp in Sources */,
 				63F5575DCDE438070E9DF48C /* BattleView.cpp in Sources */,
 				63F55D45A7A30820587225CB /* BattleGesture.cpp in Sources */,
@@ -822,6 +829,7 @@
 				4168CCCD1A2387E7007C4509 /* StringWidget.cpp in Sources */,
 				63F55ECBBDB6C8631D7D8524 /* BillboardTerrainForest.cpp in Sources */,
 				4105FB2B1806D3890074C855 /* SmoothGroundMap.cpp in Sources */,
+				41F104611A6E48C500DE76DE /* Resource.cpp in Sources */,
 				63F550B662BEEAAA8D48C2A8 /* TerrainForest.cpp in Sources */,
 				4105FB3C1806D3A50074C855 /* SmoothTerrainRenderer.cpp in Sources */,
 				63F5552382844DD951176704 /* TerrainSky.cpp in Sources */,
