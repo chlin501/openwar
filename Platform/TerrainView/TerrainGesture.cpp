@@ -175,7 +175,9 @@ void TerrainGesture::UpdateMomentumOrbit(double secondsSinceLastUpdate)
 	glm::vec3 contentAnchor = terrainView->GetTerrainPosition3(screenPosition);
 
 	terrainView->Orbit(contentAnchor, (float)secondsSinceLastUpdate * _orbitVelocity);
-	_orbitVelocity = _orbitVelocity * exp2f(-4 * (float)secondsSinceLastUpdate);
+
+	float slowdown = _hotspot->HasCapturedTouches() ? -8.0f : -4.0f;
+	_orbitVelocity = _orbitVelocity * exp2f(slowdown * (float)secondsSinceLastUpdate);
 }
 
 
