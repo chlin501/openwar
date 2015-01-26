@@ -53,6 +53,7 @@ public:
 #ifdef OPENWAR_IMAGE_ENABLE_SDL
 	void LoadFromSurface(SDL_Surface* surface);
 	SDL_Surface* GetSurface() const;
+	static SDL_Surface* EnsureSurfaceFormat(SDL_Surface* surface);
 #endif
 
 #ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS

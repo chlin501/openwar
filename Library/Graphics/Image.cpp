@@ -128,7 +128,7 @@ Image& Image::LoadFromData(const void* data, size_t size)
 #elif defined(OPENWAR_IMAGE_ENABLE_SDL)
 
 	SDL_RWops* src = SDL_RWFromConstMem(data, static_cast<int>(size));
-	SDL_Surface* surface = IMG_Load_RW(src, 0);
+	SDL_Surface* surface = EnsureSurfaceFormat(IMG_Load_RW(src, 0));
 	if (surface != nullptr)
 		LoadFromSurface(surface);
 	SDL_FreeRW(src);
@@ -178,20 +178,22 @@ Image& Image::LoadFromResource(const Resource& r)
 
 #ifdef OPENWAR_IMAGE_ENABLE_SDL
 
-	_surface = IMG_Load(r.path());
-	if (_surface->format->format != SDL_PIXELFORMAT_ABGR8888)
+	_surface = EnsureSurfaceFormat(IMG_Load(r.path()));
+	if (_surface != nullptr)
 	{
-		SDL_Surface* surface = SDL_ConvertSurfaceFormat(_surface, SDL_PIXELFORMAT_ABGR8888, 0);
-		SDL_FreeSurface(_surface);
-		_surface = surface;
+		_width = _surface->w;
+		_height = _surface->h;
+		_pixels = (unsigned char*)_surface->pixels ;
+		_owner = false;
+		PremultiplyAlpha();
 	}
-
-	_width = _surface->w;
-	_height = _surface->h;
-	_pixels = (unsigned char*)_surface->pixels;
-	_owner = false;
-
-	PremultiplyAlpha();
+	else
+	{
+		_width = 0;
+		_height = 0;
+		_pixels = nullptr;
+		_owner = false;
+	}
 
 	return *this;
 
@@ -224,6 +226,19 @@ SDL_Surface* Image::GetSurface() const
 	}
 
 	return _surface;
+}
+#endif
+
+
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
+SDL_Surface* Image::EnsureSurfaceFormat(SDL_Surface* surface)
+{
+	if (surface->format->format == SDL_PIXELFORMAT_ABGR8888)
+		return surface;
+
+	SDL_Surface* converted = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
+	SDL_FreeSurface(surface);
+	return converted;
 }
 #endif
 
