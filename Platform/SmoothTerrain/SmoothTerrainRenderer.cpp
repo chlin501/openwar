@@ -140,29 +140,26 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 }
 
 
-
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES // detect objective-c
-static NSString* FramebufferStatusString(GLenum status)
+/*#include "RunTimeUtilities/Logging.h"
+static const char* FramebufferStatusString(GLenum status)
 {
 	switch (status)
 	{
 		case GL_FRAMEBUFFER_COMPLETE:
-			return @"GL_FRAMEBUFFER_COMPLETE";
+			return "GL_FRAMEBUFFER_COMPLETE";
 		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-			return @"GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+			return "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
 		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-			return @"GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+			return "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
 #ifdef GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS
-		case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS: return @"GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS";
+		case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS: return "GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS";
 #endif
 		case GL_FRAMEBUFFER_UNSUPPORTED:
-			return @"GL_FRAMEBUFFER_UNSUPPORTED";
+			return "GL_FRAMEBUFFER_UNSUPPORTED";
 		default:
-			return [NSString stringWithFormat:@"0x%04x", (unsigned int)status];
+			return "GL_FRAMEBUFFER_???";//[NSString stringWithFormat:@"0x%04x", (unsigned int)status];
 	}
-}
-#endif
-
+}*/
 
 
 void SmoothTerrainRenderer::EnableRenderEdges()
@@ -185,23 +182,22 @@ void SmoothTerrainRenderer::EnableRenderEdges()
 #endif
 
 	_framebuffer->AttachDepth(_depth);
+
+	GLenum status = 0;
 	{
 		bind_framebuffer binding(*_framebuffer);
-		GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-		if (status != GL_FRAMEBUFFER_COMPLETE)
-		{
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
-			NSLog(@"CheckGLFramebuffer %@", FramebufferStatusString(status));
-#endif
-			delete _depth;
-			_depth = nullptr;
-		}
+		status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	}
 
-	if (_depth == nullptr)
+	if (status != GL_FRAMEBUFFER_COMPLETE)
 	{
+		//openwarlog(LOG_INFO, "CheckGLFramebuffer %s", FramebufferStatusString(status));
+
 		delete _framebuffer;
 		_framebuffer = nullptr;
+
+		delete _depth;
+		_depth = nullptr;
 
 		delete _colorbuffer;
 		_colorbuffer = nullptr;
