@@ -193,7 +193,18 @@ void SmoothTerrainRenderer::EnableRenderEdges()
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
 			NSLog(@"CheckGLFramebuffer %@", FramebufferStatusString(status));
 #endif
+			delete _depth;
+			_depth = nullptr;
 		}
+	}
+
+	if (_depth == nullptr)
+	{
+		delete _framebuffer;
+		_framebuffer = nullptr;
+
+		delete _colorbuffer;
+		_colorbuffer = nullptr;
 	}
 }
 
