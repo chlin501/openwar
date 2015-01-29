@@ -14,28 +14,26 @@
 class Image;
 
 
-
 class SmoothTerrainRenderer
 {
 	GraphicsContext* _gc;
 	SmoothGroundMap* _smoothGroundMap;
-	int _framebuffer_width;
-	int _framebuffer_height;
-	FrameBuffer* _framebuffer;
-	RenderBuffer* _colorbuffer;
-	Texture* _depth;
-	Texture* _colormap;
-	Texture* _splatmap;
+	int _framebuffer_width{};
+	int _framebuffer_height{};
+	FrameBuffer* _framebuffer{};
+	RenderBuffer* _colorbuffer{};
+	Texture* _depth{};
+	Texture* _colormap{};
+	Texture* _splatmap{};
 
-	SmoothTerrainShaders* _renderers;
 	VertexShape_2f _shadowVertices;
 	VertexShape_3f_3f _insideVertices;
 	VertexShape_3f_3f _borderVertices;
 	VertexShape_3f_1f _skirtVertices;
 	VertexShape_3f _lineVertices;
 
-	bool _showLines;
-	bool _editMode;
+	bool _showLines{};
+	bool _editMode{};
 
 public:
 	SmoothTerrainRenderer(GraphicsContext* gc, SmoothGroundMap* smoothGroundMap);
@@ -59,6 +57,9 @@ public:
 
 	void BuildTriangles();
 	void PushTriangle(const Vertex_3f_3f& v0, const Vertex_3f_3f& v1, const Vertex_3f_3f& v2);
+
+private:
+	static Texture* CreateColorMap(GraphicsContext* gc);
 };
 
 

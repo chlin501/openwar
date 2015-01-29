@@ -124,10 +124,4 @@ class GroundShadowShader : public ShaderProgram
 };
 
 
-struct SmoothTerrainShaders
-{
-	static Texture* create_colormap(GraphicsContext* gc);
-};
-
-
 #endif
