@@ -13,9 +13,6 @@
 class FrameBuffer;
 
 
-enum class CullFace { None, Front, Back, FrontAndBack };
-
-
 struct RenderCallAttribute
 {
 	GLint _index;
@@ -105,9 +102,9 @@ protected:
 	GLbitfield _clearBits{};
 	glm::vec4 _clearColor;
 	GLfloat _lineWidth{};
-	CullFace _cullFace{CullFace::Back};
 	bool _depthTest{};
 	bool _depthMask{};
+	bool _cullBack{};
 
 public:
 	RenderCallBase(ShaderProgram* shaderprogram);
@@ -177,31 +174,6 @@ public:
 		return *this;
 	}
 
-	RenderCall<ShaderProgramT>& SetCullFace(CullFace value)
-	{
-		_cullFace = value;
-		switch (value)
-		{
-			case CullFace::None:
-				glDisable(GL_CULL_FACE);
-				break;
-			case CullFace::Front:
-				glEnable(GL_CULL_FACE);
-				glCullFace(GL_FRONT);
-				break;
-			case CullFace::Back: // default value
-				glEnable(GL_CULL_FACE);
-				glCullFace(GL_BACK);
-				break;
-			case CullFace::FrontAndBack:
-				glEnable(GL_CULL_FACE);
-				glCullFace(GL_FRONT_AND_BACK);
-				break;
-		}
-		return *this;
-	}
-
-
 	RenderCall<ShaderProgramT>& SetDepthTest(bool value)
 	{
 		_depthTest = value;
@@ -214,6 +186,11 @@ public:
 		return *this;
 	}
 
+	RenderCall<ShaderProgramT>& SetCullBack(bool value)
+	{
+		_cullBack = value;
+		return *this;
+	}
 
 	RenderCall<ShaderProgramT>& SetFrameBuffer(FrameBuffer* frameBuffer)
 	{

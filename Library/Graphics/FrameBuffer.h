@@ -15,18 +15,21 @@ struct RenderBuffer;
 struct Texture;
 
 
-struct FrameBuffer
+class FrameBuffer
 {
 	friend class RenderCallBase;
 
-	GLuint id;
+	GLuint _id;
+	bool _complete{};
 
 public:
 	FrameBuffer();
 	~FrameBuffer();
 
-	FrameBuffer(const FrameBuffer&) = delete;
-	FrameBuffer& operator=(const FrameBuffer&) = delete;
+	FrameBuffer(FrameBuffer&&);
+	FrameBuffer& operator=(FrameBuffer&&);
+
+	bool IsComplete() const;
 
 	void AttachColor(RenderBuffer* value);
 	void AttachColor(Texture* value);
@@ -35,25 +38,6 @@ public:
 	void AttachDepth(Texture* value);
 
 	void AttachStencil(RenderBuffer* value);
-};
-
-
-class bind_framebuffer
-{
-	GLint _old;
-
-public:
-	bind_framebuffer(const FrameBuffer& fb)
-	{
-		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &_old);
-		glBindFramebuffer(GL_FRAMEBUFFER, fb.id);
-		CHECK_ERROR_GL();
-	}
-
-	~bind_framebuffer()
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, _old);
-	}
 };
 
 

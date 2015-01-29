@@ -9,53 +9,110 @@
 
 FrameBuffer::FrameBuffer()
 {
-	glGenFramebuffers(1, &id);
+	glGenFramebuffers(1, &_id);
 	CHECK_ERROR_GL();
 }
 
 
 FrameBuffer::~FrameBuffer()
 {
-	glDeleteFramebuffers(1, &id);
-	CHECK_ERROR_GL();
+	if (_id != 0)
+	{
+		glDeleteFramebuffers(1, &_id);
+		CHECK_ERROR_GL();
+	}
+}
+
+
+FrameBuffer::FrameBuffer(FrameBuffer&& rhs)
+{
+	std::swap(_id, rhs._id);
+	std::swap(_complete, rhs._complete);
+}
+
+
+FrameBuffer& FrameBuffer::operator=(FrameBuffer&& rhs)
+{
+	std::swap(_id, rhs._id);
+	std::swap(_complete, rhs._complete);
+	return *this;
+}
+
+
+bool FrameBuffer::IsComplete() const
+{
+	return _complete;
 }
 
 
 void FrameBuffer::AttachColor(RenderBuffer* value)
 {
-	bind_framebuffer binding(*this);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, value->id);
+	GLint old;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &old);
+	glBindFramebuffer(GL_FRAMEBUFFER, _id);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, value->_id);
 	CHECK_ERROR_GL();
+
+	_complete = glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(old));
 }
 
 
 void FrameBuffer::AttachColor(Texture* value)
 {
-	bind_framebuffer binding(*this);
+	GLint old;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &old);
+	glBindFramebuffer(GL_FRAMEBUFFER, _id);
+
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, value->_id, 0);
 	CHECK_ERROR_GL();
+
+	_complete = glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(old));
 }
 
 
 void FrameBuffer::AttachDepth(RenderBuffer* value)
 {
-	bind_framebuffer binding(*this);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, value->id);
+	GLint old;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &old);
+	glBindFramebuffer(GL_FRAMEBUFFER, _id);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, value->_id);
 	CHECK_ERROR_GL();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(old));
 }
 
 
 void FrameBuffer::AttachDepth(Texture* value)
 {
-	bind_framebuffer binding(*this);
+	GLint old;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &old);
+	glBindFramebuffer(GL_FRAMEBUFFER, _id);
+
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, value->_id, 0);
 	CHECK_ERROR_GL();
+
+	_complete = glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(old));
 }
 
 
 void FrameBuffer::AttachStencil(RenderBuffer* value)
 {
-	bind_framebuffer binding(*this);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, value->id);
+	GLint old;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &old);
+	glBindFramebuffer(GL_FRAMEBUFFER, _id);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, value->_id);
 	CHECK_ERROR_GL();
+
+	_complete = glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(old));
 }

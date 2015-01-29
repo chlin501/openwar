@@ -6,14 +6,9 @@
 #include "ShaderProgram.h"
 
 
-VertexBufferBase::VertexBufferBase() :
-_mode(0),
-_vbo(0),
-_count(0)
+VertexBufferBase::VertexBufferBase()
 {
 }
-
-
 
 
 VertexBufferBase::~VertexBufferBase()
@@ -23,4 +18,21 @@ VertexBufferBase::~VertexBufferBase()
 		glDeleteBuffers(1, &_vbo);
 		CHECK_ERROR_GL();
 	}
+}
+
+
+VertexBufferBase::VertexBufferBase(VertexBufferBase&& rhs)
+{
+	std::swap(_mode, rhs._mode);
+	std::swap(_vbo, rhs._vbo);
+	std::swap(_count, rhs._count);
+}
+
+
+VertexBufferBase& VertexBufferBase::operator=(VertexBufferBase&& rhs)
+{
+	std::swap(_mode, rhs._mode);
+	std::swap(_vbo, rhs._vbo);
+	std::swap(_count, rhs._count);
+	return *this;
 }

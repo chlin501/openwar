@@ -12,20 +12,22 @@
 
 class VertexBufferBase
 {
+	friend class RenderCallBase;
 public:
-	GLenum _mode;
-	GLuint _vbo;
-	GLsizei _count;
+	GLenum _mode{};
+protected:
+	GLuint _vbo{};
+	GLsizei _count{};
 
+public:
 	VertexBufferBase();
 	virtual ~VertexBufferBase();
 
-	VertexBufferBase(const VertexBufferBase&) = delete;
-	VertexBufferBase& operator=(const VertexBufferBase&) = delete;
+	VertexBufferBase(VertexBufferBase&&);
+	VertexBufferBase& operator=(VertexBufferBase&&);
 
 	virtual void Update() = 0;
 };
-
 
 
 template <class _Vertex>
@@ -40,25 +42,25 @@ public:
 	{
 		_mode = mode;
 
-		if (VertexBufferBase::_vbo == 0)
+		if (_vbo == 0)
 		{
 			glGenBuffers(1, &this->_vbo);
 			CHECK_ERROR_GL();
-			if (VertexBufferBase::_vbo == 0)
+			if (_vbo == 0)
 				return;
 		}
 
 		GLsizeiptr size = sizeof(VertexT) * count;
 		const GLvoid* data = static_cast<const GLvoid*>(vertices);
 
-		glBindBuffer(GL_ARRAY_BUFFER, VertexBufferBase::_vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 		CHECK_ERROR_GL();
 		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 		CHECK_ERROR_GL();
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		CHECK_ERROR_GL();
 
-		VertexBufferBase::_count = (GLsizei)count;
+		_count = (GLsizei)count;
 	}
 };
 

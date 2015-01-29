@@ -3,11 +3,10 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "Texture.h"
-#include "GraphicsContext.h"
 #include "Image.h"
 
 
-Texture::Texture(GraphicsContext* gc) :
+Texture::Texture(GraphicsContext*) :
 	_id{}
 {
 	glGenTextures(1, &_id);

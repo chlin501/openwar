@@ -68,6 +68,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 		.SetVertices(&_shadowVertices, "position")
 		.SetUniform("transform", transform)
 		.SetUniform("map_bounds", map_bounds)
+		.SetCullBack(true)
 		.ClearDepth()
 		.Render();
 
@@ -81,6 +82,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 			.SetUniform("transform", transform)
 			.SetDepthTest(true)
 			.SetDepthMask(true)
+			.SetCullBack(true)
 			.ClearDepth()
 			.Render();
 
@@ -91,6 +93,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 			.SetUniform("map_bounds", map_bounds)
 			.SetDepthTest(true)
 			.SetDepthMask(true)
+			.SetCullBack(true)
 			.Render();
 
 		RenderCall<DepthSkirtShader>(_gc)
@@ -99,6 +102,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 			.SetUniform("transform", transform)
 			.SetDepthTest(true)
 			.SetDepthMask(true)
+			.SetCullBack(true)
 			.Render();
 	}
 
@@ -111,6 +115,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 		.SetTexture("splatmap", _splatmap)
 		.SetDepthTest(true)
 		.SetDepthMask(true)
+		.SetCullBack(true)
 		.Render();
 
 	RenderCall<TerrainBorderShader>(_gc)
@@ -122,6 +127,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 		.SetTexture("splatmap", _splatmap)
 		.SetDepthTest(true)
 		.SetDepthMask(true)
+		.SetCullBack(true)
 		.Render();
 
 	if (_showLines)
@@ -140,6 +146,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 		.SetTexture("texture", _colormap, Sampler(SamplerMinMagFilter::Linear, SamplerAddressMode::Clamp))
 		.SetDepthTest(true)
 		.SetDepthMask(true)
+		.SetCullBack(true)
 		.Render();
 
 	if (_depth != nullptr)
@@ -191,19 +198,13 @@ void SmoothTerrainRenderer::EnableRenderEdges()
 	_framebuffer = new FrameBuffer();
 
 #if !TARGET_OS_IPHONE
-	_colorbuffer = new RenderBuffer(GL_RGBA, _framebuffer_width, _framebuffer_height);
+	_colorbuffer = new RenderBuffer(_framebuffer_width, _framebuffer_height);
 	_framebuffer->AttachColor(_colorbuffer);
 #endif
 
 	_framebuffer->AttachDepth(_depth);
 
-	GLenum status = 0;
-	{
-		bind_framebuffer binding(*_framebuffer);
-		status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	}
-
-	if (status != GL_FRAMEBUFFER_COMPLETE)
+	if (!_framebuffer->IsComplete())
 	{
 		//openwarlog(LOG_INFO, "CheckGLFramebuffer %s", FramebufferStatusString(status));
 
@@ -224,18 +225,18 @@ void SmoothTerrainRenderer::UpdateDepthTextureSize()
 {
 	if (_depth != nullptr)
 	{
-		GLint viewport[4];
-		glGetIntegerv(GL_VIEWPORT, viewport);
+		bounds2i viewport = _gc->GetViewport();
+		glm::ivec2 size = viewport.size();
 
-		if (viewport[2] != _framebuffer_width || viewport[3] != _framebuffer_height)
+		if (size.x != _framebuffer_width || size.y != _framebuffer_height)
 		{
-			_framebuffer_width = viewport[2];
-			_framebuffer_height = viewport[3];
+			_framebuffer_width = size.x;
+			_framebuffer_height = size.y;
 
 			_depth->ResizeDepth(_framebuffer_width, _framebuffer_height);
 
 			if (_colorbuffer != nullptr)
-				_colorbuffer->Resize(GL_RGBA, _framebuffer_width, _framebuffer_height);
+				_colorbuffer->Resize(_framebuffer_width, _framebuffer_height);
 		}
 	}
 }

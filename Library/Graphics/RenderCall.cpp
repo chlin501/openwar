@@ -147,7 +147,7 @@ void RenderCallBase::Render()
 	{
 		oldFrameBuffer.first = true;
 		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFrameBuffer.second);
-		glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer->id);
+		glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer->_id);
 	}
 
 	if (_clearBits)
@@ -211,6 +211,11 @@ void RenderCallBase::Render()
 			glDisable(GL_DEPTH_TEST);
 
 		glDepthMask(static_cast<GLboolean>(_depthMask));
+
+		if (_cullBack)
+			glEnable(GL_CULL_FACE);
+		else
+			glDisable(GL_CULL_FACE);
 
 		glDrawArrays(_vertices->_mode, 0, _vertices->_count);
 		CHECK_ERROR_GL();

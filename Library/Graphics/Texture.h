@@ -7,7 +7,6 @@
 
 #include "GraphicsContext.h"
 
-class GraphicsContext;
 class Image;
 
 
@@ -16,9 +15,9 @@ class Texture
 	friend class RenderCallTexture;
 	friend class FrameBuffer;
 
-public:
 	GLuint _id;
 
+public:
 	explicit Texture(GraphicsContext* gc);
 	virtual ~Texture();
 

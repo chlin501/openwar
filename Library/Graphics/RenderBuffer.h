@@ -8,17 +8,19 @@
 #include "GraphicsContext.h"
 
 
-struct RenderBuffer
+class RenderBuffer
 {
-	GLuint id;
+	friend class FrameBuffer;
+	GLuint _id{};
 
-	RenderBuffer(GLenum internalformat, GLsizei width, GLsizei height);
+public:
+	RenderBuffer(GLsizei width, GLsizei height);
 	~RenderBuffer();
 
 	RenderBuffer(const RenderBuffer&) = delete;
 	RenderBuffer& operator=(const RenderBuffer&) = delete;
 
-	void Resize(GLenum internalformat, GLsizei width, GLsizei height);
+	void Resize(GLsizei width, GLsizei height);
 };
 
 

@@ -519,8 +519,6 @@ void BattleView::Render()
 
 	// Terrain Surface
 
-	glEnable(GL_CULL_FACE);
-
 	if (_smoothTerrainSurface != nullptr)
 		_smoothTerrainSurface->Render(transform, _lightNormal);
 
@@ -530,7 +528,6 @@ void BattleView::Render()
 
 	// Terrain Water
 
-	glDisable(GL_CULL_FACE);
 	if (_smoothTerrainWater != nullptr)
 		_smoothTerrainWater->Render(_gc, transform);
 

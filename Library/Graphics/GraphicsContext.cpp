@@ -50,6 +50,14 @@ float GraphicsContext::GetCombinedScaling() const
 }
 
 
+bounds2i GraphicsContext::GetViewport() const
+{
+	GLint v[4];
+	glGetIntegerv(GL_VIEWPORT, v);
+	return bounds2i{v[0], v[1], v[0] + v[2], v[1] + v[3]};
+};
+
+
 TextureAtlas* GraphicsContext::GetTextureAtlas(const char* name)
 {
 	auto i = _textureAtlases.find(name);

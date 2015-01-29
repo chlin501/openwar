@@ -9,6 +9,7 @@
 #include <string>
 
 #include "FontDescriptor.h"
+#include "bounds.h"
 
 #ifdef GRAPHICS_OPENGL_IOS
 #include <OpenGLES/ES2/gl.h>
@@ -69,6 +70,8 @@ public:
 	float GetNativeScaling() const;
 	float GetVirtualScaling() const;
 	float GetCombinedScaling() const;
+
+	bounds2i GetViewport() const;
 
 	template <class _ShaderProgram> _ShaderProgram* GetShaderProgram()
 	{

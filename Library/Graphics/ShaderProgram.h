@@ -24,11 +24,12 @@ class ShaderProgram
 {
 	friend class RenderCallBase;
 
-public:
 	GLuint _program;
+public:
 	GLenum _blend_sfactor;
 	GLenum _blend_dfactor;
 
+public:
 	ShaderProgram(const char* vertexshader, const char* fragmentshader);
 	virtual ~ShaderProgram();
 
