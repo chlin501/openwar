@@ -88,7 +88,7 @@ public:
 	void Reset();
 	void AddBillboard(glm::vec3 position, float height, affine2 texcoords);
 
-	void Draw(GraphicsContext* gc, Texture* tex, const glm::mat4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit = bounds1f(0, 1024));
+	void Draw(GraphicsContext* gc, Texture* tex, const glm::mat4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bool depthTest, bounds1f sizeLimit = bounds1f(0, 1024));
 
 	void Render(GraphicsContext* gc, BillboardModel* billboardModel, const glm::mat4& transform, const glm::vec3& cameraUp, float viewportHeight, float cameraFacingDegrees, bool flip);
 };

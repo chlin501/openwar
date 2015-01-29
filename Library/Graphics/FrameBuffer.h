@@ -17,8 +17,11 @@ struct Texture;
 
 struct FrameBuffer
 {
+	friend class RenderCallBase;
+
 	GLuint id;
 
+public:
 	FrameBuffer();
 	~FrameBuffer();
 

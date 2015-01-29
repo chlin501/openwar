@@ -508,10 +508,6 @@ void BattleView::Render()
 	glm::vec2 facing = vector2_from_angle(GetViewport()->GetCameraFacing() - 2.5f * (float)M_PI_4);
 	_lightNormal = glm::normalize(glm::vec3(facing, -1));
 
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glDisable(GL_DEPTH_TEST);
-
-
 	// Terrain Sky
 
 	if (_smoothTerrainSky != nullptr)
@@ -523,7 +519,6 @@ void BattleView::Render()
 
 	// Terrain Surface
 
-	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
 	if (_smoothTerrainSurface != nullptr)
@@ -542,17 +537,17 @@ void BattleView::Render()
 
 	// Fighter Weapons
 
-	glDepthMask(false);
 	_plainLineVertices->Reset(GL_LINES);
 	for (UnitCounter* marker : _unitMarkers)
 		marker->AppendFighterWeapons(_plainLineVertices);
 
-	glLineWidth(1);
 	RenderCall<PlainShader_3f>(_gc)
 		.SetVertices(_plainLineVertices, "position")
 		.SetUniform("transform", transform)
 		.SetUniform("point_size", 1)
 		.SetUniform("color", glm::vec4(0.4, 0.4, 0.4, 0.6))
+		.SetLineWidth(1.0f)
+		.SetDepthTest(true)
 		.Render();
 
 
@@ -566,6 +561,7 @@ void BattleView::Render()
 		.SetUniform("transform", transform)
 		.SetUniform("upvector", GetViewport()->GetCameraUpVector())
 		.SetUniform("viewport_height", 0.25f * _gc->GetCombinedScaling() * GetViewport()->GetBounds().y().size())
+		.SetDepthTest(true)
 		.Render();
 
 
@@ -600,6 +596,7 @@ void BattleView::Render()
 				.SetVertices(_gradientTriangleStripVertices, "position", "color")
 				.SetUniform("transform", transform)
 				.SetUniform("point_size", 1)
+				.SetDepthTest(true)
 				.Render();
 		}
 	}
@@ -607,7 +604,6 @@ void BattleView::Render()
 
 	// Unit Facing Markers
 
-	glDisable(GL_DEPTH_TEST);
 	_textureTriangleVertices2->Reset(GL_TRIANGLES);
 
 	for (UnitCounter* marker : _unitMarkers)
@@ -648,6 +644,7 @@ void BattleView::Render()
 		GetViewport()->GetCameraUpVector(),
 		glm::degrees(GetViewport()->GetCameraFacing()),
 		GetViewport()->GetBounds().y().size(),
+		false,
 		sizeLimit);
 
 	_textureBillboardShape2->Draw(_gc,
@@ -656,12 +653,12 @@ void BattleView::Render()
 		GetViewport()->GetCameraUpVector(),
 		glm::degrees(GetViewport()->GetCameraFacing()),
 		GetViewport()->GetBounds().y().size(),
+		false,
 		sizeLimit);
 
 
 	// Tracking Markers
 
-	glDisable(GL_DEPTH_TEST);
 	for (UnitTrackingMarker* marker : _trackingMarkers)
 	{
 		_textureBillboardShape1->Reset();
@@ -672,13 +669,13 @@ void BattleView::Render()
 			GetViewport()->GetCameraUpVector(),
 			glm::degrees(GetViewport()->GetCameraFacing()),
 			GetViewport()->GetBounds().y().size(),
+			true,
 			bounds1f(64, 64));
 	}
 
 
 	// Movement Paths
 
-	glEnable(GL_DEPTH_TEST);
 	_gradientTriangleVertices->Reset(GL_TRIANGLES);
 	for (UnitMovementMarker* marker : _movementMarkers)
 		marker->RenderMovementPath(_gradientTriangleVertices);
@@ -687,12 +684,12 @@ void BattleView::Render()
 		.SetVertices(_gradientTriangleVertices, "position", "color")
 		.SetUniform("transform", transform)
 		.SetUniform("point_size", 1)
+		.SetDepthTest(true)
 		.Render();
 
 
 	// Tracking Path
 
-	glDisable(GL_DEPTH_TEST);
 	for (UnitTrackingMarker* marker : _trackingMarkers)
 	{
 		_gradientTriangleVertices->Reset(GL_TRIANGLES);
@@ -709,7 +706,6 @@ void BattleView::Render()
 
 	// Tracking Fighters
 
-	glEnable(GL_DEPTH_TEST);
 	_colorBillboardVertices->Reset(GL_POINTS);
 	for (UnitTrackingMarker* marker : _trackingMarkers)
 		marker->RenderTrackingFighters(_colorBillboardVertices);
@@ -719,6 +715,7 @@ void BattleView::Render()
 		.SetUniform("transform", transform)
 		.SetUniform("upvector", GetViewport()->GetCameraUpVector())
 		.SetUniform("viewport_height", 0.25f * _gc->GetCombinedScaling() * GetViewport()->GetBounds().y().size())
+		.SetDepthTest(true)
 		.Render();
 
 
@@ -733,6 +730,7 @@ void BattleView::Render()
 		.SetUniform("transform", transform)
 		.SetUniform("upvector", GetViewport()->GetCameraUpVector())
 		.SetUniform("viewport_height", 0.25f * _gc->GetCombinedScaling() * GetViewport()->GetBounds().y().size())
+		.SetDepthTest(true)
 		.Render();
 
 
@@ -746,6 +744,7 @@ void BattleView::Render()
 		.SetVertices(_gradientLineVertices, "position", "color")
 		.SetUniform("transform", transform)
 		.SetUniform("point_size", 1)
+		.SetDepthTest(true)
 		.Render();
 
 
@@ -754,22 +753,20 @@ void BattleView::Render()
 	_plainLineVertices->Reset(GL_LINES);
 	RenderMouseHint(*_plainLineVertices);
 
-	glLineWidth(1);
 	RenderCall<PlainShader_3f> renderMouseHints{_gc};
 	renderMouseHints
 		.SetVertices(_plainLineVertices, "position")
 		.SetUniform("transform", transform)
 		.SetUniform("point_size", 1)
 		.SetUniform("color", glm::vec4(0, 0, 0, 0.8f))
+		.SetLineWidth(1.0f)
+		.SetDepthTest(true)
+		.SetDepthMask(false)
 		.Render();
-
-	glDisable(GL_DEPTH_TEST);
 
 	renderMouseHints
 		.SetUniform("color", glm::vec4(1, 1, 1, 0.2f))
 		.Render();
-
-	glDepthMask(true);
 };
 
 

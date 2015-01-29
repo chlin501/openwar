@@ -64,38 +64,41 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 	bounds2f bounds = _smoothGroundMap->GetBounds();
 	glm::vec4 map_bounds = glm::vec4(bounds.min, bounds.size());
 
-	glDepthMask(false);
-
 	RenderCall<GroundShadowShader>(_gc)
 		.SetVertices(&_shadowVertices, "position")
 		.SetUniform("transform", transform)
 		.SetUniform("map_bounds", map_bounds)
+		.ClearDepth()
 		.Render();
-
-	glDepthMask(true);
 
 	if (_framebuffer != nullptr)
 	{
 		UpdateDepthTextureSize();
 
-		bind_framebuffer binding(*_framebuffer);
-
-		glClear(GL_DEPTH_BUFFER_BIT);
-
 		RenderCall<DepthInsideShader>(_gc)
+			.SetFrameBuffer(_framebuffer)
 			.SetVertices(&_insideVertices, "position", "normal")
 			.SetUniform("transform", transform)
+			.SetDepthTest(true)
+			.SetDepthMask(true)
+			.ClearDepth()
 			.Render();
 
 		RenderCall<DepthBorderShader>(_gc)
+			.SetFrameBuffer(_framebuffer)
 			.SetVertices(&_borderVertices, "position", "normal")
 			.SetUniform("transform", transform)
 			.SetUniform("map_bounds", map_bounds)
+			.SetDepthTest(true)
+			.SetDepthMask(true)
 			.Render();
 
 		RenderCall<DepthSkirtShader>(_gc)
+			.SetFrameBuffer(_framebuffer)
 			.SetVertices(&_skirtVertices, "position", "height")
 			.SetUniform("transform", transform)
+			.SetDepthTest(true)
+			.SetDepthMask(true)
 			.Render();
 	}
 
@@ -106,6 +109,8 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 		.SetUniform("map_bounds", map_bounds)
 		.SetTexture("colormap", _colormap, Sampler(SamplerMinMagFilter::Linear, SamplerAddressMode::Clamp))
 		.SetTexture("splatmap", _splatmap)
+		.SetDepthTest(true)
+		.SetDepthMask(true)
 		.Render();
 
 	RenderCall<TerrainBorderShader>(_gc)
@@ -115,31 +120,30 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 		.SetUniform("map_bounds", map_bounds)
 		.SetTexture("colormap", _colormap, Sampler(SamplerMinMagFilter::Linear, SamplerAddressMode::Clamp))
 		.SetTexture("splatmap", _splatmap)
+		.SetDepthTest(true)
+		.SetDepthMask(true)
 		.Render();
 
 	if (_showLines)
 	{
-		glDisable(GL_DEPTH_TEST);
 		RenderCall<PlainShader_3f>(_gc)
 			.SetVertices(&_lineVertices, "position")
 			.SetUniform("transform", transform)
 			.SetUniform("point_size", 1)
 			.SetUniform("color", glm::vec4(0, 0, 0, 0.06f))
 			.Render();
-		glEnable(GL_DEPTH_TEST);
 	}
 
 	RenderCall<TerrainSkirtShader>(_gc)
 		.SetVertices(&_skirtVertices, "position", "height")
 		.SetUniform("transform", transform)
 		.SetTexture("texture", _colormap, Sampler(SamplerMinMagFilter::Linear, SamplerAddressMode::Clamp))
+		.SetDepthTest(true)
+		.SetDepthMask(true)
 		.Render();
 
 	if (_depth != nullptr)
 	{
-		glDisable(GL_DEPTH_TEST);
-		glDepthMask(false);
-
 		VertexShape_2f_2f vertices;
 		vertices._mode = GL_TRIANGLE_STRIP;
 		vertices.AddVertex(Vertex_2f_2f(glm::vec2(-1, 1), glm::vec2(0, 1)));
@@ -152,9 +156,6 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 			.SetUniform("transform", glm::mat4())
 			.SetTexture("depth", _depth, Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Clamp))
 			.Render();
-
-		glDepthMask(true);
-		glEnable(GL_DEPTH_TEST);
 	}
 }
 

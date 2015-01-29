@@ -167,6 +167,8 @@ void SmoothTerrainWater::Render(GraphicsContext* gc, const glm::mat4& transform)
 		.SetUniform("transform", transform)
 		.SetUniform("map_bounds", glm::vec4(bounds.min, bounds.size()))
 		.SetTexture("texture", nullptr)
+		.SetDepthTest(true)
+		.SetDepthMask(true)
 		.Render();
 
 	RenderCall<WaterBorderShader>(gc)
@@ -174,5 +176,7 @@ void SmoothTerrainWater::Render(GraphicsContext* gc, const glm::mat4& transform)
 		.SetUniform("transform", transform)
 		.SetUniform("map_bounds", glm::vec4(bounds.min, bounds.size()))
 		.SetTexture("texture", nullptr)
+		.SetDepthTest(true)
+		.SetDepthMask(true)
 		.Render();
 }

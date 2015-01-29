@@ -34,11 +34,6 @@ _timestamp()
 
 	_glcontext = SDL_GL_CreateContext(_window);
 
-#if !defined(OPENWAR_USE_GLES2)
-	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-	glEnable(GL_POINT_SPRITE);
-#endif
-
 	Uint32 windowID = SDL_GetWindowID(_window);
 
 	_windows[windowID] = this;

@@ -107,7 +107,15 @@ struct billboard_index
 	float order;
 };
 
-void BillboardTextureShape::Draw(GraphicsContext* gc, Texture* tex, const glm::mat4& transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bounds1f sizeLimit)
+void BillboardTextureShape::Draw(
+	GraphicsContext* gc,
+	Texture* tex,
+	const glm::mat4& transform,
+	const glm::vec3& cameraUp,
+	float cameraFacingDegrees,
+	float viewportHeight,
+	bool depthTest,
+	bounds1f sizeLimit)
 {
 	static std::vector<Vertex_3f_1f_2f_2f> vertices;
 	static std::vector<billboard_index> indices;
@@ -148,6 +156,7 @@ void BillboardTextureShape::Draw(GraphicsContext* gc, Texture* tex, const glm::m
 		.SetUniform("viewport_height", gc->GetCombinedScaling() * viewportHeight)
 		.SetUniform("min_point_size", sizeLimit.min)
 		.SetUniform("max_point_size", sizeLimit.max)
+		.SetDepthTest(depthTest)
 		.Render();
 }
 
@@ -182,5 +191,5 @@ void BillboardTextureShape::Render(GraphicsContext* gc, BillboardModel* billboar
 		AddBillboard(billboard.position, billboard.height, texcoords);
 	}
 
-	Draw(gc, billboardModel->texture->GetTexture(), transform, cameraUp, cameraFacingDegrees, viewportHeight);
+	Draw(gc, billboardModel->texture->GetTexture(), transform, cameraUp, cameraFacingDegrees, viewportHeight, true);
 }

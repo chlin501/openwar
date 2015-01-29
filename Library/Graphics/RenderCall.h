@@ -10,6 +10,11 @@
 #include "Vertex.h"
 #include "Sampler.h"
 
+class FrameBuffer;
+
+
+enum class CullFace { None, Front, Back, FrontAndBack };
+
 
 struct RenderCallAttribute
 {
@@ -90,12 +95,19 @@ protected:
 class RenderCallBase
 {
 protected:
-	ShaderProgram* _shaderprogram;
+	ShaderProgram* _shaderProgram;
+	FrameBuffer* _frameBuffer{};
 	std::vector<RenderCallUniformBase*> _uniforms;
 	std::vector<RenderCallTexture*> _textures;
 	std::vector<RenderCallAttribute> _attributes;
-	VertexBufferBase* _vertices;
-	int _texture_count;
+	VertexBufferBase* _vertices{};
+	int _texture_count{};
+	GLbitfield _clearBits{};
+	glm::vec4 _clearColor;
+	GLfloat _lineWidth{};
+	CullFace _cullFace{CullFace::Back};
+	bool _depthTest{};
+	bool _depthMask{};
 
 public:
 	RenderCallBase(ShaderProgram* shaderprogram);
@@ -111,7 +123,7 @@ protected:
 	RenderCallUniform<T>* GetUniform(const char* name)
 	{
 		RenderCallUniform<T>* result = 0;
-		GLint location = glGetUniformLocation(_shaderprogram->_program, name);
+		GLint location = glGetUniformLocation(_shaderProgram->_program, name);
 		for (RenderCallUniformBase* uniform : _uniforms)
 			if (uniform->_location == location)
 			{
@@ -131,7 +143,7 @@ protected:
 	RenderCallAttribute MakeRenderCallAttribute(const VertexAttributeTraits& traits, GLsizei stride)
 	{
 		return RenderCallAttribute{
-			glGetAttribLocation(_shaderprogram->_program, traits.name),
+			glGetAttribLocation(_shaderProgram->_program, traits.name),
 			traits.size,
 			traits.type,
 			stride,
@@ -139,6 +151,7 @@ protected:
 		};
 	}
 };
+
 
 
 template <class _ShaderProgram>
@@ -149,6 +162,63 @@ public:
 
 	RenderCall(GraphicsContext* gc) : RenderCallBase(gc->GetShaderProgram<_ShaderProgram>())
 	{
+	}
+
+	RenderCall<ShaderProgramT>& ClearDepth()
+	{
+		_clearBits |= GL_DEPTH_BUFFER_BIT;
+		return *this;
+	}
+
+	RenderCall<ShaderProgramT>& ClearColor(const glm::vec4& value)
+	{
+		_clearBits |= GL_COLOR_BUFFER_BIT;
+		_clearColor = value;
+		return *this;
+	}
+
+	RenderCall<ShaderProgramT>& SetCullFace(CullFace value)
+	{
+		_cullFace = value;
+		switch (value)
+		{
+			case CullFace::None:
+				glDisable(GL_CULL_FACE);
+				break;
+			case CullFace::Front:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_FRONT);
+				break;
+			case CullFace::Back: // default value
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_BACK);
+				break;
+			case CullFace::FrontAndBack:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_FRONT_AND_BACK);
+				break;
+		}
+		return *this;
+	}
+
+
+	RenderCall<ShaderProgramT>& SetDepthTest(bool value)
+	{
+		_depthTest = value;
+		return *this;
+	}
+
+	RenderCall<ShaderProgramT>& SetDepthMask(bool value)
+	{
+		_depthMask = value;
+		return *this;
+	}
+
+
+	RenderCall<ShaderProgramT>& SetFrameBuffer(FrameBuffer* frameBuffer)
+	{
+		_frameBuffer = frameBuffer;
+		return *this;
 	}
 
 	template <class T>
@@ -176,6 +246,12 @@ public:
 		for (const auto& traits : VertexT::GetVertexAttributeTraits(names...))
 			_attributes.push_back(MakeRenderCallAttribute(traits, stride));
 
+		return *this;
+	}
+
+	RenderCall<ShaderProgramT>& SetLineWidth(GLfloat value)
+	{
+		_lineWidth = value;
 		return *this;
 	}
 };

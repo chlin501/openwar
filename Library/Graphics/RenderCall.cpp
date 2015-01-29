@@ -3,6 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "RenderCall.h"
+#include "FrameBuffer.h"
 
 
 RenderCallUniformBase::RenderCallUniformBase(GLint location) :
@@ -117,9 +118,7 @@ void RenderCallTexture::Assign()
 
 
 RenderCallBase::RenderCallBase(ShaderProgram* shaderprogram) :
-	_shaderprogram(shaderprogram),
-	_vertices(nullptr),
-	_texture_count(0)
+	_shaderProgram(shaderprogram)
 {
 }
 
@@ -135,84 +134,117 @@ RenderCallBase::~RenderCallBase()
 
 void RenderCallBase::Render()
 {
-	if (_vertices == nullptr)
-		return;
+	std::pair<bool, GLint> oldFrameBuffer{};
 
-	_vertices->Update();
-
-	if (_vertices->_vbo == 0 || _vertices->_count == 0)
-		return;
-
-	glUseProgram(_shaderprogram->_program);
-
-	for (RenderCallUniformBase* uniform : _uniforms)
-		uniform->Assign();
-
-	for (RenderCallTexture* texture : _textures)
-		texture->Assign();
-
-	glUseProgram(_shaderprogram->_program);
-	CHECK_ERROR_GL();
-
-	if (_vertices->_vbo != 0)
+	bool has_vertices = false;
+	if (_vertices != nullptr)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, _vertices->_vbo);
-		CHECK_ERROR_GL();
+		_vertices->Update();
+		has_vertices = _vertices->_vbo != 0 && _vertices->_count != 0;
 	}
 
-	for (const RenderCallAttribute& attribute : _attributes)
+	if ((_clearBits || has_vertices) && _frameBuffer != nullptr)
 	{
-		if (attribute._index != -1)
+		oldFrameBuffer.first = true;
+		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFrameBuffer.second);
+		glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer->id);
+	}
+
+	if (_clearBits)
+	{
+		if (_clearBits & GL_DEPTH_BUFFER_BIT)
+			glDepthMask(GL_TRUE);
+
+		glClear(_clearBits);
+		_clearBits = 0;
+	}
+
+	if (has_vertices)
+	{
+		glUseProgram(_shaderProgram->_program);
+
+		for (RenderCallUniformBase* uniform : _uniforms)
+			uniform->Assign();
+
+		for (RenderCallTexture* texture : _textures)
+			texture->Assign();
+
+		glUseProgram(_shaderProgram->_program);
+		CHECK_ERROR_GL();
+
+		if (_vertices->_vbo != 0)
 		{
-			GLuint index = (GLuint)attribute._index;
-
-			glEnableVertexAttribArray(index);
+			glBindBuffer(GL_ARRAY_BUFFER, _vertices->_vbo);
 			CHECK_ERROR_GL();
+		}
 
-			const GLvoid* pointer = reinterpret_cast<const GLvoid*>(attribute._offset);
+		for (const RenderCallAttribute& attribute : _attributes)
+		{
+			if (attribute._index != -1)
+			{
+				GLuint index = (GLuint)attribute._index;
 
-			glVertexAttribPointer(index, attribute._size, attribute._type, GL_FALSE, attribute._stride, pointer);
+				glEnableVertexAttribArray(index);
+				CHECK_ERROR_GL();
+
+				const GLvoid* pointer = reinterpret_cast<const GLvoid*>(attribute._offset);
+
+				glVertexAttribPointer(index, attribute._size, attribute._type, GL_FALSE, attribute._stride, pointer);
+				CHECK_ERROR_GL();
+			}
+		}
+
+		if (_shaderProgram->_blend_sfactor != GL_ONE || _shaderProgram->_blend_dfactor != GL_ZERO)
+		{
+			glEnable(GL_BLEND);
+			CHECK_ERROR_GL();
+			glBlendFunc(_shaderProgram->_blend_sfactor, _shaderProgram->_blend_dfactor);
+			CHECK_ERROR_GL();
+		}
+
+		if (_lineWidth != 0)
+			glLineWidth(_lineWidth);
+
+		if (_depthTest)
+			glEnable(GL_DEPTH_TEST);
+		else
+			glDisable(GL_DEPTH_TEST);
+
+		glDepthMask(static_cast<GLboolean>(_depthMask));
+
+		glDrawArrays(_vertices->_mode, 0, _vertices->_count);
+		CHECK_ERROR_GL();
+
+		if (_shaderProgram->_blend_sfactor != GL_ONE || _shaderProgram->_blend_dfactor != GL_ZERO)
+		{
+			glDisable(GL_BLEND);
+			CHECK_ERROR_GL();
+			glBlendFunc(GL_ONE, GL_ZERO);
+			CHECK_ERROR_GL();
+		}
+
+		for (const RenderCallAttribute& attribute : _attributes)
+		{
+			glDisableVertexAttribArray(attribute._index);
+			CHECK_ERROR_GL();
+		}
+
+		if (_vertices->_vbo != 0)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			CHECK_ERROR_GL();
 		}
 	}
 
-	if (_shaderprogram->_blend_sfactor != GL_ONE || _shaderprogram->_blend_dfactor != GL_ZERO)
-	{
-		glEnable(GL_BLEND);
-		CHECK_ERROR_GL();
-		glBlendFunc(_shaderprogram->_blend_sfactor, _shaderprogram->_blend_dfactor);
-		CHECK_ERROR_GL();
-	}
-
-	glDrawArrays(_vertices->_mode, 0, _vertices->_count);
-	CHECK_ERROR_GL();
-
-	if (_shaderprogram->_blend_sfactor != GL_ONE || _shaderprogram->_blend_dfactor != GL_ZERO)
-	{
-		glDisable(GL_BLEND);
-		CHECK_ERROR_GL();
-		glBlendFunc(GL_ONE, GL_ZERO);
-		CHECK_ERROR_GL();
-	}
-
-	for (const RenderCallAttribute& attribute : _attributes)
-	{
-		glDisableVertexAttribArray(attribute._index);
-		CHECK_ERROR_GL();
-	}
-
-	if (_vertices->_vbo != 0)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		CHECK_ERROR_GL();
-	}
-}
+	if (oldFrameBuffer.first)
+		glBindFramebuffer(GL_FRAMEBUFFER, oldFrameBuffer.second);
+};
 
 
 RenderCallTexture* RenderCallBase::GetTexture(const char* name)
 {
 	RenderCallTexture* result = 0;
-	GLint location = glGetUniformLocation(_shaderprogram->_program, name);
+	GLint location = glGetUniformLocation(_shaderProgram->_program, name);
 	for (RenderCallTexture* texture : _textures)
 		if (texture->_location == location)
 		{
