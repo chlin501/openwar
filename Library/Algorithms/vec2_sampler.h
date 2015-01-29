@@ -2,20 +2,20 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef SAMPLER_H
-#define SAMPLER_H
+#ifndef VEC2_SAMPLER_H
+#define VEC2_SAMPLER_H
 
 #include <vector>
 #include <glm/glm.hpp>
 
 
-class sampler
+class vec2_sampler
 {
 	double _duration;
 	std::vector<std::pair<double, glm::vec2>> _samples;
 
 public:
-	sampler();
+	vec2_sampler();
 
 	double time() const { return _samples.empty() ? 0 : _samples.back().first; };
 

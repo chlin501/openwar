@@ -2,25 +2,25 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "sampler.h"
+#include "vec2_sampler.h"
 
 
 
-sampler::sampler() :
+vec2_sampler::vec2_sampler() :
 _duration(1)
 {
 }
 
 
 
-void sampler::clear()
+void vec2_sampler::clear()
 {
 	_samples.clear();
 }
 
 
 
-void sampler::add(double time, glm::vec2 value)
+void vec2_sampler::add(double time, glm::vec2 value)
 {
 	if (!_samples.empty())
 		erase_samples_before(_samples.back().first - _duration);
@@ -33,7 +33,7 @@ void sampler::add(double time, glm::vec2 value)
 
 
 
-glm::vec2 sampler::get(double time) const
+glm::vec2 vec2_sampler::get(double time) const
 {
 	if (_samples.empty())
 		return glm::vec2();
@@ -83,7 +83,7 @@ glm::vec2 sampler::get(double time) const
 
 
 
-void sampler::erase_samples_before(double time)
+void vec2_sampler::erase_samples_before(double time)
 {
 	auto i = _samples.begin();
 	while (i != _samples.end() && i->first < time)

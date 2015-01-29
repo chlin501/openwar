@@ -7,7 +7,7 @@
 
 #include <memory>
 #include <vector>
-#include "Algorithms/sampler.h"
+#include "vec2_sampler.h"
 
 class Gesture;
 class Hotspot;
@@ -42,7 +42,7 @@ class Touch
 	glm::vec2 _original;
 	double _timestart;
 	double _timestamp;
-	sampler _sampler;
+	vec2_sampler _sampler;
 	MouseButtons _currentButtons;
 	MouseButtons _previousButtons;
 

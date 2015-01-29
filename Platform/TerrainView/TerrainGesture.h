@@ -7,7 +7,7 @@
 
 #include "Surface/Gesture.h"
 #include "Graphics/RenderLoopObserver.h"
-#include "Algorithms/sampler.h"
+#include "vec2_sampler.h"
 
 class TerrainView;
 class TerrainHotspot;
@@ -19,8 +19,8 @@ class TerrainGesture : public Gesture, RenderLoopObserver
 
 	TerrainHotspot* _hotspot{};
 
-	sampler _scrollSampler;
-	sampler _orbitSampler;
+	vec2_sampler _scrollSampler;
+	vec2_sampler _orbitSampler;
 	glm::vec2 _scrollVelocity;
 	float _previousCameraDirection{};
 	float _orbitAccumulator{};
