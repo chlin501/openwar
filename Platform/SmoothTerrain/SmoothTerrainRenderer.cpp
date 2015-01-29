@@ -66,21 +66,13 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 
 	glDepthMask(false);
 
-	terrain_uniforms shadow_uniforms;
-	shadow_uniforms._transform = transform;
-	shadow_uniforms._map_bounds = map_bounds;
-
-	_renderers->render_ground_shadow(_gc, _shadowVertices, shadow_uniforms);
+	RenderCall<GroundShadowShader>(_gc)
+		.SetVertices(&_shadowVertices, "position")
+		.SetUniform("transform", transform)
+		.SetUniform("map_bounds", map_bounds)
+		.Render();
 
 	glDepthMask(true);
-
-	terrain_uniforms uniforms;
-	uniforms._transform = transform;
-	uniforms._map_bounds = map_bounds;
-	uniforms._light_normal = lightNormal;
-	uniforms._colormap = _colormap;
-	uniforms._splatmap = _splatmap;
-
 
 	if (_framebuffer != nullptr)
 	{
@@ -90,32 +82,58 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		terrain_uniforms du;
-		du._transform = uniforms._transform;
-		du._map_bounds = map_bounds;
+		RenderCall<DepthInsideShader>(_gc)
+			.SetVertices(&_insideVertices, "position", "normal")
+			.SetUniform("transform", transform)
+			.Render();
 
-		_renderers->render_depth_inside(_gc, _insideVertices, du);
-		_renderers->render_depth_border(_gc, _borderVertices, du);
+		RenderCall<DepthBorderShader>(_gc)
+			.SetVertices(&_borderVertices, "position", "normal")
+			.SetUniform("transform", transform)
+			.SetUniform("map_bounds", map_bounds)
+			.Render();
 
-		_renderers->render_depth_skirt(_gc, _skirtVertices, uniforms._transform);
+		RenderCall<DepthSkirtShader>(_gc)
+			.SetVertices(&_skirtVertices, "position", "height")
+			.SetUniform("transform", transform)
+			.Render();
 	}
 
-	_renderers->render_terrain_inside(_gc, _insideVertices, uniforms);
-	_renderers->render_terrain_border(_gc, _borderVertices, uniforms);
+	RenderCall<TerrainInsideShader>(_gc)
+		.SetVertices(&_insideVertices, "position", "normal")
+		.SetUniform("transform", transform)
+		.SetUniform("light_normal", lightNormal)
+		.SetUniform("map_bounds", map_bounds)
+		.SetTexture("colormap", _colormap, Sampler(SamplerMinMagFilter::Linear, SamplerAddressMode::Clamp))
+		.SetTexture("splatmap", _splatmap)
+		.Render();
+
+	RenderCall<TerrainBorderShader>(_gc)
+		.SetVertices(&_borderVertices, "position", "normal")
+		.SetUniform("transform", transform)
+		.SetUniform("light_normal", lightNormal)
+		.SetUniform("map_bounds", map_bounds)
+		.SetTexture("colormap", _colormap, Sampler(SamplerMinMagFilter::Linear, SamplerAddressMode::Clamp))
+		.SetTexture("splatmap", _splatmap)
+		.Render();
 
 	if (_showLines)
 	{
 		glDisable(GL_DEPTH_TEST);
 		RenderCall<PlainShader_3f>(_gc)
 			.SetVertices(&_lineVertices, "position")
-			.SetUniform("transform", uniforms._transform)
+			.SetUniform("transform", transform)
 			.SetUniform("point_size", 1)
 			.SetUniform("color", glm::vec4(0, 0, 0, 0.06f))
 			.Render();
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	_renderers->render_terrain_skirt(_gc, _skirtVertices, uniforms._transform, _colormap);
+	RenderCall<TerrainSkirtShader>(_gc)
+		.SetVertices(&_skirtVertices, "position", "height")
+		.SetUniform("transform", transform)
+		.SetTexture("texture", _colormap, Sampler(SamplerMinMagFilter::Linear, SamplerAddressMode::Clamp))
+		.Render();
 
 	if (_depth != nullptr)
 	{
@@ -129,10 +147,11 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 		vertices.AddVertex(Vertex_2f_2f(glm::vec2(1, 1), glm::vec2(1, 1)));
 		vertices.AddVertex(Vertex_2f_2f(glm::vec2(1, -1), glm::vec2(1, 0)));
 
-		sobel_uniforms su;
-		su._transform = glm::mat4();
-		su._depth = _depth;
-		_renderers->render_sobel_filter(_gc, vertices, su);
+		RenderCall<SobelFilterShader>(_gc)
+			.SetVertices(&vertices, "position", "texcoord")
+			.SetUniform("transform", glm::mat4())
+			.SetTexture("depth", _depth, Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Clamp))
+			.Render();
 
 		glDepthMask(true);
 		glEnable(GL_DEPTH_TEST);
@@ -165,13 +184,6 @@ static const char* FramebufferStatusString(GLenum status)
 void SmoothTerrainRenderer::EnableRenderEdges()
 {
 	_depth = new TextureAtlas(_gc);
-	glBindTexture(GL_TEXTURE_2D, _depth->_id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	//Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Clamp)
 
 	UpdateDepthTextureSize();
 

@@ -13,23 +13,6 @@
 class GraphicsContext;
 
 
-struct terrain_uniforms
-{
-	glm::mat4 _transform;
-	glm::vec3 _light_normal;
-	glm::vec4 _map_bounds;
-	Texture* _colormap;
-	Texture* _splatmap;
-};
-
-
-struct sobel_uniforms
-{
-	glm::mat4 _transform;
-	Texture* _depth;
-};
-
-
 class TerrainInsideShader : public ShaderProgram
 {
 	friend class GraphicsContext;
@@ -141,21 +124,8 @@ class GroundShadowShader : public ShaderProgram
 };
 
 
-
 struct SmoothTerrainShaders
 {
-	void render_terrain_inside(GraphicsContext* gc, VertexShape_3f_3f& vertices, terrain_uniforms& uniforms);
-	void render_terrain_border(GraphicsContext* gc, VertexShape_3f_3f& vertices, terrain_uniforms& uniforms);
-	void render_terrain_skirt(GraphicsContext* gc, VertexShape_3f_1f& vertices, const glm::mat4& transform, Texture* texture);
-
-	void render_depth_inside(GraphicsContext* gc, VertexShape_3f_3f& vertices, terrain_uniforms& uniforms);
-	void render_depth_border(GraphicsContext* gc, VertexShape_3f_3f& vertices, terrain_uniforms& uniforms);
-	void render_depth_skirt(GraphicsContext* gc, VertexShape_3f_1f& vertices, const glm::mat4& transform);
-
-	void render_sobel_filter(GraphicsContext* gc, VertexShape_2f_2f& vertices, sobel_uniforms& uniforms);
-
-	void render_ground_shadow(GraphicsContext* gc, VertexShape_2f& vertices, terrain_uniforms& uniforms);
-
 	static Texture* create_colormap(GraphicsContext* gc);
 };
 

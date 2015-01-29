@@ -380,97 +380,6 @@ GroundShadowShader::GroundShadowShader(GraphicsContext* gc) : ShaderProgram(
 }
 
 
-void SmoothTerrainShaders::render_terrain_inside(GraphicsContext* gc, VertexShape_3f_3f& vertices, terrain_uniforms& uniforms)
-{
-	RenderCall<TerrainInsideShader>(gc)
-		.SetVertices(&vertices, "position", "normal")
-		.SetUniform("transform", uniforms._transform)
-		.SetUniform("light_normal", uniforms._light_normal)
-		.SetUniform("map_bounds", uniforms._map_bounds)
-		.SetTexture("colormap", uniforms._colormap)
-		.SetTexture("splatmap", uniforms._splatmap)
-		.Render();
-}
-
-
-
-void SmoothTerrainShaders::render_terrain_border(GraphicsContext* gc, VertexShape_3f_3f& vertices, terrain_uniforms& uniforms)
-{
-	RenderCall<TerrainBorderShader>(gc)
-		.SetVertices(&vertices, "position", "normal")
-		.SetUniform("transform", uniforms._transform)
-		.SetUniform("light_normal", uniforms._light_normal)
-		.SetUniform("map_bounds", uniforms._map_bounds)
-		.SetTexture("colormap", uniforms._colormap)
-		.SetTexture("splatmap", uniforms._splatmap)
-		.Render();
-}
-
-
-
-void SmoothTerrainShaders::render_terrain_skirt(GraphicsContext* gc, VertexShape_3f_1f& vertices, const glm::mat4& transform, Texture* texturex)
-{
-	RenderCall<TerrainSkirtShader>(gc)
-		.SetVertices(&vertices, "position", "height")
-		.SetUniform("transform", transform)
-		.SetTexture("texture", texturex)
-		.Render();
-}
-
-
-
-void SmoothTerrainShaders::render_depth_inside(GraphicsContext* gc, VertexShape_3f_3f& vertices, terrain_uniforms& uniforms)
-{
-	RenderCall<DepthInsideShader>(gc)
-		.SetVertices(&vertices, "position", "normal")
-		.SetUniform("transform", uniforms._transform)
-		.Render();
-}
-
-
-
-void SmoothTerrainShaders::render_depth_border(GraphicsContext* gc, VertexShape_3f_3f& vertices, terrain_uniforms& uniforms)
-{
-	RenderCall<DepthBorderShader>(gc)
-		.SetVertices(&vertices, "position", "normal")
-		.SetUniform("transform", uniforms._transform)
-		.SetUniform("map_bounds", uniforms._map_bounds)
-		.Render();
-}
-
-
-
-void SmoothTerrainShaders::render_depth_skirt(GraphicsContext* gc, VertexShape_3f_1f& vertices, const glm::mat4& transform)
-{
-	RenderCall<DepthSkirtShader>(gc)
-		.SetVertices(&vertices, "position", "height")
-		.SetUniform("transform", transform)
-		.Render();
-}
-
-
-void SmoothTerrainShaders::render_sobel_filter(GraphicsContext* gc, VertexShape_2f_2f& vertices, sobel_uniforms& uniforms)
-{
-	RenderCall<SobelFilterShader>(gc)
-		.SetVertices(&vertices, "position", "texcoord")
-		.SetUniform("transform", uniforms._transform)
-		.SetTexture("depth", uniforms._depth)
-		.Render();
-}
-
-
-void SmoothTerrainShaders::render_ground_shadow(GraphicsContext* gc, VertexShape_2f& vertices, terrain_uniforms& uniforms)
-{
-	RenderCall<GroundShadowShader>(gc)
-		.SetVertices(&vertices, "position")
-		.SetUniform("transform", uniforms._transform)
-		.SetUniform("map_bounds", uniforms._map_bounds)
-		.Render();
-}
-
-
-
-
 static int _colorScheme = 0;
 
 
@@ -584,13 +493,6 @@ Texture* SmoothTerrainShaders::create_colormap(GraphicsContext* gc)
 
 	TextureAtlas* result = new TextureAtlas(gc);
 	result->LoadTextureFromImage(*image);
-
-	glBindTexture(GL_TEXTURE_2D, result->_id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//Sampler(SamplerMinMagFilter::Linear, SamplerAddressMode::Clamp)
 
 	return result;
 }
