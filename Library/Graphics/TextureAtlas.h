@@ -118,8 +118,6 @@ public:
 
 	TextureFont* GetTextureFont(const FontDescriptor& fontDescriptor);
 
-	void LoadTextureFromImage(const Image& image);
-
 #ifdef OPENWAR_IMAGE_USE_SDL
 	void LoadTextureFromSurface(SDL_Surface* surface);
 #endif

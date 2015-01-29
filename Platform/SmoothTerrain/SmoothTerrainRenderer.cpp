@@ -171,6 +171,7 @@ void SmoothTerrainRenderer::EnableRenderEdges()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glBindTexture(GL_TEXTURE_2D, 0);
+	//Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Clamp)
 
 	UpdateDepthTextureSize();
 
@@ -218,9 +219,7 @@ void SmoothTerrainRenderer::UpdateDepthTextureSize()
 			_framebuffer_width = viewport[2];
 			_framebuffer_height = viewport[3];
 
-			glBindTexture(GL_TEXTURE_2D, _depth->_id);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, _framebuffer_width, _framebuffer_height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
-			glBindTexture(GL_TEXTURE_2D, 0);
+			_depth->ResizeDepth(_framebuffer_width, _framebuffer_height);
 
 			if (_colorbuffer != nullptr)
 				_colorbuffer->Resize(GL_RGBA, _framebuffer_width, _framebuffer_height);
@@ -306,12 +305,8 @@ void SmoothTerrainRenderer::UpdateSplatmap()
 				*p++ = (GLubyte)(255.0f * forest);
 			}
 
-		glBindTexture(GL_TEXTURE_2D, _splatmap->_id);
-		CHECK_ERROR_GL();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		CHECK_ERROR_GL();
-		glGenerateMipmap(GL_TEXTURE_2D);
-		CHECK_ERROR_GL();
+		_splatmap->LoadTextureFromData(width, height, data);
+		_splatmap->GenerateMipmap();
 
 		delete[] data;
 	}

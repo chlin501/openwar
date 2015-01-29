@@ -25,11 +25,6 @@ _tiledGroundMap(tiledGroundMap)
 			if (_textures.find(tile->texture) == _textures.end())
 			{
 				Texture* t = nullptr;//new TextureAtlas(gc, Image(gc, resource(tile->texture.c_str())));
-
-				glBindTexture(GL_TEXTURE_2D, t->_id);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
 				_textures[tile->texture] = t;
 			}
 		}

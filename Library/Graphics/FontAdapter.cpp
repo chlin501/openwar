@@ -312,10 +312,10 @@ TTF_Font* FontAdapter_SDL_ttf::FindFontForCharacter(const std::string& character
 	auto result = conv.from_bytes(character);
 	if (!result.empty())
 	{
-		if (_emoji != nullptr && TTF_GlyphIsProvided(_emoji, result[0]))
+		if (_emoji != nullptr && TTF_GlyphIsProvided(_emoji, static_cast<UInt16>(result[0])))
 			return _emoji;
 
-		if (_font1 != nullptr && TTF_GlyphIsProvided(_font1, result[0]))
+		if (_font1 != nullptr && TTF_GlyphIsProvided(_font1, static_cast<UInt16>(result[0])))
 			return _font1;
 	}
 

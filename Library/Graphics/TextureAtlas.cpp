@@ -15,12 +15,6 @@ TextureAtlas::TextureAtlas(GraphicsContext* gc) : Texture(gc),
 	_discardableHeight(0),
 	_dirty(false)
 {
-	glBindTexture(GL_TEXTURE_2D, _id);
-	CHECK_ERROR_GL();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	CHECK_ERROR_GL();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	CHECK_ERROR_GL();
 }
 
 
@@ -42,18 +36,6 @@ TextureFont* TextureAtlas::GetTextureFont(const FontDescriptor& fontDescriptor)
 	_textureFonts[fontAdapter] = result;
 	return result;
 }
-
-
-void TextureAtlas::LoadTextureFromImage(const Image& image)
-{
-	glBindTexture(GL_TEXTURE_2D, _id);
-	CHECK_ERROR_GL();
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.GetWidth(), image.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.GetPixels());
-	CHECK_ERROR_GL();
-	//glGenerateMipmap(GL_TEXTURE_2D);
-	//CHECK_ERROR_GL();
-}
-
 
 
 #ifdef OPENWAR_IMAGE_USE_SDL

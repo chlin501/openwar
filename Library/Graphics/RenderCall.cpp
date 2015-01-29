@@ -82,6 +82,13 @@ RenderCallTexture::RenderCallTexture(GLint location, GLenum texture) :
 }
 
 
+void RenderCallTexture::SetValue(Texture* value, const Sampler& sampler)
+{
+	_value = value;
+	_sampler = sampler;
+}
+
+
 void RenderCallTexture::Assign()
 {
 	if (_value != nullptr)
@@ -91,6 +98,14 @@ void RenderCallTexture::Assign()
 		glActiveTexture(GL_TEXTURE0 + _texture);
 		CHECK_ERROR_GL();
 		glBindTexture(GL_TEXTURE_2D, _value->_id);
+		CHECK_ERROR_GL();
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(_sampler.minFilter));
+		CHECK_ERROR_GL();
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(_sampler.magFilter));
+		CHECK_ERROR_GL();
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLint>(_sampler.sAddressMode));
+		CHECK_ERROR_GL();
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLint>(_sampler.tAddressMode));
 		CHECK_ERROR_GL();
 	}
 	glUniform1i(_location, _texture);

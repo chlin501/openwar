@@ -8,6 +8,7 @@
 #include "GraphicsContext.h"
 #include "ShaderProgram.h"
 #include "Vertex.h"
+#include "Sampler.h"
 
 
 struct RenderCallAttribute
@@ -76,10 +77,12 @@ class RenderCallTexture
 	GLint _location;
 	GLenum _texture;
 	Texture* _value;
+	Sampler _sampler;
 
 protected:
 	RenderCallTexture(GLint location, GLenum texture);
 
+	void SetValue(Texture* value, const Sampler& sampler);
 	void Assign();
 };
 
@@ -155,9 +158,9 @@ public:
 		return *this;
 	}
 
-	RenderCall<ShaderProgramT>& SetTexture(const char* name, Texture* value)
+	RenderCall<ShaderProgramT>& SetTexture(const char* name, Texture* value, const Sampler& sampler = Sampler{})
 	{
-		GetTexture(name)->_value = value;
+		GetTexture(name)->SetValue(value, sampler);
 		return *this;
 	}
 

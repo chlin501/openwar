@@ -8,10 +8,14 @@
 #include "GraphicsContext.h"
 
 class GraphicsContext;
+class Image;
 
 
 class Texture
 {
+	friend class RenderCallTexture;
+	friend class FrameBuffer;
+
 public:
 	GLuint _id;
 
@@ -22,6 +26,12 @@ public:
 	Texture& operator=(Texture&&);
 
 	virtual void UpdateTexture() = 0;
+
+	void LoadTextureFromImage(const Image& image);
+	void LoadTextureFromData(int width, int height, const void* data);
+
+	void GenerateMipmap();
+	void ResizeDepth(int width, int height);
 };
 
 
