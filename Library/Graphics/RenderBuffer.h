@@ -5,7 +5,7 @@
 #ifndef RenderBuffer_H
 #define RenderBuffer_H
 
-#include "GraphicsOpenGL.h"
+#include "GraphicsContext.h"
 
 
 struct RenderBuffer

@@ -4,7 +4,6 @@
 
 #include "Viewport.h"
 #include "GraphicsContext.h"
-#include "GraphicsOpenGL.h"
 
 
 Viewport::Viewport(GraphicsContext* gc) :

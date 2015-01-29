@@ -5,7 +5,7 @@
 #ifndef Vertex_H
 #define Vertex_H
 
-#include "GraphicsOpenGL.h"
+#include "GraphicsContext.h"
 #include <glm/glm.hpp>
 #include <vector>
 

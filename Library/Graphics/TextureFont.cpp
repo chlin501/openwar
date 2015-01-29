@@ -6,6 +6,7 @@
 #include "Image.h"
 #include "TextureAtlas.h"
 #include "GraphicsContext.h"
+#include "FontAdapter.h"
 
 #include <codecvt>
 #include <cstdlib>

@@ -4,6 +4,8 @@
 
 #include "GraphicsContext.h"
 #include "TextureAtlas.h"
+#include "ShaderProgram.h"
+#include "FontAdapter.h"
 
 
 GraphicsContext::GraphicsContext(float nativeScaling, float virtualScaling) :

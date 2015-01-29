@@ -6,8 +6,8 @@
 #define RenderCall_H
 
 #include "GraphicsContext.h"
+#include "ShaderProgram.h"
 #include "Vertex.h"
-
 
 
 struct RenderCallAttribute

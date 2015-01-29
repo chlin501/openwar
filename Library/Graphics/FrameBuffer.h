@@ -5,7 +5,7 @@
 #ifndef FrameBuffer_H
 #define FrameBuffer_H
 
-#include "GraphicsOpenGL.h"
+#include "GraphicsContext.h"
 
 #ifndef CHECK_ERROR_GL
 extern void CHECK_ERROR_GL();

@@ -5,7 +5,7 @@
 #ifndef Texture_H
 #define Texture_H
 
-#include "GraphicsOpenGL.h"
+#include "GraphicsContext.h"
 
 class GraphicsContext;
 

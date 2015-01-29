@@ -5,12 +5,47 @@
 #ifndef GraphicsContext_H
 #define GraphicsContext_H
 
-#include "FontAdapter.h"
-#include "GraphicsOpenGL.h"
-#include "ShaderProgram.h"
 #include <map>
 #include <string>
 
+#include "FontDescriptor.h"
+
+#ifdef GRAPHICS_OPENGL_IOS
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
+#endif
+
+
+#ifdef GRAPHICS_OPENGL_MAC
+#include <OpenGL/gl.h>
+//#define glGenVertexArraysOES glGenVertexArraysAPPLE
+//#define glBindVertexArrayOES glBindVertexArrayAPPLE
+//#define glDeleteVertexArraysOES glDeleteVertexArraysAPPLE
+#endif
+
+
+#ifdef GRAPHICS_OPENGL_ANDROID
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#endif
+
+
+#ifdef GRAPHICS_OPENGL_LINUX
+#endif
+
+
+#ifndef CHECK_ERROR_GL
+extern void CHECK_ERROR_GL();
+#endif
+
+
+#ifndef GL_POINT_SPRITE
+#define GL_POINT_SPRITE 0x8861
+#endif
+
+
+class FontAdapter;
+class ShaderProgram;
 class TextureAtlas;
 
 #define WIDGET_TEXTURE_ATLAS "WIDGET"

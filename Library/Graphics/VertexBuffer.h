@@ -6,7 +6,7 @@
 #define VertexBuffer_H
 
 #include "Algebra/bounds.h"
-#include "GraphicsOpenGL.h"
+#include "GraphicsContext.h"
 #include "Vertex.h"
 
 

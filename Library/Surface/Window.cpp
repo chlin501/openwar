@@ -5,7 +5,7 @@
 #include "Window.h"
 #include "Surface.h"
 #include "Gesture.h"
-#include "Graphics/GraphicsOpenGL.h"
+#include "Graphics/GraphicsContext.h"
 #include "Graphics/RenderLoopObserver.h"
 #include "Graphics/Viewport.h"
 

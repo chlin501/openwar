@@ -5,7 +5,7 @@
 #ifndef ShaderProgram_H
 #define ShaderProgram_H
 
-#include "GraphicsOpenGL.h"
+#include "GraphicsContext.h"
 #include "VertexBuffer.h"
 #include "Texture.h"
 #include <map>
