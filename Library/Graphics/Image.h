@@ -19,30 +19,37 @@
 #import <CoreGraphics/CoreGraphics.h>
 #endif
 
+class Image;
+
 
 class Image
 {
 #ifdef OPENWAR_IMAGE_ENABLE_SDL
-	mutable SDL_Surface* _surface;
+	mutable SDL_Surface* _surface{};
 #endif
 #ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
-	mutable CGContextRef _context;
-	mutable CGImageRef _image;
+	mutable CGContextRef _context{};
+	mutable CGImageRef _image{};
 #endif
 
-	int _width;
-	int _height;
-	float _pixelDensity;
-	unsigned char* _pixels;
-	bool _owner;
+	int _width{};
+	int _height{};
+	float _pixelDensity{1};
+	unsigned char* _pixels{};
+	bool _owner{};
 
 public:
+	static void swap(Image&, Image&);
+
 	Image();
 	Image(int width, int height);
 	~Image();
 
-	Image(const Image&);
+	Image(const Image&) = delete;
 	Image& operator=(const Image&) = delete;
+
+	Image(Image&&);
+	Image& operator=(Image&&);
 
 	float GetPixelDensity() const;
 	void SetPixelDensity(float value);
@@ -80,7 +87,9 @@ public:
 	void ApplyCircleMask();
 
 	void Copy(const Image& image, int x, int y);
+	void Draw(const Image& image, int x, int y, int w, int h);
 	void Fill(const glm::vec4& color, const bounds2f& bounds);
+	void Resize(int width, int height);
 };
 
 

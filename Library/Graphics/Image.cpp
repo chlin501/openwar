@@ -25,36 +25,33 @@
 #endif
 
 
-Image::Image() :
+void Image::swap(Image& a, Image& b)
+{
+	using std::swap;
+
 #ifdef OPENWAR_IMAGE_ENABLE_SDL
-	_surface(nullptr),
+	swap(a._surface, b._surface);
 #endif
 #ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
-	_context(NULL),
-	_image(NULL),
+	swap(a._context, b._context);
+	swap(a._image, b._image);
 #endif
-	_width(0),
-	_height(0),
-	_pixelDensity(1),
-	_pixels(nullptr),
-	_owner(false)
+	swap(a._width, b._width);
+	swap(a._height, b._height);
+	swap(a._pixelDensity, b._pixelDensity);
+	swap(a._pixels, b._pixels);
+	swap(a._owner, b._owner);
+}
+
+
+Image::Image()
 {
 }
 
 
 Image::Image(int width, int height) :
-#ifdef OPENWAR_IMAGE_ENABLE_SDL
-	_surface(nullptr),
-#endif
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
-	_context(NULL),
-	_image(NULL),
-#endif
 	_width(width),
-	_height(height),
-	_pixelDensity(1),
-	_pixels(nullptr),
-	_owner(false)
+	_height(height)
 {
 	_pixels = (unsigned char*) calloc((size_t)(_width * _height), 4);
 	_owner = true;
@@ -85,23 +82,27 @@ Image::~Image()
 }
 
 
-Image::Image(const Image& image) :
-#ifdef OPENWAR_IMAGE_ENABLE_SDL
-	_surface(nullptr),
-#endif
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
-	_context(NULL),
-	_image(NULL),
-#endif
+/*Image::Image(const Image& image) :
 	_width(image._width),
 	_height(image._height),
-	_pixelDensity(1),
-	_pixels(nullptr),
-	_owner(false)
+	_pixelDensity(image._pixelDensity)
 {
 	_pixels = (unsigned char*) calloc((size_t)(_width * _height), 4);
 	std::memcpy(_pixels, image._pixels, (size_t)(_width * _height) * 4);
 	_owner = true;
+}*/
+
+
+Image::Image(Image&& image)
+{
+	swap(*this, image);
+}
+
+
+Image& Image::operator=(Image&& image)
+{
+	swap(*this, image);
+	return *this;
 }
 
 
@@ -462,12 +463,16 @@ void Image::ApplyCircleMask()
 
 void Image::Copy(const Image& image, int x, int y)
 {
+	Draw(image, x, y, image.GetWidth(), image.GetHeight());
+}
+
+
+void Image::Draw(const Image& image, int x, int y, int w, int h)
+{
 #if defined(OPENWAR_IMAGE_ENABLE_COREGRAPHICS)
 
 	CGContextRef context = GetCGContext();
-	int width = image.GetWidth();
-	int height = image.GetHeight();
-	CGRect rect = CGRectMake(x, _height - y - height, width, height);
+	CGRect rect = CGRectMake(x, _height - y - h, w, h);
 	CGContextClearRect(context, rect);
 	CGContextDrawImage(context, rect, image.GetCGImage());
 
@@ -485,8 +490,8 @@ void Image::Copy(const Image& image, int x, int y)
 	SDL_Rect dstRect;
 	dstRect.x = x;
 	dstRect.y = y;
-	dstRect.w = src->w;
-	dstRect.h = src->h;
+	dstRect.w = w;
+	dstRect.h = h;
 
 	SDL_BlendMode oldBlendMode;
 	SDL_GetSurfaceBlendMode(src, &oldBlendMode);
@@ -534,6 +539,14 @@ void Image::Fill(const glm::vec4& color, const bounds2f& bounds)
 	SDL_FillRect(dst, &rect, c);
 
 #endif
+}
+
+
+void Image::Resize(int width, int height)
+{
+	Image image(width, height);
+	image.Draw(*this, 0, 0, width, height);
+	*this = std::move(image);
 }
 
 
