@@ -50,7 +50,7 @@ TextureChar* TextureFont::GetTextureChar(const std::string& character, float blu
 		image.PremultiplyAlpha();
 	};
 
-	int border = 2 + (int)glm::ceil(2 * blurRadius);
+	int border = 4 + (int)glm::ceil(2 * blurRadius);
 
 	std::shared_ptr<TextureImage> textureImage = _fontAdapter->AddTextureImage(_textureAtlas, character, border, filter);
 	if (textureImage == nullptr)
