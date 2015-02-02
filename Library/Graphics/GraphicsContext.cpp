@@ -12,13 +12,10 @@ GraphicsContext::GraphicsContext(float nativeScaling, float virtualScaling) :
 	_nativeScaling(nativeScaling),
 	_virtualScaling(virtualScaling)
 {
+#if !defined(OPENWAR_USE_GLES2)
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	glEnable(GL_POINT_SPRITE);
-
-/*#if !defined(OPENWAR_USE_GLES2)
-	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-	glEnable(GL_POINT_SPRITE);
-#endif*/
+#endif
 }
 
 

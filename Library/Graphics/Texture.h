@@ -15,6 +15,7 @@ class Texture
 	friend class RenderCallTexture;
 	friend class FrameBuffer;
 
+protected:
 	GLuint _id;
 
 public:
