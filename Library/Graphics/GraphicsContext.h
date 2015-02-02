@@ -9,7 +9,7 @@
 #include <string>
 
 #include "FontDescriptor.h"
-#include "bounds.h"
+#include "Algebra/bounds.h"
 
 #ifdef GRAPHICS_OPENGL_IOS
 #include <OpenGLES/ES2/gl.h>

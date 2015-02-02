@@ -7,7 +7,7 @@
 
 #include "Surface/Gesture.h"
 #include "Graphics/RenderLoopObserver.h"
-#include "vec2_sampler.h"
+#include "Algorithms/vec2_sampler.h"
 
 class TerrainView;
 class TerrainHotspot;

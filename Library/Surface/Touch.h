@@ -7,7 +7,7 @@
 
 #include <memory>
 #include <vector>
-#include "vec2_sampler.h"
+#include "Algorithms/vec2_sampler.h"
 
 class Gesture;
 class Hotspot;
