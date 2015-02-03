@@ -26,15 +26,7 @@
 
 
 BattleGesture::BattleGesture(BattleHotspot* hotspot) :
-	_hotspot(hotspot),
-	_tappedUnitCenter(false),
-	_tappedDestination(false),
-	_tappedModiferArea(false),
-	_trackingMarker(0),
-	_trackingTouch(0),
-	_modifierTouch(0),
-	_offsetToMarker(0),
-	_allowTargetEnemyUnit(false)
+	_hotspot(hotspot)
 {
 }
 
@@ -234,7 +226,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 				BattleGesture* gesture = dynamic_cast<BattleGesture*>(g);
 				if (gesture != nullptr && gesture != this && gesture->_trackingTouch != nullptr)
 				{
-					if (glm::length(_trackingTouch->GetCurrentPosition() - touch->GetCurrentPosition()) > glm::length(gesture->_trackingTouch->GetCurrentPosition() - touch->GetCurrentPosition()))
+					if (glm::distance(_trackingTouch->GetCurrentPosition(), touch->GetCurrentPosition()) > glm::distance(gesture->_trackingTouch->GetCurrentPosition(), touch->GetCurrentPosition()))
 						return;
 				}
 			}
@@ -451,7 +443,7 @@ void BattleGesture::UpdateTrackingMarker()
 		}
 
 		float movementLimit = -1;
-		float delta = 1.0f / fmaxf(1, glm::length(currentDestination - markerPosition));
+		float delta = 1.0f / glm::max(1.0f, glm::distance(currentDestination, markerPosition));
 		for (float k = delta; k < 1; k += delta)
 		{
 			GroundMap* groundMap = _hotspot->GetBattleView()->GetSimulator()->GetGroundMap();
@@ -473,6 +465,12 @@ void BattleGesture::UpdateTrackingMarker()
 
 		if (enemyUnit && !_trackingMarker->GetMeleeTarget())
 			SoundPlayer::singleton->Play(SoundBufferCommandMod);
+
+		/*if (!unit->deployed)
+		{
+			unit->state.center = markerPosition;
+			unitCenter = unit->state.center;
+		}*/
 
 		_trackingMarker->SetMeleeTarget(enemyUnit);
 		_trackingMarker->SetDestination(&markerPosition);
@@ -559,8 +557,8 @@ Unit* BattleGesture::FindCommandableUnit(glm::vec2 screenPosition, glm::vec2 ter
 
 	if (unitByPosition != nullptr && unitByDestination != nullptr)
 	{
-		float distanceToPosition = glm::length(unitByPosition->state.center - screenPosition);
-		float distanceToDestination = glm::length(unitByDestination->GetCommand().GetDestination() - screenPosition);
+		float distanceToPosition = glm::distance(unitByPosition->state.center, screenPosition);
+		float distanceToDestination = glm::distance(unitByDestination->GetCommand().GetDestination(), screenPosition);
 		return distanceToPosition < distanceToDestination
 				? unitByPosition
 				: unitByDestination;
@@ -640,7 +638,7 @@ Unit* BattleGesture::FindEnemyUnit(glm::vec2 touchPosition, glm::vec2 markerPosi
 	for (int i = 0; i < 4; ++i)
 	{
 		UnitCounter* unitMarker = _hotspot->GetBattleView()->GetNearestUnitCounter(p, enemyTeam, 0);
-		if (unitMarker && glm::length(unitMarker->_unit->state.center - p) <= SNAP_TO_UNIT_TRESHOLD)
+		if (unitMarker && glm::distance(unitMarker->_unit->state.center, p) <= SNAP_TO_UNIT_TRESHOLD)
 		{
 			enemyMarker = unitMarker;
 			break;

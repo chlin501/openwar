@@ -16,6 +16,8 @@ BattleScenario::BattleScenario()
 	_script = new BattleScript(this);
 
 	_dummyCommander = new BattleCommander(this, "", 1, BattleCommanderType::None);
+
+	UpdateDeploymentZones(0);
 }
 
 
@@ -152,19 +154,25 @@ void BattleScenario::Tick(double secondsSinceLastTick)
 	if (_script != nullptr)
 		_script->Tick(secondsSinceLastTick);
 
+	UpdateDeploymentZones(secondsSinceLastTick);
+}
+
+
+void BattleScenario::UpdateDeploymentZones(double secondsSinceLastTick)
+{
 	const float deploymentRadius = 768.0f;
-	const float deploymenyStart = 128.0f;
+	const float deploymenyStart = -100.0f;
 	const float deploymentTime = 90.0f;
 	float deploymentOffset = deploymenyStart + _deploymentTimer * (512.0f - deploymenyStart) / deploymentTime;
 	if (deploymentOffset < 512.0f)
 	{
 		_simulator->SetDeploymentZone(1, glm::vec2{512.0f, 512.0f - deploymentRadius - deploymentOffset}, deploymentRadius);
-		_simulator->SetDeploymentZone(2, glm::vec2{512.0f, 512.0f + deploymentRadius + deploymentOffset}, deploymentRadius);
+		//_simulator->SetDeploymentZone(2, glm::vec2{512.0f, 512.0f + deploymentRadius + deploymentOffset}, deploymentRadius);
 	}
 	else
 	{
 		_simulator->SetDeploymentZone(1, glm::vec2{}, 0.0f);
-		_simulator->SetDeploymentZone(2, glm::vec2{}, 0.0f);
+		//_simulator->SetDeploymentZone(2, glm::vec2{}, 0.0f);
 	}
 
 	_deploymentTimer += static_cast<float>(secondsSinceLastTick);

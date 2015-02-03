@@ -19,19 +19,19 @@ class UnitCounter;
 
 class BattleGesture : public Gesture
 {
-	BattleHotspot* _hotspot;
+	BattleHotspot* _hotspot{};
 
-	bool _tappedUnitCenter;
-	bool _tappedDestination;
-	bool _tappedModiferArea;
+	bool _tappedUnitCenter{};
+	bool _tappedDestination{};
+	bool _tappedModiferArea{};
 
-	UnitTrackingMarker* _trackingMarker;
+	UnitTrackingMarker* _trackingMarker{};
 
-	Touch* _trackingTouch;
-	Touch* _modifierTouch;
+	Touch* _trackingTouch{};
+	Touch* _modifierTouch{};
 
-	float _offsetToMarker;
-	bool _allowTargetEnemyUnit;
+	float _offsetToMarker{};
+	bool _allowTargetEnemyUnit{};
 
 public:
 	BattleGesture(BattleHotspot* hotspot);

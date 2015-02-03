@@ -252,6 +252,13 @@ float BattleSimulator::GetDeploymentRadius(int team) const
 }
 
 
+bool BattleSimulator::IsDeploymentZone(int team, glm::vec2 position) const
+{
+	glm::vec3 p = _deploymentZones[team == 1 ? 0 : 1];
+	return glm::distance(position, p.xy()) < p.z;
+}
+
+
 Unit* BattleSimulator::AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position)
 {
 	Unit* unit = new Unit();
@@ -265,6 +272,7 @@ Unit* BattleSimulator::AddUnit(BattleCommander* commander, const char* unitClass
 	unit->fightersCount = numberOfFighters;
 	unit->fighters = new Fighter[numberOfFighters];
 
+	unit->deployed = !IsDeploymentZone(commander->GetTeam(), position);
 	unit->command.bearing = bearing;
 	unit->nextCommand = unit->command;
 

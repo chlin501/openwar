@@ -56,6 +56,9 @@ public:
 	void SetTiledMap(int x, int y);
 
 	void Tick(double secondsSinceLastTick);
+
+private:
+	void UpdateDeploymentZones(double secondsSinceLastTick);
 };
 
 

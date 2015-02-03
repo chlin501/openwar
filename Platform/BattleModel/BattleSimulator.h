@@ -225,6 +225,7 @@ struct Unit
 	UnitRange unitRange{};
 
 	// control attributes
+	bool deployed{};
 	UnitCommand command{};
 	UnitCommand nextCommand{};
 	float nextCommandTimer{};
@@ -305,6 +306,7 @@ public:
 	void SetDeploymentZone(int team, glm::vec2 position, float radius);
 	glm::vec2 GetDeploymentPosition(int team) const;
 	float GetDeploymentRadius(int team) const;
+	bool IsDeploymentZone(int team, glm::vec2 position) const;
 
 	const std::vector<Unit*>& GetUnits() { return _units; }
 	Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);

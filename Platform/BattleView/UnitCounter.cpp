@@ -14,9 +14,7 @@
 
 UnitCounter::UnitCounter(BattleView* battleView, Unit* unit) :
 _battleView(battleView),
-_unit(unit),
-_routingTimer(0),
-_weaponIndex(0)
+_unit(unit)
 {
 	_samuraiWeapon = SamuraiModule::GetSamuraiWeapon(unit->unitClass.c_str());
 	_samuraiPlatform = SamuraiModule::GetSamuraiPlatform(unit->unitClass.c_str());
@@ -68,10 +66,12 @@ void UnitCounter::AppendUnitMarker(BillboardTextureShape* renderer, bool flip)
 			color = 2;
 	}
 
-	int command = _unit->IsCommandableBy(_battleView->GetCommander()) ? 0 : 1;
+	int command = !_unit->deployed ? 2
+		: !_unit->IsCommandableBy(_battleView->GetCommander()) ? 1
+		: 0;
 
 	glm::vec3 position = _battleView->GetSimulator()->GetHeightMap()->GetPosition(_unit->state.center, 0);
-	glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
+	glm::vec2 texsize(0.1875f, 0.1875f); // 48 / 256
 	glm::vec2 texcoord1 = texsize * glm::vec2(color, command);
 	glm::vec2 texcoord2 = texsize * glm::vec2((int)_samuraiPlatform, 3);
 	glm::vec2 texcoord3 = texsize * glm::vec2(4, (int)_samuraiWeapon);

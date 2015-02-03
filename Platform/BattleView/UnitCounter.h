@@ -22,10 +22,9 @@ class UnitCounter
 public:
 	BattleView* _battleView;
 	Unit* _unit;
-	float _routingTimer;
-	int _weaponIndex;
-	SamuraiWeapon _samuraiWeapon;
-	SamuraiPlatform _samuraiPlatform;
+	float _routingTimer{};
+	SamuraiWeapon _samuraiWeapon{};
+	SamuraiPlatform _samuraiPlatform{};
 
 public:
 	UnitCounter(BattleView* battleView, Unit* unit);

@@ -34,9 +34,22 @@ SmoothTerrainRenderer::~SmoothTerrainRenderer()
 {
 	delete _colormap;
 	delete _splatmap;
+
 	delete _sobelFrameBuffer;
 	delete _sobelColorBuffer;
 	delete _sobelDepthBuffer;
+
+	delete _hatchingsMasterColorBuffer;
+	delete _hatchingsMasterFrameBuffer;
+
+	delete _hatchingsIntermediateFrameBuffer;
+	delete _hatchingsIntermediateColorBuffer;
+	delete _hatchingsIntermediateDepthBuffer;
+
+	delete _hatchingsDeployment;
+	delete _hatchingsPatternR;
+	delete _hatchingsPatternG;
+	delete _hatchingsPatternB;
 }
 
 
