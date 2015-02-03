@@ -25,13 +25,14 @@ public:
 	Texture(Texture&&);
 	Texture& operator=(Texture&&);
 
-	virtual void UpdateTexture() = 0;
+	void Reset(GLenum internalFormat, GLenum type, GLsizei width, GLsizei height);
+
+	virtual void UpdateTexture();
 
 	void LoadTextureFromImage(const Image& image);
 	void LoadTextureFromData(int width, int height, const void* data);
 
 	void GenerateMipmap();
-	void ResizeDepth(int width, int height);
 };
 
 

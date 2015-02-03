@@ -14,13 +14,13 @@ class RenderBuffer
 	GLuint _id{};
 
 public:
-	RenderBuffer(GLsizei width, GLsizei height);
+	RenderBuffer();
 	~RenderBuffer();
 
 	RenderBuffer(const RenderBuffer&) = delete;
 	RenderBuffer& operator=(const RenderBuffer&) = delete;
 
-	void Resize(GLsizei width, GLsizei height);
+	void Reset(GLenum internalFormat, GLsizei width, GLsizei height);
 };
 
 

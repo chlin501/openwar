@@ -20,7 +20,7 @@ class FrameBuffer
 	friend class RenderCallBase;
 
 	GLuint _id;
-	bool _complete{};
+	GLenum _status{};
 
 public:
 	FrameBuffer();
@@ -30,6 +30,7 @@ public:
 	FrameBuffer& operator=(FrameBuffer&&);
 
 	bool IsComplete() const;
+	const char* GetStatus() const;
 
 	void AttachColor(RenderBuffer* value);
 	void AttachColor(Texture* value);

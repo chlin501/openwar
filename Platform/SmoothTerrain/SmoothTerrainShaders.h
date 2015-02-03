@@ -5,10 +5,7 @@
 #ifndef SmoothTerrainShaders_H
 #define SmoothTerrainShaders_H
 
-#include "Graphics/FrameBuffer.h"
-#include "Graphics/RenderBuffer.h"
 #include "Graphics/ShaderProgram.h"
-#include "Shapes/VertexShape.h"
 
 class GraphicsContext;
 
@@ -97,7 +94,6 @@ class DepthSkirtShader : public ShaderProgram
 };
 
 
-
 class SobelFilterShader : public ShaderProgram
 {
 	friend class GraphicsContext;
@@ -121,6 +117,48 @@ class GroundShadowShader : public ShaderProgram
 		uniform vec4 map_bounds;
 	 */
 	GroundShadowShader(GraphicsContext* gc);
+};
+
+
+class HatchingsInsideShader : public ShaderProgram
+{
+	friend class GraphicsContext;
+	/*
+		attribute vec3 position;
+		attribute vec3 normal;
+
+		uniform mat4 transform;
+		uniform vec4 map_bounds;
+	 */
+	HatchingsInsideShader(GraphicsContext* gc);
+};
+
+
+class HatchingsBorderShader : public ShaderProgram
+{
+	friend class GraphicsContext;
+	/*
+		attribute vec3 position;
+		attribute vec3 normal;
+
+		uniform mat4 transform;
+		uniform vec4 map_bounds;
+	 */
+	HatchingsBorderShader(GraphicsContext* gc);
+};
+
+
+class HatchingsResultShader : public ShaderProgram
+{
+	friend class GraphicsContext;
+	/*
+		attribute vec2 position;
+		attribute vec2 texcoord;
+
+		uniform mat4 transform;
+		uniform sampler2D texture;
+	 */
+	HatchingsResultShader(GraphicsContext* gc);
 };
 
 

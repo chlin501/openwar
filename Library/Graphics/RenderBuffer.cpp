@@ -11,13 +11,9 @@ extern void CHECK_ERROR_GL();
 
 
 
-RenderBuffer::RenderBuffer(GLsizei width, GLsizei height)
+RenderBuffer::RenderBuffer()
 {
 	glGenRenderbuffers(1, &_id);
-	CHECK_ERROR_GL();
-	glBindRenderbuffer(GL_RENDERBUFFER, _id);
-	CHECK_ERROR_GL();
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, width, height);
 	CHECK_ERROR_GL();
 }
 
@@ -29,8 +25,12 @@ RenderBuffer::~RenderBuffer()
 }
 
 
-void RenderBuffer::Resize(GLsizei width, GLsizei height)
+void RenderBuffer::Reset(GLenum internalFormat, GLsizei width, GLsizei height)
 {
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, width, height);
+	glBindRenderbuffer(GL_RENDERBUFFER, _id);
+	CHECK_ERROR_GL();
+	glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height);
+	CHECK_ERROR_GL();
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	CHECK_ERROR_GL();
 }

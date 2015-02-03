@@ -37,6 +37,21 @@ Texture& Texture::operator=(Texture&& rhs)
 }
 
 
+void Texture::Reset(GLenum internalFormat, GLenum type, GLsizei width, GLsizei height)
+{
+	glBindTexture(GL_TEXTURE_2D, _id);
+	CHECK_ERROR_GL();
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, internalFormat, type, NULL);
+	CHECK_ERROR_GL();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	CHECK_ERROR_GL();
+}
+
+
+void Texture::UpdateTexture()
+{
+}
+
 
 void Texture::LoadTextureFromImage(const Image& image)
 {
@@ -62,12 +77,4 @@ void Texture::GenerateMipmap()
 	CHECK_ERROR_GL();
 	glGenerateMipmap(GL_TEXTURE_2D);
 	CHECK_ERROR_GL();
-}
-
-
-void Texture::ResizeDepth(int width, int height)
-{
-	glBindTexture(GL_TEXTURE_2D, _id);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
-	glBindTexture(GL_TEXTURE_2D, 0);
 }

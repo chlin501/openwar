@@ -63,10 +63,4 @@ void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const Resourc
 
 	LoadTextureFromImage(image);
 	GenerateMipmap();
-
-}
-
-
-void TextureResource::UpdateTexture()
-{
 }

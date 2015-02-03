@@ -19,8 +19,15 @@ RenderCallUniformBase::~RenderCallUniformBase()
 
 void RenderCallUniformBase::Assign(int value)
 {
-	glUniform1iv(_location, 1, (const GLint*)&value);
-	CHECK_ERROR_GL();
+	if (_location != -1)
+	{
+		glUniform1iv(_location, 1, (const GLint*)&value);
+		CHECK_ERROR_GL();
+	}
+	else
+	{
+		// TODO: should log error
+	}
 }
 
 
@@ -182,7 +189,7 @@ void RenderCallBase::Render()
 		{
 			if (attribute._index != -1)
 			{
-				GLuint index = (GLuint)attribute._index;
+				GLuint index = static_cast<GLuint>(attribute._index);
 
 				glEnableVertexAttribArray(index);
 				CHECK_ERROR_GL();
@@ -230,8 +237,11 @@ void RenderCallBase::Render()
 
 		for (const RenderCallAttribute& attribute : _attributes)
 		{
-			glDisableVertexAttribArray(attribute._index);
-			CHECK_ERROR_GL();
+			if (attribute._index != -1)
+			{
+				glDisableVertexAttribArray(static_cast<GLuint>(attribute._index));
+				CHECK_ERROR_GL();
+			}
 		}
 
 		if (_vertices->_vbo != 0)

@@ -378,3 +378,126 @@ GroundShadowShader::GroundShadowShader(GraphicsContext* gc) : ShaderProgram(
 	_blend_sfactor = GL_SRC_ALPHA;
 	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
 }
+
+
+HatchingsInsideShader::HatchingsInsideShader(GraphicsContext* gc) : ShaderProgram(
+	VERTEX_SHADER
+	({
+		uniform mat4 transform;
+		uniform vec4 map_bounds;
+		attribute vec3 position;
+		attribute vec3 normal;
+		varying vec2 _texcoord;
+
+		void main()
+		{
+			vec4 p = transform * vec4(position, 1);
+
+			_texcoord = (position.xy - map_bounds.xy) / map_bounds.zw;
+
+			gl_Position = p;
+			//gl_PointSize = 1.0;
+		}
+	}),
+	FRAGMENT_SHADER
+	({
+		uniform sampler2D texture;
+		varying vec2 _texcoord;
+
+		void main()
+		{
+			gl_FragColor = texture2D(texture, _texcoord);
+		}
+	}))
+{
+	_blend_sfactor = GL_ONE;
+	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
+
+
+HatchingsBorderShader::HatchingsBorderShader(GraphicsContext* gc) : ShaderProgram(
+	VERTEX_SHADER
+	({
+		uniform mat4 transform;
+		uniform vec4 map_bounds;
+		attribute vec3 position;
+		attribute vec3 normal;
+
+		varying vec2 _texcoord;
+
+		void main()
+		{
+			vec4 p = transform * vec4(position, 1);
+
+			_texcoord = (position.xy - map_bounds.xy) / map_bounds.zw;
+
+			gl_Position = p;
+			//gl_PointSize = 1.0;
+		}
+	}),
+	FRAGMENT_SHADER
+	({
+		uniform sampler2D texture;
+		varying vec2 _texcoord;
+
+		void main()
+		{
+			if (distance(_texcoord, vec2(0.5, 0.5)) > 0.5)
+				discard;
+
+			gl_FragColor = texture2D(texture, _texcoord);
+		}
+	}))
+{
+	_blend_sfactor = GL_ONE;
+	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}
+
+
+HatchingsResultShader::HatchingsResultShader(GraphicsContext* gc) : ShaderProgram(
+	VERTEX_SHADER
+	({
+		attribute vec2 position;
+		attribute vec2 texcoord;
+		uniform mat4 transform;
+		varying vec2 _texcoord;
+
+		void main()
+		{
+			vec4 p = transform * vec4(position.x, position.y, 0, 1);
+
+			_texcoord = texcoord;
+
+			gl_Position = p;
+			gl_PointSize = 1.0;
+		}
+	}),
+	FRAGMENT_SHADER
+	({
+		uniform sampler2D texture;
+		uniform sampler2D hatch_r;
+		uniform sampler2D hatch_g;
+		uniform sampler2D hatch_b;
+		varying vec2 _texcoord;
+
+		vec4 mix_hatch(vec4 c1, vec4 c2)
+		{
+			return c1 + c2 * (1.0 - c1.a);
+		}
+
+		void main()
+		{
+			vec2 hatchcoord = gl_FragCoord.xy / 8.0;
+
+			vec4 k = texture2D(texture, _texcoord);
+			vec4 r = texture2D(hatch_r, hatchcoord) * step(0.5, k.r);
+			vec4 g = texture2D(hatch_g, hatchcoord) * step(0.5, k.g);
+			vec4 b = texture2D(hatch_b, hatchcoord) * step(0.5, k.b);
+
+			gl_FragColor = mix_hatch(mix_hatch(b, r), g);
+		}
+	}))
+{
+	_blend_sfactor = GL_ONE;
+	_blend_dfactor = GL_ONE_MINUS_SRC_ALPHA;
+}

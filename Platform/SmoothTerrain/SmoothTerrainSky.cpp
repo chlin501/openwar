@@ -49,7 +49,7 @@ void SmoothTerrainSky::Render(float cameraDirectionZ)
 	RenderCall<GradientShader_2f>(_gc)
 		.SetVertices(&vertices, "position", "color")
 		.SetUniform("transform", glm::mat4())
-		.SetUniform("point_size", 1)
+		.SetUniform("point_size", 1.0f)
 		.Render();
 }
 

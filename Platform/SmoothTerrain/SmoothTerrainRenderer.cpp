@@ -7,6 +7,9 @@
 #include "Graphics/CommonShaders.h"
 #include "Graphics/GraphicsContext.h"
 #include "Graphics/TextureAtlas.h"
+#include "Graphics/FrameBuffer.h"
+#include "Graphics/RenderBuffer.h"
+#include "Graphics/TextureResource.h"
 
 
 SmoothTerrainRenderer::SmoothTerrainRenderer(GraphicsContext* gc, SmoothGroundMap* smoothGroundMap) :
@@ -23,29 +26,98 @@ _smoothGroundMap(smoothGroundMap)
 	InitializeLines();
 
 	BuildTriangles();
-}
+
+	EnableHatchingsBuffers();
+};
 
 
 SmoothTerrainRenderer::~SmoothTerrainRenderer()
 {
 	delete _colormap;
 	delete _splatmap;
-	delete _framebuffer;
-	delete _colorbuffer;
-	delete _depth;
+	delete _sobelFrameBuffer;
+	delete _sobelColorBuffer;
+	delete _sobelDepthBuffer;
 }
 
 
-/*float SmoothTerrainSurface::InterpolateHeight(glm::vec2 position) const
+void SmoothTerrainRenderer::EnableSobelBuffers()
 {
-	return _smoothGroundMap->GetHeightMap()->InterpolateHeight(position);
-}*/
+	_sobelFrameBuffer = new FrameBuffer();
+
+#if !TARGET_OS_IPHONE
+	_sobelColorBuffer = new RenderBuffer();
+#endif
+	_sobelDepthBuffer = new Texture(_gc);
+
+	UpdateSobelBufferSize();
+
+#if !TARGET_OS_IPHONE
+	_sobelFrameBuffer->AttachColor(_sobelColorBuffer);
+#endif
+	_sobelFrameBuffer->AttachDepth(_sobelDepthBuffer);
 
 
-/*const float* SmoothTerrainSurface::Intersect(ray r)
+	if (!_sobelFrameBuffer->IsComplete())
+	{
+		NSLog(@"%s", _sobelFrameBuffer->GetStatus());
+
+		delete _sobelFrameBuffer;
+		_sobelFrameBuffer = nullptr;
+
+		delete _sobelDepthBuffer;
+		_sobelDepthBuffer = nullptr;
+
+		delete _sobelColorBuffer;
+		_sobelColorBuffer = nullptr;
+	}
+}
+
+
+void SmoothTerrainRenderer::UpdateSobelBufferSize()
 {
-	return _smoothGroundMap->GetHeightMap()->Intersect(r);
-}*/
+	bounds2i viewport = _gc->GetViewport();
+	glm::ivec2 size = viewport.size();
+
+	if (size.x != _framebuffer_width || size.y != _framebuffer_height)
+	{
+		_framebuffer_width = size.x;
+		_framebuffer_height = size.y;
+
+		if (_sobelColorBuffer != nullptr)
+			_sobelColorBuffer->Reset(GL_RGBA, _framebuffer_width, _framebuffer_height);
+
+		if (_sobelDepthBuffer != nullptr)
+			_sobelDepthBuffer->Reset(GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, _framebuffer_width, _framebuffer_height);
+	}
+}
+
+
+void SmoothTerrainRenderer::EnableHatchingsBuffers()
+{
+	_hatchingsIntermediateBufferSize = glm::ivec2{128, 128};
+
+	_hatchingsMasterColorBuffer = new TextureResource(_gc, Resource("Textures-Interface/Deployment.png"));
+	_hatchingsPatternR = new TextureResource(_gc, Resource("Textures/HatchPatternR.png"));
+	_hatchingsPatternG = new TextureResource(_gc, Resource("Textures/HatchPatternG.png"));
+	_hatchingsPatternB = new TextureResource(_gc, Resource("Textures/HatchPatternB.png"));
+
+	_hatchingsIntermediateFrameBuffer = new FrameBuffer();
+	_hatchingsIntermediateColorBuffer = new Texture(_gc);
+	_hatchingsIntermediateDepthBuffer = new Texture(_gc);
+
+	_hatchingsIntermediateColorBuffer->Reset(GL_RGBA, GL_UNSIGNED_BYTE, _hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y);
+	_hatchingsIntermediateDepthBuffer->Reset(GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, _hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y);
+
+	_hatchingsIntermediateFrameBuffer->AttachColor(_hatchingsIntermediateColorBuffer);
+	_hatchingsIntermediateFrameBuffer->AttachDepth(_hatchingsIntermediateDepthBuffer);
+
+
+	if (!_hatchingsIntermediateFrameBuffer->IsComplete())
+	{
+		NSLog(@"%s", _hatchingsIntermediateFrameBuffer->GetStatus());
+	}
+};
 
 
 void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& lightNormal)
@@ -61,12 +133,13 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 		.ClearDepth()
 		.Render();
 
-	if (_framebuffer != nullptr)
+
+	if (_sobelFrameBuffer != nullptr)
 	{
-		UpdateDepthTextureSize();
+		UpdateSobelBufferSize();
 
 		RenderCall<DepthInsideShader>(_gc)
-			.SetFrameBuffer(_framebuffer)
+			.SetFrameBuffer(_sobelFrameBuffer)
 			.SetVertices(&_insideVertices, "position", "normal")
 			.SetUniform("transform", transform)
 			.SetDepthTest(true)
@@ -76,7 +149,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 			.Render();
 
 		RenderCall<DepthBorderShader>(_gc)
-			.SetFrameBuffer(_framebuffer)
+			.SetFrameBuffer(_sobelFrameBuffer)
 			.SetVertices(&_borderVertices, "position", "normal")
 			.SetUniform("transform", transform)
 			.SetUniform("map_bounds", map_bounds)
@@ -86,7 +159,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 			.Render();
 
 		RenderCall<DepthSkirtShader>(_gc)
-			.SetFrameBuffer(_framebuffer)
+			.SetFrameBuffer(_sobelFrameBuffer)
 			.SetVertices(&_skirtVertices, "position", "height")
 			.SetUniform("transform", transform)
 			.SetDepthTest(true)
@@ -94,6 +167,7 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 			.SetCullBack(true)
 			.Render();
 	}
+
 
 	RenderCall<TerrainInsideShader>(_gc)
 		.SetVertices(&_insideVertices, "position", "normal")
@@ -119,16 +193,6 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 		.SetCullBack(true)
 		.Render();
 
-	if (_showLines)
-	{
-		RenderCall<PlainShader_3f>(_gc)
-			.SetVertices(&_lineVertices, "position")
-			.SetUniform("transform", transform)
-			.SetUniform("point_size", 1)
-			.SetUniform("color", glm::vec4(0, 0, 0, 0.06f))
-			.Render();
-	}
-
 	RenderCall<TerrainSkirtShader>(_gc)
 		.SetVertices(&_skirtVertices, "position", "height")
 		.SetUniform("transform", transform)
@@ -138,95 +202,83 @@ void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& 
 		.SetCullBack(true)
 		.Render();
 
-	if (_depth != nullptr)
+	if (_sobelDepthBuffer != nullptr)
 	{
 		VertexShape_2f_2f vertices;
 		vertices._mode = GL_TRIANGLE_STRIP;
-		vertices.AddVertex(Vertex_2f_2f(glm::vec2(-1, 1), glm::vec2(0, 1)));
-		vertices.AddVertex(Vertex_2f_2f(glm::vec2(-1, -1), glm::vec2(0, 0)));
-		vertices.AddVertex(Vertex_2f_2f(glm::vec2(1, 1), glm::vec2(1, 1)));
-		vertices.AddVertex(Vertex_2f_2f(glm::vec2(1, -1), glm::vec2(1, 0)));
+		vertices.AddVertex({{-1, 1}, {0, 1}});
+		vertices.AddVertex({{-1, -1}, {0, 0}});
+		vertices.AddVertex({{1, 1}, {1, 1}});
+		vertices.AddVertex({{1, -1}, {1, 0}});
 
 		RenderCall<SobelFilterShader>(_gc)
 			.SetVertices(&vertices, "position", "texcoord")
 			.SetUniform("transform", glm::mat4())
-			.SetTexture("depth", _depth, Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Clamp))
+			.SetTexture("depth", _sobelDepthBuffer, Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Clamp))
 			.Render();
 	}
-}
 
-
-/*#include "RunTimeUtilities/Logging.h"
-static const char* FramebufferStatusString(GLenum status)
-{
-	switch (status)
+	if (_showLines)
 	{
-		case GL_FRAMEBUFFER_COMPLETE:
-			return "GL_FRAMEBUFFER_COMPLETE";
-		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-			return "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
-		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-			return "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
-#ifdef GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS
-		case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS: return "GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS";
-#endif
-		case GL_FRAMEBUFFER_UNSUPPORTED:
-			return "GL_FRAMEBUFFER_UNSUPPORTED";
-		default:
-			return "GL_FRAMEBUFFER_???";//[NSString stringWithFormat:@"0x%04x", (unsigned int)status];
+		RenderCall<PlainShader_3f>(_gc)
+			.SetVertices(&_lineVertices, "position")
+			.SetUniform("transform", transform)
+			.SetUniform("point_size", 1.0f)
+			.SetUniform("color", glm::vec4(0, 0, 0, 0.06f))
+			.Render();
 	}
-}*/
+};
 
 
-void SmoothTerrainRenderer::EnableRenderEdges()
+void SmoothTerrainRenderer::RenderHatchings(const glm::mat4& transform)
 {
-	_depth = new TextureAtlas(_gc);
-
-	UpdateDepthTextureSize();
-
-	_framebuffer = new FrameBuffer();
-
-#if !TARGET_OS_IPHONE
-	_colorbuffer = new RenderBuffer(_framebuffer_width, _framebuffer_height);
-	_framebuffer->AttachColor(_colorbuffer);
-#endif
-
-	_framebuffer->AttachDepth(_depth);
-
-	if (!_framebuffer->IsComplete())
+	if (_hatchingsMasterColorBuffer != nullptr)
 	{
-		//openwarlog(LOG_INFO, "CheckGLFramebuffer %s", FramebufferStatusString(status));
+		bounds2f bounds = _smoothGroundMap->GetBounds();
+		glm::vec4 map_bounds = glm::vec4(bounds.min, bounds.size());
 
-		delete _framebuffer;
-		_framebuffer = nullptr;
+		glViewport(0, 0, _hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y);
 
-		delete _depth;
-		_depth = nullptr;
+		RenderCall<HatchingsInsideShader>(_gc)
+			.SetFrameBuffer(_hatchingsIntermediateFrameBuffer)
+			.SetVertices(&_insideVertices, "position", "normal")
+			.SetUniform("transform", transform)
+			.SetUniform("map_bounds", map_bounds)
+			.SetTexture("texture", _hatchingsMasterColorBuffer, Sampler(SamplerMinMagFilter::Linear, SamplerAddressMode::Clamp))
+			.SetDepthTest(true)
+			.SetDepthMask(true)
+			.SetCullBack(true)
+			.ClearDepth()
+			.ClearColor(glm::vec4{0, 0, 0, 1})
+			.Render();
 
-		delete _colorbuffer;
-		_colorbuffer = nullptr;
-	}
-}
+		RenderCall<HatchingsBorderShader>(_gc)
+			.SetFrameBuffer(_hatchingsIntermediateFrameBuffer)
+			.SetVertices(&_borderVertices, "position", "normal")
+			.SetUniform("transform", transform)
+			.SetUniform("map_bounds", map_bounds)
+			.SetTexture("texture", _hatchingsMasterColorBuffer, Sampler(SamplerMinMagFilter::Linear, SamplerAddressMode::Clamp))
+			.SetDepthTest(true)
+			.SetDepthMask(true)
+			.SetCullBack(true)
+			.Render();
 
+		glViewport(0, 0, _framebuffer_width, _framebuffer_height);
 
+		_hatchingsVertices.Reset(GL_TRIANGLE_STRIP);
+		_hatchingsVertices.AddVertex({{-1, 1}, {0, 1}});
+		_hatchingsVertices.AddVertex({{-1, -1}, {0, 0}});
+		_hatchingsVertices.AddVertex({{1, 1}, {1, 1}});
+		_hatchingsVertices.AddVertex({{1, -1}, {1, 0}});
 
-void SmoothTerrainRenderer::UpdateDepthTextureSize()
-{
-	if (_depth != nullptr)
-	{
-		bounds2i viewport = _gc->GetViewport();
-		glm::ivec2 size = viewport.size();
-
-		if (size.x != _framebuffer_width || size.y != _framebuffer_height)
-		{
-			_framebuffer_width = size.x;
-			_framebuffer_height = size.y;
-
-			_depth->ResizeDepth(_framebuffer_width, _framebuffer_height);
-
-			if (_colorbuffer != nullptr)
-				_colorbuffer->Resize(_framebuffer_width, _framebuffer_height);
-		}
+		RenderCall<HatchingsResultShader>(_gc)
+			.SetVertices(&_hatchingsVertices, "position", "texcoord")
+			.SetUniform("transform", glm::mat4())
+			.SetTexture("texture", _hatchingsIntermediateColorBuffer, Sampler(SamplerMinMagFilter::Linear, SamplerAddressMode::Clamp))
+			.SetTexture("hatch_r", _hatchingsPatternR, Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Repeat))
+			.SetTexture("hatch_g", _hatchingsPatternG, Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Repeat))
+			.SetTexture("hatch_b", _hatchingsPatternB, Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Repeat))
+			.Render();
 	}
 }
 
@@ -252,12 +304,12 @@ void SmoothTerrainRenderer::InitializeShadow()
 		glm::vec2 p3 = center + radius2 * vector2_from_angle(angle2);
 		glm::vec2 p4 = center + radius1 * vector2_from_angle(angle2);
 
-		_shadowVertices.AddVertex(Vertex_2f(p1));
-		_shadowVertices.AddVertex(Vertex_2f(p2));
-		_shadowVertices.AddVertex(Vertex_2f(p3));
-		_shadowVertices.AddVertex(Vertex_2f(p3));
-		_shadowVertices.AddVertex(Vertex_2f(p4));
-		_shadowVertices.AddVertex(Vertex_2f(p1));
+		_shadowVertices.AddVertex({p1});
+		_shadowVertices.AddVertex({p2});
+		_shadowVertices.AddVertex({p3});
+		_shadowVertices.AddVertex({p3});
+		_shadowVertices.AddVertex({p4});
+		_shadowVertices.AddVertex({p1});
 	}
 }
 
@@ -279,8 +331,8 @@ void SmoothTerrainRenderer::InitializeSkirt()
 		glm::vec2 p = center + radius * vector2_from_angle(a);
 		float h = fmaxf(0, _smoothGroundMap->GetHeightMap()->InterpolateHeight(p));
 
-		_skirtVertices.AddVertex(Vertex_3f_1f(glm::vec3(p, h + 0.5), h));
-		_skirtVertices.AddVertex(Vertex_3f_1f(glm::vec3(p, -2.5), h));
+		_skirtVertices.AddVertex({glm::vec3{p, h + 0.5f}, h});
+		_skirtVertices.AddVertex({glm::vec3{p, -2.5f}, h});
 	}
 
 	_skirtVertices.AddVertex(_skirtVertices.GetVertices()[0]);
@@ -294,25 +346,22 @@ void SmoothTerrainRenderer::UpdateSplatmap()
 	int height = _smoothGroundMap->GetImage()->GetHeight();
 
 	GLubyte* data = new GLubyte[4 * width * height];
-	if (data != nullptr)
-	{
-		GLubyte* p = data;
-		for (int y = 0; y < height; ++y)
-			for (int x = 0; x < width; ++x)
-			{
-				float forest = _smoothGroundMap->GetForestValue(x, y);
-				float block = _smoothGroundMap->GetImpassableValue(x, y);
-				*p++ = (GLubyte)(255.0f * block);
-				*p++ = (GLubyte)(255.0f * forest);
-				*p++ = (GLubyte)(255.0f * forest);
-				*p++ = (GLubyte)(255.0f * forest);
-			}
+	GLubyte* p = data;
+	for (int y = 0; y < height; ++y)
+		for (int x = 0; x < width; ++x)
+		{
+			float forest = _smoothGroundMap->GetForestValue(x, y);
+			float block = _smoothGroundMap->GetImpassableValue(x, y);
+			*p++ = (GLubyte)(255.0f * block);
+			*p++ = (GLubyte)(255.0f * forest);
+			*p++ = (GLubyte)(255.0f * forest);
+			*p++ = (GLubyte)(255.0f * forest);
+		}
 
-		_splatmap->LoadTextureFromData(width, height, data);
-		_splatmap->GenerateMipmap();
+	_splatmap->LoadTextureFromData(width, height, data);
+	_splatmap->GenerateMipmap();
 
-		delete[] data;
-	}
+	delete[] data;
 }
 
 
@@ -405,16 +454,16 @@ void SmoothTerrainRenderer::InitializeLines()
 				{
 					x2 = corner.x + size.x * ((x + 2) / k);
 					h20 = _smoothGroundMap->GetHeightMap()->GetHeight(x + 2, y);
-					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x0, y0, h00)));
-					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x2, y0, h20)));
+					_lineVertices.AddVertex({{x0, y0, h00}});
+					_lineVertices.AddVertex({{x2, y0, h20}});
 				}
 				float y2, h02;
 				if (y != n)
 				{
 					y2 = corner.y + size.y * ((y + 2) / k);
 					h02 = _smoothGroundMap->GetHeightMap()->GetHeight(x, y + 2);
-					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x0, y0, h00)));
-					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x0, y2, h02)));
+					_lineVertices.AddVertex({{x0, y0, h00}});
+					_lineVertices.AddVertex({{x0, y2, h02}});
 				}
 
 				if (x != n && y != n)
@@ -424,17 +473,14 @@ void SmoothTerrainRenderer::InitializeLines()
 					float h11 = _smoothGroundMap->GetHeightMap()->GetHeight(x + 1, y + 1);
 					float h22 = _smoothGroundMap->GetHeightMap()->GetHeight(x + 2, y + 2);
 
-					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x0, y0, h00)));
-					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x1, y1, h11)));
-
-					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x2, y0, h20)));
-					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x1, y1, h11)));
-
-					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x0, y2, h02)));
-					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x1, y1, h11)));
-
-					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x2, y2, h22)));
-					_lineVertices.AddVertex(Vertex_3f(glm::vec3(x1, y1, h11)));
+					_lineVertices.AddVertex({{x0, y0, h00}});
+					_lineVertices.AddVertex({{x1, y1, h11}});
+					_lineVertices.AddVertex({{x2, y0, h20}});
+					_lineVertices.AddVertex({{x1, y1, h11}});
+					_lineVertices.AddVertex({{x0, y2, h02}});
+					_lineVertices.AddVertex({{x1, y1, h11}});
+					_lineVertices.AddVertex({{x2, y2, h22}});
+					_lineVertices.AddVertex({{x1, y1, h11}});
 				}
 			}
 		}
@@ -662,7 +708,7 @@ Texture* SmoothTerrainRenderer::CreateColorMap(GraphicsContext* gc)
 			}
 	}
 
-	TextureAtlas* result = new TextureAtlas(gc);
+	Texture* result = new Texture(gc);
 	result->LoadTextureFromImage(*image);
 
 	return result;

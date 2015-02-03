@@ -274,7 +274,7 @@ void BattleView::OnSetGroundMap(GroundMap* groundMap)
 		_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
 
 		if (ShouldEnableRenderEdges(_gc))
-			_smoothTerrainSurface->EnableRenderEdges();
+			_smoothTerrainSurface->EnableSobelBuffers();
 	}
 
 	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(groundMap);
@@ -541,7 +541,7 @@ void BattleView::Render()
 	RenderCall<PlainShader_3f>(_gc)
 		.SetVertices(_plainLineVertices, "position")
 		.SetUniform("transform", transform)
-		.SetUniform("point_size", 1)
+		.SetUniform("point_size", 1.0f)
 		.SetUniform("color", glm::vec4(0.4, 0.4, 0.4, 0.6))
 		.SetLineWidth(1.0f)
 		.SetDepthTest(true)
@@ -592,7 +592,7 @@ void BattleView::Render()
 			RenderCall<GradientShader_3f>(_gc)
 				.SetVertices(_gradientTriangleStripVertices, "position", "color")
 				.SetUniform("transform", transform)
-				.SetUniform("point_size", 1)
+				.SetUniform("point_size", 1.0f)
 				.SetDepthTest(true)
 				.Render();
 		}
@@ -680,7 +680,7 @@ void BattleView::Render()
 	RenderCall<GradientShader_3f>(_gc)
 		.SetVertices(_gradientTriangleVertices, "position", "color")
 		.SetUniform("transform", transform)
-		.SetUniform("point_size", 1)
+		.SetUniform("point_size", 1.0f)
 		.SetDepthTest(true)
 		.Render();
 
@@ -696,7 +696,7 @@ void BattleView::Render()
 		RenderCall<GradientShader_3f>(_gc)
 			.SetVertices(_gradientTriangleVertices, "position", "color")
 			.SetUniform("transform", transform)
-			.SetUniform("point_size", 1)
+			.SetUniform("point_size", 1.0f)
 			.Render();
 	}
 
@@ -740,10 +740,16 @@ void BattleView::Render()
 	RenderCall<GradientShader_3f>(_gc)
 		.SetVertices(_gradientLineVertices, "position", "color")
 		.SetUniform("transform", transform)
-		.SetUniform("point_size", 1)
+		.SetUniform("point_size", 1.0f)
 		.SetDepthTest(true)
 		.Render();
 
+
+
+	// SmoothTerrain Hatch
+
+	if (_smoothTerrainSurface != nullptr)
+		_smoothTerrainSurface->RenderHatchings(transform);
 
 	// Mouse Hint
 
@@ -754,7 +760,7 @@ void BattleView::Render()
 	renderMouseHints
 		.SetVertices(_plainLineVertices, "position")
 		.SetUniform("transform", transform)
-		.SetUniform("point_size", 1)
+		.SetUniform("point_size", 1.0f)
 		.SetUniform("color", glm::vec4(0, 0, 0, 0.8f))
 		.SetLineWidth(1.0f)
 		.SetDepthTest(true)

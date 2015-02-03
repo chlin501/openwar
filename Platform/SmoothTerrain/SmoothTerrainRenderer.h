@@ -5,13 +5,16 @@
 #ifndef SmoothTerrainRenderer_H
 #define SmoothTerrainRenderer_H
 
+#include "Algebra/bounds.h"
 #include "BattleModel/GroundMap.h"
 #include "BattleModel/HeightMap.h"
 #include "BattleModel/SmoothGroundMap.h"
-#include "Algebra/bounds.h"
+#include "Shapes/VertexShape.h"
 #include "SmoothTerrainShaders.h"
 
+class FrameBuffer;
 class Image;
+class RenderBuffer;
 
 
 class SmoothTerrainRenderer
@@ -20,9 +23,20 @@ class SmoothTerrainRenderer
 	SmoothGroundMap* _smoothGroundMap;
 	int _framebuffer_width{};
 	int _framebuffer_height{};
-	FrameBuffer* _framebuffer{};
-	RenderBuffer* _colorbuffer{};
-	Texture* _depth{};
+
+	FrameBuffer* _sobelFrameBuffer{};
+	RenderBuffer* _sobelColorBuffer{};
+	Texture* _sobelDepthBuffer{};
+
+	Texture* _hatchingsMasterColorBuffer{};
+	glm::ivec2 _hatchingsIntermediateBufferSize;
+	FrameBuffer* _hatchingsIntermediateFrameBuffer{};
+	Texture* _hatchingsIntermediateColorBuffer{};
+	Texture* _hatchingsIntermediateDepthBuffer{};
+	Texture* _hatchingsPatternR{};
+	Texture* _hatchingsPatternG{};
+	Texture* _hatchingsPatternB{};
+
 	Texture* _colormap{};
 	Texture* _splatmap{};
 
@@ -31,6 +45,8 @@ class SmoothTerrainRenderer
 	VertexShape_3f_3f _borderVertices;
 	VertexShape_3f_1f _skirtVertices;
 	VertexShape_3f _lineVertices;
+
+	VertexShape_2f_2f _hatchingsVertices;
 
 	bool _showLines{};
 	bool _editMode{};
@@ -41,12 +57,15 @@ public:
 
 	SmoothGroundMap* GetSmoothGroundMap() const { return _smoothGroundMap; }
 
-	void Render(const glm::mat4& transform, const glm::vec3& lightNormal);
+	void EnableSobelBuffers();
+	void UpdateSobelBufferSize();
 
-	void EnableRenderEdges();
+	void EnableHatchingsBuffers();
+
+	void Render(const glm::mat4& transform, const glm::vec3& lightNormal);
+	void RenderHatchings(const glm::mat4& transform);
 
 	void UpdateChanges(bounds2f bounds);
-	void UpdateDepthTextureSize();
 	void UpdateSplatmap();
 
 	void InitializeShadow();

@@ -22,6 +22,9 @@
 #ifndef CHECK_ERROR_GL
 void CHECK_ERROR_GL()
 {
+	//GLenum error = glGetError();
+	//if (error != GL_NO_ERROR)
+	//	; //TODO: should log error
 }
 #endif
 
