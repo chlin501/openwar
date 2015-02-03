@@ -143,6 +143,7 @@ public:
 	UnitCounter* GetNearestUnitCounter(glm::vec2 position, int team, BattleCommander* commander);
 
 	void UpdateSoundPlayer();
+	void UpdateDeploymentZones();
 };
 
 

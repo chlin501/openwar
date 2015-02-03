@@ -396,6 +396,7 @@ class BattleSimulator
 	float _timeStep;
 	bool _practice;
 	int _winnerTeam;
+	glm::vec3 _deploymentZones[2];
 
 public:
 	BattleSimulator();
@@ -414,6 +415,10 @@ public:
 
 	void SetGroundMap(GroundMap* groundMap);
 	GroundMap* GetGroundMap() { return _groundMap; }
+
+	void SetDeploymentZone(int team, glm::vec2 position, float radius);
+	glm::vec2 GetDeploymentPosition(int team) const;
+	float GetDeploymentRadius(int team) const;
 
 	const std::vector<Unit*>& GetUnits() { return _units; }
 	Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);

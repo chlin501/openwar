@@ -666,7 +666,7 @@ void BattleView::Render()
 			GetViewport()->GetCameraUpVector(),
 			glm::degrees(GetViewport()->GetCameraFacing()),
 			GetViewport()->GetBounds().y().size(),
-			true,
+			false,
 			bounds1f(64, 64));
 	}
 
@@ -797,6 +797,7 @@ template <class T> void AnimateMarkers(std::vector<T*>& markers, float seconds)
 void BattleView::OnRenderLoop(double secondsSinceLastUpdate)
 {
 	UpdateSoundPlayer();
+	UpdateDeploymentZones();
 
 	_casualtyMarker->Animate((float)secondsSinceLastUpdate);
 
@@ -1128,4 +1129,19 @@ void BattleView::UpdateSoundPlayer()
 	SoundPlayer::singleton->UpdateCavalryRunning(horseGallop != 0);
 
 	SoundPlayer::singleton->UpdateFighting(_simulator->IsMelee());
+}
+
+
+void BattleView::UpdateDeploymentZones()
+{
+	if (_smoothTerrainSurface != nullptr)
+	{
+		_smoothTerrainSurface->SetDeploymentZoneBlue(
+			_simulator->GetDeploymentPosition(1),
+			_simulator->GetDeploymentRadius(1));
+
+		_smoothTerrainSurface->SetDeploymentZoneRed(
+			_simulator->GetDeploymentPosition(2),
+			_simulator->GetDeploymentRadius(2));
+	}
 }

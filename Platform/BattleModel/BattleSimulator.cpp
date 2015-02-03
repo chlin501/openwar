@@ -243,6 +243,24 @@ void BattleSimulator::SetGroundMap(GroundMap* groundMap)
 }
 
 
+void BattleSimulator::SetDeploymentZone(int team, glm::vec2 position, float radius)
+{
+	_deploymentZones[team == 1 ? 0 : 1] = glm::vec3{position, radius};
+};
+
+
+glm::vec2 BattleSimulator::GetDeploymentPosition(int team) const
+{
+	return _deploymentZones[team == 1 ? 0 : 1].xy();
+}
+
+
+float BattleSimulator::GetDeploymentRadius(int team) const
+{
+	return _deploymentZones[team == 1 ? 0 : 1].z;
+}
+
+
 Unit* BattleSimulator::AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position)
 {
 	Unit* unit = new Unit();

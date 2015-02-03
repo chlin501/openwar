@@ -29,6 +29,7 @@ class BattleScenario
 	Image* _smoothMap;
 	int _teamPosition1;
 	int _teamPosition2;
+	float _deploymentTimer{};
 
 public:
 	BattleScenario();

@@ -380,6 +380,40 @@ GroundShadowShader::GroundShadowShader(GraphicsContext* gc) : ShaderProgram(
 }
 
 
+HatchingsMasterShader::HatchingsMasterShader(GraphicsContext* gc) : ShaderProgram(
+	VERTEX_SHADER
+	({
+		uniform mat4 transform;
+		attribute vec2 position;
+		attribute vec2 texcoord;
+		varying vec2 _texcoord;
+
+		void main()
+		{
+			vec4 p = transform * vec4(position.x, position.y, 0, 1);
+
+			_texcoord = texcoord;
+
+			gl_Position = p;
+			gl_PointSize = 1.0;
+		}
+	}),
+	FRAGMENT_SHADER
+	({
+		uniform sampler2D texture;
+		varying vec2 _texcoord;
+
+		void main()
+		{
+			gl_FragColor = texture2D(texture, _texcoord);
+		}
+	}))
+{
+	_blend_sfactor = GL_ONE;
+	_blend_dfactor = GL_ONE;
+}
+
+
 HatchingsInsideShader::HatchingsInsideShader(GraphicsContext* gc) : ShaderProgram(
 	VERTEX_SHADER
 	({
@@ -396,7 +430,7 @@ HatchingsInsideShader::HatchingsInsideShader(GraphicsContext* gc) : ShaderProgra
 			_texcoord = (position.xy - map_bounds.xy) / map_bounds.zw;
 
 			gl_Position = p;
-			//gl_PointSize = 1.0;
+			gl_PointSize = 1.0;
 		}
 	}),
 	FRAGMENT_SHADER
@@ -432,7 +466,7 @@ HatchingsBorderShader::HatchingsBorderShader(GraphicsContext* gc) : ShaderProgra
 			_texcoord = (position.xy - map_bounds.xy) / map_bounds.zw;
 
 			gl_Position = p;
-			//gl_PointSize = 1.0;
+			gl_PointSize = 1.0;
 		}
 	}),
 	FRAGMENT_SHADER

@@ -28,11 +28,16 @@ class SmoothTerrainRenderer
 	RenderBuffer* _sobelColorBuffer{};
 	Texture* _sobelDepthBuffer{};
 
+	glm::ivec2 _hatchingsMasterBufferSize;
 	Texture* _hatchingsMasterColorBuffer{};
+	FrameBuffer* _hatchingsMasterFrameBuffer{};
+
 	glm::ivec2 _hatchingsIntermediateBufferSize;
 	FrameBuffer* _hatchingsIntermediateFrameBuffer{};
 	Texture* _hatchingsIntermediateColorBuffer{};
 	Texture* _hatchingsIntermediateDepthBuffer{};
+
+	Texture* _hatchingsDeployment{};
 	Texture* _hatchingsPatternR{};
 	Texture* _hatchingsPatternG{};
 	Texture* _hatchingsPatternB{};
@@ -46,7 +51,13 @@ class SmoothTerrainRenderer
 	VertexShape_3f_1f _skirtVertices;
 	VertexShape_3f _lineVertices;
 
-	VertexShape_2f_2f _hatchingsVertices;
+	VertexShape_2f_2f _hatchingsMasterVertices;
+	VertexShape_2f_2f _hatchingsResultVertices;
+
+	glm::vec2 _deploymentPositionBlue;
+	glm::vec2 _deploymentPositionRed;
+	float _deploymentRadiusBlue{};
+	float _deploymentRadiusRed{};
 
 	bool _showLines{};
 	bool _editMode{};
@@ -57,12 +68,21 @@ public:
 
 	SmoothGroundMap* GetSmoothGroundMap() const { return _smoothGroundMap; }
 
-	void EnableSobelBuffers();
-	void UpdateSobelBufferSize();
-
-	void EnableHatchingsBuffers();
+	void SetDeploymentZoneBlue(glm::vec2 position, float radius);
+	void SetDeploymentZoneRed(glm::vec2 position, float radius);
 
 	void Render(const glm::mat4& transform, const glm::vec3& lightNormal);
+
+	void RenderGroundShadow(const glm::mat4& transform);
+	void RenderTerrain(const glm::mat4& transform, const glm::vec3& lightNormal);
+	void RenderLines(const glm::mat4& transform);
+
+	void EnableSobelBuffers();
+	void UpdateSobelBufferSize();
+	void UpdateSobelTexture(const glm::mat4& transform);
+	void RenderSobelTexture();
+
+	void TryEnableHatchingsBuffers();
 	void RenderHatchings(const glm::mat4& transform);
 
 	void UpdateChanges(bounds2f bounds);

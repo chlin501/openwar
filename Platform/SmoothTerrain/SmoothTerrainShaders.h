@@ -120,6 +120,20 @@ class GroundShadowShader : public ShaderProgram
 };
 
 
+class HatchingsMasterShader : public ShaderProgram
+{
+	friend class GraphicsContext;
+	/*
+		attribute vec2 position;
+		attribute vec2 texcoord;
+
+		uniform mat4 transform;
+		uniform sampler2D texture;
+	 */
+	HatchingsMasterShader(GraphicsContext* gc);
+};
+
+
 class HatchingsInsideShader : public ShaderProgram
 {
 	friend class GraphicsContext;
