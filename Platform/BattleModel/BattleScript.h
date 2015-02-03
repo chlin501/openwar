@@ -14,11 +14,11 @@ class BattleScenario;
 class BattleScript : public BattleObserver
 {
 protected:
-	BattleScenario* _scenario;
-	BattleSimulator* _simulator;
-	std::map<int, Unit*> _units;
-	std::map<Unit*, int> _unitId;
-	int _nextUnitId;
+	BattleScenario* _scenario{};
+	BattleSimulator* _simulator{};
+	std::map<int, Unit*> _units{};
+	std::map<Unit*, int> _unitId{};
+	int _nextUnitId{};
 
 public:
 	BattleScript(BattleScenario* scenario);

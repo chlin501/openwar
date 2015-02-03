@@ -10,13 +10,7 @@
 #include "TiledGroundMap.h"
 
 
-BattleScenario::BattleScenario() :
-_simulator(nullptr),
-_script(nullptr),
-_smoothMap(nullptr),
-_teamPosition1(0),
-_teamPosition2(0)
-
+BattleScenario::BattleScenario()
 {
 	_simulator = new BattleSimulator();
 	_script = new BattleScript(this);

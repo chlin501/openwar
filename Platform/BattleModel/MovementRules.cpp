@@ -9,16 +9,6 @@
 #include "BattleCommander.h"
 
 
-Formation::Formation() :
-rankDistance(0),
-fileDistance(0),
-numberOfRanks(0),
-numberOfFiles(0),
-_direction(0)
-{
-}
-
-
 glm::vec2 Formation::GetFrontLeft(glm::vec2 center)
 {
 	return center - towardRight * (0.5f * (numberOfFiles - 1)) - towardBack * (0.5f * (numberOfRanks - 1));

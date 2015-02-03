@@ -21,14 +21,14 @@ enum class BattleOutcome
 
 class BattleScenario
 {
-	BattleSimulator* _simulator;
-	BattleScript* _script;
-	std::vector<BattleCommander*> _commanders;
-	BattleCommander* _dummyCommander;
-	std::string _smoothMapHash;
-	Image* _smoothMap;
-	int _teamPosition1;
-	int _teamPosition2;
+	BattleSimulator* _simulator{};
+	BattleScript* _script{};
+	std::vector<BattleCommander*> _commanders{};
+	BattleCommander* _dummyCommander{};
+	std::string _smoothMapHash{};
+	Image* _smoothMap{};
+	int _teamPosition1{};
+	int _teamPosition2{};
 	float _deploymentTimer{};
 
 public:

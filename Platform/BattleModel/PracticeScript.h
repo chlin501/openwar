@@ -6,8 +6,8 @@
 
 class PracticeScript : public BattleScript
 {
-	double _commandTimer;
-	int _waveNumber;
+	double _commandTimer{};
+	int _waveNumber{};
 
 public:
 	PracticeScript(BattleScenario* scenario);

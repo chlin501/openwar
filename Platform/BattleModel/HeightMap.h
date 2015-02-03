@@ -13,10 +13,10 @@
 class HeightMap
 {
 	bounds2f _bounds;
-	int _cacheStride;
-	int _cacheMaxIndex;
-	float* _cacheHeights;
-	glm::vec3* _cacheNormals;
+	int _cacheStride{256};
+	int _cacheMaxIndex{254};
+	float* _cacheHeights{};
+	glm::vec3* _cacheNormals{};
 
 public:
 	HeightMap(bounds2f bounds);

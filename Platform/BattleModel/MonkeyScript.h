@@ -6,7 +6,7 @@
 
 class MonkeyScript : public BattleScript
 {
-	double _commandTimer;
+	double _commandTimer{};
 
 public:
 	MonkeyScript(BattleScenario* scenario);

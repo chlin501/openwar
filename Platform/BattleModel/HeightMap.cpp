@@ -8,11 +8,7 @@
 
 
 HeightMap::HeightMap(bounds2f bounds) :
-_bounds(bounds),
-_cacheStride(256),
-_cacheMaxIndex(254),
-_cacheHeights(nullptr),
-_cacheNormals(nullptr)
+	_bounds(bounds)
 {
 	int n = _cacheStride * _cacheStride;
 	_cacheHeights = new float [n];

@@ -6,9 +6,7 @@
 #include "Algebra/geometry.h"
 
 
-PracticeScript::PracticeScript(BattleScenario* scenario) : BattleScript(scenario),
-_commandTimer(0),
-_waveNumber(0)
+PracticeScript::PracticeScript(BattleScenario* scenario) : BattleScript(scenario)
 {
 }
 

@@ -13,7 +13,6 @@
 #include "BattleCommander.h"
 
 
-
 static float normalize_angle(float a)
 {
 	static float two_pi = 2.0f * (float)M_PI;
@@ -171,15 +170,7 @@ BattleObserver::~BattleObserver()
 /***/
 
 
-BattleSimulator::BattleSimulator() :
-_fighterQuadTree(0, 0, 1024, 1024),
-_weaponQuadTree(0, 0, 1024, 1024),
-_heightMap(nullptr),
-_groundMap(nullptr),
-_secondsSinceLastTimeStep(0),
-_timeStep(1.0f / 15.0f),
-_practice(false),
-_winnerTeam(0)
+BattleSimulator::BattleSimulator()
 {
 	_heightMap = new HeightMap(bounds2f(0, 0, 1024, 1024));
 }

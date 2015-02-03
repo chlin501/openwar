@@ -46,36 +46,20 @@ enum UnitMode
 
 struct Projectile
 {
-	glm::vec2 position1;
-	glm::vec2 position2;
-	float delay;
-
-	Projectile() :
-	position1(),
-	position2(),
-	delay(0)
-	{
-	}
+	glm::vec2 position1{};
+	glm::vec2 position2{};
+	float delay{};
 };
 
 
 struct Shooting
 {
-	Unit* unit;
-	MissileType missileType;
-	float timeToImpact;
-	glm::vec2 target;
-	bool released;
-	std::vector<Projectile> projectiles;
-
-	Shooting() :
-	unit(nullptr),
-	missileType(MissileType::None),
-	timeToImpact(0),
-	released(false),
-	projectiles()
-	{
-	}
+	Unit* unit{};
+	MissileType missileType{};
+	float timeToImpact{};
+	glm::vec2 target{};
+	bool released{};
+	std::vector<Projectile> projectiles{};
 };
 
 
@@ -92,125 +76,69 @@ enum ReadyState
 struct FighterState
 {
 	// dynamic attributes
-	glm::vec2 position;
-	float position_z;
-	ReadyState readyState;
-	float readyingTimer;
-	float strikingTimer;
-	float stunnedTimer;
-	Fighter* opponent;
+	glm::vec2 position{};
+	float position_z{};
+	ReadyState readyState{};
+	float readyingTimer{};
+	float strikingTimer{};
+	float stunnedTimer{};
+	Fighter* opponent{};
 
 	// intermediate attributes
-	glm::vec2 destination;
-	glm::vec2 velocity;
-	float bearing;
-	Fighter* meleeTarget;
-
-	FighterState() :
-	position(),
-	position_z(0),
-	readyState(ReadyState_Unready),
-	readyingTimer(0),
-	strikingTimer(0),
-	stunnedTimer(0),
-	opponent(nullptr),
-	destination(),
-	velocity(),
-	bearing(0),
-	meleeTarget(nullptr)
-	{
-	}
+	glm::vec2 destination{};
+	glm::vec2 velocity{};
+	float bearing{};
+	Fighter* meleeTarget{};
 };
 
 
 struct Fighter
 {
 	// static attributes
-	Unit* unit;
+	Unit* unit{};
 
 	// dynamic attributes
-	FighterState state;
+	FighterState state{};
 
 	// optimization attributes
-	bool terrainForest;
-	bool terrainImpassable;
-	glm::vec2 terrainPosition;
+	bool terrainForest{};
+	bool terrainImpassable{};
+	glm::vec2 terrainPosition{};
 
 	// intermediate attributes
-	FighterState nextState;
-	bool casualty;
-
-
-	Fighter() :
-	unit(nullptr),
-	state(),
-	terrainForest(false),
-	terrainImpassable(false),
-	terrainPosition(),
-	nextState(),
-	casualty(false)
-	{
-	}
+	FighterState nextState{};
+	bool casualty{};
 };
 
 
 struct UnitStats
 {
-	PlatformType platformType;
-	MissileType missileType;
+	PlatformType platformType{};
+	MissileType missileType{};
 
-	float weaponReach;
-	float trainingLevel;
-	float strikingDuration;
-	float readyingDuration;
-	float fireRate; // shots per minute
-	float minimumRange; // minimum fire range in meters
-	float maximumRange; // maximum fire range in meters
-	float fireAccuracy; // percentage of hit at half range
-	float walkingSpeed; // meters per second
-	float runningSpeed; // meters per second
-	glm::vec2 fighterSize; // x = side-to-side, y = front-to-back
-	glm::vec2 spacing;  // x = side-to-side, y = front-to-back
-
-	UnitStats() :
-	platformType(PlatformType::None),
-	missileType(MissileType::None),
-	weaponReach(0),
-	trainingLevel(0),
-	strikingDuration(0),
-	readyingDuration(0),
-	fireRate(25.0f), // rounds per minute
-	minimumRange(0),
-	maximumRange(0),
-	fireAccuracy(0.7f),
-	walkingSpeed(0),
-	runningSpeed(0),
-	fighterSize(glm::vec2(10, 10)),
-	spacing(glm::vec2(10, 10))
-	{
-	}
+	float weaponReach{};
+	float trainingLevel{};
+	float strikingDuration{};
+	float readyingDuration{};
+	float fireRate{25.0f}; // shots per minute
+	float minimumRange{}; // minimum fire range in meters
+	float maximumRange{}; // maximum fire range in meters
+	float fireAccuracy{0.7f}; // percentage of hit at half range
+	float walkingSpeed{}; // meters per second
+	float runningSpeed{}; // meters per second
+	glm::vec2 fighterSize{10.0f, 10.0f}; // x = side-to-side, y = front-to-back
+	glm::vec2 spacing{10.0f, 10.0f};  // x = side-to-side, y = front-to-back
 };
 
 
 struct UnitRange
 {
-	glm::vec2 center;
-	float angleStart;
-	float angleLength;
-	float minimumRange;
-	float maximumRange;
-	std::vector<float> actualRanges;
-
-	UnitRange() :
-	center(),
-	angleStart(0),
-	angleLength(0),
-	minimumRange(0),
-	maximumRange(0),
-	actualRanges()
-	{
-
-	}
+	glm::vec2 center{};
+	float angleStart{};
+	float angleLength{};
+	float minimumRange{};
+	float maximumRange{};
+	std::vector<float> actualRanges{};
 
 	bool IsWithinRange(glm::vec2 p) const;
 };
@@ -219,21 +147,20 @@ struct UnitRange
 struct UnitState
 {
 	// dynamic attributes
-	float loadingTimer;
-	float loadingDuration;
-	int shootingCounter;
-	float morale;
+	float loadingTimer{};
+	float loadingDuration{};
+	int shootingCounter{};
+	float morale{1.0f};
 
 	// optimization attributes
-	UnitMode unitMode;
-	glm::vec2 center;
-	float bearing;
-	float influence;
+	UnitMode unitMode{};
+	glm::vec2 center{};
+	float bearing{};
+	float influence{};
 
 	// intermediate attributes
-	int recentCasualties;
-
-	glm::vec2 waypoint;
+	int recentCasualties{};
+	glm::vec2 waypoint{};
 
 
 	bool IsRouting() const
@@ -247,42 +174,18 @@ struct UnitState
 		float x = morale + influence;
 		return 0 <= x && x < 0.33f ? 0.1f + x * 3 : 0;
 	}
-
-	UnitState() :
-	loadingTimer(0),
-	loadingDuration(0),
-	shootingCounter(0),
-	morale(1),
-	unitMode(UnitMode_Initializing),
-	center(),
-	bearing(0),
-	influence(0),
-	recentCasualties(0),
-	waypoint()
-	{
-	}
 };
 
 
 
 struct UnitCommand
 {
-	std::vector<glm::vec2> path;
-	bool running;
-	float bearing;
-	Unit* meleeTarget;
-	Unit* missileTarget; // set to self to hold fire
-	bool missileTargetLocked;
-
-	UnitCommand() :
-	path(),
-	running(false),
-	bearing(0),
-	meleeTarget(nullptr),
-	missileTarget(nullptr),
-	missileTargetLocked(false)
-	{
-	}
+	std::vector<glm::vec2> path{};
+	bool running{};
+	float bearing{};
+	Unit* meleeTarget{};
+	Unit* missileTarget{}; // set to self to hold fire
+	bool missileTargetLocked{};
 
 	void UpdatePath(glm::vec2 curr, glm::vec2 dest)
 	{
@@ -305,45 +208,28 @@ struct UnitCommand
 struct Unit
 {
 	// static attributes
-	BattleCommander* commander;
-	std::string unitClass;
-	UnitStats stats;
-	Fighter* fighters;
+	BattleCommander* commander{};
+	std::string unitClass{};
+	UnitStats stats{};
+	Fighter* fighters{};
 
 	// dynamic attributes
-	UnitState state; // updated by AssignNextState()
-	int fightersCount; // updated by RemoveCasualties()
-	int shootingCounter; // updated by ResolveMissileCombat()
-	Formation formation; // updated by UpdateFormation()
-	float timeUntilSwapFighters;
+	UnitState state{}; // updated by AssignNextState()
+	int fightersCount{}; // updated by RemoveCasualties()
+	int shootingCounter{}; // updated by ResolveMissileCombat()
+	Formation formation{}; // updated by UpdateFormation()
+	float timeUntilSwapFighters{};
 
 	// intermediate attributes
-	UnitState nextState; // updated by ComputeNextState()
-	UnitRange unitRange;
+	UnitState nextState{}; // updated by ComputeNextState()
+	UnitRange unitRange{};
 
 	// control attributes
-	UnitCommand command;
-	UnitCommand nextCommand;
-	float nextCommandTimer;
-	bool _ownedBySimulator;
+	UnitCommand command{};
+	UnitCommand nextCommand{};
+	float nextCommandTimer{};
+	bool _ownedBySimulator{};
 
-	Unit() :
-		commander(nullptr),
-		stats(),
-		fighters(nullptr),
-		state(),
-		fightersCount(0),
-		shootingCounter(0),
-		formation(),
-		timeUntilSwapFighters(0),
-		nextState(),
-		unitRange(),
-		command(),
-		nextCommand(),
-		nextCommandTimer(0),
-		_ownedBySimulator(false)
-	{
-	}
 
 	glm::vec2 CalculateUnitCenter();
 
@@ -381,21 +267,21 @@ public:
 
 class BattleSimulator
 {
-	std::set<BattleObserver*> _observers;
-	quadtree<Fighter*> _fighterQuadTree;
-	quadtree<Fighter*> _weaponQuadTree;
+	std::set<BattleObserver*> _observers{};
+	quadtree<Fighter*> _fighterQuadTree{0, 0, 1024, 1024};
+	quadtree<Fighter*> _weaponQuadTree{0, 0, 1024, 1024};
 
-	HeightMap* _heightMap;
-	GroundMap* _groundMap;
+	HeightMap* _heightMap{};
+	GroundMap* _groundMap{};
 
-	std::vector<Unit*> _units;
-	std::vector<std::pair<float, Shooting>> _shootings;
-	std::map<int, int> _kills;
+	std::vector<Unit*> _units{};
+	std::vector<std::pair<float, Shooting>> _shootings{};
+	std::map<int, int> _kills{};
 
-	float _secondsSinceLastTimeStep;
-	float _timeStep;
-	bool _practice;
-	int _winnerTeam;
+	float _secondsSinceLastTimeStep{};
+	float _timeStep{1.0f / 15.0f};
+	bool _practice{};
+	int _winnerTeam{};
 	glm::vec3 _deploymentZones[2];
 
 public:

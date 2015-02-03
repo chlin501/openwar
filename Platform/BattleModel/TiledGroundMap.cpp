@@ -11,9 +11,7 @@
 TiledGroundMap::TiledGroundMap(HeightMap* heightMap, bounds2f bounds, glm::ivec2 size) :
 _heightMap(heightMap),
 _bounds(bounds),
-_size(size),
-_tiles(nullptr),
-_patch(nullptr)
+_size(size)
 {
 	_tiles = new Tile[size.x * size.y];
 	_patch = new bspline_patch(glm::ivec2(size.x + 1, size.y + 1));

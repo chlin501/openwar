@@ -10,12 +10,12 @@ enum class BattleCommanderType { None = 0, Player = 1, Script = 2 };
 
 class BattleCommander
 {
-	BattleScenario* _scenario;
-	std::string _playerId;
-	int _team;
-	BattleCommanderType _type;
-	bool _isIncapacitated;
-	bool _hasAbandonedBattle;
+	BattleScenario* _scenario{};
+	std::string _playerId{};
+	int _team{};
+	BattleCommanderType _type{};
+	bool _isIncapacitated{};
+	bool _hasAbandonedBattle{};
 
 public:
 	BattleCommander(BattleScenario* scenario, const char* playerId, int team, BattleCommanderType type);

@@ -6,9 +6,7 @@ BattleCommander::BattleCommander(BattleScenario* scenario, const char* playerId,
 	_scenario(scenario),
 	_playerId(playerId),
 	_team(team),
-	_type(type),
-	_isIncapacitated(false),
-	_hasAbandonedBattle(false)
+	_type(type)
 {
 }
 

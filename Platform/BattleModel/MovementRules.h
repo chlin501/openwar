@@ -14,15 +14,14 @@ struct Unit;
 
 struct Formation
 {
-	float rankDistance;
-	float fileDistance;
-	int numberOfRanks; // updated by UpdateFormation() and AddUnit()
-	int numberOfFiles; // updated by UpdateFormation() and AddUnit()
-	float _direction;
-	glm::vec2 towardRight;
-	glm::vec2 towardBack;
+	float rankDistance{};
+	float fileDistance{};
+	int numberOfRanks{}; // updated by UpdateFormation() and AddUnit()
+	int numberOfFiles{}; // updated by UpdateFormation() and AddUnit()
+	float _direction{};
+	glm::vec2 towardRight{};
+	glm::vec2 towardBack{};
 
-	Formation();
 	glm::vec2 GetFrontLeft(glm::vec2 center);
 	void SetDirection(float direction);
 };

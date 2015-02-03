@@ -6,8 +6,7 @@
 #include "Algebra/geometry.h"
 
 
-MonkeyScript::MonkeyScript(BattleScenario* scenario) : BattleScript(scenario),
-	_commandTimer(0)
+MonkeyScript::MonkeyScript(BattleScenario* scenario) : BattleScript(scenario)
 {
 }
 
