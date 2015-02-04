@@ -521,7 +521,7 @@ HatchingsResultShader::HatchingsResultShader(GraphicsContext* gc) : ShaderProgra
 
 		void main()
 		{
-			vec2 hatchcoord = gl_FragCoord.xy / 8.0;
+			vec2 hatchcoord = gl_FragCoord.xy / 16.0;
 
 			vec4 k = texture2D(texture, _texcoord);
 			vec4 r = texture2D(hatch_r, hatchcoord) * step(0.5, k.r);

@@ -274,6 +274,23 @@ glm::vec2 BattleSimulator::ConstrainDeploymentZone(int team, glm::vec2 position,
 }
 
 
+bool BattleSimulator::HasCompletedDeployment(int team) const
+{
+	int count = 0;
+	for (Unit* unit : _units)
+	{
+		if (team == unit->commander->GetTeam())
+		{
+			if (!unit->deployed)
+				return false;
+			++count;
+		}
+	}
+
+	return count != 0;
+}
+
+
 void BattleSimulator::Deploy(Unit* unit, glm::vec2 position)
 {
 	unit->state.center = position;
@@ -456,6 +473,12 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 
 void BattleSimulator::SimulateOneTimeStep()
 {
+	for (Unit* unit : _units)
+	{
+		if (!unit->deployed && !IsDeploymentZone(unit->commander->GetTeam(), unit->state.center))
+			unit->deployed = true;
+	}
+
 	for (Unit* unit : _units)
 	{
 		if (unit->nextCommandTimer > 0)
@@ -653,6 +676,8 @@ void BattleSimulator::ResolveMissileCombat()
 
 void BattleSimulator::TriggerShooting(Unit* unit)
 {
+	if (!unit->deployed)
+		return;
 	if (unit->state.IsRouting())
 		return;
 	if (unit->command.missileTarget == nullptr)

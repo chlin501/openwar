@@ -265,50 +265,53 @@ void SmoothTerrainRenderer::RenderSobelTexture()
 
 void SmoothTerrainRenderer::TryEnableHatchingsBuffers()
 {
-	// Hatchings Master Buffer
-
-	_hatchingsMasterBufferSize = glm::ivec2{128, 128};
-
-	_hatchingsMasterColorBuffer = new Texture(_gc);
-	_hatchingsMasterColorBuffer->Reset(GL_RGBA, GL_UNSIGNED_BYTE, _hatchingsMasterBufferSize.x, _hatchingsMasterBufferSize.y);
-
-	_hatchingsMasterFrameBuffer = new FrameBuffer();
-	_hatchingsMasterFrameBuffer->AttachColor(_hatchingsMasterColorBuffer);
-	if (!_hatchingsMasterFrameBuffer->IsComplete())
+	if (_hatchingsMasterFrameBuffer == nullptr && (_deploymentRadiusBlue > 0 || _deploymentRadiusRed > 0))
 	{
-		NSLog(@"_hatchingsMasterFrameBuffer %s", _hatchingsMasterFrameBuffer->GetStatus());
+		// Hatchings Master Buffer
+
+		_hatchingsMasterBufferSize = glm::ivec2{128, 128};
+
+		_hatchingsMasterColorBuffer = new Texture(_gc);
+		_hatchingsMasterColorBuffer->Reset(GL_RGBA, GL_UNSIGNED_BYTE, _hatchingsMasterBufferSize.x, _hatchingsMasterBufferSize.y);
+
+		_hatchingsMasterFrameBuffer = new FrameBuffer();
+		_hatchingsMasterFrameBuffer->AttachColor(_hatchingsMasterColorBuffer);
+		if (!_hatchingsMasterFrameBuffer->IsComplete())
+		{
+			NSLog(@"_hatchingsMasterFrameBuffer %s", _hatchingsMasterFrameBuffer->GetStatus());
+		}
+
+		// Hatchings Intermediate Buffer
+
+		_hatchingsIntermediateBufferSize = glm::ivec2{128, 128};
+
+		_hatchingsIntermediateColorBuffer = new Texture(_gc);
+		_hatchingsIntermediateDepthBuffer = new Texture(_gc);
+
+		_hatchingsIntermediateColorBuffer->Reset(GL_RGBA, GL_UNSIGNED_BYTE, _hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y);
+		_hatchingsIntermediateDepthBuffer->Reset(GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, _hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y);
+
+		_hatchingsIntermediateFrameBuffer = new FrameBuffer();
+		_hatchingsIntermediateFrameBuffer->AttachColor(_hatchingsIntermediateColorBuffer);
+		_hatchingsIntermediateFrameBuffer->AttachDepth(_hatchingsIntermediateDepthBuffer);
+		if (!_hatchingsIntermediateFrameBuffer->IsComplete())
+		{
+			NSLog(@"_hatchingsIntermediateFrameBuffer %s", _hatchingsIntermediateFrameBuffer->GetStatus());
+		}
+
+		_hatchingsResultVertices.Reset(GL_TRIANGLE_STRIP);
+		_hatchingsResultVertices.AddVertex({{-1, 1}, {0, 1}});
+		_hatchingsResultVertices.AddVertex({{-1, -1}, {0, 0}});
+		_hatchingsResultVertices.AddVertex({{1, 1}, {1, 1}});
+		_hatchingsResultVertices.AddVertex({{1, -1}, {1, 0}});
+
+		// Hacthing Patterns
+
+		_hatchingsDeployment = new TextureResource(_gc, Resource("Textures/Deployment.png"));
+		_hatchingsPatternR = new TextureResource(_gc, Resource("Textures/HatchPatternR.png"));
+		_hatchingsPatternG = new TextureResource(_gc, Resource("Textures/HatchPatternG.png"));
+		_hatchingsPatternB = new TextureResource(_gc, Resource("Textures/HatchPatternB.png"));
 	}
-
-	// Hatchings Intermediate Buffer
-
-	_hatchingsIntermediateBufferSize = glm::ivec2{128, 128};
-
-	_hatchingsIntermediateColorBuffer = new Texture(_gc);
-	_hatchingsIntermediateDepthBuffer = new Texture(_gc);
-
-	_hatchingsIntermediateColorBuffer->Reset(GL_RGBA, GL_UNSIGNED_BYTE, _hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y);
-	_hatchingsIntermediateDepthBuffer->Reset(GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, _hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y);
-
-	_hatchingsIntermediateFrameBuffer = new FrameBuffer();
-	_hatchingsIntermediateFrameBuffer->AttachColor(_hatchingsIntermediateColorBuffer);
-	_hatchingsIntermediateFrameBuffer->AttachDepth(_hatchingsIntermediateDepthBuffer);
-	if (!_hatchingsIntermediateFrameBuffer->IsComplete())
-	{
-		NSLog(@"_hatchingsIntermediateFrameBuffer %s", _hatchingsIntermediateFrameBuffer->GetStatus());
-	}
-
-	_hatchingsResultVertices.Reset(GL_TRIANGLE_STRIP);
-	_hatchingsResultVertices.AddVertex({{-1, 1}, {0, 1}});
-	_hatchingsResultVertices.AddVertex({{-1, -1}, {0, 0}});
-	_hatchingsResultVertices.AddVertex({{1, 1}, {1, 1}});
-	_hatchingsResultVertices.AddVertex({{1, -1}, {1, 0}});
-
-	// Hacthing Patterns
-
-	_hatchingsDeployment = new TextureResource(_gc, Resource("Textures/Deployment.png"));
-	_hatchingsPatternR = new TextureResource(_gc, Resource("Textures/HatchPatternR.png"));
-	_hatchingsPatternG = new TextureResource(_gc, Resource("Textures/HatchPatternG.png"));
-	_hatchingsPatternB = new TextureResource(_gc, Resource("Textures/HatchPatternB.png"));
 };
 
 
@@ -316,6 +319,10 @@ void SmoothTerrainRenderer::RenderHatchings(const glm::mat4& transform)
 {
 	if (_hatchingsMasterFrameBuffer != nullptr && (_deploymentRadiusBlue > 0 || _deploymentRadiusRed > 0))
 	{
+		GLint oldViewport[4];
+
+		glGetIntegerv(GL_VIEWPORT, oldViewport);
+
 		_hatchingsMasterVertices.Reset(GL_TRIANGLES);
 
 		if (_deploymentRadiusBlue > 0)
@@ -385,7 +392,7 @@ void SmoothTerrainRenderer::RenderHatchings(const glm::mat4& transform)
 
 		/***/
 
-		glViewport(0, 0, _framebuffer_width, _framebuffer_height);
+		glViewport(oldViewport[0], oldViewport[1], oldViewport[2], oldViewport[3]);
 
 		RenderCall<HatchingsResultShader>(_gc)
 			.SetVertices(&_hatchingsResultVertices, "position", "texcoord")

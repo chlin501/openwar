@@ -471,18 +471,26 @@ void BattleGesture::UpdateTrackingMarker()
 			BattleSimulator* simulator = _hotspot->GetBattleView()->GetSimulator();
 			int team = unit->commander->GetTeam();
 
-			unitCenter = simulator->ConstrainDeploymentZone(
-				team,
-				simulator->IsDeploymentZone(team, markerPosition) ? markerPosition : unitCenter,
-				10);
+			if (simulator->IsDeploymentZone(team, markerPosition))
+			{
+				unitCenter = simulator->ConstrainDeploymentZone(team, markerPosition, 10);
+				_trackingMarker->_path.clear();
+			}
+			else
+			{
+				while (!_trackingMarker->_path.empty() && simulator->IsDeploymentZone(team, _trackingMarker->_path.front()))
+					_trackingMarker->_path.erase(_trackingMarker->_path.begin());
+
+				unitCenter = simulator->ConstrainDeploymentZone(team,
+					!_trackingMarker->_path.empty() ? _trackingMarker->_path.front() : unitCenter,
+					10);
+
+				if (!_trackingMarker->_path.empty())
+					MovementRules::UpdateMovementPath(_trackingMarker->_path, unitCenter, _trackingMarker->_path.back());
+			}
 
 			simulator->Deploy(unit, unitCenter);
-
-			while (!_trackingMarker->_path.empty() && simulator->IsDeploymentZone(team, _trackingMarker->_path.front()))
-				_trackingMarker->_path.erase(_trackingMarker->_path.begin());
-
-			if (!_trackingMarker->_path.empty())
-				MovementRules::UpdateMovementPath(_trackingMarker->_path, unitCenter, _trackingMarker->_path.back());
+			unitCenter = unit->state.center;
 		}
 
 		_trackingMarker->SetMeleeTarget(enemyUnit);

@@ -74,78 +74,78 @@ void BattleScript::Execute()
 
 		int* part = team == 1 ? &part1 : &part2;
 
-		std::function<glm::vec2(float, float)> pos = position == 1
-			? std::function<glm::vec2(float, float)>([](float x, float y) { return glm::vec2(x, y); })
-			: std::function<glm::vec2(float, float)>([](float x, float y) { return glm::vec2(x, 1024 - y); });
+		std::function<glm::vec2(int, int)> pos = position == 1
+			? std::function<glm::vec2(int, int)>([](int x, int y) { return glm::vec2(512 + x, 256 - 32 + y); })
+			: std::function<glm::vec2(int, int)>([](int x, int y) { return glm::vec2(512 - x, 768 + 32 - y); });
 
 
 		if (armytype == 1)
 		{
 			if (*part == 0 || *part == 1)
 			{
-				NewUnit(commanderId, "CAV-BOW",  40, pos(354, 244), bearing);
-				NewUnit(commanderId, "SAM-KATA", 80, pos(371, 277), bearing);
-				NewUnit(commanderId, "ASH-YARI", 80, pos(392, 311), bearing);
-				NewUnit(commanderId, "ASH-BOW",  80, pos(400, 345), bearing);
-				NewUnit(commanderId, "GEN-KATA", 40, pos(429, 213), bearing);
-				NewUnit(commanderId, "SAM-KATA", 80, pos(452, 255), bearing);
+				NewUnit(commanderId, "CAV-BOW",  40, pos(-117, -34), bearing);
+				NewUnit(commanderId, "SAM-KATA", 80, pos(-100, -1), bearing);
+				NewUnit(commanderId, "ASH-YARI", 80, pos(-79, 33), bearing);
+				NewUnit(commanderId, "ASH-BOW",  80, pos(-71, 67), bearing);
+				NewUnit(commanderId, "GEN-KATA", 40, pos(-42, -65), bearing);
+				NewUnit(commanderId, "SAM-KATA", 80, pos(-19, -23), bearing);
 			}
 			if (*part == 0 || *part == 2)
 			{
-				NewUnit(commanderId, "SAM-NAGI", 80, pos(461, 302), bearing);
-				NewUnit(commanderId, "ASH-BOW",  80, pos(468, 339), bearing);
-				NewUnit(commanderId, "ASH-YARI", 80, pos(531, 294), bearing);
-				NewUnit(commanderId, "ASH-BOW",  80, pos(533, 332), bearing);
-				NewUnit(commanderId, "CAV-YARI", 40, pos(537, 231), bearing);
-				NewUnit(commanderId, "SAM-KATA", 80, pos(549, 262), bearing);
-				NewUnit(commanderId, "CAV-KATA", 40, pos(645, 204), bearing);
+				NewUnit(commanderId, "SAM-NAGI", 80, pos(-10, 24), bearing);
+				NewUnit(commanderId, "ASH-BOW",  80, pos(-3, 61), bearing);
+				NewUnit(commanderId, "ASH-YARI", 80, pos(60, 16), bearing);
+				NewUnit(commanderId, "ASH-BOW",  80, pos(62, 54), bearing);
+				NewUnit(commanderId, "CAV-YARI", 40, pos(66, -47), bearing);
+				NewUnit(commanderId, "SAM-KATA", 80, pos(78, -16), bearing);
+				NewUnit(commanderId, "CAV-KATA", 40, pos(174, -74), bearing);
 			}
 		}
 		else if (armytype == 2)
 		{
 			if (*part == 0 || *part == 1)
 			{
-				NewUnit(commanderId, "CAV-KATA", 40, pos(225, 340), bearing);
-				NewUnit(commanderId, "SAM-KATA", 80, pos(294, 270), bearing);
-				NewUnit(commanderId, "SAM-BOW",  80, pos(332, 307), bearing);
-				NewUnit(commanderId, "ASH-YARI", 80, pos(342, 337), bearing);
-				NewUnit(commanderId, "SAM-NAGI", 80, pos(362, 271), bearing);
-				NewUnit(commanderId, "ASH-ARQ",  80, pos(403, 368), bearing);
-				NewUnit(commanderId, "SAM-KATA", 80, pos(465, 254), bearing);
+				NewUnit(commanderId, "CAV-KATA", 40, pos(-236, 24), bearing);
+				NewUnit(commanderId, "SAM-KATA", 80, pos(-167, -46), bearing);
+				NewUnit(commanderId, "SAM-BOW",  80, pos(-129, -9), bearing);
+				NewUnit(commanderId, "ASH-YARI", 80, pos(-119, 21), bearing);
+				NewUnit(commanderId, "SAM-NAGI", 80, pos(-99, -45), bearing);
+				NewUnit(commanderId, "ASH-ARQ",  80, pos(-58, 52), bearing);
+				NewUnit(commanderId, "SAM-KATA", 80, pos(4, -62), bearing);
 			}
 			if (*part == 0 || *part == 2)
 			{
-				NewUnit(commanderId, "GEN-KATA", 40, pos(465, 314), bearing);
-				NewUnit(commanderId, "ASH-ARQ",  80, pos(472, 366), bearing);
-				NewUnit(commanderId, "ASH-ARQ",  80, pos(529, 367), bearing);
-				NewUnit(commanderId, "SAM-NAGI", 80, pos(551, 271), bearing);
-				NewUnit(commanderId, "ASH-YARI", 80, pos(580, 342), bearing);
-				NewUnit(commanderId, "SAM-BOW",  80, pos(583, 312), bearing);
-				NewUnit(commanderId, "SAM-KATA", 80, pos(626, 276), bearing);
-				NewUnit(commanderId, "CAV-KATA", 40, pos(683, 346), bearing);
+				NewUnit(commanderId, "GEN-KATA", 40, pos(4, -2), bearing);
+				NewUnit(commanderId, "ASH-ARQ",  80, pos(11, 50), bearing);
+				NewUnit(commanderId, "ASH-ARQ",  80, pos(68, 51), bearing);
+				NewUnit(commanderId, "SAM-NAGI", 80, pos(90, -45), bearing);
+				NewUnit(commanderId, "ASH-YARI", 80, pos(119, 26), bearing);
+				NewUnit(commanderId, "SAM-BOW",  80, pos(122, -4), bearing);
+				NewUnit(commanderId, "SAM-KATA", 80, pos(165, -40), bearing);
+				NewUnit(commanderId, "CAV-KATA", 40, pos(222, 30), bearing);
 			}
 		}
 		else
 		{
 			if (*part == 0 || *part == 1)
 			{
-				NewUnit(commanderId, "SAM-NAGI", 80, pos(383, 324), bearing);
-				NewUnit(commanderId, "CAV-KATA", 40, pos(359, 286), bearing);
-				NewUnit(commanderId, "SAM-KATA", 80, pos(443, 348), bearing);
-				NewUnit(commanderId, "ASH-ARQ",  80, pos(448, 419), bearing);
-				NewUnit(commanderId, "ASH-YARI", 80, pos(456, 386), bearing);
-				NewUnit(commanderId, "ASH-BOW",  80, pos(503, 359), bearing);
-				NewUnit(commanderId, "GEN-KATA", 40, pos(507, 315), bearing);
+				NewUnit(commanderId, "SAM-NAGI", 80, pos(-130, -18), bearing);
+				NewUnit(commanderId, "CAV-KATA", 40, pos(-154, -56), bearing);
+				NewUnit(commanderId, "SAM-KATA", 80, pos(-70, 6), bearing);
+				NewUnit(commanderId, "ASH-ARQ",  80, pos(-65, 77), bearing);
+				NewUnit(commanderId, "ASH-YARI", 80, pos(-57, 44), bearing);
+				NewUnit(commanderId, "ASH-BOW",  80, pos(-10, 17), bearing);
+				NewUnit(commanderId, "GEN-KATA", 40, pos(-6, -27), bearing);
 			}
 			else if (*part == 0 || *part == 2)
 			{
-				NewUnit(commanderId, "SAM-NAGI", 80, pos(508, 269), bearing);
-				NewUnit(commanderId, "ASH-YARI", 80, pos(552, 387), bearing);
-				NewUnit(commanderId, "ASH-ARQ",  80, pos(558, 414), bearing);
-				NewUnit(commanderId, "SAM-KATA", 80, pos(562, 350), bearing);
-				NewUnit(commanderId, "CAV-BOW",  40, pos(679, 308), bearing);
-				NewUnit(commanderId, "CAV-YARI", 40, pos(601, 284), bearing);
-				NewUnit(commanderId, "SAM-NAGI", 80, pos(616, 333), bearing);
+				NewUnit(commanderId, "SAM-NAGI", 80, pos(-5, -73), bearing);
+				NewUnit(commanderId, "ASH-YARI", 80, pos(40, 45), bearing);
+				NewUnit(commanderId, "ASH-ARQ",  80, pos(46, 72), bearing);
+				NewUnit(commanderId, "SAM-KATA", 80, pos(50, 8), bearing);
+				NewUnit(commanderId, "CAV-BOW",  40, pos(167, -34), bearing);
+				NewUnit(commanderId, "CAV-YARI", 40, pos(89, -58), bearing);
+				NewUnit(commanderId, "SAM-NAGI", 80, pos(104, -9), bearing);
 			}
 		}
 
