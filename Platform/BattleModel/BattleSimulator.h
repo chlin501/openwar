@@ -252,9 +252,11 @@ struct Unit
 
 class BattleObserver
 {
+	friend class BattleSimulator;
 public:
 	virtual ~BattleObserver();
 
+private:
 	virtual void OnSetGroundMap(GroundMap* groundMap) = 0;
 	virtual void OnAddUnit(Unit* unit) = 0;
 	virtual void OnRemoveUnit(Unit* unit) = 0;

@@ -512,7 +512,8 @@ void BattleView::Render()
 
 	_plainLineVertices->Reset(GL_LINES);
 	for (UnitCounter* marker : _unitMarkers)
-		marker->AppendFighterWeapons(_plainLineVertices);
+		if (marker->GetUnit()->IsFriendlyCommander(_commander) || marker->GetUnit()->deployed)
+			marker->AppendFighterWeapons(_plainLineVertices);
 
 	RenderCall<PlainShader_3f>(_gc)
 		.SetVertices(_plainLineVertices, "position")
@@ -543,7 +544,8 @@ void BattleView::Render()
 	_billboardModel->dynamicBillboards.clear();
 	_casualtyMarker->AppendCasualtyBillboards(_billboardModel);
 	for (UnitCounter* marker : _unitMarkers)
-		marker->AppendFighterBillboards(_billboardModel);
+		if (marker->GetUnit()->IsFriendlyCommander(_commander) || marker->GetUnit()->deployed)
+			marker->AppendFighterBillboards(_billboardModel);
 	for (SmokeCounter* marker : _smokeMarkers)
 		marker->AppendSmokeBillboards(_billboardModel);
 	_textureBillboardShape->Render(_gc,
@@ -555,7 +557,7 @@ void BattleView::Render()
 		GetViewport()->GetFlip());
 
 
-	// SmoothTerrain Hatch
+	// SmoothTerrain Hatchings
 
 	if (_smoothTerrainSurface != nullptr)
 		_smoothTerrainSurface->RenderHatchings(transform);
@@ -609,7 +611,8 @@ void BattleView::Render()
 	_textureBillboardShape2->Reset();
 
 	for (UnitCounter* marker : _unitMarkers)
-		marker->AppendUnitMarker(_textureBillboardShape2, GetViewport()->GetFlip());
+		if (marker->GetUnit()->IsFriendlyCommander(_commander) || marker->GetUnit()->deployed)
+			marker->AppendUnitMarker(_textureBillboardShape2, GetViewport()->GetFlip());
 	for (UnitMovementMarker* marker : _movementMarkers)
 		marker->RenderMovementMarker(_textureBillboardShape1);
 	for (UnitTrackingMarker* marker : _trackingMarkers)
@@ -1038,7 +1041,7 @@ void BattleView::RemoveAllSmokeMarkers()
 }
 
 
-UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int team, BattleCommander* commander)
+UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int filterTeam, BattleCommander* filterCommander, bool filterDeployed)
 {
 	UnitCounter* result = 0;
 	float nearest = INFINITY;
@@ -1046,9 +1049,11 @@ UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int team, Bat
 	for (UnitCounter* marker : _unitMarkers)
 	{
 		Unit* unit = marker->_unit;
-		if (team != 0 && unit->commander->GetTeam() != team)
+		if (filterTeam != 0 && unit->commander->GetTeam() != filterTeam)
 			continue;
-		if (commander != nullptr && !unit->IsCommandableBy(commander))
+		if (filterCommander != nullptr && !unit->IsCommandableBy(filterCommander))
+			continue;
+		if (filterDeployed && !unit->deployed)
 			continue;
 
 		glm::vec2 p = unit->state.center;

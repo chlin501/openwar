@@ -17,7 +17,7 @@ class Unit;
 class UnitCounter;
 
 
-class BattleGesture : public Gesture
+class BattleGesture : public Gesture, BattleObserver
 {
 	BattleHotspot* _hotspot{};
 
@@ -59,6 +59,16 @@ private:
 	bounds2f GetUnitCurrentBounds(Unit* unit);
 	bounds2f GetUnitFutureBounds(Unit* unit);
 	bounds2f GetUnitModifierBounds(Unit* unit);
+
+private: // BattleObserver
+	void OnSetGroundMap(GroundMap* groundMap) override;
+	void OnAddUnit(Unit* unit) override;
+	void OnRemoveUnit(Unit* unit) override;
+	void OnCommand(Unit* unit, float timer) override;
+	void OnShooting(const Shooting& shooting, float timer) override;
+	void OnRelease(const Shooting& shooting) override;
+	void OnCasualty(const Fighter& fighter) override;
+	void OnRouting(Unit* unit) override;
 };
 
 

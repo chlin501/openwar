@@ -80,16 +80,17 @@ public:
 	SmoothTerrainRenderer* GetSmoothTerrainRenderer() const { return _smoothTerrainSurface; }
 	SmoothTerrainWater* GetSmoothTerrainWater() const { return _smoothTerrainWater; }
 
-	// BattleObserver
-	virtual void OnSetGroundMap(GroundMap* groundMap);
-	virtual void OnAddUnit(Unit* unit);
-	virtual void OnRemoveUnit(Unit* unit);
-	virtual void OnCommand(Unit* unit, float timer);
-	virtual void OnShooting(const Shooting& shooting, float timer);
-	virtual void OnRelease(const Shooting& shooting);
-	virtual void OnCasualty(const Fighter& fighter);
-	virtual void OnRouting(Unit* unit);
+private: // BattleObserver
+	void OnSetGroundMap(GroundMap* groundMap) override;
+	void OnAddUnit(Unit* unit) override;
+	void OnRemoveUnit(Unit* unit) override;
+	void OnCommand(Unit* unit, float timer) override;
+	void OnShooting(const Shooting& shooting, float timer) override;
+	void OnRelease(const Shooting& shooting) override;
+	void OnCasualty(const Fighter& fighter) override;
+	void OnRouting(Unit* unit) override;
 
+public:
 	void AddCasualty(Unit* unit, glm::vec2 position);
 
 	const std::vector<UnitCounter*>& GetUnitCounters() const { return _unitMarkers; }
@@ -140,7 +141,7 @@ public:
 	SmokeCounter* AddSmokeMarker(MissileType missileType);
 	void RemoveAllSmokeMarkers();
 
-	UnitCounter* GetNearestUnitCounter(glm::vec2 position, int team, BattleCommander* commander);
+	UnitCounter* GetNearestUnitCounter(glm::vec2 position, int filterTeam, BattleCommander* filterCommander, bool filterDeployed);
 
 	void UpdateSoundPlayer();
 	void UpdateDeploymentZones();

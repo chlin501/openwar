@@ -171,8 +171,7 @@ void BattleScenario::UpdateDeploymentZones(double secondsSinceLastTick)
 		}
 		else
 		{
-			if (secondsSinceLastTick == 0)
-				secondsSinceLastTick = 0;
+			_simulator->SetDeploymentZone(team, glm::vec2{}, 0);
 		}
 	}
 

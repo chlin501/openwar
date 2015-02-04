@@ -11,7 +11,7 @@
 class BattleScenario;
 
 
-class BattleScript : public BattleObserver
+class BattleScript : BattleObserver
 {
 protected:
 	BattleScenario* _scenario{};
@@ -27,15 +27,15 @@ public:
 	virtual void Execute();
 	virtual void Tick(double secondsSinceLastTick);
 
-	// BattleObserver
-	virtual void OnSetGroundMap(GroundMap* groundMap);
-	virtual void OnAddUnit(Unit* unit);
-	virtual void OnRemoveUnit(Unit* unit);
-	virtual void OnCommand(Unit* unit, float timer);
-	virtual void OnShooting(const Shooting& shooting, float timer);
-	virtual void OnRelease(const Shooting& shooting);
-	virtual void OnCasualty(const Fighter& fighter);
-	virtual void OnRouting(Unit* unit);
+private: // BattleObserver
+	void OnSetGroundMap(GroundMap* groundMap) override;
+	void OnAddUnit(Unit* unit) override;
+	void OnRemoveUnit(Unit* unit) override;
+	void OnCommand(Unit* unit, float timer) override;
+	void OnShooting(const Shooting& shooting, float timer) override;
+	void OnRelease(const Shooting& shooting) override;
+	void OnCasualty(const Fighter& fighter) override;
+	void OnRouting(Unit* unit) override;
 
 protected:
 	int NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing);

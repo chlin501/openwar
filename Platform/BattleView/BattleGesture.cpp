@@ -33,97 +33,13 @@ BattleGesture::BattleGesture(BattleHotspot* hotspot) :
 
 BattleGesture::~BattleGesture()
 {
+	_hotspot->GetBattleView()->GetSimulator()->RemoveObserver(this);
 }
-
-
-/*void BattleGesture::RenderHints()
-{
-	VertexShape_2f vertices;
-	vertices._mode = GL_LINES;
-
-	for (UnitCounter* unitMarker : _hotspot->GetBattleView()->GetUnitCounters())
-	{
-		bounds2f bounds = GetUnitCurrentBounds(unitMarker->_unit);
-
-		vertices.AddVertex(Vertex_2f(bounds.mix_00()));
-		vertices.AddVertex(Vertex_2f(bounds.mix_01()));
-		vertices.AddVertex(Vertex_2f(bounds.mix_01()));
-		vertices.AddVertex(Vertex_2f(bounds.mix_11()));
-		vertices.AddVertex(Vertex_2f(bounds.mix_11()));
-		vertices.AddVertex(Vertex_2f(bounds.mix_10()));
-		vertices.AddVertex(Vertex_2f(bounds.mix_10()));
-		vertices.AddVertex(Vertex_2f(bounds.mix_00()));
-
-		bounds = GetUnitFutureBounds(unitMarker->_unit);
-		if (!bounds.empty())
-		{
-			vertices.AddVertex(Vertex_2f(bounds.mix_00()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_01()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_01()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_11()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_11()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_10()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_10()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_00()));
-		}
-
-		bounds = GetUnitModifierBounds(unitMarker->_unit);
-		if (!bounds.empty())
-		{
-			vertices.AddVertex(Vertex_2f(bounds.mix_00()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_01()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_01()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_11()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_11()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_10()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_10()));
-			vertices.AddVertex(Vertex_2f(bounds.mix_00()));
-		}
-	}
-
-	GraphicsContext* gc = _hotspot->GetBattleView()->GetGraphicsContext();
-
-	RenderCall<PlainShader_2f>(gc)
-		.SetVertices(&vertices)
-		.SetUniform("transform", _hotspot->GetBattleView()->GetRenderTransform())
-		.SetUniform("point_size", 1)
-		.SetUniform("color", glm::vec4(0, 0, 0, 0.2f))
-		.Render();
-
-
-	/ *PlainLineRenderer renderer;
-	renderer.Reset();
-	for (UnitCounter* unitMarker : _hotspot->GetBattleView()->GetBattleSimulator()->_unitMarkers)
-	{
-		glm::vec2 center = !unitMarker->_unit->command.path.empty() ? unitMarker->_unit->command.path.back() : unitMarker->_unit->state.center;
-		float facing = unitMarker->_unit->command.facing;
-
-		glm::vec2 p1 = center + MODIFIER_AREA_RADIUS_MAX * vector2_from_angle(facing - 0.5f * glm::half_pi<float>());
-		glm::vec2 p2 = center + MODIFIER_AREA_RADIUS_MAX * vector2_from_angle(facing + 0.5f * glm::half_pi<float>());
-
-		renderer.AddLine(_hotspot->GetBattleView()->GetPosition(center), _hotspot->GetBattleView()->GetPosition(p1));
-		renderer.AddLine(_hotspot->GetBattleView()->GetPosition(center), _hotspot->GetBattleView()->GetPosition(p2));
-
-		for (int i = 1; i <= 10; ++i)
-		{
-			float a1 = facing + ((i - 1) / 10.0f - 0.5f) * glm::half_pi<float>();
-			float a2 = facing + (i / 10.0f - 0.5f) * glm::half_pi<float>();
-
-			p1 = center + MODIFIER_AREA_RADIUS_MIN * vector2_from_angle(a1);
-			p2 = center + MODIFIER_AREA_RADIUS_MIN * vector2_from_angle(a2);
-			renderer.AddLine(_hotspot->GetBattleView()->GetPosition(p1), _hotspot->GetBattleView()->GetPosition(p2));
-
-			p1 = center + MODIFIER_AREA_RADIUS_MAX * vector2_from_angle(a1);
-			p2 = center + MODIFIER_AREA_RADIUS_MAX * vector2_from_angle(a2);
-			renderer.AddLine(_hotspot->GetBattleView()->GetPosition(p1), _hotspot->GetBattleView()->GetPosition(p2));
-		}
-	}
-	renderer.Draw(_hotspot->GetBattleView()->GetTransform(), glm::vec4(0, 0, 0, 0.2f));* /
-}*/
 
 
 void BattleGesture::TouchWasCaptured(Touch* touch)
 {
+	_hotspot->GetBattleView()->GetSimulator()->AddObserver(this);
 }
 
 
@@ -434,13 +350,11 @@ void BattleGesture::UpdateTrackingMarker()
 		bounds2f contentBounds = _hotspot->GetBattleView()->GetViewport()->GetTerrainBounds();
 		glm::vec2 contentCenter = contentBounds.mid();
 		float contentRadius = contentBounds.x().size() / 2;
+		float maximumRadius = contentRadius - 25.0f;
 
-		glm::vec2 differenceToCenter = contentCenter - markerPosition;
-		float distanceToCenter = glm::length(differenceToCenter);
-		if (distanceToCenter > contentRadius)
-		{
-			markerPosition += differenceToCenter * (distanceToCenter - contentRadius) / distanceToCenter;
-		}
+		glm::vec2 markerOffsetFromCenter = markerPosition - contentCenter;
+		if (glm::length(markerOffsetFromCenter) > maximumRadius)
+			markerPosition = contentCenter + glm::normalize(markerOffsetFromCenter) * maximumRadius;
 
 		float movementLimit = -1;
 		float delta = 1.0f / glm::max(1.0f, glm::distance(currentDestination, markerPosition));
@@ -595,7 +509,7 @@ Unit* BattleGesture::FindCommandableUnit(glm::vec2 screenPosition, glm::vec2 ter
 Unit* BattleGesture::FindCommandableUnitByCurrentPosition(glm::vec2 screenPosition, glm::vec2 terrainPosition)
 {
 	Unit* result = nullptr;
-	UnitCounter* unitMarker = _hotspot->GetBattleView()->GetNearestUnitCounter(terrainPosition, 0, _hotspot->GetBattleView()->GetCommander());
+	UnitCounter* unitMarker = _hotspot->GetBattleView()->GetNearestUnitCounter(terrainPosition, 0, _hotspot->GetBattleView()->GetCommander(), false);
 	if (unitMarker != nullptr)
 	{
 		Unit* unit = unitMarker->_unit;
@@ -658,7 +572,7 @@ Unit* BattleGesture::FindEnemyUnit(glm::vec2 touchPosition, glm::vec2 markerPosi
 	glm::vec2 d = (touchPosition - markerPosition) / 4.0f;
 	for (int i = 0; i < 4; ++i)
 	{
-		UnitCounter* unitMarker = _hotspot->GetBattleView()->GetNearestUnitCounter(p, enemyTeam, 0);
+		UnitCounter* unitMarker = _hotspot->GetBattleView()->GetNearestUnitCounter(p, enemyTeam, nullptr, true);
 		if (unitMarker && glm::distance(unitMarker->_unit->state.center, p) <= SNAP_TO_UNIT_TRESHOLD)
 		{
 			enemyMarker = unitMarker;
@@ -694,4 +608,52 @@ bounds2f BattleGesture::GetUnitModifierBounds(Unit* unit)
 		case UnitMode_Moving: return _hotspot->GetBattleView()->GetUnitFutureFacingMarkerBounds(unit).grow(12);
 		default: return bounds2f();
 	}
+}
+
+
+/* BattleObserver */
+
+
+void BattleGesture::OnSetGroundMap(GroundMap* groundMap)
+{
+}
+
+
+void BattleGesture::OnAddUnit(Unit* unit)
+{
+}
+
+
+void BattleGesture::OnRemoveUnit(Unit* unit)
+{
+	if (_trackingMarker != nullptr && _trackingMarker->GetUnit() == unit)
+	{
+		_hotspot->GetBattleView()->RemoveTrackingMarker(_trackingMarker);
+		_trackingMarker = nullptr;
+	}
+}
+
+
+void BattleGesture::OnCommand(Unit* unit, float timer)
+{
+}
+
+
+void BattleGesture::OnShooting(const Shooting& shooting, float timer)
+{
+}
+
+
+void BattleGesture::OnRelease(const Shooting& shooting)
+{
+}
+
+
+void BattleGesture::OnCasualty(const Fighter& fighter)
+{
+}
+
+
+void BattleGesture::OnRouting(Unit* unit)
+{
 }
