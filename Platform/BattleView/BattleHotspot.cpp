@@ -3,8 +3,8 @@
 
 
 BattleHotspot::BattleHotspot(BattleView* battleView) :
-	_gesture(this),
-	_battleView(battleView)
+	_gesture{this},
+	_battleView{battleView}
 {
 }
 

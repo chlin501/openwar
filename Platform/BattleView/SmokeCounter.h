@@ -15,20 +15,15 @@ class SmokeCounter
 public:
 	struct Particle
 	{
-		glm::vec3 position;
-		glm::vec3 velocity;
-		float time;
-
-		Particle() :
-		position(),
-		velocity(),
-		time(0) { }
+		glm::vec3 position{};
+		glm::vec3 velocity{};
+		float time{};
 	};
 
-	MissileType _missileType;
-	std::vector<Particle> particles;
-	int _soundCookie;
-	bool _impacted;
+	MissileType _missileType{};
+	std::vector<Particle> particles{};
+	int _soundCookie{};
+	bool _impacted{};
 
 public:
 	SmokeCounter(MissileType missileType);

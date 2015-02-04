@@ -43,31 +43,7 @@ static affine2 billboard_texcoords(int x, int y, bool flip)
 
 
 BattleView::BattleView(Surface* surface) : TerrainView(surface),
-	_gc(surface->GetGraphicsContext()),
-	_simulator(nullptr),
-	_commander(nullptr),
-	_lightNormal(),
-	_billboardTexture(nullptr),
-	_billboardModel(nullptr),
-	_textureBillboardShape(nullptr),
-	_textureBillboardShape1(nullptr),
-	_textureBillboardShape2(nullptr),
-	_casualtyMarker(0),
-	_movementMarkers(),
-	_trackingMarkers(),
-	_plainLineVertices(nullptr),
-	_gradientLineVertices(nullptr),
-	_gradientTriangleVertices(nullptr),
-	_gradientTriangleStripVertices(nullptr),
-	_colorBillboardVertices(nullptr),
-	_textureTriangleVertices(nullptr),
-	_textureTriangleVertices2(nullptr),
-	_textureUnitMarkers(nullptr),
-	_textureTouchMarker(nullptr),
-	_smoothTerrainSurface(nullptr),
-	_smoothTerrainWater(nullptr),
-	_smoothTerrainSky(nullptr),
-	_tiledTerrainRenderer(nullptr)
+	_gc{surface->GetGraphicsContext()}
 {
 	_textureUnitMarkers = new TextureResource(_gc, Resource("Textures/UnitMarkers.png"));
 	_textureTouchMarker = new TextureResource(_gc, Resource("Textures/TouchMarker.png"));
@@ -579,6 +555,12 @@ void BattleView::Render()
 		GetViewport()->GetFlip());
 
 
+	// SmoothTerrain Hatch
+
+	if (_smoothTerrainSurface != nullptr)
+		_smoothTerrainSurface->RenderHatchings(transform);
+
+
 	// Range Markers
 
 	for (Unit* unit : _simulator->GetUnits())
@@ -745,11 +727,6 @@ void BattleView::Render()
 		.Render();
 
 
-
-	// SmoothTerrain Hatch
-
-	if (_smoothTerrainSurface != nullptr)
-		_smoothTerrainSurface->RenderHatchings(transform);
 
 	// Mouse Hint
 

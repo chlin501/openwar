@@ -8,10 +8,7 @@
 
 
 ShootingCounter::ShootingCounter(MissileType missileType) :
-_missileType(missileType),
-_projectiles(),
-_soundCookie(0),
-_impacted(false)
+	_missileType{missileType}
 {
 	if (missileType == MissileType::Arq)
 		SoundPlayer::singleton->PlayMatchlock();

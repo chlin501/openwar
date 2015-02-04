@@ -14,12 +14,8 @@
 
 
 BattleLayer::BattleLayer(Surface* surface) :
-	_surface(surface),
-	_gc(surface->GetGraphicsContext()),
-	_playing(false),
-	_editing(false),
-	_scenario(nullptr),
-	_editorModel(nullptr)
+	_surface{surface},
+	_gc{surface->GetGraphicsContext()}
 {
 }
 

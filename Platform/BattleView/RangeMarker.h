@@ -12,8 +12,8 @@
 class RangeMarker
 {
 public:
-	BattleSimulator* _battleSimulator;
-	Unit* _unit;
+	BattleSimulator* _battleSimulator{};
+	Unit* _unit{};
 
 public:
 	RangeMarker(BattleSimulator* battleSimulator, Unit* unit);

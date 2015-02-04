@@ -15,9 +15,9 @@
 
 
 BattleScript::BattleScript(BattleScenario* scenario) :
-_scenario(scenario),
-_simulator(scenario->GetSimulator()),
-_nextUnitId(1)
+	_scenario{scenario},
+	_simulator{scenario->GetSimulator()},
+	_nextUnitId{1}
 {
 	_simulator->AddObserver(this);
 }

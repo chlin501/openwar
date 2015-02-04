@@ -9,10 +9,7 @@
 
 
 SmokeCounter::SmokeCounter(MissileType missileType) :
-_missileType(missileType),
-particles(),
-_soundCookie(0),
-_impacted(false)
+	_missileType{missileType}
 {
 	if (missileType == MissileType::Arq)
 		SoundPlayer::singleton->PlayMatchlock();

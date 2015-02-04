@@ -13,8 +13,8 @@
 
 
 UnitCounter::UnitCounter(BattleView* battleView, Unit* unit) :
-_battleView(battleView),
-_unit(unit)
+_battleView{battleView},
+_unit{unit}
 {
 	_samuraiWeapon = SamuraiModule::GetSamuraiWeapon(unit->unitClass.c_str());
 	_samuraiPlatform = SamuraiModule::GetSamuraiPlatform(unit->unitClass.c_str());

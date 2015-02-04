@@ -20,8 +20,8 @@ class Unit;
 class UnitCounter
 {
 public:
-	BattleView* _battleView;
-	Unit* _unit;
+	BattleView* _battleView{};
+	Unit* _unit{};
 	float _routingTimer{};
 	SamuraiWeapon _samuraiWeapon{};
 	SamuraiPlatform _samuraiPlatform{};

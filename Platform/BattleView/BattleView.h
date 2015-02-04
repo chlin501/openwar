@@ -30,42 +30,42 @@ class Touch;
 
 class BattleView : public TerrainView, public BattleObserver, RenderLoopObserver
 {
-	GraphicsContext* _gc;
-	BattleSimulator* _simulator;
-	BattleCommander* _commander;
+	GraphicsContext* _gc{};
+	BattleSimulator* _simulator{};
+	BattleCommander* _commander{};
 
-	glm::vec3 _lightNormal;
+	glm::vec3 _lightNormal{};
 
-	BillboardTextureSheet* _billboardTexture;
-	BillboardModel* _billboardModel;
-	BillboardTextureShape* _textureBillboardShape;
-	BillboardTextureShape* _textureBillboardShape1;
-	BillboardTextureShape* _textureBillboardShape2;
+	BillboardTextureSheet* _billboardTexture{};
+	BillboardModel* _billboardModel{};
+	BillboardTextureShape* _textureBillboardShape{};
+	BillboardTextureShape* _textureBillboardShape1{};
+	BillboardTextureShape* _textureBillboardShape2{};
 
-	CasualtyMarker* _casualtyMarker;
-	std::vector<UnitMovementMarker*> _movementMarkers;
-	std::vector<UnitTrackingMarker*> _trackingMarkers;
+	CasualtyMarker* _casualtyMarker{};
+	std::vector<UnitMovementMarker*> _movementMarkers{};
+	std::vector<UnitTrackingMarker*> _trackingMarkers{};
 
-	VertexShape_3f* _plainLineVertices;
-	VertexShape_3f_4f* _gradientLineVertices;
-	VertexShape_3f_4f* _gradientTriangleVertices;
-	VertexShape_3f_4f* _gradientTriangleStripVertices;
-	VertexShape_3f_4f_1f* _colorBillboardVertices;
-	VertexShape_3f_2f* _textureTriangleVertices;
-	VertexShape_2f_2f* _textureTriangleVertices2;
+	VertexShape_3f* _plainLineVertices{};
+	VertexShape_3f_4f* _gradientLineVertices{};
+	VertexShape_3f_4f* _gradientTriangleVertices{};
+	VertexShape_3f_4f* _gradientTriangleStripVertices{};
+	VertexShape_3f_4f_1f* _colorBillboardVertices{};
+	VertexShape_3f_2f* _textureTriangleVertices{};
+	VertexShape_2f_2f* _textureTriangleVertices2{};
 
-	Texture* _textureUnitMarkers;
-	Texture* _textureTouchMarker;
+	Texture* _textureUnitMarkers{};
+	Texture* _textureTouchMarker{};
 
-	std::vector<SmokeCounter*> _smokeMarkers;
-	std::vector<ShootingCounter*> _shootingCounters;
-	std::vector<UnitCounter*> _unitMarkers;
+	std::vector<SmokeCounter*> _smokeMarkers{};
+	std::vector<ShootingCounter*> _shootingCounters{};
+	std::vector<UnitCounter*> _unitMarkers{};
 
-	SmoothTerrainRenderer* _smoothTerrainSurface;
-	SmoothTerrainWater* _smoothTerrainWater;
-	SmoothTerrainSky* _smoothTerrainSky;
-	TiledTerrainRenderer* _tiledTerrainRenderer;
-	std::shared_ptr<BattleHotspot> _battleHotspot;
+	SmoothTerrainRenderer* _smoothTerrainSurface{};
+	SmoothTerrainWater* _smoothTerrainWater{};
+	SmoothTerrainSky* _smoothTerrainSky{};
+	TiledTerrainRenderer* _tiledTerrainRenderer{};
+	std::shared_ptr<BattleHotspot> _battleHotspot{};
 
 public:
 	BattleView(Surface* surface);

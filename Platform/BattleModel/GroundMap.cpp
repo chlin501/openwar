@@ -5,11 +5,6 @@
 #include "GroundMap.h"
 
 
-GroundMap::GroundMap()
-{
-}
-
-
 GroundMap::~GroundMap()
 {
 }

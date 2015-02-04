@@ -283,7 +283,7 @@ class BattleSimulator
 	float _timeStep{1.0f / 15.0f};
 	bool _practice{};
 	int _winnerTeam{};
-	glm::vec3 _deploymentZones[2];
+	glm::vec3 _deploymentZones[2]{};
 
 public:
 	BattleSimulator();
@@ -307,6 +307,7 @@ public:
 	glm::vec2 GetDeploymentPosition(int team) const;
 	float GetDeploymentRadius(int team) const;
 	bool IsDeploymentZone(int team, glm::vec2 position) const;
+	void Deploy(Unit* unit, glm::vec2 position);
 
 	const std::vector<Unit*>& GetUnits() { return _units; }
 	Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);

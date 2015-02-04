@@ -259,6 +259,26 @@ bool BattleSimulator::IsDeploymentZone(int team, glm::vec2 position) const
 }
 
 
+void BattleSimulator::Deploy(Unit* unit, glm::vec2 position)
+{
+	unit->state.center = position;
+
+	unit->command = UnitCommand();
+	//unit->command.bearing = bearing;
+	unit->nextCommand = unit->command;
+
+	unit->state.unitMode = UnitMode_Initializing;
+	MovementRules::AdvanceTime(unit, 0);
+	unit->nextState = NextUnitState(unit);
+	for (Fighter* i = unit->fighters, * end = i + unit->fightersCount; i != end; ++i)
+		i->nextState = NextFighterState(i);
+
+	unit->state = unit->nextState;
+	for (Fighter* i = unit->fighters, * end = i + unit->fightersCount; i != end; ++i)
+		i->state = i->nextState;
+}
+
+
 Unit* BattleSimulator::AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position)
 {
 	Unit* unit = new Unit();

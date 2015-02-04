@@ -12,8 +12,8 @@
 
 
 RangeMarker::RangeMarker(BattleSimulator* battleSimulator, Unit* unit) :
-_battleSimulator(battleSimulator),
-_unit(unit)
+	_battleSimulator{battleSimulator},
+	_unit{unit}
 {
 }
 

@@ -16,7 +16,6 @@ class HeightMap;
 class GroundMap
 {
 public:
-	GroundMap();
 	virtual ~GroundMap();
 
 	virtual bounds2f GetBounds() const = 0;

@@ -12,8 +12,8 @@ class Unit;
 class UnitMarker
 {
 protected:
-	BattleView* _battleView;
-	Unit* _unit;
+	BattleView* _battleView{};
+	Unit* _unit{};
 
 public:
 	UnitMarker(BattleView* battleView, Unit* unit);

@@ -8,8 +8,8 @@
 
 
 UnitMarker::UnitMarker(BattleView* battleView, Unit* unit) :
-_battleView(battleView),
-_unit(unit)
+	_battleView{battleView},
+	_unit{unit}
 {
 }
 

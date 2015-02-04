@@ -14,16 +14,8 @@
 
 
 UnitTrackingMarker::UnitTrackingMarker(BattleView* battleView, Unit* unit) : UnitMarker(battleView, unit),
-_meleeTarget(0),
-_destination(_unit->state.center),
-_hasDestination(false),
-_missileTarget(0),
-_orientation(),
-_hasOrientation(false),
-_renderOrientation(false),
-_running(false)
+_destination{_unit->state.center}
 {
-
 }
 
 

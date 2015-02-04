@@ -26,7 +26,7 @@
 
 
 BattleGesture::BattleGesture(BattleHotspot* hotspot) :
-	_hotspot(hotspot)
+	_hotspot{hotspot}
 {
 }
 
@@ -466,11 +466,11 @@ void BattleGesture::UpdateTrackingMarker()
 		if (enemyUnit && !_trackingMarker->GetMeleeTarget())
 			SoundPlayer::singleton->Play(SoundBufferCommandMod);
 
-		/*if (!unit->deployed)
+		if (!unit->deployed)
 		{
-			unit->state.center = markerPosition;
+			_hotspot->GetBattleView()->GetSimulator()->Deploy(unit, markerPosition);
 			unitCenter = unit->state.center;
-		}*/
+		}
 
 		_trackingMarker->SetMeleeTarget(enemyUnit);
 		_trackingMarker->SetDestination(&markerPosition);

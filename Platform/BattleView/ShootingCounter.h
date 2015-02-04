@@ -14,22 +14,16 @@ class ShootingCounter
 public:
 	struct Projectile
 	{
-		glm::vec3 position1;
-		glm::vec3 position2;
-		float time;
-		float duration;
-
-		Projectile() :
-		position1(),
-		position2(),
-		time(0),
-		duration(0) { }
+		glm::vec3 position1{};
+		glm::vec3 position2{};
+		float time{};
+		float duration{};
 	};
 
-	MissileType _missileType;
-	std::vector<Projectile> _projectiles;
-	int _soundCookie;
-	bool _impacted;
+	MissileType _missileType{};
+	std::vector<Projectile> _projectiles{};
+	int _soundCookie{};
+	bool _impacted{};
 
 public:
 	ShootingCounter(MissileType missileType);
