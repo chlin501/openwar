@@ -303,10 +303,11 @@ public:
 	void SetGroundMap(GroundMap* groundMap);
 	GroundMap* GetGroundMap() { return _groundMap; }
 
-	void SetDeploymentZone(int team, glm::vec2 position, float radius);
-	glm::vec2 GetDeploymentPosition(int team) const;
+	void SetDeploymentZone(int team, glm::vec2 center, float radius);
+	glm::vec2 GetDeploymentCenter(int team) const;
 	float GetDeploymentRadius(int team) const;
 	bool IsDeploymentZone(int team, glm::vec2 position) const;
+	glm::vec2 ConstrainDeploymentZone(int team, glm::vec2 position, float inset) const;
 	void Deploy(Unit* unit, glm::vec2 position);
 
 	const std::vector<Unit*>& GetUnits() { return _units; }
