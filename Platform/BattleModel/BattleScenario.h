@@ -30,6 +30,7 @@ class BattleScenario
 	int _teamPosition1{};
 	int _teamPosition2{};
 	float _deploymentTimer{};
+	bool _deploymentEnabled{};
 
 public:
 	BattleScenario();
@@ -57,6 +58,7 @@ public:
 
 	void Tick(double secondsSinceLastTick);
 
+	void EnableDeploymentZones();
 	void UpdateDeploymentZones(double secondsSinceLastTick);
 };
 
