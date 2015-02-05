@@ -21,6 +21,8 @@ class FrameBuffer
 
 	GLuint _id;
 	GLenum _status{};
+	bool _hasColor{};
+	bool _hasDepth{};
 
 public:
 	FrameBuffer();
@@ -31,14 +33,14 @@ public:
 
 	bool IsComplete() const;
 	const char* GetStatus() const;
+	bool HasColor() const;
+	bool HasDepth() const;
 
 	void AttachColor(RenderBuffer* value);
 	void AttachColor(Texture* value);
 
 	void AttachDepth(RenderBuffer* value);
 	void AttachDepth(Texture* value);
-
-	void AttachStencil(RenderBuffer* value);
 };
 
 

@@ -171,6 +171,10 @@ class HatchingsResultShader : public ShaderProgram
 
 		uniform mat4 transform;
 		uniform sampler2D texture;
+		uniform sampler2D hatch_r;
+		uniform sampler2D hatch_g;
+		uniform sampler2D hatch_b;
+		uniform float hatch_scale;
 	 */
 	HatchingsResultShader(GraphicsContext* gc);
 };

@@ -496,7 +496,12 @@ void Image::Draw(const Image& image, int x, int y, int w, int h)
 	SDL_BlendMode oldBlendMode;
 	SDL_GetSurfaceBlendMode(src, &oldBlendMode);
 	SDL_SetSurfaceBlendMode(src, SDL_BLENDMODE_NONE);
-	SDL_BlitSurface(src, &srcRect, dst, &dstRect);
+
+	if (srcRect.w == dstRect.w && srcRect.h == dstRect.h)
+		SDL_BlitSurface(src, &srcRect, dst, &dstRect);
+	else
+		SDL_BlitScaled(src, &srcRect, dst, &dstRect);
+
 	SDL_SetSurfaceBlendMode(src, oldBlendMode);
 
 #endif

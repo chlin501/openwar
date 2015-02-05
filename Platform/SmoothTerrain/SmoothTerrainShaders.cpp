@@ -512,6 +512,7 @@ HatchingsResultShader::HatchingsResultShader(GraphicsContext* gc) : ShaderProgra
 		uniform sampler2D hatch_r;
 		uniform sampler2D hatch_g;
 		uniform sampler2D hatch_b;
+		uniform float hatch_scale;
 		varying vec2 _texcoord;
 
 		vec4 mix_hatch(vec4 c1, vec4 c2)
@@ -521,7 +522,7 @@ HatchingsResultShader::HatchingsResultShader(GraphicsContext* gc) : ShaderProgra
 
 		void main()
 		{
-			vec2 hatchcoord = gl_FragCoord.xy / 16.0;
+			vec2 hatchcoord = gl_FragCoord.xy / hatch_scale;
 
 			vec4 k = texture2D(texture, _texcoord);
 			vec4 r = texture2D(hatch_r, hatchcoord) * step(0.5, k.r);

@@ -25,11 +25,22 @@ RenderBuffer::~RenderBuffer()
 }
 
 
-void RenderBuffer::Reset(GLenum internalFormat, GLsizei width, GLsizei height)
+void RenderBuffer::PrepareColorBuffer(GLsizei width, GLsizei height)
 {
 	glBindRenderbuffer(GL_RENDERBUFFER, _id);
 	CHECK_ERROR_GL();
-	glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, width, height);
+	CHECK_ERROR_GL();
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	CHECK_ERROR_GL();
+}
+
+
+void RenderBuffer::PrepareDepthBuffer(GLsizei width, GLsizei height)
+{
+	glBindRenderbuffer(GL_RENDERBUFFER, _id);
+	CHECK_ERROR_GL();
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
 	CHECK_ERROR_GL();
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	CHECK_ERROR_GL();

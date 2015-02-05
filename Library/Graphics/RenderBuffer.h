@@ -20,7 +20,8 @@ public:
 	RenderBuffer(const RenderBuffer&) = delete;
 	RenderBuffer& operator=(const RenderBuffer&) = delete;
 
-	void Reset(GLenum internalFormat, GLsizei width, GLsizei height);
+	void PrepareColorBuffer(GLsizei width, GLsizei height);
+	void PrepareDepthBuffer(GLsizei width, GLsizei height);
 };
 
 

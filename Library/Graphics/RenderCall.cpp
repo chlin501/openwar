@@ -155,6 +155,10 @@ void RenderCallBase::Render()
 		oldFrameBuffer.first = true;
 		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFrameBuffer.second);
 		glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer->_id);
+#if TARGET_OS_MAC && !TARGET_OS_IPHONE
+		if (!_frameBuffer->HasColor())
+			glDrawBuffer(GL_NONE);
+#endif
 	}
 
 	if (_clearBits)
@@ -252,7 +256,13 @@ void RenderCallBase::Render()
 	}
 
 	if (oldFrameBuffer.first)
+	{
 		glBindFramebuffer(GL_FRAMEBUFFER, oldFrameBuffer.second);
+#if TARGET_OS_MAC && !TARGET_OS_IPHONE
+		if (!_frameBuffer->HasColor())
+			glDrawBuffer(GL_BACK);
+#endif
+	}
 };
 
 

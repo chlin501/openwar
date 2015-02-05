@@ -12,6 +12,10 @@
 #include "Graphics/TextureResource.h"
 #include <glm/gtc/matrix_transform.hpp>
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#endif
+
 
 SmoothTerrainRenderer::SmoothTerrainRenderer(GraphicsContext* gc, SmoothGroundMap* smoothGroundMap) :
 _gc(gc),
@@ -154,14 +158,14 @@ void SmoothTerrainRenderer::EnableSobelBuffers()
 {
 	_sobelFrameBuffer = new FrameBuffer();
 
-#if !TARGET_OS_IPHONE
+#if TARGET_OS_MAC
 	_sobelColorBuffer = new RenderBuffer();
 #endif
 	_sobelDepthBuffer = new Texture(_gc);
 
 	UpdateSobelBufferSize();
 
-#if !TARGET_OS_IPHONE
+#if TARGET_OS_MAC
 	_sobelFrameBuffer->AttachColor(_sobelColorBuffer);
 #endif
 	_sobelFrameBuffer->AttachDepth(_sobelDepthBuffer);
@@ -169,7 +173,12 @@ void SmoothTerrainRenderer::EnableSobelBuffers()
 
 	if (!_sobelFrameBuffer->IsComplete())
 	{
-		NSLog(@"%s", _sobelFrameBuffer->GetStatus());
+#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
+		NSLog(@"EnableSobelBuffers: _sobelFrameBuffer=%s", _sobelFrameBuffer->GetStatus());
+#endif
+#ifdef __ANDROID__
+		__android_log_print(ANDROID_LOG_INFO, "openwar", "EnableSobelBuffers: _sobelFrameBuffer=%s", _sobelFrameBuffer->GetStatus());
+#endif
 
 		delete _sobelFrameBuffer;
 		_sobelFrameBuffer = nullptr;
@@ -194,10 +203,10 @@ void SmoothTerrainRenderer::UpdateSobelBufferSize()
 		_framebuffer_height = size.y;
 
 		if (_sobelColorBuffer != nullptr)
-			_sobelColorBuffer->Reset(GL_RGBA, _framebuffer_width, _framebuffer_height);
+			_sobelColorBuffer->PrepareColorBuffer(_framebuffer_width, _framebuffer_height);
 
 		if (_sobelDepthBuffer != nullptr)
-			_sobelDepthBuffer->Reset(GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, _framebuffer_width, _framebuffer_height);
+			_sobelDepthBuffer->PrepareDepthBuffer(_framebuffer_width, _framebuffer_height);
 	}
 }
 
@@ -272,13 +281,18 @@ void SmoothTerrainRenderer::TryEnableHatchingsBuffers()
 		_hatchingsMasterBufferSize = glm::ivec2{128, 128};
 
 		_hatchingsMasterColorBuffer = new Texture(_gc);
-		_hatchingsMasterColorBuffer->Reset(GL_RGBA, GL_UNSIGNED_BYTE, _hatchingsMasterBufferSize.x, _hatchingsMasterBufferSize.y);
+		_hatchingsMasterColorBuffer->PrepareColorBuffer(_hatchingsMasterBufferSize.x, _hatchingsMasterBufferSize.y);
 
 		_hatchingsMasterFrameBuffer = new FrameBuffer();
 		_hatchingsMasterFrameBuffer->AttachColor(_hatchingsMasterColorBuffer);
 		if (!_hatchingsMasterFrameBuffer->IsComplete())
 		{
-			NSLog(@"_hatchingsMasterFrameBuffer %s", _hatchingsMasterFrameBuffer->GetStatus());
+#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
+			NSLog(@"TryEnableHatchingsBuffers: _hatchingsMasterFrameBuffer %s", _hatchingsMasterFrameBuffer->GetStatus());
+#endif
+#ifdef __ANDROID__
+			__android_log_print(ANDROID_LOG_INFO, "openwar", "TryEnableHatchingsBuffers: _hatchingsMasterFrameBuffer=%s", _hatchingsMasterFrameBuffer->GetStatus());
+#endif
 		}
 
 		// Hatchings Intermediate Buffer
@@ -286,17 +300,22 @@ void SmoothTerrainRenderer::TryEnableHatchingsBuffers()
 		_hatchingsIntermediateBufferSize = glm::ivec2{128, 128};
 
 		_hatchingsIntermediateColorBuffer = new Texture(_gc);
-		_hatchingsIntermediateDepthBuffer = new Texture(_gc);
+		_hatchingsIntermediateDepthBuffer = new RenderBuffer();
 
-		_hatchingsIntermediateColorBuffer->Reset(GL_RGBA, GL_UNSIGNED_BYTE, _hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y);
-		_hatchingsIntermediateDepthBuffer->Reset(GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, _hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y);
+		_hatchingsIntermediateColorBuffer->PrepareColorBuffer(_hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y);
+		_hatchingsIntermediateDepthBuffer->PrepareDepthBuffer(_hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y);
 
 		_hatchingsIntermediateFrameBuffer = new FrameBuffer();
 		_hatchingsIntermediateFrameBuffer->AttachColor(_hatchingsIntermediateColorBuffer);
 		_hatchingsIntermediateFrameBuffer->AttachDepth(_hatchingsIntermediateDepthBuffer);
 		if (!_hatchingsIntermediateFrameBuffer->IsComplete())
 		{
-			NSLog(@"_hatchingsIntermediateFrameBuffer %s", _hatchingsIntermediateFrameBuffer->GetStatus());
+#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
+			NSLog(@"TryEnableHatchingsBuffers: _hatchingsIntermediateFrameBuffer %s", _hatchingsIntermediateFrameBuffer->GetStatus());
+#endif
+#ifdef __ANDROID__
+			__android_log_print(ANDROID_LOG_INFO, "openwar", "TryEnableHatchingsBuffers: _hatchingsIntermediateFrameBuffer=%s", _hatchingsIntermediateFrameBuffer->GetStatus());
+#endif
 		}
 
 		_hatchingsResultVertices.Reset(GL_TRIANGLE_STRIP);
@@ -401,6 +420,7 @@ void SmoothTerrainRenderer::RenderHatchings(const glm::mat4& transform)
 			.SetTexture("hatch_r", _hatchingsPatternR, Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Repeat))
 			.SetTexture("hatch_g", _hatchingsPatternG, Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Repeat))
 			.SetTexture("hatch_b", _hatchingsPatternB, Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Repeat))
+			.SetUniform("hatch_scale", 16.0f * _gc->GetCombinedScaling())
 			.Render();
 	};
 }

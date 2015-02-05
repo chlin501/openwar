@@ -74,6 +74,18 @@ const char* FrameBuffer::GetStatus() const
 }
 
 
+bool FrameBuffer::HasColor() const
+{
+	return _hasColor;
+}
+
+
+bool FrameBuffer::HasDepth() const
+{
+	return _hasDepth;
+}
+
+
 void FrameBuffer::AttachColor(RenderBuffer* value)
 {
 	GLint old;
@@ -87,6 +99,8 @@ void FrameBuffer::AttachColor(RenderBuffer* value)
 	_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(old));
+
+	_hasColor = value != nullptr;
 }
 
 
@@ -103,6 +117,8 @@ void FrameBuffer::AttachColor(Texture* value)
 	_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(old));
+
+	_hasColor = value != nullptr;
 }
 
 
@@ -119,6 +135,8 @@ void FrameBuffer::AttachDepth(RenderBuffer* value)
 	_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(old));
+
+	_hasDepth = value != nullptr;
 }
 
 
@@ -135,20 +153,6 @@ void FrameBuffer::AttachDepth(Texture* value)
 	_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(old));
-}
 
-
-void FrameBuffer::AttachStencil(RenderBuffer* value)
-{
-	GLint old;
-	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &old);
-	glBindFramebuffer(GL_FRAMEBUFFER, _id);
-	CHECK_ERROR_GL();
-
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, value->_id);
-	CHECK_ERROR_GL();
-
-	_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(old));
+	_hasDepth = value != nullptr;
 }

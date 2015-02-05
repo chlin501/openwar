@@ -35,7 +35,7 @@ class SmoothTerrainRenderer
 	glm::ivec2 _hatchingsIntermediateBufferSize;
 	FrameBuffer* _hatchingsIntermediateFrameBuffer{};
 	Texture* _hatchingsIntermediateColorBuffer{};
-	Texture* _hatchingsIntermediateDepthBuffer{};
+	RenderBuffer* _hatchingsIntermediateDepthBuffer{};
 
 	Texture* _hatchingsDeployment{};
 	Texture* _hatchingsPatternR{};

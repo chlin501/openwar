@@ -25,7 +25,8 @@ public:
 	Texture(Texture&&);
 	Texture& operator=(Texture&&);
 
-	void Reset(GLenum internalFormat, GLenum type, GLsizei width, GLsizei height);
+	void PrepareColorBuffer(GLsizei width, GLsizei height);
+	void PrepareDepthBuffer(GLsizei width, GLsizei height);
 
 	virtual void UpdateTexture();
 
