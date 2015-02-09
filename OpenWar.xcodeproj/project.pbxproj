@@ -21,6 +21,8 @@
 		4105FB3D1806D3A50074C855 /* SmoothTerrainShaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4105FB381806D3A50074C855 /* SmoothTerrainShaders.cpp */; };
 		4105FB3E1806D3A50074C855 /* SmoothTerrainSky.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4105FB3A1806D3A50074C855 /* SmoothTerrainSky.cpp */; };
 		4105FB421806D3C40074C855 /* TiledTerrainRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4105FB401806D3C40074C855 /* TiledTerrainRenderer.cpp */; };
+		41327F1D1A88B1010074DB2D /* SoundLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41327F191A88B1010074DB2D /* SoundLoader.cpp */; };
+		41327F1E1A88B1010074DB2D /* SoundPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41327F1B1A88B1010074DB2D /* SoundPlayer.cpp */; };
 		41396E0817E7517F00EC1DA6 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41C0B59817E63DA300C52270 /* SDL2.framework */; };
 		41396E0A17E7517F00EC1DA6 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B7026175DFEC800AABF10 /* AudioToolbox.framework */; };
 		41396E0B17E7517F00EC1DA6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B6DFA175CE70B00AABF10 /* Cocoa.framework */; };
@@ -32,8 +34,6 @@
 		4156C3111A139E40006A264C /* bspline_patch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2AB1A139E3F006A264C /* bspline_patch.cpp */; };
 		4156C3121A139E40006A264C /* GaussBlur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2AD1A139E3F006A264C /* GaussBlur.cpp */; };
 		4156C3131A139E40006A264C /* quadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2AF1A139E3F006A264C /* quadtree.cpp */; };
-		4156C3151A139E40006A264C /* SoundLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2B41A139E3F006A264C /* SoundLoader.cpp */; };
-		4156C3161A139E40006A264C /* SoundPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2B61A139E3F006A264C /* SoundPlayer.cpp */; };
 		4156C3291A139E40006A264C /* ScrollerGesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2DF1A139E3F006A264C /* ScrollerGesture.cpp */; };
 		4156C32A1A139E40006A264C /* ScrollerHotspot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2E11A139E3F006A264C /* ScrollerHotspot.cpp */; };
 		4156C32B1A139E40006A264C /* ScrollerViewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2E31A139E3F006A264C /* ScrollerViewport.cpp */; };
@@ -144,6 +144,10 @@
 		4105FB3B1806D3A50074C855 /* SmoothTerrainSky.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmoothTerrainSky.h; sourceTree = "<group>"; };
 		4105FB401806D3C40074C855 /* TiledTerrainRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TiledTerrainRenderer.cpp; sourceTree = "<group>"; };
 		4105FB411806D3C40074C855 /* TiledTerrainRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiledTerrainRenderer.h; sourceTree = "<group>"; };
+		41327F191A88B1010074DB2D /* SoundLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundLoader.cpp; sourceTree = "<group>"; };
+		41327F1A1A88B1010074DB2D /* SoundLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundLoader.h; sourceTree = "<group>"; };
+		41327F1B1A88B1010074DB2D /* SoundPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundPlayer.cpp; sourceTree = "<group>"; };
+		41327F1C1A88B1010074DB2D /* SoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundPlayer.h; sourceTree = "<group>"; };
 		41396E3117E7517F00EC1DA6 /* Open War.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Open War.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		413B6DFA175CE70B00AABF10 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		413B6DFD175CE70B00AABF10 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -167,10 +171,6 @@
 		4156C2AE1A139E3F006A264C /* GaussBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GaussBlur.h; sourceTree = "<group>"; };
 		4156C2AF1A139E3F006A264C /* quadtree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quadtree.cpp; sourceTree = "<group>"; };
 		4156C2B01A139E3F006A264C /* quadtree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = quadtree.h; sourceTree = "<group>"; };
-		4156C2B41A139E3F006A264C /* SoundLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundLoader.cpp; sourceTree = "<group>"; };
-		4156C2B51A139E3F006A264C /* SoundLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundLoader.h; sourceTree = "<group>"; };
-		4156C2B61A139E3F006A264C /* SoundPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundPlayer.cpp; sourceTree = "<group>"; };
-		4156C2B71A139E3F006A264C /* SoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundPlayer.h; sourceTree = "<group>"; };
 		4156C2DF1A139E3F006A264C /* ScrollerGesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollerGesture.cpp; sourceTree = "<group>"; };
 		4156C2E01A139E3F006A264C /* ScrollerGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollerGesture.h; sourceTree = "<group>"; };
 		4156C2E11A139E3F006A264C /* ScrollerHotspot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollerHotspot.cpp; sourceTree = "<group>"; };
@@ -384,6 +384,17 @@
 			path = TiledTerrain;
 			sourceTree = "<group>";
 		};
+		41327F181A88B1010074DB2D /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				41327F191A88B1010074DB2D /* SoundLoader.cpp */,
+				41327F1A1A88B1010074DB2D /* SoundLoader.h */,
+				41327F1B1A88B1010074DB2D /* SoundPlayer.cpp */,
+				41327F1C1A88B1010074DB2D /* SoundPlayer.h */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
 		413B6DEE175CE70B00AABF10 = {
 			isa = PBXGroup;
 			children = (
@@ -451,17 +462,6 @@
 				63F55D5BF82F5A4BBD08DE07 /* vec2_sampler.h */,
 			);
 			path = Algorithms;
-			sourceTree = "<group>";
-		};
-		4156C2B31A139E3F006A264C /* Audio */ = {
-			isa = PBXGroup;
-			children = (
-				4156C2B41A139E3F006A264C /* SoundLoader.cpp */,
-				4156C2B51A139E3F006A264C /* SoundLoader.h */,
-				4156C2B61A139E3F006A264C /* SoundPlayer.cpp */,
-				4156C2B71A139E3F006A264C /* SoundPlayer.h */,
-			);
-			path = Audio;
 			sourceTree = "<group>";
 		};
 		4156C2B81A139E3F006A264C /* Graphics */ = {
@@ -603,6 +603,7 @@
 		63F5514E02B8998EDF2FC576 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
+				41327F181A88B1010074DB2D /* Audio */,
 				4105FB141806D3890074C855 /* BattleModel */,
 				63F55FFA5FE3E081A6015693 /* BattleView */,
 				63F55588CA4F5E074F058960 /* SmoothTerrain */,
@@ -677,7 +678,6 @@
 			children = (
 				4156C2A31A139E3F006A264C /* Algebra */,
 				4156C2A81A139E3F006A264C /* Algorithms */,
-				4156C2B31A139E3F006A264C /* Audio */,
 				4156C2B81A139E3F006A264C /* Graphics */,
 				4156C2DE1A139E3F006A264C /* Scroller */,
 				4156C2E51A139E3F006A264C /* Shapes */,
@@ -822,6 +822,7 @@
 				63F55433D66E0956B386D227 /* UnitMovementMarker.cpp in Sources */,
 				63F5596C0986FE7D81143BE1 /* RangeMarker.cpp in Sources */,
 				4168CC961A2387AF007C4509 /* FrameBuffer.cpp in Sources */,
+				41327F1D1A88B1010074DB2D /* SoundLoader.cpp in Sources */,
 				63F5563E7284F60A11F8D90F /* UnitTrackingMarker.cpp in Sources */,
 				4168CCC71A2387E7007C4509 /* ButtonWidget.cpp in Sources */,
 				63F559482A86E47274136F37 /* UnitMarker.cpp in Sources */,
@@ -829,6 +830,7 @@
 				4105FB341806D3970074C855 /* SmokeCounter.cpp in Sources */,
 				4156C3351A139E40006A264C /* Window.cpp in Sources */,
 				4168CC951A2387AF007C4509 /* FontAdapter.cpp in Sources */,
+				41327F1E1A88B1010074DB2D /* SoundPlayer.cpp in Sources */,
 				4156C32E1A139E40006A264C /* PathRenderer.cpp in Sources */,
 				63F55D68A07CFDC7816F111A /* SmoothTerrainWater.cpp in Sources */,
 				4168CCA61A2387BC007C4509 /* BillboardTextureShader.cpp in Sources */,
@@ -841,7 +843,6 @@
 				63F550B662BEEAAA8D48C2A8 /* TerrainForest.cpp in Sources */,
 				4105FB3C1806D3A50074C855 /* SmoothTerrainRenderer.cpp in Sources */,
 				63F5552382844DD951176704 /* TerrainSky.cpp in Sources */,
-				4156C3151A139E40006A264C /* SoundLoader.cpp in Sources */,
 				4156C3321A139E40006A264C /* Hotspot.cpp in Sources */,
 				63F55FBC597899D12FDCC5E9 /* TerrainGesture.cpp in Sources */,
 				4105FB3D1806D3A50074C855 /* SmoothTerrainShaders.cpp in Sources */,
@@ -859,7 +860,6 @@
 				63F55932A50F5611BA25ED6F /* SamuraiModule.cpp in Sources */,
 				4156C32C1A139E40006A264C /* BillboardColorShader.cpp in Sources */,
 				4168CC9A1A2387AF007C4509 /* RenderCall.cpp in Sources */,
-				4156C3161A139E40006A264C /* SoundPlayer.cpp in Sources */,
 				4168CC991A2387AF007C4509 /* RenderBuffer.cpp in Sources */,
 				4156C30F1A139E40006A264C /* geometry.cpp in Sources */,
 				4156C3341A139E40006A264C /* Touch.cpp in Sources */,
