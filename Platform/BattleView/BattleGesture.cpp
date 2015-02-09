@@ -261,7 +261,7 @@ void BattleGesture::TouchEnded(Touch* touch)
 			_hotspot->GetBattleView()->GetSimulator()->SetUnitCommand(unit, command, _hotspot->GetBattleView()->GetSimulator()->GetTimerDelay());
 
 			if (touch->GetTapCount() == 1)
-				SoundPlayer::singleton->Play(SoundBufferCommandAck);
+				SoundPlayer::GetSingleton()->PlayUserInterfaceSound(SoundSampleID::CommandAck);
 
 		}
 	}
@@ -378,7 +378,7 @@ void BattleGesture::UpdateTrackingMarker()
 		}
 
 		if (enemyUnit && !_trackingMarker->GetMeleeTarget())
-			SoundPlayer::singleton->Play(SoundBufferCommandMod);
+			SoundPlayer::GetSingleton()->PlayUserInterfaceSound(SoundSampleID::CommandMod);
 
 		if (!unit->deployed)
 		{
@@ -459,7 +459,7 @@ void BattleGesture::UpdateTrackingMarker()
 				enemyUnit = nullptr;
 
 			if (enemyUnit != nullptr && _trackingMarker->GetMissileTarget() == nullptr)
-				SoundPlayer::singleton->Play(SoundBufferCommandMod);
+				SoundPlayer::GetSingleton()->PlayUserInterfaceSound(SoundSampleID::CommandMod);
 
 			_trackingMarker->SetMissileTarget(enemyUnit);
 			_trackingMarker->SetOrientation(&markerPosition);

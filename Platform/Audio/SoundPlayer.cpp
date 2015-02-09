@@ -12,55 +12,23 @@
 #import <AVFoundation/AVFoundation.h>
 #endif
 
-SoundPlayer* SoundPlayer::singleton = nullptr;
-
-
-static void _LoadSound(SoundPlayer* soundPlayer, SoundBuffer soundBuffer, const char* name)
-{
-#ifdef OPENWAR_USE_OPENAL
-	SoundLoader sound(name);
-	soundPlayer->LoadSound(soundBuffer, sound.format, sound.data, sound.size, sound.freq);
-#endif
-
-#ifdef OPENWAR_USE_SDL_MIXER
-	std::string path = Resource((std::string("Sounds/") + name + std::string(".wav")).c_str()).path();
-	soundPlayer->LoadSound(soundBuffer, Mix_LoadWAV(path.c_str()));
-#endif
-}
+SoundPlayer* SoundPlayer::_singleton = nullptr;
 
 
 void SoundPlayer::Initialize()
 {
-	if (SoundPlayer::singleton == nullptr)
-	{
-		SoundPlayer::singleton = new SoundPlayer();
-		_LoadSound(SoundPlayer::singleton, SoundBufferArrowsFlying, "ArrowsFlying");
-		_LoadSound(SoundPlayer::singleton, SoundBufferCavalryMarching, "CavalryMarching");
-		_LoadSound(SoundPlayer::singleton, SoundBufferCavalryRunning, "CavalryRunning");
-		_LoadSound(SoundPlayer::singleton, SoundBufferCommandAck, "CommandAck");
-		_LoadSound(SoundPlayer::singleton, SoundBufferCommandMod, "CommandMod");
-		_LoadSound(SoundPlayer::singleton, SoundBufferInfantryFighting, "InfantryFighting");
-		_LoadSound(SoundPlayer::singleton, SoundBufferInfantryGrunting, "InfantryGrunting");
-		_LoadSound(SoundPlayer::singleton, SoundBufferInfantryMarching, "InfantryMarching");
-		_LoadSound(SoundPlayer::singleton, SoundBufferInfantryRunning, "InfantryRunning");
-		_LoadSound(SoundPlayer::singleton, SoundBufferMatchlockFire1, "MatchlockFire1");
-		_LoadSound(SoundPlayer::singleton, SoundBufferMatchlockFire2, "MatchlockFire2");
-		_LoadSound(SoundPlayer::singleton, SoundBufferMatchlockFire3, "MatchlockFire3");
-		_LoadSound(SoundPlayer::singleton, SoundBufferMatchlockFire4, "MatchlockFire4");
-	}
+	if (SoundPlayer::_singleton == nullptr)
+		SoundPlayer::_singleton = new SoundPlayer();
 }
 
 
+SoundPlayer* SoundPlayer::GetSingleton()
+{
+	return _singleton;
+}
 
-SoundPlayer::SoundPlayer() :
-#ifdef OPENWAR_USE_OPENAL
-	_device(nullptr),
-	_context(nullptr),
-#endif
-	_nextMatchlock(SoundSourceMatchlockFirst),
-	_nextArrows(SoundSourceArrowsFirst),
-	_nextCookie(1),
-	_isPaused(false)
+
+SoundPlayer::SoundPlayer()
 {
 #ifdef OPENWAR_USE_OPENAL
 	[[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryAmbient error: nil];
@@ -75,18 +43,26 @@ SoundPlayer::SoundPlayer() :
 
 	// Generate Buffers
 	alGetError(); // clear error code
-	alGenBuffers(NUMBER_OF_SOUND_BUFFERS, _buffers);
+
+	ALuint buffers[NUMBER_OF_SOUND_SAMPLES];
+	alGenBuffers(NUMBER_OF_SOUND_SAMPLES, buffers);
 	if (ALenum error = alGetError())
 	{
 		//DisplayALError("alGenBuffers :", error);
 		return;
 	}
+	for (int i = 0; i < NUMBER_OF_SOUND_SAMPLES; ++i)
+		_samples[i]._buffer = buffers[i];
 
-	alGenSources(NUMBER_OF_SOUND_SOURCES, _sources);
+	ALuint sources[NUMBER_OF_SOUND_CHANNELS];
+	alGenSources(NUMBER_OF_SOUND_CHANNELS, sources);
 	if (ALenum error = alGetError())
 	{
 		return;
 	}
+	for (int i = 0; i < NUMBER_OF_SOUND_CHANNELS; ++i)
+		_channels[i]._source = sources[i];
+
 
 	float orientation[6] =
 			{
@@ -106,8 +82,25 @@ SoundPlayer::SoundPlayer() :
 	{
 	}
 
-	Mix_AllocateChannels(NUMBER_OF_SOUND_SOURCES);
+	Mix_AllocateChannels(NUMBER_OF_SOUND_CHANNELS);
+	for (int i = 0; i < NUMBER_OF_SOUND_CHANNELS; ++i)
+		_channels[i]._channel = i;
+
 #endif
+
+	LoadSoundSample(GetSoundSample(SoundSampleID::ArrowsFlying), "ArrowsFlying");
+	LoadSoundSample(GetSoundSample(SoundSampleID::CavalryMarching), "CavalryMarching");
+	LoadSoundSample(GetSoundSample(SoundSampleID::CavalryRunning), "CavalryRunning");
+	LoadSoundSample(GetSoundSample(SoundSampleID::CommandAck), "CommandAck");
+	LoadSoundSample(GetSoundSample(SoundSampleID::CommandMod), "CommandMod");
+	LoadSoundSample(GetSoundSample(SoundSampleID::InfantryFighting), "InfantryFighting");
+	LoadSoundSample(GetSoundSample(SoundSampleID::InfantryGrunting), "InfantryGrunting");
+	LoadSoundSample(GetSoundSample(SoundSampleID::InfantryMarching), "InfantryMarching");
+	LoadSoundSample(GetSoundSample(SoundSampleID::InfantryRunning), "InfantryRunning");
+	LoadSoundSample(GetSoundSample(SoundSampleID::MatchlockFire1), "MatchlockFire1");
+	LoadSoundSample(GetSoundSample(SoundSampleID::MatchlockFire2), "MatchlockFire2");
+	LoadSoundSample(GetSoundSample(SoundSampleID::MatchlockFire3), "MatchlockFire3");
+	LoadSoundSample(GetSoundSample(SoundSampleID::MatchlockFire4), "MatchlockFire4");
 }
 
 
@@ -126,25 +119,6 @@ SoundPlayer::~SoundPlayer()
 	*/
 }
 
-
-#ifdef OPENWAR_USE_OPENAL
-void SoundPlayer::LoadSound(SoundBuffer soundBuffer, ALenum format, ALvoid* data, ALsizei size, ALsizei freq)
-{
-	int index = (int)soundBuffer;
-	alBufferData(_buffers[index], format, data, size, freq);
-}
-#endif
-
-
-#ifdef OPENWAR_USE_SDL_MIXER
-void SoundPlayer::LoadSound(SoundBuffer soundBuffer, Mix_Chunk* chunk)
-{
-	int index = (int)soundBuffer;
-	_chunks[index] = chunk;
-}
-#endif
-
-
 bool SoundPlayer::IsPaused() const
 {
 	return _isPaused;
@@ -157,9 +131,9 @@ void SoundPlayer::Pause()
 	{
 		_isPaused = true;
 #ifdef OPENWAR_USE_OPENAL
-		for (int i = 0; i < NUMBER_OF_SOUND_SOURCES; ++i)
-			if (_playing[i])
-				alSourcePause(_sources[i]);
+		for (int i = 0; i < NUMBER_OF_SOUND_CHANNELS; ++i)
+			if (_channels[i]._current)
+				alSourcePause(_channels[i]._source);
 #endif
 
 #ifdef OPENWAR_USE_SDL_MIXER
@@ -175,9 +149,9 @@ void SoundPlayer::Resume()
 	{
 		_isPaused = false;
 #ifdef OPENWAR_USE_OPENAL
-		for (int i = 0; i < NUMBER_OF_SOUND_SOURCES; ++i)
-			if (_playing[i])
-				alSourcePlay(_sources[i]);
+		for (int i = 0; i < NUMBER_OF_SOUND_CHANNELS; ++i)
+			if (_channels[i]._current)
+				alSourcePlay(_channels[i]._source);
 #endif
 
 #ifdef OPENWAR_USE_SDL_MIXER
@@ -190,117 +164,93 @@ void SoundPlayer::Resume()
 void SoundPlayer::UpdateInfantryWalking(bool value)
 {
 	if (value)
-		PlaySound(SoundSourceInfantryWalking, SoundBufferInfantryMarching, true);
+		PlaySound(GetSoundChannel(SoundChannelID::InfantryWalking), &GetSoundSample(SoundSampleID::InfantryMarching), true);
 	else
-		StopSound(SoundSourceInfantryWalking);
+		StopSound(GetSoundChannel(SoundChannelID::InfantryWalking));
 }
 
 
 void SoundPlayer::UpdateInfantryRunning(bool value)
 {
 	if (value)
-		PlaySound(SoundSourceInfantryRunning, SoundBufferInfantryRunning, true);
+		PlaySound(GetSoundChannel(SoundChannelID::InfantryRunning), &GetSoundSample(SoundSampleID::InfantryRunning), true);
 	else
-		StopSound(SoundSourceInfantryRunning);
+		StopSound(GetSoundChannel(SoundChannelID::InfantryRunning));
 }
 
 
 void SoundPlayer::UpdateCavalryWalking(bool value)
 {
 	if (value)
-		PlaySound(SoundSourceCavalryWalking, SoundBufferCavalryMarching, true);
+		PlaySound(GetSoundChannel(SoundChannelID::CavalryWalking), &GetSoundSample(SoundSampleID::CavalryMarching), true);
 	else
-		StopSound(SoundSourceCavalryWalking);
+		StopSound(GetSoundChannel(SoundChannelID::CavalryWalking));
 }
 
 
 void SoundPlayer::UpdateCavalryRunning(bool value)
 {
 	if (value)
-		PlaySound(SoundSourceCavalryRunning, SoundBufferCavalryRunning, true);
+		PlaySound(GetSoundChannel(SoundChannelID::CavalryRunning), &GetSoundSample(SoundSampleID::CavalryRunning), true);
 	else
-		StopSound(SoundSourceCavalryRunning);
+		StopSound(GetSoundChannel(SoundChannelID::CavalryRunning));
 }
 
 
 void SoundPlayer::UpdateCharging(bool value)
 {
 	if (value)
-		PlaySound(SoundSourceCharging, SoundBufferInfantryFighting, true);
+		PlaySound(GetSoundChannel(SoundChannelID::Charging), &GetSoundSample(SoundSampleID::InfantryFighting), true);
 	else
-		StopSound(SoundSourceCharging);
+		StopSound(GetSoundChannel(SoundChannelID::Charging));
 }
 
 
 void SoundPlayer::UpdateFighting(bool value)
 {
 	if (value)
-		PlaySound(SoundSourceFighting, SoundBufferInfantryFighting, true);
+		PlaySound(GetSoundChannel(SoundChannelID::Fighting), &GetSoundSample(SoundSampleID::InfantryFighting), true);
 	else
-		StopSound(SoundSourceFighting);
+		StopSound(GetSoundChannel(SoundChannelID::Fighting));
 }
 
 
 void SoundPlayer::PlayGrunts()
 {
-	PlaySound(SoundSourceGrunts, SoundBufferInfantryGrunting, false);
+	PlaySound(GetSoundChannel(SoundChannelID::Grunts), &GetSoundSample(SoundSampleID::InfantryGrunting), false);
 }
 
 
 void SoundPlayer::PlayMatchlock()
 {
-	SoundBuffer soundBuffer;
-	switch (std::rand() & 3)
-	{
-		case 0:
-			soundBuffer = SoundBufferMatchlockFire1;
-			break;
-		case 1:
-			soundBuffer = SoundBufferMatchlockFire2;
-			break;
-		case 2:
-			soundBuffer = SoundBufferMatchlockFire3;
-			break;
-		default:
-			soundBuffer = SoundBufferMatchlockFire4;
-			break;
-	}
-
-	PlaySound(_nextMatchlock, soundBuffer, false);
-
-	if (_nextMatchlock == SoundSourceMarchlockLast)
-		_nextMatchlock = SoundSourceMatchlockFirst;
-	else
-		_nextMatchlock = (SoundSource)(_nextMatchlock + 1);
+	SoundSampleID soundSample = RandomMatchlockSample();
+	PlaySound(GetSoundChannel(_nextChannelMatchlock), &GetSoundSample(soundSample), false);
+	_nextChannelMatchlock = NextSoundChannel(_nextChannelMatchlock);
 }
 
 
-int SoundPlayer::PlayArrows()
+SoundCookieID SoundPlayer::PlayArrows()
 {
-	int cookie = PlaySound(_nextArrows, SoundBufferArrowsFlying, false);
-
-	if (_nextArrows == SoundSourceArrowsLast)
-		_nextArrows = SoundSourceArrowsFirst;
-	else
-		_nextArrows = (SoundSource)(_nextArrows + 1);
+	int cookie = PlaySound(GetSoundChannel(_nextChannelArrows), &GetSoundSample(SoundSampleID::ArrowsFlying), false);
+	_nextChannelArrows = NextSoundChannel(_nextChannelArrows);
 
 	return cookie;
 }
 
 
-void SoundPlayer::Play(SoundBuffer soundBuffer)
+void SoundPlayer::PlayUserInterfaceSound(SoundSampleID soundSampleID)
 {
-	PlaySound(SoundSourceUserInterface, soundBuffer, false);
+	PlaySound(GetSoundChannel(SoundChannelID::UserInterface), &GetSoundSample(soundSampleID), false);
 }
 
 
-void SoundPlayer::Stop(int cookie)
+void SoundPlayer::Stop(SoundCookieID cookie)
 {
-	for (int i = 0; i < NUMBER_OF_SOUND_SOURCES; ++i)
+	for (int i = 0; i < NUMBER_OF_SOUND_CHANNELS; ++i)
 	{
-		if (_cookies[i] == cookie)
+		if (_channels[i]._cookie == cookie)
 		{
-			StopSound((SoundSource)i);
+			StopSound(GetSoundChannel((SoundChannelID)i));
 		}
 	}
 }
@@ -308,23 +258,77 @@ void SoundPlayer::Stop(int cookie)
 
 void SoundPlayer::StopAll()
 {
-	for (int i = 0; i < NUMBER_OF_SOUND_SOURCES; ++i)
+	for (int i = 0; i < NUMBER_OF_SOUND_CHANNELS; ++i)
 	{
-		StopSound((SoundSource)i);
+		StopSound(GetSoundChannel((SoundChannelID)i));
 	}
 }
 
 
-int SoundPlayer::PlaySound(SoundSource soundSource, SoundBuffer soundBuffer, bool looping)
+SoundPlayer::Sample& SoundPlayer::GetSoundSample(SoundSampleID soundSampleID)
 {
-	int cookie = 0;
+	return _samples[static_cast<int>(soundSampleID)];
+}
+
+
+SoundPlayer::Channel& SoundPlayer::GetSoundChannel(SoundChannelID soundChannelID)
+{
+	return _channels[static_cast<int>(soundChannelID)];
+}
+
+
+
+SoundChannelID SoundPlayer::NextSoundChannel(SoundChannelID soundChannelID) const
+{
+	switch (soundChannelID)
+	{
+		case SoundChannelID::Matchlock1: return SoundChannelID::Matchlock2;
+		case SoundChannelID::Matchlock2: return SoundChannelID::Matchlock3;
+		case SoundChannelID::Matchlock3: return SoundChannelID::Matchlock4;
+		case SoundChannelID::Matchlock4: return SoundChannelID::Matchlock1;
+		case SoundChannelID::Arrows1: return SoundChannelID::Arrows2;
+		case SoundChannelID::Arrows2: return SoundChannelID::Arrows3;
+		case SoundChannelID::Arrows3: return SoundChannelID::Arrows4;
+		case SoundChannelID::Arrows4: return SoundChannelID::Arrows1;
+		default: return SoundChannelID::UserInterface;
+	}
+}
+
+
+SoundSampleID SoundPlayer::RandomMatchlockSample() const
+{
+	switch (std::rand() & 3)
+	{
+		case 0: return SoundSampleID::MatchlockFire1;
+		case 1: return SoundSampleID::MatchlockFire2;
+		case 2: return SoundSampleID::MatchlockFire3;
+		default: return SoundSampleID::MatchlockFire4;
+	}
+}
+
+
+void SoundPlayer::LoadSoundSample(Sample& soundSample, const char* name)
+{
+#ifdef OPENWAR_USE_OPENAL
+	SoundLoader s(name);
+	alBufferData(soundSample._buffer, s.format, s.data, s.size, s.freq);
+#endif
+
+#ifdef OPENWAR_USE_SDL_MIXER
+	std::string path = Resource((std::string("Sounds/") + name + std::string(".wav")).c_str()).path();
+	soundSample._chunk = Mix_LoadWAV(path.c_str());
+#endif
+}
+
+
+int SoundPlayer::PlaySound(Channel& soundChannel, Sample* soundSample, bool looping)
+{
+	if (looping && soundChannel._current == soundSample)
+		return soundChannel._cookie;
 
 #ifdef OPENWAR_USE_OPENAL
-	ALuint source = _sources[(int)soundSource];
-	ALuint buffer = _buffers[(int)soundBuffer];
-
-	if (looping && _playing[(int)soundSource] == buffer)
-		return _cookies[(int)soundSource];
+	ALuint source = soundChannel._source;
+	ALuint buffer = soundSample->_buffer;
 
 	alSourceStop(source);
 
@@ -335,49 +339,30 @@ int SoundPlayer::PlaySound(SoundSource soundSource, SoundBuffer soundBuffer, boo
 	alSource3f(source, AL_POSITION, 0, 0, 0);
 	alSourcei(source, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);
 	alSourcePlay(source);
-
-	cookie = _nextCookie++;
-
-	_playing[(int)soundSource] = buffer;
-	_cookies[(int)soundSource] = cookie;
 #endif
 
 #ifdef OPENWAR_USE_SDL_MIXER
 
-	int channel = (int)soundSource;
-	Mix_Chunk* chunk = _chunks[(int)soundBuffer];
-
-	if (looping && _playing[(int)soundSource] == chunk)
-		return _cookies[(int)soundSource];
-
-	Mix_PlayChannel(channel, chunk, looping ? -1 : 0);
-
-	cookie = _nextCookie++;
-
-	_playing[(int)soundSource] = chunk;
-	_cookies[(int)soundSource] = cookie;
+	Mix_PlayChannel(soundChannel._channel, soundSample->_chunk, looping ? -1 : 0);
 #endif
 
-	return cookie;
+	soundChannel._current = soundSample;
+	soundChannel._cookie = _nextCookie++;
+
+	return soundChannel._cookie;
 }
 
 
-void SoundPlayer::StopSound(SoundSource soundSource)
+void SoundPlayer::StopSound(Channel& soundChannel)
 {
 #ifdef OPENWAR_USE_OPENAL
-	ALuint source = _sources[(int)soundSource];
-
-	alSourceStop(source);
-
-	_playing[(int)soundSource] = AL_NONE;
-	_cookies[(int)soundSource] = 0;
+	alSourceStop(soundChannel._source);
 #endif
 
 #ifdef OPENWAR_USE_SDL_MIXER
-	Mix_HaltChannel((int)soundSource);
-
-	_playing[(int)soundSource] = nullptr;
-	_cookies[(int)soundSource] = 0;
-
+	Mix_HaltChannel(soundChannel._channel);
 #endif
+
+	soundChannel._current = nullptr;
+	soundChannel._cookie = 0;
 }

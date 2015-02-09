@@ -1104,13 +1104,13 @@ void BattleView::UpdateSoundPlayer()
 			++fighting;
 	}
 
-	SoundPlayer::singleton->UpdateInfantryWalking(infantryMarching != 0);
-	SoundPlayer::singleton->UpdateInfantryRunning(infantryRunning != 0);
+	SoundPlayer::GetSingleton()->UpdateInfantryWalking(infantryMarching != 0);
+	SoundPlayer::GetSingleton()->UpdateInfantryRunning(infantryRunning != 0);
 
-	SoundPlayer::singleton->UpdateCavalryWalking(horseTrot != 0);
-	SoundPlayer::singleton->UpdateCavalryRunning(horseGallop != 0);
+	SoundPlayer::GetSingleton()->UpdateCavalryWalking(horseTrot != 0);
+	SoundPlayer::GetSingleton()->UpdateCavalryRunning(horseGallop != 0);
 
-	SoundPlayer::singleton->UpdateFighting(_simulator->IsMelee());
+	SoundPlayer::GetSingleton()->UpdateFighting(_simulator->IsMelee());
 }
 
 

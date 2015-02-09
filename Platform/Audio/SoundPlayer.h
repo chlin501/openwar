@@ -20,80 +20,103 @@
 #endif
 
 
-enum SoundBuffer
+#define NUMBER_OF_SOUND_SAMPLES 14
+#define NUMBER_OF_SOUND_CHANNELS 16
+
+
+enum class SoundSampleID
 {
-	SoundBufferArrowsFlying = 1,
-	SoundBufferCavalryMarching = 2,
-	SoundBufferCavalryRunning = 3,
-	SoundBufferCommandAck = 4,
-	SoundBufferCommandMod = 5,
-	SoundBufferInfantryFighting = 6,
-	SoundBufferInfantryGrunting = 7,
-	SoundBufferInfantryMarching = 8,
-	SoundBufferInfantryRunning = 9,
-	SoundBufferMatchlockFire1 = 10,
-	SoundBufferMatchlockFire2 = 11,
-	SoundBufferMatchlockFire3 = 12,
-	SoundBufferMatchlockFire4 = 13
+	None = 0,
+	ArrowsFlying = 1,
+	CavalryMarching = 2,
+	CavalryRunning = 3,
+	CommandAck = 4,
+	CommandMod = 5,
+	InfantryFighting = 6,
+	InfantryGrunting = 7,
+	InfantryMarching = 8,
+	InfantryRunning = 9,
+	MatchlockFire1 = 10,
+	MatchlockFire2 = 11,
+	MatchlockFire3 = 12,
+	MatchlockFire4 = 13
 };
 
-#define NUMBER_OF_SOUND_BUFFERS 14
 
-
-enum SoundSource
+enum class SoundChannelID
 {
-	SoundSourceUserInterface = 0,
-	SoundSourceInfantryWalking = 1,
-	SoundSourceInfantryRunning = 2,
-	SoundSourceCavalryWalking = 3,
-	SoundSourceCavalryRunning = 4,
-	SoundSourceCharging = 5,
-	SoundSourceFighting = 6,
-	SoundSourceMatchlockFirst = 7,
-	SoundSourceMarchlockLast = 10,
-	SoundSourceArrowsFirst = 11,
-	SoundSourceArrowsLast = 14,
-	SoundSourceGrunts = 15
+	UserInterface = 0,
+	InfantryWalking = 1,
+	InfantryRunning = 2,
+	CavalryWalking = 3,
+	CavalryRunning = 4,
+	Charging = 5,
+	Fighting = 6,
+	Matchlock1 = 7,
+	Matchlock2 = 8,
+	Matchlock3 = 9,
+	Matchlock4 = 10,
+	Arrows1 = 11,
+	Arrows2 = 12,
+	Arrows3 = 13,
+	Arrows4 = 14,
+	Grunts = 15
 };
 
-#define NUMBER_OF_SOUND_SOURCES 16
+
+using SoundCookieID = int;
 
 
 class SoundPlayer
 {
+	struct Sample
+	{
 #ifdef OPENWAR_USE_OPENAL
-	ALCdevice* _device;
-	ALCcontext* _context;
-	ALuint _buffers[NUMBER_OF_SOUND_BUFFERS];
-	ALuint _sources[NUMBER_OF_SOUND_SOURCES];
-	ALuint _playing[NUMBER_OF_SOUND_SOURCES];
+		ALuint _buffer{};
 #endif
-
 #ifdef OPENWAR_USE_SDL_MIXER
-	Mix_Chunk* _chunks[NUMBER_OF_SOUND_BUFFERS];
-	Mix_Chunk* _playing[NUMBER_OF_SOUND_SOURCES];
+		Mix_Chunk* _chunk{};
+#endif
+	};
+
+	struct Channel
+	{
+#ifdef OPENWAR_USE_OPENAL
+		ALuint _source{};
+#endif
+#ifdef OPENWAR_USE_SDL_MIXER
+		int _channel{};
 #endif
 
-	int _cookies[NUMBER_OF_SOUND_SOURCES];
-	SoundSource _nextMatchlock;
-	SoundSource _nextArrows;
-	int _nextCookie;
-	bool _isPaused;
+		Sample* _current{};
+		int _cookie{};
+	};
+
+
+	static SoundPlayer* _singleton;
+
+#ifdef OPENWAR_USE_OPENAL
+	ALCdevice* _device{};
+	ALCcontext* _context{};
+#endif
+
+	Sample _samples[NUMBER_OF_SOUND_SAMPLES]{};
+	Channel _channels[NUMBER_OF_SOUND_CHANNELS]{};
+
+	SoundChannelID _nextChannelMatchlock{SoundChannelID::Matchlock1};
+	SoundChannelID _nextChannelArrows{SoundChannelID::Arrows1};
+	SoundCookieID _nextCookie{1};
+	bool _isPaused{};
 
 public:
-	static SoundPlayer* singleton;
-
 	static void Initialize();
+	static SoundPlayer* GetSingleton();
 
 	SoundPlayer();
 	~SoundPlayer();
 
-#ifdef OPENWAR_USE_OPENAL
-	void LoadSound(SoundBuffer soundBuffer, ALenum format, ALvoid* data, ALsizei size, ALsizei freq);
-#endif
-#ifdef OPENWAR_USE_SDL_MIXER
-	void LoadSound(SoundBuffer soundBuffer, Mix_Chunk* chunk);
-#endif
+	SoundPlayer(const SoundPlayer&) = delete;
+	SoundPlayer& operator=(const SoundPlayer&) = delete;
 
 	bool IsPaused() const;
 	void Pause();
@@ -108,19 +131,23 @@ public:
 
 	void PlayGrunts();
 	void PlayMatchlock();
-	int PlayArrows();
+	SoundCookieID PlayArrows();
 
-	void Play(SoundBuffer soundBuffer);
-	void Stop(int cookie);
+	void PlayUserInterfaceSound(SoundSampleID soundSampleID);
+	void Stop(SoundCookieID cookie);
 	void StopAll();
 
 private:
-	int PlaySound(SoundSource soundSource, SoundBuffer soundBuffer, bool looping);
-	void StopSound(SoundSource soundSource);
+	Sample& GetSoundSample(SoundSampleID soundSampleID);
+	Channel& GetSoundChannel(SoundChannelID soundChannelID);
 
-private:
-	SoundPlayer(const SoundPlayer&);
-	SoundPlayer& operator = (const SoundPlayer&);
+	SoundSampleID RandomMatchlockSample() const;
+	SoundChannelID NextSoundChannel(SoundChannelID soundChannelID) const;
+
+	void LoadSoundSample(Sample& soundSample, const char* name);
+
+	int PlaySound(Channel& soundChannel, Sample* soundSample, bool looping);
+	void StopSound(Channel& soundChannel);
 };
 
 

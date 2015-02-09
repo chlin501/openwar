@@ -11,9 +11,9 @@ ShootingCounter::ShootingCounter(MissileType missileType) :
 	_missileType{missileType}
 {
 	if (missileType == MissileType::Arq)
-		SoundPlayer::singleton->PlayMatchlock();
+		SoundPlayer::GetSingleton()->PlayMatchlock();
 	else
-		SoundPlayer::singleton->PlayArrows();
+		SoundPlayer::GetSingleton()->PlayArrows();
 }
 
 
@@ -66,13 +66,13 @@ bool ShootingCounter::Animate(float seconds)
 
 	if (impact && !_impacted)
 	{
-		SoundPlayer::singleton->PlayGrunts();
+		SoundPlayer::GetSingleton()->PlayGrunts();
 		_impacted = true;
 	}
 
 	if (!alive && _soundCookie != 0)
 	{
-		SoundPlayer::singleton->Stop(_soundCookie);
+		SoundPlayer::GetSingleton()->Stop(_soundCookie);
 	}
 
 	return alive;
