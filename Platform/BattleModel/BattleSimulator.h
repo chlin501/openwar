@@ -323,7 +323,9 @@ public:
 
 	void AdvanceTime(float secondsSinceLastTime);
 
-	bool IsMelee() const;
+	bool IsMeleeCavalry() const;
+	bool IsMeleeInfantry() const;
+
 	int GetWinnerTeam() const { return _winnerTeam; }
 
 private:

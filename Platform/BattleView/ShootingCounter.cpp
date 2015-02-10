@@ -11,9 +11,9 @@ ShootingCounter::ShootingCounter(MissileType missileType) :
 	_missileType{missileType}
 {
 	if (missileType == MissileType::Arq)
-		SoundPlayer::GetSingleton()->PlayMatchlock();
+		SoundPlayer::GetSingleton()->PlayMissileMatchlock();
 	else
-		SoundPlayer::GetSingleton()->PlayArrows();
+		_soundCookie = SoundPlayer::GetSingleton()->PlayMissileArrows();
 }
 
 
@@ -37,7 +37,6 @@ void ShootingCounter::AddProjectile(glm::vec3 position1, glm::vec3 position2, fl
 bool ShootingCounter::Animate(float seconds)
 {
 	bool alive = false;
-	bool impact = false;
 
 	for (Projectile& projectile : _projectiles)
 	{
@@ -57,22 +56,12 @@ bool ShootingCounter::Animate(float seconds)
 		{
 			projectile.time += 1;
 			alive = true;
-			impact = true;
-		}
-		else
-		{
 		}
 	}
 
-	if (impact && !_impacted)
+	if (!alive)
 	{
-		SoundPlayer::GetSingleton()->PlayGrunts();
-		_impacted = true;
-	}
-
-	if (!alive && _soundCookie != 0)
-	{
-		SoundPlayer::GetSingleton()->Stop(_soundCookie);
+		SoundPlayer::GetSingleton()->StopMissileArrows(_soundCookie);
 	}
 
 	return alive;

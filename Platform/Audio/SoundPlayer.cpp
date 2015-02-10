@@ -88,19 +88,45 @@ SoundPlayer::SoundPlayer()
 
 #endif
 
-	LoadSoundSample(GetSoundSample(SoundSampleID::ArrowsFlying), "ArrowsFlying");
-	LoadSoundSample(GetSoundSample(SoundSampleID::CavalryMarching), "CavalryMarching");
-	LoadSoundSample(GetSoundSample(SoundSampleID::CavalryRunning), "CavalryRunning");
-	LoadSoundSample(GetSoundSample(SoundSampleID::CommandAck), "CommandAck");
-	LoadSoundSample(GetSoundSample(SoundSampleID::CommandMod), "CommandMod");
-	LoadSoundSample(GetSoundSample(SoundSampleID::InfantryFighting), "InfantryFighting");
-	LoadSoundSample(GetSoundSample(SoundSampleID::InfantryGrunting), "InfantryGrunting");
-	LoadSoundSample(GetSoundSample(SoundSampleID::InfantryMarching), "InfantryMarching");
-	LoadSoundSample(GetSoundSample(SoundSampleID::InfantryRunning), "InfantryRunning");
-	LoadSoundSample(GetSoundSample(SoundSampleID::MatchlockFire1), "MatchlockFire1");
-	LoadSoundSample(GetSoundSample(SoundSampleID::MatchlockFire2), "MatchlockFire2");
-	LoadSoundSample(GetSoundSample(SoundSampleID::MatchlockFire3), "MatchlockFire3");
-	LoadSoundSample(GetSoundSample(SoundSampleID::MatchlockFire4), "MatchlockFire4");
+	LoadSample(GetSample(SoundSampleID::CommandAck), "CommandAck");
+	LoadSample(GetSample(SoundSampleID::CommandMod), "CommandMod");
+
+	LoadSample(GetSample(SoundSampleID::Background), "Samurai Background");
+
+	LoadSample(GetSample(SoundSampleID::Casualty1), "Samurai Casualty 1");
+	LoadSample(GetSample(SoundSampleID::Casualty2), "Samurai Casualty 2");
+	LoadSample(GetSample(SoundSampleID::Casualty3), "Samurai Casualty 3");
+	LoadSample(GetSample(SoundSampleID::Casualty4), "Samurai Casualty 4");
+	LoadSample(GetSample(SoundSampleID::Casualty5), "Samurai Casualty 5");
+	LoadSample(GetSample(SoundSampleID::Casualty6), "Samurai Casualty 6");
+	LoadSample(GetSample(SoundSampleID::Casualty7), "Samurai Casualty 7");
+	LoadSample(GetSample(SoundSampleID::Casualty8), "Samurai Casualty 8");
+
+	LoadSample(GetSample(SoundSampleID::CavalryRunning), "Samurai Cavalry Running");
+	LoadSample(GetSample(SoundSampleID::CavalryWalking), "Samurai Cavalry Walking");
+
+	LoadSample(GetSample(SoundSampleID::HorseNeigh1), "Samurai Horse Neigh 1");
+	LoadSample(GetSample(SoundSampleID::HorseNeigh2), "Samurai Horse Neigh 2");
+	LoadSample(GetSample(SoundSampleID::HorseNeigh3), "Samurai Horse Neigh 3");
+	LoadSample(GetSample(SoundSampleID::HorseSnort), "Samurai Horse Snort");
+
+	LoadSample(GetSample(SoundSampleID::InfantryRunning), "Samurai Infantry Running");
+	LoadSample(GetSample(SoundSampleID::InfantryWalking), "Samurai Infantry Walking");
+
+	LoadSample(GetSample(SoundSampleID::MeleeCavalry), "Samurai Melee Cavalry");
+	LoadSample(GetSample(SoundSampleID::MeleeCharging), "Samurai Melee Charging");
+	LoadSample(GetSample(SoundSampleID::MeleeInfantry), "Samurai Melee Infantry");
+
+	LoadSample(GetSample(SoundSampleID::MissileArrows), "Samurai Missile Arrows");
+	LoadSample(GetSample(SoundSampleID::MissileMatchlock1), "Samurai Missile Matchlock 1");
+	LoadSample(GetSample(SoundSampleID::MissileMatchlock2), "Samurai Missile Matchlock 2");
+	LoadSample(GetSample(SoundSampleID::MissileMatchlock3), "Samurai Missile Matchlock 3");
+	LoadSample(GetSample(SoundSampleID::MissileMatchlock4), "Samurai Missile Matchlock 4");
+
+	LoadSample(GetSample(SoundSampleID::Sword1), "Samurai Sword 1");
+	LoadSample(GetSample(SoundSampleID::Sword2), "Samurai Sword 2");
+	LoadSample(GetSample(SoundSampleID::Sword3), "Samurai Sword 3");
+	LoadSample(GetSample(SoundSampleID::Sword4), "Samurai Sword 4");
 }
 
 
@@ -118,6 +144,45 @@ SoundPlayer::~SoundPlayer()
 	alcCloseDevice(Device);
 	*/
 }
+
+
+void SoundPlayer::Tick(double secondsSinceLastUpdate)
+{
+	TickHorse(secondsSinceLastUpdate);
+	TickSword(secondsSinceLastUpdate);
+}
+
+
+static double Random(double min, double max)
+{
+	return min + (max - min) * ((std::rand() & 0x7fff) / (double)0x7fff);
+}
+
+
+void SoundPlayer::TickHorse(double secondsSinceLastUpdate)
+{
+	_horseTimer -= secondsSinceLastUpdate;
+	if (_horseTimer < 0)
+	{
+		if (_cavalryCount != 0)
+			PlaySound(GetChannel(SoundChannelID::Horse), &GetSample(RandomHorseSample()), false);
+
+		_horseTimer = Random(5.0, 15.0);
+	}
+}
+
+
+void SoundPlayer::TickSword(double secondsSinceLastUpdate)
+{
+	_swordTimer -= secondsSinceLastUpdate;
+	if (_swordTimer < 0)
+	{
+		if (_meleeInfantry || _meleeCavalry)
+			PlaySound(GetChannel(SoundChannelID::Sword), &GetSample(RandomSwordSample()), false);
+		_swordTimer = Random(1.0, 3.0);
+	}
+}
+
 
 bool SoundPlayer::IsPaused() const
 {
@@ -161,117 +226,158 @@ void SoundPlayer::Resume()
 }
 
 
+void SoundPlayer::StopAll()
+{
+	_cavalryCount = 0;
+	_meleeInfantry = false;
+	_meleeCavalry = false;
+
+	for (int i = 0; i < NUMBER_OF_SOUND_CHANNELS; ++i)
+	{
+		StopSound(GetChannel((SoundChannelID)i));
+	}
+}
+
+
+void SoundPlayer::PlayBackground()
+{
+	PlaySound(GetChannel(SoundChannelID::Background), &GetSample(SoundSampleID::Background), true);
+}
+
+
 void SoundPlayer::UpdateInfantryWalking(bool value)
 {
 	if (value)
-		PlaySound(GetSoundChannel(SoundChannelID::InfantryWalking), &GetSoundSample(SoundSampleID::InfantryMarching), true);
+		PlaySound(GetChannel(SoundChannelID::InfantryWalking), &GetSample(SoundSampleID::InfantryWalking), true);
 	else
-		StopSound(GetSoundChannel(SoundChannelID::InfantryWalking));
+		StopSound(GetChannel(SoundChannelID::InfantryWalking));
 }
 
 
 void SoundPlayer::UpdateInfantryRunning(bool value)
 {
 	if (value)
-		PlaySound(GetSoundChannel(SoundChannelID::InfantryRunning), &GetSoundSample(SoundSampleID::InfantryRunning), true);
+		PlaySound(GetChannel(SoundChannelID::InfantryRunning), &GetSample(SoundSampleID::InfantryRunning), true);
 	else
-		StopSound(GetSoundChannel(SoundChannelID::InfantryRunning));
+		StopSound(GetChannel(SoundChannelID::InfantryRunning));
 }
 
 
 void SoundPlayer::UpdateCavalryWalking(bool value)
 {
 	if (value)
-		PlaySound(GetSoundChannel(SoundChannelID::CavalryWalking), &GetSoundSample(SoundSampleID::CavalryMarching), true);
+		PlaySound(GetChannel(SoundChannelID::CavalryWalking), &GetSample(SoundSampleID::CavalryWalking), true);
 	else
-		StopSound(GetSoundChannel(SoundChannelID::CavalryWalking));
+		StopSound(GetChannel(SoundChannelID::CavalryWalking));
 }
 
 
 void SoundPlayer::UpdateCavalryRunning(bool value)
 {
 	if (value)
-		PlaySound(GetSoundChannel(SoundChannelID::CavalryRunning), &GetSoundSample(SoundSampleID::CavalryRunning), true);
+		PlaySound(GetChannel(SoundChannelID::CavalryRunning), &GetSample(SoundSampleID::CavalryRunning), true);
 	else
-		StopSound(GetSoundChannel(SoundChannelID::CavalryRunning));
+		StopSound(GetChannel(SoundChannelID::CavalryRunning));
 }
 
 
-void SoundPlayer::UpdateCharging(bool value)
+void SoundPlayer::UpdateCavalryCount(int value)
+{
+	_cavalryCount = value;
+}
+
+
+void SoundPlayer::UpdateMeleeCavalry(bool value)
 {
 	if (value)
-		PlaySound(GetSoundChannel(SoundChannelID::Charging), &GetSoundSample(SoundSampleID::InfantryFighting), true);
+		PlaySound(GetChannel(SoundChannelID::MeleeCavalry), &GetSample(SoundSampleID::MeleeCavalry), true);
 	else
-		StopSound(GetSoundChannel(SoundChannelID::Charging));
+		StopSound(GetChannel(SoundChannelID::MeleeCavalry));
+	_meleeCavalry = value;
+	UpdateMeleeCharging();
 }
 
 
-void SoundPlayer::UpdateFighting(bool value)
+void SoundPlayer::UpdateMeleeInfantry(bool value)
 {
 	if (value)
-		PlaySound(GetSoundChannel(SoundChannelID::Fighting), &GetSoundSample(SoundSampleID::InfantryFighting), true);
+		PlaySound(GetChannel(SoundChannelID::MeleeInfantry), &GetSample(SoundSampleID::MeleeInfantry), true);
 	else
-		StopSound(GetSoundChannel(SoundChannelID::Fighting));
+		StopSound(GetChannel(SoundChannelID::MeleeInfantry));
+	_meleeInfantry = value;
+	UpdateMeleeCharging();
 }
 
 
-void SoundPlayer::PlayGrunts()
+void SoundPlayer::UpdateMeleeCharging()
 {
-	PlaySound(GetSoundChannel(SoundChannelID::Grunts), &GetSoundSample(SoundSampleID::InfantryGrunting), false);
+	bool isMelee = _meleeCavalry || _meleeInfantry;
+	if (!_meleeCharging && isMelee)
+	{
+		if (std::chrono::system_clock::now() > _meleeChargeTimer)
+		{
+			PlaySound(GetChannel(SoundChannelID::MeleeCharging), &GetSample(SoundSampleID::MeleeCharging), false);
+			_meleeCharging = true;
+		}
+	}
+	else if (_meleeCharging && !isMelee)
+	{
+		_meleeCharging = false;
+		_meleeChargeTimer = std::chrono::system_clock::now() + std::chrono::seconds(15);
+	}
 }
 
 
-void SoundPlayer::PlayMatchlock()
+SoundCookieID SoundPlayer::PlayMissileArrows()
+{
+	int cookie = PlaySound(GetChannel(_nextChannelArrows), &GetSample(SoundSampleID::MissileArrows), false);
+	_nextChannelArrows = NextSoundChannel(_nextChannelArrows);
+	return cookie;
+}
+
+
+void SoundPlayer::StopMissileArrows(SoundCookieID soundCookieID)
+{
+	if (soundCookieID != 0)
+		for (int i = 0; i < NUMBER_OF_SOUND_CHANNELS; ++i)
+			if (_channels[i]._cookie == soundCookieID)
+				StopSound(_channels[i]);
+}
+
+
+void SoundPlayer::PlayMissileMatchlock()
 {
 	SoundSampleID soundSample = RandomMatchlockSample();
-	PlaySound(GetSoundChannel(_nextChannelMatchlock), &GetSoundSample(soundSample), false);
+	PlaySound(GetChannel(_nextChannelMatchlock), &GetSample(soundSample), false);
 	_nextChannelMatchlock = NextSoundChannel(_nextChannelMatchlock);
 }
 
 
-SoundCookieID SoundPlayer::PlayArrows()
+void SoundPlayer::PlayCasualty()
 {
-	int cookie = PlaySound(GetSoundChannel(_nextChannelArrows), &GetSoundSample(SoundSampleID::ArrowsFlying), false);
-	_nextChannelArrows = NextSoundChannel(_nextChannelArrows);
-
-	return cookie;
+	auto now = std::chrono::system_clock::now();
+	if (now > _casualtyTimer)
+	{
+		SoundSampleID soundSample = RandomCasualtySample();
+		PlaySound(GetChannel(SoundChannelID::Casualty), &GetSample(soundSample), false);
+		_casualtyTimer = now + std::chrono::seconds(2);
+	}
 }
 
 
 void SoundPlayer::PlayUserInterfaceSound(SoundSampleID soundSampleID)
 {
-	PlaySound(GetSoundChannel(SoundChannelID::UserInterface), &GetSoundSample(soundSampleID), false);
+	PlaySound(GetChannel(SoundChannelID::UserInterface), &GetSample(soundSampleID), false);
 }
 
 
-void SoundPlayer::Stop(SoundCookieID cookie)
-{
-	for (int i = 0; i < NUMBER_OF_SOUND_CHANNELS; ++i)
-	{
-		if (_channels[i]._cookie == cookie)
-		{
-			StopSound(GetSoundChannel((SoundChannelID)i));
-		}
-	}
-}
-
-
-void SoundPlayer::StopAll()
-{
-	for (int i = 0; i < NUMBER_OF_SOUND_CHANNELS; ++i)
-	{
-		StopSound(GetSoundChannel((SoundChannelID)i));
-	}
-}
-
-
-SoundPlayer::Sample& SoundPlayer::GetSoundSample(SoundSampleID soundSampleID)
+SoundPlayer::Sample& SoundPlayer::GetSample(SoundSampleID soundSampleID)
 {
 	return _samples[static_cast<int>(soundSampleID)];
 }
 
 
-SoundPlayer::Channel& SoundPlayer::GetSoundChannel(SoundChannelID soundChannelID)
+SoundPlayer::Channel& SoundPlayer::GetChannel(SoundChannelID soundChannelID)
 {
 	return _channels[static_cast<int>(soundChannelID)];
 }
@@ -282,53 +388,90 @@ SoundChannelID SoundPlayer::NextSoundChannel(SoundChannelID soundChannelID) cons
 {
 	switch (soundChannelID)
 	{
-		case SoundChannelID::Matchlock1: return SoundChannelID::Matchlock2;
-		case SoundChannelID::Matchlock2: return SoundChannelID::Matchlock3;
-		case SoundChannelID::Matchlock3: return SoundChannelID::Matchlock4;
-		case SoundChannelID::Matchlock4: return SoundChannelID::Matchlock1;
-		case SoundChannelID::Arrows1: return SoundChannelID::Arrows2;
-		case SoundChannelID::Arrows2: return SoundChannelID::Arrows3;
-		case SoundChannelID::Arrows3: return SoundChannelID::Arrows4;
-		case SoundChannelID::Arrows4: return SoundChannelID::Arrows1;
+		case SoundChannelID::MissileMatchlock1: return SoundChannelID::MissileMatchlock2;
+		case SoundChannelID::MissileMatchlock2: return SoundChannelID::MissileMatchlock1;
+		case SoundChannelID::MissileArrows1: return SoundChannelID::MissileArrows2;
+		case SoundChannelID::MissileArrows2: return SoundChannelID::MissileArrows1;
 		default: return SoundChannelID::UserInterface;
 	}
 }
+
+
+SoundSampleID SoundPlayer::RandomCasualtySample() const
+{
+	switch (std::rand() & 7)
+	{
+		case 0: return SoundSampleID::Casualty1;
+		case 1: return SoundSampleID::Casualty2;
+		case 2: return SoundSampleID::Casualty3;
+		case 3: return SoundSampleID::Casualty4;
+		case 4: return SoundSampleID::Casualty5;
+		case 5: return SoundSampleID::Casualty6;
+		case 6: return SoundSampleID::Casualty7;
+		default: return SoundSampleID::Casualty8;
+	}
+}
+
+
+SoundSampleID SoundPlayer::RandomHorseSample() const
+{
+	switch (std::rand() & 3)
+	{
+		case 0: return SoundSampleID::HorseNeigh1;
+		case 1: return SoundSampleID::HorseNeigh2;
+		case 2: return SoundSampleID::HorseNeigh3;
+		default: return SoundSampleID::HorseSnort;
+	}
+}
+
 
 
 SoundSampleID SoundPlayer::RandomMatchlockSample() const
 {
 	switch (std::rand() & 3)
 	{
-		case 0: return SoundSampleID::MatchlockFire1;
-		case 1: return SoundSampleID::MatchlockFire2;
-		case 2: return SoundSampleID::MatchlockFire3;
-		default: return SoundSampleID::MatchlockFire4;
+		case 0: return SoundSampleID::MissileMatchlock1;
+		case 1: return SoundSampleID::MissileMatchlock2;
+		case 2: return SoundSampleID::MissileMatchlock3;
+		default: return SoundSampleID::MissileMatchlock4;
 	}
 }
 
 
-void SoundPlayer::LoadSoundSample(Sample& soundSample, const char* name)
+SoundSampleID SoundPlayer::RandomSwordSample() const
+{
+	switch (std::rand() & 3)
+	{
+		case 0: return SoundSampleID::Sword1;
+		case 1: return SoundSampleID::Sword2;
+		case 2: return SoundSampleID::Sword3;
+		default: return SoundSampleID::Sword4;
+	}
+}
+
+
+void SoundPlayer::LoadSample(Sample& sample, const char* name)
 {
 #ifdef OPENWAR_USE_OPENAL
 	SoundLoader s(name);
-	alBufferData(soundSample._buffer, s.format, s.data, s.size, s.freq);
+	alBufferData(sample._buffer, s.format, s.data, s.size, s.freq);
 #endif
 
 #ifdef OPENWAR_USE_SDL_MIXER
 	std::string path = Resource((std::string("Sounds/") + name + std::string(".wav")).c_str()).path();
-	soundSample._chunk = Mix_LoadWAV(path.c_str());
+	sample._chunk = Mix_LoadWAV(path.c_str());
 #endif
 }
 
 
-int SoundPlayer::PlaySound(Channel& soundChannel, Sample* soundSample, bool looping)
+int SoundPlayer::PlaySound(Channel& channel, Sample* sample, bool looping)
 {
-	if (looping && soundChannel._current == soundSample)
-		return soundChannel._cookie;
+	if (looping && channel._current == sample)
+		return channel._cookie;
 
 #ifdef OPENWAR_USE_OPENAL
-	ALuint source = soundChannel._source;
-	ALuint buffer = soundSample->_buffer;
+	ALuint source = channel._source;
+	ALuint buffer = sample->_buffer;
 
 	alSourceStop(source);
 
@@ -342,27 +485,26 @@ int SoundPlayer::PlaySound(Channel& soundChannel, Sample* soundSample, bool loop
 #endif
 
 #ifdef OPENWAR_USE_SDL_MIXER
-
-	Mix_PlayChannel(soundChannel._channel, soundSample->_chunk, looping ? -1 : 0);
+	Mix_PlayChannel(channel._channel, sample->_chunk, looping ? -1 : 0);
 #endif
 
-	soundChannel._current = soundSample;
-	soundChannel._cookie = _nextCookie++;
+	channel._current = sample;
+	channel._cookie = _nextCookie++;
 
-	return soundChannel._cookie;
+	return channel._cookie;
 }
 
 
-void SoundPlayer::StopSound(Channel& soundChannel)
+void SoundPlayer::StopSound(Channel& channel)
 {
 #ifdef OPENWAR_USE_OPENAL
-	alSourceStop(soundChannel._source);
+	alSourceStop(channel._source);
 #endif
 
 #ifdef OPENWAR_USE_SDL_MIXER
-	Mix_HaltChannel(soundChannel._channel);
+	Mix_HaltChannel(channel._channel);
 #endif
 
-	soundChannel._current = nullptr;
-	soundChannel._cookie = 0;
+	channel._current = nullptr;
+	channel._cookie = 0;
 }

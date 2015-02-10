@@ -188,18 +188,26 @@ BattleSimulator::~BattleSimulator()
 }
 
 
-bool BattleSimulator::IsMelee() const
+bool BattleSimulator::IsMeleeCavalry() const
 {
 	for (const Unit* unit : _units)
-	{
-		for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
-		{
-			if (fighter->state.opponent != nullptr)
-			{
-				return true;
-			}
-		}
-	}
+		if (unit->stats.platformType == PlatformType::Cavalry)
+			for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
+				if (fighter->state.opponent != nullptr)
+					return true;
+
+	return false;
+}
+
+
+bool BattleSimulator::IsMeleeInfantry() const
+{
+	for (const Unit* unit : _units)
+		if (unit->stats.platformType == PlatformType::Infantry)
+			for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
+				if (fighter->state.opponent != nullptr)
+					return true;
+
 	return false;
 }
 

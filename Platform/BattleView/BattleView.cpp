@@ -320,6 +320,8 @@ void BattleView::OnRelease(const Shooting& shooting)
 
 void BattleView::OnCasualty(const Fighter& fighter)
 {
+	SoundPlayer::GetSingleton()->PlayCasualty();
+
 	AddCasualty(fighter.unit, fighter.state.position);
 }
 
@@ -1073,44 +1075,49 @@ UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int filterTea
 
 void BattleView::UpdateSoundPlayer()
 {
-	int horseGallop = 0;
-	int horseTrot = 0;
-	int fighting = 0;
-	int infantryMarching = 0;
+	int cavalryRunning = 0;
+	int cavalryWalking = 0;
+	int cavalryCount = 0;
+	int infantryWalling = 0;
 	int infantryRunning = 0;
 
 	for (UnitCounter* unitMarker : GetUnitCounters())
 	{
 		Unit* unit = unitMarker->_unit;
+		if (unit->stats.platformType == PlatformType::Cavalry)
+		{
+			++cavalryCount;
+		}
+
 		if (glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)
 		{
 			if (unit->stats.platformType == PlatformType::Cavalry)
 			{
 				if (unit->command.running)
-					++horseGallop;
+					++cavalryRunning;
 				else
-					++horseTrot;
+					++cavalryWalking;
 			}
 			else
 			{
 				if (unit->command.running)
 					++infantryRunning;
 				else
-					++infantryMarching;
+					++infantryWalling;
 			}
 		}
-
-		if (unit->command.meleeTarget != nullptr)
-			++fighting;
 	}
 
-	SoundPlayer::GetSingleton()->UpdateInfantryWalking(infantryMarching != 0);
+	SoundPlayer::GetSingleton()->UpdateInfantryWalking(infantryWalling != 0);
 	SoundPlayer::GetSingleton()->UpdateInfantryRunning(infantryRunning != 0);
 
-	SoundPlayer::GetSingleton()->UpdateCavalryWalking(horseTrot != 0);
-	SoundPlayer::GetSingleton()->UpdateCavalryRunning(horseGallop != 0);
+	SoundPlayer::GetSingleton()->UpdateCavalryWalking(cavalryWalking != 0);
+	SoundPlayer::GetSingleton()->UpdateCavalryRunning(cavalryRunning != 0);
 
-	SoundPlayer::GetSingleton()->UpdateFighting(_simulator->IsMelee());
+	SoundPlayer::GetSingleton()->UpdateCavalryCount(cavalryCount);
+
+	SoundPlayer::GetSingleton()->UpdateMeleeCavalry(_simulator->IsMeleeCavalry());
+	SoundPlayer::GetSingleton()->UpdateMeleeInfantry(_simulator->IsMeleeInfantry());
 }
 
 

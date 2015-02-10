@@ -23,7 +23,6 @@ public:
 	MissileType _missileType{};
 	std::vector<Projectile> _projectiles{};
 	int _soundCookie{};
-	bool _impacted{};
 
 public:
 	ShootingCounter(MissileType missileType);

@@ -114,6 +114,8 @@ void OpenWarSurface::RenderViews()
 
 void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 {
+	SoundPlayer::GetSingleton()->Tick(secondsSinceLastUpdate);
+
 	bounds2f viewportBounds = bounds2f(0, 0, GetVirtualSize());
 
 	_buttonsTopLeft->SetBounds(viewportBounds);

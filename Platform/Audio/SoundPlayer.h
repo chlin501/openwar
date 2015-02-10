@@ -19,49 +19,70 @@
 #include <SDL2_mixer/SDL_mixer.h>
 #endif
 
-
-#define NUMBER_OF_SOUND_SAMPLES 14
-#define NUMBER_OF_SOUND_CHANNELS 16
+#include <chrono>
 
 
 enum class SoundSampleID
 {
-	None = 0,
-	ArrowsFlying = 1,
-	CavalryMarching = 2,
-	CavalryRunning = 3,
-	CommandAck = 4,
-	CommandMod = 5,
-	InfantryFighting = 6,
-	InfantryGrunting = 7,
-	InfantryMarching = 8,
-	InfantryRunning = 9,
-	MatchlockFire1 = 10,
-	MatchlockFire2 = 11,
-	MatchlockFire3 = 12,
-	MatchlockFire4 = 13
+	CommandAck,
+	CommandMod,
+	Background,
+	Casualty1,
+	Casualty2,
+	Casualty3,
+	Casualty4,
+	Casualty5,
+	Casualty6,
+	Casualty7,
+	Casualty8,
+	CavalryRunning,
+	CavalryWalking,
+	HorseNeigh1,
+	HorseNeigh2,
+	HorseNeigh3,
+	HorseSnort,
+	InfantryRunning,
+	InfantryWalking,
+	MeleeCavalry,
+	MeleeCharging,
+	MeleeInfantry,
+	MissileArrows,
+	MissileMatchlock1,
+	MissileMatchlock2,
+	MissileMatchlock3,
+	MissileMatchlock4,
+	Sword1,
+	Sword2,
+	Sword3,
+	Sword4,
+	NumberOfSoundSamples
 };
+
+#define NUMBER_OF_SOUND_SAMPLES (static_cast<int>(SoundSampleID::NumberOfSoundSamples))
 
 
 enum class SoundChannelID
 {
-	UserInterface = 0,
-	InfantryWalking = 1,
-	InfantryRunning = 2,
-	CavalryWalking = 3,
-	CavalryRunning = 4,
-	Charging = 5,
-	Fighting = 6,
-	Matchlock1 = 7,
-	Matchlock2 = 8,
-	Matchlock3 = 9,
-	Matchlock4 = 10,
-	Arrows1 = 11,
-	Arrows2 = 12,
-	Arrows3 = 13,
-	Arrows4 = 14,
-	Grunts = 15
+	UserInterface,
+	Background,
+	Casualty,
+	CavalryWalking,
+	CavalryRunning,
+	Horse,
+	InfantryWalking,
+	InfantryRunning,
+	MeleeCavalry,
+	MeleeCharging,
+	MeleeInfantry,
+	MissileMatchlock1,
+	MissileMatchlock2,
+	MissileArrows1,
+	MissileArrows2,
+	Sword,
+	NumberOfSoundChannels
 };
+
+#define NUMBER_OF_SOUND_CHANNELS (static_cast<int>(SoundChannelID::NumberOfSoundChannels))
 
 
 using SoundCookieID = int;
@@ -103,10 +124,19 @@ class SoundPlayer
 	Sample _samples[NUMBER_OF_SOUND_SAMPLES]{};
 	Channel _channels[NUMBER_OF_SOUND_CHANNELS]{};
 
-	SoundChannelID _nextChannelMatchlock{SoundChannelID::Matchlock1};
-	SoundChannelID _nextChannelArrows{SoundChannelID::Arrows1};
+	SoundChannelID _nextChannelMatchlock{SoundChannelID::MissileMatchlock1};
+	SoundChannelID _nextChannelArrows{SoundChannelID::MissileArrows1};
 	SoundCookieID _nextCookie{1};
 	bool _isPaused{};
+	std::chrono::system_clock::time_point _casualtyTimer{};
+	bool _meleeCavalry{};
+	bool _meleeInfantry{};
+	int _cavalryCount{};
+	double _horseTimer{};
+	double _swordTimer{};
+
+	bool _meleeCharging{};
+	std::chrono::system_clock::time_point _meleeChargeTimer{};
 
 public:
 	static void Initialize();
@@ -118,36 +148,51 @@ public:
 	SoundPlayer(const SoundPlayer&) = delete;
 	SoundPlayer& operator=(const SoundPlayer&) = delete;
 
+	void Tick(double secondsSinceLastUpdate);
+	void TickHorse(double secondsSinceLastUpdate);
+	void TickSword(double secondsSinceLastUpdate);
+
 	bool IsPaused() const;
 	void Pause();
 	void Resume();
+	void StopAll();
+
+	void PlayBackground();
 
 	void UpdateInfantryWalking(bool value);
 	void UpdateInfantryRunning(bool value);
 	void UpdateCavalryWalking(bool value);
 	void UpdateCavalryRunning(bool value);
-	void UpdateCharging(bool value);
-	void UpdateFighting(bool value);
+	void UpdateCavalryCount(int value);
 
-	void PlayGrunts();
-	void PlayMatchlock();
-	SoundCookieID PlayArrows();
+	void UpdateMeleeCavalry(bool value);
+	void UpdateMeleeInfantry(bool value);
+	void UpdateMeleeCharging();
+
+	SoundCookieID PlayMissileArrows();
+	void StopMissileArrows(SoundCookieID soundCookieID);
+
+	void PlayMissileMatchlock();
+
+	void PlayCasualty();
 
 	void PlayUserInterfaceSound(SoundSampleID soundSampleID);
-	void Stop(SoundCookieID cookie);
-	void StopAll();
 
 private:
-	Sample& GetSoundSample(SoundSampleID soundSampleID);
-	Channel& GetSoundChannel(SoundChannelID soundChannelID);
+	Sample& GetSample(SoundSampleID soundSampleID);
+	Channel& GetChannel(SoundChannelID soundChannelID);
 
+	SoundSampleID RandomCasualtySample() const;
+	SoundSampleID RandomHorseSample() const;
 	SoundSampleID RandomMatchlockSample() const;
+	SoundSampleID RandomSwordSample() const;
+
 	SoundChannelID NextSoundChannel(SoundChannelID soundChannelID) const;
 
-	void LoadSoundSample(Sample& soundSample, const char* name);
+	void LoadSample(Sample& sample, const char* name);
 
-	int PlaySound(Channel& soundChannel, Sample* soundSample, bool looping);
-	void StopSound(Channel& soundChannel);
+	int PlaySound(Channel& channel, Sample* sample, bool looping);
+	void StopSound(Channel& channel);
 };
 
 
