@@ -24,12 +24,18 @@ void MusicDirector::OnStartBattle()
 
 void MusicDirector::Tick(double secondsSinceLastTick)
 {
-	if (!_soundPlayer->IsTrackPlaying())
-		_silenceTimer += secondsSinceLastTick;
+	double& timer = _soundPlayer->IsTrackPlaying() ? _playingTimer : _silenceTimer;
+	timer += secondsSinceLastTick;
 
 	auto suggestion = SuggestTrack();
-	if (ShouldSwitchTrack(suggestion))
+	if (suggestion.first == _currentTrack && _soundPlayer->IsTrackPlaying())
+	{
+		_currentPriority = std::max(_currentPriority, suggestion.second);
+	}
+	else if (ShouldSwitchTrack(suggestion))
+	{
 		SwitchTrack(suggestion);
+	}
 }
 
 
@@ -56,14 +62,25 @@ MusicDirector::TrackAndPriority MusicDirector::SuggestTrack() const
 	if (!_isBattle)
 		return std::make_pair(SoundTrackID::Title, 0);
 
+	// Priority 3
+
 	if (_meleeInfantry >= 3)
 		return std::make_pair(SoundTrackID::StormOfSusanoo, 3);
 
 	if (_meleeCavalry >= 1)
 		return std::make_pair(SoundTrackID::HorseCharge, 3);
 
-	if (_unitsMoving >= 3)
-		return std::make_pair(SoundTrackID::GeishaGarden, 2);
+	// Priority 2
+
+	if (_unitsMoving >= 5)
+	{
+		if (_currentTrack != SoundTrackID::GeishaGarden)
+			return std::make_pair(SoundTrackID::GeishaGarden, 2);
+		else
+			return std::make_pair(SoundTrackID::Amaterasu, 2);
+	}
+
+	// Priority 1
 
 	if (_currentTrack == SoundTrackID::Title)
 		return std::make_pair(SoundTrackID::DreamingWaves, 1);
@@ -75,7 +92,8 @@ MusicDirector::TrackAndPriority MusicDirector::SuggestTrack() const
 bool MusicDirector::ShouldSwitchTrack(TrackAndPriority suggestion) const
 {
 	return suggestion.second > _currentPriority
-		|| _silenceTimer > 10;
+		? _playingTimer > 15
+		: _silenceTimer > 15;
 }
 
 
@@ -83,6 +101,9 @@ void MusicDirector::SwitchTrack(TrackAndPriority trackAndPriority)
 {
 	_currentTrack = trackAndPriority.first;
 	_currentPriority = trackAndPriority.second;
+
 	_soundPlayer->PlayTrack(_currentTrack);
+
+	_playingTimer = 0;
 	_silenceTimer = 0;
 }

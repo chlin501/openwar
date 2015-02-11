@@ -24,6 +24,7 @@ public:
 	MissileType _missileType{};
 	std::vector<Projectile> _projectiles{};
 	SoundCookieID _soundCookie{};
+	bool _impacted{};
 
 public:
 	ShootingCounter(MissileType missileType);

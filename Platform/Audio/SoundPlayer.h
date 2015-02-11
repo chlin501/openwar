@@ -19,12 +19,6 @@
 #include <SDL2_mixer/SDL_mixer.h>
 #endif
 
-#ifdef OPENWAR_USE_OPENAL
-#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
-#define OPENWAR_USE_AVFOUNDATION
-#endif
-#endif
-
 #ifdef OPENWAR_USE_AVFOUNDATION
 #import <AVFoundation/AVFoundation.h>
 #endif
@@ -56,6 +50,8 @@ enum class SoundChannelID
 	MissileMatchlock2,
 	MissileArrows1,
 	MissileArrows2,
+	MissileArrows3,
+	MissileImpact,
 	Sword,
 	NumberOfSoundChannels
 };
@@ -86,6 +82,10 @@ enum class SoundSampleID
 	MeleeCharging,
 	MeleeInfantry,
 	MissileArrows,
+	MissileImpact1,
+	MissileImpact2,
+	MissileImpact3,
+	MissileImpact4,
 	MissileMatchlock1,
 	MissileMatchlock2,
 	MissileMatchlock3,
@@ -213,6 +213,7 @@ public:
 
 	SoundCookieID PlayMissileArrows();
 	void StopMissileArrows(SoundCookieID soundCookieID);
+	void PlayMissileImpact();
 
 	void PlayMissileMatchlock();
 
@@ -227,6 +228,7 @@ private:
 
 	SoundSampleID RandomCasualtySample() const;
 	SoundSampleID RandomHorseSample() const;
+	SoundSampleID RandomMissileImpactSample() const;
 	SoundSampleID RandomMatchlockSample() const;
 	SoundSampleID RandomSwordSample() const;
 

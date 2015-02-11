@@ -115,6 +115,12 @@ SoundPlayer::SoundPlayer()
 	LoadSample(GetSample(SoundSampleID::MeleeInfantry), "Samurai Melee Infantry");
 
 	LoadSample(GetSample(SoundSampleID::MissileArrows), "Samurai Missile Arrows");
+
+	LoadSample(GetSample(SoundSampleID::MissileImpact1), "Samurai Missile Impact1");
+	LoadSample(GetSample(SoundSampleID::MissileImpact2), "Samurai Missile Impact2");
+	LoadSample(GetSample(SoundSampleID::MissileImpact3), "Samurai Missile Impact3");
+	LoadSample(GetSample(SoundSampleID::MissileImpact4), "Samurai Missile Impact4");
+
 	LoadSample(GetSample(SoundSampleID::MissileMatchlock1), "Samurai Missile Matchlock 1");
 	LoadSample(GetSample(SoundSampleID::MissileMatchlock2), "Samurai Missile Matchlock 2");
 	LoadSample(GetSample(SoundSampleID::MissileMatchlock3), "Samurai Missile Matchlock 3");
@@ -184,7 +190,7 @@ void SoundPlayer::TickHorse(double secondsSinceLastTick)
 		if (_cavalryCount != 0)
 			PlaySound(GetChannel(SoundChannelID::Horse), &GetSample(RandomHorseSample()), false);
 
-		_horseTimer = Random(5.0, 15.0);
+		_horseTimer = Random(8.0, 16.0);
 	}
 }
 
@@ -388,6 +394,12 @@ void SoundPlayer::StopMissileArrows(SoundCookieID soundCookieID)
 }
 
 
+void SoundPlayer::PlayMissileImpact()
+{
+	PlaySound(GetChannel(SoundChannelID::MissileImpact), &GetSample(RandomMissileImpactSample()), false);
+}
+
+
 void SoundPlayer::PlayMissileMatchlock()
 {
 	SoundSampleID soundSample = RandomMatchlockSample();
@@ -439,7 +451,8 @@ SoundChannelID SoundPlayer::NextSoundChannel(SoundChannelID soundChannelID) cons
 		case SoundChannelID::MissileMatchlock1: return SoundChannelID::MissileMatchlock2;
 		case SoundChannelID::MissileMatchlock2: return SoundChannelID::MissileMatchlock1;
 		case SoundChannelID::MissileArrows1: return SoundChannelID::MissileArrows2;
-		case SoundChannelID::MissileArrows2: return SoundChannelID::MissileArrows1;
+		case SoundChannelID::MissileArrows2: return SoundChannelID::MissileArrows3;
+		case SoundChannelID::MissileArrows3: return SoundChannelID::MissileArrows1;
 		default: return SoundChannelID::UserInterface;
 	}
 }
@@ -472,6 +485,17 @@ SoundSampleID SoundPlayer::RandomHorseSample() const
 	}
 }
 
+
+SoundSampleID SoundPlayer::RandomMissileImpactSample() const
+{
+	switch (std::rand() & 3)
+	{
+		case 0: return SoundSampleID::MissileImpact1;
+		case 1: return SoundSampleID::MissileImpact2;
+		case 2: return SoundSampleID::MissileImpact3;
+		default: return SoundSampleID::MissileImpact4;
+	}
+}
 
 
 SoundSampleID SoundPlayer::RandomMatchlockSample() const

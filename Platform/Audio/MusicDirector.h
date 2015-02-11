@@ -15,6 +15,7 @@ class MusicDirector
 	SoundTrackID _currentTrack{};
 	int _currentPriority{};
 	double _silenceTimer{};
+	double _playingTimer{};
 	bool _isBattle{};
 	int _unitsMoving{};
 	int _meleeCavalry{};
