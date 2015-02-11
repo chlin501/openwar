@@ -12,7 +12,6 @@ void MusicDirector::OnTitleScreen()
 {
 	_isBattle = false;
 	SwitchTrack(SuggestTrack());
-
 }
 
 
@@ -91,6 +90,11 @@ MusicDirector::TrackAndPriority MusicDirector::SuggestTrack() const
 
 bool MusicDirector::ShouldSwitchTrack(TrackAndPriority suggestion) const
 {
+	bool isTitle = _currentTrack == SoundTrackID::Title;
+	bool shouldBeTitle = !_isBattle;
+	if (isTitle != shouldBeTitle)
+		return true;
+
 	return suggestion.second > _currentPriority
 		? _playingTimer > 15
 		: _silenceTimer > 15;

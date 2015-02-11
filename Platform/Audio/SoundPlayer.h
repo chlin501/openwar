@@ -19,7 +19,7 @@
 #include <SDL2_mixer/SDL_mixer.h>
 #endif
 
-#ifdef OPENWAR_USE_AVFOUNDATION
+#if defined(OPENWAR_USE_AVFOUNDATION) || defined(OPENWAR_USE_AVAUDIOSESSION)
 #import <AVFoundation/AVFoundation.h>
 #endif
 
@@ -159,6 +159,7 @@ class SoundPlayer
 	Sample _samples[NUMBER_OF_SOUND_SAMPLES]{};
 	Channel _channels[NUMBER_OF_SOUND_CHANNELS]{};
 
+	bool _disableMusic{};
 	Track* _currentTrack{};
 	SoundChannelID _nextChannelMatchlock{SoundChannelID::MissileMatchlock1};
 	SoundChannelID _nextChannelArrows{SoundChannelID::MissileArrows1};
@@ -187,6 +188,8 @@ public:
 
 	MusicDirector& GetMusicDirector();
 
+	void CheckOtherMusicPlaying();
+
 	void Tick(double secondsSinceLastTick);
 	void TickHorse(double secondsSinceLastTick);
 	void TickSword(double secondsSinceLastTick);
@@ -197,6 +200,7 @@ public:
 	void StopAll();
 
 	void PlayTrack(SoundTrackID soundTrackID);
+	void StopTrack();
 	bool IsTrackPlaying() const;
 
 	void PlayBackground();

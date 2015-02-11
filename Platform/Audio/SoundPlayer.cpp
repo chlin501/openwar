@@ -27,10 +27,12 @@ SoundPlayer* SoundPlayer::GetSingleton()
 
 SoundPlayer::SoundPlayer()
 {
-#ifdef OPENWAR_USE_AVFOUNDATION
-    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryAmbient error: nil];
+	CheckOtherMusicPlaying();
+
+#ifdef OPENWAR_USE_AVAUDIOSESSION
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error: nil];
 #endif
-    
+
 #ifdef OPENWAR_USE_OPENAL
 	_device = alcOpenDevice(nullptr); // select the "preferred device"
 	if (_device != nullptr)
@@ -169,6 +171,29 @@ MusicDirector& SoundPlayer::GetMusicDirector()
 }
 
 
+void SoundPlayer::CheckOtherMusicPlaying()
+{
+	if ([[AVAudioSession sharedInstance] respondsToSelector:@selector(secondaryAudioShouldBeSilencedHint)])
+	{
+		_disableMusic = [[AVAudioSession sharedInstance] secondaryAudioShouldBeSilencedHint];
+	}
+	else if ([[AVAudioSession sharedInstance] respondsToSelector:@selector(isOtherAudioPlaying)])
+	{
+		_disableMusic = [[AVAudioSession sharedInstance] isOtherAudioPlaying];
+	}
+	else
+	{
+		UInt32 propertySize = sizeof(UInt32);
+		UInt32 audioIsAlreadyPlaying = 0;
+		AudioSessionGetProperty(kAudioSessionProperty_OtherAudioIsPlaying, &propertySize, &audioIsAlreadyPlaying);
+		_disableMusic = audioIsAlreadyPlaying != 0;
+	}
+
+	if (_disableMusic && IsTrackPlaying())
+		StopTrack();
+}
+
+
 void SoundPlayer::Tick(double secondsSinceLastTick)
 {
 	_musicDirector.Tick(secondsSinceLastTick);
@@ -266,17 +291,27 @@ void SoundPlayer::StopAll()
 
 void SoundPlayer::PlayTrack(SoundTrackID soundTrackID)
 {
-	Track* track = &GetTrack(soundTrackID);
+	StopTrack();
 
+	_currentTrack = &GetTrack(soundTrackID);
+
+	if (!_disableMusic)
+	{
+#ifdef OPENWAR_USE_AVFOUNDATION
+		[_currentTrack->_player prepareToPlay];
+		_currentTrack->_player.currentTime = 0;
+		[_currentTrack->_player play];
+#endif
+	}
+}
+
+
+void SoundPlayer::StopTrack()
+{
 #ifdef OPENWAR_USE_AVFOUNDATION
 	if (_currentTrack)
 		[_currentTrack->_player stop];
-	[track->_player prepareToPlay];
-	track->_player.currentTime = 0;
-	[track->_player play];
 #endif
-
-	_currentTrack = track;
 }
 
 
