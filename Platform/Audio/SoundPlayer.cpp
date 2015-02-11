@@ -27,9 +27,11 @@ SoundPlayer* SoundPlayer::GetSingleton()
 
 SoundPlayer::SoundPlayer()
 {
+#ifdef OPENWAR_USE_AVFOUNDATION
+    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryAmbient error: nil];
+#endif
+    
 #ifdef OPENWAR_USE_OPENAL
-	[[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryAmbient error: nil];
-
 	_device = alcOpenDevice(nullptr); // select the "preferred device"
 	if (_device != nullptr)
 	{
