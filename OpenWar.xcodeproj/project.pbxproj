@@ -29,6 +29,7 @@
 		41396E0C17E7517F00EC1DA6 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B6ECF175DE18A00AABF10 /* GLKit.framework */; };
 		41396E0D17E7517F00EC1DA6 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B7022175DFEA900AABF10 /* OpenAL.framework */; };
 		41396E0E17E7517F00EC1DA6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B6ED1175DE19200AABF10 /* OpenGL.framework */; };
+		413A21241A8B5CEF00BDB852 /* MusicDirector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 413A21221A8B5CEF00BDB852 /* MusicDirector.cpp */; };
 		4156C30F1A139E40006A264C /* geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2A61A139E3F006A264C /* geometry.cpp */; };
 		4156C3101A139E40006A264C /* bspline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2A91A139E3F006A264C /* bspline.cpp */; };
 		4156C3111A139E40006A264C /* bspline_patch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2AB1A139E3F006A264C /* bspline_patch.cpp */; };
@@ -149,6 +150,8 @@
 		41327F1B1A88B1010074DB2D /* SoundPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundPlayer.cpp; sourceTree = "<group>"; };
 		41327F1C1A88B1010074DB2D /* SoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundPlayer.h; sourceTree = "<group>"; };
 		41396E3117E7517F00EC1DA6 /* Open War.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Open War.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		413A21221A8B5CEF00BDB852 /* MusicDirector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MusicDirector.cpp; sourceTree = "<group>"; };
+		413A21231A8B5CEF00BDB852 /* MusicDirector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicDirector.h; sourceTree = "<group>"; };
 		413B6DFA175CE70B00AABF10 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		413B6DFD175CE70B00AABF10 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		413B6DFF175CE70B00AABF10 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -387,6 +390,8 @@
 		41327F181A88B1010074DB2D /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				413A21221A8B5CEF00BDB852 /* MusicDirector.cpp */,
+				413A21231A8B5CEF00BDB852 /* MusicDirector.h */,
 				41327F191A88B1010074DB2D /* SoundLoader.cpp */,
 				41327F1A1A88B1010074DB2D /* SoundLoader.h */,
 				41327F1B1A88B1010074DB2D /* SoundPlayer.cpp */,
@@ -886,6 +891,7 @@
 				63F55C07D79D3F9A3EA3A8CD /* FontDescriptor.cpp in Sources */,
 				63F556A7A2F2FD636868A634 /* vec2_sampler.cpp in Sources */,
 				63F55D14165983EF9CF7DADA /* Sampler.cpp in Sources */,
+				413A21241A8B5CEF00BDB852 /* MusicDirector.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -243,6 +243,8 @@ struct Unit
 	bool IsFriendlyCommander(BattleCommander* battleCommander) const;
  	bool IsCommandableBy(BattleCommander* battleCommander) const;
 
+	bool IsInMelee() const;
+
 	static int GetFighterRank(Fighter* fighter);
 	static int GetFighterFile(Fighter* fighter);
 	static Fighter* GetFighter(Unit* unit, int rank, int file);
@@ -323,8 +325,8 @@ public:
 
 	void AdvanceTime(float secondsSinceLastTime);
 
-	bool IsMeleeCavalry() const;
-	bool IsMeleeInfantry() const;
+	int CountCavalryInMelee() const;
+	int CountInfantryInMelee() const;
 
 	int GetWinnerTeam() const { return _winnerTeam; }
 

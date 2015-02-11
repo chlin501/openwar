@@ -133,6 +133,17 @@ bool Unit::IsCommandableBy(BattleCommander* battleCommander) const
 }
 
 
+bool Unit::IsInMelee() const
+{
+	int count = 0;
+	for (Fighter* fighter = fighters, * end = fighter + fightersCount; fighter != end; ++fighter)
+		if (fighter->state.opponent != nullptr && ++count >= 3)
+			return true;
+
+	return false;
+}
+
+
 int Unit::GetFighterRank(Fighter* fighter)
 {
 	Unit* unit = fighter->unit;
@@ -188,27 +199,27 @@ BattleSimulator::~BattleSimulator()
 }
 
 
-bool BattleSimulator::IsMeleeCavalry() const
+int BattleSimulator::CountCavalryInMelee() const
 {
-	for (const Unit* unit : _units)
-		if (unit->stats.platformType == PlatformType::Cavalry)
-			for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
-				if (fighter->state.opponent != nullptr)
-					return true;
+	int result = 0;
 
-	return false;
+	for (const Unit* unit : _units)
+		if (unit->stats.platformType == PlatformType::Cavalry && unit->IsInMelee())
+			++result;
+
+	return result;
 }
 
 
-bool BattleSimulator::IsMeleeInfantry() const
+int BattleSimulator::CountInfantryInMelee() const
 {
-	for (const Unit* unit : _units)
-		if (unit->stats.platformType == PlatformType::Infantry)
-			for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
-				if (fighter->state.opponent != nullptr)
-					return true;
+	int result = 0;
 
-	return false;
+	for (const Unit* unit : _units)
+		if (unit->stats.platformType == PlatformType::Infantry && unit->IsInMelee())
+			++result;
+
+	return result;
 }
 
 

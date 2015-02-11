@@ -1078,7 +1078,7 @@ void BattleView::UpdateSoundPlayer()
 	int cavalryRunning = 0;
 	int cavalryWalking = 0;
 	int cavalryCount = 0;
-	int infantryWalling = 0;
+	int infantryWalking = 0;
 	int infantryRunning = 0;
 
 	for (UnitCounter* unitMarker : GetUnitCounters())
@@ -1103,21 +1103,27 @@ void BattleView::UpdateSoundPlayer()
 				if (unit->command.running)
 					++infantryRunning;
 				else
-					++infantryWalling;
+					++infantryWalking;
 			}
 		}
 	}
 
-	SoundPlayer::GetSingleton()->UpdateInfantryWalking(infantryWalling != 0);
-	SoundPlayer::GetSingleton()->UpdateInfantryRunning(infantryRunning != 0);
+	int meleeCavalry = _simulator->CountCavalryInMelee();
+	int meleeInfantry = _simulator->CountInfantryInMelee();
 
-	SoundPlayer::GetSingleton()->UpdateCavalryWalking(cavalryWalking != 0);
-	SoundPlayer::GetSingleton()->UpdateCavalryRunning(cavalryRunning != 0);
+	SoundPlayer* soundPlayer = SoundPlayer::GetSingleton();
+	soundPlayer->UpdateInfantryWalking(infantryWalking != 0);
+	soundPlayer->UpdateInfantryRunning(infantryRunning != 0);
+	soundPlayer->UpdateCavalryWalking(cavalryWalking != 0);
+	soundPlayer->UpdateCavalryRunning(cavalryRunning != 0);
+	soundPlayer->UpdateCavalryCount(cavalryCount);
+	soundPlayer->UpdateMeleeCavalry(meleeCavalry != 0);
+	soundPlayer->UpdateMeleeInfantry(meleeInfantry != 0);
 
-	SoundPlayer::GetSingleton()->UpdateCavalryCount(cavalryCount);
-
-	SoundPlayer::GetSingleton()->UpdateMeleeCavalry(_simulator->IsMeleeCavalry());
-	SoundPlayer::GetSingleton()->UpdateMeleeInfantry(_simulator->IsMeleeInfantry());
+	MusicDirector& musicDirector = soundPlayer->GetMusicDirector();
+	musicDirector.UpdateUnitsMoving(infantryWalking + infantryRunning + cavalryWalking + cavalryRunning);
+	musicDirector.UpdateMeleeCavalry(meleeCavalry);
+	musicDirector.UpdateMeleeInfantry(meleeInfantry);
 }
 
 

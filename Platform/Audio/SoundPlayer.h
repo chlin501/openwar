@@ -19,7 +19,46 @@
 #include <SDL2_mixer/SDL_mixer.h>
 #endif
 
+#ifdef OPENWAR_USE_OPENAL
+#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
+#define OPENWAR_USE_AVFOUNDATION
+#endif
+#endif
+
+#ifdef OPENWAR_USE_AVFOUNDATION
+#import <AVFoundation/AVFoundation.h>
+#endif
+
+#include "MusicDirector.h"
+
 #include <chrono>
+
+
+#define NUMBER_OF_SOUND_CHANNELS (static_cast<int>(SoundChannelID::NumberOfSoundChannels))
+#define NUMBER_OF_SOUND_SAMPLES (static_cast<int>(SoundSampleID::NumberOfSoundSamples))
+#define NUMBER_OF_SOUND_TRACKS (static_cast<int>(SoundTrackID::NumberOfSoundTracks))
+
+
+enum class SoundChannelID
+{
+	UserInterface,
+	Background,
+	Casualty,
+	CavalryWalking,
+	CavalryRunning,
+	Horse,
+	InfantryWalking,
+	InfantryRunning,
+	MeleeCavalry,
+	MeleeCharging,
+	MeleeInfantry,
+	MissileMatchlock1,
+	MissileMatchlock2,
+	MissileArrows1,
+	MissileArrows2,
+	Sword,
+	NumberOfSoundChannels
+};
 
 
 enum class SoundSampleID
@@ -58,38 +97,34 @@ enum class SoundSampleID
 	NumberOfSoundSamples
 };
 
-#define NUMBER_OF_SOUND_SAMPLES (static_cast<int>(SoundSampleID::NumberOfSoundSamples))
 
-
-enum class SoundChannelID
+enum class SoundTrackID
 {
-	UserInterface,
-	Background,
-	Casualty,
-	CavalryWalking,
-	CavalryRunning,
-	Horse,
-	InfantryWalking,
-	InfantryRunning,
-	MeleeCavalry,
-	MeleeCharging,
-	MeleeInfantry,
-	MissileMatchlock1,
-	MissileMatchlock2,
-	MissileArrows1,
-	MissileArrows2,
-	Sword,
-	NumberOfSoundChannels
+	Title,
+	DreamingWaves,
+	Amaterasu,
+	GeishaGarden,
+	StormOfSusanoo,
+	HorseCharge,
+	NumberOfSoundTracks
 };
 
-#define NUMBER_OF_SOUND_CHANNELS (static_cast<int>(SoundChannelID::NumberOfSoundChannels))
 
-
-using SoundCookieID = int;
+enum class SoundCookieID : int
+{
+	None
+};
 
 
 class SoundPlayer
 {
+	struct Track
+	{
+#ifdef OPENWAR_USE_AVFOUNDATION
+		AVAudioPlayer* _player{};
+#endif
+	};
+
 	struct Sample
 	{
 #ifdef OPENWAR_USE_OPENAL
@@ -110,9 +145,8 @@ class SoundPlayer
 #endif
 
 		Sample* _current{};
-		int _cookie{};
+		SoundCookieID _cookie{};
 	};
-
 
 	static SoundPlayer* _singleton;
 
@@ -121,12 +155,14 @@ class SoundPlayer
 	ALCcontext* _context{};
 #endif
 
+	Track _tracks[NUMBER_OF_SOUND_TRACKS]{};
 	Sample _samples[NUMBER_OF_SOUND_SAMPLES]{};
 	Channel _channels[NUMBER_OF_SOUND_CHANNELS]{};
 
+	Track* _currentTrack{};
 	SoundChannelID _nextChannelMatchlock{SoundChannelID::MissileMatchlock1};
 	SoundChannelID _nextChannelArrows{SoundChannelID::MissileArrows1};
-	SoundCookieID _nextCookie{1};
+	int _lastSoundCookie{};
 	bool _isPaused{};
 	std::chrono::system_clock::time_point _casualtyTimer{};
 	bool _meleeCavalry{};
@@ -137,6 +173,7 @@ class SoundPlayer
 
 	bool _meleeCharging{};
 	std::chrono::system_clock::time_point _meleeChargeTimer{};
+	MusicDirector _musicDirector{this};
 
 public:
 	static void Initialize();
@@ -148,14 +185,19 @@ public:
 	SoundPlayer(const SoundPlayer&) = delete;
 	SoundPlayer& operator=(const SoundPlayer&) = delete;
 
-	void Tick(double secondsSinceLastUpdate);
-	void TickHorse(double secondsSinceLastUpdate);
-	void TickSword(double secondsSinceLastUpdate);
+	MusicDirector& GetMusicDirector();
+
+	void Tick(double secondsSinceLastTick);
+	void TickHorse(double secondsSinceLastTick);
+	void TickSword(double secondsSinceLastTick);
 
 	bool IsPaused() const;
 	void Pause();
 	void Resume();
 	void StopAll();
+
+	void PlayTrack(SoundTrackID soundTrackID);
+	bool IsTrackPlaying() const;
 
 	void PlayBackground();
 
@@ -179,6 +221,7 @@ public:
 	void PlayUserInterfaceSound(SoundSampleID soundSampleID);
 
 private:
+	Track& GetTrack(SoundTrackID soundTrackID);
 	Sample& GetSample(SoundSampleID soundSampleID);
 	Channel& GetChannel(SoundChannelID soundChannelID);
 
@@ -189,9 +232,10 @@ private:
 
 	SoundChannelID NextSoundChannel(SoundChannelID soundChannelID) const;
 
+	void LoadTrack(Track& track, const char* name, bool loop);
 	void LoadSample(Sample& sample, const char* name);
 
-	int PlaySound(Channel& channel, Sample* sample, bool looping);
+	SoundCookieID PlaySound(Channel& channel, Sample* sample, bool looping);
 	void StopSound(Channel& channel);
 };
 

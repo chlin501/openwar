@@ -8,9 +8,6 @@
 
 #include <cstdlib>
 
-#ifdef OPENWAR_USE_OPENAL
-#import <AVFoundation/AVFoundation.h>
-#endif
 
 SoundPlayer* SoundPlayer::_singleton = nullptr;
 
@@ -127,6 +124,13 @@ SoundPlayer::SoundPlayer()
 	LoadSample(GetSample(SoundSampleID::Sword2), "Samurai Sword 2");
 	LoadSample(GetSample(SoundSampleID::Sword3), "Samurai Sword 3");
 	LoadSample(GetSample(SoundSampleID::Sword4), "Samurai Sword 4");
+
+	LoadTrack(GetTrack(SoundTrackID::Title), "Samurai Sample", true);
+	LoadTrack(GetTrack(SoundTrackID::DreamingWaves), "Dreaming Waves", false);
+	LoadTrack(GetTrack(SoundTrackID::Amaterasu), "Amaterasu", false);
+	LoadTrack(GetTrack(SoundTrackID::GeishaGarden), "Geisha Garden", false);
+	LoadTrack(GetTrack(SoundTrackID::StormOfSusanoo), "Storm of Susanoo", false);
+	LoadTrack(GetTrack(SoundTrackID::HorseCharge), "Horse Charge", false);
 }
 
 
@@ -134,6 +138,11 @@ SoundPlayer::~SoundPlayer()
 {
 #ifdef OPENWAR_USE_SDL_MIXER
 	Mix_CloseAudio();
+#endif
+
+#ifdef OPENWAR_USE_AVFOUNDATION
+	for (int i = 0; i < NUMBER_OF_SOUND_TRACKS; ++i)
+		[_tracks[i]._player release];
 #endif
 
 	/*
@@ -146,10 +155,18 @@ SoundPlayer::~SoundPlayer()
 }
 
 
-void SoundPlayer::Tick(double secondsSinceLastUpdate)
+MusicDirector& SoundPlayer::GetMusicDirector()
 {
-	TickHorse(secondsSinceLastUpdate);
-	TickSword(secondsSinceLastUpdate);
+	return _musicDirector;
+}
+
+
+void SoundPlayer::Tick(double secondsSinceLastTick)
+{
+	_musicDirector.Tick(secondsSinceLastTick);
+
+	TickHorse(secondsSinceLastTick);
+	TickSword(secondsSinceLastTick);
 }
 
 
@@ -159,9 +176,9 @@ static double Random(double min, double max)
 }
 
 
-void SoundPlayer::TickHorse(double secondsSinceLastUpdate)
+void SoundPlayer::TickHorse(double secondsSinceLastTick)
 {
-	_horseTimer -= secondsSinceLastUpdate;
+	_horseTimer -= secondsSinceLastTick;
 	if (_horseTimer < 0)
 	{
 		if (_cavalryCount != 0)
@@ -172,9 +189,9 @@ void SoundPlayer::TickHorse(double secondsSinceLastUpdate)
 }
 
 
-void SoundPlayer::TickSword(double secondsSinceLastUpdate)
+void SoundPlayer::TickSword(double secondsSinceLastTick)
 {
-	_swordTimer -= secondsSinceLastUpdate;
+	_swordTimer -= secondsSinceLastTick;
 	if (_swordTimer < 0)
 	{
 		if (_meleeInfantry || _meleeCavalry)
@@ -236,6 +253,32 @@ void SoundPlayer::StopAll()
 	{
 		StopSound(GetChannel((SoundChannelID)i));
 	}
+}
+
+
+void SoundPlayer::PlayTrack(SoundTrackID soundTrackID)
+{
+	Track* track = &GetTrack(soundTrackID);
+
+#ifdef OPENWAR_USE_AVFOUNDATION
+	if (_currentTrack)
+		[_currentTrack->_player stop];
+	[track->_player prepareToPlay];
+	track->_player.currentTime = 0;
+	[track->_player play];
+#endif
+
+	_currentTrack = track;
+}
+
+
+bool SoundPlayer::IsTrackPlaying() const
+{
+#ifdef OPENWAR_USE_AVFOUNDATION
+	return _currentTrack && [_currentTrack->_player isPlaying];
+#endif
+
+	return false;
 }
 
 
@@ -330,7 +373,7 @@ void SoundPlayer::UpdateMeleeCharging()
 
 SoundCookieID SoundPlayer::PlayMissileArrows()
 {
-	int cookie = PlaySound(GetChannel(_nextChannelArrows), &GetSample(SoundSampleID::MissileArrows), false);
+	SoundCookieID cookie = PlaySound(GetChannel(_nextChannelArrows), &GetSample(SoundSampleID::MissileArrows), false);
 	_nextChannelArrows = NextSoundChannel(_nextChannelArrows);
 	return cookie;
 }
@@ -338,7 +381,7 @@ SoundCookieID SoundPlayer::PlayMissileArrows()
 
 void SoundPlayer::StopMissileArrows(SoundCookieID soundCookieID)
 {
-	if (soundCookieID != 0)
+	if (soundCookieID != SoundCookieID::None)
 		for (int i = 0; i < NUMBER_OF_SOUND_CHANNELS; ++i)
 			if (_channels[i]._cookie == soundCookieID)
 				StopSound(_channels[i]);
@@ -371,6 +414,12 @@ void SoundPlayer::PlayUserInterfaceSound(SoundSampleID soundSampleID)
 }
 
 
+SoundPlayer::Track& SoundPlayer::GetTrack(SoundTrackID soundTrackID)
+{
+	return _tracks[static_cast<int>(soundTrackID)];
+}
+
+
 SoundPlayer::Sample& SoundPlayer::GetSample(SoundSampleID soundSampleID)
 {
 	return _samples[static_cast<int>(soundSampleID)];
@@ -381,7 +430,6 @@ SoundPlayer::Channel& SoundPlayer::GetChannel(SoundChannelID soundChannelID)
 {
 	return _channels[static_cast<int>(soundChannelID)];
 }
-
 
 
 SoundChannelID SoundPlayer::NextSoundChannel(SoundChannelID soundChannelID) const
@@ -450,6 +498,24 @@ SoundSampleID SoundPlayer::RandomSwordSample() const
 }
 
 
+void SoundPlayer::LoadTrack(Track& track, const char* name, bool loop)
+{
+#ifdef OPENWAR_USE_AVFOUNDATION
+	NSString* path = [[NSBundle mainBundle] pathForResource:[NSString stringWithUTF8String:name] ofType:@"mp3"];
+	if (path == nil)
+	{
+		NSLog(@"SoundPlayer::LoadTrack: missing track: %s", name);
+		return;
+	}
+
+	NSURL * url = [[NSURL alloc] initFileURLWithPath:path];
+	track._player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
+	track._player.numberOfLoops = loop ? -1 : 0;
+	[url release];
+#endif
+}
+
+
 void SoundPlayer::LoadSample(Sample& sample, const char* name)
 {
 #ifdef OPENWAR_USE_OPENAL
@@ -464,7 +530,7 @@ void SoundPlayer::LoadSample(Sample& sample, const char* name)
 }
 
 
-int SoundPlayer::PlaySound(Channel& channel, Sample* sample, bool looping)
+SoundCookieID SoundPlayer::PlaySound(Channel& channel, Sample* sample, bool looping)
 {
 	if (looping && channel._current == sample)
 		return channel._cookie;
@@ -489,7 +555,7 @@ int SoundPlayer::PlaySound(Channel& channel, Sample* sample, bool looping)
 #endif
 
 	channel._current = sample;
-	channel._cookie = _nextCookie++;
+	channel._cookie = static_cast<SoundCookieID>(++_lastSoundCookie);
 
 	return channel._cookie;
 }
@@ -506,5 +572,5 @@ void SoundPlayer::StopSound(Channel& channel)
 #endif
 
 	channel._current = nullptr;
-	channel._cookie = 0;
+	channel._cookie = SoundCookieID::None;
 }

@@ -7,6 +7,7 @@
 
 #include "BattleModel/BattleSimulator.h"
 #include "Shapes/VertexShape.h"
+#include "Audio/SoundPlayer.h"
 
 
 class ShootingCounter
@@ -22,7 +23,7 @@ public:
 
 	MissileType _missileType{};
 	std::vector<Projectile> _projectiles{};
-	int _soundCookie{};
+	SoundCookieID _soundCookie{};
 
 public:
 	ShootingCounter(MissileType missileType);
