@@ -58,10 +58,9 @@ public:
 
 	void Tick(double secondsSinceLastTick);
 
-	void EnableDeploymentZones();
+	void EnableDeploymentZones(float deploymentTimer);
 	void UpdateDeploymentZones(double secondsSinceLastTick);
 };
-
 
 
 #endif

@@ -156,8 +156,9 @@ void BattleScenario::Tick(double secondsSinceLastTick)
 }
 
 
-void BattleScenario::EnableDeploymentZones()
+void BattleScenario::EnableDeploymentZones(float deploymentTimer)
 {
+	_deploymentTimer = deploymentTimer;
 	_deploymentEnabled = true;
 	UpdateDeploymentZones(0);
 }
