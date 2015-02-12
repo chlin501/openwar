@@ -173,6 +173,7 @@ MusicDirector& SoundPlayer::GetMusicDirector()
 
 void SoundPlayer::CheckOtherMusicPlaying()
 {
+#ifdef OPENWAR_USE_AVAUDIOSESSION
 	if ([[AVAudioSession sharedInstance] respondsToSelector:@selector(secondaryAudioShouldBeSilencedHint)])
 	{
 		_disableMusic = [[AVAudioSession sharedInstance] secondaryAudioShouldBeSilencedHint];
@@ -188,6 +189,7 @@ void SoundPlayer::CheckOtherMusicPlaying()
 		AudioSessionGetProperty(kAudioSessionProperty_OtherAudioIsPlaying, &propertySize, &audioIsAlreadyPlaying);
 		_disableMusic = audioIsAlreadyPlaying != 0;
 	}
+#endif
 
 	if (_disableMusic && IsTrackPlaying())
 		StopTrack();
