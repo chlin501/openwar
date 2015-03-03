@@ -1,5 +1,6 @@
 #include "MusicDirector.h"
 #include "SoundPlayer.h"
+#include <algorithm>
 
 
 MusicDirector::MusicDirector(SoundPlayer* soundPlayer) :
