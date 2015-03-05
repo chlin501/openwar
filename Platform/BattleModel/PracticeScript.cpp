@@ -62,8 +62,8 @@ void PracticeScript::Tick(double secondsSinceLastTick)
 
 static Unit* FindNearestUnit(const std::vector<Unit*>& units, glm::vec2 position)
 {
-	Unit* result = nullptr;
-	float distance;
+    Unit* result{};
+    float distance{};
 	for (Unit* unit : units)
 	{
 		float d = glm::distance(position, unit->state.center);
