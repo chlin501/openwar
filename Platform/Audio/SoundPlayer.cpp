@@ -293,6 +293,7 @@ void SoundPlayer::StopAll()
 
 void SoundPlayer::PlayTrack(SoundTrackID soundTrackID)
 {
+#if OPENWAR_ENABLE_MUSIC
 	StopTrack();
 
 	_currentTrack = &GetTrack(soundTrackID);
@@ -305,6 +306,7 @@ void SoundPlayer::PlayTrack(SoundTrackID soundTrackID)
 		[_currentTrack->_player play];
 #endif
 	}
+#endif
 }
 
 
