@@ -35,9 +35,9 @@ TextureChar* TextureFont::GetTextureChar(const std::string& character, float blu
 {
 	CharacterKey key(character, blurRadius);
 
-	auto i = _textureChars.find(key);
-	if (i != _textureChars.end() && !i->second->GetTextureImage()->IsDiscarded())
-		return i->second;
+	TextureChar* textureChar = _textureChars[key];
+	if (textureChar && !textureChar->GetTextureImage()->IsDiscarded())
+		return textureChar;
 
 	bool canColorize = false;
 	std::function<void(Image&)> filter = [&canColorize, blurRadius](Image& image) {
@@ -56,9 +56,12 @@ TextureChar* TextureFont::GetTextureChar(const std::string& character, float blu
 	if (textureImage == nullptr)
 		return nullptr;
 
-	TextureChar* textureChar = new TextureChar(textureImage, canColorize);
-	_textureChars[key] = textureChar;
-	return textureChar;
+	TextureChar* result = new TextureChar(textureImage, canColorize);
+	_textureChars[key] = result;
+
+	delete textureChar;
+
+	return result;
 }
 
 

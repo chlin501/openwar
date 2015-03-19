@@ -124,7 +124,11 @@ Image& Image::LoadFromData(const void* data, size_t size)
 
 	CGDataProviderRef dataProvider = CGDataProviderCreateWithData(NULL, data, size, NULL);
 	CGImageRef image = CGImageCreateWithPNGDataProvider(dataProvider, nil, true, kCGRenderingIntentDefault);
+
 	LoadFromCGImage(image, 1);
+
+	CGImageRelease(image);
+	CGDataProviderRelease(dataProvider);
 
 #elif defined(OPENWAR_IMAGE_ENABLE_SDL)
 
