@@ -62,6 +62,11 @@ MusicDirector::TrackAndPriority MusicDirector::SuggestTrack() const
 	if (!_isBattle)
 		return std::make_pair(SoundTrackID::Title, 0);
 
+	// Priority 4
+
+	if (_meleeInfantry + _meleeCavalry >= 6)
+		return std::make_pair(SoundTrackID::BattleToTheDeath, 4);
+
 	// Priority 3
 
 	if (_meleeInfantry >= 3)
@@ -72,8 +77,11 @@ MusicDirector::TrackAndPriority MusicDirector::SuggestTrack() const
 
 	// Priority 2
 
-	if (_unitsMoving >= 5)
+	if (_unitsMoving >= 4)
 	{
+		if (_unitsMoving >= 7)
+			return std::make_pair(SoundTrackID::SwiftAsAnArrow, 2);
+
 		if (_currentTrack != SoundTrackID::GeishaGarden)
 			return std::make_pair(SoundTrackID::GeishaGarden, 2);
 		else

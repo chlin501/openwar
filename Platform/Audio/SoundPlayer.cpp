@@ -141,6 +141,8 @@ SoundPlayer::SoundPlayer()
 	LoadTrack(GetTrack(SoundTrackID::GeishaGarden), "Geisha Garden", false);
 	LoadTrack(GetTrack(SoundTrackID::StormOfSusanoo), "Storm of Susanoo", false);
 	LoadTrack(GetTrack(SoundTrackID::HorseCharge), "Horse Charge", false);
+	LoadTrack(GetTrack(SoundTrackID::BattleToTheDeath), "Battle to the Death", false);
+	LoadTrack(GetTrack(SoundTrackID::SwiftAsAnArrow), "Swift as an Arrow", false);
 }
 
 

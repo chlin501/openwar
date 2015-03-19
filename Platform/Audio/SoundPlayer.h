@@ -27,7 +27,7 @@
 
 #include <chrono>
 
-#define OPENWAR_ENABLE_MUSIC 0
+#define OPENWAR_ENABLE_MUSIC 1
 
 #define NUMBER_OF_SOUND_CHANNELS (static_cast<int>(SoundChannelID::NumberOfSoundChannels))
 #define NUMBER_OF_SOUND_SAMPLES (static_cast<int>(SoundSampleID::NumberOfSoundSamples))
@@ -107,6 +107,8 @@ enum class SoundTrackID
 	GeishaGarden,
 	StormOfSusanoo,
 	HorseCharge,
+	BattleToTheDeath,
+	SwiftAsAnArrow,
 	NumberOfSoundTracks
 };
 
