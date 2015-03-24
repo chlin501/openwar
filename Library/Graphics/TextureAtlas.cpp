@@ -131,7 +131,7 @@ std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, 
 
 TextureSheet TextureAtlas::AddTextureSheet(const Image& image)
 {
-	std::shared_ptr<TextureImage> textureImage = AddTextureImage(image, TextureDiscardability::NonDiscardable);
+	auto textureImage = AddTextureImage(image, TextureDiscardability::NonDiscardable);
 	return TextureSheet(this, textureImage->GetBounds().outer.min, image.GetPixelDensity());
 }
 
@@ -144,7 +144,7 @@ TextureSheet TextureAtlas::GetTextureSheet(const bounds2f& bounds)
 
 std::shared_ptr<TextureImage> TextureAtlas::NewTextureImage(const BorderBounds& bounds, TextureDiscardability discardability, float density)
 {
-	std::shared_ptr<TextureImage> result = std::make_shared<TextureImage>();
+	auto result = std::make_shared<TextureImage>();
 
 	result->_textureAtlas = this;
 	result->_bounds = bounds;
@@ -159,7 +159,7 @@ std::shared_ptr<TextureImage> TextureAtlas::NewTextureImage(const BorderBounds& 
 
 void TextureAtlas::DiscardTextureImages()
 {
-	for (std::shared_ptr<TextureImage> textureImage : _textureImages)
+	for (auto& textureImage : _textureImages)
 		if (textureImage->_discardable)
 			textureImage->_discarded = true;
 
@@ -239,7 +239,7 @@ glm::vec2 TextureSheet::MapCoord(int u, int v) const
 }
 
 
-std::shared_ptr<TextureImage> TextureSheet::NewTextureImage(const BorderBounds& bounds)
+std::shared_ptr<TextureImage> TextureSheet::NewTextureImage(const BorderBounds& bounds) const
 {
 	BorderBounds offsetBounds;
 	offsetBounds.inner = bounds.inner * _density + _offset;

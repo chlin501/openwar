@@ -89,7 +89,7 @@ struct TextureSheet
 
 	glm::vec2 MapCoord(int u, int v) const;
 
-	std::shared_ptr<TextureImage> NewTextureImage(const BorderBounds& bounds);
+	std::shared_ptr<TextureImage> NewTextureImage(const BorderBounds& bounds) const;
 };
 
 
