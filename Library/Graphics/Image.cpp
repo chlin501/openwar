@@ -333,7 +333,8 @@ glm::vec4 Image::GetPixel(int x, int y) const
 	if (0 <= x && x < _width && 0 <= y && y < _height)
 	{
 		const unsigned char* p = _pixels + 4 * (x + _width * y);
-		return glm::vec4(p[0], p[1], p[2], p[3]) / 255.0f;
+		constexpr float k = 1.0f / 255.0f;
+		return glm::vec4(k * p[0], k * p[1], k * p[2], k * p[3]);
 	}
 	return glm::vec4();
 }

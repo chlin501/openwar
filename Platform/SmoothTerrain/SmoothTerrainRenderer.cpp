@@ -513,35 +513,27 @@ void SmoothTerrainRenderer::UpdateChanges(bounds2f bounds)
 	InitializeSkirt();
 	UpdateSplatmap();
 
-	if (_insideVertices.GetVertices().empty())
+	// inside
+	for (Vertex_3f_3f& vertex : _insideVertices.GetMutableVertices())
 	{
-		_editMode = true;
-		BuildTriangles();
-	}
-	else
-	{
-		// inside
-		for (Vertex_3f_3f& vertex : _insideVertices.GetMutableVertices())
+		glm::vec2 p = GetVertexAttribute<0>(vertex).xy();
+		if (bounds.contains(p))
 		{
-			glm::vec2 p = GetVertexAttribute<0>(vertex).xy();
-			if (bounds.contains(p))
-			{
-				glm::ivec2 i = _smoothGroundMap->ToGroundmapCoordinate(p);
-				GetVertexAttribute<0>(vertex).z = _smoothGroundMap->GetHeightMap()->GetHeight(i.x, i.y);
-				GetVertexAttribute<1>(vertex) = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
-			}
+			glm::ivec2 i = _smoothGroundMap->ToGroundmapCoordinate(p);
+			GetVertexAttribute<0>(vertex).z = _smoothGroundMap->GetHeightMap()->GetHeight(i.x, i.y);
+			GetVertexAttribute<1>(vertex) = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
 		}
+	}
 
-		// border
-		for (Vertex_3f_3f& vertex : _borderVertices.GetMutableVertices())
+	// border
+	for (Vertex_3f_3f& vertex : _borderVertices.GetMutableVertices())
+	{
+		glm::vec2 p = GetVertexAttribute<0>(vertex).xy();
+		if (bounds.contains(p))
 		{
-			glm::vec2 p = GetVertexAttribute<0>(vertex).xy();
-			if (bounds.contains(p))
-			{
-				glm::ivec2 i = _smoothGroundMap->ToGroundmapCoordinate(p);
-				GetVertexAttribute<0>(vertex).z = _smoothGroundMap->GetHeightMap()->GetHeight(i.x, i.y);
-				GetVertexAttribute<1>(vertex) = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
-			}
+			glm::ivec2 i = _smoothGroundMap->ToGroundmapCoordinate(p);
+			GetVertexAttribute<0>(vertex).z = _smoothGroundMap->GetHeightMap()->GetHeight(i.x, i.y);
+			GetVertexAttribute<1>(vertex) = _smoothGroundMap->GetHeightMap()->GetNormal(i.x, i.y);
 		}
 	}
 
