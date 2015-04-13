@@ -2,11 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifdef OPENWAR_USE_SDL
-#include <SDL2/SDL.h>
-#endif
-
 #include "Resource.h"
+#include <cstdlib>
 
 
 
@@ -80,7 +77,7 @@ _size(0)
 	_type.append(t.UTF8String);
     
 #else
-    
+
 	std::string s(name);
 	std::string::size_type i = s.rfind('.');
 	if (i != std::string::npos)
@@ -162,20 +159,23 @@ bool Resource::load(char const* type)
 	return data != nil;
     
 #else
-    
-	SDL_RWops* rw = SDL_RWFromFile(path(), "rb");
-    if (rw == nullptr)
-        return false;
-    
-	_size = SDL_RWsize(rw);
-	void* ptr = malloc(_size);
-	SDL_RWread(rw, ptr, _size, 1);
-    
+
+	FILE* file = fopen(path(), "rb");
+	if (!file)
+		return false;
+
+	fseek(file, 0, SEEK_END);
+	_size = (size_t)ftell(file);
+	fseek(file, 0, SEEK_SET);
+
+	void* ptr = std::malloc(_size);
+	fread(ptr, _size, 1, file);
+
 	_data = ptr;
 
-	SDL_RWclose(rw);
+	fclose(file);
 
-    return true;
-    
+	return true;
+
 #endif
 }
