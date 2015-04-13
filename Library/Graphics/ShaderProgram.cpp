@@ -3,6 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "ShaderProgram.h"
+#include <cstdlib>
 #include <string>
 
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
@@ -113,11 +114,11 @@ GLuint ShaderProgram::CompileShader(GLenum type, const char* source)
 	CHECK_ERROR_GL();
 	if (logLength > 0)
 	{
-		GLchar *log = (GLchar *)malloc((size_t)logLength);
+		GLchar *log = (GLchar *)std::malloc((size_t)logLength);
 		glGetShaderInfoLog(result, logLength, &logLength, log);
 		CHECK_ERROR_GL();
 		print_log("compile", log);
-		free(log);
+		std::free(log);
 	}
 	#endif
 
@@ -167,10 +168,10 @@ bool ShaderProgram::ValidateProgram(GLuint program)
 	CHECK_ERROR_GL();
 	if (logLength > 0)
 	{
-		GLchar *log = (GLchar *)malloc((size_t)logLength);
+		GLchar *log = (GLchar *)std::malloc((size_t)logLength);
 		glGetProgramInfoLog(program, logLength, &logLength, log);
 		print_log("validate", log);
-		free(log);
+		std::free(log);
 	}
 
 	glGetProgramiv(program, GL_VALIDATE_STATUS, &status);

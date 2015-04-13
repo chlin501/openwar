@@ -11,6 +11,7 @@
 #include "Graphics/RenderBuffer.h"
 #include "Graphics/TextureResource.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <cstdlib>
 
 #ifdef __ANDROID__
 #include <android/log.h>
@@ -823,9 +824,9 @@ Texture* SmoothTerrainRenderer::CreateColorMap(GraphicsContext* gc)
 		static glm::vec3 r[256];
 		for (int i = 0; i < 256; ++i)
 		{
-			r[i].r = (rand() & 0x7fff) / (float)0x7fff;
-			r[i].g = (rand() & 0x7fff) / (float)0x7fff;
-			r[i].b = (rand() & 0x7fff) / (float)0x7fff;
+			r[i].r = (std::rand() & 0x7fff) / (float)0x7fff;
+			r[i].g = (std::rand() & 0x7fff) / (float)0x7fff;
+			r[i].b = (std::rand() & 0x7fff) / (float)0x7fff;
 		}
 
 		image = new Image(64, 256);
