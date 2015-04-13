@@ -8,8 +8,8 @@
 #include <functional>
 
 #include "FontDescriptor.h"
+#include "GraphicsContext.h"
 
-class GraphicsContext;
 class Image;
 class TextureAtlas;
 class TextureImage;
@@ -73,7 +73,6 @@ public:
 
 
 #ifdef ENABLE_FONTADAPTER_SDL_TTF
-#include <SDL2_ttf/SDL_ttf.h>
 class FontAdapter_SDL_ttf : public FontAdapter
 {
 	TTF_Font* _font1{};

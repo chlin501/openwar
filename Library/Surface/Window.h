@@ -8,7 +8,7 @@
 #include <chrono>
 #include <map>
 #include <set>
-#include <SDL2/SDL.h>
+#include "GraphicsContext.h"
 #include "Touch.h"
 
 class Surface;

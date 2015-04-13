@@ -4,10 +4,8 @@
 
 #include "Image.h"
 #include "Algorithms/GaussBlur.h"
+#include <cstdlib>
 
-#ifdef OPENWAR_IMAGE_ENABLE_SDL
-#include <SDL2_image/SDL_image.h>
-#endif
 
 #ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
 #if TARGET_OS_IPHONE
@@ -53,7 +51,7 @@ Image::Image(int width, int height) :
 	_width(width),
 	_height(height)
 {
-	_pixels = (unsigned char*) calloc((size_t)(_width * _height), 4);
+	_pixels = (unsigned char*)std::calloc((size_t)(_width * _height), 4);
 	_owner = true;
 }
 
@@ -78,7 +76,7 @@ Image::~Image()
 #endif
 
 	if (_owner)
-		free(_pixels);
+		std::free(_pixels);
 }
 
 

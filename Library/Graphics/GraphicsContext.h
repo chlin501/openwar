@@ -35,6 +35,31 @@
 #endif
 
 
+//#include <GLES2/gl2.h>
+//#include <GLES2/gl2ext.h>
+
+
+#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#import <CoreGraphics/CoreGraphics.h>
+#endif
+
+
+
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
+#include <SDL2/SDL.h>
+//#include <SDL2/SDL.h>
+#endif
+#ifdef OPENWAR_IMAGE_ENABLE_SDL
+#include <SDL2_image/SDL_image.h>
+//#include <SDL2/SDL_image.h>
+#endif
+#ifdef ENABLE_FONTADAPTER_SDL_TTF
+#include <SDL2_ttf/SDL_ttf.h>
+//#include <SDL2/SDL_ttf.h>
+#endif
+
+
+
 #ifndef CHECK_ERROR_GL
 extern void CHECK_ERROR_GL();
 #endif

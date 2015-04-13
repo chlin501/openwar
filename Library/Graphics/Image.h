@@ -9,17 +9,7 @@
 #include <glm/glm.hpp>
 #include "Storage/Resource.h"
 #include "Algebra/bounds.h"
-
-
-#ifdef OPENWAR_IMAGE_ENABLE_SDL
-#include <SDL2/SDL.h>
-#endif
-
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
-#import <CoreGraphics/CoreGraphics.h>
-#endif
-
-class Image;
+#include "GraphicsContext.h"
 
 
 class Image
