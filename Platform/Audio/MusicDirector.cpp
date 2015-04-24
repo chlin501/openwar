@@ -19,6 +19,13 @@ void MusicDirector::OnTitleScreen()
 void MusicDirector::OnStartBattle()
 {
 	_isBattle = true;
+	_unitsMoving = 0;
+	_unitsRunning = 0;
+	_meleeCavalry = 0;
+	_meleeInfantry = 0;
+	_friendlyUnits = 0;
+	_enemyUnits = 0;
+	_outcome = 0;
 }
 
 
@@ -45,6 +52,12 @@ void MusicDirector::UpdateUnitsMoving(int count)
 }
 
 
+void MusicDirector::UpdateUnitsRunning(int count)
+{
+	_unitsRunning = count;
+}
+
+
 void MusicDirector::UpdateMeleeCavalry(int count)
 {
 	_meleeCavalry = count;
@@ -57,15 +70,60 @@ void MusicDirector::UpdateMeleeInfantry(int count)
 }
 
 
+void MusicDirector::UpdateFriendlyUnits(int count)
+{
+	_friendlyUnits = count;
+}
+
+
+void MusicDirector::UpdateEnemyUnits(int count)
+{
+	_enemyUnits = count;
+}
+
+
+void MusicDirector::UpdateOutcome(int value)
+{
+	_outcome = value;
+}
+
+
 MusicDirector::TrackAndPriority MusicDirector::SuggestTrack() const
 {
+	/*
+	- Samurai Wars (title screen)
+	- Dreaming Waves (before battle)
+	- Amaterasu (before battle)
+	- Geisha Garden (before battle)
+	- Swift as an Arrow (matching, some units)
+	- Storm of Susanoo (marching, most units)
+	- Marching of the Battlefield (marching, quick)
+	- Horse Charge (skirmishing)
+	- Attack Command (fighting, winning)
+	- Battle to the Death (fighting, uncertain)
+	- Order of Shogun (victory)
+	- The Humiliation (defeat)
+ 	*/
+
 	if (!_isBattle)
-		return std::make_pair(SoundTrackID::Title, 0);
+		return std::make_pair(SoundTrackID::SamuraiWars, 0);
+
+	// Priority 5
+
+	if (_outcome == 1)
+		return std::make_pair(SoundTrackID::OrderOfShogun, 5);
+	if (_outcome == -1)
+		return std::make_pair(SoundTrackID::TheHumiliation, 5);
 
 	// Priority 4
 
 	if (_meleeInfantry + _meleeCavalry >= 6)
-		return std::make_pair(SoundTrackID::BattleToTheDeath, 4);
+	{
+		if (_friendlyUnits > 1.5 * _enemyUnits)
+			return std::make_pair(SoundTrackID::AttackCommand, 4);
+		else
+			return std::make_pair(SoundTrackID::BattleToTheDeath, 4);
+	}
 
 	// Priority 3
 
@@ -77,21 +135,22 @@ MusicDirector::TrackAndPriority MusicDirector::SuggestTrack() const
 
 	// Priority 2
 
-	if (_unitsMoving >= 4)
-	{
-		if (_unitsMoving >= 7)
-			return std::make_pair(SoundTrackID::SwiftAsAnArrow, 2);
+	if (_unitsMoving >= 7)
+		return std::make_pair(SoundTrackID::StormOfSusanoo, 2);
 
-		if (_currentTrack != SoundTrackID::GeishaGarden)
-			return std::make_pair(SoundTrackID::GeishaGarden, 2);
-		else
-			return std::make_pair(SoundTrackID::Amaterasu, 2);
-	}
+	if (_unitsRunning >= 4)
+		return std::make_pair(SoundTrackID::SwiftAsAnArrow, 2);
+
+	if (_unitsMoving >= 4)
+		return std::make_pair(SoundTrackID::MarchingOnTheBattlefield, 2);
 
 	// Priority 1
 
-	if (_currentTrack == SoundTrackID::Title)
+	if (_currentTrack == SoundTrackID::SamuraiWars)
 		return std::make_pair(SoundTrackID::DreamingWaves, 1);
+
+	if (_currentTrack != SoundTrackID::GeishaGarden)
+		return std::make_pair(SoundTrackID::GeishaGarden, 1);
 
 	return std::make_pair(SoundTrackID::Amaterasu, 1);
 }
@@ -99,7 +158,7 @@ MusicDirector::TrackAndPriority MusicDirector::SuggestTrack() const
 
 bool MusicDirector::ShouldSwitchTrack(TrackAndPriority suggestion) const
 {
-	bool isTitle = _currentTrack == SoundTrackID::Title;
+	bool isTitle = _currentTrack == SoundTrackID::SamuraiWars;
 	bool shouldBeTitle = !_isBattle;
 	if (isTitle != shouldBeTitle)
 		return true;

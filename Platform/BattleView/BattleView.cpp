@@ -1080,6 +1080,8 @@ void BattleView::UpdateSoundPlayer()
 	int cavalryCount = 0;
 	int infantryWalking = 0;
 	int infantryRunning = 0;
+	int friendlyUnits = 0;
+	int enemyUnits = 0;
 
 	for (UnitCounter* unitMarker : GetUnitCounters())
 	{
@@ -1087,6 +1089,14 @@ void BattleView::UpdateSoundPlayer()
 		if (unit->stats.platformType == PlatformType::Cavalry)
 		{
 			++cavalryCount;
+		}
+
+		if (!unit->state.IsRouting())
+		{
+			if (unit->IsFriendlyCommander(_commander))
+				++friendlyUnits;
+			else
+				++enemyUnits;
 		}
 
 		if (glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)
@@ -1122,8 +1132,16 @@ void BattleView::UpdateSoundPlayer()
 
 	MusicDirector& musicDirector = soundPlayer->GetMusicDirector();
 	musicDirector.UpdateUnitsMoving(infantryWalking + infantryRunning + cavalryWalking + cavalryRunning);
+	musicDirector.UpdateUnitsRunning(infantryRunning + cavalryRunning);
 	musicDirector.UpdateMeleeCavalry(meleeCavalry);
 	musicDirector.UpdateMeleeInfantry(meleeInfantry);
+	musicDirector.UpdateFriendlyUnits(friendlyUnits);
+	musicDirector.UpdateEnemyUnits(enemyUnits);
+
+	if (_simulator->GetWinnerTeam() != 0)
+		musicDirector.UpdateOutcome(_simulator->GetWinnerTeam() == _commander->GetTeam() ? 1 : -1);
+	else
+		musicDirector.UpdateOutcome(0);
 }
 
 
