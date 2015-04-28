@@ -91,7 +91,7 @@ void MusicDirector::UpdateOutcome(int value)
 MusicDirector::TrackAndPriority MusicDirector::SuggestTrack() const
 {
 	/*
-	- Samurai Wars (title screen)
+	- Samurai Wars Theme (title screen)
 	- Dreaming Waves (before battle)
 	- Amaterasu (before battle)
 	- Geisha Garden (before battle)
@@ -106,26 +106,27 @@ MusicDirector::TrackAndPriority MusicDirector::SuggestTrack() const
  	*/
 
 	if (!_isBattle)
-		return std::make_pair(SoundTrackID::SamuraiWars, 0);
+		return std::make_pair(SoundTrackID::SamuraiWarsTheme, 0);
 
 	// Priority 5
 
-	if (_outcome == 1)
-		return std::make_pair(SoundTrackID::OrderOfShogun, 5);
-	if (_outcome == -1)
-		return std::make_pair(SoundTrackID::TheHumiliation, 5);
+	if (_outcome != 0)
+	{
+		if (_outcome == 1)
+			return std::make_pair(SoundTrackID::OrderOfShogun, 5);
+		else
+			return std::make_pair(SoundTrackID::TheHumiliation, 5);
+	}
 
-	// Priority 4
+	// Priority 3
 
 	if (_meleeInfantry + _meleeCavalry >= 6)
 	{
 		if (_friendlyUnits > 1.5 * _enemyUnits)
-			return std::make_pair(SoundTrackID::AttackCommand, 4);
+			return std::make_pair(SoundTrackID::AttackCommand, 3);
 		else
-			return std::make_pair(SoundTrackID::BattleToTheDeath, 4);
+			return std::make_pair(SoundTrackID::BattleToTheDeath, 3);
 	}
-
-	// Priority 3
 
 	if (_meleeInfantry >= 3)
 		return std::make_pair(SoundTrackID::StormOfSusanoo, 3);
@@ -146,7 +147,7 @@ MusicDirector::TrackAndPriority MusicDirector::SuggestTrack() const
 
 	// Priority 1
 
-	if (_currentTrack == SoundTrackID::SamuraiWars)
+	if (_currentTrack == SoundTrackID::SamuraiWarsTheme)
 		return std::make_pair(SoundTrackID::DreamingWaves, 1);
 
 	if (_currentTrack != SoundTrackID::GeishaGarden)
@@ -158,10 +159,23 @@ MusicDirector::TrackAndPriority MusicDirector::SuggestTrack() const
 
 bool MusicDirector::ShouldSwitchTrack(TrackAndPriority suggestion) const
 {
-	bool isTitle = _currentTrack == SoundTrackID::SamuraiWars;
+	bool isTitle = _currentTrack == SoundTrackID::SamuraiWarsTheme;
 	bool shouldBeTitle = !_isBattle;
 	if (isTitle != shouldBeTitle)
 		return true;
+
+	if (suggestion.first == _currentTrack)
+	{
+		switch (_currentTrack)
+		{
+			case SoundTrackID::OrderOfShogun:
+			case SoundTrackID::TheHumiliation:
+				return false;
+
+			default:
+				return _silenceTimer > 7;
+		}
+	}
 
 	return suggestion.second > _currentPriority
 		? _playingTimer > 15

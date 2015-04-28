@@ -142,8 +142,8 @@ SoundPlayer::SoundPlayer()
 	LoadTrack(GetTrack(SoundTrackID::GeishaGarden), "Geisha Garden", false);
 	LoadTrack(GetTrack(SoundTrackID::HorseCharge), "Horse Charge", false);
 	LoadTrack(GetTrack(SoundTrackID::MarchingOnTheBattlefield), "Marching on the Battlefield", false);
-	LoadTrack(GetTrack(SoundTrackID::OrderOfShogun), "Order of Shogun", true);
-	LoadTrack(GetTrack(SoundTrackID::SamuraiWars), "Samurai Wars", true);
+	LoadTrack(GetTrack(SoundTrackID::OrderOfShogun), "Order of Shogun", false);
+	LoadTrack(GetTrack(SoundTrackID::SamuraiWarsTheme), "Samurai Wars Theme", false);
 	LoadTrack(GetTrack(SoundTrackID::StormOfSusanoo), "Storm of Susanoo", false);
 	LoadTrack(GetTrack(SoundTrackID::SwiftAsAnArrow), "Swift as an Arrow", false);
 	LoadTrack(GetTrack(SoundTrackID::TheHumiliation), "The Humiliation", false);

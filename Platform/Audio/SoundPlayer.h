@@ -58,7 +58,7 @@ enum class SoundChannelID
 };
 
 
-enum class SoundSampleID
+enum class SoundSampleID : int
 {
 	CommandAck,
 	CommandMod,
@@ -99,7 +99,7 @@ enum class SoundSampleID
 };
 
 
-enum class SoundTrackID
+enum class SoundTrackID : int
 {
 	Amaterasu,
 	AttackCommand,
@@ -109,7 +109,7 @@ enum class SoundTrackID
 	HorseCharge,
 	MarchingOnTheBattlefield,
 	OrderOfShogun,
-	SamuraiWars,
+	SamuraiWarsTheme,
 	StormOfSusanoo,
 	SwiftAsAnArrow,
 	TheHumiliation,
