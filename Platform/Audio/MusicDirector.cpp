@@ -122,28 +122,52 @@ MusicDirector::TrackAndPriority MusicDirector::SuggestTrack() const
 
 	if (_meleeInfantry + _meleeCavalry >= 6)
 	{
-		if (_friendlyUnits > 1.5 * _enemyUnits)
+		if (_friendlyUnits > 1.3 * _enemyUnits)
 			return std::make_pair(SoundTrackID::AttackCommand, 3);
 		else
 			return std::make_pair(SoundTrackID::BattleToTheDeath, 3);
 	}
 
 	if (_meleeInfantry >= 3)
-		return std::make_pair(SoundTrackID::StormOfSusanoo, 3);
+	{
+		if (_currentTrack != SoundTrackID::StormOfSusanoo)
+			return std::make_pair(SoundTrackID::StormOfSusanoo, 3);
+		else
+			return std::make_pair(SoundTrackID::BattleToTheDeath, 3);
+	}
 
 	if (_meleeCavalry >= 1)
-		return std::make_pair(SoundTrackID::HorseCharge, 3);
+	{
+		if (_currentTrack != SoundTrackID::HorseCharge)
+			return std::make_pair(SoundTrackID::HorseCharge, 3);
+		else
+			return std::make_pair(SoundTrackID::MarchingOnTheBattlefield, 3);
+	}
 
 	// Priority 2
 
 	if (_unitsMoving >= 7)
-		return std::make_pair(SoundTrackID::StormOfSusanoo, 2);
-
+	{
+		if (_currentTrack != SoundTrackID::StormOfSusanoo)
+			return std::make_pair(SoundTrackID::StormOfSusanoo, 2);
+		else
+			return std::make_pair(SoundTrackID::MarchingOnTheBattlefield, 2);
+	}
 	if (_unitsRunning >= 4)
-		return std::make_pair(SoundTrackID::SwiftAsAnArrow, 2);
+	{
+		if (_currentTrack != SoundTrackID::SwiftAsAnArrow)
+			return std::make_pair(SoundTrackID::SwiftAsAnArrow, 2);
+		else
+			return std::make_pair(SoundTrackID::MarchingOnTheBattlefield, 2);
+	}
 
 	if (_unitsMoving >= 4)
-		return std::make_pair(SoundTrackID::MarchingOnTheBattlefield, 2);
+	{
+		if (_currentTrack != SoundTrackID::MarchingOnTheBattlefield)
+			return std::make_pair(SoundTrackID::MarchingOnTheBattlefield, 2);
+		else
+			return std::make_pair(SoundTrackID::SwiftAsAnArrow, 2);
+	}
 
 	// Priority 1
 
