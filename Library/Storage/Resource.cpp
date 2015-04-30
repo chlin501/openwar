@@ -5,6 +5,9 @@
 #include "Resource.h"
 #include <cstdlib>
 
+#ifdef OPENWAR_USE_SDL
+#include <SDL2/SDL.h>
+#endif
 
 
 #ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
@@ -160,6 +163,22 @@ bool Resource::load(char const* type)
     
 #else
 
+	SDL_RWops* rw = SDL_RWFromFile(path(), "rb");
+    if (rw == nullptr)
+        return false;
+
+	_size = SDL_RWsize(rw);
+	void* ptr = std::malloc(_size);
+	SDL_RWread(rw, ptr, _size, 1);
+
+	_data = ptr;
+
+	SDL_RWclose(rw);
+
+    return true;
+
+/*  temporarily remove fopen, didn't work on Android
+
 	FILE* file = fopen(path(), "rb");
 	if (!file)
 		return false;
@@ -176,6 +195,7 @@ bool Resource::load(char const* type)
 	fclose(file);
 
 	return true;
+*/
 
 #endif
 }
