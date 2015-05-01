@@ -306,11 +306,17 @@ void SoundPlayer::PlayTrack(SoundTrackID soundTrackID)
 
 	if (!_disableMusic)
 	{
+
 #ifdef OPENWAR_USE_AVFOUNDATION
 		[_currentTrack->_player prepareToPlay];
 		_currentTrack->_player.currentTime = 0;
 		[_currentTrack->_player play];
 #endif
+
+#ifdef OPENWAR_USE_SDL_MIXER
+		Mix_PlayMusic(_currentTrack->_music, 1);
+#endif
+
 	}
 #endif
 }
@@ -322,6 +328,9 @@ void SoundPlayer::StopTrack()
 	if (_currentTrack)
 		[_currentTrack->_player stop];
 #endif
+#ifdef OPENWAR_USE_SDL_MIXER
+	Mix_HaltMusic();
+#endif
 }
 
 
@@ -329,6 +338,10 @@ bool SoundPlayer::IsTrackPlaying() const
 {
 #ifdef OPENWAR_USE_AVFOUNDATION
 	return _currentTrack && [_currentTrack->_player isPlaying];
+#endif
+
+#ifdef OPENWAR_USE_SDL_MIXER
+	return Mix_PlayingMusic();
 #endif
 
 	return false;
@@ -583,6 +596,11 @@ void SoundPlayer::LoadTrack(Track& track, const char* name, bool loop)
 	track._player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
 	track._player.numberOfLoops = loop ? -1 : 0;
 	[url release];
+#endif
+
+#ifdef OPENWAR_USE_SDL_MIXER
+	std::string path = Resource((std::string("Music/") + name + std::string(".ogg")).c_str()).path();
+	track._music = Mix_LoadMUS(path.c_str());
 #endif
 }
 

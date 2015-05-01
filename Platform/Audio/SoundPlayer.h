@@ -130,6 +130,9 @@ class SoundPlayer
 #ifdef OPENWAR_USE_AVFOUNDATION
 		AVAudioPlayer* _player{};
 #endif
+#ifdef OPENWAR_USE_SDL_MIXER
+		Mix_Music* _music{};
+#endif
 	};
 
 	struct Sample
