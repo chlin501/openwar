@@ -313,7 +313,7 @@ void SoundPlayer::PlayTrack(SoundTrackID soundTrackID)
 		[_currentTrack->_player play];
 #endif
 
-#ifdef OPENWAR_USE_SDL_MIXER
+#ifdef OPENWAR_USE_SDL_MIXER_MUSIC
 		Mix_PlayMusic(_currentTrack->_music, 1);
 #endif
 
@@ -328,7 +328,7 @@ void SoundPlayer::StopTrack()
 	if (_currentTrack)
 		[_currentTrack->_player stop];
 #endif
-#ifdef OPENWAR_USE_SDL_MIXER
+#ifdef OPENWAR_USE_SDL_MIXER_MUSIC
 	Mix_HaltMusic();
 #endif
 }
@@ -340,7 +340,7 @@ bool SoundPlayer::IsTrackPlaying() const
 	return _currentTrack && [_currentTrack->_player isPlaying];
 #endif
 
-#ifdef OPENWAR_USE_SDL_MIXER
+#ifdef OPENWAR_USE_SDL_MIXER_MUSIC
 	return Mix_PlayingMusic();
 #endif
 
@@ -598,7 +598,7 @@ void SoundPlayer::LoadTrack(Track& track, const char* name, bool loop)
 	[url release];
 #endif
 
-#ifdef OPENWAR_USE_SDL_MIXER
+#ifdef OPENWAR_USE_SDL_MIXER_MUSIC
 	std::string path = Resource((std::string("Music/") + name + std::string(".ogg")).c_str()).path();
 	track._music = Mix_LoadMUS(path.c_str());
 #endif
