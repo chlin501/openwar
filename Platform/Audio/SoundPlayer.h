@@ -27,7 +27,9 @@
 
 #include <chrono>
 
+#ifndef OPENWAR_ENABLE_MUSIC
 #define OPENWAR_ENABLE_MUSIC 1
+#endif
 
 #define NUMBER_OF_SOUND_CHANNELS (static_cast<int>(SoundChannelID::NumberOfSoundChannels))
 #define NUMBER_OF_SOUND_SAMPLES (static_cast<int>(SoundSampleID::NumberOfSoundSamples))
