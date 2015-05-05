@@ -4,6 +4,7 @@
 
 #include "Image.h"
 #include "Algorithms/GaussBlur.h"
+#include "FrameBuffer.h"
 #include <cstdlib>
 
 
@@ -113,6 +114,21 @@ float Image::GetPixelDensity() const
 void Image::SetPixelDensity(float value)
 {
 	_pixelDensity = value;
+}
+
+
+Image& Image::ReadPixels(FrameBuffer* frameBuffer)
+{
+	GLint oldFrameBufferId;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFrameBufferId);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->_id);
+
+	glReadPixels(0, 0, _width, _height, GL_RGBA, GL_UNSIGNED_BYTE, _pixels);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(oldFrameBufferId));
+
+	return *this;
 }
 
 

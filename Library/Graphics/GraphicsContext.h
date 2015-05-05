@@ -80,12 +80,12 @@ class TextureAtlas;
 
 class GraphicsContext
 {
-	float _nativeScaling;
-	float _virtualScaling;
-	std::map<std::string, ShaderProgram*> _shaders;
-	std::map<std::string, TextureAtlas*> _textureAtlases;
-	std::map<FontDescriptor, FontAdapter*> _fontAdapters;
-	FrameBuffer* _frameBuffer;
+	float _nativeScaling{};
+	float _virtualScaling{};
+	std::map<std::string, ShaderProgram*> _shaders{};
+	std::map<std::string, TextureAtlas*> _textureAtlases{};
+	std::map<FontDescriptor, FontAdapter*> _fontAdapters{};
+	FrameBuffer* _frameBuffer{};
 
 public:
 	GraphicsContext(float nativeScaling, float virtualScaling);

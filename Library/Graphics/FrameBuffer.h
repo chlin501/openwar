@@ -17,6 +17,7 @@ struct Texture;
 
 class FrameBuffer
 {
+	friend class Image;
 	friend class RenderCallBase;
 
 	GLuint _id;

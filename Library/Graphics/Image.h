@@ -44,6 +44,8 @@ public:
 	float GetPixelDensity() const;
 	void SetPixelDensity(float value);
 
+	Image& ReadPixels(FrameBuffer* frameBuffer);
+
 	Image& LoadFromData(const void* data, size_t size);
 	Image& LoadFromResource(const Resource& r);
 
