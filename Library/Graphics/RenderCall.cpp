@@ -99,7 +99,7 @@ void RenderCallTexture::SetValue(Texture* value, const Sampler& sampler)
 
 void RenderCallTexture::Assign()
 {
-	if (_value != nullptr)
+	if (_value)
 	{
 		_value->UpdateTexture();
 
@@ -124,7 +124,8 @@ void RenderCallTexture::Assign()
 /***/
 
 
-RenderCallBase::RenderCallBase(ShaderProgram* shaderprogram) :
+RenderCallBase::RenderCallBase(GraphicsContext* gc, ShaderProgram* shaderprogram) :
+	_gc(gc),
 	_shaderProgram(shaderprogram)
 {
 }
@@ -141,25 +142,26 @@ RenderCallBase::~RenderCallBase()
 
 void RenderCallBase::Render()
 {
-	std::pair<bool, GLint> oldFrameBuffer{};
-
 	bool has_vertices = false;
-	if (_vertices != nullptr)
+	if (_vertices)
 	{
 		_vertices->Update();
 		has_vertices = _vertices->_vbo != 0 && _vertices->_count != 0;
 	}
 
-	if ((_clearBits || has_vertices) && _frameBuffer != nullptr)
+	std::pair<bool, GLuint> oldFrameBuffer{};
+	FrameBuffer* frameBuffer = _frameBuffer ?: _gc->GetFrameBuffer();
+	if ((_clearBits || has_vertices) && frameBuffer)
 	{
-		oldFrameBuffer.first = true;
-		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFrameBuffer.second);
-		glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer->_id);
+		GLint oldFrameBufferId{};
+		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFrameBufferId);
+		oldFrameBuffer = std::make_pair(true, static_cast<GLuint>(oldFrameBufferId));
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->_id);
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
-		if (!_frameBuffer->HasColor())
+		if (!frameBuffer->HasColor())
 			glDrawBuffer(GL_NONE);
 #endif
-	}
+	};
 
 	if (_clearBits)
 	{
@@ -259,7 +261,7 @@ void RenderCallBase::Render()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, oldFrameBuffer.second);
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
-		if (!_frameBuffer->HasColor())
+		if (!frameBuffer->HasColor())
 			glDrawBuffer(GL_BACK);
 #endif
 	}
@@ -276,10 +278,12 @@ RenderCallTexture* RenderCallBase::GetTexture(const char* name)
 			result = texture;
 			break;
 		}
-	if (result == nullptr)
+
+	if (!result)
 	{
 		result = new RenderCallTexture(location, (GLenum)_texture_count++);
 		_textures.push_back(result);
 	}
+
 	return result;
 }

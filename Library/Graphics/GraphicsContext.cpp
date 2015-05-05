@@ -6,6 +6,7 @@
 #include "TextureAtlas.h"
 #include "ShaderProgram.h"
 #include "FontAdapter.h"
+#include "FrameBuffer.h"
 
 
 GraphicsContext::GraphicsContext(float nativeScaling, float virtualScaling) :
@@ -55,6 +56,18 @@ bounds2i GraphicsContext::GetViewport() const
 };
 
 
+FrameBuffer* GraphicsContext::GetFrameBuffer() const
+{
+	return _frameBuffer;
+}
+
+
+void GraphicsContext::SetFrameBuffer(FrameBuffer* value)
+{
+	_frameBuffer = value;
+}
+
+
 TextureAtlas* GraphicsContext::GetTextureAtlas(const char* name)
 {
 	auto i = _textureAtlases.find(name);
@@ -76,21 +89,21 @@ FontAdapter* GraphicsContext::GetFontAdapter(const FontDescriptor& fontDescripto
 	FontAdapter* fontAdapter = nullptr;
 
 #ifdef ENABLE_FONTADAPTER_NSFONT
-	if (fontAdapter == nullptr)
+	if (!fontAdapter)
 		fontAdapter = new FontAdapter_NSFont(this, fontDescriptor);
 #endif
 
 #ifdef ENABLE_FONTADAPTER_UIFONT
-	if (fontAdapter == nullptr)
+	if (!fontAdapter)
 		fontAdapter = new FontAdapter_UIFont(this, fontDescriptor);
 #endif
 
 #ifdef ENABLE_FONTADAPTER_SDL_TTF
-	if (fontAdapter == nullptr)
+	if (!fontAdapter)
 		fontAdapter = new FontAdapter_SDL_ttf(this, fontDescriptor);
 #endif
 
-	if (fontAdapter != nullptr)
+	if (fontAdapter)
 		_fontAdapters[fontDescriptor] = fontAdapter;
 
 	return fontAdapter;

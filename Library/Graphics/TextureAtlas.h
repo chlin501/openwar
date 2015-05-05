@@ -98,15 +98,15 @@ class TextureAtlas : public Texture
 	friend class TextureImage;
 	friend class TextureSheet;
 
-	GraphicsContext* _gc;
-	Image* _textureAtlasImage;
-	std::map<FontAdapter*, TextureFont*> _textureFonts;
-	std::vector<std::shared_ptr<TextureImage>> _textureImages;
-	glm::ivec2 _permamentPos;
-	int _permanentHeight;
-	glm::ivec2 _discardablePos;
-	int _discardableHeight;
-	bool _dirty;
+	GraphicsContext* _gc{};
+	Image* _textureAtlasImage{};
+	std::map<FontAdapter*, TextureFont*> _textureFonts{};
+	std::vector<std::shared_ptr<TextureImage>> _textureImages{};
+	glm::ivec2 _permamentPos{};
+	int _permanentHeight{};
+	glm::ivec2 _discardablePos{};
+	int _discardableHeight{};
+	bool _dirty{};
 
 public:
 	explicit TextureAtlas(GraphicsContext* gc);
@@ -139,11 +139,11 @@ class TextureImage
 {
 	friend class TextureAtlas;
 	friend class TexturePatch;
-	TextureAtlas* _textureAtlas;
-	BorderBounds _bounds;
-	bool _discardable;
-	bool _discarded;
-	float _density;
+	TextureAtlas* _textureAtlas{};
+	BorderBounds _bounds{};
+	bool _discardable{};
+	bool _discarded{};
+	float _density{1};
 
 public:
 	TextureImage();

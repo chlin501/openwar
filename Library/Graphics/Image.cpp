@@ -60,7 +60,7 @@ Image::~Image()
 {
 #ifdef OPENWAR_IMAGE_ENABLE_SDL
 
-	if (_surface != nullptr)
+	if (_surface)
 		SDL_FreeSurface(_surface);
 
 #endif
@@ -132,7 +132,7 @@ Image& Image::LoadFromData(const void* data, size_t size)
 
 	SDL_RWops* src = SDL_RWFromConstMem(data, static_cast<int>(size));
 	SDL_Surface* surface = EnsureSurfaceFormat(IMG_Load_RW(src, 0));
-	if (surface != nullptr)
+	if (surface)
 		LoadFromSurface(surface);
 	SDL_FreeRW(src);
 	_surface = surface;
@@ -182,7 +182,7 @@ Image& Image::LoadFromResource(const Resource& r)
 #ifdef OPENWAR_IMAGE_ENABLE_SDL
 
 	_surface = EnsureSurfaceFormat(IMG_Load(r.path()));
-	if (_surface != nullptr)
+	if (_surface)
 	{
 		_width = _surface->w;
 		_height = _surface->h;
@@ -223,7 +223,7 @@ void Image::LoadFromSurface(SDL_Surface* surface)
 #ifdef OPENWAR_IMAGE_ENABLE_SDL
 SDL_Surface* Image::GetSurface() const
 {
-	if (_surface == nullptr)
+	if (!_surface)
 	{
 		_surface = SDL_CreateRGBSurfaceFrom(_pixels, _width, _height, 32, _width * 4, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
 	}

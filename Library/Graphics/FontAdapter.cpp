@@ -252,13 +252,13 @@ FontAdapter_SDL_ttf::FontAdapter_SDL_ttf(GraphicsContext* gc, const FontDescript
 
 FontAdapter_SDL_ttf::~FontAdapter_SDL_ttf()
 {
-	if (_font1 != nullptr)
+	if (_font1)
 		TTF_CloseFont(_font1);
 
-	if (_font2 != nullptr)
+	if (_font2)
 		TTF_CloseFont(_font2);
 
-	if (_emoji != nullptr)
+	if (_emoji)
 		TTF_CloseFont(_emoji);
 
 }
@@ -269,13 +269,13 @@ std::shared_ptr<TextureImage> FontAdapter_SDL_ttf::AddTextureImage(TextureAtlas*
 	SDL_Surface* surface = nullptr;
 
 	TTF_Font* font = FindFontForCharacter(character);
-	if (font != nullptr)
+	if (font)
 	{
 		SDL_Color color = {255, 255, 255, 255};
 		surface = TTF_RenderUTF8_Blended(font, character.c_str(), color);
 	}
 
-	if (surface == nullptr)
+	if (!surface)
 	{
 		return textureAtlas->AddTextureImage(Image(4, 4), TextureDiscardability::Discardable);
 	}
@@ -312,10 +312,10 @@ TTF_Font* FontAdapter_SDL_ttf::FindFontForCharacter(const std::string& character
 	auto result = conv.from_bytes(character);
 	if (!result.empty())
 	{
-		if (_emoji != nullptr && TTF_GlyphIsProvided(_emoji, result[0]))
+		if (_emoji && TTF_GlyphIsProvided(_emoji, result[0]))
 			return _emoji;
 
-		if (_font1 != nullptr && TTF_GlyphIsProvided(_font1, result[0]))
+		if (_font1 && TTF_GlyphIsProvided(_font1, result[0]))
 			return _font1;
 	}
 

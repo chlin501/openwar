@@ -92,6 +92,7 @@ protected:
 class RenderCallBase
 {
 protected:
+	GraphicsContext* _gc;
 	ShaderProgram* _shaderProgram;
 	FrameBuffer* _frameBuffer{};
 	std::vector<RenderCallUniformBase*> _uniforms;
@@ -107,7 +108,7 @@ protected:
 	bool _cullBack{};
 
 public:
-	RenderCallBase(ShaderProgram* shaderprogram);
+	RenderCallBase(GraphicsContext* gc, ShaderProgram* shaderprogram);
 	virtual ~RenderCallBase();
 
 	RenderCallBase(const RenderCallBase&) = delete;
@@ -157,7 +158,7 @@ class RenderCall : public RenderCallBase
 public:
 	typedef _ShaderProgram ShaderProgramT;
 
-	RenderCall(GraphicsContext* gc) : RenderCallBase(gc->GetShaderProgram<_ShaderProgram>())
+	RenderCall(GraphicsContext* gc) : RenderCallBase(gc, gc->GetShaderProgram<_ShaderProgram>())
 	{
 	}
 

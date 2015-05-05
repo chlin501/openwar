@@ -8,12 +8,8 @@
 
 
 
-TextureAtlas::TextureAtlas(GraphicsContext* gc) : Texture(gc),
-	_gc(gc),
-	_textureAtlasImage(nullptr),
-	_permanentHeight(0),
-	_discardableHeight(0),
-	_dirty(false)
+TextureAtlas::TextureAtlas(GraphicsContext* gc) : Texture{gc},
+	_gc{gc}
 {
 }
 
@@ -59,7 +55,7 @@ void TextureAtlas::LoadTextureFromSurface(SDL_Surface* surface)
 
 	SDL_UnlockSurface(surface);
 
-	if (tmp != nullptr)
+	if (tmp)
 		SDL_FreeSurface(tmp);
 }
 #endif
@@ -69,7 +65,7 @@ void TextureAtlas::UpdateTexture()
 {
 	if (_dirty)
 	{
-		if (_textureAtlasImage != nullptr)
+		if (_textureAtlasImage)
 			LoadTextureFromImage(*_textureAtlasImage);
 		_dirty = false;
 	}
@@ -78,7 +74,7 @@ void TextureAtlas::UpdateTexture()
 
 std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, TextureDiscardability discardability)
 {
-	if (_textureAtlasImage == nullptr)
+	if (!_textureAtlasImage)
 		_textureAtlasImage = new Image(glm::max(512, image.GetWidth()), glm::max(256, image.GetHeight()));
 
 	if (_permanentHeight + _discardableHeight + image.GetHeight() > _textureAtlasImage->GetHeight())
@@ -178,11 +174,7 @@ void TextureAtlas::DiscardTextureImages()
 /***/
 
 
-TextureImage::TextureImage() :
-	_textureAtlas(nullptr),
-	_discardable(false),
-	_discarded(false),
-	_density(1)
+TextureImage::TextureImage()
 {
 }
 

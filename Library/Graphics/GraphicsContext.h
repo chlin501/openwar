@@ -71,6 +71,7 @@ extern void CHECK_ERROR_GL();
 
 
 class FontAdapter;
+class FrameBuffer;
 class ShaderProgram;
 class TextureAtlas;
 
@@ -84,6 +85,7 @@ class GraphicsContext
 	std::map<std::string, ShaderProgram*> _shaders;
 	std::map<std::string, TextureAtlas*> _textureAtlases;
 	std::map<FontDescriptor, FontAdapter*> _fontAdapters;
+	FrameBuffer* _frameBuffer;
 
 public:
 	GraphicsContext(float nativeScaling, float virtualScaling);
@@ -97,6 +99,9 @@ public:
 	float GetCombinedScaling() const;
 
 	bounds2i GetViewport() const;
+
+	FrameBuffer* GetFrameBuffer() const;
+	void SetFrameBuffer(FrameBuffer* value);
 
 	template <class _ShaderProgram> _ShaderProgram* GetShaderProgram()
 	{
