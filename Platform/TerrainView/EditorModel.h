@@ -16,11 +16,14 @@ enum class EditorMode { Hand, Paint, Erase, Smear };
 
 class EditorModelObserver
 {
+	friend class EditorModel;
 public:
 	virtual ~EditorModelObserver();
+private:
 	virtual void OnEditorModeChanged(EditorModel* editorModel) = 0;
 	virtual void OnTerrainFeatureChanged(EditorModel* editorModel) = 0;
 };
+
 
 class EditorModel
 {
