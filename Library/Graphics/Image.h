@@ -86,7 +86,7 @@ public:
 
 
 #ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
-NSData* ConvertImageToTiff(Image* map);
+NSData* ConvertImageToTiff(const Image& image);
 Image* ConvertTiffToImage(NSData* data);
 #endif
 

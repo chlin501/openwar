@@ -139,6 +139,12 @@ void EditorModel::ToolEnded(glm::vec2 position)
 }
 
 
+const Image& EditorModel::GetSmoothMapImage() const
+{
+	return *_smoothTerrainSurface->GetSmoothGroundMap()->GetImage();
+};
+
+
 void EditorModel::Paint(TerrainFeature feature, glm::vec2 position, bool value)
 {
 	float radius = feature == TerrainFeature::Hills ? 48 : 16;

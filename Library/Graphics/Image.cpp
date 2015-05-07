@@ -575,21 +575,21 @@ void Image::Resize(int width, int height)
 
 
 #ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
-NSData* ConvertImageToTiff(Image* map)
+NSData* ConvertImageToTiff(const Image& image)
 {
 #if TARGET_OS_IPHONE
 	return nil;
 #else
-	unsigned char* pixels = reinterpret_cast<unsigned char*>(const_cast<GLvoid*>(map->GetPixels()));
+	unsigned char* pixels = reinterpret_cast<unsigned char*>(const_cast<GLvoid*>(image.GetPixels()));
 	NSBitmapImageRep* imageRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:&pixels
-														   pixelsWide:map->GetWidth()
-														   pixelsHigh:map->GetHeight()
+														   pixelsWide:image.GetWidth()
+														   pixelsHigh:image.GetHeight()
 														   bitsPerSample:8
 														   samplesPerPixel:4
 														   hasAlpha:YES
 														   isPlanar:NO
 														   colorSpaceName:NSDeviceRGBColorSpace
-														   bytesPerRow:4 * map->GetWidth()
+														   bytesPerRow:4 * image.GetWidth()
 														   bitsPerPixel:32];
 	NSData* result = [imageRep TIFFRepresentationUsingCompression:NSTIFFCompressionLZW factor:0.5];
 	[imageRep release];

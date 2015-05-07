@@ -53,6 +53,8 @@ public:
 	void ToolMoved(glm::vec2 position);
 	void ToolEnded(glm::vec2 position);
 
+	const Image& GetSmoothMapImage() const;
+
 private:
 	void Paint(TerrainFeature feature, glm::vec2 position, bool value);
 
