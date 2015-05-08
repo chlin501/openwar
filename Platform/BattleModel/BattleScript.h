@@ -20,9 +20,6 @@ public:
 
 	virtual void Execute();
 	virtual void Tick(double secondsSinceLastTick);
-
-protected:
-	void NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing);
 };
 
 

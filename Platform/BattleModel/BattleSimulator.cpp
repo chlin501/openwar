@@ -10,6 +10,7 @@
 #include "SmoothGroundMap.h"
 #include "TiledGroundMap.h"
 #include "BattleScript.h"
+#include "SamuraiModule.h"
 #include <glm/gtc/random.hpp>
 #include <algorithm>
 #include <cstdlib>
@@ -430,6 +431,17 @@ void BattleSimulator::RemoveUnit(Unit* unit)
 
 	delete[] unit->fighters;
 	delete unit;
+}
+
+
+void BattleSimulator::NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing)
+{
+	UnitStats unitStats = SamuraiModule::GetDefaultUnitStats(unitClass);
+
+	BattleCommander* commander = GetCommanders()[commanderId - 1];
+
+	Unit* unit = AddUnit(commander, unitClass, strength, unitStats, position);
+	unit->command.bearing = glm::radians(90 - bearing);
 }
 
 
@@ -1374,12 +1386,12 @@ BattleCommander* BattleSimulator::GetDummyCommander() const
 }
 
 
-void BattleSimulator::LoadLegacySmoothMap(const char* path, const char* legacyMapId, float size)
+void BattleSimulator::LoadLegacySmoothMap(const char* legacyMapId, float size)
 {
 	if (_legacyMapId == legacyMapId)
 		return;
 
-	Resource res(path);
+	Resource res(legacyMapId);
 	if (!res.load())
 	{
 		res = Resource("Maps/DefaultMap.png");
@@ -1405,8 +1417,8 @@ void BattleSimulator::LoadLegacyRandomMap()
 {
 	std::ostringstream os;
 	os << "Maps/Map" << random_int(1, 12) << ".png";
-	std::string path = os.str();
-	LoadLegacySmoothMap(path.c_str(), path.c_str(), 1024);
+	std::string legacyMapId = os.str();
+	LoadLegacySmoothMap(legacyMapId.c_str(), 1024);
 }
 
 

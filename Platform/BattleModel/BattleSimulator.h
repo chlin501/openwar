@@ -328,6 +328,8 @@ public:
 	Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
 	void RemoveUnit(Unit* unit);
 
+	void NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing);
+
 	void SetUnitCommand(Unit* unit, const UnitCommand& command, float timer);
 
 	void AddShooting(const Shooting& shooting, float timer);
@@ -385,7 +387,7 @@ public:
 	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
 	BattleCommander* GetDummyCommander() const;
 
-	void LoadLegacySmoothMap(const char* path, const char* legacyMapId, float size);
+	void LoadLegacySmoothMap(const char* legacyMapId, float size);
 	void LoadLegacyRandomMap();
 	void SetTiledMap(int x, int y);
 
