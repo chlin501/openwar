@@ -30,8 +30,6 @@ BattleScenario::~BattleScenario()
 	delete _simulator;
 	delete groundMap;
 
-	delete _smoothMap;
-
 	delete _dummyCommander;
 }
 
@@ -114,9 +112,9 @@ void BattleScenario::SetGroundMap(GroundMap* groundMap)
 }
 
 
-void BattleScenario::SetSmoothMap(const char* path, const char* hash, float size)
+void BattleScenario::LoadLegacySmoothMap(const char* path, const char* legacyMapId, float size)
 {
-	if (_smoothMapHash == hash)
+	if (_legacyMapId == legacyMapId)
 		return;
 
     Resource res(path);
@@ -127,19 +125,17 @@ void BattleScenario::SetSmoothMap(const char* path, const char* hash, float size
 			return;
 	}
 
-	Image* oldSmoothMap = _smoothMap;
 	GroundMap* oldGroundMap = _simulator->GetGroundMap();
 
 	bounds2f bounds(0, 0, size, size);
-	_smoothMap = new Image();
-	_smoothMap->LoadFromResource(res);
+	auto smoothMap = std::unique_ptr<Image>(new Image());
+	smoothMap->LoadFromResource(res);
 
-	_simulator->SetGroundMap(new SmoothGroundMap(hash, bounds, _smoothMap));
+	_simulator->SetGroundMap(new SmoothGroundMap(bounds, std::move(smoothMap)));
 
 	delete oldGroundMap;
-	delete oldSmoothMap;
 
-	_smoothMapHash = hash;
+	_legacyMapId = legacyMapId;
 }
 
 
@@ -150,6 +146,12 @@ void BattleScenario::SetTiledMap(int x, int y)
 	GroundMap* old = _simulator->GetGroundMap();
 	_simulator->SetGroundMap(new TiledGroundMap(bounds, glm::ivec2(x, y)));
 	delete old;
+}
+
+
+const char* BattleScenario::GetLegacyMapId() const
+{
+	return _legacyMapId.empty() ? nullptr : _legacyMapId.c_str();
 }
 
 

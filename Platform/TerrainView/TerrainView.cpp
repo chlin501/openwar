@@ -66,7 +66,7 @@ void TerrainView::RenderMouseHint(VertexShape_3f& vertices)
 }
 
 
-void TerrainView::SetHeightMap(HeightMap* heightMap)
+void TerrainView::SetHeightMap(const HeightMap* heightMap)
 {
 	_heightMap = heightMap;
 

@@ -115,7 +115,7 @@ static bool almost_zero(float value)
 }
 
 
-std::pair<bool, float> HeightMap::Intersect(ray r)
+std::pair<bool, float> HeightMap::Intersect(ray r) const
 {
 	glm::vec3 offset = glm::vec3(_bounds.min, 0);
 	glm::vec3 scale = glm::vec3(glm::vec2(_cacheStride, _cacheStride) / _bounds.size(), 1);
@@ -130,7 +130,7 @@ std::pair<bool, float> HeightMap::Intersect(ray r)
 }
 
 
-std::pair<bool, float> HeightMap::InternalIntersect(ray r)
+std::pair<bool, float> HeightMap::InternalIntersect(ray r) const
 {
 	bounds1f height = bounds1f(-2.5f, 250);
 	bounds2f bounds(0, 0, _cacheMaxIndex, _cacheMaxIndex);

@@ -6,20 +6,17 @@
 #include "HeightMap.h"
 
 
-SmoothGroundMap::SmoothGroundMap(const char* hash, bounds2f bounds, Image* image) :
-_heightMap(nullptr),
-_hash(hash),
-_bounds(bounds),
-_image(image)
+SmoothGroundMap::SmoothGroundMap(bounds2f bounds, std::unique_ptr<Image>&& image) :
+	_heightMap{bounds},
+	_bounds{bounds},
+	_image{std::move(image)}
 {
-	_heightMap = new HeightMap(bounds2f(0, 0, 1024, 1024));
 	UpdateHeightMap();
 }
 
 
 SmoothGroundMap::~SmoothGroundMap()
 {
-	delete _heightMap;
 }
 
 
@@ -133,7 +130,7 @@ float SmoothGroundMap::GetImpassableValue(int x, int y) const
 		if (c.b >= 0.5f && c.r < 0.5f)
 			return 1.0f;
 
-		glm::vec3 n = _heightMap->GetNormal(x, y);
+		glm::vec3 n = _heightMap.GetNormal(x, y);
 
 		return bounds1f(0, 1).clamp(0.5f + 8.0f * (0.83f - n.z));
 	}
@@ -241,5 +238,5 @@ bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, floa
 
 void SmoothGroundMap::UpdateHeightMap()
 {
-	_heightMap->Update(this);
+	_heightMap.Update(this);
 }

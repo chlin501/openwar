@@ -2,8 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef SmoothHeightMap_H
-#define SmoothHeightMap_H
+#ifndef HeightMap_H
+#define HeightMap_H
 
 #include <glm/glm.hpp>
 #include "Algebra/geometry.h"
@@ -34,12 +34,12 @@ public:
 	glm::vec3 GetNormal(int x, int y) const;
 
 	float InterpolateHeight(glm::vec2 position) const;
-	glm::vec3 GetPosition(glm::vec2 p, float h) { return glm::vec3(p, InterpolateHeight(p) + h); }
+	glm::vec3 GetPosition(glm::vec2 p, float h) const { return glm::vec3(p, InterpolateHeight(p) + h); }
 
-	std::pair<bool, float> Intersect(ray r);
+	std::pair<bool, float> Intersect(ray r) const;
 
 private:
-	std::pair<bool, float> InternalIntersect(ray r);
+	std::pair<bool, float> InternalIntersect(ray r) const;
 
 	void UpdateHeights(const GroundMap* groundMap);
 	void UpdateNormals();

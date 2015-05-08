@@ -133,7 +133,7 @@ void UnitMovementMarker::RenderMovementPath(VertexShape_3f_4f* vertices)
 		else if (command.running)
 			mode = 1;
 
-		HeightMap* heightMap = _battleView->GetSimulator()->GetGroundMap()->GetHeightMap();
+		const HeightMap* heightMap = _battleView->GetSimulator()->GetGroundMap()->GetHeightMap();
 		PathRenderer pathRenderer([heightMap](glm::vec2 p) { return heightMap->GetPosition(p, 1); });
 		pathRenderer.Path(vertices, command.path, mode);
 	}

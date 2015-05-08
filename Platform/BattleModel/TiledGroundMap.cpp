@@ -36,7 +36,7 @@ bounds2f TiledGroundMap::GetBounds() const
 }
 
 
-HeightMap* TiledGroundMap::GetHeightMap() const
+const HeightMap* TiledGroundMap::GetHeightMap() const
 {
 	return _heightMap;
 }

@@ -10,26 +10,22 @@
 #include "GroundMap.h"
 #include "Algebra/bounds.h"
 #include "Graphics/Image.h"
-
-class HeightMap;
+#include "HeightMap.h"
 
 
 class SmoothGroundMap : public GroundMap
 {
-	HeightMap* _heightMap;
-	std::string _hash;
+	HeightMap _heightMap;
 	bounds2f _bounds;
-	Image* _image;
+	std::unique_ptr<Image> _image;
 
 public:
-	SmoothGroundMap(const char* hash, bounds2f bounds, Image* image);
+	SmoothGroundMap(bounds2f bounds, std::unique_ptr<Image>&& image);
 	~SmoothGroundMap();
-
-	const char* GetHash() const { return _hash.c_str(); }
 
 public: //GroundMap
 	bounds2f GetBounds() const override { return _bounds; }
-	HeightMap* GetHeightMap() const override { return _heightMap; }
+	const HeightMap* GetHeightMap() const override { return &_heightMap; }
 	float CalculateHeight(int x, int y) const;
 
 	bool IsForest(glm::vec2 position) const override;
@@ -38,7 +34,7 @@ public: //GroundMap
 	bool ContainsWater(bounds2f bounds) const override;
 
 public:
-	Image* GetImage() const { return _image; }
+	Image* GetImage() const { return _image.get(); }
 	glm::ivec2 ToGroundmapCoordinate(glm::vec2 position) const;
 
 	float GetForestValue(int x, int y) const;

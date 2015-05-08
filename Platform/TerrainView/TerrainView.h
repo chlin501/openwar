@@ -27,7 +27,7 @@ class TerrainView : public View
 	std::shared_ptr<TerrainHotspot> _terrainHotspot;
 
 protected:
-	HeightMap* _heightMap{};
+	const HeightMap* _heightMap{};
 
 public:
 	TerrainView(Surface* surface);
@@ -48,7 +48,7 @@ public:
 
 	void RenderMouseHint(VertexShape_3f& vertices);
 
-	void SetHeightMap(HeightMap* heightMap);
+	void SetHeightMap(const HeightMap* heightMap);
 
 	ray GetCameraRay(glm::vec2 screenPosition) const;
 	glm::vec3 GetTerrainPosition2(glm::vec2 screenPosition, float height = 0) const;

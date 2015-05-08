@@ -184,7 +184,7 @@ BattleObserver::~BattleObserver()
 
 BattleSimulator::BattleSimulator()
 {
-	_groundMap = new SmoothGroundMap("", bounds2f{0, 0, 1024, 1024}, nullptr);
+	_groundMap = new SmoothGroundMap(bounds2f{0, 0, 1024, 1024}, nullptr);
 }
 
 

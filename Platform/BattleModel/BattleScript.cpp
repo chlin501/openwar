@@ -40,7 +40,7 @@ void BattleScript::Execute()
 	std::ostringstream os;
 	os << "Maps/Map" << random_int(1, 12) << ".png";
 	std::string path = os.str();
-	_scenario->SetSmoothMap(path.c_str(), path.c_str(), 1024);
+	_scenario->LoadLegacySmoothMap(path.c_str(), path.c_str(), 1024);
 
 	int armytype = random_int(1, 3);
 	int count1 = 0;

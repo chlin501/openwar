@@ -26,8 +26,7 @@ class BattleScenario
 	BattleScript* _script{};
 	std::vector<BattleCommander*> _commanders{};
 	BattleCommander* _dummyCommander{};
-	std::string _smoothMapHash{}; // LEGACY
-	Image* _smoothMap{};
+	std::string _legacyMapId{};
 	int _teamPosition1{};
 	int _teamPosition2{};
 	float _deploymentTimer{};
@@ -55,8 +54,10 @@ public:
 	BattleOutcome GetOutcome(int team) const;
 
 	void SetGroundMap(GroundMap* groundMap);
-	void SetSmoothMap(const char* path, const char* hash, float size);
+	void LoadLegacySmoothMap(const char* path, const char* legacyMapId, float size);
 	void SetTiledMap(int x, int y);
+
+	const char* GetLegacyMapId() const;
 
 	void Tick(double secondsSinceLastTick);
 

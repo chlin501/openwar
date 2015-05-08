@@ -34,7 +34,7 @@ public:
 
 public: // GroundMap
 	bounds2f GetBounds() const override;
-	HeightMap* GetHeightMap() const override;
+	const HeightMap* GetHeightMap() const override;
 	float CalculateHeight(int x, int y) const override;
 
 	bool IsForest(glm::vec2 position) const override;

@@ -2,8 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef TerrainSurface_H
-#define TerrainSurface_H
+#ifndef GroundMap_H
+#define GroundMap_H
 
 #include "Algebra/bounds.h"
 
@@ -19,7 +19,7 @@ public:
 	virtual ~GroundMap();
 
 	virtual bounds2f GetBounds() const = 0;
-	virtual HeightMap* GetHeightMap() const = 0;
+	virtual const HeightMap* GetHeightMap() const = 0;
 	virtual float CalculateHeight(int x, int y) const = 0;
 
 	virtual bool IsForest(glm::vec2 position) const = 0;
