@@ -16,17 +16,9 @@ PracticeScript::~PracticeScript()
 }
 
 
-/*static int random_int(int min, int max)
-{
-	return min + (int)glm::linearRand<float>(0, max - min);
-}*/
-
-
 void PracticeScript::Execute()
 {
 	_simulator->SetPractice(true);
-
-	_scenario->LoadLegacySmoothMap("Maps/Practice.png", "Maps/Practice.png", 1024);
 
 	glm::vec2 center(512, 512);
 

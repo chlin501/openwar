@@ -90,7 +90,7 @@ BattleCommander* BattleScenario::GetDummyCommander() const
 }
 
 
-void BattleScenario::StartScript()
+void BattleScenario::StartLegacyScenario()
 {
 	if (_script != nullptr)
 		_script->Execute();

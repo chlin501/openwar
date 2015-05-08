@@ -49,7 +49,7 @@ public:
 	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
 	BattleCommander* GetDummyCommander() const;
 
-	void StartScript();
+	void StartLegacyScenario();
 
 	BattleOutcome GetOutcome(int team) const;
 
