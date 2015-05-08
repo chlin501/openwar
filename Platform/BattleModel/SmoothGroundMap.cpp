@@ -219,5 +219,5 @@ bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, floa
 
 void SmoothGroundMap::UpdateHeightMap()
 {
-	_heightMap->Update([this](int x, int y) { return CalculateHeight(x, y); });
+	_heightMap->Update(this);
 }

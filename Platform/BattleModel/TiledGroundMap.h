@@ -32,22 +32,20 @@ public:
 	TiledGroundMap(HeightMap* heightMap, bounds2f bounds, glm::ivec2 size);
 	virtual ~TiledGroundMap();
 
-	// GroundMap
+public: // GroundMap
+	bounds2f GetBounds() const override;
+	HeightMap* GetHeightMap() const override;
+	float CalculateHeight(int x, int y) const override;
 
-	virtual bounds2f GetBounds() const;
-	virtual HeightMap* GetHeightMap() const;
+	bool IsForest(glm::vec2 position) const override;
+	bool IsImpassable(glm::vec2 position) const override;
+	bool IsWater(glm::vec2 position) const override;
+	bool ContainsWater(bounds2f bounds) const override;
 
-	virtual bool IsForest(glm::vec2 position) const;
-	virtual bool IsImpassable(glm::vec2 position) const;
-	virtual bool IsWater(glm::vec2 position) const;
-	virtual bool ContainsWater(bounds2f bounds) const;
-
-	// TiledGroundMap
-
+public: // TiledGroundMap
 	glm::ivec2 GetSize() const { return _size; }
 
 	void SetHeight(int x, int y, float h);
-	float GetHeight(int x, int y) const;
 
 	void UpdateHeightMap();
 

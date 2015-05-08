@@ -108,6 +108,12 @@ BattleOutcome BattleScenario::GetOutcome(int team) const
 }
 
 
+void BattleScenario::SetGroundMap(GroundMap* groundMap)
+{
+
+}
+
+
 void BattleScenario::SetSmoothMap(const char* path, const char* hash, float size)
 {
 	if (_smoothMapHash == hash)

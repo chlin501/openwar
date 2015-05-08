@@ -40,6 +40,12 @@ HeightMap* TiledGroundMap::GetHeightMap() const
 }
 
 
+float TiledGroundMap::CalculateHeight(int x, int y) const
+{
+	return _patch->get_height(x, y);
+}
+
+
 bool TiledGroundMap::IsForest(glm::vec2 position) const
 {
 	return false;
@@ -74,15 +80,9 @@ void TiledGroundMap::SetHeight(int x, int y, float h)
 }
 
 
-float TiledGroundMap::GetHeight(int x, int y) const
-{
-	return _patch->get_height(x, y);
-}
-
-
 void TiledGroundMap::UpdateHeightMap()
 {
-	_heightMap->Update([](int x, int y) { return 3; });
+	_heightMap->Update(this);
 }
 
 

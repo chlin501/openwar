@@ -4,7 +4,7 @@
 
 #include <algorithm>
 #include "HeightMap.h"
-
+#include "GroundMap.h"
 
 
 HeightMap::HeightMap(bounds2f bounds) :
@@ -26,9 +26,9 @@ HeightMap::~HeightMap()
 }
 
 
-void HeightMap::Update(std::function<float(int, int)> calculateHeight)
+void HeightMap::Update(const GroundMap* groundMap)
 {
-	UpdateHeights(calculateHeight);
+	UpdateHeights(groundMap);
 	UpdateNormals();
 }
 
@@ -224,7 +224,7 @@ std::pair<bool, float> HeightMap::InternalIntersect(ray r)
 }
 
 
-void HeightMap::UpdateHeights(std::function<float(int, int)> calculateHeight)
+void HeightMap::UpdateHeights(const GroundMap* groundMap)
 {
 	int n = _cacheMaxIndex;
 
@@ -232,14 +232,14 @@ void HeightMap::UpdateHeights(std::function<float(int, int)> calculateHeight)
 		for (int y = 0; y <= n; y += 2)
 		{
 			int i = x + y * _cacheStride;
-			_cacheHeights[i] = calculateHeight(x, y);
+			_cacheHeights[i] = groundMap->CalculateHeight(x, y);
 		}
 
 	for (int x = 1; x < n; x += 2)
 		for (int y = 1; y < n; y += 2)
 		{
 			int i = x + y * _cacheStride;
-			_cacheHeights[i] = calculateHeight(x, y);
+			_cacheHeights[i] = groundMap->CalculateHeight(x, y);
 		}
 
 	for (int y = 0; y <= n; y += 2)

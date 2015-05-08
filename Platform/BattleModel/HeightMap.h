@@ -5,9 +5,10 @@
 #ifndef SmoothHeightMap_H
 #define SmoothHeightMap_H
 
-#include <functional>
 #include <glm/glm.hpp>
 #include "Algebra/geometry.h"
+
+class GroundMap;
 
 
 class HeightMap
@@ -24,7 +25,7 @@ public:
 
 	bounds2f GetBounds() const { return _bounds; }
 
-	void Update(std::function<float(int, int)> calculateHeight);
+	void Update(const GroundMap* groundMap);
 
 	int GetMaxIndex() const { return _cacheMaxIndex; }
 	float GetHeight(int x, int y) const;
@@ -38,7 +39,7 @@ public:
 private:
 	std::pair<bool, float> InternalIntersect(ray r);
 
-	void UpdateHeights(std::function<float(int, int)> calculateHeight);
+	void UpdateHeights(const GroundMap* groundMap);
 	void UpdateNormals();
 };
 

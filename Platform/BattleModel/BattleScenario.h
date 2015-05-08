@@ -8,6 +8,7 @@
 
 class BattleScript;
 class BattleSimulator;
+class GroundMap;
 
 
 enum class BattleOutcome
@@ -25,7 +26,7 @@ class BattleScenario
 	BattleScript* _script{};
 	std::vector<BattleCommander*> _commanders{};
 	BattleCommander* _dummyCommander{};
-	std::string _smoothMapHash{};
+	std::string _smoothMapHash{}; // LEGACY
 	Image* _smoothMap{};
 	int _teamPosition1{};
 	int _teamPosition2{};
@@ -53,6 +54,7 @@ public:
 
 	BattleOutcome GetOutcome(int team) const;
 
+	void SetGroundMap(GroundMap* groundMap);
 	void SetSmoothMap(const char* path, const char* hash, float size);
 	void SetTiledMap(int x, int y);
 

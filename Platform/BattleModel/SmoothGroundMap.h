@@ -26,17 +26,19 @@ public:
 
 	const char* GetHash() const { return _hash.c_str(); }
 
-	virtual bounds2f GetBounds() const { return _bounds; }
-	virtual HeightMap* GetHeightMap() const { return _heightMap; }
+public: //GroundMap
+	bounds2f GetBounds() const override { return _bounds; }
+	HeightMap* GetHeightMap() const override { return _heightMap; }
+	float CalculateHeight(int x, int y) const;
 
-	virtual bool IsForest(glm::vec2 position) const;
-	virtual bool IsImpassable(glm::vec2 position) const;
-	virtual bool IsWater(glm::vec2 position) const;
-	virtual bool ContainsWater(bounds2f bounds) const;
+	bool IsForest(glm::vec2 position) const override;
+	bool IsImpassable(glm::vec2 position) const override;
+	bool IsWater(glm::vec2 position) const override;
+	bool ContainsWater(bounds2f bounds) const override;
 
+public:
 	Image* GetImage() const { return _image; }
 	glm::ivec2 ToGroundmapCoordinate(glm::vec2 position) const;
-	float CalculateHeight(int x, int y) const;
 
 	float GetForestValue(int x, int y) const;
 	float GetImpassableValue(int x, int y) const;
