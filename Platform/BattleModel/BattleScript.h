@@ -8,17 +8,14 @@
 #include <map>
 #include "BattleSimulator.h"
 
-class BattleScenario;
-
 
 class BattleScript
 {
 protected:
-	BattleScenario* _scenario{};
 	BattleSimulator* _simulator{};
 
 public:
-	BattleScript(BattleScenario* scenario);
+	BattleScript(BattleSimulator* simulator);
 	virtual ~BattleScript();
 
 	virtual void Execute();

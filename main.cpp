@@ -18,20 +18,21 @@
 
 #include "OpenWarSurface.h"
 #include "Surface/Window.h"
-#include "BattleModel/BattleScenario.h"
+#include "BattleModel/BattleSimulator.h"
 #include "BattleModel/BattleScript.h"
 #include "BattleModel/PracticeScript.h"
 #include "Viewport.h"
 
 
-static BattleScenario* CreateBattleScenario()
+static BattleSimulator* CreateBattleSimulator()
 {
-	BattleScenario* scenario = new BattleScenario();
-	scenario->SetScript(new PracticeScript(scenario));
-	scenario->AddCommander("1", 1, BattleCommanderType::Player);
-	scenario->AddCommander("2", 2, BattleCommanderType::Script);
-	scenario->StartScript();
-	return scenario;
+	BattleSimulator* simulator = new BattleSimulator();
+	simulator->SetScript(new PracticeScript(simulator));
+	simulator->AddCommander("1", 1, BattleCommanderType::Player);
+	simulator->AddCommander("2", 2, BattleCommanderType::Script);
+	simulator->LoadLegacySmoothMap("Maps/Practice.png", "Maps/Practice.png", 1024);
+	simulator->GetScript()->Execute();
+	return simulator;
 }
 
 
@@ -67,9 +68,9 @@ int main(int argc, char *argv[])
 
     RenderLoopObserver::NotifyRenderLoop(0);
 
-	BattleScenario* scenario = CreateBattleScenario();
-	std::vector<BattleCommander*> commanders(1, scenario->GetCommanders().front());
-	surface->ResetBattleViews(scenario, commanders);
+	BattleSimulator* battleSimulator = CreateBattleSimulator();
+	std::vector<BattleCommander*> battleCommanders(1, battleSimulator->GetCommanders().front());
+	surface->ResetBattleViews(battleSimulator, battleCommanders);
 
 	while (!Window::IsDone())
 		Window::ProcessEvents();

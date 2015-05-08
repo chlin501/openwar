@@ -9,7 +9,7 @@
 class BattleCommander;
 class BattleGesture;
 class BattleModel;
-class BattleScenario;
+class BattleSimulator;
 class BattleScript;
 class BattleView;
 class EditorHotspot;
@@ -29,7 +29,7 @@ class BattleLayer : RenderLoopObserver, EditorModelObserver
 	bool _playing{};
 	bool _editing{};
 
-	BattleScenario* _scenario{};
+	BattleSimulator* _scenario{};
 	std::vector<BattleCommander*> _commanders{};
 
 	std::vector<BattleView*> _battleViews{};
@@ -41,13 +41,13 @@ public:
 	BattleLayer(Surface* surface);
 	~BattleLayer();
 
-	BattleScenario* GetScenario() const { return _scenario; }
+	BattleSimulator* GetSimulator() const { return _scenario; }
 	const std::vector<BattleView*>& GetBattleViews() const { return _battleViews; }
 	BattleView* GetPrimaryBattleView() const { return _battleViews.empty() ? nullptr : _battleViews.front(); }
 	EditorModel* GetEditorModel() const { return _editorModel; }
 
-	void ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
-	void ResetEditor(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
+	void ResetBattleViews(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders);
+	void ResetEditor(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders);
 
 	void ResetCameraPosition();
 

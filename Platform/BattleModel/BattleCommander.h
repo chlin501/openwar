@@ -3,14 +3,14 @@
 
 #include <string>
 
-class BattleScenario;
+class BattleSimulator;
 
 enum class BattleCommanderType { None = 0, Player = 1, Script = 2 };
 
 
 class BattleCommander
 {
-	BattleScenario* _scenario{};
+	BattleSimulator* _simulator{};
 	std::string _playerId{};
 	int _team{};
 	BattleCommanderType _type{};
@@ -18,7 +18,7 @@ class BattleCommander
 	bool _hasAbandonedBattle{};
 
 public:
-	BattleCommander(BattleScenario* scenario, const char* playerId, int team, BattleCommanderType type);
+	BattleCommander(BattleSimulator* simulator, const char* playerId, int team, BattleCommanderType type);
 
 	const char* GetPlayerId() const;
 	int GetTeam() const;

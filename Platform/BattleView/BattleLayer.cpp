@@ -1,4 +1,3 @@
-#include "BattleModel/BattleScenario.h"
 #include "BattleModel/BattleSimulator.h"
 #include "Surface/Surface.h"
 #include "BattleHotspot.h"
@@ -25,7 +24,7 @@ BattleLayer::~BattleLayer()
 }
 
 
-void BattleLayer::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
+void BattleLayer::ResetBattleViews(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders)
 {
 	delete _editorModel;
 	_editorModel = nullptr;
@@ -52,7 +51,7 @@ void BattleLayer::ResetBattleViews(BattleScenario* scenario, const std::vector<B
 }
 
 
-void BattleLayer::ResetEditor(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
+void BattleLayer::ResetEditor(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders)
 {
 	delete _editorModel;
 	_editorModel = nullptr;
@@ -138,7 +137,7 @@ void BattleLayer::Render()
 
 void BattleLayer::CreateBattleView(BattleCommander* commander)
 {
-	BattleSimulator* simulator = _scenario->GetSimulator();
+	BattleSimulator* simulator = _scenario;
 
 	BattleView* battleView = new BattleView(_surface);
 	battleView->OrderBack();
@@ -158,7 +157,7 @@ void BattleLayer::ResetBattleView(BattleView* battleView, BattleCommander* comma
 {
 	battleView->GetViewport()->SetFlip(commander != _commanders[0]);
 	battleView->SetCommander(commander);
-	battleView->SetSimulator(_scenario->GetSimulator());
+	battleView->SetSimulator(_scenario);
 }
 
 

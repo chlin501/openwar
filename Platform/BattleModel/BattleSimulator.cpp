@@ -2,16 +2,20 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include <algorithm>
-#include <cstdlib>
-#include <cstring>
-#include <set>
 #include "Algebra/geometry.h"
 #include "BattleSimulator.h"
 #include "GroundMap.h"
 #include "HeightMap.h"
 #include "BattleCommander.h"
 #include "SmoothGroundMap.h"
+#include "TiledGroundMap.h"
+#include "BattleScript.h"
+#include <glm/gtc/random.hpp>
+#include <algorithm>
+#include <cstdlib>
+#include <cstring>
+#include <set>
+#include <sstream>
 
 
 static float normalize_angle(float a)
@@ -23,6 +27,14 @@ static float normalize_angle(float a)
 		a -= two_pi;
 	return a;
 }
+
+static int random_int(int min, int max)
+{
+	return min + (int)glm::linearRand<float>(0, max - min);
+}
+
+
+
 
 
 bool UnitRange::IsWithinRange(glm::vec2 p) const
@@ -185,11 +197,20 @@ BattleObserver::~BattleObserver()
 BattleSimulator::BattleSimulator()
 {
 	_groundMap = new SmoothGroundMap(bounds2f{0, 0, 1024, 1024}, nullptr);
+	_script = new BattleScript(this);
+	_dummyCommander = new BattleCommander(this, "", 1, BattleCommanderType::None);
 }
 
 
 BattleSimulator::~BattleSimulator()
 {
+	for (BattleCommander* commander : _commanders)
+		delete commander;
+
+	delete _script;
+	delete _groundMap;
+
+	delete _dummyCommander;
 	for (Unit* unit : _units)
 	{
 		delete[] unit->fighters;
@@ -1291,4 +1312,168 @@ bool BattleSimulator::TeamHasAbandondedBattle(int team) const
 			return false;
 
 	return true;
+}
+
+
+/***/
+
+
+void BattleSimulator::SetScript(BattleScript* value)
+{
+	delete _script;
+	_script = value;
+}
+
+
+BattleScript* BattleSimulator::GetScript() const
+{
+	return _script;
+}
+
+
+void BattleSimulator::SetTeamPosition(int team, int position)
+{
+	if (team == 1)
+		_teamPosition1 = position;
+	if (team == 2)
+		_teamPosition2 = position;
+}
+
+
+int BattleSimulator::GetTeamPosition(int team) const
+{
+	if (team == 1)
+		return _teamPosition1;
+	if (team == 2)
+		return _teamPosition2;
+	return 0;
+}
+
+
+BattleCommander* BattleSimulator::AddCommander(const char* playerId, int team, BattleCommanderType type)
+{
+	BattleCommander* commander = new BattleCommander(this, playerId, team, type);
+	_commanders.push_back(commander);
+	return commander;
+}
+
+
+BattleCommander* BattleSimulator::GetCommander(const char* playerId) const
+{
+	for (BattleCommander* commander : _commanders)
+		if (std::strcmp(commander->GetPlayerId(), playerId) == 0)
+			return commander;
+
+	return nullptr;
+}
+
+
+BattleCommander* BattleSimulator::GetDummyCommander() const
+{
+	return _dummyCommander;
+}
+
+
+void BattleSimulator::LoadLegacySmoothMap(const char* path, const char* legacyMapId, float size)
+{
+	if (_legacyMapId == legacyMapId)
+		return;
+
+	Resource res(path);
+	if (!res.load())
+	{
+		res = Resource("Maps/DefaultMap.png");
+		if (!res.load())
+			return;
+	}
+
+	GroundMap* oldGroundMap = GetGroundMap();
+
+	bounds2f bounds(0, 0, size, size);
+	auto smoothMap = std::unique_ptr<Image>(new Image());
+	smoothMap->LoadFromResource(res);
+
+	SetGroundMap(new SmoothGroundMap(bounds, std::move(smoothMap)));
+
+	delete oldGroundMap;
+
+	_legacyMapId = legacyMapId;
+}
+
+
+void BattleSimulator::LoadLegacyRandomMap()
+{
+	std::ostringstream os;
+	os << "Maps/Map" << random_int(1, 12) << ".png";
+	std::string path = os.str();
+	LoadLegacySmoothMap(path.c_str(), path.c_str(), 1024);
+}
+
+
+void BattleSimulator::SetTiledMap(int x, int y)
+{
+	bounds2f bounds(0, 0, 1024, 1024);
+
+	GroundMap* old = GetGroundMap();
+	SetGroundMap(new TiledGroundMap(bounds, glm::ivec2(x, y)));
+	delete old;
+}
+
+
+const char* BattleSimulator::GetLegacyMapId() const
+{
+	return _legacyMapId.empty() ? nullptr : _legacyMapId.c_str();
+}
+
+
+void BattleSimulator::Tick(double secondsSinceLastTick)
+{
+	if (_script != nullptr)
+		_script->Tick(secondsSinceLastTick);
+
+	UpdateDeploymentZones(secondsSinceLastTick);
+}
+
+
+void BattleSimulator::EnableDeploymentZones(float deploymentTimer)
+{
+	_deploymentTimer = deploymentTimer;
+	_deploymentEnabled = true;
+	UpdateDeploymentZones(0);
+}
+
+
+void BattleSimulator::UpdateDeploymentZones(double secondsSinceLastTick)
+{
+	if (_deploymentEnabled)
+	{
+		const float deploymentRadius = 1024.0f;
+		const float deploymenyStart = 128.0f;
+		const float deploymentPause = 15.0f; // seconds
+		const float deploymentDuration = 45.0f; // seconds (total duration including pause)
+
+		float deploymentOffset = deploymenyStart;
+		if (_deploymentTimer > deploymentPause)
+			deploymentOffset += (_deploymentTimer - deploymentPause) * (512.0f - deploymenyStart) / (deploymentDuration - deploymentPause);
+
+		for (int team = 1; team <= 2; ++team)
+		{
+			if (deploymentOffset < 512.0f && !HasCompletedDeployment(team))
+			{
+				float sign = GetTeamPosition(team) == 1 ? -1.0f : 1.0f;
+				SetDeploymentZone(team, glm::vec2{512.0f, 512.0f + sign * (deploymentRadius + deploymentOffset)}, deploymentRadius);
+			}
+			else
+			{
+				SetDeploymentZone(team, glm::vec2{}, 0);
+			}
+		}
+
+		_deploymentTimer += static_cast<float>(secondsSinceLastTick);
+	}
+	else
+	{
+		SetDeploymentZone(1, glm::vec2{}, 0);
+		SetDeploymentZone(2, glm::vec2{}, 0);
+	}
 }

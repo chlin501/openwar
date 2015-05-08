@@ -10,7 +10,7 @@ class PracticeScript : public BattleScript
 	int _waveNumber{};
 
 public:
-	PracticeScript(BattleScenario* scenario);
+	PracticeScript(BattleSimulator* simulator);
 	virtual ~PracticeScript();
 
 	virtual void Execute();

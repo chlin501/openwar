@@ -10,9 +10,11 @@
 #include <string>
 #include "Algorithms/quadtree.h"
 #include "MovementRules.h"
-#import "GroundMap.h"
+#include "GroundMap.h"
+#include "BattleCommander.h"
 
 class BattleCommander;
+class BattleScript;
 class GroundMap;
 class HeightMap;
 struct Fighter;
@@ -288,6 +290,16 @@ class BattleSimulator
 	int _winnerTeam{};
 	glm::vec3 _deploymentZones[2]{};
 
+	/***/
+	BattleScript* _script{};
+	std::vector<BattleCommander*> _commanders{};
+	BattleCommander* _dummyCommander{};
+	std::string _legacyMapId{};
+	int _teamPosition1{};
+	int _teamPosition2{};
+	float _deploymentTimer{};
+	bool _deploymentEnabled{};
+
 public:
 	BattleSimulator();
 	~BattleSimulator();
@@ -360,6 +372,29 @@ private:
 	Unit* ClosestEnemyWithinLineOfFire(Unit* unit);
 
 	bool TeamHasAbandondedBattle(int team) const;
+
+public:
+	void SetScript(BattleScript* value);
+	BattleScript* GetScript() const;
+
+	void SetTeamPosition(int team, int position);
+	int GetTeamPosition(int team) const;
+
+	BattleCommander* AddCommander(const char* playerId, int team, BattleCommanderType type);
+	BattleCommander* GetCommander(const char* playerId) const;
+	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
+	BattleCommander* GetDummyCommander() const;
+
+	void LoadLegacySmoothMap(const char* path, const char* legacyMapId, float size);
+	void LoadLegacyRandomMap();
+	void SetTiledMap(int x, int y);
+
+	const char* GetLegacyMapId() const;
+
+	void Tick(double secondsSinceLastTick);
+
+	void EnableDeploymentZones(float deploymentTimer);
+	void UpdateDeploymentZones(double secondsSinceLastTick);
 };
 
 

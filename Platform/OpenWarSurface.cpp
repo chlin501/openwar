@@ -3,7 +3,6 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "OpenWarSurface.h"
-#include "BattleModel/BattleScenario.h"
 #include "Widgets/ButtonGrid.h"
 #include "BattleView/BattleGesture.h"
 #include "BattleView/BattleView.h"
@@ -95,7 +94,7 @@ OpenWarSurface::~OpenWarSurface()
 }
 
 
-void OpenWarSurface::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
+void OpenWarSurface::ResetBattleViews(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders)
 {
 	_battleLayer->ResetEditor(scenario, commanders);
 	_battleLayer->SetPlaying(false);
@@ -121,8 +120,8 @@ void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 	_buttonsTopLeft->SetBounds(viewportBounds);
 	_buttonsTopRight->SetBounds(viewportBounds);
 
-	if (_battleLayer->GetScenario() != nullptr && _battleLayer->IsPlaying())
-		_battleLayer->GetScenario()->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);
+	if (_battleLayer->GetSimulator() != nullptr && _battleLayer->IsPlaying())
+		_battleLayer->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);
 }
 
 

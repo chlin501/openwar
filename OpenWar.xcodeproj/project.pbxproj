@@ -88,7 +88,6 @@
 		63F553445E70F2F5641FE284 /* EditorHotspot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F5583D00D8165046412FA5 /* EditorHotspot.cpp */; };
 		63F55433D66E0956B386D227 /* UnitMovementMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55D5E1B7F9F2AFF583B2D /* UnitMovementMarker.cpp */; };
 		63F554616556A395A788A79A /* BattleCommander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55CCD729E593A1AF60AC3 /* BattleCommander.cpp */; };
-		63F554B794FA10FAD4611DBE /* BattleScenario.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F55A61E69CB52A7505E66C /* BattleScenario.cpp */; };
 		63F5552382844DD951176704 /* TerrainSky.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F5554DB57C199D82F2C968 /* TerrainSky.cpp */; };
 		63F555DD68EC4972892F6EF9 /* TerrainHotspot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F554EDD3E3CD7369473A6E /* TerrainHotspot.cpp */; };
 		63F5563E7284F60A11F8D90F /* UnitTrackingMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63F558098EC65E4AB2495C2C /* UnitTrackingMarker.cpp */; };
@@ -305,7 +304,6 @@
 		63F559CAE90D309CD6697CC0 /* EditorGesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorGesture.cpp; sourceTree = "<group>"; };
 		63F55A1C5D494EA7A1DE3EBD /* Sampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sampler.h; sourceTree = "<group>"; };
 		63F55A399C7906BE1D77A063 /* TerrainSky.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainSky.h; sourceTree = "<group>"; };
-		63F55A61E69CB52A7505E66C /* BattleScenario.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleScenario.cpp; sourceTree = "<group>"; };
 		63F55AB2BE0DA6BCCD070755 /* UnitTrackingMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitTrackingMarker.h; sourceTree = "<group>"; };
 		63F55AD3C680A53B22D999AE /* TerrainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainView.h; sourceTree = "<group>"; };
 		63F55B5F9271AA7EA4F00E20 /* CasualtyMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CasualtyMarker.h; sourceTree = "<group>"; };
@@ -325,7 +323,6 @@
 		63F55ECD0E316AB8F5468718 /* TerrainHotspot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainHotspot.h; sourceTree = "<group>"; };
 		63F55EDEE5AF3C0B27543240 /* EditorModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorModel.cpp; sourceTree = "<group>"; };
 		63F55F83E4632B94624A94E5 /* FontDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontDescriptor.h; sourceTree = "<group>"; };
-		63F55F8AEA7149588D5DA97F /* BattleScenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleScenario.h; sourceTree = "<group>"; };
 		63F55FBEF0278E29E88A088C /* BattleGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleGesture.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -354,8 +351,6 @@
 			children = (
 				63F55CCD729E593A1AF60AC3 /* BattleCommander.cpp */,
 				63F5512700D8F875408129B0 /* BattleCommander.h */,
-				63F55A61E69CB52A7505E66C /* BattleScenario.cpp */,
-				63F55F8AEA7149588D5DA97F /* BattleScenario.h */,
 				4105FB171806D3890074C855 /* BattleScript.cpp */,
 				4105FB181806D3890074C855 /* BattleScript.h */,
 				4105FB191806D3890074C855 /* BattleSimulator.cpp */,
@@ -869,7 +864,6 @@
 				4156C30F1A139E40006A264C /* geometry.cpp in Sources */,
 				4156C3341A139E40006A264C /* Touch.cpp in Sources */,
 				63F554616556A395A788A79A /* BattleCommander.cpp in Sources */,
-				63F554B794FA10FAD4611DBE /* BattleScenario.cpp in Sources */,
 				4168CCC91A2387E7007C4509 /* InputEditor.cpp in Sources */,
 				4156C3291A139E40006A264C /* ScrollerGesture.cpp in Sources */,
 				4156C3121A139E40006A264C /* GaussBlur.cpp in Sources */,

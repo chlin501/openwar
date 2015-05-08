@@ -1,12 +1,11 @@
 #include <algorithm>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/random.hpp>
-#include "BattleScenario.h"
 #include "MonkeyScript.h"
 #include "Algebra/geometry.h"
 
 
-MonkeyScript::MonkeyScript(BattleScenario* scenario) : BattleScript(scenario)
+MonkeyScript::MonkeyScript(BattleSimulator* simulator) : BattleScript{simulator}
 {
 }
 
@@ -95,7 +94,7 @@ static glm::vec2 FindClusterCenter(const std::vector<Unit*>& units)
 void MonkeyScript::IssueCommands()
 {
 	BattleCommander* monkeyCommander = nullptr;
-	for (BattleCommander* commander : _scenario->GetCommanders())
+	for (BattleCommander* commander : _simulator->GetCommanders())
 		if (commander->GetType() == BattleCommanderType::Player)
 		{
 			monkeyCommander = commander;

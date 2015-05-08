@@ -1,12 +1,11 @@
 #include <algorithm>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/random.hpp>
-#include "BattleScenario.h"
 #include "PracticeScript.h"
 #include "Algebra/geometry.h"
 
 
-PracticeScript::PracticeScript(BattleScenario* scenario) : BattleScript(scenario)
+PracticeScript::PracticeScript(BattleSimulator* simulator) : BattleScript{simulator}
 {
 }
 

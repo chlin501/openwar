@@ -1,9 +1,9 @@
 #include "BattleCommander.h"
-#include "BattleScenario.h"
+#include "BattleSimulator.h"
 
 
-BattleCommander::BattleCommander(BattleScenario* scenario, const char* playerId, int team, BattleCommanderType type) :
-	_scenario{scenario},
+BattleCommander::BattleCommander(BattleSimulator* simulator, const char* playerId, int team, BattleCommanderType type) :
+	_simulator{simulator},
 	_playerId{playerId},
 	_team{team},
 	_type{type}
@@ -31,7 +31,7 @@ BattleCommanderType BattleCommander::GetType() const
 
 int BattleCommander::GetTeamPosition() const
 {
-	return _scenario->GetTeamPosition(_team);
+	return _simulator->GetTeamPosition(_team);
 }
 
 

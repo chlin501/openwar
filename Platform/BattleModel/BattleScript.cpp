@@ -10,13 +10,11 @@
 
 #include "BattleScript.h"
 #include "SamuraiModule.h"
-#include "BattleScenario.h"
 
 
 
-BattleScript::BattleScript(BattleScenario* scenario) :
-	_scenario{scenario},
-	_simulator{scenario->GetSimulator()}
+BattleScript::BattleScript(BattleSimulator* simulator) :
+	_simulator{simulator}
 {
 }
 
@@ -38,7 +36,7 @@ void BattleScript::Execute()
 	int count1 = 0;
 	int count2 = 0;
 
-	const std::vector<BattleCommander*>& commanders = _scenario->GetCommanders();
+	const std::vector<BattleCommander*>& commanders = _simulator->GetCommanders();
 	for (int i = 0; i < (int)commanders.size(); ++i)
 	{
 		switch (commanders[i]->GetTeam())
@@ -61,7 +59,7 @@ void BattleScript::Execute()
 	{
 		int team = commanders[i]->GetTeam();
 		int commanderId = i + 1;
-		int position = _scenario->GetTeamPosition(team);
+		int position = _simulator->GetTeamPosition(team);
 		float bearing = position == 1 ? 0 : 180;
 
 		int* part = team == 1 ? &part1 : &part2;
@@ -158,7 +156,7 @@ void BattleScript::NewUnit(int commanderId, const char* unitClass, int strength,
 {
 	UnitStats unitStats = SamuraiModule::GetDefaultUnitStats(unitClass);
 
-	BattleCommander* commander = _scenario->GetCommanders()[commanderId - 1];
+	BattleCommander* commander = _simulator->GetCommanders()[commanderId - 1];
 
 	Unit* unit = _simulator->AddUnit(commander, unitClass, strength, unitStats, position);
 	unit->command.bearing = glm::radians(90 - bearing);

@@ -9,7 +9,7 @@ class MonkeyScript : public BattleScript
 	double _commandTimer{};
 
 public:
-	MonkeyScript(BattleScenario* scenario);
+	MonkeyScript(BattleSimulator* simulator);
 	virtual ~MonkeyScript();
 
 	virtual void Tick(double secondsSinceLastTick);
