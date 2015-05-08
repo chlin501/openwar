@@ -16,16 +16,13 @@
 
 BattleScript::BattleScript(BattleScenario* scenario) :
 	_scenario{scenario},
-	_simulator{scenario->GetSimulator()},
-	_nextUnitId{1}
+	_simulator{scenario->GetSimulator()}
 {
-	_simulator->AddObserver(this);
 }
 
 
 BattleScript::~BattleScript()
 {
-	_simulator->RemoveObserver(this);
 }
 
 
@@ -37,11 +34,6 @@ static int random_int(int min, int max)
 
 void BattleScript::Execute()
 {
-	std::ostringstream os;
-	os << "Maps/Map" << random_int(1, 12) << ".png";
-	std::string path = os.str();
-	_scenario->LoadLegacySmoothMap(path.c_str(), path.c_str(), 1024);
-
 	int armytype = random_int(1, 3);
 	int count1 = 0;
 	int count2 = 0;
@@ -159,63 +151,10 @@ void BattleScript::Tick(double secondsSinceLastUpdate)
 }
 
 
-/* BattleObserver */
-
-
-void BattleScript::OnSetGroundMap(GroundMap* groundMap)
-{
-
-}
-
-
-void BattleScript::OnAddUnit(Unit* unit)
-{
-	if (_unitId[unit] == 0)
-	{
-		int unitId = _nextUnitId++;
-		_units[unitId] = unit;
-		_unitId[unit] = unitId;
-	}
-}
-
-
-void BattleScript::OnRemoveUnit(Unit* unit)
-{
-	int unitId = _unitId[unit];
-	_units.erase(unitId);
-	_unitId.erase(unit);
-}
-
-
-void BattleScript::OnCommand(Unit* unit, float timer)
-{
-}
-
-
-void BattleScript::OnShooting(const Shooting& shooting, float timer)
-{
-}
-
-
-void BattleScript::OnRelease(const Shooting& shooting)
-{
-}
-
-
-void BattleScript::OnCasualty(const Fighter& fighter)
-{
-}
-
-
-void BattleScript::OnRouting(Unit* unit)
-{
-}
-
-
 /***/
 
 
-int BattleScript::NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing)
+void BattleScript::NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing)
 {
 	UnitStats unitStats = SamuraiModule::GetDefaultUnitStats(unitClass);
 
@@ -223,10 +162,4 @@ int BattleScript::NewUnit(int commanderId, const char* unitClass, int strength, 
 
 	Unit* unit = _simulator->AddUnit(commander, unitClass, strength, unitStats, position);
 	unit->command.bearing = glm::radians(90 - bearing);
-
-	int unitId = _nextUnitId++;
-	_units[unitId] = unit;
-	_unitId[unit] = unitId;
-
-	return unitId;
 }

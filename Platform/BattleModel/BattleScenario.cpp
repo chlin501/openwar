@@ -1,5 +1,3 @@
-#include <cstdlib>
-#include <cstring>
 #include "Storage/Resource.h"
 #include "GroundMap.h"
 #include "BattleScenario.h"
@@ -8,6 +6,10 @@
 #include "PracticeScript.h"
 #include "SmoothGroundMap.h"
 #include "TiledGroundMap.h"
+#include <glm/gtc/random.hpp>
+#include <cstdlib>
+#include <cstring>
+#include <sstream>
 
 
 BattleScenario::BattleScenario()
@@ -90,22 +92,6 @@ BattleCommander* BattleScenario::GetDummyCommander() const
 }
 
 
-void BattleScenario::StartLegacyScenario()
-{
-	if (_script != nullptr)
-		_script->Execute();
-}
-
-
-BattleOutcome BattleScenario::GetOutcome(int team) const
-{
-	int winnerTeam = _simulator->GetWinnerTeam();
-	if (winnerTeam == 0)
-		return BattleOutcome::None;
-	return team == winnerTeam ? BattleOutcome::Won : BattleOutcome::Lost;
-}
-
-
 void BattleScenario::SetGroundMap(GroundMap* groundMap)
 {
 
@@ -136,6 +122,21 @@ void BattleScenario::LoadLegacySmoothMap(const char* path, const char* legacyMap
 	delete oldGroundMap;
 
 	_legacyMapId = legacyMapId;
+}
+
+
+static int random_int(int min, int max)
+{
+	return min + (int)glm::linearRand<float>(0, max - min);
+}
+
+
+void BattleScenario::LoadLegacyRandomMap()
+{
+	std::ostringstream os;
+	os << "Maps/Map" << random_int(1, 12) << ".png";
+	std::string path = os.str();
+	LoadLegacySmoothMap(path.c_str(), path.c_str(), 1024);
 }
 
 

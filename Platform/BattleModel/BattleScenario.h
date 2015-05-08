@@ -11,15 +11,6 @@ class BattleSimulator;
 class GroundMap;
 
 
-enum class BattleOutcome
-{
-	None,
-	Won,
-	Lost,
-	Draw
-};
-
-
 class BattleScenario
 {
 	BattleSimulator* _simulator{};
@@ -49,12 +40,9 @@ public:
 	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
 	BattleCommander* GetDummyCommander() const;
 
-	void StartLegacyScenario();
-
-	BattleOutcome GetOutcome(int team) const;
-
 	void SetGroundMap(GroundMap* groundMap);
 	void LoadLegacySmoothMap(const char* path, const char* legacyMapId, float size);
+	void LoadLegacyRandomMap();
 	void SetTiledMap(int x, int y);
 
 	const char* GetLegacyMapId() const;
