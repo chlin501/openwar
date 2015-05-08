@@ -377,7 +377,6 @@ private:
 
 public:
 	void SetScript(BattleScript* value);
-	BattleScript* GetScript() const;
 
 	void SetTeamPosition(int team, int position);
 	int GetTeamPosition(int team) const;

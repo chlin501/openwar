@@ -5,21 +5,13 @@
 #ifndef BattleScript_H
 #define BattleScript_H
 
-#include <map>
-#include "BattleSimulator.h"
-
 
 class BattleScript
 {
-protected:
-	BattleSimulator* _simulator{};
-
 public:
-	BattleScript(BattleSimulator* simulator);
 	virtual ~BattleScript();
 
-	virtual void Execute();
-	virtual void Tick(double secondsSinceLastTick);
+	virtual void Tick(double secondsSinceLastTick) = 0;
 };
 
 

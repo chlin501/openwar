@@ -3,40 +3,12 @@
 #include <glm/gtc/random.hpp>
 #include "PracticeScript.h"
 #include "Algebra/geometry.h"
+#include "BattleSimulator.h"
 
 
-PracticeScript::PracticeScript(BattleSimulator* simulator) : BattleScript{simulator}
+PracticeScript::PracticeScript(BattleSimulator* simulator) :
+	_simulator{simulator}
 {
-}
-
-
-PracticeScript::~PracticeScript()
-{
-}
-
-
-void PracticeScript::Execute()
-{
-	_simulator->SetPractice(true);
-
-	glm::vec2 center(512, 512);
-
-	_simulator->NewUnit(1, "SAM-BOW", 80, center + glm::vec2(-50, 0), 0);
-	_simulator->NewUnit(1, "SAM-ARQ", 80, center + glm::vec2(  0, 0), 0);
-	_simulator->NewUnit(1, "SAM-BOW", 80, center + glm::vec2( 50, 0), 0);
-
-	_simulator->NewUnit(1, "SAM-YARI", 80, center + glm::vec2(-25, -30), 0);
-	_simulator->NewUnit(1, "SAM-YARI", 80, center + glm::vec2( 25, -30), 0);
-
-	_simulator->NewUnit(1, "SAM-KATA", 80, center + glm::vec2(-50, -60), 0);
-	_simulator->NewUnit(1, "GEN-KATA", 40, center + glm::vec2(  0, -60), 0);
-	_simulator->NewUnit(1, "SAM-KATA", 80, center + glm::vec2( 50, -60), 0);
-
-	_simulator->NewUnit(1, "CAV-YARI", 40, center + glm::vec2(-70, -100), 0);
-	_simulator->NewUnit(1, "SAM-NAGI", 80, center + glm::vec2(  0, -90), 0);
-	_simulator->NewUnit(1, "CAV-BOW",  40, center + glm::vec2( 70, -100), 0);
-
-	SpawnWave();
 }
 
 

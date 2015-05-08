@@ -198,7 +198,6 @@ BattleObserver::~BattleObserver()
 BattleSimulator::BattleSimulator()
 {
 	_groundMap = new SmoothGroundMap(bounds2f{0, 0, 1024, 1024}, nullptr);
-	_script = new BattleScript(this);
 	_dummyCommander = new BattleCommander(this, "", 1, BattleCommanderType::None);
 }
 
@@ -1334,12 +1333,6 @@ void BattleSimulator::SetScript(BattleScript* value)
 {
 	delete _script;
 	_script = value;
-}
-
-
-BattleScript* BattleSimulator::GetScript() const
-{
-	return _script;
 }
 
 
