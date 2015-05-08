@@ -134,7 +134,7 @@ void BattleScenario::SetSmoothMap(const char* path, const char* hash, float size
 	_smoothMap = new Image();
 	_smoothMap->LoadFromResource(res);
 
-	_simulator->SetGroundMap(new SmoothGroundMap(_simulator->GetHeightMap(), hash, bounds, _smoothMap));
+	_simulator->SetGroundMap(new SmoothGroundMap(hash, bounds, _smoothMap));
 
 	delete oldGroundMap;
 	delete oldSmoothMap;
@@ -148,7 +148,7 @@ void BattleScenario::SetTiledMap(int x, int y)
 	bounds2f bounds(0, 0, 1024, 1024);
 
 	GroundMap* old = _simulator->GetGroundMap();
-	_simulator->SetGroundMap(new TiledGroundMap(_simulator->GetHeightMap(), bounds, glm::ivec2(x, y)));
+	_simulator->SetGroundMap(new TiledGroundMap(bounds, glm::ivec2(x, y)));
 	delete old;
 }
 

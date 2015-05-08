@@ -29,7 +29,7 @@ private:
 	bspline_patch* _patch{};
 
 public:
-	TiledGroundMap(HeightMap* heightMap, bounds2f bounds, glm::ivec2 size);
+	TiledGroundMap(bounds2f bounds, glm::ivec2 size);
 	virtual ~TiledGroundMap();
 
 public: // GroundMap

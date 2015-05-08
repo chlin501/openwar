@@ -6,13 +6,20 @@
 #include "HeightMap.h"
 
 
-SmoothGroundMap::SmoothGroundMap(HeightMap* heightMap, const char* hash, bounds2f bounds, Image* image) :
-_heightMap(heightMap),
+SmoothGroundMap::SmoothGroundMap(const char* hash, bounds2f bounds, Image* image) :
+_heightMap(nullptr),
 _hash(hash),
 _bounds(bounds),
 _image(image)
 {
+	_heightMap = new HeightMap(bounds2f(0, 0, 1024, 1024));
 	UpdateHeightMap();
+}
+
+
+SmoothGroundMap::~SmoothGroundMap()
+{
+	delete _heightMap;
 }
 
 
@@ -26,6 +33,9 @@ glm::ivec2 SmoothGroundMap::ToGroundmapCoordinate(glm::vec2 position) const
 
 float SmoothGroundMap::CalculateHeight(int x, int y) const
 {
+	if (!_image)
+		return 10.0f;
+
 	if (x < 1) x = 1; else if (x > _image->size().x - 1) x = _image->size().x - 1;
 	if (y < 1) y = 1; else if (y > _image->size().y - 1) y = _image->size().y - 1;
 
@@ -51,6 +61,9 @@ float SmoothGroundMap::CalculateHeight(int x, int y) const
 
 bool SmoothGroundMap::IsForest(glm::vec2 position) const
 {
+	if (!_image)
+		return false;
+
 	glm::ivec2 coord = ToGroundmapCoordinate(position);
 	return GetForestValue(coord.x, coord.y) >= 0.5;
 }
@@ -58,6 +71,9 @@ bool SmoothGroundMap::IsForest(glm::vec2 position) const
 
 bool SmoothGroundMap::IsImpassable(glm::vec2 position) const
 {
+	if (!_image)
+		return false;
+
 	glm::ivec2 coord = ToGroundmapCoordinate(position);
 	return GetImpassableValue(coord.x, coord.y) >= 0.5;
 }
@@ -65,6 +81,9 @@ bool SmoothGroundMap::IsImpassable(glm::vec2 position) const
 
 bool SmoothGroundMap::IsWater(glm::vec2 position) const
 {
+	if (!_image)
+		return false;
+
 	glm::ivec2 mapsize = _image->size();
 	glm::vec2 p = (position - _bounds.min) / _bounds.size();
 	int x = (int)(mapsize.x * glm::floor(p.x));
@@ -76,6 +95,9 @@ bool SmoothGroundMap::IsWater(glm::vec2 position) const
 
 bool SmoothGroundMap::ContainsWater(bounds2f bounds) const
 {
+	if (!_image)
+		return false;
+
 	glm::ivec2 mapsize = _image->size();
 	glm::vec2 min = glm::vec2(mapsize.x - 1, mapsize.y - 1) * (bounds.min - _bounds.min) / _bounds.size();
 	glm::vec2 max = glm::vec2(mapsize.x - 1, mapsize.y - 1) * (bounds.max - _bounds.min) / _bounds.size();

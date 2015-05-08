@@ -27,7 +27,9 @@ public:
 
 	void Update(const GroundMap* groundMap);
 
+	int GetHeightStride() const { return _cacheStride; }
 	int GetMaxIndex() const { return _cacheMaxIndex; }
+
 	float GetHeight(int x, int y) const;
 	glm::vec3 GetNormal(int x, int y) const;
 

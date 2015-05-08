@@ -8,11 +8,12 @@
 
 
 
-TiledGroundMap::TiledGroundMap(HeightMap* heightMap, bounds2f bounds, glm::ivec2 size) :
-_heightMap(heightMap),
+TiledGroundMap::TiledGroundMap(bounds2f bounds, glm::ivec2 size) :
+_heightMap(nullptr),
 _bounds(bounds),
 _size(size)
 {
+	_heightMap = new HeightMap(bounds2f(0, 0, 1024, 1024));
 	_tiles = new Tile[size.x * size.y];
 	_patch = new bspline_patch(glm::ivec2(size.x + 1, size.y + 1));
 }
@@ -20,6 +21,7 @@ _size(size)
 
 TiledGroundMap::~TiledGroundMap()
 {
+	delete _heightMap;
 	delete [] _tiles;
 	delete _patch;
 }

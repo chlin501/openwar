@@ -11,6 +11,7 @@
 #include "GroundMap.h"
 #include "HeightMap.h"
 #include "BattleCommander.h"
+#include "SmoothGroundMap.h"
 
 
 static float normalize_angle(float a)
@@ -183,14 +184,12 @@ BattleObserver::~BattleObserver()
 
 BattleSimulator::BattleSimulator()
 {
-	_heightMap = new HeightMap(bounds2f(0, 0, 1024, 1024));
+	_groundMap = new SmoothGroundMap("", bounds2f{0, 0, 1024, 1024}, nullptr);
 }
 
 
 BattleSimulator::~BattleSimulator()
 {
-	delete _heightMap;
-
 	for (Unit* unit : _units)
 	{
 		delete[] unit->fighters;
@@ -607,7 +606,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 
 	if (unitRange.minimumRange > 0 && unitRange.maximumRange > 0)
 	{
-		float centerHeight = _heightMap->InterpolateHeight(unitRange.center) + 1.9f;
+		float centerHeight = _groundMap->GetHeightMap()->InterpolateHeight(unitRange.center) + 1.9f;
 
 		int n = 24;
 		for (int i = 0; i <= n; ++i)
@@ -619,7 +618,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 			float maxAngle = -100;
 			for (float range = unitRange.minimumRange + delta; range <= unitRange.maximumRange; range += delta)
 			{
-				float height = _heightMap->InterpolateHeight(unitRange.center + range * direction) + 0.5f;
+				float height = _groundMap->GetHeightMap()->InterpolateHeight(unitRange.center + range * direction) + 0.5f;
 				float verticalAngle = glm::atan(height - centerHeight, range);
 				if (verticalAngle > maxAngle)
 				{
@@ -791,7 +790,7 @@ void BattleSimulator::ResolveProjectileCasualties()
 
 void BattleSimulator::RemoveCasualties()
 {
-	bounds2f bounds = _heightMap->GetBounds();
+	bounds2f bounds = _groundMap->GetHeightMap()->GetBounds();
 	glm::vec2 center = bounds.mid();
 	float radius = bounds.x().size() / 2;
 	float radius_squared = radius * radius;
@@ -1039,7 +1038,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 
 	result.readyState = original.readyState;
 	result.position = NextFighterPosition(fighter);
-	result.position_z = _heightMap->InterpolateHeight(result.position);
+	result.position_z = _groundMap->GetHeightMap()->InterpolateHeight(result.position);
 	result.velocity = NextFighterVelocity(fighter);
 
 

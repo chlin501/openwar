@@ -276,7 +276,6 @@ class BattleSimulator
 	quadtree<Fighter*> _fighterQuadTree{0, 0, 1024, 1024};
 	quadtree<Fighter*> _weaponQuadTree{0, 0, 1024, 1024};
 
-	HeightMap* _heightMap{};
 	GroundMap* _groundMap{};
 
 	std::vector<Unit*> _units{};
@@ -301,8 +300,6 @@ public:
 
 	void AddObserver(BattleObserver* observer);
 	void RemoveObserver(BattleObserver* observer);
-
-	HeightMap* GetHeightMap() { return _heightMap; }
 
 	void SetGroundMap(GroundMap* groundMap);
 	GroundMap* GetGroundMap() { return _groundMap; }

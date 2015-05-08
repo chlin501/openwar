@@ -486,6 +486,9 @@ void SmoothTerrainRenderer::InitializeSkirt()
 
 void SmoothTerrainRenderer::UpdateSplatmap()
 {
+	if (!_smoothGroundMap->GetImage())
+		return;
+
 	int width = _smoothGroundMap->GetImage()->GetWidth();
 	int height = _smoothGroundMap->GetImage()->GetHeight();
 
@@ -576,7 +579,8 @@ void SmoothTerrainRenderer::InitializeLines()
 		_lineVertices._mode = GL_LINES;
 		_lineVertices.Clear();
 		int n = _smoothGroundMap->GetHeightMap()->GetMaxIndex();
-		float k = _smoothGroundMap->GetImage()->GetWidth();
+		float k = _smoothGroundMap->GetHeightMap()->GetHeightStride();
+
 		for (int x = 0; x <= n; x += 2)
 		{
 			for (int y = 0; y <= n; y += 2)
@@ -652,7 +656,7 @@ void SmoothTerrainRenderer::BuildTriangles()
 	_borderVertices.Clear();
 
 	int n = _smoothGroundMap->GetHeightMap()->GetMaxIndex();
-	float k = _smoothGroundMap->GetImage()->GetWidth();
+	float k = _smoothGroundMap->GetHeightMap()->GetHeightStride();
 
 	for (int x = 0; x < n; x += 2)
 		for (int y = 0; y < n; y += 2)

@@ -22,7 +22,8 @@ class SmoothGroundMap : public GroundMap
 	Image* _image;
 
 public:
-	SmoothGroundMap(HeightMap* heightMap, const char* hash, bounds2f bounds, Image* image);
+	SmoothGroundMap(const char* hash, bounds2f bounds, Image* image);
+	~SmoothGroundMap();
 
 	const char* GetHash() const { return _hash.c_str(); }
 

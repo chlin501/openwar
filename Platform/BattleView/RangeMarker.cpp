@@ -182,7 +182,7 @@ void RangeMarker::RenderMissileTarget(VertexShape_3f_4f* vertices, glm::vec2 tar
 
 glm::vec3 RangeMarker::GetPosition(glm::vec2 p) const
 {
-	glm::vec3 result = _battleSimulator->GetHeightMap()->GetPosition(p, 1);
+	glm::vec3 result = _battleSimulator->GetGroundMap()->GetHeightMap()->GetPosition(p, 1);
 	if (result.z < 0.5f)
 		result.z = 0.5f;
 	return result;

@@ -104,20 +104,18 @@ public:
 	void RemoveTrackingMarker(UnitTrackingMarker* trackingMarker);
 
 	void Initialize();
-
 	void InitializeTerrainTrees();
 	void UpdateTerrainTrees(bounds2f bounds);
-
 	void InitializeCameraPosition();
 
-	virtual void Render();
+public: // View
+	void Render() override;
+	void OnTouchBegin(Touch* touch) override;
 
 private: // RenderLoopObserver
-	virtual void OnRenderLoop(double secondsSinceLastUpdate);
+	void OnRenderLoop(double secondsSinceLastUpdate) override;
 
 public:
-	virtual void OnTouchBegin(Touch* touch);
-
 	bounds2f GetBillboardBounds(glm::vec3 position, float height);
 
 	bounds2f GetUnitCurrentIconViewportBounds(Unit* unit);
