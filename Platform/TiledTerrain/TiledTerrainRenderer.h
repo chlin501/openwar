@@ -8,7 +8,7 @@
 class GraphicsContext;
 
 #include <map>
-#include "BattleModel/TiledGroundMap.h"
+#include "BattleMap/TiledGroundMap.h"
 #include "Algebra/bounds.h"
 #include "Graphics/Image.h"
 #include "Algorithms/bspline_patch.h"

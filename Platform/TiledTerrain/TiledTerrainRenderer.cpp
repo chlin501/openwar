@@ -2,7 +2,7 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "BattleModel/HeightMap.h"
+#include "BattleMap/HeightMap.h"
 #include "Graphics/ShaderProgram.h"
 #include "Shapes/VertexShape.h"
 #include "TiledTerrainRenderer.h"

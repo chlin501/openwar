@@ -9,8 +9,8 @@
 #include <set>
 #include <string>
 #include "Algorithms/quadtree.h"
+#include "BattleMap/GroundMap.h"
 #include "MovementRules.h"
-#include "GroundMap.h"
 #include "BattleCommander.h"
 
 class BattleCommander;

@@ -5,9 +5,9 @@
 #include <glm/gtc/constants.hpp>
 
 #include "RangeMarker.h"
-#include "BattleModel/GroundMap.h"
-#include "BattleModel/HeightMap.h"
-#include "BattleModel/SmoothGroundMap.h"
+#include "BattleMap/GroundMap.h"
+#include "BattleMap/HeightMap.h"
+#include "BattleMap/SmoothGroundMap.h"
 #include "Algebra/geometry.h"
 
 

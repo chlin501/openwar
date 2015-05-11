@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include "BattleModel/HeightMap.h"
+#include "BattleMap/HeightMap.h"
 #include "Graphics/CommonShaders.h"
 #include "Surface/Touch.h"
 #include "Surface/Surface.h"

@@ -4,8 +4,8 @@
 
 #include "Algebra/geometry.h"
 #include "BattleSimulator.h"
-#include "GroundMap.h"
-#include "HeightMap.h"
+#include "BattleMap/GroundMap.h"
+#include "BattleMap/HeightMap.h"
 #include "BattleCommander.h"
 #include "SmoothGroundMap.h"
 #include "TiledGroundMap.h"

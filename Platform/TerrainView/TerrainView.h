@@ -5,8 +5,8 @@
 #ifndef TERRAINVIEW_H
 #define TERRAINVIEW_H
 
-#include "BattleModel/GroundMap.h"
-#include "BattleModel/HeightMap.h"
+#include "BattleMap/GroundMap.h"
+#include "BattleMap/HeightMap.h"
 #include "Algebra/geometry.h"
 #include "Shapes/VertexShape.h"
 #include "Surface/View.h"

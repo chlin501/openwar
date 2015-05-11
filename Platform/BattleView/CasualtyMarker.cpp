@@ -5,8 +5,8 @@
 #include "CasualtyMarker.h"
 #include "Shapes/BillboardColorShader.h"
 #include "Shapes/BillboardTextureShape.h"
-#include "BattleModel/HeightMap.h"
-#include "BattleModel/SmoothGroundMap.h"
+#include "BattleMap/HeightMap.h"
+#include "BattleMap/SmoothGroundMap.h"
 
 
 
