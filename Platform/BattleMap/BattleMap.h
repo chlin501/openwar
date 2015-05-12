@@ -3,9 +3,10 @@
 
 #include <vector>
 
-class HeightMap;
-class GroundMap;
 class BattleMap;
+class GroundMap;
+class HeightMap;
+class MapEditor;
 
 
 class BattleMapObserver
@@ -32,6 +33,8 @@ public:
 
 	virtual const HeightMap* GetHeightMap() const = 0;
 	virtual const GroundMap* GetGroundMap() const = 0;
+	virtual MapEditor* GetMapEditor() const = 0;
+
 
 protected:
 	void NotifyBattleMapChanged();
@@ -48,6 +51,7 @@ public:
 
 	const HeightMap* GetHeightMap() const override;
 	const GroundMap* GetGroundMap() const override;
+	MapEditor* GetMapEditor() const override;
 };
 
 #endif

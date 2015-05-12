@@ -17,7 +17,7 @@ EditorModelObserver::~EditorModelObserver()
 
 EditorModel::EditorModel(BattleView* battleView, SmoothTerrainRenderer* smoothTerrainSurface) :
 _battleView(battleView),
-_smoothTerrainSurface(smoothTerrainSurface),
+_smoothTerrainRenderer(smoothTerrainSurface),
 _editorMode(EditorMode::Hand),
 _terrainFeature(TerrainFeature::Hills),
 _brush(nullptr)
@@ -36,6 +36,12 @@ void EditorModel::AddObserver(EditorModelObserver* observer)
 void EditorModel::RemoveObserver(EditorModelObserver* observer)
 {
 	_observers.erase(observer);
+}
+
+
+MapEditor* EditorModel::GetMapEditor() const
+{
+	return _smoothTerrainRenderer->GetSmoothGroundMap();
 }
 
 
@@ -139,18 +145,13 @@ void EditorModel::ToolEnded(glm::vec2 position)
 }
 
 
-const Image& EditorModel::GetSmoothMapImage() const
-{
-	return *_smoothTerrainSurface->GetSmoothGroundMap()->GetImage();
-};
-
-
 void EditorModel::Paint(TerrainFeature feature, glm::vec2 position, bool value)
 {
+	float pressure = value ? 0.4f : -0.4f;
 	float radius = feature == TerrainFeature::Hills ? 48 : 16;
-	bounds2f bounds = _smoothTerrainSurface->GetSmoothGroundMap()->Paint(feature, position, radius, value ? 0.4f : -0.4f);
+	bounds2f bounds = GetMapEditor()->Paint(feature, position, pressure, radius);
 
-	_smoothTerrainSurface->UpdateChanges(bounds);
+	_smoothTerrainRenderer->UpdateChanges(bounds);
 
 	if (feature != TerrainFeature::Fords)
 		_battleView->UpdateTerrainTrees(bounds);
@@ -162,7 +163,7 @@ void EditorModel::Paint(TerrainFeature feature, glm::vec2 position, bool value)
 
 void EditorModel::SmearReset(TerrainFeature feature, glm::vec2 position)
 {
-	_smoothTerrainSurface->GetSmoothGroundMap()->Extract(position, _brush);
+	GetMapEditor()->Extract(position, *_brush);
 	_brushPosition = position;
 	_brushDistance = 0;
 }
@@ -174,7 +175,7 @@ void EditorModel::SmearPaint(TerrainFeature feature, glm::vec2 position)
 	_brushPosition = position;
 	while (_brushDistance > 2.0f)
 	{
-		_smoothTerrainSurface->GetSmoothGroundMap()->Extract(position, _mixer);
+		GetMapEditor()->Extract(position, *_mixer);
 
 		glm::ivec2 size = _brush->size();
 		for (int x = 0; x < size.x; ++x)
@@ -189,9 +190,9 @@ void EditorModel::SmearPaint(TerrainFeature feature, glm::vec2 position)
 		_brushDistance -= 2.0f;
 	}
 
-	bounds2f bounds = _smoothTerrainSurface->GetSmoothGroundMap()->Paint(feature, position, _brush, 0.5f);
+	bounds2f bounds = GetMapEditor()->Paint(feature, position, 0.5f, *_brush);
 
-	_smoothTerrainSurface->UpdateChanges(bounds);
+	_smoothTerrainRenderer->UpdateChanges(bounds);
 
 	if (feature != TerrainFeature::Fords)
 		_battleView->UpdateTerrainTrees(bounds);

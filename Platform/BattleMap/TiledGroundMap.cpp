@@ -60,10 +60,10 @@ bool TiledGroundMap::IsImpassable(glm::vec2 position) const
 }
 
 
-bool TiledGroundMap::IsWater(glm::vec2 position) const
+/*bool TiledGroundMap::IsWater(glm::vec2 position) const
 {
 	return false;
-}
+}*/
 
 
 bool TiledGroundMap::ContainsWater(bounds2f bounds) const

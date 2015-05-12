@@ -29,7 +29,7 @@ class EditorModel
 {
 	std::set<EditorModelObserver*> _observers;
 	BattleView* _battleView;
-	SmoothTerrainRenderer* _smoothTerrainSurface;
+	SmoothTerrainRenderer* _smoothTerrainRenderer;
 	EditorMode _editorMode;
 	TerrainFeature _terrainFeature;
 	Image* _brush;
@@ -43,6 +43,8 @@ public:
 	void AddObserver(EditorModelObserver* observer);
 	void RemoveObserver(EditorModelObserver* observer);
 
+	MapEditor* GetMapEditor() const;
+
 	EditorMode GetEditorMode() const;
 	void SetEditorMode(EditorMode value);
 
@@ -52,8 +54,6 @@ public:
 	void ToolBegan(glm::vec2 position);
 	void ToolMoved(glm::vec2 position);
 	void ToolEnded(glm::vec2 position);
-
-	const Image& GetSmoothMapImage() const;
 
 private:
 	void Paint(TerrainFeature feature, glm::vec2 position, bool value);

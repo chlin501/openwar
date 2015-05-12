@@ -7,9 +7,6 @@
 
 #include "Algebra/bounds.h"
 
-
-enum class TerrainFeature { Hills, Water, Trees, Fords };
-
 class HeightMap;
 
 
@@ -24,7 +21,7 @@ public:
 
 	virtual bool IsForest(glm::vec2 position) const = 0;
 	virtual bool IsImpassable(glm::vec2 position) const = 0;
-	virtual bool IsWater(glm::vec2 position) const = 0;
+	//virtual bool IsWater(glm::vec2 position) const = 0;
 	virtual bool ContainsWater(bounds2f bounds) const = 0;
 };
 

@@ -1,6 +1,7 @@
 #include "BattleMap.h"
-#import "HeightMap.h"
-#import "GroundMap.h"
+#include "HeightMap.h"
+#include "GroundMap.h"
+#include "MapEditor.h"
 
 
 BattleMapObserver::~BattleMapObserver()
@@ -50,4 +51,10 @@ const HeightMap* BasicBattleMap::GetHeightMap() const
 const GroundMap* BasicBattleMap::GetGroundMap() const
 {
 	return _groundMap;
+}
+
+
+MapEditor* BasicBattleMap::GetMapEditor() const
+{
+	return nullptr;
 }

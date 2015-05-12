@@ -76,7 +76,7 @@ bool SmoothGroundMap::IsImpassable(glm::vec2 position) const
 }
 
 
-bool SmoothGroundMap::IsWater(glm::vec2 position) const
+/*bool SmoothGroundMap::IsWater(glm::vec2 position) const
 {
 	if (!_image)
 		return false;
@@ -87,7 +87,7 @@ bool SmoothGroundMap::IsWater(glm::vec2 position) const
 	int y = (int)(mapsize.y * glm::floor(p.y));
 	glm::vec4 c = _image->GetPixel(x, y);
 	return c.b >= 0.5;
-}
+}*/
 
 
 bool SmoothGroundMap::ContainsWater(bounds2f bounds) const
@@ -138,21 +138,21 @@ float SmoothGroundMap::GetImpassableValue(int x, int y) const
 }
 
 
-void SmoothGroundMap::Extract(glm::vec2 position, Image* brush)
+void SmoothGroundMap::Extract(glm::vec2 position, Image& brush)
 {
-	glm::ivec2 size = brush->size();
+	glm::ivec2 size = brush.size();
 	glm::ivec2 origin = ToGroundmapCoordinate(position) - size / 2;
 
 	for (int x = 0; x < size.x; ++x)
 		for (int y = 0; y < size.y; ++y)
-			brush->SetPixel(x, y, _image->GetPixel(origin.x + x, origin.y + y));
+			brush.SetPixel(x, y, _image->GetPixel(origin.x + x, origin.y + y));
 }
 
 
-bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, Image* brush, float pressure)
+bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, float pressure, const Image& brush)
 {
 	glm::vec2 scale = _bounds.size() / glm::vec2(_image->size());
-	glm::ivec2 size = brush->size();
+	glm::ivec2 size = brush.size();
 	glm::ivec2 center = ToGroundmapCoordinate(position);
 	glm::ivec2 origin = center - size / 2;
 	float radius = size.x / 2.0f;
@@ -165,7 +165,7 @@ bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, Imag
 			float k = 1.0f - d * d;
 			if (k > 0)
 			{
-				glm::vec4 b = brush->GetPixel(x, y);
+				glm::vec4 b = brush.GetPixel(x, y);
 				glm::vec4 c = _image->GetPixel(p.x, p.y);
 				switch (feature)
 				{
@@ -192,7 +192,7 @@ bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, Imag
 }
 
 
-bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, float radius, float pressure)
+bounds2f SmoothGroundMap::Paint(TerrainFeature feature, glm::vec2 position, float pressure, float radius)
 {
 	glm::vec2 scale = _bounds.size() / glm::vec2(_image->size());
 	float abs_pressure = glm::abs(pressure);

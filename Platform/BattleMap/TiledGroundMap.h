@@ -39,7 +39,7 @@ public: // GroundMap
 
 	bool IsForest(glm::vec2 position) const override;
 	bool IsImpassable(glm::vec2 position) const override;
-	bool IsWater(glm::vec2 position) const override;
+	//bool IsWater(glm::vec2 position) const override;
 	bool ContainsWater(bounds2f bounds) const override;
 
 public: // TiledGroundMap
