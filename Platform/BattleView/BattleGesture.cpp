@@ -6,6 +6,7 @@
 #import <UIKit/UIKit.h>
 #endif
 
+#include "BattleMap/BattleMap.h"
 #include "BattleModel/BattleCommander.h"
 #include "BattleModel/BattleSimulator.h"
 #include "Audio/SoundPlayer.h"
@@ -360,7 +361,7 @@ void BattleGesture::UpdateTrackingMarker()
 		float delta = 1.0f / glm::max(1.0f, glm::distance(currentDestination, markerPosition));
 		for (float k = delta; k < 1; k += delta)
 		{
-			GroundMap* groundMap = _hotspot->GetBattleView()->GetSimulator()->GetGroundMap();
+			const GroundMap* groundMap = _hotspot->GetBattleView()->GetSimulator()->GetBattleMap()->GetGroundMap();
 			if (groundMap != nullptr && groundMap->IsImpassable(glm::mix(currentDestination, markerPosition, k)))
 			{
 				movementLimit = k;
@@ -612,11 +613,6 @@ bounds2f BattleGesture::GetUnitModifierBounds(Unit* unit)
 
 
 /* BattleObserver */
-
-
-void BattleGesture::OnSetGroundMap(GroundMap* groundMap)
-{
-}
 
 
 void BattleGesture::OnAddUnit(Unit* unit)

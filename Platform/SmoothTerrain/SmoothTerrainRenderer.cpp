@@ -18,7 +18,7 @@
 #endif
 
 
-SmoothTerrainRenderer::SmoothTerrainRenderer(GraphicsContext* gc, SmoothGroundMap* smoothGroundMap) :
+SmoothTerrainRenderer::SmoothTerrainRenderer(GraphicsContext* gc, const SmoothGroundMap* smoothGroundMap) :
 _gc(gc),
 _smoothGroundMap(smoothGroundMap)
 {

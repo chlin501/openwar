@@ -61,7 +61,6 @@ private:
 	bounds2f GetUnitModifierBounds(Unit* unit);
 
 private: // BattleObserver
-	void OnSetGroundMap(GroundMap* groundMap) override;
 	void OnAddUnit(Unit* unit) override;
 	void OnRemoveUnit(Unit* unit) override;
 	void OnCommand(Unit* unit, float timer) override;

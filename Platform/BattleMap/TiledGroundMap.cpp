@@ -97,7 +97,7 @@ void TiledGroundMap::SetTile(int x, int y, const std::string& texture, int rotat
 }
 
 
-TiledGroundMap::Tile* TiledGroundMap::GetTile(int x, int y)
+TiledGroundMap::Tile* TiledGroundMap::GetTile(int x, int y) const
 {
 	if (0 <= x && x < _size.x && 0 <= y && y < _size.y)
 		return _tiles + x + _size.x * y;

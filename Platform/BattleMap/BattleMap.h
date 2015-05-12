@@ -10,9 +10,13 @@ class BattleMap;
 
 class BattleMapObserver
 {
+	friend class BattleMap;
+
 public:
 	virtual ~BattleMapObserver();
-	virtual void OnBattleMapChanged(const BattleMap* battleMap) const = 0;
+
+private:
+	virtual void OnBattleMapChanged(const BattleMap* battleMap) = 0;
 };
 
 
@@ -33,5 +37,17 @@ protected:
 	void NotifyBattleMapChanged();
 };
 
+
+
+class BasicBattleMap : public BattleMap
+{
+	const HeightMap* _heightMap;
+	const GroundMap* _groundMap;
+public:
+	BasicBattleMap(const HeightMap* heightMap, const GroundMap* groundMap);
+
+	const HeightMap* GetHeightMap() const override;
+	const GroundMap* GetGroundMap() const override;
+};
 
 #endif

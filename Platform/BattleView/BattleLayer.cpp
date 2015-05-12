@@ -171,7 +171,7 @@ void BattleLayer::RemoveBattleView(BattleView* battleView)
 			++i;
 	}
 
-	battleView->GetSimulator()->RemoveObserver(battleView);
+	//battleView->GetSimulator()->RemoveObserver(battleView);
 	delete battleView;
 }
 

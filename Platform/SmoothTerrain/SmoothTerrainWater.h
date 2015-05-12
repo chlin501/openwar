@@ -42,13 +42,13 @@ class WaterBorderShader : public ShaderProgram
 
 class SmoothTerrainWater
 {
-	GroundMap* _groundMap;
+	const GroundMap* _groundMap;
 
 	VertexShape_2f _waterInsideVertices;
 	VertexShape_2f _waterBorderVertices;
 
 public:
-	SmoothTerrainWater(GroundMap* groundMap);
+	SmoothTerrainWater(const GroundMap* groundMap);
 	virtual ~SmoothTerrainWater();
 
 	void Update();

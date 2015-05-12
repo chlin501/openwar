@@ -72,7 +72,7 @@ WaterBorderShader::WaterBorderShader(GraphicsContext* gc) : ShaderProgram(
 }
 
 
-SmoothTerrainWater::SmoothTerrainWater(GroundMap* groundMap) :
+SmoothTerrainWater::SmoothTerrainWater(const GroundMap* groundMap) :
 _groundMap(groundMap)
 {
 	Update();

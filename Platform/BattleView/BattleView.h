@@ -5,6 +5,7 @@
 #ifndef BATTLEVIEW_H
 #define BATTLEVIEW_H
 
+#include "BattleMap/BattleMap.h"
 #include "BattleModel/BattleSimulator.h"
 #include "Shapes/VertexShape.h"
 #include "Shapes/BillboardTextureShape.h"
@@ -28,7 +29,7 @@ class BattleHotspot;
 class Touch;
 
 
-class BattleView : public TerrainView, public BattleObserver, RenderLoopObserver
+class BattleView : public TerrainView, BattleObserver, BattleMapObserver, RenderLoopObserver
 {
 	GraphicsContext* _gc{};
 	BattleSimulator* _simulator{};
@@ -81,7 +82,6 @@ public:
 	SmoothTerrainWater* GetSmoothTerrainWater() const { return _smoothTerrainWater; }
 
 private: // BattleObserver
-	void OnSetGroundMap(GroundMap* groundMap) override;
 	void OnAddUnit(Unit* unit) override;
 	void OnRemoveUnit(Unit* unit) override;
 	void OnCommand(Unit* unit, float timer) override;
@@ -89,6 +89,9 @@ private: // BattleObserver
 	void OnRelease(const Shooting& shooting) override;
 	void OnCasualty(const Fighter& fighter) override;
 	void OnRouting(Unit* unit) override;
+
+private: // BattleMapObserver
+	void OnBattleMapChanged(const BattleMap* battleMap) override;
 
 public:
 	void AddCasualty(Unit* unit, glm::vec2 position);

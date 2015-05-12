@@ -5,6 +5,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include "Shapes/BillboardTextureShape.h"
+#include "BattleMap/BattleMap.h"
 #include "BattleModel/BattleSimulator.h"
 #include "BattleModel/BattleCommander.h"
 #include "BattleView.h"
@@ -70,7 +71,7 @@ void UnitCounter::AppendUnitMarker(BillboardTextureShape* renderer, bool flip)
 		: !_unit->IsCommandableBy(_battleView->GetCommander()) ? 1
 		: 0;
 
-	glm::vec3 position = _battleView->GetSimulator()->GetGroundMap()->GetHeightMap()->GetPosition(_unit->state.center, 0);
+	glm::vec3 position = _battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(_unit->state.center, 0);
 	glm::vec2 texsize(0.1875f, 0.1875f); // 48 / 256
 	glm::vec2 texcoord1 = texsize * glm::vec2(color, command);
 	glm::vec2 texcoord2 = texsize * glm::vec2((int)_samuraiPlatform, 3);
@@ -163,8 +164,8 @@ void UnitCounter::AppendFighterWeapons(VertexShape_3f* vertices)
 			glm::vec2 p1 = fighter->state.position;
 			glm::vec2 p2 = p1 + _unit->stats.weaponReach * vector2_from_angle(fighter->state.bearing);
 
-			vertices->AddVertex(Vertex_3f(_battleView->GetSimulator()->GetGroundMap()->GetHeightMap()->GetPosition(p1, 1)));
-			vertices->AddVertex(Vertex_3f(_battleView->GetSimulator()->GetGroundMap()->GetHeightMap()->GetPosition(p2, 1)));
+			vertices->AddVertex(Vertex_3f(_battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(p1, 1)));
+			vertices->AddVertex(Vertex_3f(_battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(p2, 1)));
 		}
 	}
 }
@@ -197,7 +198,7 @@ void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 		}
 
 		const float adjust = 0.5 - 2.0 / 64.0; // place texture 2 texels below ground
-		glm::vec3 p = _battleView->GetSimulator()->GetGroundMap()->GetHeightMap()->GetPosition(fighter->state.position, adjust * size);
+		glm::vec3 p = _battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(fighter->state.position, adjust * size);
 		float facing = glm::degrees(fighter->state.bearing);
 		billboardModel->dynamicBillboards.push_back(Billboard(p, facing, size, shape));
 	}

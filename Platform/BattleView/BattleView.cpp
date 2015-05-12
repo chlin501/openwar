@@ -11,6 +11,7 @@
 
 #include "Shapes/BillboardColorShader.h"
 #include "Surface/Surface.h"
+#include "BattleMap/BattleMap.h"
 #include "BattleModel/BattleCommander.h"
 #include "SmoothTerrain/SmoothTerrainWater.h"
 #include "SmoothTerrain/SmoothTerrainSky.h"
@@ -147,6 +148,12 @@ BattleView::BattleView(Surface* surface) : TerrainView(surface),
 
 BattleView::~BattleView()
 {
+	if (_simulator)
+	{
+		_simulator->GetBattleMap()->RemoveObserver(this);
+		_simulator->RemoveObserver(this);
+	}
+
 	delete _casualtyMarker;
 
 	for (UnitMovementMarker* marker : _movementMarkers)
@@ -199,17 +206,18 @@ void BattleView::SetSimulator(BattleSimulator* simulator)
 	{
 		for (Unit* unit : _simulator->GetUnits())
 			OnRemoveUnit(unit);
+		_simulator->GetBattleMap()->RemoveObserver(this);
 		_simulator->RemoveObserver(this);
 	}
 
 	_simulator = simulator;
-	if (simulator->GetGroundMap())
-		SetHeightMap(simulator->GetGroundMap()->GetHeightMap());
+	OnBattleMapChanged(simulator->GetBattleMap());
 
 	delete _casualtyMarker;
 	_casualtyMarker = new CasualtyMarker(_simulator);
 
 	_simulator->AddObserver(this);
+	_simulator->GetBattleMap()->AddObserver(this);
 }
 
 
@@ -220,59 +228,6 @@ static bool ShouldEnableRenderEdges(GraphicsContext* gc)
 #else
 	return true;
 #endif
-}
-
-
-void BattleView::OnSetGroundMap(GroundMap* groundMap)
-{
-	bounds2f terrainBounds = groundMap->GetHeightMap()->GetBounds();
-
-	SetHeightMap(groundMap->GetHeightMap());
-
-	GetViewport()->SetBounds(GetBounds());
-	GetViewport()->SetTerrainBounds(terrainBounds);
-	GetViewport()->SetCameraPosition(glm::vec3(terrainBounds.mid(), 0.3f * glm::length(terrainBounds.size())));
-
-	InitializeTerrainTrees();
-	InitializeCameraPosition();
-
-	SmoothGroundMap*  smoothGroundMap = dynamic_cast<SmoothGroundMap*>(groundMap);
-	if (smoothGroundMap == nullptr)
-		return;
-
-	/*if (smoothGroundMap != nullptr
-		&& _smoothTerrainSurface != nullptr
-		&& smoothGroundMap->GetImage() == _smoothTerrainSurface->GetSmoothGroundMap()->GetImage())
-	{
-		return; // no image, same map
-	}*/
-
-	delete _smoothTerrainSurface;
-	_smoothTerrainSurface = nullptr;
-
-	delete _smoothTerrainWater;
-	_smoothTerrainWater = nullptr;
-
-	delete _tiledTerrainRenderer;
-	_tiledTerrainRenderer = nullptr;
-
-	if (smoothGroundMap != nullptr)
-	{
-		_smoothTerrainSurface = new SmoothTerrainRenderer(_gc, smoothGroundMap);
-		_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
-
-		if (ShouldEnableRenderEdges(_gc))
-			_smoothTerrainSurface->EnableSobelBuffers();
-	}
-
-	TiledGroundMap* tiledGroundMap = dynamic_cast<TiledGroundMap*>(groundMap);
-	if (tiledGroundMap != nullptr)
-	{
-		tiledGroundMap->UpdateHeightMap();
-		_tiledTerrainRenderer = new TiledTerrainRenderer(_gc, tiledGroundMap);
-	}
-
-	UpdateTerrainTrees(groundMap->GetBounds());
 }
 
 
@@ -343,9 +298,62 @@ void BattleView::OnRouting(Unit* unit)
 }
 
 
+void BattleView::OnBattleMapChanged(const BattleMap* battleMap)
+{
+	bounds2f terrainBounds = battleMap->GetHeightMap()->GetBounds();
+
+	SetHeightMap(battleMap->GetHeightMap());
+
+	GetViewport()->SetBounds(GetBounds());
+	GetViewport()->SetTerrainBounds(terrainBounds);
+	GetViewport()->SetCameraPosition(glm::vec3(terrainBounds.mid(), 0.3f * glm::length(terrainBounds.size())));
+
+	InitializeTerrainTrees();
+	InitializeCameraPosition();
+
+	const SmoothGroundMap* smoothGroundMap = dynamic_cast<const SmoothGroundMap*>(battleMap->GetGroundMap());
+	if (smoothGroundMap == nullptr)
+		return;
+
+	/*if (smoothGroundMap != nullptr
+		&& _smoothTerrainSurface != nullptr
+		&& smoothGroundMap->GetImage() == _smoothTerrainSurface->GetSmoothGroundMap()->GetImage())
+	{
+		return; // no image, same map
+	}*/
+
+	delete _smoothTerrainSurface;
+	_smoothTerrainSurface = nullptr;
+
+	delete _smoothTerrainWater;
+	_smoothTerrainWater = nullptr;
+
+	delete _tiledTerrainRenderer;
+	_tiledTerrainRenderer = nullptr;
+
+	if (smoothGroundMap != nullptr)
+	{
+		_smoothTerrainSurface = new SmoothTerrainRenderer(_gc, smoothGroundMap);
+		_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
+
+		if (ShouldEnableRenderEdges(_gc))
+			_smoothTerrainSurface->EnableSobelBuffers();
+	}
+
+	const TiledGroundMap* tiledGroundMap = dynamic_cast<const TiledGroundMap*>(battleMap->GetGroundMap());
+	if (tiledGroundMap != nullptr)
+	{
+		//tiledGroundMap->UpdateHeightMap();
+		_tiledTerrainRenderer = new TiledTerrainRenderer(_gc, tiledGroundMap);
+	}
+
+	UpdateTerrainTrees(battleMap->GetGroundMap()->GetBounds());
+}
+
+
 void BattleView::AddCasualty(Unit* unit, glm::vec2 position)
 {
-	glm::vec3 p = glm::vec3(position, _simulator->GetGroundMap()->GetHeightMap()->InterpolateHeight(position));
+	glm::vec3 p = glm::vec3(position, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(position));
 	SamuraiPlatform platform = SamuraiModule::GetSamuraiPlatform(unit->unitClass.c_str());
 	_casualtyMarker->AddCasualty(p, unit->commander->GetTeam(), platform);
 }
@@ -359,16 +367,16 @@ static float random_float()
 
 void BattleView::Initialize()
 {
-	if (_simulator->GetGroundMap())
+	if (_simulator->GetBattleMap())
 	{
-		OnSetGroundMap(_simulator->GetGroundMap());
+		//OnSetGroundMap(const_cast<GroundMap*>(_simulator->GetBattleMap()->GetGroundMap()));
 	}
 }
 
 
 void BattleView::InitializeTerrainTrees()
 {
-	UpdateTerrainTrees(_simulator->GetGroundMap()->GetHeightMap()->GetBounds());
+	UpdateTerrainTrees(_simulator->GetBattleMap()->GetHeightMap()->GetBounds());
 }
 
 
@@ -401,7 +409,7 @@ struct random_iterator
 
 void BattleView::UpdateTerrainTrees(bounds2f bounds)
 {
-	if (_smoothTerrainSurface != nullptr && _simulator->GetGroundMap() != nullptr)
+	if (_smoothTerrainSurface != nullptr && _simulator->GetBattleMap() != nullptr)
 	{
 		auto pos2 = std::remove_if(_billboardModel->staticBillboards.begin(), _billboardModel->staticBillboards.end(), [bounds](const Billboard& billboard) {
 			return bounds.contains(billboard.position.xy());
@@ -415,7 +423,7 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 
 		int treeType = 0;
 		random_iterator random(*_randoms);
-		bounds2f mapbounds = _simulator->GetGroundMap()->GetBounds();
+		bounds2f mapbounds = _simulator->GetBattleMap()->GetGroundMap()->GetBounds();
 		glm::vec2 center = mapbounds.mid();
 		float radius = mapbounds.x().size() / 2;
 
@@ -430,9 +438,9 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 				glm::vec2 position = glm::vec2(x + dx, y + dy);
 				if (bounds.contains(position) && glm::distance(position, center) < radius)
 				{
-					if (_simulator->GetGroundMap()->GetHeightMap()->InterpolateHeight(position) > 0 && _simulator->GetGroundMap()->IsForest(position))
+					if (_simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(position) > 0 && _simulator->GetBattleMap()->GetGroundMap()->IsForest(position))
 					{
-						const float adjust = 0.5 - 2.0 / 64.0; // place texture 2 texels below ground
+						const float adjust = 0.5f - 2.0f / 64.0f; // place texture 2 texels below ground
 						_billboardModel->staticBillboards.push_back(Billboard(GetTerrainPosition(position, adjust * 5), 0, 5, _billboardModel->_billboardTreeShapes[shape]));
 					}
 				}
@@ -993,8 +1001,8 @@ void BattleView::AddShootingCounter(const Shooting& shooting)
 
 	for (const Projectile& projectile : shooting.projectiles)
 	{
-		glm::vec3 p1 = glm::vec3(projectile.position1, _simulator->GetGroundMap()->GetHeightMap()->InterpolateHeight(projectile.position1));
-		glm::vec3 p2 = glm::vec3(projectile.position2, _simulator->GetGroundMap()->GetHeightMap()->InterpolateHeight(projectile.position2));
+		glm::vec3 p1 = glm::vec3(projectile.position1, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position1));
+		glm::vec3 p2 = glm::vec3(projectile.position2, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position2));
 		shootingCounter->AddProjectile(p1, p2, projectile.delay, shooting.timeToImpact);
 	}
 }
@@ -1023,8 +1031,8 @@ void BattleView::AddSmokeMarker(const Shooting& shooting)
 
 	for (const Projectile& projectile : shooting.projectiles)
 	{
-		glm::vec3 p1 = glm::vec3(projectile.position1, _simulator->GetGroundMap()->GetHeightMap()->InterpolateHeight(projectile.position1));
-		glm::vec3 p2 = glm::vec3(projectile.position2, _simulator->GetGroundMap()->GetHeightMap()->InterpolateHeight(projectile.position2));
+		glm::vec3 p1 = glm::vec3(projectile.position1, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position1));
+		glm::vec3 p2 = glm::vec3(projectile.position2, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position2));
 		marker->AddParticle(p1, p2, projectile.delay);
 	}
 }

@@ -18,6 +18,7 @@
 
 #include "OpenWarSurface.h"
 #include "Surface/Window.h"
+#include "BattleMap/BattleMap.h"
 #include "BattleModel/BattleSimulator.h"
 #include "BattleModel/BattleScript.h"
 #include "BattleModel/PracticeScript.h"
@@ -26,15 +27,41 @@
 
 static BattleSimulator* CreateBattleSimulator()
 {
-	BattleSimulator* simulator = new BattleSimulator();
-	simulator->SetScript(new PracticeScript(simulator));
-	simulator->AddCommander("1", 1, BattleCommanderType::Player);
-	simulator->AddCommander("2", 2, BattleCommanderType::Script);
-	simulator->LoadLegacySmoothMap("Maps/Practice.png", "Maps/Practice.png", 1024);
-	simulator->GetScript()->Execute();
-	return simulator;
-}
+	Resource res("Maps/Practice.png");
+	if (!res.load())
+		return nullptr;
 
+	auto smoothMap = std::unique_ptr<Image>(new Image());
+	smoothMap->LoadFromResource(res);
+
+	SmoothGroundMap* groundMap = new SmoothGroundMap(bounds2f(0, 0, 1024, 1024), std::move(smoothMap));
+	BattleMap* battleMap = new BasicBattleMap(groundMap->GetHeightMap(), groundMap);
+
+	BattleSimulator* battleSimulator = new BattleSimulator(battleMap);
+	battleSimulator->SetPractice(true);
+	battleSimulator->SetScript(new PracticeScript(battleSimulator));
+	battleSimulator->AddCommander("1", 1, BattleCommanderType::Player);
+	battleSimulator->AddCommander("2", 2, BattleCommanderType::Script);
+
+	glm::vec2 center(512, 512);
+
+	battleSimulator->NewUnit(1, "SAM-BOW", 80, center + glm::vec2(-50, 0), 0);
+	battleSimulator->NewUnit(1, "SAM-ARQ", 80, center + glm::vec2(  0, 0), 0);
+	battleSimulator->NewUnit(1, "SAM-BOW", 80, center + glm::vec2( 50, 0), 0);
+
+	battleSimulator->NewUnit(1, "SAM-YARI", 80, center + glm::vec2(-25, -30), 0);
+	battleSimulator->NewUnit(1, "SAM-YARI", 80, center + glm::vec2( 25, -30), 0);
+
+	battleSimulator->NewUnit(1, "SAM-KATA", 80, center + glm::vec2(-50, -60), 0);
+	battleSimulator->NewUnit(1, "GEN-KATA", 40, center + glm::vec2(  0, -60), 0);
+	battleSimulator->NewUnit(1, "SAM-KATA", 80, center + glm::vec2( 50, -60), 0);
+
+	battleSimulator->NewUnit(1, "CAV-YARI", 40, center + glm::vec2(-70, -100), 0);
+	battleSimulator->NewUnit(1, "SAM-NAGI", 80, center + glm::vec2(  0, -90), 0);
+	battleSimulator->NewUnit(1, "CAV-BOW",  40, center + glm::vec2( 70, -100), 0);
+
+	return battleSimulator;
+}
 
 
 int main(int argc, char *argv[])

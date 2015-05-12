@@ -18,11 +18,11 @@ class GraphicsContext;
 class TiledTerrainRenderer
 {
 	GraphicsContext* _gc;
-	TiledGroundMap* _tiledGroundMap;
+	const TiledGroundMap* _tiledGroundMap;
 	std::map<std::string, Texture*> _textures;
 
 public:
-	TiledTerrainRenderer(GraphicsContext* gc, TiledGroundMap* tiledGroundMap);
+	TiledTerrainRenderer(GraphicsContext* gc, const TiledGroundMap* tiledGroundMap);
 	~TiledTerrainRenderer();
 
 	void Render(const glm::mat4& transform, const glm::vec3& lightNormal);

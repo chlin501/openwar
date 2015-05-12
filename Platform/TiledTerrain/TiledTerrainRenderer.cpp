@@ -12,7 +12,7 @@
 #include "Graphics/TextureAtlas.h"
 
 
-TiledTerrainRenderer::TiledTerrainRenderer(GraphicsContext* gc, TiledGroundMap* tiledGroundMap) :
+TiledTerrainRenderer::TiledTerrainRenderer(GraphicsContext* gc, const TiledGroundMap* tiledGroundMap) :
 _gc(gc),
 _tiledGroundMap(tiledGroundMap)
 {

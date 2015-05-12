@@ -11,6 +11,7 @@
 #include "TiledGroundMap.h"
 #include "BattleScript.h"
 #include "SamuraiModule.h"
+#import "BattleMap.h"
 #include <glm/gtc/random.hpp>
 #include <algorithm>
 #include <cstdlib>
@@ -28,14 +29,6 @@ static float normalize_angle(float a)
 		a -= two_pi;
 	return a;
 }
-
-static int random_int(int min, int max)
-{
-	return min + (int)glm::linearRand<float>(0, max - min);
-}
-
-
-
 
 
 bool UnitRange::IsWithinRange(glm::vec2 p) const
@@ -195,9 +188,9 @@ BattleObserver::~BattleObserver()
 /***/
 
 
-BattleSimulator::BattleSimulator()
+BattleSimulator::BattleSimulator(BattleMap* battleMap) :
+	_battleMap{battleMap}
 {
-	_groundMap = new SmoothGroundMap(bounds2f{0, 0, 1024, 1024}, nullptr);
 	_dummyCommander = new BattleCommander(this, "", 1, BattleCommanderType::None);
 }
 
@@ -208,7 +201,6 @@ BattleSimulator::~BattleSimulator()
 		delete commander;
 
 	delete _script;
-	delete _groundMap;
 
 	delete _dummyCommander;
 	for (Unit* unit : _units)
@@ -247,9 +239,6 @@ void BattleSimulator::AddObserver(BattleObserver* observer)
 {
 	_observers.insert(observer);
 
-	if (_groundMap != nullptr)
-		observer->OnSetGroundMap(_groundMap);
-
 	for (Unit* unit : _units)
 	{
 		observer->OnAddUnit(unit);
@@ -264,12 +253,9 @@ void BattleSimulator::RemoveObserver(BattleObserver* observer)
 }
 
 
-void BattleSimulator::SetGroundMap(GroundMap* groundMap)
+BattleMap* BattleSimulator::GetBattleMap() const
 {
-	_groundMap = groundMap;
-
-	for (BattleObserver* observer : _observers)
-		observer->OnSetGroundMap(_groundMap);
+	return _battleMap;
 }
 
 
@@ -638,7 +624,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 
 	if (unitRange.minimumRange > 0 && unitRange.maximumRange > 0)
 	{
-		float centerHeight = _groundMap->GetHeightMap()->InterpolateHeight(unitRange.center) + 1.9f;
+		float centerHeight = _battleMap->GetHeightMap()->InterpolateHeight(unitRange.center) + 1.9f;
 
 		int n = 24;
 		for (int i = 0; i <= n; ++i)
@@ -650,7 +636,7 @@ void BattleSimulator::UpdateUnitRange(Unit* unit)
 			float maxAngle = -100;
 			for (float range = unitRange.minimumRange + delta; range <= unitRange.maximumRange; range += delta)
 			{
-				float height = _groundMap->GetHeightMap()->InterpolateHeight(unitRange.center + range * direction) + 0.5f;
+				float height = _battleMap->GetHeightMap()->InterpolateHeight(unitRange.center + range * direction) + 0.5f;
 				float verticalAngle = glm::atan(height - centerHeight, range);
 				if (verticalAngle > maxAngle)
 				{
@@ -822,7 +808,7 @@ void BattleSimulator::ResolveProjectileCasualties()
 
 void BattleSimulator::RemoveCasualties()
 {
-	bounds2f bounds = _groundMap->GetHeightMap()->GetBounds();
+	bounds2f bounds = _battleMap->GetHeightMap()->GetBounds();
 	glm::vec2 center = bounds.mid();
 	float radius = bounds.x().size() / 2;
 	float radius_squared = radius * radius;
@@ -1070,7 +1056,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 
 	result.readyState = original.readyState;
 	result.position = NextFighterPosition(fighter);
-	result.position_z = _groundMap->GetHeightMap()->InterpolateHeight(result.position);
+	result.position_z = _battleMap->GetHeightMap()->InterpolateHeight(result.position);
 	result.velocity = NextFighterVelocity(fighter);
 
 
@@ -1265,10 +1251,10 @@ glm::vec2 BattleSimulator::NextFighterVelocity(Fighter* fighter)
 			break;
 	}
 
-	if (_groundMap != nullptr && glm::length(fighter->state.position - fighter->terrainPosition) > 4)
+	if (_battleMap && glm::length(fighter->state.position - fighter->terrainPosition) > 4)
 	{
-		fighter->terrainForest = _groundMap->IsForest(fighter->state.position);
-		fighter->terrainImpassable = _groundMap->IsImpassable(fighter->state.position);
+		fighter->terrainForest = _battleMap->GetGroundMap()->IsForest(fighter->state.position);
+		fighter->terrainImpassable = _battleMap->GetGroundMap()->IsImpassable(fighter->state.position);
 		if (!fighter->terrainImpassable)
 			fighter->terrainPosition = fighter->state.position;
 	}
@@ -1376,58 +1362,6 @@ BattleCommander* BattleSimulator::GetCommander(const char* playerId) const
 BattleCommander* BattleSimulator::GetDummyCommander() const
 {
 	return _dummyCommander;
-}
-
-
-void BattleSimulator::LoadLegacySmoothMap(const char* legacyMapId, float size)
-{
-	if (_legacyMapId == legacyMapId)
-		return;
-
-	Resource res(legacyMapId);
-	if (!res.load())
-	{
-		res = Resource("Maps/DefaultMap.png");
-		if (!res.load())
-			return;
-	}
-
-	GroundMap* oldGroundMap = GetGroundMap();
-
-	bounds2f bounds(0, 0, size, size);
-	auto smoothMap = std::unique_ptr<Image>(new Image());
-	smoothMap->LoadFromResource(res);
-
-	SetGroundMap(new SmoothGroundMap(bounds, std::move(smoothMap)));
-
-	delete oldGroundMap;
-
-	_legacyMapId = legacyMapId;
-}
-
-
-void BattleSimulator::LoadLegacyRandomMap()
-{
-	std::ostringstream os;
-	os << "Maps/Map" << random_int(1, 12) << ".png";
-	std::string legacyMapId = os.str();
-	LoadLegacySmoothMap(legacyMapId.c_str(), 1024);
-}
-
-
-void BattleSimulator::SetTiledMap(int x, int y)
-{
-	bounds2f bounds(0, 0, 1024, 1024);
-
-	GroundMap* old = GetGroundMap();
-	SetGroundMap(new TiledGroundMap(bounds, glm::ivec2(x, y)));
-	delete old;
-}
-
-
-const char* BattleSimulator::GetLegacyMapId() const
-{
-	return _legacyMapId.empty() ? nullptr : _legacyMapId.c_str();
 }
 
 

@@ -14,6 +14,7 @@
 #include "BattleCommander.h"
 
 class BattleCommander;
+class BattleMap;
 class BattleScript;
 class GroundMap;
 class HeightMap;
@@ -261,7 +262,6 @@ public:
 	virtual ~BattleObserver();
 
 private:
-	virtual void OnSetGroundMap(GroundMap* groundMap) = 0;
 	virtual void OnAddUnit(Unit* unit) = 0;
 	virtual void OnRemoveUnit(Unit* unit) = 0;
 	virtual void OnCommand(Unit* unit, float timer) = 0;
@@ -278,7 +278,7 @@ class BattleSimulator
 	quadtree<Fighter*> _fighterQuadTree{0, 0, 1024, 1024};
 	quadtree<Fighter*> _weaponQuadTree{0, 0, 1024, 1024};
 
-	GroundMap* _groundMap{};
+	BattleMap* _battleMap{};
 
 	std::vector<Unit*> _units{};
 	std::vector<std::pair<float, Shooting>> _shootings{};
@@ -294,14 +294,13 @@ class BattleSimulator
 	BattleScript* _script{};
 	std::vector<BattleCommander*> _commanders{};
 	BattleCommander* _dummyCommander{};
-	std::string _legacyMapId{};
 	int _teamPosition1{};
 	int _teamPosition2{};
 	float _deploymentTimer{};
 	bool _deploymentEnabled{};
 
 public:
-	BattleSimulator();
+	BattleSimulator(BattleMap* battleMap);
 	~BattleSimulator();
 
 	float GetTimeStep() const { return _timeStep; }
@@ -313,8 +312,7 @@ public:
 	void AddObserver(BattleObserver* observer);
 	void RemoveObserver(BattleObserver* observer);
 
-	void SetGroundMap(GroundMap* groundMap);
-	GroundMap* GetGroundMap() { return _groundMap; }
+	BattleMap* GetBattleMap() const;
 
 	void SetDeploymentZone(int team, glm::vec2 center, float radius);
 	glm::vec2 GetDeploymentCenter(int team) const;
@@ -385,12 +383,6 @@ public:
 	BattleCommander* GetCommander(const char* playerId) const;
 	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
 	BattleCommander* GetDummyCommander() const;
-
-	void LoadLegacySmoothMap(const char* legacyMapId, float size);
-	void LoadLegacyRandomMap();
-	void SetTiledMap(int x, int y);
-
-	const char* GetLegacyMapId() const;
 
 	void Tick(double secondsSinceLastTick);
 

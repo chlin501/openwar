@@ -20,7 +20,7 @@ class RenderBuffer;
 class SmoothTerrainRenderer
 {
 	GraphicsContext* _gc;
-	SmoothGroundMap* _smoothGroundMap;
+	const SmoothGroundMap* _smoothGroundMap;
 	int _framebuffer_width{};
 	int _framebuffer_height{};
 
@@ -63,10 +63,10 @@ class SmoothTerrainRenderer
 	bool _editMode{};
 
 public:
-	SmoothTerrainRenderer(GraphicsContext* gc, SmoothGroundMap* smoothGroundMap);
+	SmoothTerrainRenderer(GraphicsContext* gc, const SmoothGroundMap* smoothGroundMap);
 	virtual ~SmoothTerrainRenderer();
 
-	SmoothGroundMap* GetSmoothGroundMap() const { return _smoothGroundMap; }
+	SmoothGroundMap* GetSmoothGroundMap() const { return const_cast<SmoothGroundMap*>(_smoothGroundMap); }
 
 	void SetDeploymentZoneBlue(glm::vec2 position, float radius);
 	void SetDeploymentZoneRed(glm::vec2 position, float radius);

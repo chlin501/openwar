@@ -50,7 +50,7 @@ public: // TiledGroundMap
 	void UpdateHeightMap();
 
 	void SetTile(int x, int y, const std::string& texture, int rotate, bool mirror);
-	Tile* GetTile(int x, int y);
+	Tile* GetTile(int x, int y) const;
 };
 
 

@@ -15,11 +15,12 @@
 
 class SmoothGroundMap : public GroundMap
 {
-	HeightMap _heightMap;
 	bounds2f _bounds;
 	std::unique_ptr<Image> _image;
 
 public:
+	HeightMap _heightMap;
+
 	SmoothGroundMap(bounds2f bounds, std::unique_ptr<Image>&& image);
 	~SmoothGroundMap();
 

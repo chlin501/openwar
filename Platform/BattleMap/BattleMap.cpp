@@ -1,4 +1,6 @@
 #include "BattleMap.h"
+#import "HeightMap.h"
+#import "GroundMap.h"
 
 
 BattleMapObserver::~BattleMapObserver()
@@ -29,4 +31,23 @@ void BattleMap::NotifyBattleMapChanged()
 {
 	for (BattleMapObserver* observer : _observers)
 		observer->OnBattleMapChanged(this);
+}
+
+
+BasicBattleMap::BasicBattleMap(const HeightMap* heightMap, const GroundMap* groundMap) :
+	_heightMap(heightMap),
+	_groundMap(groundMap)
+{
+}
+
+
+const HeightMap* BasicBattleMap::GetHeightMap() const
+{
+	return _heightMap;
+}
+
+
+const GroundMap* BasicBattleMap::GetGroundMap() const
+{
+	return _groundMap;
 }
