@@ -149,7 +149,7 @@ bool Resource::load(char const* type)
 	NSData* data = [NSData dataWithContentsOfFile:path];
 	if (data != nil)
 	{
-		if (type != nullptr)
+		if (type)
 			_type = type;
         
 		[_nsdata release];

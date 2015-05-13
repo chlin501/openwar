@@ -431,7 +431,7 @@ static InputEditor_Android* _instance = nullptr;
 
 /*JNIEXPORT*/ void /*JNICALL*/ Java_org_openwar_InputEditor_notifyEnter(JNIEnv* env, jclass jcls)
 {
-	if (_instance != nullptr)
+	if (_instance)
 		_instance->CallbackNotifyEnter();
 }
 

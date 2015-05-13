@@ -22,7 +22,7 @@ RangeMarker::RangeMarker(BattleSimulator* battleSimulator, Unit* unit) :
 void RangeMarker::Render(VertexShape_3f_4f* vertices)
 {
 	const UnitCommand& command = _unit->GetCommand();
-	if (command.missileTarget != nullptr)
+	if (command.missileTarget)
 	{
 		RenderMissileTarget(vertices, command.missileTarget->state.center);
 	}

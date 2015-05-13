@@ -47,14 +47,14 @@ public:
 
 	void SetDestination(glm::vec2* value)
 	{
-		if (value != nullptr) _destination = *value;
+		if (value) _destination = *value;
 		_hasDestination = value !=  nullptr;
 	}
 
 	void SetOrientation(glm::vec2* value)
 	{
-		if (value != nullptr) _orientation = *value;
-		_hasOrientation = value != nullptr;
+		if (value) _orientation = *value;
+		_hasOrientation = value;
 	}
 
 	void SetRenderOrientation(bool value) { _renderOrientation = value; }
@@ -68,7 +68,7 @@ public:
 
 	glm::vec2 DestinationXXX() const
 	{
-		return GetMeleeTarget() != nullptr ? GetMeleeTarget()->state.center
+		return GetMeleeTarget() ? GetMeleeTarget()->state.center
 			: _path.size() != 0 ? *(_path.end() - 1)
 			: _hasDestination ? _destination
 			: GetUnit()->state.center;

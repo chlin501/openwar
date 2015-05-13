@@ -151,7 +151,7 @@ void ButtonWidget::RefreshContent()
 	_borderImage.SetBounds(_bounds);
 	if (_disabled)
 	{
-		if (_backgroundDisabled != nullptr)
+		if (_backgroundDisabled)
 		{
 			_borderImage.SetTextureImage(_backgroundDisabled);
 			_borderImage.SetColorize(glm::vec4());
@@ -166,7 +166,7 @@ void ButtonWidget::RefreshContent()
 	}
 	else if (_hotspot.IsHighlight())
 	{
-		if (_backgroundHighlight != nullptr)
+		if (_backgroundHighlight)
 		{
 			_borderImage.SetTextureImage(_backgroundHighlight);
 			_borderImage.SetColorize(glm::vec4());

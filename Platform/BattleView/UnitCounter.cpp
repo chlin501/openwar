@@ -99,7 +99,7 @@ void UnitCounter::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleView* ba
 	const UnitCommand& command = _unit->GetCommand();
 
 	if (_unit->state.unitMode != UnitMode_Standing
-		|| command.meleeTarget != nullptr
+		|| command.meleeTarget
 		|| _unit->state.IsRouting())
 	{
 		return;

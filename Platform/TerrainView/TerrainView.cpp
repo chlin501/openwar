@@ -49,7 +49,7 @@ void TerrainView::OnTouchEnter(Touch* touch)
 
 void TerrainView::OnTouchBegin(Touch* touch)
 {
-	if (_editorHotspot != nullptr)
+	if (_editorHotspot)
 		_editorHotspot->SubscribeTouch(touch);
 
 	if (_terrainHotspot == nullptr)

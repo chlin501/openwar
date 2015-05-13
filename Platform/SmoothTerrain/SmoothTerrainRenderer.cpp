@@ -203,10 +203,10 @@ void SmoothTerrainRenderer::UpdateSobelBufferSize()
 		_framebuffer_width = size.x;
 		_framebuffer_height = size.y;
 
-		if (_sobelColorBuffer != nullptr)
+		if (_sobelColorBuffer)
 			_sobelColorBuffer->PrepareColorBuffer(_framebuffer_width, _framebuffer_height);
 
-		if (_sobelDepthBuffer != nullptr)
+		if (_sobelDepthBuffer)
 			_sobelDepthBuffer->PrepareDepthBuffer(_framebuffer_width, _framebuffer_height);
 	}
 }
@@ -217,7 +217,7 @@ void SmoothTerrainRenderer::UpdateSobelTexture(const glm::mat4& transform)
 	bounds2f bounds = _smoothGroundMap->GetBounds();
 	glm::vec4 map_bounds = glm::vec4(bounds.min, bounds.size());
 
-	if (_sobelFrameBuffer != nullptr)
+	if (_sobelFrameBuffer)
 	{
 		UpdateSobelBufferSize();
 
@@ -255,7 +255,7 @@ void SmoothTerrainRenderer::UpdateSobelTexture(const glm::mat4& transform)
 
 void SmoothTerrainRenderer::RenderSobelTexture()
 {
-	if (_sobelDepthBuffer != nullptr)
+	if (_sobelDepthBuffer)
 	{
 		VertexShape_2f_2f vertices;
 		vertices._mode = GL_TRIANGLE_STRIP;
@@ -337,7 +337,7 @@ void SmoothTerrainRenderer::TryEnableHatchingsBuffers()
 
 void SmoothTerrainRenderer::RenderHatchings(const glm::mat4& transform)
 {
-	if (_hatchingsMasterFrameBuffer != nullptr && (_deploymentRadiusBlue > 0 || _deploymentRadiusRed > 0))
+	if (_hatchingsMasterFrameBuffer && (_deploymentRadiusBlue > 0 || _deploymentRadiusRed > 0))
 	{
 		GLint oldViewport[4];
 
@@ -713,7 +713,7 @@ void SmoothTerrainRenderer::PushTriangle(const Vertex_3f_3f& v0, const Vertex_3f
 		GetVertexAttribute<0>(v1).xy(),
 		GetVertexAttribute<0>(v2).xy());
 	VertexShape_3f_3f* vertices = SelectTerrainVertexBuffer(inside);
-	if (vertices != nullptr)
+	if (vertices)
 	{
 		vertices->AddVertex(v0);
 		vertices->AddVertex(v1);

@@ -83,7 +83,7 @@ glm::vec2 ButtonItem::CalculateSize() const
 		return glm::vec2(38 + size.x, fmaxf(44, size.y));
 	}
 
-	if (_buttonIcon != nullptr)
+	if (_buttonIcon)
 	{
 		glm::vec2 size = _buttonIcon->GetBounds().outer.size();
 		if (size.x > 44 || size.y > 44)
@@ -181,7 +181,7 @@ void ButtonArea::UpdateColumnsAndRows()
 			}
 		}
 
-	if (buttonItems.size() == 1 && buttonItems.front()->GetButtonText() != nullptr)
+	if (buttonItems.size() == 1 && buttonItems.front()->GetButtonText())
 	{
 		columns.front() = fmaxf(172, columns.front());
 	}
@@ -373,7 +373,7 @@ void ButtonGrid::Render()
 			buttonItem->selectedImage.SetInset(BorderInset(32));
 			buttonItem->selectedImage.SetTextureImage(buttonItem->IsSelected() ? _textureSheet->buttonSelected : nullptr);
 
-			if (buttonItem->GetButtonIcon() != nullptr)
+			if (buttonItem->GetButtonIcon())
 			{
 				bounds2f bounds_xy = buttonItem->GetButtonIcon()->GetBounds().outer;
 				bounds_xy -= bounds_xy.mid();

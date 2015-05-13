@@ -106,11 +106,11 @@ bool Hotspot::TryCaptureTouch(Touch* touch)
 	if (touch->_capturedByHotspot == this)
 		return true;
 
-	if (touch->_capturedByHotspot != nullptr)
+	if (touch->_capturedByHotspot)
 	{
 		Gesture* gesture = touch->_capturedByHotspot->GetGesture();
 		gesture->AskReleaseTouchToAnotherHotspot(touch, this);
-		if (touch->_capturedByHotspot != nullptr)
+		if (touch->_capturedByHotspot)
 			return false;
 	}
 

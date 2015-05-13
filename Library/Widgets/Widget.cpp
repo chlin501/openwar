@@ -23,7 +23,7 @@ Widget::Widget(WidgetOwner* widgetOwner) :
 
 Widget::~Widget()
 {
-	if (_widgetOwner != nullptr)
+	if (_widgetOwner)
 	{
 		_widgetOwner->_widgets.erase(
 			std::remove(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), this),
@@ -83,21 +83,21 @@ WidgetOwner* Widget::GetWidgetOwner() const
 
 WidgetView* Widget::GetWidgetView() const
 {
-	return _widgetOwner != nullptr ? _widgetOwner->FindWidgetView() : nullptr;
+	return _widgetOwner ? _widgetOwner->FindWidgetView() : nullptr;
 }
 
 
 ScrollerViewport* Widget::GetViewport() const
 {
 	WidgetView* widgetView = GetWidgetView();
-	return widgetView != nullptr ? widgetView->GetViewport() : nullptr;
+	return widgetView ? widgetView->GetViewport() : nullptr;
 }
 
 
 GraphicsContext* Widget::GetGraphicsContext() const
 {
 	WidgetView* widgetView = GetWidgetView();
-	return widgetView != nullptr ? widgetView->GetGraphicsContext() : nullptr;
+	return widgetView ? widgetView->GetGraphicsContext() : nullptr;
 }
 
 
@@ -115,7 +115,7 @@ void Widget::SetVisible(bool value)
 
 void Widget::OrderFront()
 {
-	if (_widgetOwner != nullptr)
+	if (_widgetOwner)
 	{
 		auto i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), this);
 		if (i != _widgetOwner->_widgets.end())
@@ -129,7 +129,7 @@ void Widget::OrderFront()
 
 void Widget::OrderFrontOf(Widget* widget)
 {
-	if (_widgetOwner != nullptr && _widgetOwner == widget->_widgetOwner)
+	if (_widgetOwner && _widgetOwner == widget->_widgetOwner)
 	{
 		auto i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), this);
 		if (i != _widgetOwner->_widgets.end())
@@ -144,7 +144,7 @@ void Widget::OrderFrontOf(Widget* widget)
 
 void Widget::OrderBack()
 {
-	if (_widgetOwner != nullptr)
+	if (_widgetOwner)
 	{
 		auto i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), this);
 		if (i != _widgetOwner->_widgets.end())
@@ -158,7 +158,7 @@ void Widget::OrderBack()
 
 void Widget::OrderBackOf(Widget* widget)
 {
-	if (_widgetOwner != nullptr && _widgetOwner == widget->_widgetOwner)
+	if (_widgetOwner && _widgetOwner == widget->_widgetOwner)
 	{
 		auto i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), this);
 		if (i != _widgetOwner->_widgets.end())
@@ -209,5 +209,5 @@ void WidgetGroup::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 WidgetView* WidgetGroup::FindWidgetView()
 {
 	WidgetOwner* widgetOwner = GetWidgetOwner();
-	return widgetOwner != nullptr ? widgetOwner->FindWidgetView() : nullptr;
+	return widgetOwner ? widgetOwner->FindWidgetView() : nullptr;
 }

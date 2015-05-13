@@ -72,7 +72,7 @@ void Window::ProcessEvents()
 
 	for (auto i : _windows)
 	{
-		if (i.second != nullptr)
+		if (i.second)
 		{
 			i.second->Update();
 			i.second->Render();
@@ -150,52 +150,52 @@ void Window::ProcessEvent(const SDL_Event& event)
 
 		case SDL_WINDOWEVENT:
 			window = GetWindow(event.window.windowID);
-			if (window != nullptr) window->ProcessWindow(event.window);
+			if (window) window->ProcessWindow(event.window);
 			break;
 
 		case SDL_KEYDOWN:
 			window = GetWindow(event.key.windowID);
-			if (window != nullptr) window->ProcessKeyDown(event.key);
+			if (window) window->ProcessKeyDown(event.key);
 			break;
 
 		case SDL_KEYUP:
 			window = GetWindow(event.key.windowID);
-			if (window != nullptr) window->ProcessKeyUp(event.key);
+			if (window) window->ProcessKeyUp(event.key);
 			break;
 
 		case SDL_FINGERDOWN:
 			window = _touchWindow;
-			if (window != nullptr) window->ProcessFingerDown(event.tfinger);
+			if (window) window->ProcessFingerDown(event.tfinger);
 			break;
 
 		case SDL_FINGERUP:
 			window = _touchWindow;
-			if (window != nullptr) window->ProcessFingerUp(event.tfinger);
+			if (window) window->ProcessFingerUp(event.tfinger);
 			break;
 
 		case SDL_FINGERMOTION:
 			window = _touchWindow;
-			if (window != nullptr) window->ProcessFingerMotion(event.tfinger);
+			if (window) window->ProcessFingerMotion(event.tfinger);
 			break;
 
 		case SDL_MOUSEMOTION:
 			window = GetWindow(event.motion.windowID);
-			if (window != nullptr && event.motion.which != SDL_TOUCH_MOUSEID) window->ProcessMouseMotion(event.motion);
+			if (window && event.motion.which != SDL_TOUCH_MOUSEID) window->ProcessMouseMotion(event.motion);
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
 			window = GetWindow(event.button.windowID);
-			if (window != nullptr && event.button.which != SDL_TOUCH_MOUSEID) window->ProcessMouseButtonDown(event.button);
+			if (window && event.button.which != SDL_TOUCH_MOUSEID) window->ProcessMouseButtonDown(event.button);
 			break;
 
 		case SDL_MOUSEBUTTONUP:
 			window = GetWindow(event.button.windowID);
-			if (window != nullptr && event.button.which != SDL_TOUCH_MOUSEID) window->ProcessMouseButtonUp(event.button);
+			if (window && event.button.which != SDL_TOUCH_MOUSEID) window->ProcessMouseButtonUp(event.button);
 			break;
 
 		case SDL_MOUSEWHEEL:
 			window = GetWindow(event.wheel.windowID);
-			if (window != nullptr && event.wheel.which != SDL_TOUCH_MOUSEID) window->ProcessMouseWheel(event.wheel);
+			if (window && event.wheel.which != SDL_TOUCH_MOUSEID) window->ProcessMouseWheel(event.wheel);
 			break;
 	}
 }
@@ -241,7 +241,7 @@ void Window::ProcessKeyDown(const SDL_KeyboardEvent& event)
 	if (key == '\0')
 		return;
 
-	if (Gesture::_gestures != nullptr)
+	if (Gesture::_gestures)
 		for (Gesture* gesture : *Gesture::_gestures)
 			gesture->KeyDown(key);
 
@@ -254,7 +254,7 @@ void Window::ProcessKeyUp(const SDL_KeyboardEvent& event)
 	if (key == '\0')
 		return;
 
-	if (Gesture::_gestures != nullptr)
+	if (Gesture::_gestures)
 		for (Gesture* gesture : *Gesture::_gestures)
 			gesture->KeyUp(key);
 }
@@ -326,7 +326,7 @@ void Window::ProcessFingerMotion(const SDL_TouchFingerEvent& event)
 
 void Window::ProcessMouseMotion(const SDL_MouseMotionEvent& event)
 {
-	if (_mouseTouch != nullptr)
+	if (_mouseTouch)
 	{
 		glm::vec2 position = ToVector(event.x, event.y);
 		double timestamp = ToTimestamp(event.timestamp);
@@ -352,7 +352,7 @@ void Window::ProcessMouseButtonDown(const SDL_MouseButtonEvent& event)
 	double timestamp = ToTimestamp(event.timestamp);
 
 	MouseButtons buttons;
-	if (_mouseTouch != nullptr)
+	if (_mouseTouch)
 		buttons = _mouseTouch->GetCurrentButtons();
 
 	switch (event.button)
@@ -381,7 +381,7 @@ void Window::ProcessMouseButtonUp(const SDL_MouseButtonEvent& event)
 {
 	//NSLog(@"ProcessMouseButtonUp button=%d state=%d", event.button, event.state);
 
-	if (_mouseTouch != nullptr)
+	if (_mouseTouch)
 	{
 		glm::vec2 position = ToVector(event.x, event.y);
 		double timestamp = ToTimestamp(event.timestamp);
@@ -418,7 +418,7 @@ void Window::ProcessMouseWheel(const SDL_MouseWheelEvent& event)
 
 	float k = 1;
 
-	if (Gesture::_gestures != nullptr)
+	if (Gesture::_gestures)
 		for (Gesture* gesture : *Gesture::_gestures)
 			gesture->ScrollWheel(position, k * glm::vec2(event.x, event.y));
 
@@ -436,7 +436,7 @@ void Window::Update()
 
 	RenderLoopObserver::NotifyRenderLoop(secondsSinceLastUpdate);
 
-	if (_mouseTouch != nullptr)
+	if (_mouseTouch)
 	{
 		double oldTimestamp = _mouseTouch->GetTimestamp();
 		_mouseTouch->Update(secondsSinceTimeStart);
@@ -449,7 +449,7 @@ void Window::Update()
 
 void Window::Render()
 {
-	if (_surface != nullptr)
+	if (_surface)
 	{
 		_surface->RenderViews();
 		SDL_GL_SwapWindow(_window);

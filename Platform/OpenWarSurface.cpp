@@ -120,7 +120,7 @@ void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 	_buttonsTopLeft->SetBounds(viewportBounds);
 	_buttonsTopRight->SetBounds(viewportBounds);
 
-	if (_battleLayer->GetSimulator() != nullptr && _battleLayer->IsPlaying())
+	if (_battleLayer->GetSimulator() && _battleLayer->IsPlaying())
 		_battleLayer->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);
 }
 
@@ -141,7 +141,7 @@ void OpenWarSurface::ClickedPause()
 
 void OpenWarSurface::SetEditorMode(EditorMode editorMode)
 {
-	if (_editorModel != nullptr)
+	if (_editorModel)
 	{
 		_editorModel->SetEditorMode(editorMode);
 		UpdateButtons();
@@ -151,7 +151,7 @@ void OpenWarSurface::SetEditorMode(EditorMode editorMode)
 
 void OpenWarSurface::SetEditorFeature(TerrainFeature terrainFeature)
 {
-	if (_editorModel != nullptr)
+	if (_editorModel)
 	{
 		_editorModel->SetTerrainFeature(terrainFeature);
 		UpdateButtons();
@@ -162,7 +162,7 @@ void OpenWarSurface::SetEditorFeature(TerrainFeature terrainFeature)
 void OpenWarSurface::UpdateButtons()
 {
 	bool playing = _battleLayer->IsPlaying();
-	bool editing = _editorModel != nullptr && _editorModel->GetEditorMode() != EditorMode::Hand;
+	bool editing = _editorModel && _editorModel->GetEditorMode() != EditorMode::Hand;
 	_battleLayer->SetEditing(editing);
 
 	/*
@@ -176,7 +176,7 @@ void OpenWarSurface::UpdateButtons()
 	_buttonItemFords->SetDisabled(playing);
 	*/
 
-	if (_editorModel != nullptr)
+	if (_editorModel)
 	{
 		_buttonItemHand->SetSelected(_editorModel->GetEditorMode() == EditorMode::Hand);
 		_buttonItemPaint->SetSelected(_editorModel->GetEditorMode() == EditorMode::Paint);
@@ -188,7 +188,7 @@ void OpenWarSurface::UpdateButtons()
 		_buttonItemFords->SetSelected(_editorModel->GetTerrainFeature() == TerrainFeature::Fords);
 	}
 
-	/*if (_editorGesture != nullptr)
+	/*if (_editorGesture)
 	{
 		_editorGesture->SetEnabled(editing);
 	}*/

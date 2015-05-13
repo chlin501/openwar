@@ -67,7 +67,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 		if (unit == nullptr)
 			return;
 
-		if (unit != nullptr && _hotspot->GetBattleView()->GetTrackingMarker(unit) == nullptr)
+		if (unit && _hotspot->GetBattleView()->GetTrackingMarker(unit) == nullptr)
 		{
 			const UnitCommand command = unit->GetCommand();
 
@@ -133,15 +133,15 @@ void BattleGesture::TouchBegan(Touch* touch)
 	}
 	else if (_modifierTouch == nullptr)
 	{
-		if (unit != nullptr)
+		if (unit)
 			return;
 
-		if (_gestures != nullptr)
+		if (_gestures)
 		{
 			for (Gesture* g : *_gestures)
 			{
 				BattleGesture* gesture = dynamic_cast<BattleGesture*>(g);
-				if (gesture != nullptr && gesture != this && gesture->_trackingTouch != nullptr)
+				if (gesture && gesture != this && gesture->_trackingTouch)
 				{
 					if (glm::distance(_trackingTouch->GetCurrentPosition(), touch->GetCurrentPosition()) > glm::distance(gesture->_trackingTouch->GetCurrentPosition(), touch->GetCurrentPosition()))
 						return;
@@ -160,7 +160,7 @@ void BattleGesture::TouchMoved(Touch* touch)
 	if (!_hotspot->HasCapturedTouch())
 		return;
 
-	if (_trackingMarker != nullptr)
+	if (_trackingMarker)
 	{
 		int icon_size = 0;
 
@@ -204,7 +204,7 @@ void BattleGesture::TouchEnded(Touch* touch)
 
 	if (touch == _trackingTouch)
 	{
-		if (_trackingMarker != nullptr)
+		if (_trackingMarker)
 		{
 			Unit* unit = _trackingMarker->GetUnit();
 			UnitCommand command;
@@ -216,7 +216,7 @@ void BattleGesture::TouchEnded(Touch* touch)
 			Unit* missileTarget = _trackingMarker->GetMissileTarget();
 			glm::vec2* orientation = _trackingMarker->GetOrientationX();
 
-			if (missileTarget != nullptr)
+			if (missileTarget)
 			{
 				command.missileTarget = missileTarget;
 				command.missileTargetLocked = true;
@@ -268,20 +268,20 @@ void BattleGesture::TouchEnded(Touch* touch)
 	}
 
 
-	if (touch == _modifierTouch && _trackingTouch != nullptr)
+	if (touch == _modifierTouch && _trackingTouch)
 	{
 		_trackingTouch->ResetHasMoved();
 	}
 
 
-	if (_trackingTouch != nullptr && _modifierTouch != nullptr)
+	if (_trackingTouch && _modifierTouch)
 	{
 		_trackingTouch->ResetVelocity();
 		_modifierTouch->ResetVelocity();
 	}
 
 
-	/*if (_trackingTouch == nullptr && _modifierTouch != nullptr)
+	/*if (_trackingTouch == nullptr && _modifierTouch)
 	{
 		if (!ViewState::singleton->showTitleScreen)
 		{
@@ -339,7 +339,7 @@ void BattleGesture::UpdateTrackingMarker()
 	Unit* enemyUnit = FindEnemyUnit(touchPosition, markerPosition);
 	glm::vec2 unitCenter = unit->state.center;
 
-	bool isModifierMode = _tappedModiferArea || _modifierTouch != nullptr || _trackingTouch->GetCurrentButtons().right;
+	bool isModifierMode = _tappedModiferArea || _modifierTouch || _trackingTouch->GetCurrentButtons().right;
 	_trackingMarker->SetRenderOrientation(isModifierMode);
 
 	if (!isModifierMode)
@@ -362,7 +362,7 @@ void BattleGesture::UpdateTrackingMarker()
 		for (float k = delta; k < 1; k += delta)
 		{
 			const GroundMap* groundMap = _hotspot->GetBattleView()->GetSimulator()->GetBattleMap()->GetGroundMap();
-			if (groundMap != nullptr && groundMap->IsImpassable(glm::mix(currentDestination, markerPosition, k)))
+			if (groundMap && groundMap->IsImpassable(glm::mix(currentDestination, markerPosition, k)))
 			{
 				movementLimit = k;
 				break;
@@ -411,12 +411,12 @@ void BattleGesture::UpdateTrackingMarker()
 		_trackingMarker->SetMeleeTarget(enemyUnit);
 		_trackingMarker->SetDestination(&markerPosition);
 
-		if (enemyUnit != nullptr)
+		if (enemyUnit)
 			MovementRules::UpdateMovementPath(_trackingMarker->_path, unitCenter, enemyUnit->state.center);
 		else
 			MovementRules::UpdateMovementPath(_trackingMarker->_path, unitCenter, markerPosition);
 
-		if (enemyUnit != nullptr)
+		if (enemyUnit)
 		{
 			glm::vec2 destination = enemyUnit->state.center;
 			glm::vec2 orientation = destination + glm::normalize(destination - unitCenter) * 18.0f;
@@ -459,7 +459,7 @@ void BattleGesture::UpdateTrackingMarker()
 			if (!_allowTargetEnemyUnit)
 				enemyUnit = nullptr;
 
-			if (enemyUnit != nullptr && _trackingMarker->GetMissileTarget() == nullptr)
+			if (enemyUnit && _trackingMarker->GetMissileTarget() == nullptr)
 				SoundPlayer::GetSingleton()->PlayUserInterfaceSound(SoundSampleID::CommandMod);
 
 			_trackingMarker->SetMissileTarget(enemyUnit);
@@ -481,17 +481,17 @@ Unit* BattleGesture::FindCommandableUnit(glm::vec2 screenPosition, glm::vec2 ter
 	Unit* unitByDestination = FindCommandableUnitByFuturePosition(screenPosition, terrainPosition);
 	Unit* unitByModifier = FindCommandableUnitByModifierArea(screenPosition, terrainPosition);
 
-	if (unitByPosition != nullptr && unitByDestination == nullptr)
+	if (unitByPosition && unitByDestination == nullptr)
 	{
 		return unitByPosition;
 	}
 
-	if (unitByPosition == nullptr && unitByDestination != nullptr)
+	if (unitByPosition == nullptr && unitByDestination)
 	{
 		return unitByDestination;
 	}
 
-	if (unitByPosition != nullptr && unitByDestination != nullptr)
+	if (unitByPosition && unitByDestination)
 	{
 		float distanceToPosition = glm::distance(unitByPosition->state.center, screenPosition);
 		float distanceToDestination = glm::distance(unitByDestination->GetCommand().GetDestination(), screenPosition);
@@ -500,7 +500,7 @@ Unit* BattleGesture::FindCommandableUnit(glm::vec2 screenPosition, glm::vec2 ter
 				: unitByDestination;
 	}
 
-	if (unitByModifier != nullptr)
+	if (unitByModifier)
 		return unitByModifier;
 
 	return nullptr;
@@ -511,7 +511,7 @@ Unit* BattleGesture::FindCommandableUnitByCurrentPosition(glm::vec2 screenPositi
 {
 	Unit* result = nullptr;
 	UnitCounter* unitMarker = _hotspot->GetBattleView()->GetNearestUnitCounter(terrainPosition, 0, _hotspot->GetBattleView()->GetCommander(), false);
-	if (unitMarker != nullptr)
+	if (unitMarker)
 	{
 		Unit* unit = unitMarker->_unit;
 		if (!unit->state.IsRouting() && GetUnitCurrentBounds(unit).contains(screenPosition))
@@ -527,7 +527,7 @@ Unit* BattleGesture::FindCommandableUnitByFuturePosition(glm::vec2 screenPositio
 {
 	Unit* result = nullptr;
 	UnitMovementMarker* movementMarker = _hotspot->GetBattleView()->GetNearestMovementMarker(terrainPosition, _hotspot->GetBattleView()->GetCommander());
-	if (movementMarker != nullptr)
+	if (movementMarker)
 	{
 		Unit* unit = movementMarker->GetUnit();
 		if (!unit->state.IsRouting() && GetUnitFutureBounds(unit).contains(screenPosition))
@@ -582,7 +582,7 @@ Unit* BattleGesture::FindEnemyUnit(glm::vec2 touchPosition, glm::vec2 markerPosi
 		p += d;
 	}
 
-	if (enemyMarker != nullptr)
+	if (enemyMarker)
 		return enemyMarker->_unit;
 	else
 		return nullptr;
@@ -622,7 +622,7 @@ void BattleGesture::OnAddUnit(Unit* unit)
 
 void BattleGesture::OnRemoveUnit(Unit* unit)
 {
-	if (_trackingMarker != nullptr && _trackingMarker->GetUnit() == unit)
+	if (_trackingMarker && _trackingMarker->GetUnit() == unit)
 	{
 		_hotspot->GetBattleView()->RemoveTrackingMarker(_trackingMarker);
 		_trackingMarker = nullptr;

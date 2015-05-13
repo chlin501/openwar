@@ -95,7 +95,7 @@ glm::vec2 MovementRules::NextWaypoint(Unit* unit)
 		if (glm::distance(p, unit->state.center) > 1.0f)
 			return p;
 
-	if (unit->command.meleeTarget != nullptr)
+	if (unit->command.meleeTarget)
 		return unit->command.meleeTarget->state.center;
 
 	if (!unit->command.path.empty())
@@ -108,7 +108,7 @@ glm::vec2 MovementRules::NextWaypoint(Unit* unit)
 
 void MovementRules::AdvanceTime(Unit* unit, float timeStep)
 {
-	if (unit->command.meleeTarget != nullptr)
+	if (unit->command.meleeTarget)
 		unit->command.UpdatePath(unit->state.center, unit->command.meleeTarget->state.center);
 	else if (unit->command.path.empty())
 		unit->command.ClearPathAndSetDestination(unit->state.center);
@@ -217,7 +217,7 @@ glm::vec2 MovementRules::NextFighterDestination(Fighter* fighter)
 			return glm::vec2(fighterState.position.x * 3, 2000);
 	}
 
-	if (fighterState.opponent != nullptr)
+	if (fighterState.opponent)
 	{
 		return fighterState.opponent->state.position
 			- unit->stats.weaponReach * vector2_from_angle(fighterState.bearing);

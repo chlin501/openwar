@@ -35,7 +35,7 @@ SoundPlayer::SoundPlayer()
 
 #ifdef OPENWAR_USE_OPENAL
 	_device = alcOpenDevice(nullptr); // select the "preferred device"
-	if (_device != nullptr)
+	if (_device)
 	{
 		_context = alcCreateContext(_device, 0);
 	}

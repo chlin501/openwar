@@ -144,7 +144,7 @@ bool Unit::IsInMelee() const
 {
 	int count = 0;
 	for (Fighter* fighter = fighters, * end = fighter + fightersCount; fighter != end; ++fighter)
-		if (fighter->state.opponent != nullptr && ++count >= 3)
+		if (fighter->state.opponent && ++count >= 3)
 			return true;
 
 	return false;
@@ -397,9 +397,9 @@ void BattleSimulator::RemoveUnit(Unit* unit)
 		for (int i = 0; i < other->fightersCount; ++i)
 		{
 			Fighter* fighter = &other->fighters[i];
-			if (fighter->state.opponent != nullptr && fighter->state.opponent->unit == unit)
+			if (fighter->state.opponent && fighter->state.opponent->unit == unit)
 				fighter->state.opponent = nullptr;
-			if (fighter->state.meleeTarget != nullptr && fighter->state.meleeTarget->unit == unit)
+			if (fighter->state.meleeTarget && fighter->state.meleeTarget->unit == unit)
 				fighter->state.meleeTarget = nullptr;
 		}
 
@@ -457,7 +457,7 @@ void BattleSimulator::AddShooting(const Shooting& shooting, float timer)
 
 void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 {
-	//if (this != nullptr)
+	//if (this)
 	//	return;
 
 	bool didStep = false;
@@ -659,7 +659,7 @@ void BattleSimulator::ResolveMeleeCombat()
 		for (Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
 		{
 			Fighter* meleeTarget = fighter->state.meleeTarget;
-			if (meleeTarget != nullptr && meleeTarget->unit->IsOwnedBySimulator())
+			if (meleeTarget && meleeTarget->unit->IsOwnedBySimulator())
 			{
 				Unit* enemyUnit = meleeTarget->unit;
 				float killProbability = 0.5f;
@@ -838,7 +838,7 @@ void BattleSimulator::RemoveCasualties()
 	{
 		Fighter* end = unit->fighters + unit->fightersCount;
 		for (Fighter* fighter = unit->fighters; fighter != end; ++fighter)
-			if (fighter->state.opponent != nullptr && fighter->state.opponent->casualty)
+			if (fighter->state.opponent && fighter->state.opponent->casualty)
 				fighter->state.opponent = nullptr;
 	}
 
@@ -910,7 +910,7 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 	{
 		unit->command.missileTarget = ClosestEnemyWithinLineOfFire(unit);
 	}
-	else if (unit->command.missileTarget != nullptr
+	else if (unit->command.missileTarget
 		&& unit->command.missileTarget != unit
 		&& !IsWithinLineOfFire(unit, unit->command.missileTarget->state.center))
 	{
@@ -931,7 +931,7 @@ UnitState BattleSimulator::NextUnitState(Unit* unit)
 	else
 	{
 		if (unit->state.loadingDuration != 0
-			&& unit->command.missileTarget != nullptr
+			&& unit->command.missileTarget
 			&& IsWithinLineOfFire(unit, unit->command.missileTarget->state.center))
 		{
 			++result.shootingCounter;
@@ -1066,7 +1066,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 	{
 		result.bearing = angle(original.velocity);
 	}
-	else if (original.opponent != nullptr)
+	else if (original.opponent)
 	{
 		result.bearing = angle(original.opponent->state.position - original.position);
 	}
@@ -1078,7 +1078,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 
 	// OPPONENT
 
-	if (original.opponent != nullptr
+	if (original.opponent
 		&& (original.opponent - original.opponent->unit->fighters) < original.opponent->unit->fightersCount
 		&& glm::length(original.position - original.opponent->state.position) <= fighter->unit->stats.weaponReach * 2)
 	{
@@ -1098,7 +1098,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 	switch (original.readyState)
 	{
 		case ReadyState_Unready:
-			if (fighter->unit->command.meleeTarget != nullptr)
+			if (fighter->unit->command.meleeTarget)
 			{
 				result.readyState = ReadyState_Prepared;
 			}
@@ -1126,7 +1126,7 @@ FighterState BattleSimulator::NextFighterState(Fighter* fighter)
 			{
 				result.readyState = ReadyState_Unready;
 			}
-			else if (result.opponent != nullptr)
+			else if (result.opponent)
 			{
 				result.readyState = ReadyState_Striking;
 				result.strikingTimer = fighter->unit->stats.strikingDuration;
@@ -1367,7 +1367,7 @@ BattleCommander* BattleSimulator::GetDummyCommander() const
 
 void BattleSimulator::Tick(double secondsSinceLastTick)
 {
-	if (_script != nullptr)
+	if (_script)
 		_script->Tick(secondsSinceLastTick);
 
 	UpdateDeploymentZones(secondsSinceLastTick);

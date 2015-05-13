@@ -26,7 +26,7 @@ Touch::Touch(int tapCount, glm::vec2 position, double timestamp, MouseButtons bu
 
 Touch::~Touch()
 {
-	if (_capturedByHotspot != nullptr)
+	if (_capturedByHotspot)
 		_capturedByHotspot->ReleaseTouch(this);
 
 	while (!_subscribedHotspots.empty())

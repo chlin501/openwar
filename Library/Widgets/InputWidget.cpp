@@ -63,7 +63,7 @@ void InputWidget::SetWidth(float value)
 
 const char* InputWidget::GetString() const
 {
-	if (_inputEditor != nullptr)
+	if (_inputEditor)
 		return _inputEditor->GetString();
 	else
 		return StringWidget::GetString();
@@ -72,7 +72,7 @@ const char* InputWidget::GetString() const
 
 void InputWidget::SetString(const char* value)
 {
-	if (_inputEditor != nullptr)
+	if (_inputEditor)
 		_inputEditor->SetString(value);
 	else
 		StringWidget::SetString(value);
@@ -112,7 +112,7 @@ void InputWidget::OnTouchBegin(Touch* touch)
 
 void InputWidget::RefreshContent()
 {
-	if (_inputEditor != nullptr)
+	if (_inputEditor)
 		_inputEditor->OnInputWidgetChanged();
 }
 
@@ -121,7 +121,7 @@ void InputWidget::OnRenderLoop(double secondsSinceLastLoop)
 {
 	if (_editing && _inputEditor == nullptr)
 		ShowInputEditor();
-	else if (!_editing && _inputEditor != nullptr)
+	else if (!_editing && _inputEditor)
 		HideInputEditor();
 }
 

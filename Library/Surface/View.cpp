@@ -15,7 +15,7 @@ View::View(ViewOwner* viewOwner) :
 
 View::~View()
 {
-	if (_viewOwner != nullptr)
+	if (_viewOwner)
 	{
 		_viewOwner->_views.erase(
 			std::find(_viewOwner->_views.begin(), _viewOwner->_views.end(), this),
@@ -32,14 +32,14 @@ ViewOwner* View::GetViewOwner() const
 
 Surface* View::GetSurface() const
 {
-	return _viewOwner != nullptr ? _viewOwner->FindSurface() : nullptr;
+	return _viewOwner ? _viewOwner->FindSurface() : nullptr;
 }
 
 
 GraphicsContext* View::GetGraphicsContext() const
 {
 	Surface* surface = GetSurface();
-	return surface != nullptr ? surface->GetGraphicsContext() : nullptr;
+	return surface ? surface->GetGraphicsContext() : nullptr;
 }
 
 
@@ -70,7 +70,7 @@ void View::SetVisible(bool value)
 
 void View::OrderFront()
 {
-	if (_viewOwner != nullptr)
+	if (_viewOwner)
 	{
 		auto i = std::find(_viewOwner->_views.begin(), _viewOwner->_views.end(), this);
 		if (i != _viewOwner->_views.end())
@@ -84,7 +84,7 @@ void View::OrderFront()
 
 void View::OrderFrontOf(View* view)
 {
-	if (_viewOwner != nullptr &_viewOwner == view->_viewOwner)
+	if (_viewOwner && _viewOwner == view->_viewOwner)
 	{
 		auto i = std::find(_viewOwner->_views.begin(), _viewOwner->_views.end(), this);
 		if (i != _viewOwner->_views.end())
@@ -99,7 +99,7 @@ void View::OrderFrontOf(View* view)
 
 void View::OrderBack()
 {
-	if (_viewOwner != nullptr)
+	if (_viewOwner)
 	{
 		auto i = std::find(_viewOwner->_views.begin(), _viewOwner->_views.end(), this);
 		if (i != _viewOwner->_views.end())
@@ -113,7 +113,7 @@ void View::OrderBack()
 
 void View::OrderBackOf(View* view)
 {
-	if (_viewOwner != nullptr && _viewOwner == view->_viewOwner)
+	if (_viewOwner && _viewOwner == view->_viewOwner)
 	{
 		auto i = std::find(_viewOwner->_views.begin(), _viewOwner->_views.end(), this);
 		if (i != _viewOwner->_views.end())
@@ -204,5 +204,5 @@ void ViewGroup::Render()
 Surface* ViewGroup::FindSurface()
 {
 	ViewOwner* viewOwner = GetViewOwner();
-	return viewOwner != nullptr ? viewOwner->FindSurface() : nullptr;
+	return viewOwner ? viewOwner->FindSurface() : nullptr;
 }

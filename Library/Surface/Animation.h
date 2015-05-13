@@ -261,16 +261,16 @@ protected:
 	{
 		if (!_started)
 		{
-			if (_animationValue != nullptr)
+			if (_animationValue)
 				_startValue = _getter();
 
-			if (_animationAction != nullptr)
+			if (_animationAction)
 				_animationAction->_action();
 
 			_started = true;
 		}
 
-		if (_animationValue != nullptr)
+		if (_animationValue)
 		{
 			float duration = _animationValue->_duration;
 			_time += deltaTime;
@@ -288,7 +288,7 @@ protected:
 			_setter((1.0f - k) * _startValue + k * _animationValue->_value);
 		}
 
-		if (_animationRepeat != nullptr)
+		if (_animationRepeat)
 		{
 			while (_index < _animationRepeat->_count && deltaTime > 0)
 			{
@@ -307,7 +307,7 @@ protected:
 			}
 		}
 
-		if (_animationSequence != nullptr)
+		if (_animationSequence)
 		{
 			while (_index < (int)_animationSequence->_animations.size() && deltaTime > 0)
 			{

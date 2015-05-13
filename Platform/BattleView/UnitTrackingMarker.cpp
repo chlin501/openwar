@@ -140,8 +140,8 @@ void UnitTrackingMarker::RenderOrientation(VertexShape_3f_4f* vertices)
 {
 	if (_renderOrientation && _hasOrientation && !_path.empty())
 	{
-		glm::vec2 tip = _missileTarget != nullptr ? _missileTarget->state.center : _orientation;
-		float overshoot = _missileTarget != nullptr ? 5 : 20;
+		glm::vec2 tip = _missileTarget ? _missileTarget->state.center : _orientation;
+		float overshoot = _missileTarget ? 5 : 20;
 		glm::vec2 center = _path.back();
 		glm::vec2 diff = tip - center;
 		if (glm::length(diff) < 0.1)

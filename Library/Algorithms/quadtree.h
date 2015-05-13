@@ -329,7 +329,7 @@ template <class T> typename quadtree<T>::node* quadtree<T>::iterator::get_next_n
 	}
 
 	node* current = _node;
-	while (current->_parent != nullptr)
+	while (current->_parent)
 	{
 		int index = current->get_index();
 		while (++index != 4)

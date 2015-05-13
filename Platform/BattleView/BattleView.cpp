@@ -202,7 +202,7 @@ void BattleView::SetSimulator(BattleSimulator* simulator)
 	if (simulator == _simulator)
 		return;
 
-	if (_simulator != nullptr)
+	if (_simulator)
 	{
 		for (Unit* unit : _simulator->GetUnits())
 			OnRemoveUnit(unit);
@@ -315,8 +315,8 @@ void BattleView::OnBattleMapChanged(const BattleMap* battleMap)
 	if (smoothGroundMap == nullptr)
 		return;
 
-	/*if (smoothGroundMap != nullptr
-		&& _smoothTerrainSurface != nullptr
+	/*if (smoothGroundMap
+		&& _smoothTerrainSurface
 		&& smoothGroundMap->GetImage() == _smoothTerrainSurface->GetSmoothGroundMap()->GetImage())
 	{
 		return; // no image, same map
@@ -331,7 +331,7 @@ void BattleView::OnBattleMapChanged(const BattleMap* battleMap)
 	delete _tiledTerrainRenderer;
 	_tiledTerrainRenderer = nullptr;
 
-	if (smoothGroundMap != nullptr)
+	if (smoothGroundMap)
 	{
 		_smoothTerrainSurface = new SmoothTerrainRenderer(_gc, smoothGroundMap);
 		_smoothTerrainWater = new SmoothTerrainWater(smoothGroundMap);
@@ -341,7 +341,7 @@ void BattleView::OnBattleMapChanged(const BattleMap* battleMap)
 	}
 
 	const TiledGroundMap* tiledGroundMap = dynamic_cast<const TiledGroundMap*>(battleMap->GetGroundMap());
-	if (tiledGroundMap != nullptr)
+	if (tiledGroundMap)
 	{
 		//tiledGroundMap->UpdateHeightMap();
 		_tiledTerrainRenderer = new TiledTerrainRenderer(_gc, tiledGroundMap);
@@ -409,7 +409,7 @@ struct random_iterator
 
 void BattleView::UpdateTerrainTrees(bounds2f bounds)
 {
-	if (_smoothTerrainSurface != nullptr && _simulator->GetBattleMap() != nullptr)
+	if (_smoothTerrainSurface && _simulator->GetBattleMap())
 	{
 		auto pos2 = std::remove_if(_billboardModel->staticBillboards.begin(), _billboardModel->staticBillboards.end(), [bounds](const Billboard& billboard) {
 			return bounds.contains(billboard.position.xy());
@@ -457,7 +457,7 @@ void BattleView::InitializeCameraPosition()
 	glm::vec2 friendlyCenter;
 	glm::vec2 enemyCenter;
 
-	int position = _commander != nullptr && _commander->GetType() == BattleCommanderType::Player ? _commander->GetTeamPosition() : 0;
+	int position = _commander && _commander->GetType() == BattleCommanderType::Player ? _commander->GetTeamPosition() : 0;
 	switch (position)
 	{
 		case 1:
@@ -502,7 +502,7 @@ void BattleView::Render()
 
 	// Terrain Sky
 
-	if (_smoothTerrainSky != nullptr)
+	if (_smoothTerrainSky)
 	{
 		_smoothTerrainSky->RenderBackgroundLinen(GetBounds());
 		_smoothTerrainSky->Render(GetViewport()->GetCameraDirection().z);
@@ -511,16 +511,16 @@ void BattleView::Render()
 
 	// Terrain Surface
 
-	if (_smoothTerrainSurface != nullptr)
+	if (_smoothTerrainSurface)
 		_smoothTerrainSurface->Render(transform, _lightNormal);
 
-	if (_tiledTerrainRenderer != nullptr)
+	if (_tiledTerrainRenderer)
 		_tiledTerrainRenderer->Render(transform, _lightNormal);
 
 
 	// Terrain Water
 
-	if (_smoothTerrainWater != nullptr)
+	if (_smoothTerrainWater)
 		_smoothTerrainWater->Render(_gc, transform);
 
 
@@ -575,7 +575,7 @@ void BattleView::Render()
 
 	// SmoothTerrain Hatchings
 
-	if (_smoothTerrainSurface != nullptr)
+	if (_smoothTerrainSurface)
 		_smoothTerrainSurface->RenderHatchings(transform);
 
 
@@ -838,7 +838,7 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, Bat
 	for (UnitMovementMarker* marker : _movementMarkers)
 	{
 		Unit* unit = marker->GetUnit();
-		if (commander != nullptr && !unit->IsCommandableBy(commander))
+		if (commander && !unit->IsCommandableBy(commander))
 			continue;
 
 		const UnitCommand& command = unit->GetCommand();
@@ -1065,7 +1065,7 @@ UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int filterTea
 		Unit* unit = marker->_unit;
 		if (filterTeam != 0 && unit->commander->GetTeam() != filterTeam)
 			continue;
-		if (filterCommander != nullptr && !unit->IsCommandableBy(filterCommander))
+		if (filterCommander && !unit->IsCommandableBy(filterCommander))
 			continue;
 		if (filterDeployed && !unit->deployed)
 			continue;
@@ -1159,7 +1159,7 @@ void BattleView::UpdateSoundPlayer()
 
 void BattleView::UpdateDeploymentZones()
 {
-	if (_smoothTerrainSurface != nullptr)
+	if (_smoothTerrainSurface)
 	{
 		_smoothTerrainSurface->SetDeploymentZoneBlue(
 			_simulator->GetDeploymentCenter(1),

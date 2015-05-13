@@ -139,7 +139,7 @@ void SmoothTerrainWater::Update()
 				glm::vec2 v22 = p + s;
 
 				VertexShape_2f* s = choose_shape(inside_circle(bounds, v11, v22, v12), &_waterInsideVertices, &_waterBorderVertices);
-				if (s != nullptr)
+				if (s)
 				{
 					s->AddVertex(Vertex_2f(v11));
 					s->AddVertex(Vertex_2f(v22));
@@ -147,7 +147,7 @@ void SmoothTerrainWater::Update()
 				}
 
 				s = choose_shape(inside_circle(bounds, v22, v11, v21), &_waterInsideVertices, &_waterBorderVertices);
-				if (s != nullptr)
+				if (s)
 				{
 					s->AddVertex(Vertex_2f(v22));
 					s->AddVertex(Vertex_2f(v11));

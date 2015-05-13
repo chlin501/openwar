@@ -129,7 +129,7 @@ void UnitMovementMarker::RenderMovementPath(VertexShape_3f_4f* vertices)
 	if (!command.path.empty())
 	{
 		int mode = 0;
-		if (command.meleeTarget != nullptr)
+		if (command.meleeTarget)
 			mode = 2;
 		else if (command.running)
 			mode = 1;

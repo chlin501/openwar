@@ -33,7 +33,7 @@ void BattleLayer::ResetBattleViews(BattleSimulator* scenario, const std::vector<
 	_scenario = scenario;
 	_commanders = commanders;
 
-	int count = scenario != nullptr ? (int)commanders.size() : 0;
+	int count = scenario ? (int)commanders.size() : 0;
 
 	while ((int)_battleViews.size() > count)
 		RemoveBattleView(_battleViews.back());
@@ -116,7 +116,7 @@ void BattleLayer::OnRenderLoop(double secondsSinceLastUpdate)
 {
 	UpdateBattleViewSize();
 
-	if (_scenario != nullptr)
+	if (_scenario)
 	{
 		if (_playing)
 			_scenario->Tick(secondsSinceLastUpdate);
