@@ -5,17 +5,17 @@
 static std::array<int, 3> BoxesForGauss(float sigma, int n)
 {
 	float wIdeal = glm::sqrt((12 * sigma * sigma / n) + 1);
-	int wl = (int)glm::floor(wIdeal);
+    int wl = (int)glm::floor(wIdeal);
 	if ((wl & 1) == 0)
 		--wl;
-	int wu = wl + 2;
+    int wu = wl + 2;
 
 	float mIdeal = (12 * sigma * sigma - n * wl * wl - 4 * n * wl - 3 * n) / (-4 * wl - 4);
-	int m = (int)glm::round(mIdeal);
+    int m = (int)glm::round(mIdeal);
 
 	std::array<int, 3> result;
-	for (int i = 0; i < n; ++i)
-		result[i] = (i < m ? wl : wu);
+    for (int i = 0; i < n; ++i)
+		result[(unsigned int)i] = (i < m ? wl : wu);
 	return result;
 }
 

@@ -62,7 +62,7 @@ glm::vec2 Surface::GetVirtualSize() const
 #ifdef ENABLE_SURFACE_ADAPTER_MAC
 void Surface::SetNSView(NSView* value)
 {
-	_nsview = [value retain];
+    _nsview = [value retain];
 }
 #endif
 

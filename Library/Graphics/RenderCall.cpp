@@ -116,7 +116,7 @@ void RenderCallTexture::Assign()
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLint>(_sampler.tAddressMode));
 		CHECK_ERROR_GL();
 	}
-	glUniform1i(_location, _texture);
+	glUniform1i(_location, (GLint)_texture);
 	CHECK_ERROR_GL();
 }
 

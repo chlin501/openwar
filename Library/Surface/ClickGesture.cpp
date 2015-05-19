@@ -4,7 +4,6 @@
 
 #include "ClickGesture.h"
 #include "ClickHotspot.h"
-#include "Widgets/ButtonGrid.h"
 #include "Surface/Surface.h"
 #include "Surface/Touch.h"
 
@@ -22,6 +21,7 @@ ClickGesture::~ClickGesture()
 
 void ClickGesture::KeyDown(char key)
 {
+    /*
 	for (ButtonGrid* buttonView : _buttonViews)
 		for (ButtonArea* buttonArea : buttonView->GetButtonAreas())
 			for (ButtonItem* buttonItem : buttonArea->buttonItems)
@@ -31,6 +31,7 @@ void ClickGesture::KeyDown(char key)
 				{
 					buttonItem->CallAction();
 				}
+     */
 }
 
 

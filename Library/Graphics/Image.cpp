@@ -136,12 +136,15 @@ Image& Image::LoadFromData(const void* data, size_t size)
 {
 #if defined(OPENWAR_IMAGE_ENABLE_COREGRAPHICS)
 
+    /*
+    Mac ???
+
 	NSImage* img = [[NSImage alloc] initWithData:[NSData dataWithBytes:data length:size]];
 	NSRect rect = NSMakeRect(0, 0, img.size.width, img.size.height);
 	LoadFromCGImage([img CGImageForProposedRect:&rect context:nil hints:nil], 1);
 	[img release];
+     */
 
-	/*
 	CGDataProviderRef dataProvider = CGDataProviderCreateWithData(NULL, data, size, NULL);
 	CGImageRef image = CGImageCreateWithPNGDataProvider(dataProvider, nil, true, kCGRenderingIntentDefault);
 
@@ -149,7 +152,7 @@ Image& Image::LoadFromData(const void* data, size_t size)
 
 	CGImageRelease(image);
 	CGDataProviderRelease(dataProvider);
-	*/
+
 
 #elif defined(OPENWAR_IMAGE_ENABLE_SDL)
 
@@ -198,8 +201,6 @@ Image& Image::LoadFromResource(const Resource& r)
 
 #endif
 
-	return *this;
-
 #endif
 
 #ifdef OPENWAR_IMAGE_ENABLE_SDL
@@ -221,9 +222,10 @@ Image& Image::LoadFromResource(const Resource& r)
 		_owner = false;
 	}
 
-	return *this;
-
 #endif
+    
+    return *this;
+
 }
 
 

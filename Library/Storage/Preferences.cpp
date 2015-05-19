@@ -73,6 +73,8 @@ std::string Preferences::GetString(const char* key)
 	return result;
 
 #endif
+
+	return std::string{};
 };
 
 

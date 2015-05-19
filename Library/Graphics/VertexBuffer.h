@@ -50,7 +50,7 @@ public:
 				return;
 		}
 
-		GLsizeiptr size = sizeof(VertexT) * count;
+		GLsizeiptr size = static_cast<GLsizeiptr>(sizeof(VertexT) * count);
 		const GLvoid* data = static_cast<const GLvoid*>(vertices);
 
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);

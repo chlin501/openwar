@@ -18,7 +18,7 @@
 
 
 #ifdef GRAPHICS_OPENGL_MAC
-#include <OpenGL/gl.h>
+#include <OpenGL/gl3.h>
 //#define glGenVertexArraysOES glGenVertexArraysAPPLE
 //#define glBindVertexArrayOES glBindVertexArrayAPPLE
 //#define glDeleteVertexArraysOES glDeleteVertexArraysAPPLE

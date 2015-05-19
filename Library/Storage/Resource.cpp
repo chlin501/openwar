@@ -163,6 +163,7 @@ bool Resource::load(char const* type)
     
 #else
 
+    /*
 	SDL_RWops* rw = SDL_RWFromFile(path(), "rb");
     if (rw == nullptr)
         return false;
@@ -174,7 +175,8 @@ bool Resource::load(char const* type)
 	_data = ptr;
 
 	SDL_RWclose(rw);
-
+*/
+    
     return true;
 
 /*  temporarily remove fopen, didn't work on Android

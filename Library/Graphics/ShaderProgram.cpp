@@ -18,6 +18,7 @@
 #endif
 
 //#include <android/log.h>
+//#import <Foundation/Foundation.h>
 
 
 #ifndef CHECK_ERROR_GL
@@ -25,7 +26,7 @@ void CHECK_ERROR_GL()
 {
 	//GLenum error = glGetError();
 	//if (error != GL_NO_ERROR)
-	//	; //TODO: should log error
+	//	NSLog(@"glGetError() = %#06x", (int)error); //TODO: should log error
 }
 #endif
 
