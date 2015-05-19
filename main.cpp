@@ -17,7 +17,7 @@
 #endif
 
 #include "OpenWarSurface.h"
-#include "Surface/Window.h"
+#include "SurfaceAdapter_SDL.h"
 #include "BattleMap/BattleMap.h"
 #include "BattleModel/BattleSimulator.h"
 #include "BattleModel/BattleScript.h"
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 	Mix_Init(0);
 #endif
 
-	Window* window = new Window();
+	SurfaceAdapter* surfaceAdapter = new SurfaceAdapter();
 
 #if OPENWAR_USE_GLEW
 	GLenum err = glewInit();
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     GraphicsContext* gc = new GraphicsContext(1, 1);
 	OpenWarSurface* surface = new OpenWarSurface(gc);
 
-	window->SetSurface(surface);
+	surfaceAdapter->SetSurface(surface);
 
     RenderLoopObserver::NotifyRenderLoop(0);
 
@@ -99,8 +99,8 @@ int main(int argc, char *argv[])
 	std::vector<BattleCommander*> battleCommanders(1, battleSimulator->GetCommanders().front());
 	surface->ResetBattleViews(battleSimulator, battleCommanders);
 
-	while (!Window::IsDone())
-		Window::ProcessEvents();
+	while (!SurfaceAdapter::IsDone())
+		SurfaceAdapter::ProcessEvents();
 
 	SDL_Quit();
 

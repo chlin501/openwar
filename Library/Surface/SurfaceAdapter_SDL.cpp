@@ -2,7 +2,7 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#include "Window.h"
+#include "SurfaceAdapter_SDL.h"
 #include "Surface.h"
 #include "Gesture.h"
 #include "Graphics/GraphicsContext.h"
@@ -10,12 +10,12 @@
 #include "Graphics/Viewport.h"
 
 
-bool Window::_done = false;
-std::map<Uint32, Window*> Window::_windows;
-Window* Window::_touchWindow = nullptr;
+bool SurfaceAdapter::_done = false;
+std::map<Uint32, SurfaceAdapter*> SurfaceAdapter::_windows;
+SurfaceAdapter* SurfaceAdapter::_touchWindow = nullptr;
 
 
-Window::Window() :
+SurfaceAdapter::SurfaceAdapter() :
 _surface(nullptr),
 _window(nullptr),
 _glcontext(0),
@@ -44,25 +44,25 @@ _timestamp()
 }
 
 
-Window::~Window()
+SurfaceAdapter::~SurfaceAdapter()
 {
 }
 
 
-void Window::SetSurface(Surface* surface)
+void SurfaceAdapter::SetSurface(Surface* surface)
 {
 	_surface = surface;
 	_surface->SetNativeSize((glm::vec2)GetWindowSize());
 }
 
 
-bool Window::IsDone()
+bool SurfaceAdapter::IsDone()
 {
 	return _done;
 }
 
 
-void Window::ProcessEvents()
+void SurfaceAdapter::ProcessEvents()
 {
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
@@ -81,7 +81,7 @@ void Window::ProcessEvents()
 }
 
 
-Window* Window::GetWindow(Uint32 windowID)
+SurfaceAdapter* SurfaceAdapter::GetWindow(Uint32 windowID)
 {
 	return _windows[windowID];
 }
@@ -137,11 +137,11 @@ Window* Window::GetWindow(Uint32 windowID)
 
 
 
-void Window::ProcessEvent(const SDL_Event& event)
+void SurfaceAdapter::ProcessEvent(const SDL_Event& event)
 {
 	//NSLog(@"ProcessEvent %@", EventTypeToString(event.type));
 
-	Window* window;
+	SurfaceAdapter* window;
 	switch (event.type)
 	{
 		case SDL_QUIT:
@@ -201,7 +201,7 @@ void Window::ProcessEvent(const SDL_Event& event)
 }
 
 
-void Window::ProcessWindow(const SDL_WindowEvent& event)
+void SurfaceAdapter::ProcessWindow(const SDL_WindowEvent& event)
 {
 	int x, y, w, h;
 	SDL_GetWindowPosition(_window, &x, &y);
@@ -235,7 +235,7 @@ static char TranslateKeyCode(const SDL_Keysym& keysym)
 }
 
 
-void Window::ProcessKeyDown(const SDL_KeyboardEvent& event)
+void SurfaceAdapter::ProcessKeyDown(const SDL_KeyboardEvent& event)
 {
 	char key = TranslateKeyCode(event.keysym);
 	if (key == '\0')
@@ -248,7 +248,7 @@ void Window::ProcessKeyDown(const SDL_KeyboardEvent& event)
 }
 
 
-void Window::ProcessKeyUp(const SDL_KeyboardEvent& event)
+void SurfaceAdapter::ProcessKeyUp(const SDL_KeyboardEvent& event)
 {
 	char key = TranslateKeyCode(event.keysym);
 	if (key == '\0')
@@ -260,7 +260,7 @@ void Window::ProcessKeyUp(const SDL_KeyboardEvent& event)
 }
 
 
-void Window::ProcessFingerDown(const SDL_TouchFingerEvent& event)
+void SurfaceAdapter::ProcessFingerDown(const SDL_TouchFingerEvent& event)
 {
 	if (_surface == nullptr)
 		return;
@@ -277,7 +277,7 @@ void Window::ProcessFingerDown(const SDL_TouchFingerEvent& event)
 }
 
 
-void Window::ProcessFingerUp(const SDL_TouchFingerEvent& event)
+void SurfaceAdapter::ProcessFingerUp(const SDL_TouchFingerEvent& event)
 {
 	if (_surface == nullptr)
 		return;
@@ -300,7 +300,7 @@ void Window::ProcessFingerUp(const SDL_TouchFingerEvent& event)
 }
 
 
-void Window::ProcessFingerMotion(const SDL_TouchFingerEvent& event)
+void SurfaceAdapter::ProcessFingerMotion(const SDL_TouchFingerEvent& event)
 {
 	if (_surface == nullptr)
 		return;
@@ -324,7 +324,7 @@ void Window::ProcessFingerMotion(const SDL_TouchFingerEvent& event)
 
 
 
-void Window::ProcessMouseMotion(const SDL_MouseMotionEvent& event)
+void SurfaceAdapter::ProcessMouseMotion(const SDL_MouseMotionEvent& event)
 {
 	if (_mouseTouch)
 	{
@@ -344,7 +344,7 @@ void Window::ProcessMouseMotion(const SDL_MouseMotionEvent& event)
 }
 
 
-void Window::ProcessMouseButtonDown(const SDL_MouseButtonEvent& event)
+void SurfaceAdapter::ProcessMouseButtonDown(const SDL_MouseButtonEvent& event)
 {
 	//NSLog(@"ProcessMouseButtonDown button=%d state=%d", event.button, event.state);
 
@@ -377,7 +377,7 @@ void Window::ProcessMouseButtonDown(const SDL_MouseButtonEvent& event)
 }
 
 
-void Window::ProcessMouseButtonUp(const SDL_MouseButtonEvent& event)
+void SurfaceAdapter::ProcessMouseButtonUp(const SDL_MouseButtonEvent& event)
 {
 	//NSLog(@"ProcessMouseButtonUp button=%d state=%d", event.button, event.state);
 
@@ -410,7 +410,7 @@ void Window::ProcessMouseButtonUp(const SDL_MouseButtonEvent& event)
 }
 
 
-void Window::ProcessMouseWheel(const SDL_MouseWheelEvent& event)
+void SurfaceAdapter::ProcessMouseWheel(const SDL_MouseWheelEvent& event)
 {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
@@ -425,7 +425,7 @@ void Window::ProcessMouseWheel(const SDL_MouseWheelEvent& event)
 }
 
 
-void Window::Update()
+void SurfaceAdapter::Update()
 {
 	_surface->SetNativeSize((glm::vec2)GetWindowSize());
 
@@ -447,7 +447,7 @@ void Window::Update()
 }
 
 
-void Window::Render()
+void SurfaceAdapter::Render()
 {
 	if (_surface)
 	{
@@ -457,7 +457,7 @@ void Window::Render()
 }
 
 
-glm::vec2 Window::ToVector(int x, int y)
+glm::vec2 SurfaceAdapter::ToVector(int x, int y)
 {
 	int w, h;
 	SDL_GetWindowSize(_window, &w, &h);
@@ -465,7 +465,7 @@ glm::vec2 Window::ToVector(int x, int y)
 }
 
 
-glm::ivec2 Window::GetWindowSize() const
+glm::ivec2 SurfaceAdapter::GetWindowSize() const
 {
 	int w, h;
 	SDL_GetWindowSize(_window, &w, &h);
@@ -473,7 +473,7 @@ glm::ivec2 Window::GetWindowSize() const
 }
 
 
-glm::vec2 Window::ToPosition(const SDL_TouchFingerEvent& event)
+glm::vec2 SurfaceAdapter::ToPosition(const SDL_TouchFingerEvent& event)
 {
 	if (_surface == nullptr)
 		return glm::vec2();
@@ -482,14 +482,14 @@ glm::vec2 Window::ToPosition(const SDL_TouchFingerEvent& event)
 }
 
 
-double Window::ToTimestamp(Uint32 timestamp)
+double SurfaceAdapter::ToTimestamp(Uint32 timestamp)
 {
 	// TODO: calculate correct timestamp
 	return 0.000001 * std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - _timestart).count();
 }
 
 
-std::pair<SDL_TouchID, SDL_FingerID> Window::MakeTouchKey(const SDL_TouchFingerEvent& event)
+std::pair<SDL_TouchID, SDL_FingerID> SurfaceAdapter::MakeTouchKey(const SDL_TouchFingerEvent& event)
 {
 	return std::pair<SDL_TouchID, SDL_FingerID>(event.touchId, event.fingerId);
 }

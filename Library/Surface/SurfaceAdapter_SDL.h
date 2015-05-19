@@ -14,11 +14,11 @@
 class Surface;
 
 
-class Window
+class SurfaceAdapter
 {
 	static bool _done;
-	static std::map<Uint32, Window*> _windows;
-	static Window* _touchWindow;
+	static std::map<Uint32, SurfaceAdapter*> _windows;
+	static SurfaceAdapter* _touchWindow;
 
 	Surface* _surface;
 	SDL_Window* _window;
@@ -30,8 +30,8 @@ class Window
 	std::map<std::pair<SDL_TouchID, SDL_FingerID>, Touch*> _touches;
 
 public:
-	Window();
-	~Window();
+	SurfaceAdapter();
+	~SurfaceAdapter();
 
 	void SetSurface(Surface* surface);
 
@@ -55,7 +55,7 @@ private:
 	void Update();
 	void Render();
 
-	static Window* GetWindow(Uint32 windowID);
+	static SurfaceAdapter* GetWindow(Uint32 windowID);
 
 	glm::vec2 ToVector(int x, int y);
 	glm::ivec2 GetWindowSize() const;
