@@ -7,19 +7,19 @@
 #include "Touch.h"
 #include "Graphics/GraphicsContext.h"
 
-#ifdef ENABLE_SURFACE_ADAPTER_MAC
+#ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
 #import <AppKit/AppKit.h>
 #endif
-#ifdef ENABLE_SURFACE_ADAPTER_IOS
+#ifdef OPENWAR_USE_SURFACE_ADAPTER_IOS
 #import <UIKit/UIKit.h>
 #endif
 
 
 Surface::Surface(GraphicsContext* gc) :
-#ifdef ENABLE_SURFACE_ADAPTER_MAC
+#ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
 	_nsview(nil),
 #endif
-#ifdef ENABLE_SURFACE_ADAPTER_IOS
+#ifdef OPENWAR_USE_SURFACE_ADAPTER_IOS
 	_uiview(nil),
 #endif
 	_gc(gc)
@@ -29,7 +29,7 @@ Surface::Surface(GraphicsContext* gc) :
 
 Surface::~Surface()
 {
-#ifdef ENABLE_SURFACE_ADAPTER_MAC
+#ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
 	[_nsview release];
 #endif
 }
@@ -59,7 +59,7 @@ glm::vec2 Surface::GetVirtualSize() const
 }
 
 
-#ifdef ENABLE_SURFACE_ADAPTER_MAC
+#ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
 void Surface::SetNSView(NSView* value)
 {
     _nsview = [value retain];
@@ -67,7 +67,7 @@ void Surface::SetNSView(NSView* value)
 #endif
 
 
-#ifdef ENABLE_SURFACE_ADAPTER_MAC
+#ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
 NSView* Surface::GetNSView() const
 {
 	return _nsview;
@@ -75,7 +75,7 @@ NSView* Surface::GetNSView() const
 #endif
 
 
-#ifdef ENABLE_SURFACE_ADAPTER_IOS
+#ifdef OPENWAR_USE_SURFACE_ADAPTER_IOS
 void Surface::SetUIView(UIView* value)
 {
 	_uiview = value;
@@ -83,7 +83,7 @@ void Surface::SetUIView(UIView* value)
 #endif
 
 
-#ifdef ENABLE_SURFACE_ADAPTER_IOS
+#ifdef OPENWAR_USE_SURFACE_ADAPTER_IOS
 UIView* Surface::GetUIView() const
 {
 	return _uiview;

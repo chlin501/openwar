@@ -33,7 +33,7 @@ void InputEditor::NotifyEnter()
 /******************************************************************************/
 
 
-#ifdef ENABLE_INPUT_EDITOR_MAC
+#ifdef OPENWAR_USE_INPUT_EDITOR_MAC
 
 
 @interface InputEditorDelegate_Mac : NSObject<NSTextFieldDelegate>
@@ -252,7 +252,7 @@ void InputEditor_Mac::UpdateNSTextFieldColor()
 /******************************************************************************/
 
 
-#ifdef ENABLE_INPUT_EDITOR_IOS
+#ifdef OPENWAR_USE_INPUT_EDITOR_IOS
 
 InputEditor_iOS::InputEditor_iOS(InputWidget* inputWidget) : InputEditor(inputWidget),
 	_textField(nil),
@@ -419,7 +419,7 @@ void InputEditor_iOS::UpdateNSTextFieldColor()
 /******************************************************************************/
 
 
-#ifdef ENABLE_INPUT_EDITOR_ANDROID
+#ifdef OPENWAR_USE_INPUT_EDITOR_ANDROID
 
 #include <codecvt>
 #include <cstring>

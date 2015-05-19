@@ -94,7 +94,7 @@ GLuint ShaderProgram::CompileShader(GLenum type, const char* source)
     if (str.size() >= 2 && str[0] == '{' && str[str.size() - 1] == '}')
         str = str.substr(1, str.size() - 2);
     
-#ifdef OPENWAR_USE_GLES2
+#ifdef OPENWAR_USING_GLES2
     str.insert(0, "precision highp float; precision lowp int; ");
 #else
     str.insert(0, "#version 120\n");

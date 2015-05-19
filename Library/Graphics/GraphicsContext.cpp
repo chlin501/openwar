@@ -13,7 +13,7 @@ GraphicsContext::GraphicsContext(float nativeScaling, float virtualScaling) :
 	_nativeScaling(nativeScaling),
 	_virtualScaling(virtualScaling)
 {
-#if !defined(OPENWAR_USE_GLES2)
+#if !defined(OPENWAR_USING_GLES2)
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	glEnable(GL_POINT_SPRITE);
 #endif
@@ -88,17 +88,17 @@ FontAdapter* GraphicsContext::GetFontAdapter(const FontDescriptor& fontDescripto
 
 	FontAdapter* fontAdapter = nullptr;
 
-#ifdef ENABLE_FONTADAPTER_NSFONT
+#ifdef OPENWAR_USE_FONT_ADAPTER_NSFONT
 	if (!fontAdapter)
 		fontAdapter = new FontAdapter_NSFont(this, fontDescriptor);
 #endif
 
-#ifdef ENABLE_FONTADAPTER_UIFONT
+#ifdef OPENWAR_USE_FONT_ADAPTER_UIFONT
 	if (!fontAdapter)
 		fontAdapter = new FontAdapter_UIFont(this, fontDescriptor);
 #endif
 
-#ifdef ENABLE_FONTADAPTER_SDL_TTF
+#ifdef OPENWAR_USE_FONT_ADAPTER_SDL_TTF
 	if (!fontAdapter)
 		fontAdapter = new FontAdapter_SDL_ttf(this, fontDescriptor);
 #endif

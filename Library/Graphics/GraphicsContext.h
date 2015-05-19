@@ -11,13 +11,14 @@
 #include "FontDescriptor.h"
 #include "Algebra/bounds.h"
 
-#ifdef GRAPHICS_OPENGL_IOS
+#ifdef OPENWAR_PLATFORM_IOS
+#define OPENWAR_USING_GLES2
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #endif
 
 
-#ifdef GRAPHICS_OPENGL_MAC
+#ifdef OPENWAR_PLATFORM_MAC
 #include <OpenGL/gl3.h>
 //#define glGenVertexArraysOES glGenVertexArraysAPPLE
 //#define glBindVertexArrayOES glBindVertexArrayAPPLE
@@ -25,13 +26,13 @@
 #endif
 
 
-#ifdef GRAPHICS_OPENGL_ANDROID
+#ifdef OPENWAR_PLATFORM_ANDROID
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #endif
 
 
-#ifdef GRAPHICS_OPENGL_LINUX
+#ifdef OPENWAR_PLATFORM_LINUX
 #endif
 
 
@@ -53,7 +54,7 @@
 #include <SDL2_image/SDL_image.h>
 //#include <SDL2/SDL_image.h>
 #endif
-#ifdef ENABLE_FONTADAPTER_SDL_TTF
+#ifdef OPENWAR_USE_FONT_ADAPTER_SDL_TTF
 #include <SDL2_ttf/SDL_ttf.h>
 //#include <SDL2/SDL_ttf.h>
 #endif

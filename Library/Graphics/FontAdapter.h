@@ -40,7 +40,7 @@ public:
 };
 
 
-#ifdef ENABLE_FONTADAPTER_NSFONT
+#ifdef OPENWAR_USE_FONT_ADAPTER_NSFONT
 @class NSFont;
 @class NSDictionary;
 class FontAdapter_NSFont : public FontAdapter
@@ -56,7 +56,7 @@ public:
 #endif
 
 
-#ifdef ENABLE_FONTADAPTER_UIFONT
+#ifdef OPENWAR_USE_FONT_ADAPTER_UIFONT
 @class UIFont;
 @class NSDictionary;
 class FontAdapter_UIFont : public FontAdapter
@@ -72,7 +72,7 @@ public:
 #endif
 
 
-#ifdef ENABLE_FONTADAPTER_SDL_TTF
+#ifdef OPENWAR_USE_FONT_ADAPTER_SDL_TTF
 class FontAdapter_SDL_ttf : public FontAdapter
 {
 	TTF_Font* _font1{};

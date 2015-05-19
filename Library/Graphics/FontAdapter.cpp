@@ -7,15 +7,15 @@
 #include "Image.h"
 #include "TextureAtlas.h"
 
-#ifdef ENABLE_FONTADAPTER_NSFONT
+#ifdef OPENWAR_USE_FONT_ADAPTER_NSFONT
 #import <AppKit/AppKit.h>
 #endif
 
-#ifdef ENABLE_FONTADAPTER_UIFONT
+#ifdef OPENWAR_USE_FONT_ADAPTER_UIFONT
 #import <UIKit/UIKit.h>
 #endif
 
-#ifdef ENABLE_FONTADAPTER_SDL_TTF
+#ifdef OPENWAR_USE_FONT_ADAPTER_SDL_TTF
 #include <locale>
 #include <codecvt>
 #endif
@@ -29,7 +29,7 @@ FontAdapter::~FontAdapter()
 /* FontAdapter_NSFont */
 
 
-#ifdef ENABLE_FONTADAPTER_NSFONT
+#ifdef OPENWAR_USE_FONT_ADAPTER_NSFONT
 
 
 FontAdapter_NSFont::FontAdapter_NSFont(GraphicsContext* gc, const FontDescriptor& fontDescriptor) :
@@ -108,7 +108,7 @@ std::shared_ptr<TextureImage> FontAdapter_NSFont::AddTextureImage(TextureAtlas* 
 /* FontAdapter_UIFont */
 
 
-#ifdef ENABLE_FONTADAPTER_UIFONT
+#ifdef OPENWAR_USE_FONT_ADAPTER_UIFONT
 
 
 FontAdapter_UIFont::FontAdapter_UIFont(GraphicsContext* gc, const FontDescriptor& fontDescriptor) :
@@ -192,18 +192,18 @@ std::shared_ptr<TextureImage> FontAdapter_UIFont::AddTextureImage(TextureAtlas* 
 /* FontAdapter_NSFont */
 
 
-#ifdef ENABLE_FONTADAPTER_SDL_TTF
+#ifdef OPENWAR_USE_FONT_ADAPTER_SDL_TTF
 
-#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
-#define FONTNAME_REGULAR "Roboto-Regular.ttf"
-#define FONTNAME_BOLD "Roboto-Regular.ttf"
-#define FONTNAME_FALLBACK "Roboto-Regular.ttf"
-#define FONTNAME_EMOJI "Roboto-Regular.ttf"
-#else
+#ifdef OPENWAR_PLATFORM_ANDROID
 #define FONTNAME_REGULAR "/system/fonts/Roboto-Regular.ttf"
 #define FONTNAME_BOLD "/system/fonts/Roboto-Bold.ttf"
 #define FONTNAME_FALLBACK "/system/fonts/DroidSansFallback.ttf"
 #define FONTNAME_EMOJI "/system/fonts/AndroidEmoji.ttf"
+#else
+#define FONTNAME_REGULAR "Roboto-Regular.ttf"
+#define FONTNAME_BOLD "Roboto-Regular.ttf"
+#define FONTNAME_FALLBACK "Roboto-Regular.ttf"
+#define FONTNAME_EMOJI "Roboto-Regular.ttf"
 #endif
 
 FontAdapter_SDL_ttf::FontAdapter_SDL_ttf(GraphicsContext* gc, const FontDescriptor& fontDescriptor)

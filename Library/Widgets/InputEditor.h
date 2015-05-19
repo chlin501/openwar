@@ -27,7 +27,7 @@ public:
 };
 
 
-#ifdef ENABLE_INPUT_EDITOR_MAC
+#ifdef OPENWAR_USE_INPUT_EDITOR_MAC
 
 #include <AppKit/AppKit.h>
 
@@ -60,7 +60,7 @@ private:
 #endif
 
 
-#ifdef ENABLE_INPUT_EDITOR_IOS
+#ifdef OPENWAR_USE_INPUT_EDITOR_IOS
 
 #include <UIKit/UIKit.h>
 class InputEditor_iOS;
@@ -94,7 +94,7 @@ private:
 #endif
 
 
-#ifdef ENABLE_INPUT_EDITOR_ANDROID
+#ifdef OPENWAR_USE_INPUT_EDITOR_ANDROID
 
 #include <jni.h>
 #include <string>
