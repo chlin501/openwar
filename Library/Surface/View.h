@@ -1,3 +1,7 @@
+// Copyright (C) 2015 Felix Ungman
+//
+// This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
+
 #ifndef View_H
 #define View_H
 
