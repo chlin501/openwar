@@ -84,11 +84,13 @@
     [self mouseEnterHoverLeave];
     
     NSTimeInterval timestamp = [NSProcessInfo processInfo].systemUptime;
-    
+    if (_timestamp == 0)
+		_timestamp = timestamp;
+
     double secondsSinceLastUpdate = timestamp - _timestamp;
     RenderLoopObserver::NotifyRenderLoop(secondsSinceLastUpdate);
-    _timestamp = timestamp;
-    
+	_timestamp = timestamp;
+
     if (_touch)
     {
         double oldTimestamp = _touch->GetTimestamp();
@@ -139,7 +141,7 @@
 
 - (void)startTimer
 {
-	_timestamp = [NSDate timeIntervalSinceReferenceDate];
+	_timestamp = [NSProcessInfo processInfo].systemUptime;
 	_timer = [NSTimer timerWithTimeInterval:1.0 / 30.0
 					  target:self
 					  selector:@selector(timerEvent:)
