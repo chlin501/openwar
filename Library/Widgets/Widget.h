@@ -28,8 +28,8 @@ public:
 	Widget(const Widget&) = delete;
 	Widget& operator=(const Widget&) = delete;
 
-	Widget(Widget&&) = default;
-	Widget& operator=(Widget&&) = default;
+	Widget(Widget&&);
+	Widget& operator=(Widget&&);
 
 	virtual WidgetOwner* GetWidgetOwner() const;
 	virtual WidgetView* GetWidgetView() const;
@@ -64,8 +64,8 @@ public:
 	WidgetOwner(const WidgetOwner&) = delete;
 	WidgetOwner& operator=(const WidgetOwner&) = delete;
 
-	WidgetOwner(WidgetOwner&&) = default;
-	WidgetOwner& operator=(WidgetOwner&&) = default;
+	//WidgetOwner(WidgetOwner&&) = default;
+	//WidgetOwner& operator=(WidgetOwner&&) = default;
 
 protected:
 	const std::vector<Widget*>& GetWidgets();
@@ -79,10 +79,13 @@ protected:
 };
 
 
-class WidgetGroup : public Widget, protected WidgetOwner
+class WidgetGroup : public Widget, public WidgetOwner
 {
 public:
 	WidgetGroup(WidgetOwner* widgetOwner);
+
+	//WidgetGroup(const WidgetGroup&) = delete;
+	//WidgetGroup& operator=(const WidgetGroup&) = delete;
 
 	virtual void OnTouchEnter(Touch* touch);
 	virtual void OnTouchBegin(Touch* touch);

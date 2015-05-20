@@ -32,6 +32,25 @@ Widget::~Widget()
 }
 
 
+Widget::Widget(Widget&& widget)
+{
+	_widgetOwner = widget._widgetOwner;
+	widget._widgetOwner = nullptr;
+	_visible = widget._visible;
+	*std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), &widget) = this;
+}
+
+
+Widget& Widget::operator=(Widget&& widget)
+{
+	_widgetOwner = widget._widgetOwner;
+	widget._widgetOwner = nullptr;
+	_visible = widget._visible;
+	*std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), &widget) = this;
+	return *this;
+}
+
+
 /* WidgetOwner */
 
 
