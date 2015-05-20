@@ -18,6 +18,7 @@ ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
 		return ClickHotspot::GetDefaultTolerance(touch, _bounds.size());
 	});
 
+	_titleString.SetAnchor(StringAnchor::Center);
 	_titleString.SetGlowColor(glm::vec4(0, 0, 0, 0.5f));
 	_titleString.SetGlowRadius(1.5f);
 }
@@ -188,6 +189,7 @@ void ButtonWidget::RefreshContent()
 
 	_iconImage.SetBounds(_bounds);
 
-	_titleString.SetPosition(_bounds.mid() - 0.5f * _titleString.MeasureSize());
+
+	_titleString.SetPosition(_bounds.mid());
 	_titleString.SetAlpha(_disabled ? 0.5f : 1.0f);
 }

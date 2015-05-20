@@ -36,11 +36,7 @@ static bool ContainsArabic(const std::wstring& ws)
 
 
 
-StringWidget::StringWidget(WidgetOwner* widgetOwner) : Widget(widgetOwner),
-	_string(),
-	_color(1, 1, 1, 1),
-	_glowRadius(1),
-	_width(0)
+StringWidget::StringWidget(WidgetOwner* widgetOwner) : Widget(widgetOwner)
 {
 }
 
@@ -54,6 +50,18 @@ glm::vec2 StringWidget::GetPosition() const
 void StringWidget::SetPosition(glm::vec2 value)
 {
 	_position = value;
+}
+
+
+StringAnchor StringWidget::GetAnchor() const
+{
+	return _anchor;
+}
+
+
+void StringWidget::SetAnchor(StringAnchor value)
+{
+	_anchor = value;
 }
 
 
@@ -167,18 +175,40 @@ void StringWidget::OnTouchBegin(Touch* touch)
 
 void StringWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
+	glm::vec2 offset = CalculateOffset();
+
 	if (_glowColor.a != 0 && _glowRadius > 0)
 	{
-		AppendVertices(vertices, _glowColor, _glowRadius);
+		AppendVertices(vertices, offset, _glowColor, _glowRadius);
 	}
 
-	AppendVertices(vertices, _color, 0);
+	AppendVertices(vertices, offset, _color, 0);
 }
 
 
-void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec4 color, float blurRadius)
+glm::vec2 StringWidget::CalculateOffset() const
 {
-	glm::vec2 offset = _position;
+	glm::vec2 result = _position;
+	if (_anchor != StringAnchor::BottomLeft)
+	{
+		glm::vec2 size = MeasureSize();
+
+		if (IsStringAnchorAlignment(_anchor, StringAlignment::HorizontalCenter))
+			result.x -= size.x / 2.0;
+		else if (IsStringAnchorAlignment(_anchor, StringAlignment::HorizontalRight))
+			result.x -= size.x;
+
+		if (IsStringAnchorAlignment(_anchor, StringAlignment::VerticalCenter))
+			result.y -= size.y / 2.0;
+		else if (IsStringAnchorAlignment(_anchor, StringAlignment::VerticalTop))
+			result.y -= size.y;
+	}
+	return result;
+}
+
+
+void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec2 offset, glm::vec4 color, float blurRadius)
+{
 	glm::vec2 p(0, 0);
 
 	float alpha = color.a;
