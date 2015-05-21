@@ -111,9 +111,6 @@ _size(0)
 
 Resource::~Resource()
 {
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
-	[_nsdata release];
-#endif
 }
 
 
@@ -152,8 +149,7 @@ bool Resource::load(char const* type)
 		if (type)
 			_type = type;
         
-		[_nsdata release];
-		_nsdata = [data retain];
+		_nsdata = data;
         
 		_data = data.bytes;
 		_size = data.length;

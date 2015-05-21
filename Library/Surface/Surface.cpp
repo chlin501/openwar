@@ -29,9 +29,6 @@ Surface::Surface(GraphicsContext* gc) :
 
 Surface::~Surface()
 {
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
-	[_nsview release];
-#endif
 }
 
 
@@ -62,7 +59,7 @@ glm::vec2 Surface::GetVirtualSize() const
 #ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
 void Surface::SetNSView(NSView* value)
 {
-    _nsview = [value retain];
+    _nsview = value;
 }
 #endif
 

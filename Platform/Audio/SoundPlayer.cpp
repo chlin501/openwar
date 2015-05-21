@@ -156,11 +156,6 @@ SoundPlayer::~SoundPlayer()
 	Mix_CloseAudio();
 #endif
 
-#ifdef OPENWAR_USE_AVFOUNDATION
-	for (int i = 0; i < NUMBER_OF_SOUND_TRACKS; ++i)
-		[_tracks[i]._player release];
-#endif
-
 	/*
 	Context=alcGetCurrentContext();
 	Device=alcGetContextsDevice(Context);
@@ -595,7 +590,6 @@ void SoundPlayer::LoadTrack(Track& track, const char* name, bool loop)
 	NSURL * url = [[NSURL alloc] initFileURLWithPath:path];
 	track._player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
 	track._player.numberOfLoops = loop ? -1 : 0;
-	[url release];
 #endif
 
 #ifdef OPENWAR_USE_SDL_MIXER_MUSIC

@@ -93,13 +93,9 @@ InputEditor_Mac::InputEditor_Mac(InputWidget* inputWidget) : InputEditor(inputWi
 InputEditor_Mac::~InputEditor_Mac()
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:_observer];
-	[_observer release];
-
+    
 	_textField.delegate = nil;
 	[_textField removeFromSuperview];
-	[_textField release];
-	[_delegate release];
-	[_formatter release];
 }
 
 
@@ -289,8 +285,6 @@ InputEditor_iOS::~InputEditor_iOS()
 {
 	_textField.delegate = nil;
 	[_textField removeFromSuperview];
-	[_textField release];
-	[_delegate release];
 }
 
 

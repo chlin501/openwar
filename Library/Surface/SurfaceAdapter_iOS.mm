@@ -32,7 +32,7 @@
     self = [super initWithFrame:frame context:context];
 	if (self)
 	{
-		self.context = [[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2] autorelease];
+		self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 		self.enableSetNeedsDisplay = YES;
 		[self setNeedsDisplay];
 	}
@@ -46,7 +46,7 @@
     self = [super initWithCoder:decoder];
     if (self)
     {
-		self.context = [[[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2] autorelease];
+		self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 		self.enableSetNeedsDisplay = YES;
 		[self setNeedsDisplay];
     }
@@ -165,7 +165,6 @@
 
 - (void)createTouch:(UITouch*)original
 {
-	[original retain];
 	glm::vec2 position = [self toVector:[original locationInView:self]];
 	_touches[original] = new Touch(original.tapCount, position, original.timestamp, MouseButtons());
 }
@@ -190,7 +189,6 @@
 	{
 		delete touch;
 		_touches.erase(original);
-		[original release];
 	}
 }
 

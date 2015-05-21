@@ -41,24 +41,21 @@ FontAdapter_NSFont::FontAdapter_NSFont(GraphicsContext* gc, const FontDescriptor
 		size = 12 * gc->GetCombinedScaling();
 
 	if (!fontDescriptor.name.empty())
-		_font = [[NSFont fontWithName:[NSString stringWithUTF8String:fontDescriptor.name.c_str()] size:size] retain];
+		_font = [NSFont fontWithName:[NSString stringWithUTF8String:fontDescriptor.name.c_str()] size:size];
 	else if (fontDescriptor.bold)
-		_font = [[NSFont boldSystemFontOfSize:size] retain];
+		_font = [NSFont boldSystemFontOfSize:size];
 	else
-		_font = [[NSFont systemFontOfSize:size] retain];
+		_font = [NSFont systemFontOfSize:size];
 
-	_attributes = [@{
+	_attributes = @{
 		NSFontAttributeName: _font,
 		NSForegroundColorAttributeName: [NSColor whiteColor]
-	} retain];
-
+	};
 }
 
 
 FontAdapter_NSFont::~FontAdapter_NSFont()
 {
-	[_font release];
-	[_attributes release];
 }
 
 
@@ -120,23 +117,21 @@ FontAdapter_UIFont::FontAdapter_UIFont(GraphicsContext* gc, const FontDescriptor
 		size = 12 * gc->GetCombinedScaling();
 
 	if (!fontDescriptor.name.empty())
-		_font = [[UIFont fontWithName:[NSString stringWithUTF8String:fontDescriptor.name.c_str()] size:size] retain];
+		_font = [UIFont fontWithName:[NSString stringWithUTF8String:fontDescriptor.name.c_str()] size:size];
 	else if (fontDescriptor.bold)
-		_font = [[UIFont boldSystemFontOfSize:size] retain];
+		_font = [UIFont boldSystemFontOfSize:size];
 	else
-		_font = [[UIFont systemFontOfSize:size] retain];
+		_font = [UIFont systemFontOfSize:size];
 
-	_attributes = [@{
+	_attributes = @{
 //		NSFontAttributeName: _font,
 //		NSForegroundColorAttributeName: [UIColor whiteColor]
-	} retain];
+	};
 }
 
 
 FontAdapter_UIFont::~FontAdapter_UIFont()
 {
-	[_font release];
-	[_attributes release];
 }
 
 

@@ -191,7 +191,6 @@ Image& Image::LoadFromResource(const Resource& r)
 	if (image != nil)
 	{
 		LoadFromCGImage([image CGImageForProposedRect:nil context:nil hints:nil], 1);
-		[image release];
 	}
 	else
 	{
@@ -601,7 +600,6 @@ NSData* ConvertImageToTiff(const Image& image)
 														   bytesPerRow:4 * image.GetWidth()
 														   bitsPerPixel:32];
 	NSData* result = [imageRep TIFFRepresentationUsingCompression:NSTIFFCompressionLZW factor:0.5];
-	[imageRep release];
 	return result;
 #endif
 }
@@ -621,7 +619,6 @@ Image* ConvertTiffToImage(NSData* data)
 	NSRect rect = NSMakeRect(0, 0, size.width, size.height);
 	Image* result = new Image();
 	result->LoadFromCGImage([img CGImageForProposedRect:&rect context:nil hints:nil], 1);
-	[img release];
 	return result;
 #endif
 }
