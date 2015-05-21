@@ -69,6 +69,7 @@ public:
 	glm::vec2 GetCurrentPosition() const;
 	glm::vec2 GetPreviousPosition() const;
 	glm::vec2 GetOriginalPosition() const;
+	void ResetPosition(glm::vec2 position);
 
 	double GetTimeStart() const;
 	double GetTimestamp() const;

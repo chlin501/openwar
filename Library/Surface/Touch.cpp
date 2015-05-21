@@ -138,6 +138,14 @@ glm::vec2 Touch::GetOriginalPosition() const
 }
 
 
+void Touch::ResetPosition(glm::vec2 position)
+{
+	_position = position;
+	_previous = position;
+	_original = position;
+}
+
+
 double Touch::GetTimeStart() const
 {
 	return _timestart;

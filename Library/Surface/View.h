@@ -74,7 +74,7 @@ private:
 };
 
 
-class ViewGroup : public View, protected ViewOwner
+class ViewGroup : public View, public ViewOwner
 {
 public:
 	ViewGroup(ViewOwner* viewOwner);
