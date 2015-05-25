@@ -108,6 +108,7 @@ struct billboard_index
 };
 
 void BillboardTextureShape::Draw(
+	Viewport* viewport,
 	GraphicsContext* gc,
 	Texture* tex,
 	const glm::mat4& transform,
@@ -157,7 +158,7 @@ void BillboardTextureShape::Draw(
 		.SetUniform("min_point_size", sizeLimit.min)
 		.SetUniform("max_point_size", sizeLimit.max)
 		.SetDepthTest(depthTest)
-		.Render();
+		.Render(*viewport);
 }
 
 
@@ -169,7 +170,7 @@ static affine2 FlipY(const affine2& texcoords)
 }
 
 
-void BillboardTextureShape::Render(GraphicsContext* gc, BillboardModel* billboardModel, glm::mat4 const & transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bool flip)
+void BillboardTextureShape::Render(Viewport* viewport, GraphicsContext* gc, BillboardModel* billboardModel, glm::mat4 const & transform, const glm::vec3& cameraUp, float cameraFacingDegrees, float viewportHeight, bool flip)
 {
 	Reset();
 
@@ -191,5 +192,5 @@ void BillboardTextureShape::Render(GraphicsContext* gc, BillboardModel* billboar
 		AddBillboard(billboard.position, billboard.height, texcoords);
 	}
 
-	Draw(gc, billboardModel->texture->GetTexture(), transform, cameraUp, cameraFacingDegrees, viewportHeight, true);
+	Draw(viewport, gc, billboardModel->texture->GetTexture(), transform, cameraUp, cameraFacingDegrees, viewportHeight, true);
 }

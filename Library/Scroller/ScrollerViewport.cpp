@@ -21,7 +21,7 @@ glm::mat4 ScrollerViewport::GetTransform() const
 	glm::mat4 result;
 
 	result = glm::translate(result, glm::vec3(-1, -1, 0));
-	result = glm::scale(result, glm::vec3(glm::vec2(2, 2) / (glm::vec2)GetBounds().size(), 1));
+	result = glm::scale(result, glm::vec3(glm::vec2(2, 2) / (glm::vec2)GetViewportBounds().size(), 1));
 	result = glm::translate(result, glm::vec3(-_contentOffset, 0));
 
 	return result;
@@ -52,7 +52,7 @@ static float ClampContentOffset(float value, float contentSize, bounds1i viewpor
 
 glm::vec2 ScrollerViewport::GetClampedOffset(glm::vec2 value) const
 {
-	bounds2i viewportBounds = GetBounds();
+	bounds2i viewportBounds = GetViewportBounds();
 	return glm::vec2(
 		::ClampContentOffset(value.x, _contentSize.x, viewportBounds.x()),
 		::ClampContentOffset(value.y, _contentSize.y, viewportBounds.y()));
@@ -79,7 +79,7 @@ void ScrollerViewport::SetContentSize(glm::vec2 value)
 
 bounds2f ScrollerViewport::GetVisibleBounds() const
 {
-	bounds2i bounds = GetBounds();
+	bounds2i bounds = GetViewportBounds();
 	return bounds2f(0, 0, bounds.x().size(), bounds.y().size()) + _contentOffset;
 }
 
@@ -98,7 +98,7 @@ glm::vec2 ScrollerViewport::GlobalToLocal(glm::vec2 value) const
 
 glm::vec2 ScrollerViewport::LocalToNormalized(glm::vec2 value) const
 {
-	glm::ivec2 size = GetBounds().size();
+	glm::ivec2 size = GetViewportBounds().size();
 	if (size.x == 0 || size.y == 0)
 		return glm::vec2(-1, -1);
 
@@ -108,7 +108,7 @@ glm::vec2 ScrollerViewport::LocalToNormalized(glm::vec2 value) const
 
 glm::vec2 ScrollerViewport::NormalizedToLocal(glm::vec2 value) const
 {
-	glm::ivec2 size = GetBounds().size();
+	glm::ivec2 size = GetViewportBounds().size();
 	if (size.x == 0 || size.y == 0)
 		return glm::vec2(0, 0);
 

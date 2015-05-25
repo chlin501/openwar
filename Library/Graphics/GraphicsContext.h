@@ -86,7 +86,6 @@ class GraphicsContext
 	std::map<std::string, ShaderProgram*> _shaders{};
 	std::map<std::string, TextureAtlas*> _textureAtlases{};
 	std::map<FontDescriptor, FontAdapter*> _fontAdapters{};
-	FrameBuffer* _frameBuffer{};
 
 public:
 	GraphicsContext(float nativeScaling, float virtualScaling);
@@ -99,10 +98,7 @@ public:
 	float GetVirtualScaling() const;
 	float GetCombinedScaling() const;
 
-	bounds2i GetViewport() const;
-
-	FrameBuffer* GetFrameBuffer() const;
-	void SetFrameBuffer(FrameBuffer* value);
+	bounds2i GetViewportBounds() const;
 
 	template <class _ShaderProgram> _ShaderProgram* GetShaderProgram()
 	{

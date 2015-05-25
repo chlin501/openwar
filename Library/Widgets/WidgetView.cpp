@@ -64,7 +64,7 @@ TextureAtlas* WidgetView::GetWidgetTextureAtlas() const
 void WidgetView::SetBounds(const bounds2f& value)
 {
 	View::SetBounds(value);
-	_viewport.SetBounds(value);
+	_viewport.SetViewportBounds(value);
 }
 
 
@@ -78,7 +78,7 @@ void WidgetView::OnTouchBegin(Touch* touch)
 {
 	if (_viewport.GetContentSize() != glm::vec2(0, 0))
 	{
-		bounds2f viewportBounds = _viewport.GetBounds();
+		bounds2f viewportBounds = _viewport.GetViewportBounds();
 		if (viewportBounds.contains(touch->GetOriginalPosition()))
 		{
 			_scrollerHotspot.SubscribeTouch(touch);
@@ -91,13 +91,11 @@ void WidgetView::OnTouchBegin(Touch* touch)
 
 void WidgetView::Render()
 {
-	_viewport.UseViewport();
-
 	RenderCall<WidgetShader>(_gc)
 		.SetVertices(&_vertices, "position", "texcoord", "colorize", "alpha")
 		.SetUniform("transform", _viewport.GetTransform())
 		.SetTexture("texture", _textureAtlas)
-		.Render();
+		.Render(_viewport);
 }
 
 

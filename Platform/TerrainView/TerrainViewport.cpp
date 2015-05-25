@@ -28,7 +28,7 @@ glm::mat4 TerrainViewport::GetProjectionMatrix() const
 {
 	float r = 2 * glm::length(_terrainBounds.size());
 
-	glm::vec2 viewportSize = (glm::vec2)GetBounds().size();
+	glm::vec2 viewportSize = (glm::vec2)GetViewportBounds().size();
 	float aspect = viewportSize.y / viewportSize.x;
 
 	return glm::perspective(45.0f, 1.0f / aspect, 0.01f * r, r);
@@ -142,7 +142,7 @@ glm::vec2 TerrainViewport::GlobalToLocal(glm::vec2 value) const
 
 glm::vec2 TerrainViewport::LocalToNormalized(glm::vec2 value) const
 {
-	glm::ivec2 size = GetBounds().size();
+	glm::ivec2 size = GetViewportBounds().size();
 	if (size.x == 0 || size.y == 0)
 		return glm::vec2(-1, -1);
 
@@ -152,7 +152,7 @@ glm::vec2 TerrainViewport::LocalToNormalized(glm::vec2 value) const
 
 glm::vec2 TerrainViewport::NormalizedToLocal(glm::vec2 value) const
 {
-	glm::ivec2 size = GetBounds().size();
+	glm::ivec2 size = GetViewportBounds().size();
 	if (size.x == 0 || size.y == 0)
 		return glm::vec2(0, 0);
 

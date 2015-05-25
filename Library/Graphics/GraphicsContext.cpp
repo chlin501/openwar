@@ -48,23 +48,11 @@ float GraphicsContext::GetCombinedScaling() const
 }
 
 
-bounds2i GraphicsContext::GetViewport() const
+bounds2i GraphicsContext::GetViewportBounds() const
 {
 	GLint v[4];
 	glGetIntegerv(GL_VIEWPORT, v);
 	return bounds2i{v[0], v[1], v[0] + v[2], v[1] + v[3]};
-};
-
-
-FrameBuffer* GraphicsContext::GetFrameBuffer() const
-{
-	return _frameBuffer;
-}
-
-
-void GraphicsContext::SetFrameBuffer(FrameBuffer* value)
-{
-	_frameBuffer = value;
 }
 
 

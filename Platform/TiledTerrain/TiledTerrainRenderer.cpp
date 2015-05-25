@@ -38,7 +38,7 @@ TiledTerrainRenderer::~TiledTerrainRenderer()
 
 
 
-void TiledTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& lightNormal)
+void TiledTerrainRenderer::Render(Viewport* viewport, const glm::mat4& transform, const glm::vec3& lightNormal)
 {
 	//HeightMap* heightMap = _tiledGroundMap->GetHeightMap();
 	bounds2f bounds = _tiledGroundMap->GetBounds();
@@ -105,6 +105,6 @@ void TiledTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& l
 				.SetVertices(&_vertices, "position", "texcoord")
 				.SetUniform("transform", transform)
 				.SetTexture("texture", _textures[tile->texture])
-				.Render();
+				.Render(*viewport);
 		}
 }

@@ -23,7 +23,7 @@ SmoothTerrainSky::~SmoothTerrainSky()
 }
 
 
-void SmoothTerrainSky::Render(float cameraDirectionZ)
+void SmoothTerrainSky::Render(Viewport* viewport, float cameraDirectionZ)
 {
 	VertexShape_2f_4f vertices;
 
@@ -50,12 +50,12 @@ void SmoothTerrainSky::Render(float cameraDirectionZ)
 		.SetVertices(&vertices, "position", "color")
 		.SetUniform("transform", glm::mat4())
 		.SetUniform("point_size", 1.0f)
-		.Render();
+		.Render(*viewport);
 }
 
 
 
-void SmoothTerrainSky::RenderBackgroundLinen(const bounds2f& bounds)
+void SmoothTerrainSky::RenderBackgroundLinen(Viewport* viewport, const bounds2f& bounds)
 {
 	VertexShape_2f_2f vertices;
 
@@ -77,5 +77,5 @@ void SmoothTerrainSky::RenderBackgroundLinen(const bounds2f& bounds)
 		.SetVertices(&vertices, "position", "texcoord")
 		.SetUniform("transform", glm::mat4())
 		.SetTexture("texture", _textureBackgroundLinen)
-		.Render();
+		.Render(*viewport);
 }

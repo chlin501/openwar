@@ -83,7 +83,7 @@ void TerrainGesture::ScrollWheel(glm::vec2 position, glm::vec2 delta)
 void TerrainGesture::Magnify(glm::vec2 position, float magnification)
 {
 	TerrainView* terrainView = _hotspot->GetTerrainView();
-	bounds2i bounds = terrainView->GetViewport()->GetBounds();
+	bounds2i bounds = terrainView->GetViewport()->GetViewportBounds();
 	glm::vec2 p = (glm::vec2)bounds.mid();
 	glm::vec2 d1 = glm::vec2(0, 0.1f * bounds.y().size());
 	glm::vec2 d2 = d1 * glm::exp(magnification);
@@ -111,7 +111,7 @@ void TerrainGesture::TouchWillBeReleased(Touch* touch)
 void TerrainGesture::TouchBegan(Touch* touch)
 {
 	TerrainView* terrainView = _hotspot->GetTerrainView();
-	bounds2f viewportBounds = (bounds2f)terrainView->GetViewport()->GetBounds();
+	bounds2f viewportBounds = (bounds2f)terrainView->GetViewport()->GetViewportBounds();
 	if (!viewportBounds.contains(touch->GetCurrentPosition()))
 		return;
 
@@ -307,7 +307,7 @@ float TerrainGesture::NormalizeScrollSpeed(float value) const
 	glm::vec3 contentPos = contentCenter + glm::vec3{value * vector2_from_angle(angle), 0};
 	glm::vec2 screenPos = terrainView->ContentToScreen(contentPos);
 
-	glm::ivec2 viewportSize = terrainView->GetViewport()->GetBounds().size();
+	glm::ivec2 viewportSize = terrainView->GetViewport()->GetViewportBounds().size();
 	float viewportScale = glm::max(viewportSize.x, viewportSize.y);
 
 	return glm::distance(screenCenter, screenPos) / viewportScale;

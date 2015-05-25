@@ -158,7 +158,7 @@ void SmoothTerrainWater::Update()
 }
 
 
-void SmoothTerrainWater::Render(GraphicsContext* gc, const glm::mat4& transform)
+void SmoothTerrainWater::Render(Viewport* viewport, GraphicsContext* gc, const glm::mat4& transform)
 {
 	bounds2f bounds = _groundMap->GetBounds();
 
@@ -169,7 +169,7 @@ void SmoothTerrainWater::Render(GraphicsContext* gc, const glm::mat4& transform)
 		.SetTexture("texture", nullptr)
 		.SetDepthTest(true)
 		.SetDepthMask(true)
-		.Render();
+		.Render(*viewport);
 
 	RenderCall<WaterBorderShader>(gc)
 		.SetVertices(&_waterBorderVertices, "position")
@@ -178,5 +178,5 @@ void SmoothTerrainWater::Render(GraphicsContext* gc, const glm::mat4& transform)
 		.SetTexture("texture", nullptr)
 		.SetDepthTest(true)
 		.SetDepthMask(true)
-		.Render();
+		.Render(*viewport);
 }

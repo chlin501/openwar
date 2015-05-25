@@ -11,6 +11,7 @@
 #include "Sampler.h"
 
 class FrameBuffer;
+class Viewport;
 
 
 struct RenderCallAttribute
@@ -94,7 +95,6 @@ class RenderCallBase
 protected:
 	GraphicsContext* _gc;
 	ShaderProgram* _shaderProgram;
-	FrameBuffer* _frameBuffer{};
 	std::vector<RenderCallUniformBase*> _uniforms;
 	std::vector<RenderCallTexture*> _textures;
 	std::vector<RenderCallAttribute> _attributes;
@@ -114,7 +114,7 @@ public:
 	RenderCallBase(const RenderCallBase&) = delete;
 	RenderCallBase& operator=(const RenderCallBase&) = delete;
 
-	void Render();
+	void Render(const Viewport& viewport);
 
 protected:
 	template <class T>
@@ -190,12 +190,6 @@ public:
 	RenderCall<ShaderProgramT>& SetCullBack(bool value)
 	{
 		_cullBack = value;
-		return *this;
-	}
-
-	RenderCall<ShaderProgramT>& SetFrameBuffer(FrameBuffer* frameBuffer)
-	{
-		_frameBuffer = frameBuffer;
 		return *this;
 	}
 

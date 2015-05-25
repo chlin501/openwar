@@ -19,8 +19,8 @@ public:
 	SmoothTerrainSky(GraphicsContext* gc);
 	virtual ~SmoothTerrainSky();
 
-	void Render(float cameraDirectionZ);
-	void RenderBackgroundLinen(const bounds2f& bounds);
+	void Render(Viewport* viewport, float cameraDirectionZ);
+	void RenderBackgroundLinen(Viewport* viewport, const bounds2f& bounds);
 };
 
 

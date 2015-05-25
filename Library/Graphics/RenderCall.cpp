@@ -4,6 +4,7 @@
 
 #include "RenderCall.h"
 #include "FrameBuffer.h"
+#import "Viewport.h"
 
 
 RenderCallUniformBase::RenderCallUniformBase(GLint location) :
@@ -140,8 +141,13 @@ RenderCallBase::~RenderCallBase()
 }
 
 
-void RenderCallBase::Render()
+void RenderCallBase::Render(const Viewport& viewport)
 {
+	GLint oldViewport[4]{};
+	glGetIntegerv(GL_VIEWPORT, oldViewport);
+	bounds2i b = viewport.GetViewportBounds();
+	glViewport(b.min.x, b.min.y, b.x().size(), b.y().size());
+
 	bool has_vertices = false;
 	if (_vertices)
 	{
@@ -150,7 +156,8 @@ void RenderCallBase::Render()
 	}
 
 	std::pair<bool, GLuint> oldFrameBuffer{};
-	FrameBuffer* frameBuffer = _frameBuffer ?: _gc->GetFrameBuffer();
+
+	FrameBuffer* frameBuffer = viewport.GetFrameBuffer();
 	if ((_clearBits || has_vertices) && frameBuffer)
 	{
 		GLint oldFrameBufferId{};
@@ -265,7 +272,9 @@ void RenderCallBase::Render()
 			glDrawBuffer(GL_BACK);
 #endif
 	}
-};
+
+	glViewport(oldViewport[0], oldViewport[1], oldViewport[2], oldViewport[3]);
+}
 
 
 RenderCallTexture* RenderCallBase::GetTexture(const char* name)

@@ -15,6 +15,7 @@
 class FrameBuffer;
 class Image;
 class RenderBuffer;
+class Viewport;
 
 
 class SmoothTerrainRenderer
@@ -71,19 +72,19 @@ public:
 	void SetDeploymentZoneBlue(glm::vec2 position, float radius);
 	void SetDeploymentZoneRed(glm::vec2 position, float radius);
 
-	void Render(const glm::mat4& transform, const glm::vec3& lightNormal);
+	void Render(Viewport* viewport, const glm::mat4& transform, const glm::vec3& lightNormal);
 
-	void RenderGroundShadow(const glm::mat4& transform);
-	void RenderTerrain(const glm::mat4& transform, const glm::vec3& lightNormal);
-	void RenderLines(const glm::mat4& transform);
+	void RenderGroundShadow(Viewport* viewport, const glm::mat4& transform);
+	void RenderTerrain(Viewport* viewport, const glm::mat4& transform, const glm::vec3& lightNormal);
+	void RenderLines(Viewport* viewport, const glm::mat4& transform);
 
 	void EnableSobelBuffers();
 	void UpdateSobelBufferSize();
 	void UpdateSobelTexture(const glm::mat4& transform);
-	void RenderSobelTexture();
+	void RenderSobelTexture(Viewport* viewport);
 
 	void TryEnableHatchingsBuffers();
-	void RenderHatchings(const glm::mat4& transform);
+	void RenderHatchings(Viewport* viewport, const glm::mat4& transform);
 
 	void UpdateChanges(bounds2f bounds);
 	void UpdateSplatmap();

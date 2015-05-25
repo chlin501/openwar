@@ -7,26 +7,41 @@
 
 #include "Algebra/bounds.h"
 
+class FrameBuffer;
 class GraphicsContext;
 
 
 class Viewport
 {
-	GraphicsContext* _gc;
-	bounds2i _bounds;
+	GraphicsContext* _gc{};
+	bounds2i _bounds{};
+	FrameBuffer* _frameBuffer{};
 
 public:
 	Viewport(GraphicsContext* gc);
 	virtual ~Viewport();
 
-	virtual bounds2i GetBounds() const;
-	virtual void SetBounds(const bounds2i& value);
-	virtual void UseViewport() const;
+	GraphicsContext* GetGraphicsContext() const;
+
+	FrameBuffer* GetFrameBuffer() const;
+	void SetFrameBuffer(FrameBuffer* frameBuffer);
+
+	virtual bounds2i GetViewportBounds() const;
+	virtual void SetViewportBounds(const bounds2i& value);
 
 	virtual glm::mat4 GetTransform() const = 0;
 
 	glm::vec2 GlobalToNormalized(glm::vec2 value) const;
 	glm::vec2 NormalizedToGlobal(glm::vec2 value) const;
+};
+
+
+class BasicViewport : public Viewport
+{
+public:
+	BasicViewport(GraphicsContext* gc);
+
+	glm::mat4 GetTransform() const override;
 };
 
 

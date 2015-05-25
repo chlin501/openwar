@@ -8,6 +8,7 @@
 #include "Surface/Surface.h"
 #include "Graphics/GraphicsContext.h"
 #include "Scroller/ScrollerViewport.h"
+#include <cassert>
 
 
 /* Widget */
@@ -37,18 +38,25 @@ Widget::Widget(Widget&& widget)
 	_widgetOwner = widget._widgetOwner;
 	widget._widgetOwner = nullptr;
 	_visible = widget._visible;
-	*std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), &widget) = this;
+
+	auto i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), &widget);
+	assert(i != _widgetOwner->_widgets.end());
+	*i = this;
 }
 
 
-Widget& Widget::operator=(Widget&& widget)
+/*Widget& Widget::operator=(Widget&& widget)
 {
 	_widgetOwner = widget._widgetOwner;
 	widget._widgetOwner = nullptr;
 	_visible = widget._visible;
-	*std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), &widget) = this;
+
+	auto i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), &widget);
+	assert(i != _widgetOwner->_widgets.end());
+	*i = this;
+	
 	return *this;
-}
+}*/
 
 
 /* WidgetOwner */

@@ -11,6 +11,7 @@
 
 class GraphicsContext;
 class GroundMap;
+class Viewport;
 
 
 class WaterInsideShader : public ShaderProgram
@@ -52,7 +53,7 @@ public:
 	virtual ~SmoothTerrainWater();
 
 	void Update();
-	void Render(GraphicsContext* gc, const glm::mat4& transform);
+	void Render(Viewport* viewport, GraphicsContext* gc, const glm::mat4& transform);
 };
 
 

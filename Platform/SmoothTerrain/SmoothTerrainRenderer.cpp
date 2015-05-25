@@ -10,6 +10,7 @@
 #include "Graphics/FrameBuffer.h"
 #include "Graphics/RenderBuffer.h"
 #include "Graphics/TextureResource.h"
+#import "Viewport.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <cstdlib>
 
@@ -76,17 +77,17 @@ void SmoothTerrainRenderer::SetDeploymentZoneRed(glm::vec2 position, float radiu
 }
 
 
-void SmoothTerrainRenderer::Render(const glm::mat4& transform, const glm::vec3& lightNormal)
+void SmoothTerrainRenderer::Render(Viewport* viewport, const glm::mat4& transform, const glm::vec3& lightNormal)
 {
-	RenderGroundShadow(transform);
+	RenderGroundShadow(viewport, transform);
 	UpdateSobelTexture(transform);
-	RenderTerrain(transform, lightNormal);
-	RenderSobelTexture();
-	RenderLines(transform);
+	RenderTerrain(viewport, transform, lightNormal);
+	RenderSobelTexture(viewport);
+	RenderLines(viewport, transform);
 };
 
 
-void SmoothTerrainRenderer::RenderGroundShadow(const glm::mat4& transform)
+void SmoothTerrainRenderer::RenderGroundShadow(Viewport* viewport, const glm::mat4& transform)
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
 	glm::vec4 map_bounds = glm::vec4(bounds.min, bounds.size());
@@ -97,11 +98,11 @@ void SmoothTerrainRenderer::RenderGroundShadow(const glm::mat4& transform)
 		.SetUniform("map_bounds", map_bounds)
 		.SetCullBack(true)
 		.ClearDepth()
-		.Render();
+		.Render(*viewport);
 }
 
 
-void SmoothTerrainRenderer::RenderTerrain(const glm::mat4& transform, const glm::vec3& lightNormal)
+void SmoothTerrainRenderer::RenderTerrain(Viewport* viewport, const glm::mat4& transform, const glm::vec3& lightNormal)
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
 	glm::vec4 map_bounds = glm::vec4(bounds.min, bounds.size());
@@ -116,7 +117,7 @@ void SmoothTerrainRenderer::RenderTerrain(const glm::mat4& transform, const glm:
 		.SetDepthTest(true)
 		.SetDepthMask(true)
 		.SetCullBack(true)
-		.Render();
+		.Render(*viewport);
 
 	RenderCall<TerrainBorderShader>(_gc)
 		.SetVertices(&_borderVertices, "position", "normal")
@@ -128,7 +129,7 @@ void SmoothTerrainRenderer::RenderTerrain(const glm::mat4& transform, const glm:
 		.SetDepthTest(true)
 		.SetDepthMask(true)
 		.SetCullBack(true)
-		.Render();
+		.Render(*viewport);
 
 	RenderCall<TerrainSkirtShader>(_gc)
 		.SetVertices(&_skirtVertices, "position", "height")
@@ -137,11 +138,11 @@ void SmoothTerrainRenderer::RenderTerrain(const glm::mat4& transform, const glm:
 		.SetDepthTest(true)
 		.SetDepthMask(true)
 		.SetCullBack(true)
-		.Render();
+		.Render(*viewport);
 }
 
 
-void SmoothTerrainRenderer::RenderLines(const glm::mat4& transform)
+void SmoothTerrainRenderer::RenderLines(Viewport* viewport, const glm::mat4& transform)
 {
 	if (_showLines)
 	{
@@ -150,7 +151,7 @@ void SmoothTerrainRenderer::RenderLines(const glm::mat4& transform)
 			.SetUniform("transform", transform)
 			.SetUniform("point_size", 1.0f)
 			.SetUniform("color", glm::vec4(0, 0, 0, 0.06f))
-			.Render();
+			.Render(*viewport);
 	}
 }
 
@@ -195,7 +196,7 @@ void SmoothTerrainRenderer::EnableSobelBuffers()
 
 void SmoothTerrainRenderer::UpdateSobelBufferSize()
 {
-	bounds2i viewport = _gc->GetViewport();
+	bounds2i viewport = _gc->GetViewportBounds();
 	glm::ivec2 size = viewport.size();
 
 	if (size.x != _framebuffer_width || size.y != _framebuffer_height)
@@ -221,39 +222,40 @@ void SmoothTerrainRenderer::UpdateSobelTexture(const glm::mat4& transform)
 	{
 		UpdateSobelBufferSize();
 
+		BasicViewport sobelViewport{_gc};
+		sobelViewport.SetViewportBounds(bounds2i{0, 0, _framebuffer_width, _framebuffer_height});
+		sobelViewport.SetFrameBuffer(_sobelFrameBuffer);
+
 		RenderCall<DepthInsideShader>(_gc)
-			.SetFrameBuffer(_sobelFrameBuffer)
 			.SetVertices(&_insideVertices, "position", "normal")
 			.SetUniform("transform", transform)
 			.SetDepthTest(true)
 			.SetDepthMask(true)
 			.SetCullBack(true)
 			.ClearDepth()
-			.Render();
+			.Render(sobelViewport);
 
 		RenderCall<DepthBorderShader>(_gc)
-			.SetFrameBuffer(_sobelFrameBuffer)
 			.SetVertices(&_borderVertices, "position", "normal")
 			.SetUniform("transform", transform)
 			.SetUniform("map_bounds", map_bounds)
 			.SetDepthTest(true)
 			.SetDepthMask(true)
 			.SetCullBack(true)
-			.Render();
+			.Render(sobelViewport);
 
 		RenderCall<DepthSkirtShader>(_gc)
-			.SetFrameBuffer(_sobelFrameBuffer)
 			.SetVertices(&_skirtVertices, "position", "height")
 			.SetUniform("transform", transform)
 			.SetDepthTest(true)
 			.SetDepthMask(true)
 			.SetCullBack(true)
-			.Render();
+			.Render(sobelViewport);
 	}
 }
 
 
-void SmoothTerrainRenderer::RenderSobelTexture()
+void SmoothTerrainRenderer::RenderSobelTexture(Viewport* viewport)
 {
 	if (_sobelDepthBuffer)
 	{
@@ -268,7 +270,7 @@ void SmoothTerrainRenderer::RenderSobelTexture()
 			.SetVertices(&vertices, "position", "texcoord")
 			.SetUniform("transform", glm::mat4())
 			.SetTexture("depth", _sobelDepthBuffer, Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Clamp))
-			.Render();
+			.Render(*viewport);
 	}
 }
 
@@ -335,14 +337,10 @@ void SmoothTerrainRenderer::TryEnableHatchingsBuffers()
 };
 
 
-void SmoothTerrainRenderer::RenderHatchings(const glm::mat4& transform)
+void SmoothTerrainRenderer::RenderHatchings(Viewport* viewport, const glm::mat4& transform)
 {
 	if (_hatchingsMasterFrameBuffer && (_deploymentRadiusBlue > 0 || _deploymentRadiusRed > 0))
 	{
-		GLint oldViewport[4];
-
-		glGetIntegerv(GL_VIEWPORT, oldViewport);
-
 		_hatchingsMasterVertices.Reset(GL_TRIANGLES);
 
 		if (_deploymentRadiusBlue > 0)
@@ -370,24 +368,27 @@ void SmoothTerrainRenderer::RenderHatchings(const glm::mat4& transform)
 		glm::vec3 translate = glm::vec3{-bounds.mid(), 0};
 		glm::vec3 scale = glm::vec3{2.0f / bounds.size(), 0};
 
-		glViewport(0, 0, _hatchingsMasterBufferSize.x, _hatchingsMasterBufferSize.y);
+		BasicViewport masterViewport{_gc};
+		masterViewport.SetViewportBounds(bounds2i{0, 0, _hatchingsMasterBufferSize.x, _hatchingsMasterBufferSize.y});
+		masterViewport.SetFrameBuffer(_hatchingsMasterFrameBuffer);
 
 		RenderCall<HatchingsMasterShader>(_gc)
-			.SetFrameBuffer(_hatchingsMasterFrameBuffer)
 			.SetVertices(&_hatchingsMasterVertices, "position", "texcoord")
 			.SetUniform("transform", glm::translate(glm::scale(glm::mat4{}, scale), translate))
 			.SetTexture("texture", _hatchingsDeployment, Sampler(SamplerMinMagFilter::Linear, SamplerAddressMode::Clamp))
 			.ClearColor(glm::vec4{})
-			.Render();
+			.Render(masterViewport);
 
 
 		/***/
 
-		glViewport(0, 0, _hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y);
+		BasicViewport intermediateViewport{_gc};
+		intermediateViewport.SetViewportBounds(bounds2i{0, 0, _hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y});
+		intermediateViewport.SetFrameBuffer(_hatchingsIntermediateFrameBuffer);
+
 		glm::vec4 map_bounds = glm::vec4{bounds.min, bounds.size()};
 
 		RenderCall<HatchingsInsideShader>(_gc)
-			.SetFrameBuffer(_hatchingsIntermediateFrameBuffer)
 			.SetVertices(&_insideVertices, "position", "normal")
 			.SetUniform("transform", transform)
 			.SetUniform("map_bounds", map_bounds)
@@ -397,10 +398,9 @@ void SmoothTerrainRenderer::RenderHatchings(const glm::mat4& transform)
 			.SetCullBack(true)
 			.ClearDepth()
 			.ClearColor(glm::vec4{0, 0, 0, 1})
-			.Render();
+			.Render(intermediateViewport);
 
 		RenderCall<HatchingsBorderShader>(_gc)
-			.SetFrameBuffer(_hatchingsIntermediateFrameBuffer)
 			.SetVertices(&_borderVertices, "position", "normal")
 			.SetUniform("transform", transform)
 			.SetUniform("map_bounds", map_bounds)
@@ -408,11 +408,9 @@ void SmoothTerrainRenderer::RenderHatchings(const glm::mat4& transform)
 			.SetDepthTest(true)
 			.SetDepthMask(true)
 			.SetCullBack(true)
-			.Render();
+			.Render(intermediateViewport);
 
 		/***/
-
-		glViewport(oldViewport[0], oldViewport[1], oldViewport[2], oldViewport[3]);
 
 		RenderCall<HatchingsResultShader>(_gc)
 			.SetVertices(&_hatchingsResultVertices, "position", "texcoord")
@@ -422,7 +420,7 @@ void SmoothTerrainRenderer::RenderHatchings(const glm::mat4& transform)
 			.SetTexture("hatch_g", _hatchingsPatternG, Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Repeat))
 			.SetTexture("hatch_b", _hatchingsPatternB, Sampler(SamplerMinMagFilter::Nearest, SamplerAddressMode::Repeat))
 			.SetUniform("hatch_scale", 16.0f * _gc->GetCombinedScaling())
-			.Render();
+			.Render(*viewport);
 	};
 }
 

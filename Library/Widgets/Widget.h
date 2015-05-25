@@ -29,7 +29,7 @@ public:
 	Widget& operator=(const Widget&) = delete;
 
 	Widget(Widget&&);
-	Widget& operator=(Widget&&);
+	Widget& operator=(Widget&&) = delete;
 
 	virtual WidgetOwner* GetWidgetOwner() const;
 	virtual WidgetView* GetWidgetView() const;

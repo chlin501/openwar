@@ -14,6 +14,8 @@ class GraphicsContext;
 #include "Algorithms/bspline_patch.h"
 #include "Graphics/Texture.h"
 
+class Viewport;
+
 
 class TiledTerrainRenderer
 {
@@ -25,7 +27,7 @@ public:
 	TiledTerrainRenderer(GraphicsContext* gc, const TiledGroundMap* tiledGroundMap);
 	~TiledTerrainRenderer();
 
-	void Render(const glm::mat4& transform, const glm::vec3& lightNormal);
+	void Render(Viewport* viewport, const glm::mat4& transform, const glm::vec3& lightNormal);
 };
 
 

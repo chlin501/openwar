@@ -38,7 +38,7 @@ void ScrollerGesture::TouchWillBeReleased(Touch* touch)
 
 void ScrollerGesture::TouchBegan(Touch* touch)
 {
-	bounds2f viewportBounds = _hotspot->GetViewport()->GetBounds();
+	bounds2f viewportBounds = _hotspot->GetViewport()->GetViewportBounds();
 	if (viewportBounds.contains(touch->GetOriginalPosition()))
 	{
 		_touch = touch;
