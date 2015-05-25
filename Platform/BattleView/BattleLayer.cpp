@@ -145,7 +145,7 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 	_battleViews.push_back(battleView);
 	UpdateBattleViewSize();
 
-	battleView->GetViewport()->SetFlip(commander != _commanders[0]);
+	battleView->GetTerrainViewport()->SetFlip(commander != _commanders[0]);
 	battleView->SetCommander(commander);
 	battleView->SetSimulator(simulator);
 
@@ -155,7 +155,7 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 
 void BattleLayer::ResetBattleView(BattleView* battleView, BattleCommander* commander)
 {
-	battleView->GetViewport()->SetFlip(commander != _commanders[0]);
+	battleView->GetTerrainViewport()->SetFlip(commander != _commanders[0]);
 	battleView->SetCommander(commander);
 	battleView->SetSimulator(_scenario);
 }

@@ -30,7 +30,7 @@ TerrainView::~TerrainView()
 }
 
 
-TerrainViewport* TerrainView::GetViewport() const
+TerrainViewport* TerrainView::GetTerrainViewport() const
 {
 	return _terrainViewport;
 }

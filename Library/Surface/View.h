@@ -12,14 +12,14 @@ class GraphicsContext;
 class Surface;
 class Touch;
 class ViewOwner;
-
+class Viewport;
 
 class View
 {
 	friend class ViewOwner;
-	ViewOwner* _viewOwner;
-	bounds2f _bounds;
-	bool _visible;
+	ViewOwner* _viewOwner{};
+	bounds2f _bounds{};
+	bool _visible{true};
 
 public:
 	View(ViewOwner* viewOwner);

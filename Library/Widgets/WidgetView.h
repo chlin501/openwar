@@ -29,7 +29,7 @@ class WidgetView : public View, public WidgetOwner
 	};
 
 	GraphicsContext* _gc;
-	ScrollerViewport _viewport;
+	ScrollerViewport _scrollerViewport;
 	ScrollerHotspot _scrollerHotspot;
 	TextureAtlas* _textureAtlas;
 	WidgetVertexBuffer _vertices;
@@ -38,7 +38,7 @@ public:
 	WidgetView(ViewOwner* viewOwner);
 	virtual ~WidgetView();
 
-	ScrollerViewport* GetViewport();
+	ScrollerViewport* GetScrollerViewport();
 
 	TextureAtlas* GetWidgetTextureAtlas() const;
 

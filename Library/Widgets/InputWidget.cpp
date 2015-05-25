@@ -8,7 +8,7 @@
 InputWidget::InputWidget(WidgetOwner* widgetOwner) : StringWidget{widgetOwner}
 {
 	_inputHotspot.SetDistance([this](glm::vec2 position) {
-		return _bounds.distance(GetViewport()->GlobalToLocal(position));
+		return _bounds.distance(GetScrollerViewport()->GlobalToLocal(position));
 	});
 	_inputHotspot.SetTolerance([this](Touch* touch) {
 		return ClickHotspot::GetDefaultTolerance(touch, _bounds.size());

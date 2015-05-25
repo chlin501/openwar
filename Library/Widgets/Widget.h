@@ -33,7 +33,7 @@ public:
 
 	virtual WidgetOwner* GetWidgetOwner() const;
 	virtual WidgetView* GetWidgetView() const;
-	virtual ScrollerViewport* GetViewport() const;
+	virtual ScrollerViewport* GetScrollerViewport() const;
 	virtual GraphicsContext* GetGraphicsContext() const;
 
 	virtual bool IsVisible() const;

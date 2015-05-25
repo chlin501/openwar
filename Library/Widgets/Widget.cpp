@@ -114,10 +114,10 @@ WidgetView* Widget::GetWidgetView() const
 }
 
 
-ScrollerViewport* Widget::GetViewport() const
+ScrollerViewport* Widget::GetScrollerViewport() const
 {
 	WidgetView* widgetView = GetWidgetView();
-	return widgetView ? widgetView->GetViewport() : nullptr;
+	return widgetView ? widgetView->GetScrollerViewport() : nullptr;
 }
 
 

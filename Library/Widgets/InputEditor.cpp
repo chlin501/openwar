@@ -139,7 +139,7 @@ void InputEditor_Mac::UpdateNSTextFieldFont()
 void InputEditor_Mac::UpdateNSTextFieldFrame()
 {
 	InputWidget* inputWidget = GetInputWidget();
-	ScrollerViewport* viewport = inputWidget->GetViewport();
+	ScrollerViewport* viewport = inputWidget->GetScrollerViewport();
 
 	bounds2f bounds = inputWidget->GetBounds();
 	bounds.min = viewport->LocalToGlobal(bounds.min);

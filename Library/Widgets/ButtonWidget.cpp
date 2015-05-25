@@ -12,7 +12,7 @@ ButtonWidget::ButtonWidget(WidgetOwner* widgetOwner) : WidgetGroup(widgetOwner),
 	_disabled(false)
 {
 	_hotspot.SetDistance([this](glm::vec2 position) {
-		return _bounds.distance(GetViewport()->GlobalToLocal(position));
+		return _bounds.distance(GetScrollerViewport()->GlobalToLocal(position));
 	});
 	_hotspot.SetTolerance([this](Touch* touch) {
 		return ClickHotspot::GetDefaultTolerance(touch, _bounds.size());

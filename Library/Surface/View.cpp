@@ -10,8 +10,7 @@
 
 
 View::View(ViewOwner* viewOwner) :
-	_viewOwner(viewOwner),
-	_visible(true)
+	_viewOwner{viewOwner}
 {
 	_viewOwner->_views.insert(_viewOwner->_views.begin(), this);
 }
@@ -182,7 +181,7 @@ void ViewOwner::RenderViews()
 /* ViewGroup */
 
 
-ViewGroup::ViewGroup(ViewOwner* viewOwner) : View(viewOwner)
+ViewGroup::ViewGroup(ViewOwner* viewOwner) : View{viewOwner}
 {
 }
 
