@@ -10,7 +10,7 @@
 
 #include "Graphics/GraphicsContext.h"
 #include "Graphics/RenderLoopObserver.h"
-#include "DependencyRule.h"
+#include "Dependency.h"
 #include "Gesture.h"
 #include "Surface.h"
 #include "Touch.h"
@@ -69,7 +69,7 @@
 	if (!_surface)
 		[self createSurface];
 
-	DependencyHost::UpdateAll();
+	DependencyBase::UpdateAll();
 
 	if (_surface)
 		_surface->RenderViews();

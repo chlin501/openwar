@@ -79,7 +79,7 @@
 		4168CCD01A2387E7007C4509 /* WidgetView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4168CCC11A2387E7007C4509 /* WidgetView.cpp */; };
 		4168CCD31A23885C007C4509 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4168CCD11A23885C007C4509 /* View.cpp */; };
 		418FCC3E192DEE0700D7D476 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */; };
-		41A61AB71B130683003A7560 /* DependencyRule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41A61AB51B130683003A7560 /* DependencyRule.cpp */; };
+		41A61AC01B13318A003A7560 /* Dependency.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41A61ABE1B13318A003A7560 /* Dependency.cpp */; };
 		41B2298F17EC730E00DFA0B6 /* Maps in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298B17EC730E00DFA0B6 /* Maps */; };
 		41B2299117EC730E00DFA0B6 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298D17EC730E00DFA0B6 /* Sounds */; };
 		41B2299217EC730E00DFA0B6 /* Textures in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298E17EC730E00DFA0B6 /* Textures */; };
@@ -261,8 +261,8 @@
 		4168CCD11A23885C007C4509 /* View.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = View.cpp; sourceTree = "<group>"; };
 		4168CCD21A23885C007C4509 /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = View.h; sourceTree = "<group>"; };
 		418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = /Library/Frameworks/SDL2_ttf.framework; sourceTree = "<absolute>"; };
-		41A61AB51B130683003A7560 /* DependencyRule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DependencyRule.cpp; sourceTree = "<group>"; };
-		41A61AB61B130683003A7560 /* DependencyRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DependencyRule.h; sourceTree = "<group>"; };
+		41A61ABE1B13318A003A7560 /* Dependency.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Dependency.cpp; sourceTree = "<group>"; };
+		41A61ABF1B13318A003A7560 /* Dependency.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dependency.h; sourceTree = "<group>"; };
 		41B2298B17EC730E00DFA0B6 /* Maps */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Maps; sourceTree = "<group>"; };
 		41B2298D17EC730E00DFA0B6 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
 		41B2298E17EC730E00DFA0B6 /* Textures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Textures; sourceTree = "<group>"; };
@@ -560,8 +560,8 @@
 				63F558BB253E0635E173BB2E /* ClickGesture.h */,
 				63F55D4B276E610FB5B27C6B /* ClickHotspot.cpp */,
 				63F5595B4CC40A7DFAC21A7D /* ClickHotspot.h */,
-				41A61AB51B130683003A7560 /* DependencyRule.cpp */,
-				41A61AB61B130683003A7560 /* DependencyRule.h */,
+				41A61ABE1B13318A003A7560 /* Dependency.cpp */,
+				41A61ABF1B13318A003A7560 /* Dependency.h */,
 				4156C2F11A139E3F006A264C /* Gesture.cpp */,
 				4156C2F21A139E3F006A264C /* Gesture.h */,
 				4156C2F31A139E3F006A264C /* Hotspot.cpp */,
@@ -898,11 +898,11 @@
 				4156C32A1A139E40006A264C /* ScrollerHotspot.cpp in Sources */,
 				63F55DF188CEFBEF7F2E123B /* TerrainViewport.cpp in Sources */,
 				63F55ABC3B69FFC1B4D154BE /* ClickGesture.cpp in Sources */,
-				41A61AB71B130683003A7560 /* DependencyRule.cpp in Sources */,
 				63F55E634774DADBB36E73A2 /* ClickHotspot.cpp in Sources */,
 				63F55C07D79D3F9A3EA3A8CD /* FontDescriptor.cpp in Sources */,
 				63F556A7A2F2FD636868A634 /* vec2_sampler.cpp in Sources */,
 				63F55D14165983EF9CF7DADA /* Sampler.cpp in Sources */,
+				41A61AC01B13318A003A7560 /* Dependency.cpp in Sources */,
 				413A21241A8B5CEF00BDB852 /* MusicDirector.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

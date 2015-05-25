@@ -2,8 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef DependencyRule_H
-#define DependencyRule_H
+#ifndef Dependency_H
+#define Dependency_H
 
 #include <chrono>
 #include <functional>
@@ -26,11 +26,12 @@ class DependencyBase
 {
 	friend class DependencyHost;
 
-	static std::vector<DependencyBase*> _dependencyRules;
+	static std::vector<DependencyBase*> _all_dependencies;
+	static std::chrono::system_clock::time_point _last_update;
 
 protected:
 	std::vector<DependencyBase*> _dependencies;
-	AnimationCurve _animationCurve{};
+	AnimationCurve _animation_curve{};
 	float _duration{};
 	float _elapsed{};
 	bool _value_updated{};
@@ -45,13 +46,15 @@ public:
 	DependencyBase(const DependencyBase&) = delete;
 	DependencyBase& operator=(const DependencyBase&) = delete;
 
+	static void UpdateAll();
+
 private:
 	virtual void TryUpdateValue(float secondsSinceLastUpdate) = 0;
 };
 
 
 template <class T>
-class DependencyRule : public DependencyBase
+class Dependency : public DependencyBase
 {
 	T _value{};
 	T _value1{};
@@ -65,16 +68,16 @@ public:
 		return _value;
 	}
 
-	DependencyRule<T>& SetTarget(std::function<void(T)> output)
+	Dependency<T>& SetTarget(std::function<void(T)> output)
 	{
 		_output = output;
 		TryUpdateValue(0);
 		return *this;
 	}
 
-	DependencyRule<T>& SetSource(std::function<T()> input)
+	Dependency<T>& SetSource(std::function<T()> input)
 	{
-		_animationCurve = AnimationCurve::None;
+		_animation_curve = AnimationCurve::None;
 		if (input)
 			_value = input();
 		_input = input;
@@ -82,18 +85,18 @@ public:
 		return *this;
 	}
 
-	DependencyRule<T>& SetValue(T value)
+	Dependency<T>& SetValue(T value)
 	{
-		_animationCurve = AnimationCurve::None;
+		_animation_curve = AnimationCurve::None;
 		_value = value;
 		_input = nullptr;
 		TryUpdateValue(0);
 		return *this;
 	}
 
-	DependencyRule<T>& Animate(T value1, T value2, float duration, AnimationCurve animationCurve)
+	Dependency<T>& Animate(T value1, T value2, float duration, AnimationCurve animationCurve)
 	{
-		_animationCurve = animationCurve;
+		_animation_curve = animationCurve;
 		_duration = duration;
 		_elapsed = 0;
 		_value = value1;
@@ -108,12 +111,12 @@ private:
 	void TryUpdateValue(float secondsSinceLastUpdate) override
 	{
 		_value_updated = false;
-		if (_animationCurve != AnimationCurve::None)
+		if (_animation_curve != AnimationCurve::None)
 		{
 			_elapsed += secondsSinceLastUpdate;
 			if (_elapsed < _duration)
 			{
-				float k = AnimationCurveFactor(_elapsed / _duration, _animationCurve);
+				float k = AnimationCurveFactor(_elapsed / _duration, _animation_curve);
 				T value = (1.0f - k) * _value1 + k * _value2;
 				if (value != _value)
 				{
@@ -128,7 +131,7 @@ private:
 					_value = _value2;
 					_value_updated = true;
 				}
-				_animationCurve = AnimationCurve::None;
+				_animation_curve = AnimationCurve::None;
 			}
 		}
 		else if (_input)
@@ -152,21 +155,18 @@ private:
 
 class DependencyHost
 {
-	static std::chrono::system_clock::time_point _lastUpdate;
-	std::vector<DependencyBase*> _dependencyRules;
+	std::vector<DependencyBase*> _dependencies;
 
 public:
 	DependencyHost();
 	virtual ~DependencyHost();
 
-	static void UpdateAll();
-
 	template <class T>
-	DependencyRule<T>& AddDependencyRule(std::initializer_list<DependencyBase*> dependencies = std::initializer_list<DependencyBase*>())
+	Dependency<T>& AddDependency(std::initializer_list<DependencyBase*> dependencies = std::initializer_list<DependencyBase*>())
 	{
-		DependencyRule<T>* dependenecyRule = new DependencyRule<T>();
-		_dependencyRules.push_back(dependenecyRule);
-		return *dependenecyRule;
+		Dependency<T>* dependenecy = new Dependency<T>();
+		_dependencies.push_back(dependenecy);
+		return *dependenecy;
 	}
 };
 

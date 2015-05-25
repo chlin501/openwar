@@ -10,7 +10,7 @@
 #include "Touch.h"
 #include "RenderLoopObserver.h"
 #include "Viewport.h"
-#include "DependencyRule.h"
+#include "Dependency.h"
 
 
 @implementation SurfaceAdapter
@@ -99,7 +99,7 @@
             _touch->TouchMoved();
     }
 
-    DependencyHost::UpdateAll();
+    DependencyBase::UpdateAll();
 
 	if (_surface)
 		_surface->RenderViews();
