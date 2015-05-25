@@ -26,7 +26,6 @@
 		41396E0D17E7517F00EC1DA6 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B7022175DFEA900AABF10 /* OpenAL.framework */; };
 		41396E0E17E7517F00EC1DA6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 413B6ED1175DE19200AABF10 /* OpenGL.framework */; };
 		413A21241A8B5CEF00BDB852 /* MusicDirector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 413A21221A8B5CEF00BDB852 /* MusicDirector.cpp */; };
-		415380E51B0B924800AFC81D /* Animator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 415380E31B0B924800AFC81D /* Animator.cpp */; };
 		415380F31B0B9B0F00AFC81D /* BattleMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 415380E71B0B9B0F00AFC81D /* BattleMap.cpp */; };
 		415380F41B0B9B0F00AFC81D /* GroundMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 415380E91B0B9B0F00AFC81D /* GroundMap.cpp */; };
 		415380F51B0B9B0F00AFC81D /* HeightMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 415380EB1B0B9B0F00AFC81D /* HeightMap.cpp */; };
@@ -80,6 +79,7 @@
 		4168CCD01A2387E7007C4509 /* WidgetView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4168CCC11A2387E7007C4509 /* WidgetView.cpp */; };
 		4168CCD31A23885C007C4509 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4168CCD11A23885C007C4509 /* View.cpp */; };
 		418FCC3E192DEE0700D7D476 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */; };
+		41A61AB71B130683003A7560 /* DependencyRule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41A61AB51B130683003A7560 /* DependencyRule.cpp */; };
 		41B2298F17EC730E00DFA0B6 /* Maps in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298B17EC730E00DFA0B6 /* Maps */; };
 		41B2299117EC730E00DFA0B6 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298D17EC730E00DFA0B6 /* Sounds */; };
 		41B2299217EC730E00DFA0B6 /* Textures in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298E17EC730E00DFA0B6 /* Textures */; };
@@ -155,8 +155,6 @@
 		413B7022175DFEA900AABF10 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		413B7024175DFEB900AABF10 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		413B7026175DFEC800AABF10 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		415380E31B0B924800AFC81D /* Animator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Animator.cpp; sourceTree = "<group>"; };
-		415380E41B0B924800AFC81D /* Animator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animator.h; sourceTree = "<group>"; };
 		415380E71B0B9B0F00AFC81D /* BattleMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BattleMap.cpp; sourceTree = "<group>"; };
 		415380E81B0B9B0F00AFC81D /* BattleMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BattleMap.h; sourceTree = "<group>"; };
 		415380E91B0B9B0F00AFC81D /* GroundMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GroundMap.cpp; sourceTree = "<group>"; };
@@ -263,6 +261,8 @@
 		4168CCD11A23885C007C4509 /* View.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = View.cpp; sourceTree = "<group>"; };
 		4168CCD21A23885C007C4509 /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = View.h; sourceTree = "<group>"; };
 		418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = /Library/Frameworks/SDL2_ttf.framework; sourceTree = "<absolute>"; };
+		41A61AB51B130683003A7560 /* DependencyRule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DependencyRule.cpp; sourceTree = "<group>"; };
+		41A61AB61B130683003A7560 /* DependencyRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DependencyRule.h; sourceTree = "<group>"; };
 		41B2298B17EC730E00DFA0B6 /* Maps */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Maps; sourceTree = "<group>"; };
 		41B2298D17EC730E00DFA0B6 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
 		41B2298E17EC730E00DFA0B6 /* Textures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Textures; sourceTree = "<group>"; };
@@ -556,24 +556,24 @@
 		4156C2EE1A139E3F006A264C /* Surface */ = {
 			isa = PBXGroup;
 			children = (
-				415380E31B0B924800AFC81D /* Animator.cpp */,
-				415380E41B0B924800AFC81D /* Animator.h */,
+				63F5511F1662B0ED37E2DEEF /* ClickGesture.cpp */,
+				63F558BB253E0635E173BB2E /* ClickGesture.h */,
+				63F55D4B276E610FB5B27C6B /* ClickHotspot.cpp */,
+				63F5595B4CC40A7DFAC21A7D /* ClickHotspot.h */,
+				41A61AB51B130683003A7560 /* DependencyRule.cpp */,
+				41A61AB61B130683003A7560 /* DependencyRule.h */,
 				4156C2F11A139E3F006A264C /* Gesture.cpp */,
 				4156C2F21A139E3F006A264C /* Gesture.h */,
 				4156C2F31A139E3F006A264C /* Hotspot.cpp */,
 				4156C2F41A139E3F006A264C /* Hotspot.h */,
 				4156C2F61A139E3F006A264C /* Surface.cpp */,
 				4156C2F71A139E3F006A264C /* Surface.h */,
+				4156C2FA1A139E3F006A264C /* SurfaceAdapter_SDL.cpp */,
+				4156C2FB1A139E3F006A264C /* SurfaceAdapter_SDL.h */,
 				4156C2F81A139E3F006A264C /* Touch.cpp */,
 				4156C2F91A139E3F006A264C /* Touch.h */,
 				4168CCD11A23885C007C4509 /* View.cpp */,
 				4168CCD21A23885C007C4509 /* View.h */,
-				4156C2FA1A139E3F006A264C /* SurfaceAdapter_SDL.cpp */,
-				4156C2FB1A139E3F006A264C /* SurfaceAdapter_SDL.h */,
-				63F5511F1662B0ED37E2DEEF /* ClickGesture.cpp */,
-				63F558BB253E0635E173BB2E /* ClickGesture.h */,
-				63F55D4B276E610FB5B27C6B /* ClickHotspot.cpp */,
-				63F5595B4CC40A7DFAC21A7D /* ClickHotspot.h */,
 			);
 			path = Surface;
 			sourceTree = "<group>";
@@ -894,11 +894,11 @@
 				4156C3311A139E40006A264C /* Gesture.cpp in Sources */,
 				4168CC981A2387AF007C4509 /* Image.cpp in Sources */,
 				63F553445E70F2F5641FE284 /* EditorHotspot.cpp in Sources */,
-				415380E51B0B924800AFC81D /* Animator.cpp in Sources */,
 				63F555DD68EC4972892F6EF9 /* TerrainHotspot.cpp in Sources */,
 				4156C32A1A139E40006A264C /* ScrollerHotspot.cpp in Sources */,
 				63F55DF188CEFBEF7F2E123B /* TerrainViewport.cpp in Sources */,
 				63F55ABC3B69FFC1B4D154BE /* ClickGesture.cpp in Sources */,
+				41A61AB71B130683003A7560 /* DependencyRule.cpp in Sources */,
 				63F55E634774DADBB36E73A2 /* ClickHotspot.cpp in Sources */,
 				63F55C07D79D3F9A3EA3A8CD /* FontDescriptor.cpp in Sources */,
 				63F556A7A2F2FD636868A634 /* vec2_sampler.cpp in Sources */,
