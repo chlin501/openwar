@@ -36,7 +36,7 @@ ButtonItem::ButtonItem(ButtonArea* buttonArea, const char* text) :
 	buttonString(buttonArea->GetButtonGrid())
 {
 	_hotspot.SetDistance([this](glm::vec2 position) {
-		return _bounds.distance(_buttonArea->GetButtonGrid()->GetScrollerViewport()->GlobalToLocal(position));
+		return _bounds.distance(_buttonArea->GetButtonGrid()->GetScrollerViewport()->ScreenToContent(position));
 	});
 
 	buttonString.SetString(text);
@@ -57,7 +57,7 @@ ButtonItem::ButtonItem(ButtonArea* buttonArea, std::shared_ptr<TextureImage> ico
 	buttonString(buttonArea->GetButtonGrid())
 {
 	_hotspot.SetDistance([this](glm::vec2 position) {
-		return _bounds.distance(_buttonArea->GetButtonGrid()->GetScrollerViewport()->GlobalToLocal(position));
+		return _bounds.distance(_buttonArea->GetButtonGrid()->GetScrollerViewport()->ScreenToContent(position));
 	});
 }
 
@@ -219,7 +219,7 @@ void ButtonArea::UpdateBounds(bounds2f bounds)
 
 
 
-ButtonGrid::ButtonGrid(Surface* surface, std::shared_ptr<ScrollerViewport> viewport, ButtonGridTextureSheet* textureSheet, ButtonAlignment alignment) : WidgetView(surface, viewport),
+ButtonGrid::ButtonGrid(Surface* surface, std::shared_ptr<ScrollableViewport2D> viewport, ButtonGridTextureSheet* textureSheet, ButtonAlignment alignment) : WidgetView(surface, viewport),
 	_gc(surface->GetGraphicsContext()),
 	_alignment(alignment),
 	_textureSheet(textureSheet)
@@ -346,7 +346,7 @@ void ButtonGrid::OnRenderLoop(double secondsSinceLastUpdate)
 
 void ButtonGrid::OnTouchBegin(Touch* touch)
 {
-	glm::vec2 position = GetScrollerViewport()->GlobalToLocal(touch->GetOriginalPosition());
+	glm::vec2 position = GetScrollerViewport()->ScreenToContent(touch->GetOriginalPosition());
 
 	for (ButtonArea* buttonArea : _buttonAreas)
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)

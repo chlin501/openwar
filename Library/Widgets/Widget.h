@@ -9,7 +9,7 @@
 #include <vector>
 
 class GraphicsContext;
-class ScrollerViewport;
+class ScrollableViewport2D;
 class Touch;
 class WidgetOwner;
 class WidgetView;
@@ -33,7 +33,7 @@ public:
 
 	virtual WidgetOwner* GetWidgetOwner() const;
 	virtual WidgetView* GetWidgetView() const;
-	virtual ScrollerViewport* GetScrollerViewport() const;
+	virtual ScrollableViewport2D* GetScrollerViewport() const;
 	virtual GraphicsContext* GetGraphicsContext() const;
 
 	virtual bool IsVisible() const;

@@ -29,16 +29,16 @@ class WidgetView : public View, public WidgetOwner
 	};
 
 	GraphicsContext* _gc;
-	ScrollerViewport* _scrollerViewport;
+	ScrollableViewport2D* _scrollerViewport;
 	ScrollerHotspot _scrollerHotspot;
 	TextureAtlas* _textureAtlas;
 	WidgetVertexBuffer _vertices;
 
 public:
-	WidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollerViewport> viewport);
+	WidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollableViewport2D> viewport);
 	virtual ~WidgetView();
 
-	ScrollerViewport* GetScrollerViewport();
+	ScrollableViewport2D* GetScrollerViewport();
 
 	TextureAtlas* GetWidgetTextureAtlas() const;
 

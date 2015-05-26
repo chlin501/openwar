@@ -29,18 +29,70 @@ public:
 	bounds2i GetViewportBounds() const;
 	void SetViewportBounds(const bounds2i& value);
 
-	virtual glm::mat4 GetTransform() const = 0;
+	glm::vec2 ScreenToNormalized(glm::vec2 value) const;
+	glm::vec2 NormalizedToScreen(glm::vec2 value) const;
 
-	glm::vec2 GlobalToNormalized(glm::vec2 value) const;
-	glm::vec2 NormalizedToGlobal(glm::vec2 value) const;
+	virtual glm::mat4 GetTransform() const = 0;
 };
 
 
-class BasicViewport : public Viewport
+class Viewport2D : public Viewport
 {
 public:
-	BasicViewport(GraphicsContext* gc);
+	Viewport2D(GraphicsContext* gc);
 
+	glm::vec2 ContentToNormalized(glm::vec2 value) const;
+	glm::vec2 NormalizedToContent(glm::vec2 value) const;
+
+	virtual glm::vec2 GetContentSize() const = 0;
+	virtual bounds2f GetVisibleBounds() const = 0;
+
+	virtual glm::vec2 ContentToScreen(glm::vec2 value) const = 0;
+	virtual glm::vec2 ScreenToContent(glm::vec2 value) const = 0;
+};
+
+
+class StandardViewport2D : public Viewport2D
+{
+public:
+	StandardViewport2D(GraphicsContext* gc);
+
+public: // Viewport2D
+	glm::vec2 GetContentSize() const override;
+	bounds2f GetVisibleBounds() const override;
+
+	glm::vec2 ContentToScreen(glm::vec2 value) const override;
+	glm::vec2 ScreenToContent(glm::vec2 value) const override;
+
+public: // Viewport
+	glm::mat4 GetTransform() const override;
+};
+
+
+class ScrollableViewport2D : public Viewport2D
+{
+	glm::vec2 _contentOffset;
+	glm::vec2 _contentSize;
+
+public:
+	ScrollableViewport2D(GraphicsContext* gc);
+
+	void SetContentSize(glm::vec2 value);
+
+	glm::vec2 GetContentOffset() const;
+	void SetContentOffset(glm::vec2 value);
+
+	glm::vec2 GetClampedOffset(glm::vec2 value) const;
+	void ClampContentOffset();
+
+public: // Viewport2D
+	glm::vec2 GetContentSize() const override;
+	bounds2f GetVisibleBounds() const override;
+
+	glm::vec2 ContentToScreen(glm::vec2 value) const override;
+	glm::vec2 ScreenToContent(glm::vec2 value) const override;
+
+public: // Viewport
 	glm::mat4 GetTransform() const override;
 };
 

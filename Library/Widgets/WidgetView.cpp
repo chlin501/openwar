@@ -31,7 +31,7 @@ void WidgetView::WidgetVertexBuffer::Update()
 /* WidgetView */
 
 
-WidgetView::WidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollerViewport> viewport) : View(viewOwner, viewport),
+WidgetView::WidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollableViewport2D> viewport) : View(viewOwner, viewport),
 	_gc{GetGraphicsContext()},
 	_scrollerViewport{viewport.get()},
 	_scrollerHotspot{viewport.get()},
@@ -48,7 +48,7 @@ WidgetView::~WidgetView()
 }
 
 
-ScrollerViewport* WidgetView::GetScrollerViewport()
+ScrollableViewport2D* WidgetView::GetScrollerViewport()
 {
 	return _scrollerViewport;
 }

@@ -114,7 +114,7 @@ WidgetView* Widget::GetWidgetView() const
 }
 
 
-ScrollerViewport* Widget::GetScrollerViewport() const
+ScrollableViewport2D* Widget::GetScrollerViewport() const
 {
 	WidgetView* widgetView = GetWidgetView();
 	return widgetView ? widgetView->GetScrollerViewport() : nullptr;

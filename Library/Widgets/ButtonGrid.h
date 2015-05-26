@@ -141,7 +141,7 @@ public:
 	ButtonGridTextureSheet* _textureSheet;
 
 public:
-	ButtonGrid(Surface* surface, std::shared_ptr<ScrollerViewport> viewport, ButtonGridTextureSheet* textureSheet, ButtonAlignment alignment);
+	ButtonGrid(Surface* surface, std::shared_ptr<ScrollableViewport2D> viewport, ButtonGridTextureSheet* textureSheet, ButtonAlignment alignment);
 
 	ButtonAlignment GetAlignment() const { return _alignment; }
 

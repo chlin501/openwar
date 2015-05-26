@@ -11,20 +11,20 @@
 #include "ScrollerGesture.h"
 #include "Algebra/bounds.h"
 
-class ScrollerViewport;
+class ScrollableViewport2D;
 
 
 class ScrollerHotspot : public Hotspot
 {
 	ScrollerGesture _gesture;
-	ScrollerViewport* _viewport;
+	ScrollableViewport2D* _viewport;
 
 public:
-	ScrollerHotspot(ScrollerViewport* viewport);
+	ScrollerHotspot(ScrollableViewport2D* viewport);
 
 	Gesture* GetGesture() override;
 
-	ScrollerViewport* GetViewport() const;
+	ScrollableViewport2D* GetViewport() const;
 };
 
 

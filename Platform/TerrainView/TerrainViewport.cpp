@@ -130,13 +130,13 @@ void TerrainViewport::SetFlip(bool value)
 
 glm::vec2 TerrainViewport::LocalToGlobal(glm::vec2 value) const
 {
-	return NormalizedToGlobal(LocalToNormalized(value));
+	return NormalizedToScreen(LocalToNormalized(value));
 }
 
 
 glm::vec2 TerrainViewport::GlobalToLocal(glm::vec2 value) const
 {
-	return NormalizedToLocal(GlobalToNormalized(value));
+	return NormalizedToLocal(ScreenToNormalized(value));
 }
 
 

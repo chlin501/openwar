@@ -222,7 +222,7 @@ void SmoothTerrainRenderer::UpdateSobelTexture(const glm::mat4& transform)
 	{
 		UpdateSobelBufferSize();
 
-		BasicViewport sobelViewport{_gc};
+		StandardViewport2D sobelViewport{_gc};
 		sobelViewport.SetViewportBounds(bounds2i{0, 0, _framebuffer_width, _framebuffer_height});
 		sobelViewport.SetFrameBuffer(_sobelFrameBuffer);
 
@@ -368,7 +368,7 @@ void SmoothTerrainRenderer::RenderHatchings(Viewport* viewport, const glm::mat4&
 		glm::vec3 translate = glm::vec3{-bounds.mid(), 0};
 		glm::vec3 scale = glm::vec3{2.0f / bounds.size(), 0};
 
-		BasicViewport masterViewport{_gc};
+		StandardViewport2D masterViewport{_gc};
 		masterViewport.SetViewportBounds(bounds2i{0, 0, _hatchingsMasterBufferSize.x, _hatchingsMasterBufferSize.y});
 		masterViewport.SetFrameBuffer(_hatchingsMasterFrameBuffer);
 
@@ -382,7 +382,7 @@ void SmoothTerrainRenderer::RenderHatchings(Viewport* viewport, const glm::mat4&
 
 		/***/
 
-		BasicViewport intermediateViewport{_gc};
+		StandardViewport2D intermediateViewport{_gc};
 		intermediateViewport.SetViewportBounds(bounds2i{0, 0, _hatchingsIntermediateBufferSize.x, _hatchingsIntermediateBufferSize.y});
 		intermediateViewport.SetFrameBuffer(_hatchingsIntermediateFrameBuffer);
 
