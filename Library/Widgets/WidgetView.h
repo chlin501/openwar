@@ -29,30 +29,42 @@ class WidgetView : public View, public WidgetOwner
 	};
 
 	GraphicsContext* _gc;
-	ScrollerViewport* _viewport2D;
-	ScrollerHotspot _scrollerHotspot;
+	Viewport2D& _viewport2D;
 	TextureAtlas* _textureAtlas;
 	WidgetVertexBuffer _vertices;
 
 public:
-	WidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollerViewport> viewport);
-	virtual ~WidgetView();
+	WidgetView(ViewOwner* viewOwner, std::shared_ptr<Viewport2D> viewport);
 
-	const Viewport2D& GetViewport2D() const { return *_viewport2D; }
-	Viewport2D& GetViewport2D() { return *_viewport2D; }
+	const Viewport2D& GetViewport2D() const { return _viewport2D; }
+	Viewport2D& GetViewport2D() { return _viewport2D; }
 
 	TextureAtlas* GetWidgetTextureAtlas() const;
 
-	virtual void OnTouchEnter(Touch* touch);
-	virtual void OnTouchBegin(Touch* touch);
+public: // View
+	void OnTouchEnter(Touch* touch) override;
+	void OnTouchBegin(Touch* touch) override;
 
-	virtual void Render();
+	void Render() override;
 
 protected:
 	virtual WidgetView* FindWidgetView();
 
 private:
 	void UpdateVertexBuffer();
+};
+
+
+class ScrollerWidgetView : public WidgetView
+{
+	ScrollerHotspot _scrollerHotspot;
+
+public:
+	ScrollerWidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollerViewport> viewport);
+
+public: // View
+	void OnTouchEnter(Touch* touch) override;
+	void OnTouchBegin(Touch* touch) override;
 };
 
 

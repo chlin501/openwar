@@ -30,19 +30,11 @@ void WidgetView::WidgetVertexBuffer::Update()
 /* WidgetView */
 
 
-WidgetView::WidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollerViewport> viewport) : View(viewOwner, viewport),
+WidgetView::WidgetView(ViewOwner* viewOwner, std::shared_ptr<Viewport2D> viewport) : View(viewOwner, viewport),
 	_gc{GetGraphicsContext()},
-	_viewport2D{viewport.get()},
-	_scrollerHotspot{viewport.get()},
-	_textureAtlas(nullptr),
+	_viewport2D{*viewport},
+	_textureAtlas(_gc->GetTextureAtlas(WIDGET_TEXTURE_ATLAS)),
 	_vertices(this)
-{
-	_vertices._mode = GL_TRIANGLES;
-	_textureAtlas = _gc->GetTextureAtlas(WIDGET_TEXTURE_ATLAS);
-}
-
-
-WidgetView::~WidgetView()
 {
 }
 
@@ -61,15 +53,6 @@ void WidgetView::OnTouchEnter(Touch* touch)
 
 void WidgetView::OnTouchBegin(Touch* touch)
 {
-	if (_viewport2D->GetContentSize() != glm::vec2(0, 0))
-	{
-		bounds2f viewportBounds = _viewport2D->GetViewportBounds();
-		if (viewportBounds.contains(touch->GetOriginalPosition()))
-		{
-			_scrollerHotspot.SubscribeTouch(touch);
-		}
-	}
-
 	CallWidgets_OnTouchBegin(touch);
 }
 
@@ -78,9 +61,9 @@ void WidgetView::Render()
 {
 	RenderCall<WidgetShader>(_gc)
 		.SetVertices(&_vertices, "position", "texcoord", "colorize", "alpha")
-		.SetUniform("transform", _viewport2D->GetTransform())
+		.SetUniform("transform", _viewport2D.GetTransform())
 		.SetTexture("texture", _textureAtlas)
-		.Render(*_viewport2D);
+		.Render(_viewport2D);
 }
 
 
@@ -98,4 +81,33 @@ void WidgetView::UpdateVertexBuffer()
 
 	_vertices.UpdateVBO(GL_TRIANGLES, vertices.data(), vertices.size());
 	vertices.clear();
+}
+
+
+/* ScrollerWidgetView */
+
+
+ScrollerWidgetView::ScrollerWidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollerViewport> viewport) : WidgetView{viewOwner, viewport},
+	_scrollerHotspot{viewport.get()}
+{
+}
+
+
+void ScrollerWidgetView::OnTouchEnter(Touch* touch)
+{
+	WidgetView::OnTouchEnter(touch);
+}
+
+
+void ScrollerWidgetView::OnTouchBegin(Touch* touch)
+{
+	if (GetViewport2D().GetContentSize() != glm::vec2{})
+	{
+		bounds2f viewportBounds = GetViewport2D().GetViewportBounds();
+		if (viewportBounds.contains(touch->GetOriginalPosition()))
+		{
+			_scrollerHotspot.SubscribeTouch(touch);
+		}
+	}
+	WidgetView::OnTouchBegin(touch);
 }
