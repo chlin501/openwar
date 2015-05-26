@@ -8,7 +8,7 @@
 #include "BattleView/BattleView.h"
 #include "TerrainView/EditorGesture.h"
 #include "TerrainView/EditorHotspot.h"
-#include "Scroller/ScrollerViewport.h"
+#include "Graphics/Viewport.h"
 #include "Audio/SoundPlayer.h"
 #include "Widgets/ButtonGrid.h"
 #include <glm/gtc/matrix_transform.hpp>

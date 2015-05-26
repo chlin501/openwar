@@ -5,9 +5,9 @@
 #ifndef Touch_H
 #define Touch_H
 
+#include "Algorithms/vec2_sampler.h"
 #include <memory>
 #include <vector>
-#include "Algorithms/vec2_sampler.h"
 
 class Gesture;
 class Hotspot;

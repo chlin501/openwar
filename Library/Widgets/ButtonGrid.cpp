@@ -5,7 +5,7 @@
 #include "ButtonGrid.h"
 #include "Surface/Surface.h"
 #include "Surface/Touch.h"
-#include "Scroller/ScrollerViewport.h"
+#include "Graphics/Viewport.h"
 #include "Graphics/TextureFont.h"
 
 

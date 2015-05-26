@@ -5,9 +5,9 @@
 #ifndef Surface_H
 #define Surface_H
 
+#include "View.h"
 #include <vector>
 #include <glm/glm.hpp>
-#include "View.h"
 
 class GraphicsContext;
 class Touch;

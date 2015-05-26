@@ -3,10 +3,11 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "View.h"
+
 #include "Surface.h"
+#include "Touch.h"
 #include "Graphics/Viewport.h"
 #include "Graphics/GraphicsContext.h"
-#include "Touch.h"
 
 
 View::View(ViewOwner* viewOwner, std::shared_ptr<Viewport> viewport) :

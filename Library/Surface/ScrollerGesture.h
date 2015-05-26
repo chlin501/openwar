@@ -5,7 +5,7 @@
 #ifndef ScrollerGesture_H
 #define ScrollerGesture_H
 
-#include "Surface/Gesture.h"
+#include "Gesture.h"
 #include "Graphics/RenderLoopObserver.h"
 
 class ScrollerHotspot;
@@ -32,7 +32,6 @@ public:
 	virtual void TouchMoved(Touch* touch);
 	virtual void TouchEnded(Touch* touch);
 };
-
 
 
 #endif

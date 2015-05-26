@@ -5,9 +5,9 @@
 #ifndef ClickHotspot_H
 #define ClickHotspot_H
 
-#include <functional>
-#include "Surface/Hotspot.h"
 #include "ClickGesture.h"
+#include "Hotspot.h"
+#include <functional>
 
 
 class ClickHotspot : public Hotspot

@@ -3,8 +3,9 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "ClickHotspot.h"
-#include "Surface/Touch.h"
-#include "Surface/Surface.h"
+
+#include "Surface.h"
+#include "Touch.h"
 
 
 ClickHotspot::ClickHotspot() :

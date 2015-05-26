@@ -5,11 +5,11 @@
 #ifndef ScrollerHotspot_H
 #define ScrollerHotspot_H
 
-#include <functional>
-#include <glm/glm.hpp>
-#include "Surface/Hotspot.h"
+#include "Hotspot.h"
 #include "ScrollerGesture.h"
 #include "Algebra/bounds.h"
+#include <functional>
+#include <glm/glm.hpp>
 
 class ScrollableViewport2D;
 

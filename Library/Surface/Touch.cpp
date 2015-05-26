@@ -3,9 +3,10 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "Touch.h"
+
 #include "Gesture.h"
-#include "Surface.h"
 #include "Hotspot.h"
+#include "Surface.h"
 
 
 Touch::Touch(int tapCount, glm::vec2 position, double timestamp, MouseButtons buttons) :

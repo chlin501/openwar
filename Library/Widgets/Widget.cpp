@@ -7,7 +7,7 @@
 #include "Surface/Touch.h"
 #include "Surface/Surface.h"
 #include "Graphics/GraphicsContext.h"
-#include "Scroller/ScrollerViewport.h"
+#include "Graphics/Viewport.h"
 #include <cassert>
 
 

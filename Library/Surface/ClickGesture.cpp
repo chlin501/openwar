@@ -3,9 +3,10 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "ClickGesture.h"
+
 #include "ClickHotspot.h"
-#include "Surface/Surface.h"
-#include "Surface/Touch.h"
+#include "Surface.h"
+#include "Touch.h"
 
 
 ClickGesture::ClickGesture(ClickHotspot* hotspot) :

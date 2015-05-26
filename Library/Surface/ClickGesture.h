@@ -5,8 +5,8 @@
 #ifndef ClickGesture_H
 #define ClickGesture_H
 
+#include "Gesture.h"
 #include <memory>
-#include "Surface/Gesture.h"
 
 class ClickHotspot;
 class ButtonItem;

@@ -3,9 +3,10 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "ScrollerGesture.h"
+
 #include "ScrollerHotspot.h"
-#include "ScrollerViewport.h"
-#include "Surface/Touch.h"
+#include "Touch.h"
+#include "Graphics/Viewport.h"
 
 
 ScrollerGesture::ScrollerGesture(ScrollerHotspot* hotspot) :

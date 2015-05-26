@@ -3,9 +3,10 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "Hotspot.h"
+
 #include "Gesture.h"
-#include "Touch.h"
 #include "Surface.h"
+#include "Touch.h"
 
 
 Hotspot::Hotspot()

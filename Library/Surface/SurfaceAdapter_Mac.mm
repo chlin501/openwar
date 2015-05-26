@@ -4,13 +4,13 @@
 
 #import "SurfaceAdapter_Mac.h"
 
-#include "GraphicsContext.h"
-#include "Surface.h"
-#include "Gesture.h"
-#include "Touch.h"
-#include "RenderLoopObserver.h"
-#include "Viewport.h"
 #include "Dependency.h"
+#include "Gesture.h"
+#include "Surface.h"
+#include "Touch.h"
+#include "Graphics/GraphicsContext.h"
+#include "Graphics/RenderLoopObserver.h"
+#include "Graphics/Viewport.h"
 
 
 @implementation SurfaceAdapter

@@ -8,8 +8,8 @@
 #include <vector>
 #include "Algebra/bounds.h"
 #include "Graphics/VertexBuffer.h"
-#include "Scroller/ScrollerHotspot.h"
-#include "Scroller/ScrollerViewport.h"
+#include "Surface/ScrollerHotspot.h"
+#include "Graphics/Viewport.h"
 #include "Surface/View.h"
 #include "Widget.h"
 
