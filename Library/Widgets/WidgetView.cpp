@@ -3,13 +3,12 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "WidgetView.h"
-#include "Graphics/GraphicsContext.h"
+
 #include "Graphics/RenderCall.h"
-#include "Surface/Surface.h"
 #include "Graphics/TextureAtlas.h"
 #include "Graphics/TextureFont.h"
+#include "Surface/Surface.h"
 #include "Surface/Touch.h"
-#include "Widget.h"
 #include "WidgetShader.h"
 
 
@@ -46,13 +45,6 @@ WidgetView::WidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollerViewport> v
 WidgetView::~WidgetView()
 {
 }
-
-
-ScrollerViewport* WidgetView::GetScrollerViewport()
-{
-	return _viewport2D;
-}
-
 
 
 TextureAtlas* WidgetView::GetWidgetTextureAtlas() const

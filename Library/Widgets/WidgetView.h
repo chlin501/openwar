@@ -5,13 +5,13 @@
 #ifndef WidgetView_H
 #define WidgetView_H
 
-#include <vector>
 #include "Algebra/bounds.h"
 #include "Graphics/VertexBuffer.h"
-#include "Surface/ScrollerHotspot.h"
 #include "Graphics/Viewport.h"
+#include "Surface/ScrollerHotspot.h"
 #include "Surface/View.h"
 #include "Widget.h"
+#include <vector>
 
 class GraphicsContext;
 class ScrollerHotspot;
@@ -40,8 +40,6 @@ public:
 
 	const Viewport2D& GetViewport2D() const { return *_viewport2D; }
 	Viewport2D& GetViewport2D() { return *_viewport2D; }
-
-	ScrollerViewport* GetScrollerViewport();
 
 	TextureAtlas* GetWidgetTextureAtlas() const;
 

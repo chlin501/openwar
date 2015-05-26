@@ -2,9 +2,9 @@
 #define ButtonWidget_H
 
 #include "Widget.h"
-#include "Surface/ClickHotspot.h"
 #include "ImageWidget.h"
 #include "StringWidget.h"
+#include "Surface/ClickHotspot.h"
 
 
 class ButtonWidget : public WidgetGroup
