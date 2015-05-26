@@ -19,7 +19,6 @@ class ScrollerGesture : public Gesture, RenderLoopObserver
 
 public:
 	ScrollerGesture(ScrollerHotspot* hotspot);
-	virtual ~ScrollerGesture();
 
 private: // RenderLoopObserver
 	virtual void OnRenderLoop(double secondsSinceLastUpdate);

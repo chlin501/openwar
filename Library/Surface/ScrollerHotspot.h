@@ -17,14 +17,16 @@ class ScrollerViewport;
 class ScrollerHotspot : public Hotspot
 {
 	ScrollerGesture _gesture;
-	ScrollerViewport* _viewport;
+	ScrollerViewport& _viewport;
 
 public:
-	ScrollerHotspot(ScrollerViewport* viewport);
+	ScrollerHotspot(ScrollerViewport& viewport);
 
+	const ScrollerViewport& GetScrollerViewport() const { return _viewport; }
+	ScrollerViewport& GetScrollerViewport() { return _viewport; }
+
+public: // Hotspot
 	Gesture* GetGesture() override;
-
-	ScrollerViewport* GetViewport() const;
 };
 
 

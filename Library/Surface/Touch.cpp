@@ -44,6 +44,12 @@ bool Touch::IsCaptured() const
 }
 
 
+bool Touch::HasSubscribers() const
+{
+	return !_subscribedHotspots.empty();
+}
+
+
 int Touch::GetTapCount() const
 {
 	return _tapCount;

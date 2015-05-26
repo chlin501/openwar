@@ -15,8 +15,8 @@ class Touch;
 class Hotspot
 {
 	friend class Touch;
-	std::vector<Touch*> _subscribedTouches;
-	std::vector<Touch*> _capturedTouches;
+	std::vector<Touch*> _subscribedTouches{};
+	std::vector<Touch*> _capturedTouches{};
 
 public:
 	Hotspot();

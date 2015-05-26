@@ -9,8 +9,6 @@
 #include <memory>
 
 class ClickHotspot;
-class ButtonItem;
-class ButtonGrid;
 
 
 class ClickGesture : public Gesture
@@ -18,21 +16,17 @@ class ClickGesture : public Gesture
 	ClickHotspot* _hotspot;
 
 public:
-	std::vector<ButtonGrid*> _buttonViews;
-
 	ClickGesture(ClickHotspot* hotspot);
-	virtual ~ClickGesture();
 
-	virtual void KeyDown(char key);
+public: // Gesture
+	void TouchWasCaptured(Touch* touch) override;
+	void TouchWillBeReleased(Touch* touch) override;
+	void AskReleaseTouchToAnotherHotspot(Touch* touch, Hotspot* anotherHotspot) override;
 
-	virtual void TouchWasCaptured(Touch* touch);
-	virtual void TouchWillBeReleased(Touch* touch);
-	virtual void AskReleaseTouchToAnotherHotspot(Touch* touch, Hotspot* anotherHotspot);
-
-	virtual void TouchBegin(Touch* touch);
-	virtual void TouchBegan(Touch* touch);
-	virtual void TouchMoved(Touch* touch);
-	virtual void TouchEnded(Touch* touch);
+	void TouchBegin(Touch* touch) override;
+	void TouchBegan(Touch* touch) override;
+	void TouchMoved(Touch* touch) override;
+	void TouchEnded(Touch* touch) override;
 
 private:
 	bool ShouldReleaseTouchToAnotherHotspot(Touch* touch, Hotspot* anotherHotspot);

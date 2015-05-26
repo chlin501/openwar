@@ -54,6 +54,7 @@ public:
 	Touch& operator=(const Touch&) = delete;
 
 	bool IsCaptured() const;
+	bool HasSubscribers() const;
 
 	int GetTapCount() const;
 

@@ -15,27 +15,6 @@ ClickGesture::ClickGesture(ClickHotspot* hotspot) :
 }
 
 
-ClickGesture::~ClickGesture()
-{
-}
-
-
-void ClickGesture::KeyDown(char key)
-{
-    /*
-	for (ButtonGrid* buttonView : _buttonViews)
-		for (ButtonArea* buttonArea : buttonView->GetButtonAreas())
-			for (ButtonItem* buttonItem : buttonArea->buttonItems)
-				if (buttonItem->HasAction()
-						&& !buttonItem->IsDisabled()
-						&& buttonItem->GetKeyboardShortcut() == key)
-				{
-					buttonItem->CallAction();
-				}
-     */
-}
-
-
 void ClickGesture::TouchWasCaptured(Touch* touch)
 {
 }

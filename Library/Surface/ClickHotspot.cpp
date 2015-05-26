@@ -8,22 +8,6 @@
 #include "Touch.h"
 
 
-ClickHotspot::ClickHotspot() :
-	_gesture(this),
-	_distance(),
-	_tolerance(),
-	_action(),
-	_highlight(false),
-	_immediate(false)
-{
-}
-
-
-ClickHotspot::~ClickHotspot()
-{
-}
-
-
 Gesture* ClickHotspot::GetGesture()
 {
 	return &_gesture;

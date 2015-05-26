@@ -12,17 +12,14 @@
 
 class ClickHotspot : public Hotspot
 {
-	ClickGesture _gesture;
-	std::function<glm::vec2(glm::vec2)> _distance;
-	std::function<glm::vec2(Touch*)> _tolerance;
-	std::function<void()> _action;
-	bool _highlight;
-	bool _immediate;
+	ClickGesture _gesture{this};
+	std::function<glm::vec2(glm::vec2)> _distance{};
+	std::function<glm::vec2(Touch*)> _tolerance{};
+	std::function<void()> _action{};
+	bool _highlight{};
+	bool _immediate{};
 
 public:
-	ClickHotspot();
-	virtual ~ClickHotspot();
-
 	Gesture* GetGesture() override;
 
 	virtual void SetDistance(std::function<glm::vec2(glm::vec2)> distance);
