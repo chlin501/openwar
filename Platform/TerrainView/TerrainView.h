@@ -21,7 +21,7 @@ class Touch;
 
 class TerrainView : public View
 {
-	TerrainViewport* _terrainViewport{};
+	TerrainViewport& _terrainViewport;
 
 	std::shared_ptr<EditorHotspot> _editorHotspot;
 	std::shared_ptr<TerrainHotspot> _terrainHotspot;
@@ -32,12 +32,13 @@ protected:
 public:
 	TerrainView(Surface* surface, std::shared_ptr<TerrainViewport> viewport);
 
+	const TerrainViewport& GetTerrainViewport() const;
+	TerrainViewport& GetTerrainViewport();
+
 	glm::vec2 GetScreenTop() const;
 	glm::vec2 GetScreenLeft() const;
 	glm::vec2 GetScreenBottom() const;
 	glm::vec2 GetScreenRight() const;
-
-	TerrainViewport* GetTerrainViewport() const;
 
 	void SetEditorHotspot(std::shared_ptr<EditorHotspot> hotspot);
 

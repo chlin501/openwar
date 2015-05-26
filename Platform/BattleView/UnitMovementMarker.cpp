@@ -65,7 +65,7 @@ void UnitMovementMarker::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleV
 
 	const UnitCommand& command = _unit->GetCommand();
 
-	TerrainViewport* terrainViewport = battleView->GetTerrainViewport();
+	TerrainViewport* terrainViewport = &battleView->GetTerrainViewport();
 
 	bounds2f b = battleView->GetUnitFutureFacingMarkerBounds(_unit);
 	glm::vec2 p = b.mid();

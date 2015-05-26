@@ -87,7 +87,7 @@ glm::vec3 TerrainHotspot::GetContentPosition2() const
 glm::vec3 TerrainHotspot::GetContentPosition2x() const
 {
 	glm::vec3 p = GetContentPosition1();
-	glm::vec3 c = _terrainView->GetTerrainPosition3(_terrainView->GetTerrainViewport()->NormalizedToLocal(glm::vec2{}));
+	glm::vec3 c = _terrainView->GetTerrainPosition3(_terrainView->GetTerrainViewport().NormalizedToLocal(glm::vec2{}));
 	return glm::vec3{2.0f * c.xy() - p.xy(), p.z};
 }
 
@@ -103,7 +103,7 @@ glm::vec2 TerrainHotspot::GetCurrentScreenPosition1() const
 	if (GetCapturedTouches().size() >= 1)
 		return GetCapturedTouches().front()->GetCurrentPosition();
 
-	return _terrainView->GetTerrainViewport()->NormalizedToLocal(glm::vec2{});
+	return _terrainView->GetTerrainViewport().NormalizedToLocal(glm::vec2{});
 }
 
 
@@ -118,7 +118,7 @@ glm::vec2 TerrainHotspot::GetCurrentScreenPosition2() const
 glm::vec2 TerrainHotspot::GetCurrentScreenPosition2x() const
 {
 	glm::vec3 p = _terrainView->GetTerrainPosition3(GetCurrentScreenPosition1());
-	glm::vec3 c = _terrainView->GetTerrainPosition3(_terrainView->GetTerrainViewport()->NormalizedToLocal(glm::vec2{}));
+	glm::vec3 c = _terrainView->GetTerrainPosition3(_terrainView->GetTerrainViewport().NormalizedToLocal(glm::vec2{}));
 	return _terrainView->ContentToScreen(glm::vec3(2.0f * c.xy() - p.xy(), p.z));
 }
 
@@ -141,7 +141,7 @@ float TerrainHotspot::GetOrbitFactor() const
 		? GetCurrentScreenPosition1()
 		: 0.5f * (GetCurrentScreenPosition1() + GetCurrentScreenPosition2());
 
-	float value = glm::length(_terrainView->GetTerrainViewport()->LocalToNormalized(pos));
+	float value = glm::length(_terrainView->GetTerrainViewport().LocalToNormalized(pos));
 	return bounds1f{0, 1}.clamp(bounds1f{0.33f, 0.66f}.unmix(value * value));
 };
 
