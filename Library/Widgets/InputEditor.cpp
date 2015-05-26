@@ -139,11 +139,11 @@ void InputEditor_Mac::UpdateNSTextFieldFont()
 void InputEditor_Mac::UpdateNSTextFieldFrame()
 {
 	InputWidget* inputWidget = GetInputWidget();
-	ScrollableViewport2D* viewport = inputWidget->GetScrollerViewport();
+	const Viewport2D& viewport = inputWidget->GetViewport2D();
 
 	bounds2f bounds = inputWidget->GetBounds();
-	bounds.min = viewport->ContentToScreen(bounds.min);
-	bounds.max = viewport->ContentToScreen(bounds.max);
+	bounds.min = viewport.ContentToScreen(bounds.min);
+	bounds.max = viewport.ContentToScreen(bounds.max);
 
 	float height = (float)_textField.font.pointSize + 6;
 	float width = bounds.x().size() + 2;

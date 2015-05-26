@@ -94,36 +94,36 @@ glm::vec2 Viewport2D::NormalizedToContent(glm::vec2 value) const
 /***/
 
 
-StandardViewport2D::StandardViewport2D(GraphicsContext* gc) : Viewport2D{gc}
+StandardViewport::StandardViewport(GraphicsContext* gc) : Viewport2D{gc}
 {
 }
 
 
-glm::vec2 StandardViewport2D::GetContentSize() const
+glm::vec2 StandardViewport::GetContentSize() const
 {
 	return (glm::vec2)GetViewportBounds().size();
 }
 
 
-bounds2f StandardViewport2D::GetVisibleBounds() const
+bounds2f StandardViewport::GetVisibleBounds() const
 {
 	return bounds2f{0, 0, (glm::vec2)GetViewportBounds().size()};
 }
 
 
-glm::vec2 StandardViewport2D::ContentToScreen(glm::vec2 value) const
+glm::vec2 StandardViewport::ContentToScreen(glm::vec2 value) const
 {
 	return value + (glm::vec2)GetViewportBounds().min;
 }
 
 
-glm::vec2 StandardViewport2D::ScreenToContent(glm::vec2 value) const
+glm::vec2 StandardViewport::ScreenToContent(glm::vec2 value) const
 {
 	return value - (glm::vec2)GetViewportBounds().min;
 }
 
 
-glm::mat4 StandardViewport2D::GetTransform() const
+glm::mat4 StandardViewport::GetTransform() const
 {
 	glm::mat4 result;
 	bounds2i bounds = GetViewportBounds();
@@ -139,24 +139,24 @@ glm::mat4 StandardViewport2D::GetTransform() const
 
 
 
-ScrollableViewport2D::ScrollableViewport2D(GraphicsContext* gc) : Viewport2D{gc}
+ScrollerViewport::ScrollerViewport(GraphicsContext* gc) : Viewport2D{gc}
 {
 }
 
 
-void ScrollableViewport2D::SetContentSize(glm::vec2 value)
+void ScrollerViewport::SetContentSize(glm::vec2 value)
 {
 	_contentSize = value;
 }
 
 
-glm::vec2 ScrollableViewport2D::GetContentOffset() const
+glm::vec2 ScrollerViewport::GetContentOffset() const
 {
 	return _contentOffset;
 }
 
 
-void ScrollableViewport2D::SetContentOffset(glm::vec2 value)
+void ScrollerViewport::SetContentOffset(glm::vec2 value)
 {
 	_contentOffset = value;
 }
@@ -172,7 +172,7 @@ static float ClampContentOffset(float value, float contentSize, bounds1i viewpor
 }
 
 
-glm::vec2 ScrollableViewport2D::GetClampedOffset(glm::vec2 value) const
+glm::vec2 ScrollerViewport::GetClampedOffset(glm::vec2 value) const
 {
 	bounds2i viewportBounds = GetViewportBounds();
 	return glm::vec2(
@@ -181,38 +181,38 @@ glm::vec2 ScrollableViewport2D::GetClampedOffset(glm::vec2 value) const
 }
 
 
-void ScrollableViewport2D::ClampContentOffset()
+void ScrollerViewport::ClampContentOffset()
 {
 	_contentOffset = GetClampedOffset(_contentOffset);
 }
 
 
-glm::vec2 ScrollableViewport2D::GetContentSize() const
+glm::vec2 ScrollerViewport::GetContentSize() const
 {
 	return _contentSize;
 }
 
 
-bounds2f ScrollableViewport2D::GetVisibleBounds() const
+bounds2f ScrollerViewport::GetVisibleBounds() const
 {
 	bounds2i bounds = GetViewportBounds();
 	return bounds2f(0, 0, bounds.x().size(), bounds.y().size()) + _contentOffset;
 }
 
 
-glm::vec2 ScrollableViewport2D::ContentToScreen(glm::vec2 value) const
+glm::vec2 ScrollerViewport::ContentToScreen(glm::vec2 value) const
 {
 	return value + (glm::vec2)GetViewportBounds().min - _contentOffset;
 }
 
 
-glm::vec2 ScrollableViewport2D::ScreenToContent(glm::vec2 value) const
+glm::vec2 ScrollerViewport::ScreenToContent(glm::vec2 value) const
 {
 	return value - (glm::vec2)GetViewportBounds().min + _contentOffset;
 }
 
 
-glm::mat4 ScrollableViewport2D::GetTransform() const
+glm::mat4 ScrollerViewport::GetTransform() const
 {
 	glm::mat4 result;
 

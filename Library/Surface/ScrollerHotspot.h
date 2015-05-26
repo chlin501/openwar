@@ -11,20 +11,20 @@
 #include <functional>
 #include <glm/glm.hpp>
 
-class ScrollableViewport2D;
+class ScrollerViewport;
 
 
 class ScrollerHotspot : public Hotspot
 {
 	ScrollerGesture _gesture;
-	ScrollableViewport2D* _viewport;
+	ScrollerViewport* _viewport;
 
 public:
-	ScrollerHotspot(ScrollableViewport2D* viewport);
+	ScrollerHotspot(ScrollerViewport* viewport);
 
 	Gesture* GetGesture() override;
 
-	ScrollableViewport2D* GetViewport() const;
+	ScrollerViewport* GetViewport() const;
 };
 
 

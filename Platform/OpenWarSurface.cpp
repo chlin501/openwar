@@ -35,7 +35,7 @@ _battleLayer(nullptr)
 
 	_buttonGridTextureSheet = new ButtonGridTextureSheet(gc->GetTextureAtlas(WIDGET_TEXTURE_ATLAS));
 
-	std::shared_ptr<ScrollableViewport2D> viewport = std::make_shared<ScrollableViewport2D>(gc);
+	std::shared_ptr<ScrollerViewport> viewport = std::make_shared<ScrollerViewport>(gc);
 
 	_buttonsTopLeft = new ButtonGrid(this, viewport, _buttonGridTextureSheet, ButtonAlignment::TopLeft);
 	_buttonsTopRight = new ButtonGrid(this, viewport, _buttonGridTextureSheet, ButtonAlignment::TopRight);

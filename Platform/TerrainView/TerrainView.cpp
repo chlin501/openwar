@@ -17,16 +17,10 @@
 #include "TerrainViewport.h"
 
 
-TerrainView::TerrainView(Surface* surface, std::shared_ptr<TerrainViewport> viewport) : View(surface, viewport)
+TerrainView::TerrainView(Surface* surface, std::shared_ptr<TerrainViewport> viewport) : View(surface, viewport),
+	_terrainViewport{viewport.get()}
 {
 	GraphicsContext* gc = surface->GetGraphicsContext();
-	_terrainViewport = new TerrainViewport(gc);
-}
-
-
-TerrainView::~TerrainView()
-{
-	delete _terrainViewport;
 }
 
 

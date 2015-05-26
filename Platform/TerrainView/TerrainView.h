@@ -31,7 +31,6 @@ protected:
 
 public:
 	TerrainView(Surface* surface, std::shared_ptr<TerrainViewport> viewport);
-	virtual ~TerrainView();
 
 	glm::vec2 GetScreenTop() const;
 	glm::vec2 GetScreenLeft() const;

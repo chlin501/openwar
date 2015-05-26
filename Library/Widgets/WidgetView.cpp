@@ -31,9 +31,9 @@ void WidgetView::WidgetVertexBuffer::Update()
 /* WidgetView */
 
 
-WidgetView::WidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollableViewport2D> viewport) : View(viewOwner, viewport),
+WidgetView::WidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollerViewport> viewport) : View(viewOwner, viewport),
 	_gc{GetGraphicsContext()},
-	_scrollerViewport{viewport.get()},
+	_viewport2D{viewport.get()},
 	_scrollerHotspot{viewport.get()},
 	_textureAtlas(nullptr),
 	_vertices(this)
@@ -48,9 +48,9 @@ WidgetView::~WidgetView()
 }
 
 
-ScrollableViewport2D* WidgetView::GetScrollerViewport()
+ScrollerViewport* WidgetView::GetScrollerViewport()
 {
-	return _scrollerViewport;
+	return _viewport2D;
 }
 
 
@@ -69,9 +69,9 @@ void WidgetView::OnTouchEnter(Touch* touch)
 
 void WidgetView::OnTouchBegin(Touch* touch)
 {
-	if (_scrollerViewport->GetContentSize() != glm::vec2(0, 0))
+	if (_viewport2D->GetContentSize() != glm::vec2(0, 0))
 	{
-		bounds2f viewportBounds = _scrollerViewport->GetViewportBounds();
+		bounds2f viewportBounds = _viewport2D->GetViewportBounds();
 		if (viewportBounds.contains(touch->GetOriginalPosition()))
 		{
 			_scrollerHotspot.SubscribeTouch(touch);
@@ -86,9 +86,9 @@ void WidgetView::Render()
 {
 	RenderCall<WidgetShader>(_gc)
 		.SetVertices(&_vertices, "position", "texcoord", "colorize", "alpha")
-		.SetUniform("transform", _scrollerViewport->GetTransform())
+		.SetUniform("transform", _viewport2D->GetTransform())
 		.SetTexture("texture", _textureAtlas)
-		.Render(*_scrollerViewport);
+		.Render(*_viewport2D);
 }
 
 

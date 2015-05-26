@@ -9,8 +9,9 @@
 #include <vector>
 
 class GraphicsContext;
-class ScrollableViewport2D;
+class ScrollerViewport;
 class Touch;
+class Viewport2D;
 class WidgetOwner;
 class WidgetView;
 
@@ -31,10 +32,11 @@ public:
 	Widget(Widget&&);
 	Widget& operator=(Widget&&) = delete;
 
-	virtual WidgetOwner* GetWidgetOwner() const;
-	virtual WidgetView* GetWidgetView() const;
-	virtual ScrollableViewport2D* GetScrollerViewport() const;
-	virtual GraphicsContext* GetGraphicsContext() const;
+	WidgetOwner* GetWidgetOwner() const;
+	WidgetView* GetWidgetView() const;
+
+	const Viewport2D& GetViewport2D() const;
+	GraphicsContext* GetGraphicsContext() const;
 
 	virtual bool IsVisible() const;
 	virtual void SetVisible(bool value);

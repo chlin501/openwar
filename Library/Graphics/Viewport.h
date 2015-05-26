@@ -52,10 +52,10 @@ public:
 };
 
 
-class StandardViewport2D : public Viewport2D
+class StandardViewport : public Viewport2D
 {
 public:
-	StandardViewport2D(GraphicsContext* gc);
+	StandardViewport(GraphicsContext* gc);
 
 public: // Viewport2D
 	glm::vec2 GetContentSize() const override;
@@ -69,13 +69,13 @@ public: // Viewport
 };
 
 
-class ScrollableViewport2D : public Viewport2D
+class ScrollerViewport : public Viewport2D
 {
 	glm::vec2 _contentOffset;
 	glm::vec2 _contentSize;
 
 public:
-	ScrollableViewport2D(GraphicsContext* gc);
+	ScrollerViewport(GraphicsContext* gc);
 
 	void SetContentSize(glm::vec2 value);
 

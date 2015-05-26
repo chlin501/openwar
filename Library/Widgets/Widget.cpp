@@ -110,21 +110,19 @@ WidgetOwner* Widget::GetWidgetOwner() const
 
 WidgetView* Widget::GetWidgetView() const
 {
-	return _widgetOwner ? _widgetOwner->FindWidgetView() : nullptr;
+	return _widgetOwner->FindWidgetView();
 }
 
 
-ScrollableViewport2D* Widget::GetScrollerViewport() const
+const Viewport2D& Widget::GetViewport2D() const
 {
-	WidgetView* widgetView = GetWidgetView();
-	return widgetView ? widgetView->GetScrollerViewport() : nullptr;
+	return GetWidgetView()->GetViewport2D();
 }
 
 
 GraphicsContext* Widget::GetGraphicsContext() const
 {
-	WidgetView* widgetView = GetWidgetView();
-	return widgetView ? widgetView->GetGraphicsContext() : nullptr;
+	return GetWidgetView()->GetGraphicsContext();
 }
 
 
@@ -235,6 +233,5 @@ void WidgetGroup::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 
 WidgetView* WidgetGroup::FindWidgetView()
 {
-	WidgetOwner* widgetOwner = GetWidgetOwner();
-	return widgetOwner ? widgetOwner->FindWidgetView() : nullptr;
+	return GetWidgetOwner()->FindWidgetView();
 }
