@@ -9,8 +9,9 @@
 #include "Touch.h"
 
 
-View::View(ViewOwner* viewOwner) :
-	_viewOwner{viewOwner}
+View::View(ViewOwner* viewOwner, std::shared_ptr<Viewport> viewport) :
+	_viewOwner{viewOwner},
+	_viewport{viewport}
 {
 	_viewOwner->_views.insert(_viewOwner->_views.begin(), this);
 }
@@ -41,20 +42,7 @@ Surface* View::GetSurface() const
 
 GraphicsContext* View::GetGraphicsContext() const
 {
-	Surface* surface = GetSurface();
-	return surface ? surface->GetGraphicsContext() : nullptr;
-}
-
-
-bounds2f View::GetBounds() const
-{
-	return _bounds;
-}
-
-
-void View::SetBounds(const bounds2f& value)
-{
-	_bounds = value;
+	return _viewport->GetGraphicsContext();
 }
 
 
@@ -181,7 +169,7 @@ void ViewOwner::RenderViews()
 /* ViewGroup */
 
 
-ViewGroup::ViewGroup(ViewOwner* viewOwner) : View{viewOwner}
+ViewGroup::ViewGroup(ViewOwner* viewOwner, std::shared_ptr<Viewport> viewport) : View{viewOwner, viewport}
 {
 }
 

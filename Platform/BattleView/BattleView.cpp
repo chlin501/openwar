@@ -43,7 +43,7 @@ static affine2 billboard_texcoords(int x, int y, bool flip)
 
 
 
-BattleView::BattleView(Surface* surface) : TerrainView(surface),
+BattleView::BattleView(Surface* surface, std::shared_ptr<TerrainViewport> viewport) : TerrainView(surface, viewport),
 	_gc{surface->GetGraphicsContext()}
 {
 	_textureUnitMarkers = new TextureResource(_gc, Resource("Textures/UnitMarkers.png"));
@@ -304,7 +304,7 @@ void BattleView::OnBattleMapChanged(const BattleMap* battleMap)
 
 	SetHeightMap(battleMap->GetHeightMap());
 
-	GetTerrainViewport()->SetViewportBounds(GetBounds());
+	GetTerrainViewport()->SetViewportBounds(GetViewport().GetViewportBounds());
 	GetTerrainViewport()->SetTerrainBounds(terrainBounds);
 	GetTerrainViewport()->SetCameraPosition(glm::vec3(terrainBounds.mid(), 0.3f * glm::length(terrainBounds.size())));
 
@@ -491,7 +491,7 @@ void BattleView::InitializeCameraPosition()
 
 void BattleView::Render()
 {
-	GetTerrainViewport()->SetViewportBounds(GetBounds());
+	GetTerrainViewport()->SetViewportBounds(GetViewport().GetViewportBounds());
 
 	glm::mat4 transform = GetTerrainViewport()->GetTransform();
 
@@ -503,7 +503,7 @@ void BattleView::Render()
 
 	if (_smoothTerrainSky)
 	{
-		_smoothTerrainSky->RenderBackgroundLinen(GetTerrainViewport(), GetBounds());
+		_smoothTerrainSky->RenderBackgroundLinen(GetTerrainViewport(), GetViewport().GetViewportBounds());
 		_smoothTerrainSky->Render(GetTerrainViewport(), GetTerrainViewport()->GetCameraDirection().z);
 	}
 

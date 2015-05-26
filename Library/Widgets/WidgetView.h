@@ -29,20 +29,18 @@ class WidgetView : public View, public WidgetOwner
 	};
 
 	GraphicsContext* _gc;
-	ScrollerViewport _scrollerViewport;
+	ScrollerViewport* _scrollerViewport;
 	ScrollerHotspot _scrollerHotspot;
 	TextureAtlas* _textureAtlas;
 	WidgetVertexBuffer _vertices;
 
 public:
-	WidgetView(ViewOwner* viewOwner);
+	WidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollerViewport> viewport);
 	virtual ~WidgetView();
 
 	ScrollerViewport* GetScrollerViewport();
 
 	TextureAtlas* GetWidgetTextureAtlas() const;
-
-	virtual void SetBounds(const bounds2f& value);
 
 	virtual void OnTouchEnter(Touch* touch);
 	virtual void OnTouchBegin(Touch* touch);

@@ -14,26 +14,27 @@ class Touch;
 class ViewOwner;
 class Viewport;
 
+
 class View
 {
 	friend class ViewOwner;
 	ViewOwner* _viewOwner{};
-	bounds2f _bounds{};
+	std::shared_ptr<Viewport> _viewport;
 	bool _visible{true};
 
 public:
-	View(ViewOwner* viewOwner);
+	View(ViewOwner* viewOwner, std::shared_ptr<Viewport> viewport);
 	virtual ~View();
 
 	View(const View&) = delete;
 	View& operator=(const View&) = delete;
 
-	virtual ViewOwner* GetViewOwner() const;
-	virtual Surface* GetSurface() const;
-	virtual GraphicsContext* GetGraphicsContext() const;
+	ViewOwner* GetViewOwner() const;
+	Surface* GetSurface() const;
 
-	virtual bounds2f GetBounds() const;
-	virtual void SetBounds(const bounds2f& value);
+	const Viewport& GetViewport() const { return *_viewport; }
+	Viewport& GetViewport() { return *_viewport; }
+	GraphicsContext* GetGraphicsContext() const;
 
 	virtual bool IsVisible() const;
 	virtual void SetVisible(bool value);
@@ -63,7 +64,7 @@ public:
 	ViewOwner(const ViewOwner&) = delete;
 	ViewOwner& operator=(const ViewOwner&) = delete;
 
-	virtual const std::vector<View*>& GetViews();
+	const std::vector<View*>& GetViews();
 
 	virtual void NotifyViewsOfTouchEnter(Touch* touch);
 	virtual void NotifyViewsOfTouchBegin(Touch* touch);
@@ -77,7 +78,7 @@ private:
 class ViewGroup : public View, public ViewOwner
 {
 public:
-	ViewGroup(ViewOwner* viewOwner);
+	ViewGroup(ViewOwner* viewOwner, std::shared_ptr<Viewport> viewport);
 
 	virtual void OnTouchEnter(Touch* touch);
 	virtual void OnTouchBegin(Touch* touch);

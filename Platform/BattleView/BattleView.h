@@ -69,7 +69,7 @@ class BattleView : public TerrainView, BattleObserver, BattleMapObserver, Render
 	std::shared_ptr<BattleHotspot> _battleHotspot{};
 
 public:
-	BattleView(Surface* surface);
+	BattleView(Surface* surface, std::shared_ptr<TerrainViewport> viewport);
 	~BattleView();
 
 	BattleSimulator* GetSimulator() const { return _simulator; }

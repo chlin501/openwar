@@ -139,7 +139,9 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 {
 	BattleSimulator* simulator = _scenario;
 
-	BattleView* battleView = new BattleView(_surface);
+	std::shared_ptr<TerrainViewport> viewport = std::make_shared<TerrainViewport>(_gc);
+
+	BattleView* battleView = new BattleView(_surface, viewport);
 	battleView->OrderBack();
 
 	_battleViews.push_back(battleView);
@@ -194,7 +196,7 @@ void BattleLayer::UpdateBattleViewSize()
 
 			bounds2f viewport_bounds(viewport_x, viewport_y.mix(k1), viewport_y.mix(k2));
 
-			battleView->SetBounds(viewport_bounds);
+			battleView->GetViewport().SetViewportBounds(viewport_bounds);
 
 			++index;
 		}

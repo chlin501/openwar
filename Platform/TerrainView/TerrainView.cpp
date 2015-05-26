@@ -17,7 +17,7 @@
 #include "TerrainViewport.h"
 
 
-TerrainView::TerrainView(Surface* surface) : View(surface)
+TerrainView::TerrainView(Surface* surface, std::shared_ptr<TerrainViewport> viewport) : View(surface, viewport)
 {
 	GraphicsContext* gc = surface->GetGraphicsContext();
 	_terrainViewport = new TerrainViewport(gc);

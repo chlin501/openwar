@@ -26,8 +26,8 @@ public:
 	FrameBuffer* GetFrameBuffer() const;
 	void SetFrameBuffer(FrameBuffer* frameBuffer);
 
-	virtual bounds2i GetViewportBounds() const;
-	virtual void SetViewportBounds(const bounds2i& value);
+	bounds2i GetViewportBounds() const;
+	void SetViewportBounds(const bounds2i& value);
 
 	virtual glm::mat4 GetTransform() const = 0;
 

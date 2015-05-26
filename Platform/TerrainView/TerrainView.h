@@ -30,7 +30,7 @@ protected:
 	const HeightMap* _heightMap{};
 
 public:
-	TerrainView(Surface* surface);
+	TerrainView(Surface* surface, std::shared_ptr<TerrainViewport> viewport);
 	virtual ~TerrainView();
 
 	glm::vec2 GetScreenTop() const;

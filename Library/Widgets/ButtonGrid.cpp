@@ -219,7 +219,7 @@ void ButtonArea::UpdateBounds(bounds2f bounds)
 
 
 
-ButtonGrid::ButtonGrid(Surface* surface, ButtonGridTextureSheet* textureSheet, ButtonAlignment alignment) : WidgetView(surface),
+ButtonGrid::ButtonGrid(Surface* surface, std::shared_ptr<ScrollerViewport> viewport, ButtonGridTextureSheet* textureSheet, ButtonAlignment alignment) : WidgetView(surface, viewport),
 	_gc(surface->GetGraphicsContext()),
 	_alignment(alignment),
 	_textureSheet(textureSheet)

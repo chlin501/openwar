@@ -35,8 +35,10 @@ _battleLayer(nullptr)
 
 	_buttonGridTextureSheet = new ButtonGridTextureSheet(gc->GetTextureAtlas(WIDGET_TEXTURE_ATLAS));
 
-	_buttonsTopLeft = new ButtonGrid(this, _buttonGridTextureSheet, ButtonAlignment::TopLeft);
-	_buttonsTopRight = new ButtonGrid(this, _buttonGridTextureSheet, ButtonAlignment::TopRight);
+	std::shared_ptr<ScrollerViewport> viewport = std::make_shared<ScrollerViewport>(gc);
+
+	_buttonsTopLeft = new ButtonGrid(this, viewport, _buttonGridTextureSheet, ButtonAlignment::TopLeft);
+	_buttonsTopRight = new ButtonGrid(this, viewport, _buttonGridTextureSheet, ButtonAlignment::TopRight);
 
 	ButtonArea* toolButtonArea = _buttonsTopLeft->AddButtonArea(4);
 	_buttonItemHand = toolButtonArea->AddButtonItem(_buttonGridTextureSheet->buttonEditorToolHand);
@@ -117,8 +119,8 @@ void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
 
 	bounds2f viewportBounds = bounds2f(0, 0, GetVirtualSize());
 
-	_buttonsTopLeft->SetBounds(viewportBounds);
-	_buttonsTopRight->SetBounds(viewportBounds);
+	_buttonsTopLeft->GetViewport().SetViewportBounds(viewportBounds);
+	_buttonsTopRight->GetViewport().SetViewportBounds(viewportBounds);
 
 	if (_battleLayer->GetSimulator() && _battleLayer->IsPlaying())
 		_battleLayer->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);
