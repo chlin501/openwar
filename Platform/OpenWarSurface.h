@@ -5,10 +5,10 @@
 #ifndef OpenWarSurface_H
 #define OpenWarSurface_H
 
+#include "Surface/Animation.h"
 #include "Surface/Surface.h"
 #include "BattleView/BattleLayer.h"
 #include "TerrainView/EditorModel.h"
-#include "Graphics/RenderLoopObserver.h"
 
 class ClickGesture;
 class ButtonItem;
@@ -17,7 +17,7 @@ class ButtonGrid;
 class EditorHotspot;
 
 
-class OpenWarSurface : public Surface, RenderLoopObserver
+class OpenWarSurface : public Surface, AnimationHost
 {
 public:
 	ButtonGridTextureSheet* _buttonGridTextureSheet;
@@ -48,7 +48,7 @@ public:
 	virtual void RenderViews();
 
 private: // RenderLoopObserver
-	virtual void OnRenderLoop(double secondsSinceLastUpdate);
+	virtual void Animate(double secondsSinceLastUpdate);
 
 protected:
 	void ClickedPlay();

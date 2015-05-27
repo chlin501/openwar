@@ -801,7 +801,7 @@ template <class T> void AnimateMarkers(std::vector<T*>& markers, float seconds)
 }
 
 
-void BattleView::OnRenderLoop(double secondsSinceLastUpdate)
+void BattleView::Animate(double secondsSinceLastUpdate)
 {
 	UpdateSoundPlayer();
 	UpdateDeploymentZones();

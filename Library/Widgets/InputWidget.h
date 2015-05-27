@@ -2,13 +2,13 @@
 #define InputWidget_H
 
 #include "StringWidget.h"
-#include "Graphics/RenderLoopObserver.h"
+#include "Surface/Animation.h"
 #include "Surface/ClickHotspot.h"
 
 class InputEditor;
 
 
-class InputWidget : public StringWidget, RenderLoopObserver
+class InputWidget : public StringWidget, AnimationHost
 {
 	friend class InputEditor;
 	bounds2f _bounds;
@@ -44,7 +44,7 @@ public:
 private:
 	void RefreshContent();
 
-	virtual void OnRenderLoop(double secondsSinceLastLoop);
+	virtual void Animate(double secondsSinceLastLoop);
 
 	void ShowInputEditor();
 	void HideInputEditor();

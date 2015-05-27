@@ -11,7 +11,7 @@
 #include "WidgetView.h"
 #include "ButtonGridTextureSheet.h"
 #include "Surface/ClickHotspot.h"
-#include "Graphics/RenderLoopObserver.h"
+#include "Surface/Animation.h"
 #include "ImageWidget.h"
 #include "StringWidget.h"
 
@@ -129,7 +129,7 @@ public:
 };
 
 
-class ButtonGrid : public WidgetView, RenderLoopObserver
+class ButtonGrid : public WidgetView, AnimationHost
 {
 private:
 	GraphicsContext* _gc;
@@ -155,7 +155,7 @@ public:
 	void UpdateLayout();
 
 private: // RenderLoopObserver
-	virtual void OnRenderLoop(double secondsSinceLastUpdate);
+	virtual void Animate(double secondsSinceLastUpdate);
 
 public:
 	virtual void OnTouchBegin(Touch* touch);

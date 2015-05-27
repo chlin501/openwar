@@ -16,7 +16,7 @@ ScrollerGesture::ScrollerGesture(ScrollerHotspot* hotspot) :
 }
 
 
-void ScrollerGesture::OnRenderLoop(double secondsSinceLastUpdate)
+void ScrollerGesture::Animate(double secondsSinceLastUpdate)
 {
 
 }

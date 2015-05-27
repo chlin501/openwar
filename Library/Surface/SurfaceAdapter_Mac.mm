@@ -4,12 +4,11 @@
 
 #import "SurfaceAdapter_Mac.h"
 
-#include "Dependency.h"
+#include "Animation.h"
 #include "Gesture.h"
 #include "Surface.h"
 #include "Touch.h"
 #include "Graphics/GraphicsContext.h"
-#include "Graphics/RenderLoopObserver.h"
 #include "Graphics/Viewport.h"
 
 
@@ -87,10 +86,6 @@
     if (_timestamp == 0)
 		_timestamp = timestamp;
 
-    double secondsSinceLastUpdate = timestamp - _timestamp;
-    RenderLoopObserver::NotifyRenderLoop(secondsSinceLastUpdate);
-	_timestamp = timestamp;
-
     if (_touch)
     {
         double oldTimestamp = _touch->GetTimestamp();
@@ -99,7 +94,7 @@
             _touch->TouchMoved();
     }
 
-    DependencyBase::UpdateAll();
+	AnimationHost::Tick();
 
 	if (_surface)
 		_surface->RenderViews();

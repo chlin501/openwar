@@ -13,7 +13,7 @@
 #include "TiledTerrain/TiledTerrainRenderer.h"
 #include "SmoothTerrain/SmoothTerrainRenderer.h"
 #include "Graphics/CommonShaders.h"
-#include "Graphics/RenderLoopObserver.h"
+#include "Surface/Animation.h"
 
 class BattleCommander;
 class CasualtyMarker;
@@ -29,7 +29,7 @@ class BattleHotspot;
 class Touch;
 
 
-class BattleView : public TerrainView, BattleObserver, BattleMapObserver, RenderLoopObserver
+class BattleView : public TerrainView, BattleObserver, BattleMapObserver, AnimationHost
 {
 	GraphicsContext* _gc{};
 	BattleSimulator* _simulator{};
@@ -116,7 +116,7 @@ public: // View
 	void OnTouchBegin(Touch* touch) override;
 
 private: // RenderLoopObserver
-	void OnRenderLoop(double secondsSinceLastUpdate) override;
+	void Animate(double secondsSinceLastUpdate) override;
 
 public:
 	bounds2f GetBillboardBounds(glm::vec3 position, float height);

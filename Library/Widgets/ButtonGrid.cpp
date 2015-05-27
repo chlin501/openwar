@@ -332,7 +332,7 @@ void ButtonGrid::UpdateLayout()
 }
 
 
-void ButtonGrid::OnRenderLoop(double secondsSinceLastUpdate)
+void ButtonGrid::Animate(double secondsSinceLastUpdate)
 {
 	UpdateLayout();
 	if (!_obsolete.empty())

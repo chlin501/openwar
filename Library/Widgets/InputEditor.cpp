@@ -327,11 +327,11 @@ void InputEditor_iOS::UpdateNSTextFieldFrame()
 {
 	InputWidget* inputWidget = GetInputWidget();
 	Surface* surface = inputWidget->GetWidgetView()->GetSurface();
-	ScrollerViewport* viewport = inputWidget->GetViewport();
+	const Viewport2D& viewport = inputWidget->GetViewport2D();
 
 	bounds2f bounds = inputWidget->GetBounds();
-	bounds.min = viewport->LocalToGlobal(bounds.min);
-	bounds.max = viewport->LocalToGlobal(bounds.max);
+	bounds.min = viewport.ContentToScreen(bounds.min);
+	bounds.max = viewport.ContentToScreen(bounds.max);
 
 
 	float height = (float)_textField.font.pointSize + 2;

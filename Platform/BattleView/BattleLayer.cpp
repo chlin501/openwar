@@ -112,7 +112,7 @@ void BattleLayer::OnTerrainFeatureChanged(EditorModel* editorModel)
 /***/
 
 
-void BattleLayer::OnRenderLoop(double secondsSinceLastUpdate)
+void BattleLayer::Animate(double secondsSinceLastUpdate)
 {
 	UpdateBattleViewSize();
 

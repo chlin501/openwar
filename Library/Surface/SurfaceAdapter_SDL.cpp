@@ -3,10 +3,11 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "SurfaceAdapter_SDL.h"
+
+#include "Animation.h"
 #include "Surface.h"
 #include "Gesture.h"
 #include "Graphics/GraphicsContext.h"
-#include "Graphics/RenderLoopObserver.h"
 #include "Graphics/Viewport.h"
 
 
@@ -431,10 +432,9 @@ void SurfaceAdapter::Update()
 
 	std::chrono::system_clock::time_point timestamp = std::chrono::system_clock::now();
 	double secondsSinceTimeStart = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(timestamp - _timestart).count();
-	double secondsSinceLastUpdate = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(timestamp - _timestamp).count();
 	_timestamp = timestamp;
 
-	RenderLoopObserver::NotifyRenderLoop(secondsSinceLastUpdate);
+	AnimationHost::Tick();
 
 	if (_mouseTouch)
 	{

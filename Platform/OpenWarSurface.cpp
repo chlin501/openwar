@@ -113,7 +113,7 @@ void OpenWarSurface::RenderViews()
 }
 
 
-void OpenWarSurface::OnRenderLoop(double secondsSinceLastUpdate)
+void OpenWarSurface::Animate(double secondsSinceLastUpdate)
 {
 	SoundPlayer::GetSingleton()->Tick(secondsSinceLastUpdate);
 

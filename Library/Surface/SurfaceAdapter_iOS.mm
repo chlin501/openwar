@@ -9,8 +9,7 @@
 #import "SurfaceAdapter_iOS.h"
 
 #include "Graphics/GraphicsContext.h"
-#include "Graphics/RenderLoopObserver.h"
-#include "Dependency.h"
+#include "Animation.h"
 #include "Gesture.h"
 #include "Surface.h"
 #include "Touch.h"
@@ -22,7 +21,6 @@
 {
 	Surface* _surface;
 	NSTimer* _timer;
-	NSTimeInterval _timestamp;
 	std::map<UITouch*, Touch*> _touches;
 }
 
@@ -69,7 +67,7 @@
 	if (!_surface)
 		[self createSurface];
 
-	DependencyBase::UpdateAll();
+	AnimationHost::Tick();
 
 	if (_surface)
 		_surface->RenderViews();
@@ -124,7 +122,6 @@
 
 - (void)startTimer
 {
-	_timestamp = [NSDate timeIntervalSinceReferenceDate];
 	_timer = [NSTimer timerWithTimeInterval:1.0 / 30.0
 					  target:self
 					  selector:@selector(timerEvent:)
@@ -147,20 +144,9 @@
 {
 	if (_surface)
 	{
-		//[self mouseEnterHoverLeave];
-
-		[EAGLContext setCurrentContext:self.context];
-
-		NSTimeInterval timestamp = t.fireDate.timeIntervalSinceReferenceDate;
-		double secondsSinceLastUpdate = timestamp - _timestamp;
-		RenderLoopObserver::NotifyRenderLoop(secondsSinceLastUpdate);
-
-		_timestamp = timestamp;
-
 		[self setNeedsDisplay];
 	}
 }
-
 
 
 - (void)createTouch:(UITouch*)original

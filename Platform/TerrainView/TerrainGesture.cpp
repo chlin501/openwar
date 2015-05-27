@@ -24,7 +24,7 @@ TerrainGesture::~TerrainGesture()
 }
 
 
-void TerrainGesture::OnRenderLoop(double secondsSinceLastUpdate)
+void TerrainGesture::Animate(double secondsSinceLastUpdate)
 {
 	if (_hotspot->GetTerrainHotspotMode() != TerrainHotspotMode::Zoom)
 		UpdateMomentumOrbit(secondsSinceLastUpdate);

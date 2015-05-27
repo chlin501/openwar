@@ -5,15 +5,15 @@
 #ifndef TERRAINGESTURE_H
 #define TERRAINGESTURE_H
 
+#include "Surface/Animation.h"
 #include "Surface/Gesture.h"
-#include "Graphics/RenderLoopObserver.h"
 #include "Algorithms/vec2_sampler.h"
 
 class TerrainView;
 class TerrainHotspot;
 
 
-class TerrainGesture : public Gesture, RenderLoopObserver
+class TerrainGesture : public Gesture, AnimationHost
 {
 	enum class MoveAndOrbitLock { None, Move, Orbit };
 
@@ -39,7 +39,7 @@ public:
 	virtual ~TerrainGesture();
 
 private: // RenderLoopObserver
-	virtual void OnRenderLoop(double secondsSinceLastUpdate);
+	virtual void Animate(double secondsSinceLastUpdate);
 
 public:
 	virtual void KeyDown(char key);

@@ -93,8 +93,6 @@ int main(int argc, char *argv[])
 
 	surfaceAdapter->SetSurface(surface);
 
-    RenderLoopObserver::NotifyRenderLoop(0);
-
 	BattleSimulator* battleSimulator = CreateBattleSimulator();
 	std::vector<BattleCommander*> battleCommanders(1, battleSimulator->GetCommanders().front());
 	surface->ResetBattleViews(battleSimulator, battleCommanders);

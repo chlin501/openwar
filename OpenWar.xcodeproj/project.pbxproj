@@ -37,9 +37,6 @@
 		4156C3111A139E40006A264C /* bspline_patch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2AB1A139E3F006A264C /* bspline_patch.cpp */; };
 		4156C3121A139E40006A264C /* GaussBlur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2AD1A139E3F006A264C /* GaussBlur.cpp */; };
 		4156C3131A139E40006A264C /* quadtree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2AF1A139E3F006A264C /* quadtree.cpp */; };
-		4156C3291A139E40006A264C /* ScrollerGesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2DF1A139E3F006A264C /* ScrollerGesture.cpp */; };
-		4156C32A1A139E40006A264C /* ScrollerHotspot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2E11A139E3F006A264C /* ScrollerHotspot.cpp */; };
-		4156C32B1A139E40006A264C /* ScrollerViewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2E31A139E3F006A264C /* ScrollerViewport.cpp */; };
 		4156C32C1A139E40006A264C /* BillboardColorShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2E61A139E3F006A264C /* BillboardColorShader.cpp */; };
 		4156C32D1A139E40006A264C /* BillboardTextureShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2E81A139E3F006A264C /* BillboardTextureShape.cpp */; };
 		4156C32E1A139E40006A264C /* PathRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4156C2EA1A139E3F006A264C /* PathRenderer.cpp */; };
@@ -57,7 +54,6 @@
 		4168CC981A2387AF007C4509 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4168CC7C1A2387AF007C4509 /* Image.cpp */; };
 		4168CC991A2387AF007C4509 /* RenderBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4168CC7E1A2387AF007C4509 /* RenderBuffer.cpp */; };
 		4168CC9A1A2387AF007C4509 /* RenderCall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4168CC801A2387AF007C4509 /* RenderCall.cpp */; };
-		4168CC9B1A2387AF007C4509 /* RenderLoopObserver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4168CC821A2387AF007C4509 /* RenderLoopObserver.cpp */; };
 		4168CC9C1A2387AF007C4509 /* ShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4168CC841A2387AF007C4509 /* ShaderProgram.cpp */; };
 		4168CC9D1A2387AF007C4509 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4168CC861A2387AF007C4509 /* Texture.cpp */; };
 		4168CC9E1A2387AF007C4509 /* TextureAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4168CC881A2387AF007C4509 /* TextureAtlas.cpp */; };
@@ -79,7 +75,12 @@
 		4168CCD01A2387E7007C4509 /* WidgetView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4168CCC11A2387E7007C4509 /* WidgetView.cpp */; };
 		4168CCD31A23885C007C4509 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4168CCD11A23885C007C4509 /* View.cpp */; };
 		418FCC3E192DEE0700D7D476 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */; };
-		41A61AC01B13318A003A7560 /* Dependency.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41A61ABE1B13318A003A7560 /* Dependency.cpp */; };
+		41A61AF91B159D67003A7560 /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41A61AF71B159D67003A7560 /* Animation.cpp */; };
+		41A61B041B159DB5003A7560 /* ScrollbarGesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41A61AFA1B159DB5003A7560 /* ScrollbarGesture.cpp */; };
+		41A61B051B159DB5003A7560 /* ScrollbarHotspot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41A61AFC1B159DB5003A7560 /* ScrollbarHotspot.cpp */; };
+		41A61B061B159DB5003A7560 /* ScrollerGesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41A61AFE1B159DB5003A7560 /* ScrollerGesture.cpp */; };
+		41A61B071B159DB5003A7560 /* ScrollerHotspot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41A61B001B159DB5003A7560 /* ScrollerHotspot.cpp */; };
+		41A61B081B159DB5003A7560 /* ScrollerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41A61B021B159DB5003A7560 /* ScrollerView.cpp */; };
 		41B2298F17EC730E00DFA0B6 /* Maps in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298B17EC730E00DFA0B6 /* Maps */; };
 		41B2299117EC730E00DFA0B6 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298D17EC730E00DFA0B6 /* Sounds */; };
 		41B2299217EC730E00DFA0B6 /* Textures in Resources */ = {isa = PBXBuildFile; fileRef = 41B2298E17EC730E00DFA0B6 /* Textures */; };
@@ -179,12 +180,6 @@
 		4156C2AE1A139E3F006A264C /* GaussBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GaussBlur.h; sourceTree = "<group>"; };
 		4156C2AF1A139E3F006A264C /* quadtree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quadtree.cpp; sourceTree = "<group>"; };
 		4156C2B01A139E3F006A264C /* quadtree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = quadtree.h; sourceTree = "<group>"; };
-		4156C2DF1A139E3F006A264C /* ScrollerGesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollerGesture.cpp; sourceTree = "<group>"; };
-		4156C2E01A139E3F006A264C /* ScrollerGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollerGesture.h; sourceTree = "<group>"; };
-		4156C2E11A139E3F006A264C /* ScrollerHotspot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollerHotspot.cpp; sourceTree = "<group>"; };
-		4156C2E21A139E3F006A264C /* ScrollerHotspot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollerHotspot.h; sourceTree = "<group>"; };
-		4156C2E31A139E3F006A264C /* ScrollerViewport.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollerViewport.cpp; sourceTree = "<group>"; };
-		4156C2E41A139E3F006A264C /* ScrollerViewport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollerViewport.h; sourceTree = "<group>"; };
 		4156C2E61A139E3F006A264C /* BillboardColorShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BillboardColorShader.cpp; sourceTree = "<group>"; };
 		4156C2E71A139E3F006A264C /* BillboardColorShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BillboardColorShader.h; sourceTree = "<group>"; };
 		4156C2E81A139E3F006A264C /* BillboardTextureShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BillboardTextureShape.cpp; sourceTree = "<group>"; };
@@ -218,8 +213,6 @@
 		4168CC7F1A2387AF007C4509 /* RenderBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderBuffer.h; sourceTree = "<group>"; };
 		4168CC801A2387AF007C4509 /* RenderCall.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderCall.cpp; sourceTree = "<group>"; };
 		4168CC811A2387AF007C4509 /* RenderCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderCall.h; sourceTree = "<group>"; };
-		4168CC821A2387AF007C4509 /* RenderLoopObserver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderLoopObserver.cpp; sourceTree = "<group>"; };
-		4168CC831A2387AF007C4509 /* RenderLoopObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderLoopObserver.h; sourceTree = "<group>"; };
 		4168CC841A2387AF007C4509 /* ShaderProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderProgram.cpp; sourceTree = "<group>"; };
 		4168CC851A2387AF007C4509 /* ShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderProgram.h; sourceTree = "<group>"; };
 		4168CC861A2387AF007C4509 /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture.cpp; sourceTree = "<group>"; };
@@ -261,8 +254,18 @@
 		4168CCD11A23885C007C4509 /* View.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = View.cpp; sourceTree = "<group>"; };
 		4168CCD21A23885C007C4509 /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = View.h; sourceTree = "<group>"; };
 		418FCC3D192DEE0700D7D476 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = /Library/Frameworks/SDL2_ttf.framework; sourceTree = "<absolute>"; };
-		41A61ABE1B13318A003A7560 /* Dependency.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Dependency.cpp; sourceTree = "<group>"; };
-		41A61ABF1B13318A003A7560 /* Dependency.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dependency.h; sourceTree = "<group>"; };
+		41A61AF71B159D67003A7560 /* Animation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Animation.cpp; sourceTree = "<group>"; };
+		41A61AF81B159D67003A7560 /* Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animation.h; sourceTree = "<group>"; };
+		41A61AFA1B159DB5003A7560 /* ScrollbarGesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollbarGesture.cpp; sourceTree = "<group>"; };
+		41A61AFB1B159DB5003A7560 /* ScrollbarGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollbarGesture.h; sourceTree = "<group>"; };
+		41A61AFC1B159DB5003A7560 /* ScrollbarHotspot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollbarHotspot.cpp; sourceTree = "<group>"; };
+		41A61AFD1B159DB5003A7560 /* ScrollbarHotspot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollbarHotspot.h; sourceTree = "<group>"; };
+		41A61AFE1B159DB5003A7560 /* ScrollerGesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollerGesture.cpp; sourceTree = "<group>"; };
+		41A61AFF1B159DB5003A7560 /* ScrollerGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollerGesture.h; sourceTree = "<group>"; };
+		41A61B001B159DB5003A7560 /* ScrollerHotspot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollerHotspot.cpp; sourceTree = "<group>"; };
+		41A61B011B159DB5003A7560 /* ScrollerHotspot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollerHotspot.h; sourceTree = "<group>"; };
+		41A61B021B159DB5003A7560 /* ScrollerView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollerView.cpp; sourceTree = "<group>"; };
+		41A61B031B159DB5003A7560 /* ScrollerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollerView.h; sourceTree = "<group>"; };
 		41B2298B17EC730E00DFA0B6 /* Maps */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Maps; sourceTree = "<group>"; };
 		41B2298D17EC730E00DFA0B6 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
 		41B2298E17EC730E00DFA0B6 /* Textures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Textures; sourceTree = "<group>"; };
@@ -497,8 +500,6 @@
 				4168CC7F1A2387AF007C4509 /* RenderBuffer.h */,
 				4168CC801A2387AF007C4509 /* RenderCall.cpp */,
 				4168CC811A2387AF007C4509 /* RenderCall.h */,
-				4168CC821A2387AF007C4509 /* RenderLoopObserver.cpp */,
-				4168CC831A2387AF007C4509 /* RenderLoopObserver.h */,
 				4168CC841A2387AF007C4509 /* ShaderProgram.cpp */,
 				4168CC851A2387AF007C4509 /* ShaderProgram.h */,
 				4168CC861A2387AF007C4509 /* Texture.cpp */,
@@ -523,19 +524,6 @@
 			path = Graphics;
 			sourceTree = "<group>";
 		};
-		4156C2DE1A139E3F006A264C /* Scroller */ = {
-			isa = PBXGroup;
-			children = (
-				4156C2DF1A139E3F006A264C /* ScrollerGesture.cpp */,
-				4156C2E01A139E3F006A264C /* ScrollerGesture.h */,
-				4156C2E11A139E3F006A264C /* ScrollerHotspot.cpp */,
-				4156C2E21A139E3F006A264C /* ScrollerHotspot.h */,
-				4156C2E31A139E3F006A264C /* ScrollerViewport.cpp */,
-				4156C2E41A139E3F006A264C /* ScrollerViewport.h */,
-			);
-			path = Scroller;
-			sourceTree = "<group>";
-		};
 		4156C2E51A139E3F006A264C /* Shapes */ = {
 			isa = PBXGroup;
 			children = (
@@ -556,16 +544,26 @@
 		4156C2EE1A139E3F006A264C /* Surface */ = {
 			isa = PBXGroup;
 			children = (
+				41A61AF71B159D67003A7560 /* Animation.cpp */,
+				41A61AF81B159D67003A7560 /* Animation.h */,
 				63F5511F1662B0ED37E2DEEF /* ClickGesture.cpp */,
 				63F558BB253E0635E173BB2E /* ClickGesture.h */,
 				63F55D4B276E610FB5B27C6B /* ClickHotspot.cpp */,
 				63F5595B4CC40A7DFAC21A7D /* ClickHotspot.h */,
-				41A61ABE1B13318A003A7560 /* Dependency.cpp */,
-				41A61ABF1B13318A003A7560 /* Dependency.h */,
 				4156C2F11A139E3F006A264C /* Gesture.cpp */,
 				4156C2F21A139E3F006A264C /* Gesture.h */,
 				4156C2F31A139E3F006A264C /* Hotspot.cpp */,
 				4156C2F41A139E3F006A264C /* Hotspot.h */,
+				41A61AFA1B159DB5003A7560 /* ScrollbarGesture.cpp */,
+				41A61AFB1B159DB5003A7560 /* ScrollbarGesture.h */,
+				41A61AFC1B159DB5003A7560 /* ScrollbarHotspot.cpp */,
+				41A61AFD1B159DB5003A7560 /* ScrollbarHotspot.h */,
+				41A61AFE1B159DB5003A7560 /* ScrollerGesture.cpp */,
+				41A61AFF1B159DB5003A7560 /* ScrollerGesture.h */,
+				41A61B001B159DB5003A7560 /* ScrollerHotspot.cpp */,
+				41A61B011B159DB5003A7560 /* ScrollerHotspot.h */,
+				41A61B021B159DB5003A7560 /* ScrollerView.cpp */,
+				41A61B031B159DB5003A7560 /* ScrollerView.h */,
 				4156C2F61A139E3F006A264C /* Surface.cpp */,
 				4156C2F71A139E3F006A264C /* Surface.h */,
 				4156C2FA1A139E3F006A264C /* SurfaceAdapter_SDL.cpp */,
@@ -695,7 +693,6 @@
 				4156C2A31A139E3F006A264C /* Algebra */,
 				4156C2A81A139E3F006A264C /* Algorithms */,
 				4156C2B81A139E3F006A264C /* Graphics */,
-				4156C2DE1A139E3F006A264C /* Scroller */,
 				4156C2E51A139E3F006A264C /* Shapes */,
 				63F5559084040FC443F651C1 /* Storage */,
 				4156C2EE1A139E3F006A264C /* Surface */,
@@ -810,6 +807,7 @@
 			files = (
 				4168CCCF1A2387E7007C4509 /* WidgetShader.cpp in Sources */,
 				4168CCC41A2387E7007C4509 /* ButtonGrid.cpp in Sources */,
+				41A61B081B159DB5003A7560 /* ScrollerView.cpp in Sources */,
 				4105FB351806D3970074C855 /* UnitCounter.cpp in Sources */,
 				4105FB261806D3890074C855 /* BattleScript.cpp in Sources */,
 				4168CCC61A2387E7007C4509 /* ButtonGridTextureSheet.cpp in Sources */,
@@ -825,7 +823,6 @@
 				4168CC9F1A2387AF007C4509 /* TextureFont.cpp in Sources */,
 				4168CCD31A23885C007C4509 /* View.cpp in Sources */,
 				4105FB331806D3970074C855 /* ShootingCounter.cpp in Sources */,
-				4168CC9B1A2387AF007C4509 /* RenderLoopObserver.cpp in Sources */,
 				63F5575DCDE438070E9DF48C /* BattleView.cpp in Sources */,
 				63F55D45A7A30820587225CB /* BattleGesture.cpp in Sources */,
 				4156C3111A139E40006A264C /* bspline_patch.cpp in Sources */,
@@ -838,16 +835,20 @@
 				63F5596C0986FE7D81143BE1 /* RangeMarker.cpp in Sources */,
 				4168CC961A2387AF007C4509 /* FrameBuffer.cpp in Sources */,
 				415380F51B0B9B0F00AFC81D /* HeightMap.cpp in Sources */,
+				41A61B071B159DB5003A7560 /* ScrollerHotspot.cpp in Sources */,
 				41327F1D1A88B1010074DB2D /* SoundLoader.cpp in Sources */,
 				63F5563E7284F60A11F8D90F /* UnitTrackingMarker.cpp in Sources */,
 				4168CCC71A2387E7007C4509 /* ButtonWidget.cpp in Sources */,
 				63F559482A86E47274136F37 /* UnitMarker.cpp in Sources */,
 				4168CC9E1A2387AF007C4509 /* TextureAtlas.cpp in Sources */,
+				41A61AF91B159D67003A7560 /* Animation.cpp in Sources */,
 				4105FB341806D3970074C855 /* SmokeCounter.cpp in Sources */,
 				4156C3351A139E40006A264C /* SurfaceAdapter_SDL.cpp in Sources */,
 				4168CC951A2387AF007C4509 /* FontAdapter.cpp in Sources */,
 				41327F1E1A88B1010074DB2D /* SoundPlayer.cpp in Sources */,
 				4156C32E1A139E40006A264C /* PathRenderer.cpp in Sources */,
+				41A61B041B159DB5003A7560 /* ScrollbarGesture.cpp in Sources */,
+				41A61B061B159DB5003A7560 /* ScrollerGesture.cpp in Sources */,
 				63F55D68A07CFDC7816F111A /* SmoothTerrainWater.cpp in Sources */,
 				4168CCA61A2387BC007C4509 /* BillboardTextureShader.cpp in Sources */,
 				4168CCCE1A2387E7007C4509 /* Widget.cpp in Sources */,
@@ -879,9 +880,9 @@
 				4168CC991A2387AF007C4509 /* RenderBuffer.cpp in Sources */,
 				4156C30F1A139E40006A264C /* geometry.cpp in Sources */,
 				4156C3341A139E40006A264C /* Touch.cpp in Sources */,
+				41A61B051B159DB5003A7560 /* ScrollbarHotspot.cpp in Sources */,
 				63F554616556A395A788A79A /* BattleCommander.cpp in Sources */,
 				4168CCC91A2387E7007C4509 /* InputEditor.cpp in Sources */,
-				4156C3291A139E40006A264C /* ScrollerGesture.cpp in Sources */,
 				4156C3121A139E40006A264C /* GaussBlur.cpp in Sources */,
 				4168CC941A2387AF007C4509 /* CommonShaders.cpp in Sources */,
 				415380F71B0B9B0F00AFC81D /* SmoothGroundMap.cpp in Sources */,
@@ -890,19 +891,16 @@
 				4168CCCC1A2387E7007C4509 /* InputWidget.cpp in Sources */,
 				63F55E0A4ECCD6FE29C8406F /* BattleLayer.cpp in Sources */,
 				63F55C0BC0B938B21CEB2D70 /* BattleHotspot.cpp in Sources */,
-				4156C32B1A139E40006A264C /* ScrollerViewport.cpp in Sources */,
 				4156C3311A139E40006A264C /* Gesture.cpp in Sources */,
 				4168CC981A2387AF007C4509 /* Image.cpp in Sources */,
 				63F553445E70F2F5641FE284 /* EditorHotspot.cpp in Sources */,
 				63F555DD68EC4972892F6EF9 /* TerrainHotspot.cpp in Sources */,
-				4156C32A1A139E40006A264C /* ScrollerHotspot.cpp in Sources */,
 				63F55DF188CEFBEF7F2E123B /* TerrainViewport.cpp in Sources */,
 				63F55ABC3B69FFC1B4D154BE /* ClickGesture.cpp in Sources */,
 				63F55E634774DADBB36E73A2 /* ClickHotspot.cpp in Sources */,
 				63F55C07D79D3F9A3EA3A8CD /* FontDescriptor.cpp in Sources */,
 				63F556A7A2F2FD636868A634 /* vec2_sampler.cpp in Sources */,
 				63F55D14165983EF9CF7DADA /* Sampler.cpp in Sources */,
-				41A61AC01B13318A003A7560 /* Dependency.cpp in Sources */,
 				413A21241A8B5CEF00BDB852 /* MusicDirector.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

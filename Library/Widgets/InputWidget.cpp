@@ -117,7 +117,7 @@ void InputWidget::RefreshContent()
 }
 
 
-void InputWidget::OnRenderLoop(double secondsSinceLastLoop)
+void InputWidget::Animate(double secondsSinceLastLoop)
 {
 	if (_editing && _inputEditor == nullptr)
 		ShowInputEditor();

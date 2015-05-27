@@ -2,8 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef Dependency_H
-#define Dependency_H
+#ifndef Animation_H
+#define Animation_H
 
 #include <chrono>
 #include <functional>
@@ -24,10 +24,8 @@ enum class AnimationCurve
 
 class DependencyBase
 {
-	friend class DependencyHost;
-
+	friend class AnimationHost;
 	static std::vector<DependencyBase*> _all_dependencies;
-	static std::chrono::system_clock::time_point _last_update;
 
 protected:
 	std::vector<DependencyBase*> _dependencies;
@@ -45,8 +43,6 @@ protected:
 public:
 	DependencyBase(const DependencyBase&) = delete;
 	DependencyBase& operator=(const DependencyBase&) = delete;
-
-	static void UpdateAll();
 
 private:
 	virtual void TryUpdateValue(float secondsSinceLastUpdate) = 0;
@@ -153,13 +149,17 @@ private:
 };
 
 
-class DependencyHost
+class AnimationHost
 {
+	static std::vector<AnimationHost*> _animation_hosts;
+	static std::chrono::system_clock::time_point _last_tick;
 	std::vector<DependencyBase*> _dependencies;
 
 public:
-	DependencyHost();
-	virtual ~DependencyHost();
+	AnimationHost();
+	virtual ~AnimationHost();
+
+	static void Tick();
 
 	template <class T>
 	Dependency<T>& AddDependency(std::initializer_list<DependencyBase*> dependencies = std::initializer_list<DependencyBase*>())
@@ -168,6 +168,9 @@ public:
 		_dependencies.push_back(dependenecy);
 		return *dependenecy;
 	}
+
+private:
+	virtual void Animate(double secondsSinceLastAnimate) { }
 };
 
 

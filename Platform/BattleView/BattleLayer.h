@@ -3,7 +3,7 @@
 
 #include "Graphics/ShaderProgram.h"
 #include "Graphics/CommonShaders.h"
-#include "Graphics/RenderLoopObserver.h"
+#include "Surface/Animation.h"
 #include "TerrainView/EditorModel.h"
 
 class BattleCommander;
@@ -21,7 +21,7 @@ class SmoothTerrainSky;
 class Surface;
 
 
-class BattleLayer : RenderLoopObserver, EditorModelObserver
+class BattleLayer : AnimationHost, EditorModelObserver
 {
 	Surface* _surface{};
 	GraphicsContext* _gc{};
@@ -59,7 +59,7 @@ public:
 	void Render();
 
 private: // RenderLoopObserver
-	virtual void OnRenderLoop(double secondsSinceLastUpdate);
+	virtual void Animate(double secondsSinceLastUpdate);
 
 public: // EditorModelObserver
 	virtual void OnEditorModeChanged(EditorModel* editorModel);
