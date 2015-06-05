@@ -41,6 +41,31 @@ StringWidget::StringWidget(WidgetOwner* widgetOwner) : Widget(widgetOwner)
 }
 
 
+bounds2f StringWidget::GetBounds() const
+{
+	glm::vec2 p = _position;
+	glm::vec2 s = MeasureSize();
+
+	if (_anchor != StringAnchor::BottomLeft)
+	{
+		if (IsStringAnchorAlignment(_anchor, StringAlignment::HorizontalCenter))
+			p.x -= s.x / 2.0;
+		else if (IsStringAnchorAlignment(_anchor, StringAlignment::HorizontalRight))
+			p.x -= s.x;
+
+		if (IsStringAnchorAlignment(_anchor, StringAlignment::VerticalCenter))
+			p.y -= s.y / 2.0;
+		else if (IsStringAnchorAlignment(_anchor, StringAlignment::VerticalTop))
+			p.y -= s.y;
+	}
+
+	if (_width > 0)
+		s.x = glm::min(s.x, _width);
+
+	return bounds2f{p, p + s};
+}
+
+
 glm::vec2 StringWidget::GetPosition() const
 {
 	return _position;
@@ -175,7 +200,7 @@ void StringWidget::OnTouchBegin(Touch* touch)
 
 void StringWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 {
-	glm::vec2 offset = CalculateOffset();
+	glm::vec2 offset = GetBounds().min;
 
 	if (_glowColor.a != 0 && _glowRadius > 0)
 	{
@@ -183,27 +208,6 @@ void StringWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 	}
 
 	AppendVertices(vertices, offset, _color, 0);
-}
-
-
-glm::vec2 StringWidget::CalculateOffset() const
-{
-	glm::vec2 result = _position;
-	if (_anchor != StringAnchor::BottomLeft)
-	{
-		glm::vec2 size = MeasureSize();
-
-		if (IsStringAnchorAlignment(_anchor, StringAlignment::HorizontalCenter))
-			result.x -= size.x / 2.0;
-		else if (IsStringAnchorAlignment(_anchor, StringAlignment::HorizontalRight))
-			result.x -= size.x;
-
-		if (IsStringAnchorAlignment(_anchor, StringAlignment::VerticalCenter))
-			result.y -= size.y / 2.0;
-		else if (IsStringAnchorAlignment(_anchor, StringAlignment::VerticalTop))
-			result.y -= size.y;
-	}
-	return result;
 }
 
 

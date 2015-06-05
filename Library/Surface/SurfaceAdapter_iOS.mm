@@ -70,7 +70,12 @@
 	AnimationHost::Tick();
 
 	if (_surface)
+	{
+		CGSize size = self.bounds.size;
+		_surface->SetNativeSize(glm::vec2(size.width, size.height));
+
 		_surface->RenderViews();
+	}
 }
 
 
@@ -109,7 +114,7 @@
 	if (nativeScale != 0)
 		pixelDensity = nativeScale;
 
-	return new GraphicsContext(pixelDensity, 1);
+	return new GraphicsContext(static_cast<float>(pixelDensity), 1);
 }
 
 

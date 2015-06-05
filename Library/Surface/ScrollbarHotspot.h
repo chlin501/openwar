@@ -29,6 +29,7 @@ public:
 	bounds2f GetBounds() const;
 	void SetBounds(const bounds2f& value);
 
+	bool ShowThumb() const;
 	bounds2f GetThumbBounds() const;
 
 public: // Hotspot

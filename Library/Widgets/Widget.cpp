@@ -15,8 +15,7 @@
 
 
 Widget::Widget(WidgetOwner* widgetOwner) :
-	_widgetOwner(widgetOwner),
-	_visible(true)
+	_widgetOwner{widgetOwner}
 {
 	_widgetOwner->_widgets.insert(_widgetOwner->_widgets.begin(), this);
 }
@@ -37,11 +36,15 @@ Widget::Widget(Widget&& widget)
 {
 	_widgetOwner = widget._widgetOwner;
 	widget._widgetOwner = nullptr;
+
 	_visible = widget._visible;
 
-	auto i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), &widget);
-	assert(i != _widgetOwner->_widgets.end());
-	*i = this;
+	if (_widgetOwner)
+	{
+		auto i = std::find(_widgetOwner->_widgets.begin(), _widgetOwner->_widgets.end(), &widget);
+		assert(i != _widgetOwner->_widgets.end());
+		*i = this;
+	}
 }
 
 
@@ -208,7 +211,7 @@ const std::vector<Widget*>& WidgetOwner::GetWidgets()
 /* WidgetGroup */
 
 
-WidgetGroup::WidgetGroup(WidgetOwner* widgetOwner) : Widget(widgetOwner)
+WidgetGroup::WidgetGroup(WidgetOwner* widgetOwner) : Widget{widgetOwner}
 {
 }
 

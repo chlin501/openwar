@@ -145,7 +145,7 @@ void RenderCallBase::Render(const Viewport& viewport)
 {
 	GLint oldViewport[4]{};
 	glGetIntegerv(GL_VIEWPORT, oldViewport);
-	bounds2i b = viewport.GetViewportBounds();
+	bounds2i b = (bounds2i)((bounds2f)viewport.GetViewportBounds() * _gc->GetCombinedScaling());
 	glViewport(b.min.x, b.min.y, b.x().size(), b.y().size());
 
 	bool has_vertices = false;

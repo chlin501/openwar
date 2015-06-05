@@ -67,7 +67,8 @@ public:
 	Dependency<T>& SetTarget(std::function<void(T)> output)
 	{
 		_output = output;
-		TryUpdateValue(0);
+		if (_output)
+			_output(_value);
 		return *this;
 	}
 

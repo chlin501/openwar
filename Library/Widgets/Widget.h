@@ -19,8 +19,9 @@ class WidgetView;
 class Widget
 {
 	friend class WidgetOwner;
+
 	WidgetOwner* _widgetOwner;
-	bool _visible;
+	bool _visible{true};
 
 public:
 	Widget(WidgetOwner* widgetOwner);

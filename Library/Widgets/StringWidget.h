@@ -57,6 +57,8 @@ class StringWidget : public Widget
 public:
 	StringWidget(WidgetOwner* widgetOwner);
 
+	virtual bounds2f GetBounds() const;
+
 	virtual glm::vec2 GetPosition() const;
 	virtual void SetPosition(glm::vec2 value);
 
@@ -93,7 +95,6 @@ public:
 	virtual void RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices);
 
 private:
-	glm::vec2 CalculateOffset() const;
 	void AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm::vec2 offset, glm::vec4 color, float blurRadius);
 };
 

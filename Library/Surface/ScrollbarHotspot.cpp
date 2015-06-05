@@ -20,6 +20,24 @@ void ScrollbarHotspot::SetBounds(const bounds2f& value)
 }
 
 
+bool ScrollbarHotspot::ShowThumb() const
+{
+	float viewportSize;
+	float contentSize;
+	if (_direction == ScrollbarDirection::Horizontal)
+	{
+		viewportSize = _viewport.GetViewportBounds().x().size();
+		contentSize = _viewport.GetContentSize().x;
+	}
+	else
+	{
+		viewportSize = _viewport.GetViewportBounds().y().size();
+		contentSize = _viewport.GetContentSize().y;
+	}
+	return contentSize > viewportSize;
+}
+
+
 bounds2f ScrollbarHotspot::GetThumbBounds() const
 {
 	if (_direction == ScrollbarDirection::Horizontal)

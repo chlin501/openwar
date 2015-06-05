@@ -71,8 +71,8 @@ public: // Viewport
 
 class ScrollerViewport : public Viewport2D
 {
-	glm::vec2 _contentOffset;
-	glm::vec2 _contentSize;
+	glm::vec2 _contentOffset{};
+	glm::vec2 _contentSize{};
 
 public:
 	ScrollerViewport(GraphicsContext* gc);
@@ -82,6 +82,7 @@ public:
 	glm::vec2 GetContentOffset() const;
 	void SetContentOffset(glm::vec2 value);
 
+	glm::vec2 GetDefaultOffset() const;
 	glm::vec2 GetClampedOffset(glm::vec2 value) const;
 	void ClampContentOffset();
 

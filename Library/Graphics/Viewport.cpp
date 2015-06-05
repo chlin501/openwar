@@ -90,7 +90,6 @@ glm::vec2 Viewport2D::NormalizedToContent(glm::vec2 value) const
 }
 
 
-
 /***/
 
 
@@ -162,13 +161,34 @@ void ScrollerViewport::SetContentOffset(glm::vec2 value)
 }
 
 
-static float ClampContentOffset(float value, float contentSize, bounds1i viewportBounds)
+glm::vec2 ScrollerViewport::GetDefaultOffset() const
+{
+	float viewportHeight = GetViewportBounds().y().size();
+	return glm::vec2{0, _contentSize.y - viewportHeight};
+}
+
+
+static float ClampContentOffsetX(float value, float contentSize, bounds1i viewportBounds)
 {
 	if (contentSize == 0)
 		return 0;
 
-	bounds1f bounds = bounds1f(0, contentSize - viewportBounds.size());
-	return !viewportBounds.empty() ? bounds.clamp(value) : bounds.mid();
+	float max = contentSize - viewportBounds.size();
+	if (max <= 0)
+		return 0;
+	return bounds1f{0, max}.clamp(value);
+};
+
+
+static float ClampContentOffsetY(float value, float contentSize, bounds1i viewportBounds)
+{
+	if (contentSize == 0)
+		return 0;
+
+	float max = contentSize - viewportBounds.size();
+	if (max <= 0)
+		return max;
+	return bounds1f{0, max}.clamp(value);
 }
 
 
@@ -176,8 +196,8 @@ glm::vec2 ScrollerViewport::GetClampedOffset(glm::vec2 value) const
 {
 	bounds2i viewportBounds = GetViewportBounds();
 	return glm::vec2(
-		::ClampContentOffset(value.x, _contentSize.x, viewportBounds.x()),
-		::ClampContentOffset(value.y, _contentSize.y, viewportBounds.y()));
+		::ClampContentOffsetX(value.x, _contentSize.x, viewportBounds.x()),
+		::ClampContentOffsetY(value.y, _contentSize.y, viewportBounds.y()));
 }
 
 

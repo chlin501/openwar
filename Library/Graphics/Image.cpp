@@ -187,7 +187,8 @@ Image& Image::LoadFromResource(const Resource& r)
 
 #else
 
-	NSImage* image = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:r.path()]];
+	NSString* path = [NSString stringWithUTF8String:r.path()];
+	NSImage* image = [[NSImage alloc] initWithContentsOfFile:path];
 	if (image != nil)
 	{
 		LoadFromCGImage([image CGImageForProposedRect:nil context:nil hints:nil], 1);

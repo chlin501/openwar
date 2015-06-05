@@ -60,6 +60,20 @@ struct bounds1
 			v > max ? max :
 			v;
 	}
+
+	b_1_t& operator+=(val_t v)
+	{
+		min += v;
+		max += v;
+		return *this;
+	}
+
+	b_1_t& operator-=(val_t v)
+	{
+		min -= v;
+		max -= v;
+		return *this;
+	}
 };
 
 
