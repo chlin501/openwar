@@ -26,6 +26,7 @@ public:
 	virtual std::shared_ptr<TextureImage> GetTextureImage() const;
 	virtual void SetTextureImage(std::shared_ptr<TextureImage> textureImage);
 
+	virtual BorderInset GetInset() const;
 	virtual void SetInset(BorderInset value);
 
 	virtual glm::vec4 GetColorize() const;

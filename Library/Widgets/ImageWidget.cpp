@@ -37,6 +37,12 @@ void ImageWidget::SetTextureImage(std::shared_ptr<TextureImage> textureImage)
 }
 
 
+BorderInset ImageWidget::GetInset() const
+{
+	return _inset;
+}
+
+
 void ImageWidget::SetInset(BorderInset value)
 {
 	_inset = value;
@@ -87,6 +93,14 @@ void ImageWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 		return;
 
 	bounds2f inner(outer.min + _inset.min, outer.max - _inset.max);
+	inner.min.x = std::min(inner.min.x, outer.max.x);
+	inner.max.x = std::max(inner.max.x, outer.min.x);
+	inner.min.y = std::min(inner.min.y, outer.max.y);
+	inner.max.y = std::max(inner.max.y, outer.min.y);
+	if (inner.min.x > inner.max.x)
+		inner.min.x = inner.max.x = (inner.min.x + inner.max.x) / 2;
+	if (inner.min.y > inner.max.y)
+		inner.min.y = inner.max.y = (inner.min.y + inner.max.y) / 2;
 
 	BorderBounds texture = _textureImage->GetCoords();
 
@@ -115,9 +129,10 @@ void ImageWidget::RenderVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices)
 			bounds2f(inner.min.x, outer.min.y, inner.max.x, inner.min.y),
 			bounds2f(texture.inner.min.x, texture.outer.max.y, texture.inner.max.x, texture.inner.max.y));
 
-	AppendRectangle(vertices,
-		bounds2f(inner.min.x, inner.min.y, inner.max.x, inner.max.y),
-		bounds2f(texture.inner.min.x, texture.inner.max.y, texture.inner.max.x, texture.inner.min.y));
+	if (!inner.empty())
+		AppendRectangle(vertices,
+			bounds2f(inner.min.x, inner.min.y, inner.max.x, inner.max.y),
+			bounds2f(texture.inner.min.x, texture.inner.max.y, texture.inner.max.x, texture.inner.min.y));
 
 	if (max_y)
 		AppendRectangle(vertices,
