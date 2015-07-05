@@ -107,6 +107,7 @@ class TextureAtlas : public Texture
 	glm::ivec2 _discardablePos{};
 	int _discardableHeight{};
 	bool _dirty{};
+	int _textureVersion{};
 
 public:
 	explicit TextureAtlas(GraphicsContext* gc);
@@ -122,7 +123,9 @@ public:
 	void LoadTextureFromSurface(SDL_Surface* surface);
 #endif
 
-	virtual void UpdateTexture();
+	int GetTextureVersion() const;
+
+	void UpdateTexture() override;
 
 	std::shared_ptr<TextureImage> AddTextureImage(const Image& image, TextureDiscardability discardability);
 	TextureSheet AddTextureSheet(const Image& image);

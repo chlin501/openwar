@@ -61,6 +61,12 @@ void TextureAtlas::LoadTextureFromSurface(SDL_Surface* surface)
 #endif
 
 
+int TextureAtlas::GetTextureVersion() const
+{
+	return _textureVersion;
+}
+
+
 void TextureAtlas::UpdateTexture()
 {
 	if (_dirty)
@@ -75,12 +81,15 @@ void TextureAtlas::UpdateTexture()
 std::shared_ptr<TextureImage> TextureAtlas::AddTextureImage(const Image& image, TextureDiscardability discardability)
 {
 	if (!_textureAtlasImage)
-		_textureAtlasImage = new Image(glm::max(512, image.GetWidth()), glm::max(256, image.GetHeight()));
+	{
+		_textureAtlasImage = new Image(glm::max(2048, image.GetWidth()), glm::max(256, image.GetHeight()));
+		_textureVersion = 1;
+	}
 
 	if (_permanentHeight + _discardableHeight + image.GetHeight() > _textureAtlasImage->GetHeight())
 	{
 		DiscardTextureImages();
-		if (_textureAtlasImage->GetHeight() < 2048)
+		if (_textureAtlasImage->GetHeight() < 4096)
 		{
 			Image* textureAtlasImage = new Image(_textureAtlasImage->GetWidth(), _textureAtlasImage->GetHeight() * 2);
 			textureAtlasImage->Copy(*_textureAtlasImage, 0, 0);
@@ -155,6 +164,8 @@ std::shared_ptr<TextureImage> TextureAtlas::NewTextureImage(const BorderBounds& 
 
 void TextureAtlas::DiscardTextureImages()
 {
+	++_textureVersion;
+
 	for (auto& textureImage : _textureImages)
 		if (textureImage->_discardable)
 			textureImage->_discarded = true;
