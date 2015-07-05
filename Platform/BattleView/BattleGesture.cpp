@@ -591,13 +591,13 @@ Unit* BattleGesture::FindEnemyUnit(glm::vec2 touchPosition, glm::vec2 markerPosi
 
 bounds2f BattleGesture::GetUnitCurrentBounds(Unit* unit)
 {
-	return _hotspot->GetBattleView()->GetUnitCurrentIconViewportBounds(unit).grow(12);
+	return _hotspot->GetBattleView()->GetUnitCurrentIconViewportBounds(unit).add_radius(12);
 }
 
 
 bounds2f BattleGesture::GetUnitFutureBounds(Unit* unit)
 {
-	return _hotspot->GetBattleView()->GetUnitFutureIconViewportBounds(unit).grow(12);
+	return _hotspot->GetBattleView()->GetUnitFutureIconViewportBounds(unit).add_radius(12);
 }
 
 
@@ -605,8 +605,8 @@ bounds2f BattleGesture::GetUnitModifierBounds(Unit* unit)
 {
 	switch (unit->state.unitMode)
 	{
-		case UnitMode_Standing: return _hotspot->GetBattleView()->GetUnitCurrentFacingMarkerBounds(unit).grow(12);
-		case UnitMode_Moving: return _hotspot->GetBattleView()->GetUnitFutureFacingMarkerBounds(unit).grow(12);
+		case UnitMode_Standing: return _hotspot->GetBattleView()->GetUnitCurrentFacingMarkerBounds(unit).add_radius(12);
+		case UnitMode_Moving: return _hotspot->GetBattleView()->GetUnitFutureFacingMarkerBounds(unit).add_radius(12);
 		default: return bounds2f();
 	}
 }

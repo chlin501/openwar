@@ -84,7 +84,7 @@ std::pair<bool, float> bspline_patch::intersect(ray r) const
 	int dx = r.direction.x < 0 ? -1 : 1;
 	int dy = r.direction.y < 0 ? -1 : 1;
 
-	while (height.contains(p.z) && bounds_2.contains(x, y))
+	while (height.contains(p.z) && bounds_2.contains({x, y}))
 	{
 		glm::vec3 v1 = glm::vec3(x, y, get_height(x, y));
 		glm::vec3 v2 = glm::vec3(x + 1, y, get_height(x + 1, y));

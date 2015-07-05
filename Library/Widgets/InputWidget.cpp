@@ -161,10 +161,10 @@ void InputWidget::RenderSolid(const glm::mat4& transform, bounds2f bounds, glm::
 {
 	VertexShape_2f vertices;
 	vertices._mode = GL_TRIANGLE_STRIP;
-	vertices.AddVertex(Vertex_2f(bounds.mix_00()));
-	vertices.AddVertex(Vertex_2f(bounds.mix_01()));
-	vertices.AddVertex(Vertex_2f(bounds.mix_10()));
-	vertices.AddVertex(Vertex_2f(bounds.mix_11()));
+	vertices.AddVertex(Vertex_2f(bounds.fix<0,0>()));
+	vertices.AddVertex(Vertex_2f(bounds.fix<0,1>()));
+	vertices.AddVertex(Vertex_2f(bounds.fix<1,0>()));
+	vertices.AddVertex(Vertex_2f(bounds.fix<1,1>()));
 
 	GraphicsContext* gc = GetGraphicsContext();
 	RenderCall<PlainShader_2f>(gc)

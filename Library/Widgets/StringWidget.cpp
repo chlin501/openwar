@@ -327,12 +327,12 @@ void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm
 
 		float next_alpha = alpha + delta * s.x;
 
-		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), colorize, alpha));
-		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_01(), glm::vec2(item_u0, item_v0), colorize, alpha));
-		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), colorize, next_alpha));
-		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), colorize, next_alpha));
-		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_10(), glm::vec2(item_u1, item_v1), colorize, next_alpha));
-		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), colorize, alpha));
+		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.fix<0,0>(), glm::vec2(item_u0, item_v1), colorize, alpha));
+		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.fix<0,1>(), glm::vec2(item_u0, item_v0), colorize, alpha));
+		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.fix<1,1>(), glm::vec2(item_u1, item_v0), colorize, next_alpha));
+		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.fix<1,1>(), glm::vec2(item_u1, item_v0), colorize, next_alpha));
+		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.fix<1,0>(), glm::vec2(item_u1, item_v1), colorize, next_alpha));
+		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.fix<0,0>(), glm::vec2(item_u0, item_v1), colorize, alpha));
 
 		if (next_alpha < 0)
 			break;

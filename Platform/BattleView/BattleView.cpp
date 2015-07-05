@@ -917,7 +917,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 	glm::vec4 q = transform * glm::vec4(position2, 1);
 	float s = glm::clamp(glm::abs(q.y / q.w - p.y / p.w), sizeLimit.min, sizeLimit.max);
 
-	return bounds2f(GetTerrainViewport().NormalizedToLocal((glm::vec2)p.xy() / p.w)).grow(s / 2);
+	return bounds2f(GetTerrainViewport().NormalizedToLocal((glm::vec2)p.xy() / p.w)).add_radius(s / 2);
 }
 
 
@@ -946,7 +946,7 @@ bounds2f BattleView::GetUnitFacingMarkerBounds(glm::vec2 center, float direction
 
 	position += 0.7f * size * vector2_from_angle(direction - GetTerrainViewport().GetCameraFacing() + adjust);
 
-	return bounds2f(position).grow(0.2f * size);
+	return bounds2f(position).add_radius(0.2f * size);
 }
 
 

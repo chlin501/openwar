@@ -191,7 +191,7 @@ void ButtonArea::UpdateColumnsAndRows()
 
 void ButtonArea::UpdateBounds(bounds2f bounds)
 {
-	_bounds = bounds.grow(_margin);
+	_bounds = bounds.add_radius(_margin);
 
 	float y = 0;
 	for (size_t i = 0; i < rows.size(); ++i)
@@ -204,7 +204,7 @@ void ButtonArea::UpdateBounds(bounds2f bounds)
 			size_t index = i * columns.size() + j;
 			if (index < buttonItems.size())
 			{
-				buttonItems[index]->SetBounds(bounds2f(x, -y - h, x + w, -y) + bounds.mix_01());
+				buttonItems[index]->SetBounds(bounds2f(x, -y - h, x + w, -y) + bounds.fix<0,1>());
 			}
 			x += w;
 		}
@@ -363,13 +363,13 @@ void ButtonGrid::Render()
 {
 	for (ButtonArea* buttonArea : _buttonAreas)
 	{
-		buttonArea->backgroundImage.SetBounds(buttonArea->_bounds.grow(10));
+		buttonArea->backgroundImage.SetBounds(buttonArea->_bounds.add_radius(10));
 		buttonArea->backgroundImage.SetInset(BorderInset(32));
 		buttonArea->backgroundImage.SetTextureImage(_textureSheet->buttonBackground);
 
 		for (ButtonItem* buttonItem : buttonArea->buttonItems)
 		{
-			buttonItem->selectedImage.SetBounds(buttonItem->GetBounds().grow(10));
+			buttonItem->selectedImage.SetBounds(buttonItem->GetBounds().add_radius(10));
 			buttonItem->selectedImage.SetInset(BorderInset(32));
 			buttonItem->selectedImage.SetTextureImage(buttonItem->IsSelected() ? _textureSheet->buttonSelected : nullptr);
 

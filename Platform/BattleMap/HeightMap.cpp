@@ -151,9 +151,9 @@ std::pair<bool, float> HeightMap::InternalIntersect(ray r) const
 	int dx = r.direction.x < 0 ? -1 : 1;
 	int dy = r.direction.y < 0 ? -1 : 1;
 
-	height = height.grow(0.1f); // workaround for intersect precision problem
+	height = height.add_radius(0.1f); // workaround for intersect precision problem
 
-	while (height.contains(p.z) && bounds_2.contains(x, y))
+	while (height.contains(p.z) && bounds_2.contains({x, y}))
 	{
 		glm::vec3 p00 = glm::vec3(x, y, GetHeight(x, y));
 		glm::vec3 p10 = glm::vec3(x + 1, y, GetHeight(x + 1, y));

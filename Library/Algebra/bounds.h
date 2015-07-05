@@ -43,11 +43,11 @@ struct bounds1
 	b_1_t mul(val_t v) const { return {min * v, max * v}; }
 	b_1_t div(val_t v) const { return {min / v, max / v}; }
 
-	b_1_t grow(val_t d) const { return {min - d, max + d}; }
-	b_1_t grow(val_t d, val_t a) const { val_t m{mix(a)}; val_t s{size()}; return {m - s * a - d, m + s * (1 - a) + d}; };
+	b_1_t add_radius(val_t d) const { return {min - d, max + d}; }
+	b_1_t add_radius(val_t d, val_t a) const { val_t m{mix(a)}; val_t s{size()}; return {m - s * a - d, m + s * (1 - a) + d}; };
 
-	b_1_t resize(val_t s) const { val_t m{mid() - s / 2}; return {m, m + s}; };
-	b_1_t resize(val_t s, val_t a) const { val_t m{mix(a) - s * a}; return {m, m + s}; };
+	b_1_t set_size(val_t s) const { val_t m{mid() - s / 2}; return {m, m + s}; };
+	b_1_t set_size(val_t s, val_t a) const { val_t m{mix(a) - s * a}; return {m, m + s}; };
 
 	val_t mid() const { return (min + max) / 2; }
 	val_t mix(val_t v) const { return min + v * (max - min); }
@@ -107,20 +107,16 @@ struct bounds2
 	b_1_t y() const { return {min.y, max.y}; }
 
 	vec_t mid() const { return {(min.x + max.x) / 2, (min.y + max.y) / 2}; }
-	vec_t mix(val_t kx, val_t ky) const { return {x().mix(kx), y().mix(ky)}; }
-	vec_t mix_00() const { return {min.x, min.y}; }
-	vec_t mix_01() const { return {min.x, max.y}; }
-	vec_t mix_10() const { return {max.x, min.y}; }
-	vec_t mix_11() const { return {max.x, max.y}; }
-
+	vec_t mix(vec_t a) const { return {x().mix(a.x), y().mix(a.y)}; }
 	vec_t unmix(vec_t p) const { return {x().unmix(p.x), y().unmix(p.y)}; }
 
-	vec_t size() const { return {max.x - min.x, max.y - min.y}; }
+	template <int X, int Y> vec_t fix() const { return {(1 - X) * min.x + X * max.x, (1 - Y) * min.y + Y * max.y}; }
+
+	vec_t size() const { return max - min; }
 	vec_t radius() const { return {(max.x - min.x) / 2, (max.y - min.y) / 2}; }
 
 	bool empty() const { return min.x >= max.x || min.y >= max.y; }
 	bool contains(vec_t p) const { return min.x <= p.x && p.x <= max.x && min.y <= p.y && p.y <= max.y; }
-	bool contains(val_t x, val_t y) const { return min.x <= x && x <= max.x && min.y <= y && y <= max.y; }
 	bool intersects(const b_2_t& b) const { return x().intersects(b.x()) && y().intersects(b.y()); }
 
 	vec_t distance(vec_t p) const { return {x().distance(p.x), y().distance(p.y)}; }
@@ -167,44 +163,25 @@ struct bounds2
 	b_2_t mul(vec_t v) const { return {min * v, max * v}; }
 	b_2_t div(vec_t v) const { return {min / v, max / v}; }
 
-	b_2_t add(val_t x, val_t y) const { return {min.x + x, min.y + y, max.x + x, max.y + y}; }
-	b_2_t sub(val_t x, val_t y) const { return {min.x - x, min.y - y, max.x - x, max.y - y}; }
-	b_2_t mul(val_t x, val_t y) const { return {min.x * x, min.y * y, max.x * x, max.y * y}; }
-	b_2_t div(val_t x, val_t y) const { return {min.x / x, min.y / y, max.x / x, max.y / y}; }
+	b_2_t add_radius(val_t d) const { return {min - d, max + d}; }
+	b_2_t add_radius(vec_t d) const { return {min - d, max + d}; }
+	b_2_t add_radius(val_t d, vec_t a) const { return {x().add_radius(d, a.x), y().add_radius(d, a.y)}; }
+	b_2_t add_radius(vec_t d, vec_t a) const { return {x().add_radius(d.x, a.x), y().add_radius(d.y, a.y)}; }
 
-	b_2_t grow(val_t d) const { return {min - d, max + d}; }
-	b_2_t grow(vec_t d) const { return {min - d, max + d}; }
-	b_2_t grow(val_t dx, val_t dy) const { return {min.x - dx, min.y - dy, max.x + dx, max.y + dy}; }
+	b_2_t add_radius_x(val_t d) const { return {x().add_radius(d), y()}; }
+	b_2_t add_radius_y(val_t d) const { return {x(), y().add_radius(d)}; }
+	b_2_t add_radius_x(val_t d, val_t a) const { return {x().add_radius(d, a), y()}; }
+	b_2_t add_radius_y(val_t d, val_t a) const { return {x(), y().add_radius(d, a)}; }
 
-	b_2_t grow(val_t d, vec_t a) const { return grow(d, d, a.x, a.y); }
-	b_2_t grow(vec_t d, vec_t a) const { return grow(d.x, d.y, a.x, a.y); }
-	b_2_t grow(val_t dx, val_t dy, vec_t a) const { return grow(dx, dy, a.x, a.y); }
+	b_2_t set_size(val_t s) const { return {x().set_size(s), y().set_size(s)}; }
+	b_2_t set_size(vec_t s) const { return {x().set_size(s.x), y().set_size(s.y)}; }
+	b_2_t set_size(val_t s, vec_t a) const { return {x().set_size(s, a.x), y().set_size(s, a.y)}; }
+	b_2_t set_size(vec_t s, vec_t a) const { return {x().set_size(s.x, a.x), y().set_size(s.y, a.y)}; }
 
-	b_2_t grow(val_t d, val_t ax, val_t ay) const { return grow(d, d, ax, ay); }
-	b_2_t grow(vec_t d, val_t ax, val_t ay)  const { return grow(d.x, d.y, ax, ay); }
-	b_2_t grow(val_t dx, val_t dy, val_t ax, val_t ay) const { return {x().grow(dx, ax), y().grow(dy, ay)}; }
-
-	b_2_t grow_x(val_t d) const { return {x().grow(d), y()}; }
-	b_2_t grow_y(val_t d) const { return {x(), y().grow(d)}; }
-	b_2_t grow_x(val_t d, val_t a) const { return {x().grow(d, a), y()}; }
-	b_2_t grow_y(val_t d, val_t a) const { return {x(), y().grow(d, a)}; }
-
-	b_2_t resize(val_t s) const { return resize(s, s); }
-	b_2_t resize(vec_t s) const { return resize(s.x, s.y); }
-	b_2_t resize(val_t sx, val_t sy) const { return {x().resize(sx), y().resize(sy)}; }
-
-	b_2_t resize(val_t s, vec_t a) const { return resize(s, s, a.x, a.y); }
-	b_2_t resize(vec_t s, vec_t a) const { return resize(s.x, s.y, a.x, a.y); }
-	b_2_t resize(vec_t s, val_t ax, val_t ay) const { return resize(s.x, s.y, ax, ay); }
-
-	b_2_t resize(val_t s, val_t ax, val_t ay) const { return resize(s, s, ax, ay); }
-	b_2_t resize(val_t sx, val_t sy, vec_t a) const { return resize(sx, sy, a.x, a.y); }
-	b_2_t resize(val_t sx, val_t sy, val_t ax, val_t ay) const { return {x().resize(sx, ax), y().resize(sy, ay)}; }
-
-	b_2_t resize_x(val_t s) const { return {x().resize(s), y()}; }
-	b_2_t resize_y(val_t s) const { return {x(), y().resize(s)}; }
-	b_2_t resize_x(val_t s, val_t a) const { return {x().resize(s, a), y()}; }
-	b_2_t resize_y(val_t s, val_t a) const { return {x(), y().resize(s, a)}; }
+	b_2_t set_size_x(val_t s) const { return {x().set_size(s), y()}; }
+	b_2_t set_size_y(val_t s) const { return {x(), y().set_size(s)}; }
+	b_2_t set_size_x(val_t s, val_t a) const { return {x().set_size(s, a), y()}; }
+	b_2_t set_size_y(val_t s, val_t a) const { return {x(), y().set_size(s, a)}; }
 
 	vec_t clamp(vec_t p) const { return {x().clamp(p.x), y().clamp(p.y)}; }
 

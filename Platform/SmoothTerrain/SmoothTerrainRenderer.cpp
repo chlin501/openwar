@@ -345,7 +345,7 @@ void SmoothTerrainRenderer::RenderHatchings(Viewport* viewport, const glm::mat4&
 
 		if (_deploymentRadiusBlue > 0)
 		{
-			bounds2f b = bounds2f{_deploymentPositionBlue}.grow(_deploymentRadiusBlue * 64.0f / 60.0f);
+			bounds2f b = bounds2f{_deploymentPositionBlue}.add_radius(_deploymentRadiusBlue * 64.0f / 60.0f);
 			_hatchingsMasterVertices.AddVertex({{b.min.x, b.min.y}, {0, 0}});
 			_hatchingsMasterVertices.AddVertex({{b.min.x, b.max.y}, {0, 1}});
 			_hatchingsMasterVertices.AddVertex({{b.max.x, b.max.y}, {0.5f, 1}});
@@ -355,7 +355,7 @@ void SmoothTerrainRenderer::RenderHatchings(Viewport* viewport, const glm::mat4&
 		}
 		if (_deploymentRadiusRed > 0)
 		{
-			bounds2f b = bounds2f{_deploymentPositionRed}.grow(_deploymentRadiusRed * 64.0f / 60.0f);
+			bounds2f b = bounds2f{_deploymentPositionRed}.add_radius(_deploymentRadiusRed * 64.0f / 60.0f);
 			_hatchingsMasterVertices.AddVertex({{b.min.x, b.min.y}, {0.5f, 0}});
 			_hatchingsMasterVertices.AddVertex({{b.min.x, b.max.y}, {0.5f, 1}});
 			_hatchingsMasterVertices.AddVertex({{b.max.x, b.max.y}, {1, 1}});
@@ -644,7 +644,7 @@ static int inside_circle(bounds2f bounds, glm::vec2 v1, glm::vec2 v2, glm::vec2 
 void SmoothTerrainRenderer::BuildTriangles()
 {
 	bounds2f bounds = _smoothGroundMap->GetBounds();
-	glm::vec2 corner = bounds.mix_00();
+	glm::vec2 corner = bounds.fix<0,0>();
 	glm::vec2 size = bounds.size();
 
 	_insideVertices._mode = GL_TRIANGLES;
