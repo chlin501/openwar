@@ -66,7 +66,7 @@ std::shared_ptr<TextureImage> FontAdapter_NSFont::AddTextureImage(TextureAtlas* 
 	CGSize size = [string sizeWithAttributes:_attributes];
 
 	float scaling = textureAtlas->GetGraphicsContext()->GetCombinedScaling();
-	int offset = (int)glm::ceil(scaling * border);
+	int offset = 1 + (int)glm::ceil(scaling * border);
 	int width = (int)glm::ceil(size.width) + offset * 2;
 	int height = (int)glm::ceil(size.height) + offset * 2;
 
@@ -91,6 +91,7 @@ std::shared_ptr<TextureImage> FontAdapter_NSFont::AddTextureImage(TextureAtlas* 
 	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image, TextureDiscardability::Discardable);
 
 	BorderBounds bounds = textureImage->GetBounds();
+	bounds.outer = bounds.outer.grow(-1);
 	bounds.inner.min = bounds.outer.min + glm::vec2(offset, offset);
 	bounds.inner.max = bounds.inner.min + glm::vec2(size.width, size.height);
 	textureImage->SetBounds(bounds);
@@ -143,7 +144,7 @@ std::shared_ptr<TextureImage> FontAdapter_UIFont::AddTextureImage(TextureAtlas* 
 	//CGSize size = [string sizeWithAttributes:_attributes];
 
 	float scaling = textureAtlas->GetGraphicsContext()->GetCombinedScaling();
-	int offset = (int)glm::ceil(scaling * border);
+	int offset = 1 + (int)glm::ceil(scaling * border);
 	int width = (int)glm::ceil(size.width) + offset * 2;
 	int height = (int)glm::ceil(size.height) + offset * 2;
 
@@ -173,6 +174,7 @@ std::shared_ptr<TextureImage> FontAdapter_UIFont::AddTextureImage(TextureAtlas* 
 	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image, TextureDiscardability::Discardable);
 
 	BorderBounds bounds = textureImage->GetBounds();
+	bounds.outer = bounds.outer.grow(-1);
 	bounds.inner.min = bounds.outer.min + glm::vec2(offset, offset);
 	bounds.inner.max = bounds.inner.min + glm::vec2(size.width, size.height);
 	textureImage->SetBounds(bounds);
@@ -279,7 +281,7 @@ std::shared_ptr<TextureImage> FontAdapter_SDL_ttf::AddTextureImage(TextureAtlas*
 	image.LoadFromSurface(surface);
 
 	float scaling = textureAtlas->GetGraphicsContext()->GetCombinedScaling();
-	int offset = (int)glm::ceil(scaling * border);
+	int offset = 1 + (int)glm::ceil(scaling * border);
 
 	Image image2(image.GetWidth() + offset * 2, image.GetHeight() + offset * 2);
 	image2.Copy(image, offset, offset);
@@ -293,6 +295,7 @@ std::shared_ptr<TextureImage> FontAdapter_SDL_ttf::AddTextureImage(TextureAtlas*
 
 	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image2, TextureDiscardability::Discardable);
 	BorderBounds bounds = textureImage->GetBounds();
+	bounds.outer = bounds.outer.grow(-1);
 	bounds.inner.min = bounds.outer.min + glm::vec2(offset, offset);
 	bounds.inner.max = bounds.inner.min + glm::vec2(image.GetWidth(), image.GetHeight());
 	textureImage->SetBounds(bounds);
