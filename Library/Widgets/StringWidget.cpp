@@ -13,26 +13,106 @@
 #include <locale>
 
 
-static bool IsArabic(wchar_t wc)
+#ifndef OPENWAR_USE_UBIDI
+#error "OPENWAR_USE_UBIDI is undefined"
+#endif
+
+#if OPENWAR_USE_UBIDI
+
+#import <Foundation/Foundation.h>
+#include "unicode/ubidi.h"
+
+
+static UChar* ReserveSrcBuffer(std::size_t required)
 {
-	if (0x0600 <= wc && wc <= 0x08FF)
-		return true;
+	static UChar* buffer = nullptr;
+	static std::size_t reserved = 0;
 
-	if (0xFB00 <= wc && wc <= 0xFDFF)
-		return true;
+	if (buffer == nullptr || required > reserved)
+	{
+		delete buffer;
+		buffer = new UChar[required];
+		reserved = required;
+	}
 
-	return false;
+	return buffer;
 }
 
 
-static bool ContainsArabic(const std::wstring& ws)
+static UChar* ReserveDstBuffer(std::size_t required)
 {
-	for (wchar_t wc : ws)
-		if (IsArabic(wc))
-			return true;
+	static UChar* buffer = nullptr;
+	static std::size_t reserved = 0;
 
-	return false;
+	if (buffer == nullptr || required > reserved)
+	{
+		delete buffer;
+		buffer = new UChar[required];
+		reserved = required;
+	}
+
+	return buffer;
 }
+
+
+static std::string ReorderToDisplayDirection(const std::string& s)
+{
+	if (TextureCharIterator::ContainsArabic(s.c_str()))
+		return s;
+
+	UErrorCode error = U_ZERO_ERROR;
+
+	UChar* src = ReserveSrcBuffer(s.size());
+	UChar* dst = ReserveDstBuffer(s.size() * 2);
+
+	bool reorder = false;
+	int length = 0;
+	const char* p = s.c_str();
+	while (*p != '\0')
+	{
+		std::size_t n = TextureCharIterator::Utf8CharSize(p);
+		src[length] = static_cast<UChar>(TextureCharIterator::Utf8CharCode(p, n));
+
+		if (ubidi_getBaseDirection(src + length,  1) != UBIDI_LTR)
+			reorder = true;
+
+		p += n;
+		++length;
+	}
+
+	if (!reorder)
+		return s;
+
+	UBiDi* ubidi = ubidi_openSized(length, 0, &error);
+	if (error != 0)
+		NSLog(@"ubidi_openSized error:%04x", error);
+
+	ubidi_setPara(ubidi, src, length, UBIDI_DEFAULT_LTR, NULL, &error);
+	if (error != 0)
+		NSLog(@"ubidi_setPara error:%04x", error);
+
+	length = ubidi_writeReordered(ubidi, dst, length * 2, UBIDI_DO_MIRRORING | UBIDI_REMOVE_BIDI_CONTROLS, &error);
+	if (error != 0)
+		NSLog(@"ubidi_writeReordered error:%04x", error);
+
+	NSString* result = [NSString stringWithCharacters:dst length:(NSUInteger)length];
+
+	ubidi_close(ubidi);
+
+	return std::string{result.UTF8String};
+}
+
+
+#else
+
+
+static std::string ReorderToDisplayDirection(const std::string& s)
+{
+	return s;
+}
+
+
+#endif
 
 
 
@@ -94,7 +174,7 @@ glm::vec2 StringWidget::MeasureSize() const
 {
 	TextureFont* textureFont = GetWidgetView()->GetWidgetTextureAtlas()->GetTextureFont(_fontDescriptor);
 
-	return textureFont->MeasureText(_string.c_str());
+	return textureFont->MeasureText(_display.c_str());
 }
 
 
@@ -124,13 +204,14 @@ void StringWidget::SetFontDescriptor(const FontDescriptor& fontDescriptor)
 
 const char* StringWidget::GetString() const
 {
-	return _string.c_str();
+	return _original.c_str();
 }
 
 
 void StringWidget::SetString(const char* value)
 {
-	_string = value;
+	_original = value;
+	_display = ReorderToDisplayDirection(_original);
 }
 
 
@@ -225,14 +306,12 @@ void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm
 		delta = -1.0f / fade;
 	}
 
-	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv(".", L".");
-	std::wstring ws = conv.from_bytes(_string);
-
 	TextureFont* textureFont = GetWidgetView()->GetWidgetTextureAtlas()->GetTextureFont(GetFontDescriptor());
 
-	if (ContainsArabic(ws))
+	TextureCharIterator chars(_display.c_str());
+	while (!chars.GetChar().empty())
 	{
-		TextureChar* textureChar = textureFont->GetTextureChar(_string.c_str(), blurRadius);
+		TextureChar* textureChar = textureFont->GetTextureChar(chars.GetChar(), blurRadius);
 		glm::vec4 colorize = textureChar->CanColorize() ? glm::vec4(color.rgb(), 1) : glm::vec4();
 
 		bounds2f item_xy = textureChar->GetOuterXY(p);
@@ -254,48 +333,14 @@ void StringWidget::AppendVertices(std::vector<Vertex_2f_2f_4f_1f>& vertices, glm
 		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), colorize, next_alpha));
 		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_10(), glm::vec2(item_u1, item_v1), colorize, next_alpha));
 		vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), colorize, alpha));
-	}
-	else
-	{
-		for (wchar_t wc : ws)
-		{
-			if (wc == 0)
-				continue;
 
-			std::string character = conv.to_bytes(&wc, &wc + 1);
-			if (character.empty())
-				continue;
+		if (next_alpha < 0)
+			break;
 
-			TextureChar* textureChar = textureFont->GetTextureChar(character, blurRadius);
-			glm::vec4 colorize = textureChar->CanColorize() ? glm::vec4(color.rgb(), 1) : glm::vec4();
+		p.x += s.x;
 
-			bounds2f item_xy = textureChar->GetOuterXY(p);
-			bounds2f item_uv = textureChar->GetOuterUV();
-			float item_u0 = item_uv.min.x;
-			float item_u1 = item_uv.max.x;
-			float item_v0 = item_uv.min.y;
-			float item_v1 = item_uv.max.y;
+		alpha = next_alpha;
 
-			glm::vec2 s = textureChar->GetInnerSize();
-
-			bounds2f bounds = item_xy + offset;
-
-			float next_alpha = alpha + delta * s.x;
-
-			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), colorize, alpha));
-			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_01(), glm::vec2(item_u0, item_v0), colorize, alpha));
-			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), colorize, next_alpha));
-			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_11(), glm::vec2(item_u1, item_v0), colorize, next_alpha));
-			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_10(), glm::vec2(item_u1, item_v1), colorize, next_alpha));
-			vertices.push_back(Vertex_2f_2f_4f_1f(bounds.mix_00(), glm::vec2(item_u0, item_v1), colorize, alpha));
-
-			if (next_alpha < 0)
-				break;
-
-			p.x += s.x;
-			//p.x = std::ceilf(p.x);
-
-			alpha = next_alpha;
-		}
+		chars.MoveNext();
 	}
 }

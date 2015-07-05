@@ -16,9 +16,38 @@ class TextureChar;
 class TextureImage;
 
 
+class TextureCharIterator
+{
+	//static_assert(sizeof(wchar_t) >= 4);
+	const char* _s;
+	std::string _c;
+
+public:
+	TextureCharIterator(const char* s);
+
+	const std::string& GetChar() const { return _c; }
+	void MoveNext();
+
+	static wchar_t Utf8CharCode(const char* s, std::size_t n);
+	static std::size_t Utf8CharSize(const char* s);
+
+	static bool IsArabic(wchar_t c);
+	static bool ContainsArabic(const char* s);
+};
+
+
 class TextureFont
 {
-	typedef std::pair<std::string, float> CharacterKey;
+	class CharacterKey
+	{
+		int _c;
+		float _r;
+		std::string _s;
+	public:
+		CharacterKey(const char* s, float r);
+		bool operator<(const CharacterKey& other) const;
+	};
+
 	TextureAtlas* _textureAtlas;
 	FontAdapter* _fontAdapter;
 	std::map<CharacterKey, TextureChar*> _textureChars;

@@ -47,7 +47,8 @@ class StringWidget : public Widget
 {
 	glm::vec2 _position{};
 	FontDescriptor _fontDescriptor{};
-	std::string _string{};
+	std::string _original{};
+	std::string _display{};
 	glm::vec4 _color{1.0f, 1.0f, 1.0f, 1.0f};
 	glm::vec4 _glowColor{};
 	float _glowRadius{1};
