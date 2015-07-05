@@ -163,8 +163,7 @@
 
 - (void)updateTouch:(UITouch*)original
 {
-	Touch* touch = _touches[original];
-	if (touch != nullptr)
+	if (Touch* touch = _touches[original])
 	{
 		glm::vec2 position = [self toVector:[original locationInView:self]];
 		glm::vec2 previous = [self toVector:[original previousLocationInView:self]];
@@ -175,8 +174,7 @@
 
 - (void)deleteTouch:(UITouch*)original
 {
-	Touch* touch = _touches[original];
-	if (touch != nullptr)
+	if (Touch* touch = _touches[original])
 	{
 		delete touch;
 		_touches.erase(original);
@@ -184,25 +182,55 @@
 }
 
 
+static bool IsObsolete(UITouch* touch)
+{
+	switch (touch.phase)
+	{
+		case UITouchPhaseEnded:
+		case UITouchPhaseCancelled:
+			return true;
+		default:
+			return false;
+	}
+}
+
+
+- (void)deleteObsoleteTouches
+{
+	std::vector<UITouch*> touches;
+	for (auto& i : _touches)
+		if (IsObsolete(i.first))
+			touches.push_back(i.first);
+
+	for (UITouch* touch : touches)
+		[self deleteTouch:touch];
+}
+
+
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
 {
 	if (_surface)
 	{
+		[self deleteObsoleteTouches];
+
 		for (UITouch* original in touches)
 			if (original.view == self)
 				[self createTouch:original];
 
 		for (UITouch* original in touches)
 			if (original.view == self)
-				_surface->NotifyViewsOfTouchBegin(_touches[original]);
+			if (Touch* touch = _touches[original])
+				_surface->NotifyViewsOfTouchBegin(touch);
 
 		for (UITouch* original in touches)
 			if (original.view == self)
-				_touches[original]->TouchBegin();
+			if (Touch* touch = _touches[original])
+				touch->TouchBegin();
 
 		for (UITouch* original in touches)
 			if (original.view == self)
-				_touches[original]->TouchBegan();
+			if (Touch* touch = _touches[original])
+				touch->TouchBegan();
 
 		[self setNeedsDisplay];
 	}
@@ -219,7 +247,8 @@
 
 		for (UITouch* original in touches)
 			if (original.view == self)
-				_touches[original]->TouchMoved();
+			if (Touch* touch = _touches[original])
+				touch->TouchMoved();
 
 		[self setNeedsDisplay];
 	}
@@ -236,7 +265,8 @@
 
 		for (UITouch* original in touches)
 			if (original.view == self)
-				_touches[original]->TouchEnded();
+			if (Touch* touch = _touches[original])
+				touch->TouchEnded();
 
 		for (UITouch* original in touches)
 			if (original.view == self)
