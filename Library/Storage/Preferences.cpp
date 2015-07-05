@@ -109,3 +109,26 @@ void Preferences::SetString(const char* key, const char* value)
 
 #endif
 }
+
+
+bool Preferences::GetBoolean(const char* key, bool defaultValue)
+{
+#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
+	NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
+	NSString* string = [NSString stringWithUTF8String:key];
+	if ([userDefaults objectForKey:string] == nil)
+		return defaultValue;
+	return [userDefaults boolForKey:string];
+#endif
+
+	return false;
+}
+
+
+void Preferences::SetBoolean(const char* key, bool value)
+{
+#ifdef OPENWAR_USE_XCODE_FRAMEWORKS
+	NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults setBool:value forKey:[NSString stringWithUTF8String:key]];
+#endif
+}
