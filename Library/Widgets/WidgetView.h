@@ -48,7 +48,7 @@ public: // View
 	void Render() override;
 
 protected:
-	virtual WidgetView* FindWidgetView();
+	WidgetView* FindWidgetView() override;
 
 private:
 	void UpdateVertexBuffer();

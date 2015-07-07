@@ -37,12 +37,12 @@ public:
 	BattleGesture(BattleHotspot* hotspot);
 	virtual ~BattleGesture();
 
-	virtual void TouchWasCaptured(Touch* touch);
-	virtual void TouchWillBeReleased(Touch* touch);
+	void TouchWasCaptured(Touch* touch) override;
+	void TouchWillBeReleased(Touch* touch) override;
 
-	virtual void TouchBegan(Touch* touch);
-	virtual void TouchMoved(Touch* touch);
-	virtual void TouchEnded(Touch* touch);
+	void TouchBegan(Touch* touch) override;
+	void TouchMoved(Touch* touch) override;
+	void TouchEnded(Touch* touch) override;
 
 private:
 	void UpdateTrackingMarker();

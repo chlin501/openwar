@@ -28,7 +28,7 @@ public:
 public: // GroundMap
 	bounds2f GetBounds() const override { return _bounds; }
 	const HeightMap* GetHeightMap() const override { return &_heightMap; }
-	float CalculateHeight(int x, int y) const;
+	float CalculateHeight(int x, int y) const override;
 
 	bool IsForest(glm::vec2 position) const override;
 	bool IsImpassable(glm::vec2 position) const override;
