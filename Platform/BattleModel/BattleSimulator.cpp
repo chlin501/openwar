@@ -7,11 +7,11 @@
 #include "BattleMap/GroundMap.h"
 #include "BattleMap/HeightMap.h"
 #include "BattleCommander.h"
-#include "SmoothGroundMap.h"
-#include "TiledGroundMap.h"
+#include "BattleMap/SmoothGroundMap.h"
+#include "BattleMap/TiledGroundMap.h"
 #include "BattleScript.h"
 #include "SamuraiModule.h"
-#import "BattleMap.h"
+#include "BattleMap/BattleMap.h"
 #include <glm/gtc/random.hpp>
 #include <algorithm>
 #include <cstdlib>
