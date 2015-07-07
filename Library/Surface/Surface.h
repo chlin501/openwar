@@ -13,20 +13,20 @@ class GraphicsContext;
 class Touch;
 class Viewport;
 
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
+#ifdef PHALANX_TARGET_UI_APPKIT
 @class NSView;
 #endif
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_IOS
+#ifdef PHALANX_TARGET_UI_UIKIT
 @class UIView;
 #endif
 
 
 class Surface : public ViewOwner
 {
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
+#ifdef PHALANX_TARGET_UI_APPKIT
 	NSView* _nsview;
 #endif
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_IOS
+#ifdef PHALANX_TARGET_UI_UIKIT
 	UIView* _uiview;
 #endif
 
@@ -43,11 +43,11 @@ public:
 	glm::vec2 GetNativeSize() const;
 	glm::vec2 GetVirtualSize() const;
 
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
+#ifdef PHALANX_TARGET_UI_APPKIT
 	void SetNSView(NSView* value);
 	NSView* GetNSView() const;
 #endif
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_IOS
+#ifdef PHALANX_TARGET_UI_UIKIT
 	void SetUIView(UIView* value);
 	UIView* GetUIView() const;
 #endif

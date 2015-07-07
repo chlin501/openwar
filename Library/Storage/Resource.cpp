@@ -10,7 +10,7 @@
 #endif
 
 
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 static NSString* GetPath(const char* name, const char* type)
 {
 	if (name[0] == '/')
@@ -47,7 +47,7 @@ void Resource::init(const char* argv0)
 	std::string::size_type i = app_path.rfind('/');
 	if (i != std::string::npos)
 	{
-#if TARGET_OS_IPHONE
+#ifdef PHALANX_TARGET_OS_IOS
 		_resources_path = app_path.substr(0, i) + "/";
 #else
 		i = app_path.rfind('/', i - 1);
@@ -62,7 +62,7 @@ void Resource::init(const char* argv0)
 
 
 Resource::Resource(const char* name) :
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 _nsdata(nil),
 #endif
 _name(),
@@ -70,7 +70,7 @@ _type(),
 _data(nullptr),
 _size(0)
 {
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
     
 	NSString* s = [NSString stringWithUTF8String:name];
 	NSString* n = [s stringByDeletingPathExtension];
@@ -98,7 +98,7 @@ _size(0)
 
 
 /*resource::resource(const char* name, const char* type) :
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 _nsdata(nil),
 #endif
 _name(name),
@@ -116,7 +116,7 @@ Resource::~Resource()
 
 const char* Resource::path() const
 {
-/*#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
+/*#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 
     return GetPath(_name.c_str(), _type.c_str()).UTF8String;
 
@@ -140,7 +140,7 @@ const char* Resource::path() const
 
 bool Resource::load(char const* type)
 {
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 
 	NSString* path = GetPath(_name.c_str(), type ?: _type.c_str());
 	NSData* data = [NSData dataWithContentsOfFile:path];

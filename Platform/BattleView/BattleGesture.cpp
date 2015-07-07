@@ -2,7 +2,7 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#if TARGET_OS_IPHONE
+#ifdef PHALANX_TARGET_OS_IOS
 #import <UIKit/UIKit.h>
 #endif
 
@@ -164,7 +164,7 @@ void BattleGesture::TouchMoved(Touch* touch)
 	{
 		int icon_size = 0;
 
-#if TARGET_OS_IPHONE
+#ifdef PHALANX_TARGET_OS_IOS
 		static int* _icon_size = nullptr;
 		if (_icon_size == nullptr)
 			_icon_size = new int([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone ? 57 : 72);

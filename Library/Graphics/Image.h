@@ -14,10 +14,10 @@
 
 class Image
 {
-#ifdef OPENWAR_IMAGE_ENABLE_SDL
+#ifdef PHALANX_TARGET_UI_SDL
 	mutable SDL_Surface* _surface{};
 #endif
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 	mutable CGContextRef _context{};
 	mutable CGImageRef _image{};
 #endif
@@ -49,13 +49,13 @@ public:
 	Image& LoadFromData(const void* data, size_t size);
 	Image& LoadFromResource(const Resource& r);
 
-#ifdef OPENWAR_IMAGE_ENABLE_SDL
+#ifdef PHALANX_TARGET_UI_SDL
 	void LoadFromSurface(SDL_Surface* surface);
 	SDL_Surface* GetSurface() const;
 	static SDL_Surface* EnsureSurfaceFormat(SDL_Surface* surface);
 #endif
 
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 	void LoadFromCGImage(CGImageRef image, float pixelDensity);
 
 	CGContextRef GetCGContext() const;
@@ -85,7 +85,7 @@ public:
 };
 
 
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 NSData* ConvertImageToTiff(const Image& image);
 Image* ConvertTiffToImage(NSData* data);
 #endif

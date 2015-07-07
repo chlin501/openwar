@@ -8,8 +8,8 @@
 #include <cstdlib>
 
 
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
-#if TARGET_OS_IPHONE
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#ifdef PHALANX_TARGET_OS_IOS
 #import <UIKit/UIKit.h>
 #else
 #import <AppKit/AppKit.h>
@@ -28,10 +28,10 @@ void Image::swap(Image& a, Image& b)
 {
 	using std::swap;
 
-#ifdef OPENWAR_IMAGE_ENABLE_SDL
+#ifdef PHALANX_TARGET_UI_SDL
 	swap(a._surface, b._surface);
 #endif
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 	swap(a._context, b._context);
 	swap(a._image, b._image);
 #endif
@@ -59,14 +59,14 @@ Image::Image(int width, int height) :
 
 Image::~Image()
 {
-#ifdef OPENWAR_IMAGE_ENABLE_SDL
+#ifdef PHALANX_TARGET_UI_SDL
 
 	if (_surface)
 		SDL_FreeSurface(_surface);
 
 #endif
 
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 
 	if (_context != NULL)
 		CGContextRelease(_context);
@@ -134,7 +134,7 @@ Image& Image::ReadPixels(FrameBuffer* frameBuffer)
 
 Image& Image::LoadFromData(const void* data, size_t size)
 {
-#if defined(OPENWAR_IMAGE_ENABLE_COREGRAPHICS)
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 
     /*
     Mac ???
@@ -154,7 +154,7 @@ Image& Image::LoadFromData(const void* data, size_t size)
 	CGDataProviderRelease(dataProvider);
 
 
-#elif defined(OPENWAR_IMAGE_ENABLE_SDL)
+#elif defined(PHALANX_TARGET_UI_SDL)
 
 	SDL_RWops* src = SDL_RWFromConstMem(data, static_cast<int>(size));
 	SDL_Surface* surface = EnsureSurfaceFormat(IMG_Load_RW(src, 0));
@@ -171,8 +171,8 @@ Image& Image::LoadFromData(const void* data, size_t size)
 
 Image& Image::LoadFromResource(const Resource& r)
 {
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
-#if TARGET_OS_IPHONE
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#ifdef PHALANX_TARGET_OS_IOS
 
 	NSString* name = [NSString stringWithFormat:@"%@%@", [NSString stringWithUTF8String:r.name()], [NSString stringWithUTF8String:r.type()]];
 	UIImage* image = [UIImage imageNamed:name];
@@ -203,7 +203,7 @@ Image& Image::LoadFromResource(const Resource& r)
 
 #endif
 
-#ifdef OPENWAR_IMAGE_ENABLE_SDL
+#ifdef PHALANX_TARGET_UI_SDL
 
 	_surface = EnsureSurfaceFormat(IMG_Load(r.path()));
 	if (_surface)
@@ -229,7 +229,7 @@ Image& Image::LoadFromResource(const Resource& r)
 }
 
 
-#ifdef OPENWAR_IMAGE_ENABLE_SDL
+#ifdef PHALANX_TARGET_UI_SDL
 void Image::LoadFromSurface(SDL_Surface* surface)
 {
 	_width = surface->w;
@@ -237,7 +237,7 @@ void Image::LoadFromSurface(SDL_Surface* surface)
 	_pixels = (unsigned char*)surface->pixels;
 	_owner = false;
 	_surface = nullptr;
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 	_context = nil;
 	_image = nil;
 #endif
@@ -245,7 +245,7 @@ void Image::LoadFromSurface(SDL_Surface* surface)
 #endif
 
 
-#ifdef OPENWAR_IMAGE_ENABLE_SDL
+#ifdef PHALANX_TARGET_UI_SDL
 SDL_Surface* Image::GetSurface() const
 {
 	if (!_surface)
@@ -258,7 +258,7 @@ SDL_Surface* Image::GetSurface() const
 #endif
 
 
-#ifdef OPENWAR_IMAGE_ENABLE_SDL
+#ifdef PHALANX_TARGET_UI_SDL
 SDL_Surface* Image::EnsureSurfaceFormat(SDL_Surface* surface)
 {
 	if (surface->format->format == SDL_PIXELFORMAT_ABGR8888)
@@ -271,7 +271,7 @@ SDL_Surface* Image::EnsureSurfaceFormat(SDL_Surface* surface)
 #endif
 
 
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 void Image::LoadFromCGImage(CGImageRef image, float pixelDensity)
 {
 	_width = CGImageGetWidth(image);
@@ -288,7 +288,7 @@ void Image::LoadFromCGImage(CGImageRef image, float pixelDensity)
 
 
 
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 CGContextRef Image::GetCGContext() const
 {
 	if (_context == NULL)
@@ -308,7 +308,7 @@ CGContextRef Image::GetCGContext() const
 #endif
 
 
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 CGImageRef Image::GetCGImage() const
 {
 	if (_image == NULL)
@@ -497,14 +497,14 @@ void Image::Copy(const Image& image, int x, int y)
 
 void Image::Draw(const Image& image, int x, int y, int w, int h)
 {
-#if defined(OPENWAR_IMAGE_ENABLE_COREGRAPHICS)
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 
 	CGContextRef context = GetCGContext();
 	CGRect rect = CGRectMake(x, _height - y - h, w, h);
 	CGContextClearRect(context, rect);
 	CGContextDrawImage(context, rect, image.GetCGImage());
 
-#elif defined(OPENWAR_IMAGE_ENABLE_SDL)
+#elif defined(PHALANX_TARGET_UI_SDL)
 
 	SDL_Surface* src = image.GetSurface();
 	SDL_Surface* dst = GetSurface();
@@ -538,7 +538,7 @@ void Image::Draw(const Image& image, int x, int y, int w, int h)
 
 void Image::Fill(const glm::vec4& color, const bounds2f& bounds)
 {
-#if defined(OPENWAR_IMAGE_ENABLE_COREGRAPHICS)
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 
 	CGContextRef context = GetCGContext();
 
@@ -553,7 +553,7 @@ void Image::Fill(const glm::vec4& color, const bounds2f& bounds)
 
 	//[NSGraphicsContext restoreGraphicsState];
 
-#elif defined(OPENWAR_IMAGE_ENABLE_SDL)
+#elif defined(PHALANX_TARGET_UI_SDL)
 
 	SDL_Surface* dst = GetSurface();
 
@@ -583,10 +583,10 @@ void Image::Resize(int width, int height)
 }
 
 
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 NSData* ConvertImageToTiff(const Image& image)
 {
-#if TARGET_OS_IPHONE
+#ifdef PHALANX_TARGET_OS_IOS
 	return nil;
 #else
 	unsigned char* pixels = reinterpret_cast<unsigned char*>(const_cast<GLvoid*>(image.GetPixels()));
@@ -607,10 +607,10 @@ NSData* ConvertImageToTiff(const Image& image)
 #endif
 
 
-#ifdef OPENWAR_IMAGE_ENABLE_COREGRAPHICS
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 Image* ConvertTiffToImage(NSData* data)
 {
-#if TARGET_OS_IPHONE
+#ifdef PHALANX_TARGET_OS_IOS
 	Image* result = new Image();
 	result->LoadFromCGImage([[UIImage imageWithData:data] CGImage], 1);
 	return result;

@@ -7,7 +7,7 @@
 
 #include <string>
 
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 #import <Foundation/Foundation.h>
 #endif
 
@@ -16,7 +16,7 @@ class Resource
 {
 	static std::string _resources_path;
 
-#ifdef OPENWAR_USE_NSBUNDLE_RESOURCES
+#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
 	NSData* _nsdata;
 #endif
     

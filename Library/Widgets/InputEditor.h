@@ -1,6 +1,14 @@
 #ifndef InputEditor_H
 #define InputEditor_H
 
+#if defined(PHALANX_TARGET_OS_MAC)
+#define PHALANX_USING_INPUTEDITOR_MAC
+#elif defined(PHALANX_TARGET_OS_IOS)
+#define PHALANX_USING_INPUTEDITOR_IOS
+#elif defined(PHALANX_TARGET_OS_ANDROID)
+#define PHALANX_USING_INPUTEDITOR_ANDROID
+#endif
+
 
 class InputWidget;
 
@@ -27,7 +35,7 @@ public:
 };
 
 
-#ifdef OPENWAR_USE_INPUT_EDITOR_MAC
+#ifdef PHALANX_USING_INPUTEDITOR_MAC
 
 #include <AppKit/AppKit.h>
 
@@ -60,7 +68,7 @@ private:
 #endif
 
 
-#ifdef OPENWAR_USE_INPUT_EDITOR_IOS
+#ifdef PHALANX_USING_INPUTEDITOR_IOS
 
 #include <UIKit/UIKit.h>
 class InputEditor_iOS;
@@ -94,7 +102,7 @@ private:
 #endif
 
 
-#ifdef OPENWAR_USE_INPUT_EDITOR_ANDROID
+#ifdef PHALANX_USING_INPUTEDITOR_ANDROID
 
 #include <jni.h>
 #include <string>

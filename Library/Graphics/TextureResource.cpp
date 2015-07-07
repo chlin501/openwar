@@ -6,7 +6,7 @@
 #include "GraphicsContext.h"
 #include "Image.h"
 
-#if TARGET_OS_IPHONE
+#ifdef PHALANX_TARGET_OS_IOS
 #import <UIKit/UIKit.h>
 #endif
 
@@ -25,7 +25,7 @@ static bool HasSupportForTextureCompressionPvrtc()
 	static bool result = false;
 	if (!initialized)
 	{
-#if TARGET_OS_IPHONE
+#ifdef PHALANX_TARGET_OS_IOS
 		NSString* extensionsString = [NSString stringWithCString:(const char*)glGetString(GL_EXTENSIONS) encoding:NSASCIIStringEncoding];
 		NSArray* extensionsNames = [extensionsString componentsSeparatedByString:@" "];
 		result = [extensionsNames containsObject:@"GL_IMG_texture_compression_pvrtc"];
@@ -39,7 +39,7 @@ static bool HasSupportForTextureCompressionPvrtc()
 
 void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const Resource& r)
 {
-#if TARGET_OS_IPHONE
+#ifdef PHALANX_TARGET_OS_IOS
 
 	if (HasSupportForTextureCompressionPvrtc())
 	{

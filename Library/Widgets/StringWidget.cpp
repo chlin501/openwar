@@ -13,11 +13,11 @@
 #include <locale>
 
 
-#ifndef OPENWAR_USE_UBIDI
-#error "OPENWAR_USE_UBIDI is undefined"
+#ifndef PHALANX_ENABLE_UBIDI
+#error "PHALANX_ENABLE_UBIDI is undefined"
 #endif
 
-#if OPENWAR_USE_UBIDI
+#if PHALANX_ENABLE_UBIDI
 
 #import <Foundation/Foundation.h>
 #include "unicode/ubidi.h"

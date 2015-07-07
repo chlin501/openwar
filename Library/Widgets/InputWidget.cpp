@@ -130,11 +130,11 @@ void InputWidget::ShowInputEditor()
 {
 	if (_inputEditor == nullptr)
 	{
-#if defined(OPENWAR_USE_INPUT_EDITOR_MAC)
+#if defined(PHALANX_USING_INPUTEDITOR_MAC)
 		_inputEditor = new InputEditor_Mac(this);
-#elif defined(OPENWAR_USE_INPUT_EDITOR_IOS)
+#elif defined(PHALANX_USING_INPUTEDITOR_IOS)
 		_inputEditor = new InputEditor_iOS(this);
-#elif defined(OPENWAR_USE_INPUT_EDITOR_ANDROID)
+#elif defined(PHALANX_USING_INPUTEDITOR_ANDROID)
 		_inputEditor = new InputEditor_Android(this);
 #endif
 	}

@@ -5,11 +5,20 @@
 #ifndef FontAdapter_H
 #define FontAdapter_H
 
+#if defined(PHALANX_TARGET_OS_MAC)
+#define PHALANX_USING_FONTADAPTER_NSFONT
+#elif defined(PHALANX_TARGET_OS_IOS)
+#define PHALANX_USING_FONTADAPTER_UIFONT
+#elif defined(PHALANX_TARGET_UI_SDL) && !defined(PHALANX_TARGET_OS_EMSCRIPTEN)
+#define PHALANX_USING_FONTADAPTER_SDLTTF
+#endif
+
+
 #include <functional>
 
 #include "FontDescriptor.h"
-#include "GraphicsContext.h"
 
+class GraphicsContext;
 class Image;
 class TextureAtlas;
 class TextureImage;
@@ -40,7 +49,7 @@ public:
 };
 
 
-#ifdef OPENWAR_USE_FONT_ADAPTER_NSFONT
+#ifdef PHALANX_USING_FONTADAPTER_NSFONT
 @class NSFont;
 @class NSDictionary;
 class FontAdapter_NSFont : public FontAdapter
@@ -56,7 +65,7 @@ public:
 #endif
 
 
-#ifdef OPENWAR_USE_FONT_ADAPTER_UIFONT
+#ifdef PHALANX_USING_FONTADAPTER_UIFONT
 @class UIFont;
 @class NSDictionary;
 class FontAdapter_UIFont : public FontAdapter
@@ -72,7 +81,7 @@ public:
 #endif
 
 
-#ifdef OPENWAR_USE_FONT_ADAPTER_SDL_TTF
+#ifdef PHALANX_USING_FONTADAPTER_SDLTTF
 class FontAdapter_SDL_ttf : public FontAdapter
 {
 	TTF_Font* _font1{};

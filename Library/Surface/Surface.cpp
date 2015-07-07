@@ -8,19 +8,19 @@
 #include "Touch.h"
 #include "Graphics/GraphicsContext.h"
 
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
+#ifdef PHALANX_TARGET_UI_APPKIT
 #import <AppKit/AppKit.h>
 #endif
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_IOS
+#ifdef PHALANX_TARGET_UI_UIKIT
 #import <UIKit/UIKit.h>
 #endif
 
 
 Surface::Surface(GraphicsContext* gc) :
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
+#ifdef PHALANX_TARGET_UI_APPKIT
 	_nsview(nil),
 #endif
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_IOS
+#ifdef PHALANX_TARGET_UI_UIKIT
 	_uiview(nil),
 #endif
 	_gc(gc)
@@ -57,7 +57,7 @@ glm::vec2 Surface::GetVirtualSize() const
 }
 
 
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
+#ifdef PHALANX_TARGET_UI_APPKIT
 void Surface::SetNSView(NSView* value)
 {
     _nsview = value;
@@ -65,7 +65,7 @@ void Surface::SetNSView(NSView* value)
 #endif
 
 
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_MAC
+#ifdef PHALANX_TARGET_UI_APPKIT
 NSView* Surface::GetNSView() const
 {
 	return _nsview;
@@ -73,7 +73,7 @@ NSView* Surface::GetNSView() const
 #endif
 
 
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_IOS
+#ifdef PHALANX_TARGET_UI_UIKIT
 void Surface::SetUIView(UIView* value)
 {
 	_uiview = value;
@@ -81,7 +81,7 @@ void Surface::SetUIView(UIView* value)
 #endif
 
 
-#ifdef OPENWAR_USE_SURFACE_ADAPTER_IOS
+#ifdef PHALANX_TARGET_UI_UIKIT
 UIView* Surface::GetUIView() const
 {
 	return _uiview;
