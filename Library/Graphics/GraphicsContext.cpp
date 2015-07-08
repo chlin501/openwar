@@ -9,6 +9,17 @@
 #include "FrameBuffer.h"
 
 
+void CheckOpenGLError(const char* file, int line)
+{
+    //GLenum error = glGetError();
+    //if (error != GL_NO_ERROR)
+	//{
+	//	std::cout << "glGetError: " << error << " " << file << ":" << line << "\n";
+	//	//	NSLog(@"glGetError() = %#06x", (int)error); //TODO: should log error
+	//}
+}
+
+
 GraphicsContext::GraphicsContext(float nativeScaling, float virtualScaling) :
 	_nativeScaling(nativeScaling),
 	_virtualScaling(virtualScaling)

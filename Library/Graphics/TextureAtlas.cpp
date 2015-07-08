@@ -47,11 +47,11 @@ void TextureAtlas::LoadTextureFromSurface(SDL_Surface* surface)
 	SDL_LockSurface(surface);
 
 	glBindTexture(GL_TEXTURE_2D, _id);
-	CHECK_ERROR_GL();
+	CHECK_OPENGL_ERROR();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
-	CHECK_ERROR_GL();
+	CHECK_OPENGL_ERROR();
 	glGenerateMipmap(GL_TEXTURE_2D);
-	CHECK_ERROR_GL();
+	CHECK_OPENGL_ERROR();
 
 	SDL_UnlockSurface(surface);
 

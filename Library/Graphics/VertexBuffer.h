@@ -45,7 +45,7 @@ public:
 		if (_vbo == 0)
 		{
 			glGenBuffers(1, &this->_vbo);
-			CHECK_ERROR_GL();
+            CHECK_OPENGL_ERROR();
 			if (_vbo == 0)
 				return;
 		}
@@ -53,12 +53,15 @@ public:
 		GLsizeiptr size = static_cast<GLsizeiptr>(sizeof(VertexT) * count);
 		const GLvoid* data = static_cast<const GLvoid*>(vertices);
 
-		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		CHECK_ERROR_GL();
-		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-		CHECK_ERROR_GL();
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		CHECK_ERROR_GL();
+        if (size != 0)
+        {
+            glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+            CHECK_OPENGL_ERROR();
+            glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+            CHECK_OPENGL_ERROR();
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            CHECK_OPENGL_ERROR();
+        }
 
 		_count = (GLsizei)count;
 	}

@@ -69,9 +69,10 @@
 
 
 
-#ifndef CHECK_ERROR_GL
-extern void CHECK_ERROR_GL();
-#endif
+#define CHECK_OPENGL_ERROR() CheckOpenGLError(__FILE__, __LINE__)
+
+extern void CheckOpenGLError(const char* file, int line);
+
 
 
 #ifndef GL_POINT_SPRITE

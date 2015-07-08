@@ -16,7 +16,7 @@ VertexBufferBase::~VertexBufferBase()
 	if (_vbo != 0)
 	{
 		glDeleteBuffers(1, &_vbo);
-		CHECK_ERROR_GL();
+        CHECK_OPENGL_ERROR();
 	}
 }
 

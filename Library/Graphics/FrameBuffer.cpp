@@ -10,7 +10,7 @@
 FrameBuffer::FrameBuffer()
 {
 	glGenFramebuffers(1, &_id);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 }
 
 
@@ -19,7 +19,7 @@ FrameBuffer::~FrameBuffer()
 	if (_id != 0)
 	{
 		glDeleteFramebuffers(1, &_id);
-		CHECK_ERROR_GL();
+        CHECK_OPENGL_ERROR();
 	}
 }
 
@@ -91,10 +91,10 @@ void FrameBuffer::AttachColor(RenderBuffer* value)
 	GLint old;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &old);
 	glBindFramebuffer(GL_FRAMEBUFFER, _id);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, value->_id);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 
 	_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
@@ -109,10 +109,10 @@ void FrameBuffer::AttachColor(Texture* value)
 	GLint old;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &old);
 	glBindFramebuffer(GL_FRAMEBUFFER, _id);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, value->_id, 0);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 
 	_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
@@ -127,10 +127,10 @@ void FrameBuffer::AttachDepth(RenderBuffer* value)
 	GLint old;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &old);
 	glBindFramebuffer(GL_FRAMEBUFFER, _id);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, value->_id);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 
 	_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
@@ -145,10 +145,10 @@ void FrameBuffer::AttachDepth(Texture* value)
 	GLint old;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &old);
 	glBindFramebuffer(GL_FRAMEBUFFER, _id);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, value->_id, 0);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 
 	_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 

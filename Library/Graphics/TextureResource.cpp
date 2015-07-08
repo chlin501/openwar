@@ -49,9 +49,9 @@ void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const Resourc
 		if (pvrtc != nil)
 		{
 			glBindTexture(GL_TEXTURE_2D, _id);
-			CHECK_ERROR_GL();
+			CHECK_OPENGL_ERROR();
 			glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG, 1024, 1024, 0, pvrtc.length, pvrtc.bytes);
-			CHECK_ERROR_GL();
+			CHECK_OPENGL_ERROR();
 			return;
 		}
 	}

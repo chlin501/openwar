@@ -23,7 +23,7 @@ void RenderCallUniformBase::Assign(int value)
 	if (_location != -1)
 	{
 		glUniform1iv(_location, 1, (const GLint*)&value);
-		CHECK_ERROR_GL();
+        CHECK_OPENGL_ERROR();
 	}
 	else
 	{
@@ -35,49 +35,49 @@ void RenderCallUniformBase::Assign(int value)
 void RenderCallUniformBase::Assign(float value)
 {
 	glUniform1fv(_location, 1, (const GLfloat*)&value);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 }
 
 
 void RenderCallUniformBase::Assign(const glm::vec2& value)
 {
 	glUniform2fv(_location, 1, reinterpret_cast<const GLfloat*>(&value));
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 }
 
 
 void RenderCallUniformBase::Assign(const glm::vec3& value)
 {
 	glUniform3fv(_location, 1, reinterpret_cast<const GLfloat*>(&value));
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 }
 
 
 void RenderCallUniformBase::Assign(const glm::vec4& value)
 {
 	glUniform4fv(_location, 1, reinterpret_cast<const GLfloat*>(&value));
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 }
 
 
 void RenderCallUniformBase::Assign(const glm::mat2& value)
 {
 	glUniformMatrix2fv(_location, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&value));
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 }
 
 
 void RenderCallUniformBase::Assign(const glm::mat3& value)
 {
 	glUniformMatrix3fv(_location, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&value));
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 }
 
 
 void RenderCallUniformBase::Assign(const glm::mat4& value)
 {
 	glUniformMatrix4fv(_location, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&value));
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 }
 
 
@@ -105,20 +105,20 @@ void RenderCallTexture::Assign()
 		_value->UpdateTexture();
 
 		glActiveTexture(GL_TEXTURE0 + _texture);
-		CHECK_ERROR_GL();
+        CHECK_OPENGL_ERROR();
 		glBindTexture(GL_TEXTURE_2D, _value->_id);
-		CHECK_ERROR_GL();
+        CHECK_OPENGL_ERROR();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(_sampler.minFilter));
-		CHECK_ERROR_GL();
+        CHECK_OPENGL_ERROR();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(_sampler.magFilter));
-		CHECK_ERROR_GL();
+        CHECK_OPENGL_ERROR();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLint>(_sampler.sAddressMode));
-		CHECK_ERROR_GL();
+        CHECK_OPENGL_ERROR();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLint>(_sampler.tAddressMode));
-		CHECK_ERROR_GL();
+        CHECK_OPENGL_ERROR();
 	}
 	glUniform1i(_location, (GLint)_texture);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 }
 
 
@@ -190,12 +190,12 @@ void RenderCallBase::Render(const Viewport& viewport)
 			texture->Assign();
 
 		glUseProgram(_shaderProgram->_program);
-		CHECK_ERROR_GL();
+        CHECK_OPENGL_ERROR();
 
 		if (_vertices->_vbo != 0)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, _vertices->_vbo);
-			CHECK_ERROR_GL();
+            CHECK_OPENGL_ERROR();
 		}
 
 		for (const RenderCallAttribute& attribute : _attributes)
@@ -205,21 +205,21 @@ void RenderCallBase::Render(const Viewport& viewport)
 				GLuint index = static_cast<GLuint>(attribute._index);
 
 				glEnableVertexAttribArray(index);
-				CHECK_ERROR_GL();
+                CHECK_OPENGL_ERROR();
 
 				const GLvoid* pointer = reinterpret_cast<const GLvoid*>(attribute._offset);
 
 				glVertexAttribPointer(index, attribute._size, attribute._type, GL_FALSE, attribute._stride, pointer);
-				CHECK_ERROR_GL();
+                CHECK_OPENGL_ERROR();
 			}
 		}
 
 		if (_shaderProgram->_blend_sfactor != GL_ONE || _shaderProgram->_blend_dfactor != GL_ZERO)
 		{
 			glEnable(GL_BLEND);
-			CHECK_ERROR_GL();
+            CHECK_OPENGL_ERROR();
 			glBlendFunc(_shaderProgram->_blend_sfactor, _shaderProgram->_blend_dfactor);
-			CHECK_ERROR_GL();
+            CHECK_OPENGL_ERROR();
 		}
 
 		if (_lineWidth != 0)
@@ -238,14 +238,14 @@ void RenderCallBase::Render(const Viewport& viewport)
 			glDisable(GL_CULL_FACE);
 
 		glDrawArrays(_vertices->_mode, 0, _vertices->_count);
-		CHECK_ERROR_GL();
+        CHECK_OPENGL_ERROR();
 
 		if (_shaderProgram->_blend_sfactor != GL_ONE || _shaderProgram->_blend_dfactor != GL_ZERO)
 		{
 			glDisable(GL_BLEND);
-			CHECK_ERROR_GL();
+            CHECK_OPENGL_ERROR();
 			glBlendFunc(GL_ONE, GL_ZERO);
-			CHECK_ERROR_GL();
+            CHECK_OPENGL_ERROR();
 		}
 
 		for (const RenderCallAttribute& attribute : _attributes)
@@ -253,14 +253,14 @@ void RenderCallBase::Render(const Viewport& viewport)
 			if (attribute._index != -1)
 			{
 				glDisableVertexAttribArray(static_cast<GLuint>(attribute._index));
-				CHECK_ERROR_GL();
+                CHECK_OPENGL_ERROR();
 			}
 		}
 
 		if (_vertices->_vbo != 0)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			CHECK_ERROR_GL();
+            CHECK_OPENGL_ERROR();
 		}
 	}
 

@@ -11,10 +11,6 @@
 #include <map>
 #include <vector>
 
-#ifndef CHECK_ERROR_GL
-extern void CHECK_ERROR_GL();
-#endif
-
 
 #define VERTEX_SHADER(source) (#source)
 #define FRAGMENT_SHADER(source) (#source)

@@ -5,43 +5,38 @@
 #include "RenderBuffer.h"
 
 
-#ifndef CHECK_ERROR_GL
-extern void CHECK_ERROR_GL();
-#endif
-
-
 
 RenderBuffer::RenderBuffer()
 {
 	glGenRenderbuffers(1, &_id);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 }
 
 
 RenderBuffer::~RenderBuffer()
 {
 	glDeleteRenderbuffers(1, &_id);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 }
 
 
 void RenderBuffer::PrepareColorBuffer(GLsizei width, GLsizei height)
 {
 	glBindRenderbuffer(GL_RENDERBUFFER, _id);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, width, height);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 }
 
 
 void RenderBuffer::PrepareDepthBuffer(GLsizei width, GLsizei height)
 {
 	glBindRenderbuffer(GL_RENDERBUFFER, _id);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	CHECK_ERROR_GL();
+    CHECK_OPENGL_ERROR();
 }

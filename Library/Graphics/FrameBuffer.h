@@ -7,9 +7,6 @@
 
 #include "GraphicsContext.h"
 
-#ifndef CHECK_ERROR_GL
-extern void CHECK_ERROR_GL();
-#endif
 
 struct RenderBuffer;
 struct Texture;

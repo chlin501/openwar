@@ -205,9 +205,13 @@ Image& Image::LoadFromResource(const Resource& r)
 
 #ifdef PHALANX_TARGET_UI_SDL
 
-	_surface = EnsureSurfaceFormat(IMG_Load(r.path()));
+
+    _surface = IMG_Load(r.path());
 	if (_surface)
-	{
+    	_surface = EnsureSurfaceFormat(_surface);
+
+    if (_surface)
+    {
 		_width = _surface->w;
 		_height = _surface->h;
 		_pixels = (unsigned char*)_surface->pixels ;
@@ -216,7 +220,7 @@ Image& Image::LoadFromResource(const Resource& r)
 	}
 	else
 	{
-		_width = 0;
+    	_width = 0;
 		_height = 0;
 		_pixels = nullptr;
 		_owner = false;
