@@ -23,13 +23,13 @@
 BattleSimulator::BattleSimulator(BattleMap* battleMap) :
 	_battleMap{battleMap}
 {
-	_dummyCommander = new BattleCommander(this, "", 1, BattleCommanderType::None);
+	_dummyCommander = new BattleObjects::Commander(this, "", 1, BattleObjects::CommanderType::None);
 }
 
 
 BattleSimulator::~BattleSimulator()
 {
-	for (BattleCommander* commander : _commanders)
+	for (BattleObjects::Commander* commander : _commanders)
 		delete commander;
 
 	delete _script;
@@ -168,7 +168,7 @@ void BattleSimulator::Deploy(Unit* unit, glm::vec2 position)
 }
 
 
-Unit* BattleSimulator::AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position)
+Unit* BattleSimulator::AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position)
 {
 	Unit* unit = new Unit();
 
@@ -255,7 +255,7 @@ void BattleSimulator::NewUnit(int commanderId, const char* unitClass, int streng
 {
 	UnitStats unitStats = SamuraiModule::GetDefaultUnitStats(unitClass);
 
-	BattleCommander* commander = GetCommanders()[commanderId - 1];
+	BattleObjects::Commander* commander = GetCommanders()[commanderId - 1];
 
 	Unit* unit = AddUnit(commander, unitClass, strength, unitStats, position);
 	unit->command.bearing = glm::radians(90 - bearing);
@@ -1173,17 +1173,17 @@ int BattleSimulator::GetTeamPosition(int team) const
 }
 
 
-BattleCommander* BattleSimulator::AddCommander(const char* playerId, int team, BattleCommanderType type)
+BattleObjects::Commander* BattleSimulator::AddCommander(const char* playerId, int team, BattleObjects::CommanderType type)
 {
-	BattleCommander* commander = new BattleCommander(this, playerId, team, type);
+	BattleObjects::Commander* commander = new BattleObjects::Commander(this, playerId, team, type);
 	_commanders.push_back(commander);
 	return commander;
 }
 
 
-BattleCommander* BattleSimulator::GetCommander(const char* playerId) const
+BattleObjects::Commander* BattleSimulator::GetCommander(const char* playerId) const
 {
-	for (BattleCommander* commander : _commanders)
+	for (BattleObjects::Commander* commander : _commanders)
 		if (std::strcmp(commander->GetPlayerId(), playerId) == 0)
 			return commander;
 
@@ -1191,7 +1191,7 @@ BattleCommander* BattleSimulator::GetCommander(const char* playerId) const
 }
 
 
-BattleCommander* BattleSimulator::GetDummyCommander() const
+BattleObjects::Commander* BattleSimulator::GetDummyCommander() const
 {
 	return _dummyCommander;
 }

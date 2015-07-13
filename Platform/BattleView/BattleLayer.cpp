@@ -24,7 +24,7 @@ BattleLayer::~BattleLayer()
 }
 
 
-void BattleLayer::ResetBattleViews(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders)
+void BattleLayer::ResetBattleViews(BattleSimulator* scenario, const std::vector<BattleObjects::Commander*>& commanders)
 {
 	delete _editorModel;
 	_editorModel = nullptr;
@@ -40,7 +40,7 @@ void BattleLayer::ResetBattleViews(BattleSimulator* scenario, const std::vector<
 
 	for (int i = 0; i < count; ++i)
 	{
-		BattleCommander* commander = _commanders[i];
+		BattleObjects::Commander* commander = _commanders[i];
 		if (i < (int)_battleViews.size())
 			ResetBattleView(_battleViews[i], commander);
 		else
@@ -51,7 +51,7 @@ void BattleLayer::ResetBattleViews(BattleSimulator* scenario, const std::vector<
 }
 
 
-void BattleLayer::ResetEditor(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders)
+void BattleLayer::ResetEditor(BattleSimulator* scenario, const std::vector<BattleObjects::Commander*>& commanders)
 {
 	delete _editorModel;
 	_editorModel = nullptr;
@@ -135,7 +135,7 @@ void BattleLayer::Render()
 }
 
 
-void BattleLayer::CreateBattleView(BattleCommander* commander)
+void BattleLayer::CreateBattleView(BattleObjects::Commander* commander)
 {
 	BattleSimulator* simulator = _scenario;
 
@@ -155,7 +155,7 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 }
 
 
-void BattleLayer::ResetBattleView(BattleView* battleView, BattleCommander* commander)
+void BattleLayer::ResetBattleView(BattleView* battleView, BattleObjects::Commander* commander)
 {
 	battleView->GetTerrainViewport().SetFlip(commander != _commanders[0]);
 	battleView->SetCommander(commander);

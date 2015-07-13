@@ -8,63 +8,6 @@
 
 
 
-BattleCommander::BattleCommander(BattleSimulator* simulator, const char* playerId, int team, BattleCommanderType type) :
-	_simulator{simulator},
-	_playerId{playerId},
-	_team{team},
-	_type{type}
-{
-}
-
-
-const char* BattleCommander::GetPlayerId() const
-{
-	return _playerId.c_str();
-}
-
-
-int BattleCommander::GetTeam() const
-{
-	return _team;
-}
-
-
-BattleCommanderType BattleCommander::GetType() const
-{
-	return _type;
-}
-
-
-int BattleCommander::GetTeamPosition() const
-{
-	return _simulator->GetTeamPosition(_team);
-}
-
-
-bool BattleCommander::IsIncapacitated() const
-{
-	return _isIncapacitated;
-}
-
-
-void BattleCommander::SetIncapacitated(bool value)
-{
-	_isIncapacitated = value;
-}
-
-
-bool BattleCommander::HasAbandonedBattle() const
-{
-	return _hasAbandonedBattle;
-}
-
-
-void BattleCommander::SetAbandonedBattle(bool value)
-{
-	_hasAbandonedBattle = value;
-}
-
-
 static float normalize_angle(float a)
 {
 	static float two_pi = 2.0f * (float)M_PI;
@@ -149,7 +92,7 @@ void Unit::SetOwnedBySimulator(bool value)
 }
 
 
-bool Unit::IsFriendlyCommander(BattleCommander* battleCommander) const
+bool Unit::IsFriendlyCommander(BattleObjects::Commander* battleCommander) const
 {
 	if (battleCommander == nullptr)
 		return false;
@@ -157,7 +100,7 @@ bool Unit::IsFriendlyCommander(BattleCommander* battleCommander) const
 	if (commander == battleCommander)
 		return true;
 
-	if (battleCommander->GetType() == BattleCommanderType::None)
+	if (battleCommander->GetType() == BattleObjects::CommanderType::None)
 		return false;
 
 	if (commander->GetTeam() != battleCommander->GetTeam())
@@ -167,7 +110,7 @@ bool Unit::IsFriendlyCommander(BattleCommander* battleCommander) const
 }
 
 
-bool Unit::IsCommandableBy(BattleCommander* battleCommander) const
+bool Unit::IsCommandableBy(BattleObjects::Commander* battleCommander) const
 {
 	if (battleCommander == nullptr)
 		return false;
@@ -175,7 +118,7 @@ bool Unit::IsCommandableBy(BattleCommander* battleCommander) const
 	if (commander == battleCommander)
 		return true;
 
-	if (battleCommander->GetType() == BattleCommanderType::None)
+	if (battleCommander->GetType() == BattleObjects::CommanderType::None)
 		return false;
 
 	if (commander->IsIncapacitated() && commander->GetTeam() == battleCommander->GetTeam())

@@ -36,8 +36,8 @@ class BattleSimulator
 
 	/***/
 	BattleScript* _script{};
-	std::vector<BattleCommander*> _commanders{};
-	BattleCommander* _dummyCommander{};
+	std::vector<BattleObjects::Commander*> _commanders{};
+	BattleObjects::Commander* _dummyCommander{};
 	int _teamPosition1{};
 	int _teamPosition2{};
 	float _deploymentTimer{};
@@ -67,7 +67,7 @@ public:
 	void Deploy(Unit* unit, glm::vec2 position);
 
 	const std::vector<Unit*>& GetUnits() { return _units; }
-	Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
+	Unit* AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
 	void RemoveUnit(Unit* unit);
 
 	void NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing);
@@ -123,10 +123,10 @@ public:
 	void SetTeamPosition(int team, int position);
 	int GetTeamPosition(int team) const;
 
-	BattleCommander* AddCommander(const char* playerId, int team, BattleCommanderType type);
-	BattleCommander* GetCommander(const char* playerId) const;
-	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
-	BattleCommander* GetDummyCommander() const;
+	BattleObjects::Commander* AddCommander(const char* playerId, int team, BattleObjects::CommanderType type);
+	BattleObjects::Commander* GetCommander(const char* playerId) const;
+	const std::vector<BattleObjects::Commander*>& GetCommanders() const { return _commanders; }
+	BattleObjects::Commander* GetDummyCommander() const;
 
 	void Tick(double secondsSinceLastTick);
 

@@ -96,7 +96,7 @@ OpenWarSurface::~OpenWarSurface()
 }
 
 
-void OpenWarSurface::ResetBattleViews(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders)
+void OpenWarSurface::ResetBattleViews(BattleSimulator* scenario, const std::vector<BattleObjects::Commander*>& commanders)
 {
 	_battleLayer->ResetEditor(scenario, commanders);
 	_battleLayer->SetPlaying(false);

@@ -8,8 +8,9 @@
 #include <string>
 #include <glm/glm.hpp>
 
+#include "BattleObjects.h"
 
-class BattleCommander;
+
 class BattleMap;
 class BattleScript;
 class GroundMap;
@@ -18,34 +19,6 @@ struct Fighter;
 struct Unit;
 
 class BattleSimulator;
-
-enum class BattleCommanderType { None = 0, Player = 1, Script = 2 };
-
-
-class BattleCommander
-{
-	BattleSimulator* _simulator{};
-	std::string _playerId{};
-	int _team{};
-	BattleCommanderType _type{};
-	bool _isIncapacitated{};
-	bool _hasAbandonedBattle{};
-
-public:
-	BattleCommander(BattleSimulator* simulator, const char* playerId, int team, BattleCommanderType type);
-
-	const char* GetPlayerId() const;
-	int GetTeam() const;
-	BattleCommanderType GetType() const;
-
-	int GetTeamPosition() const;
-
-	bool IsIncapacitated() const;
-	void SetIncapacitated(bool value);
-
-	bool HasAbandonedBattle() const;
-	void SetAbandonedBattle(bool value);
-};
 
 
 enum class PlatformType
@@ -260,7 +233,7 @@ struct Formation
 struct Unit
 {
 	// static attributes
-	BattleCommander* commander{};
+	BattleObjects::Commander* commander{};
 	std::string unitClass{};
 	UnitStats stats{};
 	Fighter* fighters{};
@@ -292,8 +265,8 @@ struct Unit
 	bool IsOwnedBySimulator() const;
 	void SetOwnedBySimulator(bool value);
 
-	bool IsFriendlyCommander(BattleCommander* battleCommander) const;
-	bool IsCommandableBy(BattleCommander* battleCommander) const;
+	bool IsFriendlyCommander(BattleObjects::Commander* battleCommander) const;
+	bool IsCommandableBy(BattleObjects::Commander* battleCommander) const;
 
 	bool IsInMelee() const;
 

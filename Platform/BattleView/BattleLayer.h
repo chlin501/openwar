@@ -5,8 +5,8 @@
 #include "Graphics/CommonShaders.h"
 #include "Surface/Animation.h"
 #include "TerrainView/EditorModel.h"
+#include "BattleObjects.h"
 
-class BattleCommander;
 class BattleGesture;
 class BattleModel;
 class BattleSimulator;
@@ -30,7 +30,7 @@ class BattleLayer : AnimationHost, EditorModelObserver
 	bool _editing{};
 
 	BattleSimulator* _scenario{};
-	std::vector<BattleCommander*> _commanders{};
+	std::vector<BattleObjects::Commander*> _commanders{};
 
 	std::vector<BattleView*> _battleViews{};
 
@@ -46,8 +46,8 @@ public:
 	BattleView* GetPrimaryBattleView() const { return _battleViews.empty() ? nullptr : _battleViews.front(); }
 	EditorModel* GetEditorModel() const { return _editorModel; }
 
-	void ResetBattleViews(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders);
-	void ResetEditor(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders);
+	void ResetBattleViews(BattleSimulator* scenario, const std::vector<BattleObjects::Commander*>& commanders);
+	void ResetEditor(BattleSimulator* scenario, const std::vector<BattleObjects::Commander*>& commanders);
 
 	void ResetCameraPosition();
 
@@ -66,8 +66,8 @@ public: // EditorModelObserver
 	virtual void OnTerrainFeatureChanged(EditorModel* editorModel);
 
 private:
-	void CreateBattleView(BattleCommander* commander);
-	void ResetBattleView(BattleView* battleView, BattleCommander* commander);
+	void CreateBattleView(BattleObjects::Commander* commander);
+	void ResetBattleView(BattleView* battleView, BattleObjects::Commander* commander);
 	void RemoveBattleView(BattleView* battleView);
 
 	void UpdateBattleViewSize();
