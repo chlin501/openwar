@@ -5,9 +5,6 @@
 #ifndef BattleObjects_v1_H
 #define BattleObjects_v1_H
 
-#include <string>
-#include <glm/glm.hpp>
-
 #include "BattleObjects.h"
 
 class BattleMap;
@@ -49,14 +46,6 @@ namespace BattleObjects_v1
 	};
 
 
-	struct Projectile
-	{
-		glm::vec2 position1{};
-		glm::vec2 position2{};
-		float delay{};
-	};
-
-
 	struct Shooting
 	{
 		Unit* unit{};
@@ -64,7 +53,7 @@ namespace BattleObjects_v1
 		float timeToImpact{};
 		glm::vec2 target{};
 		bool released{};
-		std::vector<Projectile> projectiles{};
+		std::vector<BattleObjects::Projectile> projectiles{};
 	};
 
 
@@ -97,10 +86,9 @@ namespace BattleObjects_v1
 	};
 
 
-	struct Fighter
+	struct Fighter : public BattleObjects::Fighter
 	{
-		// static attributes
-		Unit* unit{};
+		Unit* GetUnit() const;
 
 		// dynamic attributes
 		FighterState state{};
@@ -237,10 +225,8 @@ namespace BattleObjects_v1
 	};
 
 
-	struct Unit
+	struct Unit : public BattleObjects::Unit
 	{
-		// static attributes
-		BattleObjects::Commander* commander{};
 		std::string unitClass{};
 		UnitStats stats{};
 		Fighter* fighters{};
@@ -284,6 +270,10 @@ namespace BattleObjects_v1
 		static int GetFighterFile(Fighter* fighter);
 		static Fighter* GetFighter(Unit* unit, int rank, int file);
 	};
+
+
+	inline Unit* Fighter::GetUnit() const { return static_cast<Unit*>(unit); }
+
 
 } // namespace BattleObjects_v1
 

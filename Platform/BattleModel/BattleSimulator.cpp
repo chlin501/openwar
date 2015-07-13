@@ -491,9 +491,9 @@ void BattleSimulator::ResolveMeleeCombat()
 		for (BattleObjects_v1::Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
 		{
 			BattleObjects_v1::Fighter* meleeTarget = fighter->state.meleeTarget;
-			if (meleeTarget && meleeTarget->unit->IsOwnedBySimulator())
+			if (meleeTarget && meleeTarget->GetUnit()->IsOwnedBySimulator())
 			{
-				BattleObjects_v1::Unit* enemyUnit = meleeTarget->unit;
+				BattleObjects_v1::Unit* enemyUnit = meleeTarget->GetUnit();
 				float killProbability = 0.5f;
 
 				killProbability *= 1.25f + unit->stats.trainingLevel;
@@ -520,7 +520,7 @@ void BattleSimulator::ResolveMeleeCombat()
 					meleeTarget->state.stunnedTimer = 0.6f;
 				}
 
-				fighter->state.readyingTimer = fighter->unit->stats.readyingDuration;
+				fighter->state.readyingTimer = fighter->GetUnit()->stats.readyingDuration;
 			}
 		}
 	}
@@ -566,7 +566,7 @@ void BattleSimulator::TriggerShooting(BattleObjects_v1::Unit* unit)
 			float dx = 10.0f * ((rand() & 255) / 128.0f - 1.0f);
 			float dy = 10.0f * ((rand() & 255) / 127.0f - 1.0f);
 
-			BattleObjects_v1::Projectile projectile;
+			BattleObjects::Projectile projectile;
 			projectile.position1 = fighter->state.position;
 			projectile.position2 = shooting.target + glm::vec2(dx, dy);
 			projectile.delay = (arq ? 0.5f : 0.2f) * ((rand() & 0x7FFF) / (float)0x7FFF);
@@ -606,17 +606,17 @@ void BattleSimulator::ResolveProjectileCasualties()
 
 			shooting.timeToImpact -= _timeStep;
 
-			std::vector<BattleObjects_v1::Projectile>::iterator i = shooting.projectiles.begin();
+			std::vector<BattleObjects::Projectile>::iterator i = shooting.projectiles.begin();
 			while (i != shooting.projectiles.end())
 			{
-				BattleObjects_v1::Projectile& projectile = *i;
+				BattleObjects::Projectile& projectile = *i;
 				if (shooting.timeToImpact + projectile.delay <= 0)
 				{
 					glm::vec2 hitpoint = projectile.position2;
 					for (quadtree<BattleObjects_v1::Fighter*>::iterator j(_fighterQuadTree.find(hitpoint.x, hitpoint.y, 0.45f)); *j; ++j)
 					{
 						BattleObjects_v1::Fighter* fighter = **j;
-						if (fighter->unit->IsOwnedBySimulator())
+						if (fighter->GetUnit()->IsOwnedBySimulator())
 						{
 							bool blocked = false;
 							if (fighter->terrainForest)
@@ -894,7 +894,7 @@ BattleObjects_v1::FighterState BattleSimulator::NextFighterState(BattleObjects_v
 
 	// DIRECTION
 
-	if (fighter->unit->state.unitMode == BattleObjects_v1::UnitMode_Moving)
+	if (fighter->GetUnit()->state.unitMode == BattleObjects_v1::UnitMode_Moving)
 	{
 		result.bearing = angle(original.velocity);
 	}
@@ -904,19 +904,19 @@ BattleObjects_v1::FighterState BattleSimulator::NextFighterState(BattleObjects_v
 	}
 	else
 	{
-		result.bearing = fighter->unit->state.bearing;
+		result.bearing = fighter->GetUnit()->state.bearing;
 	}
 
 
 	// OPPONENT
 
 	if (original.opponent
-		&& (original.opponent - original.opponent->unit->fighters) < original.opponent->unit->fightersCount
-		&& glm::length(original.position - original.opponent->state.position) <= fighter->unit->stats.weaponReach * 2)
+		&& (original.opponent - original.opponent->GetUnit()->fighters) < original.opponent->GetUnit()->fightersCount
+		&& glm::length(original.position - original.opponent->state.position) <= fighter->GetUnit()->stats.weaponReach * 2)
 	{
 		result.opponent = original.opponent;
 	}
-	else if (fighter->unit->state.unitMode != BattleObjects_v1::UnitMode_Moving && !fighter->unit->state.IsRouting())
+	else if (fighter->GetUnit()->state.unitMode != BattleObjects_v1::UnitMode_Moving && !fighter->GetUnit()->state.IsRouting())
 	{
 		result.opponent = FindFighterStrikingTarget(fighter);
 	}
@@ -930,14 +930,14 @@ BattleObjects_v1::FighterState BattleSimulator::NextFighterState(BattleObjects_v
 	switch (original.readyState)
 	{
 		case BattleObjects_v1::ReadyState_Unready:
-			if (fighter->unit->command.meleeTarget)
+			if (fighter->GetUnit()->command.meleeTarget)
 			{
 				result.readyState = BattleObjects_v1::ReadyState_Prepared;
 			}
-			else if (fighter->unit->state.unitMode == BattleObjects_v1::UnitMode_Standing)
+			else if (fighter->GetUnit()->state.unitMode == BattleObjects_v1::UnitMode_Standing)
 			{
 				result.readyState = BattleObjects_v1::ReadyState_Readying;
-				result.readyingTimer = fighter->unit->stats.readyingDuration;
+				result.readyingTimer = fighter->GetUnit()->stats.readyingDuration;
 			}
 			break;
 
@@ -954,14 +954,14 @@ BattleObjects_v1::FighterState BattleSimulator::NextFighterState(BattleObjects_v
 			break;
 
 		case BattleObjects_v1::ReadyState_Prepared:
-			if (fighter->unit->state.unitMode == BattleObjects_v1::UnitMode_Moving && fighter->unit->command.meleeTarget == nullptr)
+			if (fighter->GetUnit()->state.unitMode == BattleObjects_v1::UnitMode_Moving && fighter->GetUnit()->command.meleeTarget == nullptr)
 			{
 				result.readyState = BattleObjects_v1::ReadyState_Unready;
 			}
 			else if (result.opponent)
 			{
 				result.readyState = BattleObjects_v1::ReadyState_Striking;
-				result.strikingTimer = fighter->unit->stats.strikingDuration;
+				result.strikingTimer = fighter->GetUnit()->stats.strikingDuration;
 			}
 			break;
 
@@ -976,7 +976,7 @@ BattleObjects_v1::FighterState BattleSimulator::NextFighterState(BattleObjects_v
 				result.meleeTarget = original.opponent;
 				result.strikingTimer = 0;
 				result.readyState = BattleObjects_v1::ReadyState_Readying;
-				result.readyingTimer = fighter->unit->stats.readyingDuration;
+				result.readyingTimer = fighter->GetUnit()->stats.readyingDuration;
 			}
 			break;
 
@@ -989,7 +989,7 @@ BattleObjects_v1::FighterState BattleSimulator::NextFighterState(BattleObjects_v
 			{
 				result.stunnedTimer = 0;
 				result.readyState = BattleObjects_v1::ReadyState_Readying;
-				result.readyingTimer = fighter->unit->stats.readyingDuration;
+				result.readyingTimer = fighter->GetUnit()->stats.readyingDuration;
 			}
 			break;
 	}
@@ -1000,7 +1000,7 @@ BattleObjects_v1::FighterState BattleSimulator::NextFighterState(BattleObjects_v
 
 glm::vec2 BattleSimulator::NextFighterPosition(BattleObjects_v1::Fighter* fighter)
 {
-	BattleObjects_v1::Unit* unit = fighter->unit;
+	BattleObjects_v1::Unit* unit = fighter->GetUnit();
 
 	if (unit->state.unitMode == BattleObjects_v1::UnitMode_Initializing)
 	{
@@ -1039,9 +1039,9 @@ glm::vec2 BattleSimulator::NextFighterPosition(BattleObjects_v1::Fighter* fighte
 		for (quadtree<BattleObjects_v1::Fighter*>::iterator i(_weaponQuadTree.find(result.x, result.y, weaponDistance)); *i; ++i)
 		{
 			BattleObjects_v1::Fighter* obstacle = **i;
-			if (obstacle->unit->commander->GetTeam() != unit->commander->GetTeam())
+			if (obstacle->GetUnit()->commander->GetTeam() != unit->commander->GetTeam())
 			{
-				glm::vec2 r = obstacle->unit->stats.weaponReach * vector2_from_angle(obstacle->state.bearing);
+				glm::vec2 r = obstacle->GetUnit()->stats.weaponReach * vector2_from_angle(obstacle->state.bearing);
 				glm::vec2 position = obstacle->state.position + r;
 				glm::vec2 diff = position - result;
 				if (glm::dot(diff, diff) < weaponDistance * weaponDistance)
@@ -1065,7 +1065,7 @@ glm::vec2 BattleSimulator::NextFighterPosition(BattleObjects_v1::Fighter* fighte
 
 glm::vec2 BattleSimulator::NextFighterVelocity(BattleObjects_v1::Fighter* fighter)
 {
-	BattleObjects_v1::Unit* unit = fighter->unit;
+	BattleObjects_v1::Unit* unit = fighter->GetUnit();
 	float speed = unit->GetSpeed();
 	glm::vec2 destination = fighter->state.destination;
 
@@ -1116,7 +1116,7 @@ glm::vec2 BattleSimulator::NextFighterVelocity(BattleObjects_v1::Fighter* fighte
 
 BattleObjects_v1::Fighter* BattleSimulator::FindFighterStrikingTarget(BattleObjects_v1::Fighter* fighter)
 {
-	BattleObjects_v1::Unit* unit = fighter->unit;
+	BattleObjects_v1::Unit* unit = fighter->GetUnit();
 
 	glm::vec2 position = fighter->state.position + unit->stats.weaponReach * vector2_from_angle(fighter->state.bearing);
 	float radius = 1.1f;
@@ -1124,7 +1124,7 @@ BattleObjects_v1::Fighter* BattleSimulator::FindFighterStrikingTarget(BattleObje
 	for (quadtree<BattleObjects_v1::Fighter*>::iterator i(_fighterQuadTree.find(position.x, position.y, radius)); *i; ++i)
 	{
 		BattleObjects_v1::Fighter* target = **i;
-		if (target != fighter && target->unit->commander->GetTeam() != unit->commander->GetTeam())
+		if (target != fighter && target->GetUnit()->commander->GetTeam() != unit->commander->GetTeam())
 		{
 			return target;
 		}
@@ -1365,7 +1365,7 @@ void MovementRules::SwapFighters(BattleObjects_v1::Unit* unit)
 
 glm::vec2 MovementRules::NextFighterDestination(BattleObjects_v1::Fighter* fighter)
 {
-	BattleObjects_v1::Unit* unit = fighter->unit;
+	BattleObjects_v1::Unit* unit = fighter->GetUnit();
 
 	const BattleObjects_v1::UnitState& unitState = unit->state;
 	const BattleObjects_v1::FighterState& fighterState = fighter->state;

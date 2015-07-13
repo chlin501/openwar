@@ -288,7 +288,7 @@ void BattleView::OnCasualty(const BattleObjects_v1::Fighter& fighter)
 {
 	SoundPlayer::GetSingleton()->PlayCasualty();
 
-	AddCasualty(fighter.unit, fighter.state.position);
+	AddCasualty(fighter.GetUnit(), fighter.state.position);
 }
 
 
@@ -350,7 +350,7 @@ void BattleView::OnBattleMapChanged(const BattleMap* battleMap)
 }
 
 
-void BattleView::AddCasualty(BattleObjects_v1::Unit* unit, glm::vec2 position)
+void BattleView::AddCasualty(const BattleObjects_v1::Unit* unit, glm::vec2 position)
 {
 	glm::vec3 p = glm::vec3(position, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(position));
 	SamuraiPlatform platform = SamuraiModule::GetSamuraiPlatform(unit->unitClass.c_str());
@@ -1001,7 +1001,7 @@ void BattleView::AddShootingCounter(const BattleObjects_v1::Shooting& shooting)
 {
 	ShootingCounter* shootingCounter = AddShootingCounter(shooting.missileType);
 
-	for (const BattleObjects_v1::Projectile& projectile : shooting.projectiles)
+	for (const BattleObjects::Projectile& projectile : shooting.projectiles)
 	{
 		glm::vec3 p1 = glm::vec3(projectile.position1, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position1));
 		glm::vec3 p2 = glm::vec3(projectile.position2, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position2));
@@ -1031,7 +1031,7 @@ void BattleView::AddSmokeMarker(const BattleObjects_v1::Shooting& shooting)
 {
 	SmokeCounter* marker = AddSmokeMarker(shooting.missileType);
 
-	for (const BattleObjects_v1::Projectile& projectile : shooting.projectiles)
+	for (const BattleObjects::Projectile& projectile : shooting.projectiles)
 	{
 		glm::vec3 p1 = glm::vec3(projectile.position1, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position1));
 		glm::vec3 p2 = glm::vec3(projectile.position2, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position2));

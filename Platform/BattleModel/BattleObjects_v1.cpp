@@ -141,14 +141,14 @@ bool BattleObjects_v1::Unit::IsInMelee() const
 
 int BattleObjects_v1::Unit::GetFighterRank(Fighter* fighter)
 {
-	Unit* unit = fighter->unit;
+	Unit* unit = fighter->GetUnit();
 	return (fighter - unit->fighters) % unit->formation.numberOfRanks;
 }
 
 
 int BattleObjects_v1::Unit::GetFighterFile(Fighter* fighter)
 {
-	Unit* unit = fighter->unit;
+	Unit* unit = fighter->GetUnit();
 	return (int)(fighter - unit->fighters) / unit->formation.numberOfRanks;
 }
 

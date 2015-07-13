@@ -94,7 +94,7 @@ private: // BattleMapObserver
 	void OnBattleMapChanged(const BattleMap* battleMap) override;
 
 public:
-	void AddCasualty(BattleObjects_v1::Unit* unit, glm::vec2 position);
+	void AddCasualty(const BattleObjects_v1::Unit* unit, glm::vec2 position);
 
 	const std::vector<UnitCounter*>& GetUnitCounters() const { return _unitMarkers; }
 
