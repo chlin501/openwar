@@ -12,7 +12,6 @@
 #include "Shapes/BillboardColorShader.h"
 #include "Surface/Surface.h"
 #include "BattleMap/BattleMap.h"
-#include "BattleModel/BattleCommander.h"
 #include "SmoothTerrain/SmoothTerrainWater.h"
 #include "SmoothTerrain/SmoothTerrainSky.h"
 #include "BattleView.h"

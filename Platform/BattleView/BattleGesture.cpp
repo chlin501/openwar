@@ -7,7 +7,6 @@
 #endif
 
 #include "BattleMap/BattleMap.h"
-#include "BattleModel/BattleCommander.h"
 #include "BattleModel/BattleSimulator.h"
 #include "Audio/SoundPlayer.h"
 #include "BattleGesture.h"
@@ -401,7 +400,7 @@ void BattleGesture::UpdateTrackingMarker()
 					10);
 
 				if (!_trackingMarker->_path.empty())
-					MovementRules::UpdateMovementPath(_trackingMarker->_path, unitCenter, _trackingMarker->_path.back());
+					MovementPath::UpdateMovementPath(_trackingMarker->_path, unitCenter, _trackingMarker->_path.back());
 			}
 
 			simulator->Deploy(unit, unitCenter);
@@ -412,9 +411,9 @@ void BattleGesture::UpdateTrackingMarker()
 		_trackingMarker->SetDestination(&markerPosition);
 
 		if (enemyUnit)
-			MovementRules::UpdateMovementPath(_trackingMarker->_path, unitCenter, enemyUnit->state.center);
+			MovementPath::UpdateMovementPath(_trackingMarker->_path, unitCenter, enemyUnit->state.center);
 		else
-			MovementRules::UpdateMovementPath(_trackingMarker->_path, unitCenter, markerPosition);
+			MovementPath::UpdateMovementPath(_trackingMarker->_path, unitCenter, markerPosition);
 
 		if (enemyUnit)
 		{
@@ -422,7 +421,7 @@ void BattleGesture::UpdateTrackingMarker()
 			glm::vec2 orientation = destination + glm::normalize(destination - unitCenter) * 18.0f;
 			_trackingMarker->SetOrientation(&orientation);
 		}
-		else if (MovementRules::Length(_trackingMarker->_path) > KEEP_ORIENTATION_TRESHHOLD)
+		else if (MovementPath::Length(_trackingMarker->_path) > KEEP_ORIENTATION_TRESHHOLD)
 		{
 			glm::vec2 dir = glm::normalize(markerPosition - unitCenter);
 			if (path.size() >= 2)
@@ -438,7 +437,7 @@ void BattleGesture::UpdateTrackingMarker()
 	}
 	else
 	{
-		MovementRules::UpdateMovementPathStart(_trackingMarker->_path, unitCenter);
+		MovementPath::UpdateMovementPathStart(_trackingMarker->_path, unitCenter);
 
 		bool holdFire = false;
 		if (_trackingMarker->GetUnit()->state.unitMode == UnitMode_Standing && _trackingMarker->GetUnit()->stats.maximumRange > 0)

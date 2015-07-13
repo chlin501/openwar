@@ -11,7 +11,6 @@
 #include "BattleMap/BattleMap.h"
 #include "BattleScript.h"
 #include "SamuraiModule.h"
-#include "BattleCommander.h"
 #include "BattleObserver.h"
 #include <glm/gtc/random.hpp>
 #include <algorithm>
@@ -19,166 +18,6 @@
 #include <cstring>
 #include <set>
 #include <sstream>
-
-
-static float normalize_angle(float a)
-{
-	static float two_pi = 2.0f * (float)M_PI;
-	while (a < 0)
-		a += two_pi;
-	while (a > two_pi)
-		a -= two_pi;
-	return a;
-}
-
-
-bool UnitRange::IsWithinRange(glm::vec2 p) const
-{
-	if (minimumRange > 0 && maximumRange > 0)
-	{
-		glm::vec2 diff = p - center;
-		float angle = glm::atan(diff.y, diff.x);
-		float angleDelta = 0.5f * angleLength;
-
-		if (glm::abs(diff_radians(angle, angleStart + angleDelta)) > angleDelta)
-			return false;
-
-		float distance = glm::length(diff);
-		if (distance < minimumRange)
-			return false;
-
-		if (!actualRanges.empty())
-		{
-			float n = actualRanges.size() - 1;
-			float k = n * normalize_angle(angle - angleStart) / angleLength;
-			float i = glm::floor(k);
-
-			float a0 = actualRanges[(int)i];
-			float a1 = actualRanges[(int)i + 1];
-			float actualRange = glm::mix(a0, a1, k - i);
-
-			return distance <= actualRange;
-		}
-	}
-
-	return false;
-}
-
-
-
-glm::vec2 Unit::CalculateUnitCenter()
-{
-	if (state.unitMode == UnitMode_Initializing)
-		return state.center;
-
-	glm::vec2 p = glm::vec2();
-	int count = 0;
-
-	for (Fighter* fighter = fighters, * end = fighter + fightersCount; fighter != end; ++fighter)
-	{
-		p += fighter->state.position;
-		++count;
-	}
-
-	return p / (float)count;
-}
-
-
-float Unit::GetSpeed()
-{
-	if (state.IsRouting())
-		return stats.runningSpeed * 1.2f;
-	else
-		return command.running || (command.meleeTarget != nullptr) ? stats.runningSpeed : stats.walkingSpeed;
-}
-
-
-bool Unit::IsOwnedBySimulator() const
-{
-	return _ownedBySimulator;
-}
-
-
-void Unit::SetOwnedBySimulator(bool value)
-{
-	_ownedBySimulator = value;
-}
-
-
-bool Unit::IsFriendlyCommander(BattleCommander* battleCommander) const
-{
-	if (battleCommander == nullptr)
-		return false;
-
-	if (commander == battleCommander)
-		return true;
-
-	if (battleCommander->GetType() == BattleCommanderType::None)
-		return false;
-
-	if (commander->GetTeam() != battleCommander->GetTeam())
-		return false;
-
-	return true;
-}
-
-
-bool Unit::IsCommandableBy(BattleCommander* battleCommander) const
-{
-	if (battleCommander == nullptr)
-		return false;
-
-	if (commander == battleCommander)
-		return true;
-
-	if (battleCommander->GetType() == BattleCommanderType::None)
-		return false;
-
-	if (commander->IsIncapacitated() && commander->GetTeam() == battleCommander->GetTeam())
-		return true;
-
-	return false;
-}
-
-
-bool Unit::IsInMelee() const
-{
-	int count = 0;
-	for (Fighter* fighter = fighters, * end = fighter + fightersCount; fighter != end; ++fighter)
-		if (fighter->state.opponent && ++count >= 3)
-			return true;
-
-	return false;
-}
-
-
-int Unit::GetFighterRank(Fighter* fighter)
-{
-	Unit* unit = fighter->unit;
-	return (fighter - unit->fighters) % unit->formation.numberOfRanks;
-}
-
-
-int Unit::GetFighterFile(Fighter* fighter)
-{
-	Unit* unit = fighter->unit;
-	return (int)(fighter - unit->fighters) / unit->formation.numberOfRanks;
-}
-
-
-Fighter* Unit::GetFighter(Unit* unit, int rank, int file)
-{
-	if (0 <= rank && rank < unit->formation.numberOfRanks && file >= 0)
-	{
-		int index = rank + file * unit->formation.numberOfRanks;
-		if (index < unit->fightersCount)
-			return unit->fighters + index;
-	}
-	return 0;
-}
-
-
-/***/
 
 
 BattleSimulator::BattleSimulator(BattleMap* battleMap) :
@@ -1408,4 +1247,207 @@ void BattleSimulator::UpdateDeploymentZones(double secondsSinceLastTick)
 		SetDeploymentZone(1, glm::vec2{}, 0);
 		SetDeploymentZone(2, glm::vec2{}, 0);
 	}
+}
+
+
+glm::vec2 MovementRules::NextWaypoint(Unit* unit)
+{
+	for (glm::vec2 p : unit->command.path)
+		if (glm::distance(p, unit->state.center) > 1.0f)
+			return p;
+
+	if (unit->command.meleeTarget)
+		return unit->command.meleeTarget->state.center;
+
+	if (!unit->command.path.empty())
+		return unit->command.path.back();
+
+	return unit->state.center;
+}
+
+
+
+void MovementRules::AdvanceTime(Unit* unit, float timeStep)
+{
+	if (unit->command.meleeTarget)
+		unit->command.UpdatePath(unit->state.center, unit->command.meleeTarget->state.center);
+	else if (unit->command.path.empty())
+		unit->command.ClearPathAndSetDestination(unit->state.center);
+	else
+		unit->command.UpdatePath(unit->state.center, unit->command.path.back());
+
+
+	float count = unit->fightersCount;
+	float ranks = unit->formation.numberOfRanks;
+
+	unit->formation.numberOfRanks = (int)fminf(4, count);
+	unit->formation.numberOfFiles = (int)ceilf(count / ranks);
+
+	float direction = unit->command.bearing;
+
+	if (unit->command.path.size() > 1)
+	{
+		glm::vec2 diff = unit->command.path[1] - unit->command.path[0];
+		if (glm::length(diff) > 5)
+			direction = ::angle(diff);
+	}
+
+	if (unit->command.meleeTarget && glm::length(unit->state.center - unit->command.meleeTarget->state.center) <= 15)
+		direction = angle(unit->command.meleeTarget->state.center - unit->state.center);
+
+	if (fabsf(direction - unit->formation._direction) > 0.1f)
+	{
+		unit->timeUntilSwapFighters = 0;
+	}
+
+	unit->formation.SetDirection(direction);
+
+	if (unit->timeUntilSwapFighters <= timeStep)
+	{
+		SwapFighters(unit);
+		unit->timeUntilSwapFighters = 5;
+	}
+	else
+	{
+		unit->timeUntilSwapFighters -= timeStep;
+	}
+}
+
+
+struct FighterPos
+{
+	Fighter* fighter;
+	FighterState state;
+	glm::vec2 pos;
+};
+
+
+static bool SortLeftToRight(const FighterPos& v1, const FighterPos& v2) { return v1.pos.y > v2.pos.y; }
+static bool SortFrontToBack(const FighterPos& v1, const FighterPos& v2) { return v1.pos.x > v2.pos.x; }
+
+
+void MovementRules::SwapFighters(Unit* unit)
+{
+	std::vector<FighterPos> fighters;
+
+	float direction = unit->formation._direction;
+
+	Fighter* fightersEnd = unit->fighters + unit->fightersCount;
+
+	for (Fighter* fighter = unit->fighters; fighter != fightersEnd; ++fighter)
+	{
+		FighterPos fighterPos;
+		fighterPos.fighter = fighter;
+		fighterPos.state = fighter->state;
+		fighterPos.pos = rotate(fighter->state.position, -direction);
+		fighters.push_back(fighterPos);
+	}
+
+	std::sort(fighters.begin(), fighters.end(), SortLeftToRight);
+
+	int index = 0;
+	while (index < unit->fightersCount)
+	{
+		int count = unit->fightersCount - index;
+		if (count > unit->formation.numberOfRanks)
+			count = unit->formation.numberOfRanks;
+
+		std::vector<FighterPos>::iterator begin = fighters.begin() + index;
+		std::sort(begin, begin + count, SortFrontToBack);
+		while (count-- != 0)
+		{
+			unit->fighters[index].state = fighters[index].state;
+			++index;
+		}
+	}
+}
+
+
+glm::vec2 MovementRules::NextFighterDestination(Fighter* fighter)
+{
+	Unit* unit = fighter->unit;
+
+	const UnitState& unitState = unit->state;
+	const FighterState& fighterState = fighter->state;
+
+	if (unitState.IsRouting())
+	{
+		if (unit->commander->GetTeamPosition() == 1)
+			return glm::vec2(fighterState.position.x * 3, -2000);
+		else
+			return glm::vec2(fighterState.position.x * 3, 2000);
+	}
+
+	if (fighterState.opponent)
+	{
+		return fighterState.opponent->state.position
+			- unit->stats.weaponReach * vector2_from_angle(fighterState.bearing);
+	}
+
+	switch (fighterState.readyState)
+	{
+		case ReadyState_Striking:
+		case ReadyState_Stunned:
+			return fighterState.position;
+		default:
+			break;
+	}
+
+	int rank = Unit::GetFighterRank(fighter);
+	int file = Unit::GetFighterFile(fighter);
+	glm::vec2 destination;
+	if (rank == 0)
+	{
+		if (unitState.unitMode == UnitMode_Moving)
+		{
+			destination = fighterState.position;
+			int n = 1;
+			for (int i = 1; i <= 5; ++i)
+			{
+				Fighter* other = Unit::GetFighter(unit, rank, file - i);
+				if (other == 0)
+					break;
+				destination += other->state.position + (float)i * unit->formation.towardRight;
+				++n;
+			}
+			for (int i = 1; i <= 5; ++i)
+			{
+				Fighter* other = Unit::GetFighter(unit, rank, file + i);
+				if (other == nullptr)
+					break;
+				destination += other->state.position - (float)i * unit->formation.towardRight;
+				++n;
+			}
+			destination /= n;
+			destination -= glm::normalize(unit->formation.towardBack) * unit->GetSpeed();
+		}
+		else if (unitState.unitMode == UnitMode_Turning)
+		{
+			glm::vec2 frontLeft = unit->formation.GetFrontLeft(unitState.center);
+			destination = frontLeft + unit->formation.towardRight * (float)file;
+		}
+		else
+		{
+			glm::vec2 frontLeft = unit->formation.GetFrontLeft(unitState.waypoint);
+			destination = frontLeft + unit->formation.towardRight * (float)file;
+		}
+	}
+	else
+	{
+		Fighter* fighterLeft = Unit::GetFighter(unit, rank - 1, file - 1);
+		Fighter* fighterMiddle = Unit::GetFighter(unit, rank - 1, file);
+		Fighter* fighterRight = Unit::GetFighter(unit, rank - 1, file + 1);
+
+		if (fighterLeft == nullptr || fighterRight == nullptr)
+		{
+			destination = fighterMiddle->state.destination;
+		}
+		else
+		{
+			destination = (fighterLeft->state.destination + fighterRight->state.destination) / 2.0f;
+		}
+		destination += unit->formation.towardBack;
+	}
+
+	return destination;
 }

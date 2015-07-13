@@ -6,7 +6,6 @@
 
 #include "BattleMap/BattleMap.h"
 #include "BattleModel/BattleSimulator.h"
-#include "BattleModel/BattleCommander.h"
 #include "Shapes/BillboardColorShader.h"
 #include "Shapes/PathRenderer.h"
 #include "Shapes/BillboardTextureShape.h"
@@ -31,7 +30,7 @@ bool UnitMovementMarker::Animate(float seconds)
 		return false;
 
 	const UnitCommand& command = _unit->GetCommand();
-	return command.path.size() > 2 || MovementRules::Length(command.path) > 8;
+	return command.path.size() > 2 || MovementPath::Length(command.path) > 8;
 }
 
 
