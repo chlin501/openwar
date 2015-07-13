@@ -6,6 +6,7 @@
 #define BATTLEVIEW_H
 
 #include "BattleMap/BattleMap.h"
+#include "BattleModel/BattleObserver.h"
 #include "BattleModel/BattleSimulator.h"
 #include "Shapes/VertexShape.h"
 #include "Shapes/BillboardTextureShape.h"

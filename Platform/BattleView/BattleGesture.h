@@ -6,6 +6,7 @@
 #define BATTLEGESTURE_H
 
 #include "BattleModel/BattleSimulator.h"
+#include "BattleModel/BattleObserver.h"
 #include "Algebra/bounds.h"
 #include "Surface/Gesture.h"
 #include "Surface/Touch.h"

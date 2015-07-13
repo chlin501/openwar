@@ -6,12 +6,13 @@
 #include "BattleSimulator.h"
 #include "BattleMap/GroundMap.h"
 #include "BattleMap/HeightMap.h"
-#include "BattleCommander.h"
 #include "BattleMap/SmoothGroundMap.h"
 #include "BattleMap/TiledGroundMap.h"
+#include "BattleMap/BattleMap.h"
 #include "BattleScript.h"
 #include "SamuraiModule.h"
-#include "BattleMap/BattleMap.h"
+#include "BattleCommander.h"
+#include "BattleObserver.h"
 #include <glm/gtc/random.hpp>
 #include <algorithm>
 #include <cstdlib>
@@ -174,14 +175,6 @@ Fighter* Unit::GetFighter(Unit* unit, int rank, int file)
 			return unit->fighters + index;
 	}
 	return 0;
-}
-
-
-/***/
-
-
-BattleObserver::~BattleObserver()
-{
 }
 
 
