@@ -13,7 +13,7 @@
 #include "TerrainView/TerrainViewport.h"
 
 
-UnitTrackingMarker::UnitTrackingMarker(BattleView* battleView, Unit* unit) : UnitMarker(battleView, unit),
+UnitTrackingMarker::UnitTrackingMarker(BattleView* battleView, BattleObjects_v1::Unit* unit) : UnitMarker(battleView, unit),
 _destination{_unit->state.center}
 {
 }
@@ -41,15 +41,15 @@ void UnitTrackingMarker::RenderTrackingFighters(VertexShape_3f_4f_1f* vertices)
 		glm::vec2 destination = DestinationXXX();
 		//glm::vec2 orientation = _missileTarget ? _missileTarget->state.center : _orientation;
 
-		Formation formation = _unit->formation;
+		BattleObjects_v1::Formation formation = _unit->formation;
 		formation.SetDirection(GetFacing());
 
 		glm::vec2 frontLeft = formation.GetFrontLeft(destination);
 
-		for (Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
+		for (BattleObjects_v1::Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
 		{
-			glm::vec2 offsetRight = formation.towardRight * (float)Unit::GetFighterFile(fighter);
-			glm::vec2 offsetBack = formation.towardBack * (float)Unit::GetFighterRank(fighter);
+			glm::vec2 offsetRight = formation.towardRight * (float)BattleObjects_v1::Unit::GetFighterFile(fighter);
+			glm::vec2 offsetBack = formation.towardBack * (float)BattleObjects_v1::Unit::GetFighterRank(fighter);
 			glm::vec3 p = _battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(frontLeft + offsetRight + offsetBack, 0.5);
 			vertices->AddVertex(Vertex_3f_4f_1f(p, color, 3.0));
 		}

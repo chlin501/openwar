@@ -5,21 +5,22 @@
 #ifndef UnitMarker_H
 #define UnitMarker_H
 
+#include "BattleObjects_v1.h"
+
 class BattleView;
-class Unit;
 
 
 class UnitMarker
 {
 protected:
 	BattleView* _battleView{};
-	Unit* _unit{};
+	BattleObjects_v1::Unit* _unit{};
 
 public:
-	UnitMarker(BattleView* battleView, Unit* unit);
+	UnitMarker(BattleView* battleView, BattleObjects_v1::Unit* unit);
 	virtual ~UnitMarker();
 
-	Unit* GetUnit() const { return _unit; }
+	BattleObjects_v1::Unit* GetUnit() const { return _unit; }
 };
 
 

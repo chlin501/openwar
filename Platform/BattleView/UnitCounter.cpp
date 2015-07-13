@@ -12,7 +12,7 @@
 #include "TerrainView/TerrainViewport.h"
 
 
-UnitCounter::UnitCounter(BattleView* battleView, Unit* unit) :
+UnitCounter::UnitCounter(BattleView* battleView, BattleObjects_v1::Unit* unit) :
 _battleView{battleView},
 _unit{unit}
 {
@@ -95,9 +95,9 @@ void UnitCounter::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleView* ba
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
 
-	const UnitCommand& command = _unit->GetCommand();
+	const BattleObjects_v1::UnitCommand& command = _unit->GetCommand();
 
-	if (_unit->state.unitMode != UnitMode_Standing
+	if (_unit->state.unitMode != BattleObjects_v1::UnitMode_Standing
 		|| command.meleeTarget
 		|| _unit->state.IsRouting())
 	{
@@ -158,7 +158,7 @@ void UnitCounter::AppendFighterWeapons(VertexShape_3f* vertices)
 {
 	if (_unit->stats.weaponReach > 0)
 	{
-		for (Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
+		for (BattleObjects_v1::Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
 		{
 			glm::vec2 p1 = fighter->state.position;
 			glm::vec2 p2 = p1 + _unit->stats.weaponReach * vector2_from_angle(fighter->state.bearing);
@@ -173,7 +173,7 @@ void UnitCounter::AppendFighterWeapons(VertexShape_3f* vertices)
 void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 {
 	bool isSameTeam = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam();
-	for (Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
+	for (BattleObjects_v1::Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
 	{
 		float size = 2.0;
 		int shape = 0;

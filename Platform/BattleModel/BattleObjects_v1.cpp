@@ -19,7 +19,7 @@ static float normalize_angle(float a)
 }
 
 
-bool UnitRange::IsWithinRange(glm::vec2 p) const
+bool BattleObjects_v1::UnitRange::IsWithinRange(glm::vec2 p) const
 {
 	if (minimumRange > 0 && maximumRange > 0)
 	{
@@ -53,7 +53,7 @@ bool UnitRange::IsWithinRange(glm::vec2 p) const
 
 
 
-glm::vec2 Unit::CalculateUnitCenter()
+glm::vec2 BattleObjects_v1::Unit::CalculateUnitCenter()
 {
 	if (state.unitMode == UnitMode_Initializing)
 		return state.center;
@@ -71,7 +71,7 @@ glm::vec2 Unit::CalculateUnitCenter()
 }
 
 
-float Unit::GetSpeed()
+float BattleObjects_v1::Unit::GetSpeed()
 {
 	if (state.IsRouting())
 		return stats.runningSpeed * 1.2f;
@@ -80,19 +80,19 @@ float Unit::GetSpeed()
 }
 
 
-bool Unit::IsOwnedBySimulator() const
+bool BattleObjects_v1::Unit::IsOwnedBySimulator() const
 {
 	return _ownedBySimulator;
 }
 
 
-void Unit::SetOwnedBySimulator(bool value)
+void BattleObjects_v1::Unit::SetOwnedBySimulator(bool value)
 {
 	_ownedBySimulator = value;
 }
 
 
-bool Unit::IsFriendlyCommander(BattleObjects::Commander* battleCommander) const
+bool BattleObjects_v1::Unit::IsFriendlyCommander(BattleObjects::Commander* battleCommander) const
 {
 	if (battleCommander == nullptr)
 		return false;
@@ -110,7 +110,7 @@ bool Unit::IsFriendlyCommander(BattleObjects::Commander* battleCommander) const
 }
 
 
-bool Unit::IsCommandableBy(BattleObjects::Commander* battleCommander) const
+bool BattleObjects_v1::Unit::IsCommandableBy(BattleObjects::Commander* battleCommander) const
 {
 	if (battleCommander == nullptr)
 		return false;
@@ -128,7 +128,7 @@ bool Unit::IsCommandableBy(BattleObjects::Commander* battleCommander) const
 }
 
 
-bool Unit::IsInMelee() const
+bool BattleObjects_v1::Unit::IsInMelee() const
 {
 	int count = 0;
 	for (Fighter* fighter = fighters, * end = fighter + fightersCount; fighter != end; ++fighter)
@@ -139,21 +139,21 @@ bool Unit::IsInMelee() const
 }
 
 
-int Unit::GetFighterRank(Fighter* fighter)
+int BattleObjects_v1::Unit::GetFighterRank(Fighter* fighter)
 {
 	Unit* unit = fighter->unit;
 	return (fighter - unit->fighters) % unit->formation.numberOfRanks;
 }
 
 
-int Unit::GetFighterFile(Fighter* fighter)
+int BattleObjects_v1::Unit::GetFighterFile(Fighter* fighter)
 {
 	Unit* unit = fighter->unit;
 	return (int)(fighter - unit->fighters) / unit->formation.numberOfRanks;
 }
 
 
-Fighter* Unit::GetFighter(Unit* unit, int rank, int file)
+BattleObjects_v1::Fighter* BattleObjects_v1::Unit::GetFighter(BattleObjects_v1::Unit* unit, int rank, int file)
 {
 	if (0 <= rank && rank < unit->formation.numberOfRanks && file >= 0)
 	{
@@ -165,13 +165,13 @@ Fighter* Unit::GetFighter(Unit* unit, int rank, int file)
 }
 
 
-glm::vec2 Formation::GetFrontLeft(glm::vec2 center)
+glm::vec2 BattleObjects_v1::Formation::GetFrontLeft(glm::vec2 center)
 {
 	return center - towardRight * (0.5f * (numberOfFiles - 1)) - towardBack * (0.5f * (numberOfRanks - 1));
 }
 
 
-void Formation::SetDirection(float direction)
+void BattleObjects_v1::Formation::SetDirection(float direction)
 {
 	_direction = direction;
 	towardRight = glm::vec2((float)sin(direction), -(float)cos(direction)) * fileDistance;
@@ -192,7 +192,7 @@ static bool IsForwardMotion(const std::vector<glm::vec2>& path, glm::vec2 positi
 }
 
 
-void MovementPath::UpdateMovementPathStart(std::vector<glm::vec2>& path, glm::vec2 startPosition)
+void BattleObjects_v1::MovementPath::UpdateMovementPathStart(std::vector<glm::vec2>& path, glm::vec2 startPosition)
 {
 	const float spacing = 10;
 
@@ -203,7 +203,7 @@ void MovementPath::UpdateMovementPathStart(std::vector<glm::vec2>& path, glm::ve
 }
 
 
-void MovementPath::UpdateMovementPath(std::vector<glm::vec2>& path, glm::vec2 startPosition, glm::vec2 endPosition)
+void BattleObjects_v1::MovementPath::UpdateMovementPath(std::vector<glm::vec2>& path, glm::vec2 startPosition, glm::vec2 endPosition)
 {
 	const float spacing = 10;
 
@@ -234,7 +234,7 @@ void MovementPath::UpdateMovementPath(std::vector<glm::vec2>& path, glm::vec2 st
 }
 
 
-float MovementPath::Length(const std::vector<glm::vec2>& path)
+float BattleObjects_v1::MovementPath::Length(const std::vector<glm::vec2>& path)
 {
 	float result = 0;
 

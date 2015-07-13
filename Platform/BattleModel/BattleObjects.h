@@ -35,6 +35,6 @@ namespace BattleObjects
 		void SetAbandonedBattle(bool value);
 	};
 
-}
+} // namespace BattleObjects
 
 #endif

@@ -1,9 +1,7 @@
 #ifndef BattleObserver_H
 #define BattleObserver_H
 
-struct Fighter;
-struct Unit;
-struct Shooting;
+#include "BattleObjects_v1.h"
 
 
 class BattleObserver
@@ -13,13 +11,13 @@ public:
 	virtual ~BattleObserver();
 
 private:
-	virtual void OnAddUnit(Unit* unit) = 0;
-	virtual void OnRemoveUnit(Unit* unit) = 0;
-	virtual void OnCommand(Unit* unit, float timer) = 0;
-	virtual void OnShooting(const Shooting& shooting, float timer) = 0;
-	virtual void OnRelease(const Shooting& shooting) = 0;
-	virtual void OnCasualty(const Fighter& fighter) = 0;
-	virtual void OnRouting(Unit* unit) = 0;
+	virtual void OnAddUnit(BattleObjects_v1::Unit* unit) = 0;
+	virtual void OnRemoveUnit(BattleObjects_v1::Unit* unit) = 0;
+	virtual void OnCommand(BattleObjects_v1::Unit* unit, float timer) = 0;
+	virtual void OnShooting(const BattleObjects_v1::Shooting& shooting, float timer) = 0;
+	virtual void OnRelease(const BattleObjects_v1::Shooting& shooting) = 0;
+	virtual void OnCasualty(const BattleObjects_v1::Fighter& fighter) = 0;
+	virtual void OnRouting(BattleObjects_v1::Unit* unit) = 0;
 };
 
 

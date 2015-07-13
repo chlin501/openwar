@@ -8,10 +8,10 @@
 
 
 
-SmokeCounter::SmokeCounter(MissileType missileType) :
+SmokeCounter::SmokeCounter(BattleObjects_v1::MissileType missileType) :
 	_missileType{missileType}
 {
-	if (missileType == MissileType::Arq)
+	if (missileType == BattleObjects_v1::MissileType::Arq)
 		SoundPlayer::GetSingleton()->PlayMissileMatchlock();
 	else
 		SoundPlayer::GetSingleton()->PlayMissileArrows();

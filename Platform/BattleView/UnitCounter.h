@@ -14,23 +14,22 @@ class BattleSimulator;
 class BattleView;
 class BillboardModel;
 class BillboardTextureShape;
-class Unit;
 
 
 class UnitCounter
 {
 public:
 	BattleView* _battleView{};
-	Unit* _unit{};
+	BattleObjects_v1::Unit* _unit{};
 	float _routingTimer{};
 	SamuraiWeapon _samuraiWeapon{};
 	SamuraiPlatform _samuraiPlatform{};
 
 public:
-	UnitCounter(BattleView* battleView, Unit* unit);
+	UnitCounter(BattleView* battleView, BattleObjects_v1::Unit* unit);
 	~UnitCounter();
 
-	Unit* GetUnit() const { return _unit; }
+	BattleObjects_v1::Unit* GetUnit() const { return _unit; }
 
 	bool Animate(float seconds);
 

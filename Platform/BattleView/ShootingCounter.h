@@ -21,13 +21,13 @@ public:
 		float duration{};
 	};
 
-	MissileType _missileType{};
+	BattleObjects_v1::MissileType _missileType{};
 	std::vector<Projectile> _projectiles{};
 	SoundCookieID _soundCookie{};
 	bool _impacted{};
 
 public:
-	ShootingCounter(MissileType missileType);
+	ShootingCounter(BattleObjects_v1::MissileType missileType);
 	~ShootingCounter();
 
 	bool Animate(float seconds);

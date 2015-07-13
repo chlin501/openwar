@@ -7,7 +7,7 @@
 
 
 
-UnitMarker::UnitMarker(BattleView* battleView, Unit* unit) :
+UnitMarker::UnitMarker(BattleView* battleView, BattleObjects_v1::Unit* unit) :
 	_battleView{battleView},
 	_unit{unit}
 {

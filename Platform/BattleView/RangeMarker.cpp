@@ -12,7 +12,7 @@
 #include "Algebra/geometry.h"
 
 
-RangeMarker::RangeMarker(BattleSimulator* battleSimulator, Unit* unit) :
+RangeMarker::RangeMarker(BattleSimulator* battleSimulator, BattleObjects_v1::Unit* unit) :
 	_battleSimulator{battleSimulator},
 	_unit{unit}
 {
@@ -21,19 +21,19 @@ RangeMarker::RangeMarker(BattleSimulator* battleSimulator, Unit* unit) :
 
 void RangeMarker::Render(VertexShape_3f_4f* vertices)
 {
-	const UnitCommand& command = _unit->GetCommand();
+	const BattleObjects_v1::UnitCommand& command = _unit->GetCommand();
 	if (command.missileTarget)
 	{
 		RenderMissileTarget(vertices, command.missileTarget->state.center);
 	}
-	else if (_unit->unitRange.maximumRange > 0 && _unit->state.unitMode != UnitMode_Moving && !_unit->state.IsRouting())
+	else if (_unit->unitRange.maximumRange > 0 && _unit->state.unitMode != BattleObjects_v1::UnitMode_Moving && !_unit->state.IsRouting())
 	{
 		RenderMissileRange(vertices, _unit->unitRange);
 	}
 }
 
 
-void RangeMarker::RenderMissileRange(VertexShape_3f_4f* vertices, const UnitRange& unitRange)
+void RangeMarker::RenderMissileRange(VertexShape_3f_4f* vertices, const BattleObjects_v1::UnitRange& unitRange)
 {
 	glm::vec2 center = unitRange.center;
 	const float thickness = 8;

@@ -13,15 +13,15 @@ class RangeMarker
 {
 public:
 	BattleSimulator* _battleSimulator{};
-	Unit* _unit{};
+	BattleObjects_v1::Unit* _unit{};
 
 public:
-	RangeMarker(BattleSimulator* battleSimulator, Unit* unit);
+	RangeMarker(BattleSimulator* battleSimulator, BattleObjects_v1::Unit* unit);
 
 	void Render(VertexShape_3f_4f* vertices);
 
 private:
-	void RenderMissileRange(VertexShape_3f_4f* vertices, const UnitRange& unitRange);
+	void RenderMissileRange(VertexShape_3f_4f* vertices, const BattleObjects_v1::UnitRange& unitRange);
 	void RenderMissileTarget(VertexShape_3f_4f* vertices, glm::vec2 target);
 
 	glm::vec3 GetPosition(glm::vec2 p) const;

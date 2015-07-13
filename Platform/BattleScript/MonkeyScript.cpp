@@ -29,11 +29,11 @@ void MonkeyScript::Tick(double secondsSinceLastTick)
 }
 
 
-static Unit* FindNearestUnit(const std::vector<Unit*>& units, glm::vec2 position)
+static BattleObjects_v1::Unit* FindNearestUnit(const std::vector<BattleObjects_v1::Unit*>& units, glm::vec2 position)
 {
-	Unit* result = nullptr;
+	BattleObjects_v1::Unit* result = nullptr;
 	float distance = 0;
-	for (Unit* unit : units)
+	for (BattleObjects_v1::Unit* unit : units)
 	{
 		float d = glm::distance(position, unit->state.center);
 		if (result == nullptr || d < distance)
@@ -46,21 +46,21 @@ static Unit* FindNearestUnit(const std::vector<Unit*>& units, glm::vec2 position
 }
 
 
-static Unit* FindCenterUnit(const std::vector<Unit*>& units)
+static BattleObjects_v1::Unit* FindCenterUnit(const std::vector<BattleObjects_v1::Unit*>& units)
 {
 	if (units.empty())
 		return nullptr;
 
-	std::vector<std::pair<Unit*, float>> items;
-	for (Unit* unit : units)
+	std::vector<std::pair<BattleObjects_v1::Unit*, float>> items;
+	for (BattleObjects_v1::Unit* unit : units)
 	{
 		float weight = 0;
-		for (Unit* u : units)
+		for (BattleObjects_v1::Unit* u : units)
 			if (u != unit)
 				weight += 1.0f / (1.0f + glm::distance(u->state.center, unit->state.center));
-		items.push_back(std::pair<Unit*, float>(unit, weight));
+		items.push_back(std::pair<BattleObjects_v1::Unit*, float>(unit, weight));
 	}
-	std::sort(items.begin(), items.end(), [](std::pair<Unit*, float> a, std::pair<Unit*, float> b) {
+	std::sort(items.begin(), items.end(), [](std::pair<BattleObjects_v1::Unit*, float> a, std::pair<BattleObjects_v1::Unit*, float> b) {
 		return a.second < b.second;
 	});
 
@@ -68,16 +68,16 @@ static Unit* FindCenterUnit(const std::vector<Unit*>& units)
 }
 
 
-static glm::vec2 FindClusterCenter(const std::vector<Unit*>& units)
+static glm::vec2 FindClusterCenter(const std::vector<BattleObjects_v1::Unit*>& units)
 {
 	if (units.empty())
 		return glm::vec2();
 
-	Unit* centerUnit = FindCenterUnit(units);
+	BattleObjects_v1::Unit* centerUnit = FindCenterUnit(units);
 	glm::vec2 result;
 	float weight = 0;
 
-	for (Unit* unit : units)
+	for (BattleObjects_v1::Unit* unit : units)
 	{
 		float w = 1.0f / (50.0f + glm::distance(unit->state.center, centerUnit->state.center));
 		result += w * unit->state.center;
@@ -101,10 +101,10 @@ void MonkeyScript::IssueCommands()
 	if (monkeyCommander == nullptr)
 		return;
 
-	std::vector<Unit*> monkeyUnits;
-	std::vector<Unit*> enemyUnits;
+	std::vector<BattleObjects_v1::Unit*> monkeyUnits;
+	std::vector<BattleObjects_v1::Unit*> enemyUnits;
 
-	for (Unit* unit : _simulator->GetUnits())
+	for (BattleObjects_v1::Unit* unit : _simulator->GetUnits())
 		if (!unit->state.IsRouting())
 		{
 			if (unit->commander == monkeyCommander)
@@ -122,17 +122,17 @@ void MonkeyScript::IssueCommands()
 	glm::vec2 playerCenter = FindClusterCenter(enemyUnits);
 	glm::vec2 scriptCenter = FindClusterCenter(monkeyUnits);
 
-	for (Unit* unit : monkeyUnits)
+	for (BattleObjects_v1::Unit* unit : monkeyUnits)
 	{
 		glm::vec2 unitCenter = unit->state.center;
 
-		Unit* targetUnit = FindNearestUnit(enemyUnits, unitCenter);
+		BattleObjects_v1::Unit* targetUnit = FindNearestUnit(enemyUnits, unitCenter);
 		if (targetUnit == nullptr)
 			continue;
 
 		glm::vec2 targetCenter = targetUnit->state.center;
 
-		if (unit->stats.missileType != MissileType::None)
+		if (unit->stats.missileType != BattleObjects_v1::MissileType::None)
 		{
 			float range = unit->stats.maximumRange;
 			glm::vec2 diff = targetCenter - unitCenter;
@@ -141,7 +141,7 @@ void MonkeyScript::IssueCommands()
 			{
 				glm::vec2 destination = targetCenter - 0.9f * range * glm::normalize(diff);
 
-				UnitCommand command;
+				BattleObjects_v1::UnitCommand command;
 				command.path.push_back(unitCenter);
 				command.path.push_back(destination);
 				command.bearing = angle(destination - unitCenter);
@@ -151,7 +151,7 @@ void MonkeyScript::IssueCommands()
 			{
 				glm::vec2 destination = targetCenter - 0.7f * range * glm::normalize(diff);
 
-				UnitCommand command;
+				BattleObjects_v1::UnitCommand command;
 				command.path.push_back(unitCenter);
 				command.path.push_back(destination);
 				command.bearing = angle(destination - unitCenter);
@@ -160,7 +160,7 @@ void MonkeyScript::IssueCommands()
 			}
 			else
 			{
-				UnitCommand command;
+				BattleObjects_v1::UnitCommand command;
 				command.bearing = angle(targetCenter - unitCenter);;
 				_simulator->SetUnitCommand(unit, command, 0);
 			}
@@ -169,8 +169,7 @@ void MonkeyScript::IssueCommands()
 		{
 			if (glm::distance(targetUnit->state.center, unitCenter) < 80)
 			{
-
-				UnitCommand command;
+				BattleObjects_v1::UnitCommand command;
 				command.path.push_back(unitCenter);
 				command.path.push_back(targetCenter);
 				command.bearing = angle(targetCenter - unitCenter);
@@ -185,7 +184,7 @@ void MonkeyScript::IssueCommands()
 
 				glm::vec2 destination = playerCenter + diff;
 
-				UnitCommand command;
+				BattleObjects_v1::UnitCommand command;
 				command.path.push_back(unitCenter);
 				command.path.push_back(destination);
 				command.bearing = angle(destination - unitCenter);

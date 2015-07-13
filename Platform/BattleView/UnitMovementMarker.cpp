@@ -14,7 +14,7 @@
 #include "TerrainView/TerrainViewport.h"
 
 
-UnitMovementMarker::UnitMovementMarker(BattleView* battleView, Unit* unit) : UnitMarker(battleView, unit)
+UnitMovementMarker::UnitMovementMarker(BattleView* battleView, BattleObjects_v1::Unit* unit) : UnitMarker(battleView, unit)
 {
 }
 
@@ -29,8 +29,8 @@ bool UnitMovementMarker::Animate(float seconds)
 	if (_unit->state.IsRouting())
 		return false;
 
-	const UnitCommand& command = _unit->GetCommand();
-	return command.path.size() > 2 || MovementPath::Length(command.path) > 8;
+	const BattleObjects_v1::UnitCommand& command = _unit->GetCommand();
+	return command.path.size() > 2 || BattleObjects_v1::MovementPath::Length(command.path) > 8;
 }
 
 
@@ -39,7 +39,7 @@ void UnitMovementMarker::RenderMovementMarker(BillboardTextureShape* renderer)
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
 
-	const UnitCommand& command = _unit->GetCommand();
+	const BattleObjects_v1::UnitCommand& command = _unit->GetCommand();
 	glm::vec2 finalDestination = command.GetDestination();
 	if (command.path.size() > 1 || glm::length(_unit->state.center - finalDestination) > 25)
 	{
@@ -59,10 +59,10 @@ void UnitMovementMarker::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleV
 {
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
-	if (_unit->state.unitMode != UnitMode_Moving)
+	if (_unit->state.unitMode != BattleObjects_v1::UnitMode_Moving)
 		return;
 
-	const UnitCommand& command = _unit->GetCommand();
+	const BattleObjects_v1::UnitCommand& command = _unit->GetCommand();
 
 	TerrainViewport* terrainViewport = &battleView->GetTerrainViewport();
 
@@ -98,7 +98,7 @@ void UnitMovementMarker::RenderMovementFighters(VertexShape_3f_4f_1f* vertices)
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
 
-	const UnitCommand& command = _unit->GetCommand();
+	const BattleObjects_v1::UnitCommand& command = _unit->GetCommand();
 	if (command.meleeTarget == nullptr)
 	{
 		bool isBlue = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam();
@@ -106,15 +106,15 @@ void UnitMovementMarker::RenderMovementFighters(VertexShape_3f_4f_1f* vertices)
 
 		glm::vec2 finalDestination = command.GetDestination();
 
-		Formation formation = _unit->formation;
+		BattleObjects_v1::Formation formation = _unit->formation;
 		formation.SetDirection(command.bearing);
 
 		glm::vec2 frontLeft = formation.GetFrontLeft(finalDestination);
 
-		for (Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
+		for (BattleObjects_v1::Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
 		{
-			glm::vec2 offsetRight = formation.towardRight * (float)Unit::GetFighterFile(fighter);
-			glm::vec2 offsetBack = formation.towardBack * (float)Unit::GetFighterRank(fighter);
+			glm::vec2 offsetRight = formation.towardRight * (float)BattleObjects_v1::Unit::GetFighterFile(fighter);
+			glm::vec2 offsetBack = formation.towardBack * (float)BattleObjects_v1::Unit::GetFighterRank(fighter);
 			glm::vec3 p = _battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(frontLeft + offsetRight + offsetBack, 0.5);
 			vertices->AddVertex(Vertex_3f_4f_1f(p, color, 3.0));
 		}
@@ -124,7 +124,7 @@ void UnitMovementMarker::RenderMovementFighters(VertexShape_3f_4f_1f* vertices)
 
 void UnitMovementMarker::RenderMovementPath(VertexShape_3f_4f* vertices)
 {
-	const UnitCommand& command = _unit->GetCommand();
+	const BattleObjects_v1::UnitCommand& command = _unit->GetCommand();
 	if (!command.path.empty())
 	{
 		int mode = 0;

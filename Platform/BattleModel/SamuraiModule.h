@@ -32,8 +32,8 @@ struct SamuraiModule
 	static SamuraiPlatform GetSamuraiPlatform(const char* unitClass);
 	static SamuraiWeapon GetSamuraiWeapon(const char* unitClass);
 
-	static UnitStats GetDefaultUnitStats(const char* unitClass);
-	static UnitStats GetDefaultUnitStats(SamuraiPlatform platform, SamuraiWeapon weapon);
+	static BattleObjects_v1::UnitStats GetDefaultUnitStats(const char* unitClass);
+	static BattleObjects_v1::UnitStats GetDefaultUnitStats(SamuraiPlatform platform, SamuraiWeapon weapon);
 };
 
 

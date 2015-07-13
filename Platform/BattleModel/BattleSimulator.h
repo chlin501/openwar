@@ -19,13 +19,13 @@ class BattleObserver;
 class BattleSimulator
 {
 	std::set<BattleObserver*> _observers{};
-	quadtree<Fighter*> _fighterQuadTree{0, 0, 1024, 1024};
-	quadtree<Fighter*> _weaponQuadTree{0, 0, 1024, 1024};
+	quadtree<BattleObjects_v1::Fighter*> _fighterQuadTree{0, 0, 1024, 1024};
+	quadtree<BattleObjects_v1::Fighter*> _weaponQuadTree{0, 0, 1024, 1024};
 
 	BattleMap* _battleMap{};
 
-	std::vector<Unit*> _units{};
-	std::vector<std::pair<float, Shooting>> _shootings{};
+	std::vector<BattleObjects_v1::Unit*> _units{};
+	std::vector<std::pair<float, BattleObjects_v1::Shooting>> _shootings{};
 	std::map<int, int> _kills{};
 
 	float _secondsSinceLastTimeStep{};
@@ -64,17 +64,17 @@ public:
 	bool IsDeploymentZone(int team, glm::vec2 position) const;
 	glm::vec2 ConstrainDeploymentZone(int team, glm::vec2 position, float inset) const;
 	bool HasCompletedDeployment(int team) const;
-	void Deploy(Unit* unit, glm::vec2 position);
+	void Deploy(BattleObjects_v1::Unit* unit, glm::vec2 position);
 
-	const std::vector<Unit*>& GetUnits() { return _units; }
-	Unit* AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, UnitStats stats, glm::vec2 position);
-	void RemoveUnit(Unit* unit);
+	const std::vector<BattleObjects_v1::Unit*>& GetUnits() { return _units; }
+	BattleObjects_v1::Unit* AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, BattleObjects_v1::UnitStats stats, glm::vec2 position);
+	void RemoveUnit(BattleObjects_v1::Unit* unit);
 
 	void NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing);
 
-	void SetUnitCommand(Unit* unit, const UnitCommand& command, float timer);
+	void SetUnitCommand(BattleObjects_v1::Unit* unit, const BattleObjects_v1::UnitCommand& command, float timer);
 
-	void AddShooting(const Shooting& shooting, float timer);
+	void AddShooting(const BattleObjects_v1::Shooting& shooting, float timer);
 
 	void AdvanceTime(float secondsSinceLastTime);
 
@@ -90,30 +90,30 @@ private:
 
 	void ComputeNextState();
 	void AssignNextState();
-	void UpdateUnitRange(Unit* unit);
+	void UpdateUnitRange(BattleObjects_v1::Unit* unit);
 
 	void ResolveMeleeCombat();
 	void ResolveMissileCombat();
 
-	void TriggerShooting(Unit* unit);
+	void TriggerShooting(BattleObjects_v1::Unit* unit);
 	void ResolveProjectileCasualties();
 
 	void RemoveCasualties();
 	void RemoveDeadUnits();
 	void RemoveFinishedShootings();
 
-	UnitState NextUnitState(Unit* unit);
-	UnitMode NextUnitMode(Unit* unit);
-	float NextUnitDirection(Unit* unit);
+	BattleObjects_v1::UnitState NextUnitState(BattleObjects_v1::Unit* unit);
+	BattleObjects_v1::UnitMode NextUnitMode(BattleObjects_v1::Unit* unit);
+	float NextUnitDirection(BattleObjects_v1::Unit* unit);
 
-	FighterState NextFighterState(Fighter* fighter);
-	glm::vec2 NextFighterPosition(Fighter* fighter);
-	glm::vec2 NextFighterVelocity(Fighter* fighter);
+	BattleObjects_v1::FighterState NextFighterState(BattleObjects_v1::Fighter* fighter);
+	glm::vec2 NextFighterPosition(BattleObjects_v1::Fighter* fighter);
+	glm::vec2 NextFighterVelocity(BattleObjects_v1::Fighter* fighter);
 
-	Fighter* FindFighterStrikingTarget(Fighter* fighter);
+	BattleObjects_v1::Fighter* FindFighterStrikingTarget(BattleObjects_v1::Fighter* fighter);
 
-	bool IsWithinLineOfFire(Unit* unit, glm::vec2 position);
-	Unit* ClosestEnemyWithinLineOfFire(Unit* unit);
+	bool IsWithinLineOfFire(BattleObjects_v1::Unit* unit, glm::vec2 position);
+	BattleObjects_v1::Unit* ClosestEnemyWithinLineOfFire(BattleObjects_v1::Unit* unit);
 
 	bool TeamHasAbandondedBattle(int team) const;
 
@@ -140,10 +140,10 @@ public:
 class MovementRules
 {
 public:
-	static void AdvanceTime(Unit* unit, float timeStep);
-	static void SwapFighters(Unit* unit);
-	static glm::vec2 NextFighterDestination(Fighter* fighter);
-	static glm::vec2 NextWaypoint(Unit* unit);
+	static void AdvanceTime(BattleObjects_v1::Unit* unit, float timeStep);
+	static void SwapFighters(BattleObjects_v1::Unit* unit);
+	static glm::vec2 NextFighterDestination(BattleObjects_v1::Fighter* fighter);
+	static glm::vec2 NextWaypoint(BattleObjects_v1::Unit* unit);
 };
 
 

@@ -203,7 +203,7 @@ void BattleView::SetSimulator(BattleSimulator* simulator)
 
 	if (_simulator)
 	{
-		for (Unit* unit : _simulator->GetUnits())
+		for (BattleObjects_v1::Unit* unit : _simulator->GetUnits())
 			OnRemoveUnit(unit);
 		_simulator->GetBattleMap()->RemoveObserver(this);
 		_simulator->RemoveObserver(this);
@@ -230,7 +230,7 @@ static bool ShouldEnableRenderEdges(GraphicsContext* gc)
 }
 
 
-void BattleView::OnAddUnit(Unit* unit)
+void BattleView::OnAddUnit(BattleObjects_v1::Unit* unit)
 {
 	UnitCounter* marker = new UnitCounter(this, unit);
 	marker->Animate(0);
@@ -238,7 +238,7 @@ void BattleView::OnAddUnit(Unit* unit)
 }
 
 
-void BattleView::OnRemoveUnit(Unit* unit)
+void BattleView::OnRemoveUnit(BattleObjects_v1::Unit* unit)
 {
 	for (auto i = _unitMarkers.begin(); i != _unitMarkers.end(); ++i)
 		if ((*i)->GetUnit() == unit)
@@ -266,25 +266,25 @@ void BattleView::OnRemoveUnit(Unit* unit)
 }
 
 
-void BattleView::OnCommand(Unit* unit, float timer)
+void BattleView::OnCommand(BattleObjects_v1::Unit* unit, float timer)
 {
 	if (unit->IsFriendlyCommander(_commander) && GetMovementMarker(unit) == nullptr)
 		AddMovementMarker(unit);
 }
 
 
-void BattleView::OnShooting(Shooting const & shooting, float timer)
+void BattleView::OnShooting(BattleObjects_v1::Shooting const & shooting, float timer)
 {
 }
 
 
-void BattleView::OnRelease(const Shooting& shooting)
+void BattleView::OnRelease(const BattleObjects_v1::Shooting& shooting)
 {
 	AddShootingAndSmokeCounters(shooting);
 }
 
 
-void BattleView::OnCasualty(const Fighter& fighter)
+void BattleView::OnCasualty(const BattleObjects_v1::Fighter& fighter)
 {
 	SoundPlayer::GetSingleton()->PlayCasualty();
 
@@ -292,7 +292,7 @@ void BattleView::OnCasualty(const Fighter& fighter)
 }
 
 
-void BattleView::OnRouting(Unit* unit)
+void BattleView::OnRouting(BattleObjects_v1::Unit* unit)
 {
 }
 
@@ -350,7 +350,7 @@ void BattleView::OnBattleMapChanged(const BattleMap* battleMap)
 }
 
 
-void BattleView::AddCasualty(Unit* unit, glm::vec2 position)
+void BattleView::AddCasualty(BattleObjects_v1::Unit* unit, glm::vec2 position)
 {
 	glm::vec3 p = glm::vec3(position, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(position));
 	SamuraiPlatform platform = SamuraiModule::GetSamuraiPlatform(unit->unitClass.c_str());
@@ -580,7 +580,7 @@ void BattleView::Render()
 
 	// Range Markers
 
-	for (Unit* unit : _simulator->GetUnits())
+	for (BattleObjects_v1::Unit* unit : _simulator->GetUnits())
 	{
 		if (unit->IsFriendlyCommander(_commander))
 		{
@@ -814,7 +814,7 @@ void BattleView::Animate(double secondsSinceLastUpdate)
 }
 
 
-UnitMovementMarker* BattleView::AddMovementMarker(Unit* unit)
+UnitMovementMarker* BattleView::AddMovementMarker(BattleObjects_v1::Unit* unit)
 {
 	UnitMovementMarker* marker = new UnitMovementMarker(this, unit);
 	_movementMarkers.push_back(marker);
@@ -822,7 +822,7 @@ UnitMovementMarker* BattleView::AddMovementMarker(Unit* unit)
 }
 
 
-UnitMovementMarker* BattleView::GetMovementMarker(Unit* unit)
+UnitMovementMarker* BattleView::GetMovementMarker(BattleObjects_v1::Unit* unit)
 {
 	for (UnitMovementMarker* marker : _movementMarkers)
 		if (marker->GetUnit() == unit)
@@ -839,11 +839,11 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, Bat
 
 	for (UnitMovementMarker* marker : _movementMarkers)
 	{
-		Unit* unit = marker->GetUnit();
+		BattleObjects_v1::Unit* unit = marker->GetUnit();
 		if (commander && !unit->IsCommandableBy(commander))
 			continue;
 
-		const UnitCommand& command = unit->GetCommand();
+		const BattleObjects_v1::UnitCommand& command = unit->GetCommand();
 		glm::vec2 p = command.GetDestination();
 		float dx = p.x - position.x;
 		float dy = p.y - position.y;
@@ -859,7 +859,7 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, Bat
 }
 
 
-UnitTrackingMarker* BattleView::AddTrackingMarker(Unit* unit)
+UnitTrackingMarker* BattleView::AddTrackingMarker(BattleObjects_v1::Unit* unit)
 {
 	UnitTrackingMarker* trackingMarker = new UnitTrackingMarker(this, unit);
 	_trackingMarkers.push_back(trackingMarker);
@@ -867,7 +867,7 @@ UnitTrackingMarker* BattleView::AddTrackingMarker(Unit* unit)
 }
 
 
-UnitTrackingMarker* BattleView::GetTrackingMarker(Unit* unit)
+UnitTrackingMarker* BattleView::GetTrackingMarker(BattleObjects_v1::Unit* unit)
 {
 	for (UnitTrackingMarker* marker : _trackingMarkers)
 		if (marker->GetUnit() == unit)
@@ -920,16 +920,16 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 }
 
 
-bounds2f BattleView::GetUnitCurrentIconViewportBounds(Unit* unit)
+bounds2f BattleView::GetUnitCurrentIconViewportBounds(BattleObjects_v1::Unit* unit)
 {
 	glm::vec3 position = GetTerrainPosition(unit->state.center, 0);
 	return GetBillboardBounds(position, 32);
 }
 
 
-bounds2f BattleView::GetUnitFutureIconViewportBounds(Unit* unit)
+bounds2f BattleView::GetUnitFutureIconViewportBounds(BattleObjects_v1::Unit* unit)
 {
-	const UnitCommand& command = unit->GetCommand();
+	const BattleObjects_v1::UnitCommand& command = unit->GetCommand();
 	glm::vec3 position = GetTerrainPosition(!command.path.empty() ? command.path.back() : unit->state.center, 0);
 	return GetBillboardBounds(position, 32);
 }
@@ -949,15 +949,15 @@ bounds2f BattleView::GetUnitFacingMarkerBounds(glm::vec2 center, float direction
 }
 
 
-bounds2f BattleView::GetUnitCurrentFacingMarkerBounds(Unit* unit)
+bounds2f BattleView::GetUnitCurrentFacingMarkerBounds(BattleObjects_v1::Unit* unit)
 {
 	return GetUnitFacingMarkerBounds(unit->state.center, unit->state.bearing);
 }
 
 
-bounds2f BattleView::GetUnitFutureFacingMarkerBounds(Unit* unit)
+bounds2f BattleView::GetUnitFutureFacingMarkerBounds(BattleObjects_v1::Unit* unit)
 {
-	const UnitCommand& command = unit->GetCommand();
+	const BattleObjects_v1::UnitCommand& command = unit->GetCommand();
 
 	glm::vec2 center = !command.path.empty() ? command.path.back() : unit->state.center;
 
@@ -989,19 +989,19 @@ bounds1f BattleView::GetUnitIconSizeLimit() const
 
 
 
-void BattleView::AddShootingAndSmokeCounters(const Shooting& shooting)
+void BattleView::AddShootingAndSmokeCounters(const BattleObjects_v1::Shooting& shooting)
 {
 	AddShootingCounter(shooting);
-	if (shooting.missileType == MissileType::Arq)
+	if (shooting.missileType == BattleObjects_v1::MissileType::Arq)
 		AddSmokeMarker(shooting);
 }
 
 
-void BattleView::AddShootingCounter(const Shooting& shooting)
+void BattleView::AddShootingCounter(const BattleObjects_v1::Shooting& shooting)
 {
 	ShootingCounter* shootingCounter = AddShootingCounter(shooting.missileType);
 
-	for (const Projectile& projectile : shooting.projectiles)
+	for (const BattleObjects_v1::Projectile& projectile : shooting.projectiles)
 	{
 		glm::vec3 p1 = glm::vec3(projectile.position1, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position1));
 		glm::vec3 p2 = glm::vec3(projectile.position2, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position2));
@@ -1010,7 +1010,7 @@ void BattleView::AddShootingCounter(const Shooting& shooting)
 }
 
 
-ShootingCounter* BattleView::AddShootingCounter(MissileType missileType)
+ShootingCounter* BattleView::AddShootingCounter(BattleObjects_v1::MissileType missileType)
 {
 	ShootingCounter* shootingCounter = new ShootingCounter(missileType);
 	_shootingCounters.push_back(shootingCounter);
@@ -1027,11 +1027,11 @@ void BattleView::RemoveAllShootingMarkers()
 }
 
 
-void BattleView::AddSmokeMarker(const Shooting& shooting)
+void BattleView::AddSmokeMarker(const BattleObjects_v1::Shooting& shooting)
 {
 	SmokeCounter* marker = AddSmokeMarker(shooting.missileType);
 
-	for (const Projectile& projectile : shooting.projectiles)
+	for (const BattleObjects_v1::Projectile& projectile : shooting.projectiles)
 	{
 		glm::vec3 p1 = glm::vec3(projectile.position1, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position1));
 		glm::vec3 p2 = glm::vec3(projectile.position2, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position2));
@@ -1040,7 +1040,7 @@ void BattleView::AddSmokeMarker(const Shooting& shooting)
 }
 
 
-SmokeCounter* BattleView::AddSmokeMarker(MissileType missileType)
+SmokeCounter* BattleView::AddSmokeMarker(BattleObjects_v1::MissileType missileType)
 {
 	SmokeCounter* marker = new SmokeCounter(missileType);
 	_smokeMarkers.push_back(marker);
@@ -1064,7 +1064,7 @@ UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int filterTea
 
 	for (UnitCounter* marker : _unitMarkers)
 	{
-		Unit* unit = marker->_unit;
+		BattleObjects_v1::Unit* unit = marker->_unit;
 		if (filterTeam != 0 && unit->commander->GetTeam() != filterTeam)
 			continue;
 		if (filterCommander && !unit->IsCommandableBy(filterCommander))
@@ -1099,8 +1099,8 @@ void BattleView::UpdateSoundPlayer()
 
 	for (UnitCounter* unitMarker : GetUnitCounters())
 	{
-		Unit* unit = unitMarker->_unit;
-		if (unit->stats.platformType == PlatformType::Cavalry)
+		BattleObjects_v1::Unit* unit = unitMarker->_unit;
+		if (unit->stats.platformType == BattleObjects_v1::PlatformType::Cavalry)
 		{
 			++cavalryCount;
 		}
@@ -1115,7 +1115,7 @@ void BattleView::UpdateSoundPlayer()
 
 		if (glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)
 		{
-			if (unit->stats.platformType == PlatformType::Cavalry)
+			if (unit->stats.platformType == BattleObjects_v1::PlatformType::Cavalry)
 			{
 				if (unit->command.running)
 					++cavalryRunning;

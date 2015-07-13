@@ -32,7 +32,7 @@ SamuraiWeapon SamuraiModule::GetSamuraiWeapon(const char* unitClass)
 }
 
 
-UnitStats SamuraiModule::GetDefaultUnitStats(const char* unitClass)
+BattleObjects_v1::UnitStats SamuraiModule::GetDefaultUnitStats(const char* unitClass)
 {
 	SamuraiPlatform platform = GetSamuraiPlatform(unitClass);
 	SamuraiWeapon weapon = GetSamuraiWeapon(unitClass);
@@ -40,11 +40,11 @@ UnitStats SamuraiModule::GetDefaultUnitStats(const char* unitClass)
 }
 
 
-UnitStats SamuraiModule::GetDefaultUnitStats(SamuraiPlatform platform, SamuraiWeapon weapon)
+BattleObjects_v1::UnitStats SamuraiModule::GetDefaultUnitStats(SamuraiPlatform platform, SamuraiWeapon weapon)
 {
-	UnitStats result;
+	BattleObjects_v1::UnitStats result;
 
-	result.platformType = platform == SamuraiPlatform_Cav || platform == SamuraiPlatform_Gen ? PlatformType::Cavalry : PlatformType::Infantry;
+	result.platformType = platform == SamuraiPlatform_Cav || platform == SamuraiPlatform_Gen ? BattleObjects_v1::PlatformType::Cavalry : BattleObjects_v1::PlatformType::Infantry;
 
 	if (platform == SamuraiPlatform_Cav || platform == SamuraiPlatform_Gen)
 	{
@@ -66,7 +66,7 @@ UnitStats SamuraiModule::GetDefaultUnitStats(SamuraiPlatform platform, SamuraiWe
 	switch (weapon)
 	{
 		case SamuraiWeapon_Bow:
-			result.missileType = MissileType::Bow;
+			result.missileType = BattleObjects_v1::MissileType::Bow;
 			result.minimumRange = 20;
 			result.maximumRange = 150;
 			result.runningSpeed += 2; // increased speed
@@ -74,7 +74,7 @@ UnitStats SamuraiModule::GetDefaultUnitStats(SamuraiPlatform platform, SamuraiWe
 			break;
 
 		case SamuraiWeapon_Arq:
-			result.missileType = MissileType::Arq;
+			result.missileType = BattleObjects_v1::MissileType::Arq;
 			result.minimumRange = 20;
 			result.maximumRange = 110;
 			result.walkingSpeed = 5;
