@@ -87,7 +87,7 @@ private: // BattleObserver
 	void OnCommand(BattleObjects::Unit* unit, float timer) override;
 	void OnShooting(const BattleObjects::Shooting& shooting, float timer) override;
 	void OnRelease(const BattleObjects::Shooting& shooting) override;
-	void OnCasualty(const BattleObjects_v1::Fighter& fighter) override;
+	void OnCasualty(BattleObjects::Unit* unit, glm::vec2 fighter) override;
 	void OnRouting(BattleObjects::Unit* unit) override;
 
 private: // BattleMapObserver

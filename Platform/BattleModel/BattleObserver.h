@@ -16,7 +16,7 @@ private:
 	virtual void OnCommand(BattleObjects::Unit* unit, float timer) = 0;
 	virtual void OnShooting(const BattleObjects::Shooting& shooting, float timer) = 0;
 	virtual void OnRelease(const BattleObjects::Shooting& shooting) = 0;
-	virtual void OnCasualty(const BattleObjects_v1::Fighter& fighter) = 0;
+	virtual void OnCasualty(BattleObjects::Unit* unit, glm::vec2 fighter) = 0;
 	virtual void OnRouting(BattleObjects::Unit* unit) = 0;
 };
 

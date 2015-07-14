@@ -642,7 +642,7 @@ void BattleGesture::OnRelease(const BattleObjects::Shooting& shooting)
 }
 
 
-void BattleGesture::OnCasualty(const BattleObjects_v1::Fighter& fighter)
+void BattleGesture::OnCasualty(BattleObjects::Unit* unit, glm::vec2 fighter)
 {
 }
 

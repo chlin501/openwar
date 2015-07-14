@@ -284,11 +284,11 @@ void BattleView::OnRelease(const BattleObjects::Shooting& shooting)
 }
 
 
-void BattleView::OnCasualty(const BattleObjects_v1::Fighter& fighter)
+void BattleView::OnCasualty(BattleObjects::Unit* unit, glm::vec2 fighter)
 {
 	SoundPlayer::GetSingleton()->PlayCasualty();
 
-	AddCasualty(fighter.GetUnit(), fighter.state.position);
+	AddCasualty(unit, fighter);
 }
 
 

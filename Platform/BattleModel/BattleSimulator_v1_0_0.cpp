@@ -717,7 +717,7 @@ void BattleSimulator_v1_0_0::RemoveCasualties()
 
 		for (BattleObserver* observer : _observers)
 			for (const BattleObjects_v1::Fighter& fighter : fighters)
-				observer->OnCasualty(fighter);
+				observer->OnCasualty(unit, fighter.state.position);
 
 	}
 }
