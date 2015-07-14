@@ -38,17 +38,20 @@ public:
 	BattleSimulator_v1_0_0(BattleMap* battleMap);
 	~BattleSimulator_v1_0_0();
 
-	float GetTimerDelay() const { return 0.25f; }
-
 	void SetPractice(bool value) { _practice = value; }
 	int GetKills(int team) { return _kills[team]; }
 
-	void SetDeploymentZone(int team, glm::vec2 center, float radius);
+public:
 	glm::vec2 GetDeploymentCenter(int team) const;
 	float GetDeploymentRadius(int team) const;
 	bool IsDeploymentZone(int team, glm::vec2 position) const;
 	glm::vec2 ConstrainDeploymentZone(int team, glm::vec2 position, float inset) const;
+
+private:
+	void SetDeploymentZone(int team, glm::vec2 center, float radius);
 	bool HasCompletedDeployment(int team) const;
+
+public:
 	void Deploy(BattleObjects::Unit* unit, glm::vec2 position);
 
 	BattleObjects_v1::Unit* AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, BattleObjects_v1::UnitStats stats, glm::vec2 position);
@@ -104,6 +107,7 @@ public:
 	void Tick(double secondsSinceLastTick);
 
 	void EnableDeploymentZones(float deploymentTimer);
+private:
 	void UpdateDeploymentZones(double secondsSinceLastTick);
 
 	static void MovementRules_AdvanceTime(BattleObjects_v1::Unit* unit, float timeStep);

@@ -18,6 +18,8 @@ public:
 	void AddObserver(BattleObserver* observer);
 	void RemoveObserver(BattleObserver* observer);
 
+	float GetTimerDelay() const { return 0.25f; }
+
 protected:
 	void NotifyAddUnit(BattleObjects::Unit* unit);
 	void NotifyRemoveUnit(BattleObjects::Unit* unit);
