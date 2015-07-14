@@ -67,7 +67,7 @@ public:
 
 	void NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing);
 
-	void SetUnitCommand(BattleObjects_v1::Unit* unit, const BattleObjects_v1::UnitCommand& command, float timer);
+	void SetUnitCommand(BattleObjects_v1::Unit* unit, const BattleObjects::UnitCommand& command, float timer);
 
 	void AddShooting(const BattleObjects_v1::Shooting& shooting, float timer);
 

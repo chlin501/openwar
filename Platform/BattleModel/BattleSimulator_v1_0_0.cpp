@@ -152,7 +152,7 @@ void BattleSimulator_v1_0_0::Deploy(BattleObjects_v1::Unit* unit, glm::vec2 posi
 {
 	unit->state.center = position;
 
-	unit->command = BattleObjects_v1::UnitCommand();
+	unit->command = BattleObjects::UnitCommand();
 	unit->command.bearing = unit->state.bearing;
 	unit->nextCommand = unit->command;
 
@@ -262,7 +262,7 @@ void BattleSimulator_v1_0_0::NewUnit(int commanderId, const char* unitClass, int
 }
 
 
-void BattleSimulator_v1_0_0::SetUnitCommand(BattleObjects_v1::Unit* unit, const BattleObjects_v1::UnitCommand& command, float timer)
+void BattleSimulator_v1_0_0::SetUnitCommand(BattleObjects_v1::Unit* unit, const BattleObjects::UnitCommand& command, float timer)
 {
 	unit->nextCommand = command;
 	unit->nextCommandTimer = timer;
@@ -554,7 +554,7 @@ void BattleSimulator_v1_0_0::TriggerShooting(BattleObjects_v1::Unit* unit)
 	BattleObjects_v1::Shooting shooting;
 	shooting.unit = unit;
 	shooting.missileType = unit->stats.missileType;
-	shooting.target = unit->command.missileTarget->state.center;
+	shooting.target = unit->command.missileTarget->GetCenter();
 
 	bool arq = shooting.missileType == BattleObjects_v1::MissileType::Arq;
 	float distance = 0;
@@ -744,7 +744,7 @@ BattleObjects_v1::UnitState BattleSimulator_v1_0_0::NextUnitState(BattleObjects_
 	}
 	else if (unit->command.missileTarget
 		&& unit->command.missileTarget != unit
-		&& !IsWithinLineOfFire(unit, unit->command.missileTarget->state.center))
+		&& !IsWithinLineOfFire(unit, unit->command.missileTarget->GetCenter()))
 	{
 		unit->command.missileTargetLocked = false;
 		unit->command.missileTarget = nullptr;
@@ -764,7 +764,7 @@ BattleObjects_v1::UnitState BattleSimulator_v1_0_0::NextUnitState(BattleObjects_
 	{
 		if (unit->state.loadingDuration != 0
 			&& unit->command.missileTarget
-			&& IsWithinLineOfFire(unit, unit->command.missileTarget->state.center))
+			&& IsWithinLineOfFire(unit, unit->command.missileTarget->GetCenter()))
 		{
 			++result.shootingCounter;
 		}
@@ -1214,7 +1214,7 @@ glm::vec2 BattleSimulator_v1_0_0::MovementRules_NextWaypoint(BattleObjects_v1::U
 			return p;
 
 	if (unit->command.meleeTarget)
-		return unit->command.meleeTarget->state.center;
+		return unit->command.meleeTarget->GetCenter();
 
 	if (!unit->command.path.empty())
 		return unit->command.path.back();
@@ -1227,7 +1227,7 @@ glm::vec2 BattleSimulator_v1_0_0::MovementRules_NextWaypoint(BattleObjects_v1::U
 void BattleSimulator_v1_0_0::MovementRules_AdvanceTime(BattleObjects_v1::Unit* unit, float timeStep)
 {
 	if (unit->command.meleeTarget)
-		unit->command.UpdatePath(unit->state.center, unit->command.meleeTarget->state.center);
+		unit->command.UpdatePath(unit->state.center, unit->command.meleeTarget->GetCenter());
 	else if (unit->command.path.empty())
 		unit->command.ClearPathAndSetDestination(unit->state.center);
 	else
@@ -1249,8 +1249,8 @@ void BattleSimulator_v1_0_0::MovementRules_AdvanceTime(BattleObjects_v1::Unit* u
 			direction = ::angle(diff);
 	}
 
-	if (unit->command.meleeTarget && glm::length(unit->state.center - unit->command.meleeTarget->state.center) <= 15)
-		direction = angle(unit->command.meleeTarget->state.center - unit->state.center);
+	if (unit->command.meleeTarget && glm::length(unit->state.center - unit->command.meleeTarget->GetCenter()) <= 15)
+		direction = angle(unit->command.meleeTarget->GetCenter() - unit->state.center);
 
 	if (fabsf(direction - unit->formation._direction) > 0.1f)
 	{

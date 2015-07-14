@@ -843,7 +843,7 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, Bat
 		if (commander && !unit->IsCommandableBy(commander))
 			continue;
 
-		const BattleObjects_v1::UnitCommand& command = unit->GetCommand();
+		const BattleObjects::UnitCommand& command = unit->GetCommand();
 		glm::vec2 p = command.GetDestination();
 		float dx = p.x - position.x;
 		float dy = p.y - position.y;
@@ -929,7 +929,7 @@ bounds2f BattleView::GetUnitCurrentIconViewportBounds(BattleObjects_v1::Unit* un
 
 bounds2f BattleView::GetUnitFutureIconViewportBounds(BattleObjects_v1::Unit* unit)
 {
-	const BattleObjects_v1::UnitCommand& command = unit->GetCommand();
+	const BattleObjects::UnitCommand& command = unit->GetCommand();
 	glm::vec3 position = GetTerrainPosition(!command.path.empty() ? command.path.back() : unit->GetCenter(), 0);
 	return GetBillboardBounds(position, 32);
 }
@@ -957,7 +957,7 @@ bounds2f BattleView::GetUnitCurrentFacingMarkerBounds(BattleObjects_v1::Unit* un
 
 bounds2f BattleView::GetUnitFutureFacingMarkerBounds(BattleObjects_v1::Unit* unit)
 {
-	const BattleObjects_v1::UnitCommand& command = unit->GetCommand();
+	const BattleObjects::UnitCommand& command = unit->GetCommand();
 
 	glm::vec2 center = !command.path.empty() ? command.path.back() : unit->GetCenter();
 

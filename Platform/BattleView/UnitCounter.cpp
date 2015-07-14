@@ -95,7 +95,7 @@ void UnitCounter::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleView* ba
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
 
-	const BattleObjects_v1::UnitCommand& command = _unit->GetCommand();
+	const BattleObjects::UnitCommand& command = _unit->GetCommand();
 
 	if (_unit->state.unitMode != BattleObjects_v1::UnitMode_Standing
 		|| command.meleeTarget

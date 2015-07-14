@@ -125,7 +125,7 @@ void PracticeScript::IssueCommands()
 			{
 				glm::vec2 destination = targetCenter - 0.9f * range * glm::normalize(diff);
 
-				BattleObjects_v1::UnitCommand command;
+				BattleObjects::UnitCommand command;
 				command.path.push_back(unitCenter);
 				command.path.push_back(destination);
 				command.bearing = angle(destination - unitCenter);
@@ -135,7 +135,7 @@ void PracticeScript::IssueCommands()
 			{
 				glm::vec2 destination = targetCenter - 0.7f * range * glm::normalize(diff);
 
-				BattleObjects_v1::UnitCommand command;
+				BattleObjects::UnitCommand command;
 				command.path.push_back(unitCenter);
 				command.path.push_back(destination);
 				command.bearing = angle(destination - unitCenter);
@@ -144,7 +144,7 @@ void PracticeScript::IssueCommands()
 			}
 			else
 			{
-				BattleObjects_v1::UnitCommand command;
+				BattleObjects::UnitCommand command;
 				command.bearing = angle(targetCenter - unitCenter);;
 				_simulator->SetUnitCommand(unit, command, 0);
 			}
@@ -154,7 +154,7 @@ void PracticeScript::IssueCommands()
 			if (glm::distance(targetUnit->GetCenter(), unitCenter) < 80)
 			{
 
-				BattleObjects_v1::UnitCommand command;
+				BattleObjects::UnitCommand command;
 				command.path.push_back(unitCenter);
 				command.path.push_back(targetCenter);
 				command.bearing = angle(targetCenter - unitCenter);
@@ -169,7 +169,7 @@ void PracticeScript::IssueCommands()
 
 				glm::vec2 destination = playerCenter + diff;
 
-				BattleObjects_v1::UnitCommand command;
+				BattleObjects::UnitCommand command;
 				command.path.push_back(unitCenter);
 				command.path.push_back(destination);
 				command.bearing = angle(destination - unitCenter);

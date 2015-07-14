@@ -174,45 +174,6 @@ public:
 	};
 
 
-	struct MovementPath
-	{
-		static void UpdateMovementPathStart(std::vector<glm::vec2>& path, glm::vec2 startPosition);
-
-		static void UpdateMovementPath(std::vector<glm::vec2>& path, glm::vec2 startPosition, glm::vec2 endPosition);
-		static float Length(const std::vector<glm::vec2>& path);
-	};
-
-
-	struct UnitCommand
-	{
-		std::vector<glm::vec2> path{};
-		bool running{};
-		float bearing{};
-		Unit* meleeTarget{};
-		Unit* missileTarget{}; // set to self to hold fire
-		bool missileTargetLocked{};
-
-
-		void UpdatePath(glm::vec2 curr, glm::vec2 dest)
-		{
-			MovementPath::UpdateMovementPath(path, curr, dest);
-		}
-
-
-		void ClearPathAndSetDestination(glm::vec2 p)
-		{
-			path.clear();
-			path.push_back(p);
-		}
-
-
-		glm::vec2 GetDestination() const
-		{
-			return !path.empty() ? path.back() : glm::vec2(512, 512);
-		}
-	};
-
-
 	struct Formation
 	{
 		float rankDistance{};
@@ -255,8 +216,6 @@ public:
 		glm::vec2 CalculateUnitCenter();
 		float GetSpeed();
 
-		const UnitCommand& GetCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
-
 		bool IsInMelee() const;
 
 		Fighter* GetFighter(int rank, int file) const;
@@ -271,6 +230,8 @@ public:
 		float GetMorale() const override { return state.morale; }
 		void SetMorale(float value) { state.morale = value; }
 		bool IsRouting() const { return state.IsRouting(); }
+
+		const UnitCommand& GetCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
 	};
 
 protected:
