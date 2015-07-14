@@ -25,7 +25,7 @@ class BattleSimulator_v1_0_0 : public BattleSimulator, public BattleObjects_v1
 
 	BattleMap* _battleMap{};
 
-	std::vector<std::pair<float, BattleObjects_v1::Shooting>> _shootings{};
+	std::vector<std::pair<float, BattleObjects::Shooting>> _shootings{};
 	std::map<int, int> _kills{};
 
 	float _secondsSinceLastTimeStep{};
@@ -70,7 +70,7 @@ public:
 	void SetUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer);
 	void IssueUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer);
 
-	void AddShooting(const BattleObjects_v1::Shooting& shooting, float timer);
+	void AddShooting(const BattleObjects::Shooting& shooting, float timer);
 
 	void AdvanceTime(float secondsSinceLastTime);
 

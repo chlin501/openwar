@@ -293,9 +293,9 @@ void BattleSimulator_v1_0_0::IssueUnitCommand(BattleObjects::Unit* unit, const B
 }
 
 
-void BattleSimulator_v1_0_0::AddShooting(const BattleObjects_v1::Shooting& shooting, float timer)
+void BattleSimulator_v1_0_0::AddShooting(const BattleObjects::Shooting& shooting, float timer)
 {
-	_shootings.push_back(std::pair<float, BattleObjects_v1::Shooting>(timer, shooting));
+	_shootings.push_back(std::pair<float, BattleObjects::Shooting>(timer, shooting));
 
 	for (BattleObserver* observer : _observers)
 		observer->OnShooting(shooting, timer);
@@ -458,7 +458,7 @@ void BattleSimulator_v1_0_0::AssignNextState()
 
 void BattleSimulator_v1_0_0::UpdateUnitRange(BattleObjects_v1::Unit* unit)
 {
-	BattleObjects_v1::UnitRange& unitRange = unit->unitRange;
+	BattleObjects::UnitRange& unitRange = unit->unitRange;
 
 	unitRange.center = unit->state.center;
 	unitRange.angleLength = (float)M_PI_2;
@@ -502,7 +502,7 @@ void BattleSimulator_v1_0_0::ResolveMeleeCombat()
 {
 	for (BattleObjects_v1::Unit* unit : _units)
 	{
-		bool isMissile = unit->stats.missileType != BattleObjects_v1::MissileType::None;
+		bool isMissile = unit->stats.missileType != BattleObjects::MissileType::None;
 		for (BattleObjects_v1::Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
 		{
 			BattleObjects_v1::Fighter* meleeTarget = fighter->state.meleeTarget;
@@ -566,12 +566,12 @@ void BattleSimulator_v1_0_0::TriggerShooting(BattleObjects_v1::Unit* unit)
 	if (unit->command.missileTarget == nullptr)
 		return;
 
-	BattleObjects_v1::Shooting shooting;
+	BattleObjects::Shooting shooting;
 	shooting.unit = unit;
 	shooting.missileType = unit->stats.missileType;
 	shooting.target = unit->command.missileTarget->GetCenter();
 
-	bool arq = shooting.missileType == BattleObjects_v1::MissileType::Arq;
+	bool arq = shooting.missileType == BattleObjects::MissileType::Arq;
 	float distance = 0;
 
 	for (BattleObjects_v1::Fighter* fighter = unit->fighters, * end = fighter + unit->fightersCount; fighter != end; ++fighter)
@@ -601,7 +601,7 @@ void BattleSimulator_v1_0_0::ResolveProjectileCasualties()
 {
 	static int random = 0;
 
-	for (std::pair<float, BattleObjects_v1::Shooting>& s : _shootings)
+	for (std::pair<float, BattleObjects::Shooting>& s : _shootings)
 	{
 		if (s.first > 0)
 		{
@@ -610,7 +610,7 @@ void BattleSimulator_v1_0_0::ResolveProjectileCasualties()
 
 		if (s.first <= 0)
 		{
-			BattleObjects_v1::Shooting& shooting = s.second;
+			BattleObjects::Shooting& shooting = s.second;
 
 			if (!shooting.released)
 			{
@@ -738,7 +738,7 @@ void BattleSimulator_v1_0_0::RemoveDeadUnits()
 
 void BattleSimulator_v1_0_0::RemoveFinishedShootings()
 {
-	auto i = std::remove_if(_shootings.begin(), _shootings.end(), [](const std::pair<float, BattleObjects_v1::Shooting>& s) { return s.second.projectiles.empty(); });
+	auto i = std::remove_if(_shootings.begin(), _shootings.end(), [](const std::pair<float, BattleObjects::Shooting>& s) { return s.second.projectiles.empty(); });
 	_shootings.erase(i, _shootings.end());
 }
 

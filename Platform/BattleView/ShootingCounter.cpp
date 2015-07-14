@@ -6,10 +6,10 @@
 
 
 
-ShootingCounter::ShootingCounter(BattleObjects_v1::MissileType missileType) :
+ShootingCounter::ShootingCounter(BattleObjects::MissileType missileType) :
 	_missileType{missileType}
 {
-	if (missileType == BattleObjects_v1::MissileType::Arq)
+	if (missileType == BattleObjects::MissileType::Arq)
 		SoundPlayer::GetSingleton()->PlayMissileMatchlock();
 	else
 		_soundCookie = SoundPlayer::GetSingleton()->PlayMissileArrows();
@@ -60,7 +60,7 @@ bool ShootingCounter::Animate(float seconds)
 		}
 	}
 
-	if (impact && !_impacted && _missileType == BattleObjects_v1::MissileType::Bow)
+	if (impact && !_impacted && _missileType == BattleObjects::MissileType::Bow)
 	{
 		_impacted = true;
 		SoundPlayer::GetSingleton()->PlayMissileImpact();
@@ -82,7 +82,7 @@ void ShootingCounter::Render(VertexShape_3f_4f* vertices)
 		float t = projectile.time / projectile.duration;
 		if (0 <= t && t <= 1)
 		{
-			if (_missileType == BattleObjects_v1::MissileType::Bow)
+			if (_missileType == BattleObjects::MissileType::Bow)
 				RenderArrow(vertices, projectile.position1, projectile.position2, t);
 			else
 				RenderBullet(vertices, projectile.position1, projectile.position2, t);

@@ -31,7 +31,7 @@ static float normalize_angle(float a)
 }
 
 
-bool BattleObjects_v1::UnitRange::IsWithinRange(glm::vec2 p) const
+bool BattleObjects::UnitRange::IsWithinRange(glm::vec2 p) const
 {
 	if (minimumRange > 0 && maximumRange > 0)
 	{

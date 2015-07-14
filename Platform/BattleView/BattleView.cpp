@@ -278,7 +278,7 @@ void BattleView::OnShooting(const BattleObjects::Shooting& shooting, float timer
 }
 
 
-void BattleView::OnRelease(const BattleObjects_v1::Shooting& shooting)
+void BattleView::OnRelease(const BattleObjects::Shooting& shooting)
 {
 	AddShootingAndSmokeCounters(shooting);
 }
@@ -989,15 +989,15 @@ bounds1f BattleView::GetUnitIconSizeLimit() const
 
 
 
-void BattleView::AddShootingAndSmokeCounters(const BattleObjects_v1::Shooting& shooting)
+void BattleView::AddShootingAndSmokeCounters(const BattleObjects::Shooting& shooting)
 {
 	AddShootingCounter(shooting);
-	if (shooting.missileType == BattleObjects_v1::MissileType::Arq)
+	if (shooting.missileType == BattleObjects::MissileType::Arq)
 		AddSmokeMarker(shooting);
 }
 
 
-void BattleView::AddShootingCounter(const BattleObjects_v1::Shooting& shooting)
+void BattleView::AddShootingCounter(const BattleObjects::Shooting& shooting)
 {
 	ShootingCounter* shootingCounter = AddShootingCounter(shooting.missileType);
 
@@ -1010,7 +1010,7 @@ void BattleView::AddShootingCounter(const BattleObjects_v1::Shooting& shooting)
 }
 
 
-ShootingCounter* BattleView::AddShootingCounter(BattleObjects_v1::MissileType missileType)
+ShootingCounter* BattleView::AddShootingCounter(BattleObjects::MissileType missileType)
 {
 	ShootingCounter* shootingCounter = new ShootingCounter(missileType);
 	_shootingCounters.push_back(shootingCounter);
@@ -1027,7 +1027,7 @@ void BattleView::RemoveAllShootingMarkers()
 }
 
 
-void BattleView::AddSmokeMarker(const BattleObjects_v1::Shooting& shooting)
+void BattleView::AddSmokeMarker(const BattleObjects::Shooting& shooting)
 {
 	SmokeCounter* marker = AddSmokeMarker(shooting.missileType);
 
@@ -1040,7 +1040,7 @@ void BattleView::AddSmokeMarker(const BattleObjects_v1::Shooting& shooting)
 }
 
 
-SmokeCounter* BattleView::AddSmokeMarker(BattleObjects_v1::MissileType missileType)
+SmokeCounter* BattleView::AddSmokeMarker(BattleObjects::MissileType missileType)
 {
 	SmokeCounter* marker = new SmokeCounter(missileType);
 	_smokeMarkers.push_back(marker);

@@ -64,8 +64,8 @@ private: // BattleObserver
 	void OnAddUnit(BattleObjects::Unit* unit) override;
 	void OnRemoveUnit(BattleObjects::Unit* unit) override;
 	void OnCommand(BattleObjects::Unit* unit, float timer) override;
-	void OnShooting(const BattleObjects_v1::Shooting& shooting, float timer) override;
-	void OnRelease(const BattleObjects_v1::Shooting& shooting) override;
+	void OnShooting(const BattleObjects::Shooting& shooting, float timer) override;
+	void OnRelease(const BattleObjects::Shooting& shooting) override;
 	void OnCasualty(const BattleObjects_v1::Fighter& fighter) override;
 	void OnRouting(BattleObjects::Unit* unit) override;
 };

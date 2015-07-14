@@ -632,12 +632,12 @@ void BattleGesture::OnCommand(BattleObjects::Unit* unit, float timer)
 }
 
 
-void BattleGesture::OnShooting(const BattleObjects_v1::Shooting& shooting, float timer)
+void BattleGesture::OnShooting(const BattleObjects::Shooting& shooting, float timer)
 {
 }
 
 
-void BattleGesture::OnRelease(const BattleObjects_v1::Shooting& shooting)
+void BattleGesture::OnRelease(const BattleObjects::Shooting& shooting)
 {
 }
 

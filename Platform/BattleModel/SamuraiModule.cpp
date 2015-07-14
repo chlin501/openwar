@@ -66,7 +66,7 @@ BattleObjects_v1::UnitStats SamuraiModule::GetDefaultUnitStats(SamuraiPlatform p
 	switch (weapon)
 	{
 		case SamuraiWeapon_Bow:
-			result.missileType = BattleObjects_v1::MissileType::Bow;
+			result.missileType = BattleObjects::MissileType::Bow;
 			result.minimumRange = 20;
 			result.maximumRange = 150;
 			result.runningSpeed += 2; // increased speed
@@ -74,7 +74,7 @@ BattleObjects_v1::UnitStats SamuraiModule::GetDefaultUnitStats(SamuraiPlatform p
 			break;
 
 		case SamuraiWeapon_Arq:
-			result.missileType = BattleObjects_v1::MissileType::Arq;
+			result.missileType = BattleObjects::MissileType::Arq;
 			result.minimumRange = 20;
 			result.maximumRange = 110;
 			result.walkingSpeed = 5;

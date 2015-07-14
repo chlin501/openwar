@@ -85,8 +85,8 @@ private: // BattleObserver
 	void OnAddUnit(BattleObjects::Unit* unit) override;
 	void OnRemoveUnit(BattleObjects::Unit* unit) override;
 	void OnCommand(BattleObjects::Unit* unit, float timer) override;
-	void OnShooting(const BattleObjects_v1::Shooting& shooting, float timer) override;
-	void OnRelease(const BattleObjects_v1::Shooting& shooting) override;
+	void OnShooting(const BattleObjects::Shooting& shooting, float timer) override;
+	void OnRelease(const BattleObjects::Shooting& shooting) override;
 	void OnCasualty(const BattleObjects_v1::Fighter& fighter) override;
 	void OnRouting(BattleObjects::Unit* unit) override;
 
@@ -132,14 +132,14 @@ public:
 
 	/***/
 
-	void AddShootingAndSmokeCounters(const BattleObjects_v1::Shooting& shooting);
+	void AddShootingAndSmokeCounters(const BattleObjects::Shooting& shooting);
 
-	void AddShootingCounter(const BattleObjects_v1::Shooting& shooting);
-	ShootingCounter* AddShootingCounter(BattleObjects_v1::MissileType missileType);
+	void AddShootingCounter(const BattleObjects::Shooting& shooting);
+	ShootingCounter* AddShootingCounter(BattleObjects::MissileType missileType);
 	void RemoveAllShootingMarkers();
 
-	void AddSmokeMarker(const BattleObjects_v1::Shooting& shooting);
-	SmokeCounter* AddSmokeMarker(BattleObjects_v1::MissileType missileType);
+	void AddSmokeMarker(const BattleObjects::Shooting& shooting);
+	SmokeCounter* AddSmokeMarker(BattleObjects::MissileType missileType);
 	void RemoveAllSmokeMarkers();
 
 	UnitCounter* GetNearestUnitCounter(glm::vec2 position, int filterTeam, BattleObjects::Commander* filterCommander, bool filterDeployed);

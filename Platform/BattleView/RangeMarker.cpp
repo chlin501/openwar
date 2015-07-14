@@ -33,7 +33,7 @@ void RangeMarker::Render(VertexShape_3f_4f* vertices)
 }
 
 
-void RangeMarker::RenderMissileRange(VertexShape_3f_4f* vertices, const BattleObjects_v1::UnitRange& unitRange)
+void RangeMarker::RenderMissileRange(VertexShape_3f_4f* vertices, const BattleObjects::UnitRange& unitRange)
 {
 	glm::vec2 center = unitRange.center;
 	const float thickness = 8;

@@ -62,6 +62,7 @@ public:
 		float delay{};
 	};
 
+
 	struct Shooting
 	{
 		Unit* unit{};

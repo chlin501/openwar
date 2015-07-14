@@ -20,13 +20,13 @@ public:
 		float time{};
 	};
 
-	BattleObjects_v1::MissileType _missileType{};
+	BattleObjects::MissileType _missileType{};
 	std::vector<Particle> particles{};
 	int _soundCookie{};
 	bool _impacted{};
 
 public:
-	SmokeCounter(BattleObjects_v1::MissileType missileType);
+	SmokeCounter(BattleObjects::MissileType missileType);
 	~SmokeCounter();
 
 	bool Animate(float seconds);
