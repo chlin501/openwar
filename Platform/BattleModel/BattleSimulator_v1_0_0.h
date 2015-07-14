@@ -27,9 +27,7 @@ class BattleSimulator_v1_0_0 : public BattleSimulator, public BattleObjects_v1
 	float _timeStep{1.0f / 15.0f};
 	bool _practice{};
 	int _winnerTeam{};
-	glm::vec3 _deploymentZones[2]{};
-
-	/***/
+	std::pair<glm::vec2, float> _deploymentZones[2]{};
 
 	float _deploymentTimer{};
 	bool _deploymentEnabled{};
@@ -42,10 +40,7 @@ public:
 	int GetKills(int team) { return _kills[team]; }
 
 public:
-	glm::vec2 GetDeploymentCenter(int team) const;
-	float GetDeploymentRadius(int team) const;
-	bool IsDeploymentZone(int team, glm::vec2 position) const;
-	glm::vec2 ConstrainDeploymentZone(int team, glm::vec2 position, float inset) const;
+	std::pair<glm::vec2, float> GetDeploymentZone(int team) const override;
 
 private:
 	void SetDeploymentZone(int team, glm::vec2 center, float radius);

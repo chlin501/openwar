@@ -1164,11 +1164,11 @@ void BattleView::UpdateDeploymentZones()
 	if (_smoothTerrainSurface)
 	{
 		_smoothTerrainSurface->SetDeploymentZoneBlue(
-			_simulator->GetDeploymentCenter(1),
-			_simulator->GetDeploymentRadius(1));
+			_simulator->GetDeploymentZone(1).first,
+			_simulator->GetDeploymentZone(1).second);
 
 		_smoothTerrainSurface->SetDeploymentZoneRed(
-			_simulator->GetDeploymentCenter(2),
-			_simulator->GetDeploymentRadius(2));
+			_simulator->GetDeploymentZone(2).first,
+			_simulator->GetDeploymentZone(2).second);
 	}
 }

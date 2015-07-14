@@ -38,41 +38,13 @@ BattleSimulator_v1_0_0::~BattleSimulator_v1_0_0()
 
 void BattleSimulator_v1_0_0::SetDeploymentZone(int team, glm::vec2 center, float radius)
 {
-	_deploymentZones[team == 1 ? 0 : 1] = glm::vec3{center, radius};
+	_deploymentZones[team == 1 ? 0 : 1] = std::make_pair(center, radius);
 };
 
 
-glm::vec2 BattleSimulator_v1_0_0::GetDeploymentCenter(int team) const
+std::pair<glm::vec2, float> BattleSimulator_v1_0_0::GetDeploymentZone(int team) const
 {
-	return _deploymentZones[team == 1 ? 0 : 1].xy();
-}
-
-
-float BattleSimulator_v1_0_0::GetDeploymentRadius(int team) const
-{
-	return _deploymentZones[team == 1 ? 0 : 1].z;
-}
-
-
-bool BattleSimulator_v1_0_0::IsDeploymentZone(int team, glm::vec2 position) const
-{
-	glm::vec2 center = GetDeploymentCenter(team);
-	float radius = GetDeploymentRadius(team);
-	return glm::distance(position, center) < radius;
-}
-
-
-glm::vec2 BattleSimulator_v1_0_0::ConstrainDeploymentZone(int team, glm::vec2 position, float inset) const
-{
-	float radius = GetDeploymentRadius(team) - inset;
-	if (radius > 0)
-	{
-		glm::vec2 center = GetDeploymentCenter(team);
-		glm::vec2 offset = position - center;
-		if (glm::length(offset) > radius)
-			position = center + radius * glm::normalize(offset);
-	}
-	return position;
+	return _deploymentZones[team == 1 ? 0 : 1];
 }
 
 
