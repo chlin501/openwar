@@ -28,8 +28,6 @@ BattleSimulator_v1_0_0::BattleSimulator_v1_0_0(BattleMap* battleMap)
 
 BattleSimulator_v1_0_0::~BattleSimulator_v1_0_0()
 {
-	delete _script;
-
 	for (BattleObjects_v1::Unit* unit : _units)
 	{
 		delete[] unit->fighters;
@@ -1117,18 +1115,8 @@ BattleObjects_v1::Fighter* BattleSimulator_v1_0_0::FindFighterStrikingTarget(Bat
 /***/
 
 
-void BattleSimulator_v1_0_0::SetScript(BattleScript* value)
-{
-	delete _script;
-	_script = value;
-}
-
-
 void BattleSimulator_v1_0_0::Tick(double secondsSinceLastTick)
 {
-	if (_script)
-		_script->Tick(secondsSinceLastTick);
-
 	UpdateDeploymentZones(secondsSinceLastTick);
 }
 

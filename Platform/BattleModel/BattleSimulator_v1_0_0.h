@@ -31,7 +31,6 @@ class BattleSimulator_v1_0_0 : public BattleSimulator, public BattleObjects_v1
 
 	/***/
 
-	BattleScript* _script{};
 	float _deploymentTimer{};
 	bool _deploymentEnabled{};
 
@@ -102,8 +101,6 @@ private:
 	BattleObjects_v1::Unit* ClosestEnemyWithinLineOfFire(BattleObjects_v1::Unit* unit);
 
 public:
-	void SetScript(BattleScript* value);
-
 	void Tick(double secondsSinceLastTick);
 
 	void EnableDeploymentZones(float deploymentTimer);
