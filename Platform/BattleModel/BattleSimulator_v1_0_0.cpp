@@ -218,8 +218,7 @@ void BattleSimulator_v1_0_0::AddShooting(const BattleObjects::Shooting& shooting
 
 void BattleSimulator_v1_0_0::AdvanceTime(float secondsSinceLastTime)
 {
-	//if (this)
-	//	return;
+	UpdateDeploymentZones(secondsSinceLastTime);
 
 	bool didStep = false;
 
@@ -1065,7 +1064,6 @@ BattleObjects_v1::Fighter* BattleSimulator_v1_0_0::FindFighterStrikingTarget(Bat
 
 void BattleSimulator_v1_0_0::Tick(double secondsSinceLastTick)
 {
-	UpdateDeploymentZones(secondsSinceLastTick);
 }
 
 

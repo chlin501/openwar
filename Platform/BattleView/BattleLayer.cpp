@@ -115,14 +115,6 @@ void BattleLayer::OnTerrainFeatureChanged(EditorModel* editorModel)
 void BattleLayer::Animate(double secondsSinceLastUpdate)
 {
 	UpdateBattleViewSize();
-
-	if (_scenario)
-	{
-		if (_playing)
-			_scenario->Tick(secondsSinceLastUpdate);
-		else
-			_scenario->Tick(0);
-	}
 }
 
 

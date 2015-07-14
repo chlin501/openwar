@@ -38,15 +38,13 @@ public:
 
 	void SetPractice(bool value) { _practice = value; }
 	int GetKills(int team) { return _kills[team]; }
+	int GetWinnerTeam() const { return _winnerTeam; }
 
-public:
+	void Tick(double secondsSinceLastTick);
+
+	void EnableDeploymentZones(float deploymentTimer);
 	std::pair<glm::vec2, float> GetDeploymentZone(int team) const override;
 
-private:
-	void SetDeploymentZone(int team, glm::vec2 center, float radius);
-	bool HasCompletedDeployment(int team) const;
-
-public:
 	void Deploy(BattleObjects::Unit* unit, glm::vec2 position);
 
 	BattleObjects_v1::Unit* AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, BattleObjects_v1::UnitStats stats, glm::vec2 position);
@@ -61,7 +59,6 @@ public:
 
 	void AdvanceTime(float secondsSinceLastTime);
 
-	int GetWinnerTeam() const { return _winnerTeam; }
 
 private:
 	void SimulateOneTimeStep();
@@ -95,12 +92,9 @@ private:
 	bool IsWithinLineOfFire(BattleObjects_v1::Unit* unit, glm::vec2 position);
 	BattleObjects_v1::Unit* ClosestEnemyWithinLineOfFire(BattleObjects_v1::Unit* unit);
 
-public:
-	void Tick(double secondsSinceLastTick);
-
-	void EnableDeploymentZones(float deploymentTimer);
-private:
 	void UpdateDeploymentZones(double secondsSinceLastTick);
+	void SetDeploymentZone(int team, glm::vec2 center, float radius);
+	bool HasCompletedDeployment(int team) const;
 
 	static void MovementRules_AdvanceTime(BattleObjects_v1::Unit* unit, float timeStep);
 	static void MovementRules_SwapFighters(BattleObjects_v1::Unit* unit);
