@@ -2,8 +2,8 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifndef BattleSimulator_H
-#define BattleSimulator_H
+#ifndef BattleSimulator_v1_0_0_H
+#define BattleSimulator_v1_0_0_H
 
 #include <map>
 #include <set>
