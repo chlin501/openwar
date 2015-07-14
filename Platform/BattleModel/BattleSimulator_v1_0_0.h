@@ -13,13 +13,10 @@
 #include "BattleObjects_v1.h"
 #include "BattleSimulator.h"
 
-class BattleObserver;
-
 
 
 class BattleSimulator_v1_0_0 : public BattleSimulator, public BattleObjects_v1
 {
-	std::set<BattleObserver*> _observers{};
 	quadtree<BattleObjects_v1::Fighter*> _fighterQuadTree{0, 0, 1024, 1024};
 	quadtree<BattleObjects_v1::Fighter*> _weaponQuadTree{0, 0, 1024, 1024};
 
@@ -48,9 +45,6 @@ public:
 
 	void SetPractice(bool value) { _practice = value; }
 	int GetKills(int team) { return _kills[team]; }
-
-	void AddObserver(BattleObserver* observer);
-	void RemoveObserver(BattleObserver* observer);
 
 	BattleMap* GetBattleMap() const;
 

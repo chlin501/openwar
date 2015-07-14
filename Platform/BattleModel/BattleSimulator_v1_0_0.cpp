@@ -67,24 +67,6 @@ int BattleSimulator_v1_0_0::CountInfantryInMelee() const
 }
 
 
-void BattleSimulator_v1_0_0::AddObserver(BattleObserver* observer)
-{
-	_observers.insert(observer);
-
-	for (BattleObjects_v1::Unit* unit : _units)
-	{
-		observer->OnAddUnit(unit);
-		observer->OnCommand(unit, 0);
-	}
-}
-
-
-void BattleSimulator_v1_0_0::RemoveObserver(BattleObserver* observer)
-{
-	_observers.erase(observer);
-}
-
-
 BattleMap* BattleSimulator_v1_0_0::GetBattleMap() const
 {
 	return _battleMap;
@@ -197,6 +179,7 @@ BattleObjects_v1::Unit* BattleSimulator_v1_0_0::AddUnit(BattleObjects::Commander
 	unit->formation.numberOfRanks = (int)fminf(4, unit->fightersCount);
 	unit->formation.numberOfFiles = (int)ceilf((float)unit->fightersCount / unit->formation.numberOfRanks);
 
+	_units_base.push_back(unit);
 	_units.push_back(unit);
 
 	for (BattleObjects_v1::Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
@@ -211,8 +194,7 @@ BattleObjects_v1::Unit* BattleSimulator_v1_0_0::AddUnit(BattleObjects::Commander
 	for (BattleObjects_v1::Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
 		i->state = i->nextState;
 
-	for (BattleObserver* observer : _observers)
-		observer->OnAddUnit(unit);
+	NotifyAddUnit(unit);
 
 	return unit;
 }
@@ -222,11 +204,10 @@ void BattleSimulator_v1_0_0::RemoveUnit(BattleObjects::Unit* _unit)
 {
 	Unit* unit = static_cast<Unit*>(_unit);
 
-	for (BattleObserver* observer : _observers)
-		observer->OnRemoveUnit(unit);
+	NotifyRemoveUnit(unit);
 
-	auto i = std::find(_units.begin(), _units.end(), unit);
-	_units.erase(i);
+	_units_base.erase(std::find(_units_base.begin(), _units_base.end(), unit));
+	_units.erase(std::find(_units.begin(), _units.end(), unit));
 
 	for (BattleObjects_v1::Unit* other : _units)
 	{
@@ -279,8 +260,7 @@ void BattleSimulator_v1_0_0::SetUnitCommand(BattleObjects::Unit* _unit, const Ba
 		unit->nextCommandTimer = 0;
 	}
 
-	for (BattleObserver* observer : _observers)
-		observer->OnCommand(unit, timer);
+	NotifyCommand(unit, timer);
 }
 
 
@@ -297,8 +277,7 @@ void BattleSimulator_v1_0_0::AddShooting(const BattleObjects::Shooting& shooting
 {
 	_shootings.push_back(std::pair<float, BattleObjects::Shooting>(timer, shooting));
 
-	for (BattleObserver* observer : _observers)
-		observer->OnShooting(shooting, timer);
+	NotifyShooting(shooting, timer);
 }
 
 
@@ -435,8 +414,7 @@ void BattleSimulator_v1_0_0::AssignNextState()
 	for (BattleObjects_v1::Unit* unit : _units)
 	{
 		if (!unit->state.IsRouting() && unit->nextState.IsRouting())
-			for (BattleObserver* observer : _observers)
-				observer->OnRouting(unit);
+			NotifyRouting(unit);
 
 		unit->state = unit->nextState;
 
@@ -614,8 +592,7 @@ void BattleSimulator_v1_0_0::ResolveProjectileCasualties()
 
 			if (!shooting.released)
 			{
-				for (BattleObserver* observer : _observers)
-					observer->OnRelease(s.second);
+				NotifyRelease(s.second);
 				shooting.released = true;
 			}
 
@@ -715,10 +692,8 @@ void BattleSimulator_v1_0_0::RemoveCasualties()
 
 		_kills[unit->commander->GetTeam()] += fighters.size();
 
-		for (BattleObserver* observer : _observers)
-			for (const BattleObjects_v1::Fighter& fighter : fighters)
-				observer->OnCasualty(unit, fighter.state.position);
-
+		for (const BattleObjects_v1::Fighter& fighter : fighters)
+			NotifyCasualty(unit, fighter.state.position);
 	}
 }
 

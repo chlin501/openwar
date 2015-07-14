@@ -1,12 +1,13 @@
 #ifndef BattleObserver_H
 #define BattleObserver_H
 
-#include "BattleObjects_v1.h"
+#include "BattleObjects.h"
 
 
 class BattleObserver
 {
-	friend class BattleSimulator_v1_0_0;
+	friend class BattleSimulator;
+
 public:
 	virtual ~BattleObserver();
 

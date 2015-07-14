@@ -219,10 +219,11 @@ public:
 	};
 
 protected:
+	std::vector<BattleObjects::Unit*> _units_base{};
 	std::vector<BattleObjects_v1::Unit*> _units{};
 
 public:
-	virtual const std::vector<BattleObjects_v1::Unit*>& GetUnits() { return _units; }
+	const std::vector<BattleObjects::Unit*>& GetUnits() override { return _units_base; }
 
 
 }; // class BattleObjects_v1

@@ -205,7 +205,6 @@ protected:
 	BattleObjects::Commander* _dummyCommander{};
 	int _teamPosition1{};
 	int _teamPosition2{};
-	std::vector<BattleObjects::Unit*> _units{};
 
 public:
 	BattleObjects::Commander* AddCommander(const char* playerId, int team, BattleObjects::CommanderType type);
@@ -215,6 +214,8 @@ public:
 
 	void SetTeamPosition(int team, int position);
 	int GetTeamPosition(int team) const;
+
+	virtual const std::vector<BattleObjects::Unit*>& GetUnits() = 0;
 
 }; // class BattleObjects
 
