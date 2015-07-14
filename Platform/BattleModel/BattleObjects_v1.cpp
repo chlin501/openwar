@@ -92,54 +92,6 @@ float BattleObjects_v1::Unit::GetSpeed()
 }
 
 
-bool BattleObjects_v1::Unit::IsOwnedBySimulator() const
-{
-	return _ownedBySimulator;
-}
-
-
-void BattleObjects_v1::Unit::SetOwnedBySimulator(bool value)
-{
-	_ownedBySimulator = value;
-}
-
-
-bool BattleObjects_v1::Unit::IsFriendlyCommander(BattleObjects::Commander* battleCommander) const
-{
-	if (battleCommander == nullptr)
-		return false;
-
-	if (commander == battleCommander)
-		return true;
-
-	if (battleCommander->GetType() == BattleObjects::CommanderType::None)
-		return false;
-
-	if (commander->GetTeam() != battleCommander->GetTeam())
-		return false;
-
-	return true;
-}
-
-
-bool BattleObjects_v1::Unit::IsCommandableBy(BattleObjects::Commander* battleCommander) const
-{
-	if (battleCommander == nullptr)
-		return false;
-
-	if (commander == battleCommander)
-		return true;
-
-	if (battleCommander->GetType() == BattleObjects::CommanderType::None)
-		return false;
-
-	if (commander->IsIncapacitated() && commander->GetTeam() == battleCommander->GetTeam())
-		return true;
-
-	return false;
-}
-
-
 bool BattleObjects_v1::Unit::IsInMelee() const
 {
 	int count = 0;

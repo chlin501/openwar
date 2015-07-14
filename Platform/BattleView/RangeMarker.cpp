@@ -26,7 +26,7 @@ void RangeMarker::Render(VertexShape_3f_4f* vertices)
 	{
 		RenderMissileTarget(vertices, command.missileTarget->GetCenter());
 	}
-	else if (_unit->unitRange.maximumRange > 0 && _unit->state.unitMode != BattleObjects_v1::UnitMode_Moving && !_unit->state.IsRouting())
+	else if (_unit->unitRange.maximumRange > 0 && _unit->state.unitMode != BattleObjects_v1::UnitMode_Moving && !_unit->IsRouting())
 	{
 		RenderMissileRange(vertices, _unit->unitRange);
 	}

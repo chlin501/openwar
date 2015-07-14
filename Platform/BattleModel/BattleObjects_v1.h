@@ -231,8 +231,6 @@ public:
 	struct Unit : public BattleObjects::Unit
 	{
 		// static attributes
-		BattleObjects::Commander* commander{};
-
 		std::string unitClass{};
 		UnitStats stats{};
 		Fighter* fighters{};
@@ -253,21 +251,11 @@ public:
 		UnitCommand command{};
 		UnitCommand nextCommand{};
 		float nextCommandTimer{};
-		bool _ownedBySimulator{};
-
 
 		glm::vec2 CalculateUnitCenter();
-
 		float GetSpeed();
 
 		const UnitCommand& GetCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
-
-
-		bool IsOwnedBySimulator() const;
-		void SetOwnedBySimulator(bool value);
-
-		bool IsFriendlyCommander(BattleObjects::Commander* battleCommander) const;
-		bool IsCommandableBy(BattleObjects::Commander* battleCommander) const;
 
 		bool IsInMelee() const;
 
@@ -282,6 +270,7 @@ public:
 
 		float GetMorale() const override { return state.morale; }
 		void SetMorale(float value) { state.morale = value; }
+		bool IsRouting() const { return state.IsRouting(); }
 	};
 
 protected:

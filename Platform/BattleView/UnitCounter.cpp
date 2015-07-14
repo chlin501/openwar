@@ -30,7 +30,7 @@ bool UnitCounter::Animate(float seconds)
 {
 	float routingBlinkTime = _unit->state.GetRoutingBlinkTime();
 
-	if (!_unit->state.IsRouting() && routingBlinkTime != 0)
+	if (!_unit->IsRouting() && routingBlinkTime != 0)
 	{
 		_routingTimer -= seconds;
 		if (_routingTimer < 0)
@@ -46,7 +46,7 @@ void UnitCounter::AppendUnitMarker(BillboardTextureShape* renderer, bool flip)
 	bool routingIndicator = false;
 	float routingBlinkTime = _unit->state.GetRoutingBlinkTime();
 
-	if (_unit->state.IsRouting())
+	if (_unit->IsRouting())
 	{
 		routingIndicator = true;
 	}
@@ -99,7 +99,7 @@ void UnitCounter::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleView* ba
 
 	if (_unit->state.unitMode != BattleObjects_v1::UnitMode_Standing
 		|| command.meleeTarget
-		|| _unit->state.IsRouting())
+		|| _unit->IsRouting())
 	{
 		return;
 	}

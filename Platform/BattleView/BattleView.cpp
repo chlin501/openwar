@@ -1105,7 +1105,7 @@ void BattleView::UpdateSoundPlayer()
 			++cavalryCount;
 		}
 
-		if (!unit->state.IsRouting())
+		if (!unit->IsRouting())
 		{
 			if (unit->IsFriendlyCommander(_commander))
 				++friendlyUnits;

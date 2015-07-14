@@ -105,7 +105,7 @@ void MonkeyScript::IssueCommands()
 	std::vector<BattleObjects_v1::Unit*> enemyUnits;
 
 	for (BattleObjects_v1::Unit* unit : _simulator->GetUnits())
-		if (!unit->state.IsRouting())
+		if (!unit->IsRouting())
 		{
 			if (unit->commander == monkeyCommander)
 				monkeyUnits.push_back(unit);

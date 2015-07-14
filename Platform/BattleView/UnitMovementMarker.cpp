@@ -26,7 +26,7 @@ UnitMovementMarker::~UnitMovementMarker()
 
 bool UnitMovementMarker::Animate(float seconds)
 {
-	if (_unit->state.IsRouting())
+	if (_unit->IsRouting())
 		return false;
 
 	const BattleObjects_v1::UnitCommand& command = _unit->GetCommand();

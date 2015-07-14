@@ -513,7 +513,7 @@ BattleObjects_v1::Unit* BattleGesture::FindCommandableUnitByCurrentPosition(glm:
 	if (unitMarker)
 	{
 		BattleObjects_v1::Unit* unit = unitMarker->_unit;
-		if (!unit->state.IsRouting() && GetUnitCurrentBounds(unit).contains(screenPosition))
+		if (!unit->IsRouting() && GetUnitCurrentBounds(unit).contains(screenPosition))
 		{
 			result = unit;
 		}
@@ -529,7 +529,7 @@ BattleObjects_v1::Unit* BattleGesture::FindCommandableUnitByFuturePosition(glm::
 	if (movementMarker)
 	{
 		BattleObjects_v1::Unit* unit = movementMarker->GetUnit();
-		if (!unit->state.IsRouting() && GetUnitFutureBounds(unit).contains(screenPosition))
+		if (!unit->IsRouting() && GetUnitFutureBounds(unit).contains(screenPosition))
 		{
 			result = unit;
 		}
@@ -550,7 +550,7 @@ BattleObjects_v1::Unit* BattleGesture::FindCommandableUnitByModifierArea(glm::ve
 			const BattleObjects_v1::UnitCommand& command = unit->GetCommand();
 			glm::vec2 center = !command.path.empty() ? command.path.back() : unit->GetCenter();
 			float d = glm::distance(center, terrainPosition);
-			if (d < distance && !unit->state.IsRouting() && GetUnitModifierBounds(unit).contains(screenPosition))
+			if (d < distance && !unit->IsRouting() && GetUnitModifierBounds(unit).contains(screenPosition))
 			{
 				result = unit;
 				distance = d;

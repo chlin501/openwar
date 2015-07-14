@@ -47,8 +47,18 @@ public:
 
 	class Unit
 	{
+		bool _ownedBySimulator{};
+
 	public:
+		BattleObjects::Commander* commander{};
+
 		virtual ~Unit();
+
+		bool IsOwnedBySimulator() const;
+		void SetOwnedBySimulator(bool value);
+
+		bool IsFriendlyCommander(BattleObjects::Commander* battleCommander) const;
+		bool IsCommandableBy(BattleObjects::Commander* battleCommander) const;
 
 		virtual glm::vec2 GetCenter() const = 0;
 		virtual void SetCenter(glm::vec2 value) = 0;
@@ -58,6 +68,7 @@ public:
 
 		virtual float GetMorale() const = 0;
 		virtual void SetMorale(float value) = 0;
+		virtual bool IsRouting() const = 0;
 	};
 
 

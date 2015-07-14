@@ -88,7 +88,7 @@ void PracticeScript::IssueCommands()
 	std::vector<BattleObjects_v1::Unit*> scriptUnits;
 
 	for (BattleObjects_v1::Unit* unit : _simulator->GetUnits())
-		if (!unit->state.IsRouting())
+		if (!unit->IsRouting())
 		{
 			std::vector<BattleObjects_v1::Unit*>& unitList = unit->commander->GetTeam() == 1 ? playerUnits : scriptUnits;
 			unitList.push_back(unit);
@@ -185,7 +185,7 @@ void PracticeScript::SpawnWave()
 	std::vector<BattleObjects_v1::Unit*> playerUnits;
 
 	for (BattleObjects_v1::Unit* unit : _simulator->GetUnits())
-		if (unit->commander->GetTeam() == 1 && !unit->state.IsRouting())
+		if (unit->commander->GetTeam() == 1 && !unit->IsRouting())
 			playerUnits.push_back(unit);
 
 	glm::vec2 playerCenter = FindClusterCenter(playerUnits);
