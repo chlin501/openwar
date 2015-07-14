@@ -11,12 +11,13 @@
 #include "Algorithms/quadtree.h"
 #include "BattleMap/GroundMap.h"
 #include "BattleObjects_v1.h"
+#include "BattleSimulator.h"
 
 class BattleObserver;
 
 
 
-class BattleSimulator_v1_0_0
+class BattleSimulator_v1_0_0 : public BattleSimulator, public BattleObjects_v1
 {
 	std::set<BattleObserver*> _observers{};
 	quadtree<BattleObjects_v1::Fighter*> _fighterQuadTree{0, 0, 1024, 1024};
@@ -24,7 +25,6 @@ class BattleSimulator_v1_0_0
 
 	BattleMap* _battleMap{};
 
-	std::vector<BattleObjects_v1::Unit*> _units{};
 	std::vector<std::pair<float, BattleObjects_v1::Shooting>> _shootings{};
 	std::map<int, int> _kills{};
 
@@ -37,10 +37,6 @@ class BattleSimulator_v1_0_0
 	/***/
 
 	BattleScript* _script{};
-	std::vector<BattleObjects::Commander*> _commanders{};
-	BattleObjects::Commander* _dummyCommander{};
-	int _teamPosition1{};
-	int _teamPosition2{};
 	float _deploymentTimer{};
 	bool _deploymentEnabled{};
 
@@ -119,14 +115,6 @@ private:
 
 public:
 	void SetScript(BattleScript* value);
-
-	void SetTeamPosition(int team, int position);
-	int GetTeamPosition(int team) const;
-
-	BattleObjects::Commander* AddCommander(const char* playerId, int team, BattleObjects::CommanderType type);
-	BattleObjects::Commander* GetCommander(const char* playerId) const;
-	const std::vector<BattleObjects::Commander*>& GetCommanders() const { return _commanders; }
-	BattleObjects::Commander* GetDummyCommander() const;
 
 	void Tick(double secondsSinceLastTick);
 

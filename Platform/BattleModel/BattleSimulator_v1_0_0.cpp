@@ -1154,49 +1154,6 @@ void BattleSimulator_v1_0_0::SetScript(BattleScript* value)
 }
 
 
-void BattleSimulator_v1_0_0::SetTeamPosition(int team, int position)
-{
-	if (team == 1)
-		_teamPosition1 = position;
-	if (team == 2)
-		_teamPosition2 = position;
-}
-
-
-int BattleSimulator_v1_0_0::GetTeamPosition(int team) const
-{
-	if (team == 1)
-		return _teamPosition1;
-	if (team == 2)
-		return _teamPosition2;
-	return 0;
-}
-
-
-BattleObjects::Commander* BattleSimulator_v1_0_0::AddCommander(const char* playerId, int team, BattleObjects::CommanderType type)
-{
-	BattleObjects::Commander* commander = new BattleObjects::Commander(this, playerId, team, type);
-	_commanders.push_back(commander);
-	return commander;
-}
-
-
-BattleObjects::Commander* BattleSimulator_v1_0_0::GetCommander(const char* playerId) const
-{
-	for (BattleObjects::Commander* commander : _commanders)
-		if (std::strcmp(commander->GetPlayerId(), playerId) == 0)
-			return commander;
-
-	return nullptr;
-}
-
-
-BattleObjects::Commander* BattleSimulator_v1_0_0::GetDummyCommander() const
-{
-	return _dummyCommander;
-}
-
-
 void BattleSimulator_v1_0_0::Tick(double secondsSinceLastTick)
 {
 	if (_script)

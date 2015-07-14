@@ -14,7 +14,7 @@ class GroundMap;
 class HeightMap;
 
 
-class BattleObjects_v1
+class BattleObjects_v1 : public virtual BattleObjects
 {
 public:
 	struct Fighter;
@@ -274,6 +274,11 @@ public:
 		static int GetFighterFile(Fighter* fighter);
 		static Fighter* GetFighter(Unit* unit, int rank, int file);
 	};
+
+protected:
+	std::vector<BattleObjects_v1::Unit*> _units{};
+
+
 
 }; // class BattleObjects_v1
 

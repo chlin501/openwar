@@ -4,8 +4,6 @@
 #include <string>
 #include <glm/glm.hpp>
 
-class BattleSimulator_v1_0_0;
-
 
 class BattleObjects
 {
@@ -15,7 +13,7 @@ public:
 
 	class Commander
 	{
-		BattleSimulator_v1_0_0* _simulator{};
+		BattleObjects* _simulator{};
 		std::string _playerId{};
 		int _team{};
 		CommanderType _type{};
@@ -23,7 +21,7 @@ public:
 		bool _hasAbandonedBattle{};
 
 	public:
-		Commander(BattleSimulator_v1_0_0* simulator, const char* playerId, int team, CommanderType type);
+		Commander(BattleObjects* simulator, const char* playerId, int team, CommanderType type);
 
 		const char* GetPlayerId() const;
 		int GetTeam() const;
@@ -45,6 +43,21 @@ public:
 		glm::vec2 position2{};
 		float delay{};
 	};
+
+protected:
+	std::vector<BattleObjects::Commander*> _commanders{};
+	BattleObjects::Commander* _dummyCommander{};
+	int _teamPosition1{};
+	int _teamPosition2{};
+
+public:
+	BattleObjects::Commander* AddCommander(const char* playerId, int team, BattleObjects::CommanderType type);
+	BattleObjects::Commander* GetCommander(const char* playerId) const;
+	const std::vector<BattleObjects::Commander*>& GetCommanders() const { return _commanders; }
+	BattleObjects::Commander* GetDummyCommander() const;
+
+	void SetTeamPosition(int team, int position);
+	int GetTeamPosition(int team) const;
 
 }; // class BattleObjects
 
