@@ -158,10 +158,12 @@ void UnitCounter::AppendFighterWeapons(VertexShape_3f* vertices)
 {
 	if (_unit->stats.weaponReach > 0)
 	{
-		for (BattleObjects_v1::Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
+		int count = _unit->GetFighterCount();
+		for (int index = 0; index < count; ++index)
 		{
-			glm::vec2 p1 = fighter->state.position;
-			glm::vec2 p2 = p1 + _unit->stats.weaponReach * vector2_from_angle(fighter->state.bearing);
+			BattleObjects::FighterPosition fighter = _unit->GetFighterPosition(index);
+			glm::vec2 p1 = fighter.position;
+			glm::vec2 p2 = p1 + _unit->stats.weaponReach * vector2_from_angle(fighter.bearing);
 
 			vertices->AddVertex(Vertex_3f(_battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(p1, 1)));
 			vertices->AddVertex(Vertex_3f(_battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(p2, 1)));
@@ -173,32 +175,34 @@ void UnitCounter::AppendFighterWeapons(VertexShape_3f* vertices)
 void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 {
 	bool isSameTeam = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam();
-	for (BattleObjects_v1::Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
+	float size = 2.0;
+	int shape = 0;
+	switch (_samuraiPlatform)
 	{
-		float size = 2.0;
-		int shape = 0;
-		switch (_samuraiPlatform)
-		{
-			case SamuraiPlatform_Cav:
-			case SamuraiPlatform_Gen:
-				shape = isSameTeam ? billboardModel->_billboardShapeFighterCavBlue : billboardModel->_billboardShapeFighterCavRed;
-				size = 3.0;
-				break;
+		case SamuraiPlatform_Cav:
+		case SamuraiPlatform_Gen:
+			shape = isSameTeam ? billboardModel->_billboardShapeFighterCavBlue : billboardModel->_billboardShapeFighterCavRed;
+			size = 3.0;
+			break;
 
-			case SamuraiPlatform_Sam:
-				shape = isSameTeam ? billboardModel->_billboardShapeFighterSamBlue : billboardModel->_billboardShapeFighterSamRed;
-				size = 2.0;
-				break;
+		case SamuraiPlatform_Sam:
+			shape = isSameTeam ? billboardModel->_billboardShapeFighterSamBlue : billboardModel->_billboardShapeFighterSamRed;
+			size = 2.0;
+			break;
 
-			case SamuraiPlatform_Ash:
-				shape = isSameTeam ? billboardModel->_billboardShapeFighterAshBlue : billboardModel->_billboardShapeFighterAshRed;
-				size = 2.0;
-				break;
-		}
+		case SamuraiPlatform_Ash:
+			shape = isSameTeam ? billboardModel->_billboardShapeFighterAshBlue : billboardModel->_billboardShapeFighterAshRed;
+			size = 2.0;
+			break;
+	}
 
+	int count = _unit->GetFighterCount();
+	for (int index = 0; index < count; ++index)
+	{
+		BattleObjects::FighterPosition fighter = _unit->GetFighterPosition(index);
 		const float adjust = 0.5 - 2.0 / 64.0; // place texture 2 texels below ground
-		glm::vec3 p = _battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(fighter->state.position, adjust * size);
-		float facing = glm::degrees(fighter->state.bearing);
+		glm::vec3 p = _battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(fighter.position, adjust * size);
+		float facing = glm::degrees(fighter.bearing);
 		billboardModel->dynamicBillboards.push_back(Billboard(p, facing, size, shape));
 	}
 }

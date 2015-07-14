@@ -235,7 +235,7 @@ public:
 		const UnitCommand& GetIssuedCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
 
 		int GetFighterCount() const override { return fightersCount; }
-		virtual void SetFighterCount(int value) override { fightersCount = value; }
+		void SetFighterCount(int value) override { fightersCount = value; }
 
 		FighterPosition GetFighterPosition(int index) const override
 		{
@@ -260,6 +260,8 @@ public:
 		{
 			return {index % formation.numberOfRanks, index / formation.numberOfRanks};
 		}
+
+		void SetFighterCasualty(glm::vec2 position) override;
 	};
 
 protected:

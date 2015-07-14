@@ -127,3 +127,26 @@ void BattleObjects_v1::Formation::SetDirection(float direction)
 	towardRight = glm::vec2((float)sin(direction), -(float)cos(direction)) * fileDistance;
 	towardBack = glm::vec2(-(float)cos(direction), -(float)sin(direction)) * rankDistance;
 }
+
+
+void BattleObjects_v1::Unit::SetFighterCasualty(glm::vec2 position)
+{
+	Fighter* fighter = nullptr;
+	float distance;
+	for (int i = 0; i < fightersCount; ++i)
+		if (!fighters[i].casualty)
+		{
+			float d = glm::length(fighters[i].state.position - position);
+			if (fighter == nullptr || d < distance)
+			{
+				fighter = &fighters[i];
+				distance = d;
+			}
+		}
+
+	if (fighter)
+	{
+		fighter->casualty = true;
+		timeUntilSwapFighters = 0.2f;
+	}
+}

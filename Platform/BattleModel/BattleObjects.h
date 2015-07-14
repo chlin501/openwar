@@ -129,6 +129,7 @@ public:
 		virtual void SetFighterPosition(int index, glm::vec3 value) = 0;
 
 		virtual FighterAssignment GetFighterAssignment(int index) const = 0;
+		virtual void SetFighterCasualty(glm::vec2 position) = 0;
 	};
 
 
