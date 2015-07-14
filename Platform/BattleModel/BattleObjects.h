@@ -46,6 +46,7 @@ public:
 		float delay{};
 	};
 
-};
+}; // class BattleObjects
+
 
 #endif

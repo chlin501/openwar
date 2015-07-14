@@ -14,9 +14,9 @@ class GroundMap;
 class HeightMap;
 
 
-namespace BattleObjects_v1
+class BattleObjects_v1
 {
-
+public:
 	struct Fighter;
 	struct Unit;
 
@@ -116,10 +116,8 @@ namespace BattleObjects_v1
 		float trainingLevel{};
 		float strikingDuration{};
 		float readyingDuration{};
-		float fireRate{25.0f}; // shots per minute
 		float minimumRange{}; // minimum fire range in meters
 		float maximumRange{}; // maximum fire range in meters
-		float fireAccuracy{0.7f}; // percentage of hit at half range
 		float walkingSpeed{}; // meters per second
 		float runningSpeed{}; // meters per second
 		glm::vec2 fighterSize{10.0f, 10.0f}; // x = side-to-side, y = front-to-back
@@ -277,7 +275,7 @@ namespace BattleObjects_v1
 		static Fighter* GetFighter(Unit* unit, int rank, int file);
 	};
 
+}; // class BattleObjects_v1
 
-} // namespace BattleObjects_v1
 
 #endif
