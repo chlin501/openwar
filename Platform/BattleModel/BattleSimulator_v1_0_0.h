@@ -20,8 +20,6 @@ class BattleSimulator_v1_0_0 : public BattleSimulator, public BattleObjects_v1
 	quadtree<BattleObjects_v1::Fighter*> _fighterQuadTree{0, 0, 1024, 1024};
 	quadtree<BattleObjects_v1::Fighter*> _weaponQuadTree{0, 0, 1024, 1024};
 
-	BattleMap* _battleMap{};
-
 	std::vector<std::pair<float, BattleObjects::Shooting>> _shootings{};
 	std::map<int, int> _kills{};
 
@@ -45,8 +43,6 @@ public:
 
 	void SetPractice(bool value) { _practice = value; }
 	int GetKills(int team) { return _kills[team]; }
-
-	BattleMap* GetBattleMap() const;
 
 	void SetDeploymentZone(int team, glm::vec2 center, float radius);
 	glm::vec2 GetDeploymentCenter(int team) const;
@@ -104,8 +100,6 @@ private:
 
 	bool IsWithinLineOfFire(BattleObjects_v1::Unit* unit, glm::vec2 position);
 	BattleObjects_v1::Unit* ClosestEnemyWithinLineOfFire(BattleObjects_v1::Unit* unit);
-
-	bool TeamHasAbandondedBattle(int team) const;
 
 public:
 	void SetScript(BattleScript* value);

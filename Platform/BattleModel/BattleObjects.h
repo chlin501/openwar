@@ -4,6 +4,8 @@
 #include <string>
 #include <glm/glm.hpp>
 
+class BattleMap;
+
 
 class BattleObjects
 {
@@ -154,7 +156,7 @@ public:
 		bool _ownedBySimulator{};
 
 	public:
-		BattleObjects::Commander* commander{};
+		Commander* commander{};
 		std::string unitClass{};
 		bool deployed{};
 
@@ -163,8 +165,8 @@ public:
 		bool IsOwnedBySimulator() const;
 		void SetOwnedBySimulator(bool value);
 
-		bool IsFriendlyCommander(BattleObjects::Commander* battleCommander) const;
-		bool IsCommandableBy(BattleObjects::Commander* battleCommander) const;
+		bool IsFriendlyCommander(Commander* battleCommander) const;
+		bool IsCommandableBy(Commander* battleCommander) const;
 
 		virtual glm::vec2 GetCenter() const = 0;
 		virtual void SetCenter(glm::vec2 value) = 0;
@@ -199,23 +201,29 @@ public:
 		virtual void SetFighterCasualty(glm::vec2 position) = 0;
 	};
 
-
 protected:
-	std::vector<BattleObjects::Commander*> _commanders{};
-	BattleObjects::Commander* _dummyCommander{};
+	std::vector<Commander*> _commanders{};
+	Commander* _dummyCommander{};
 	int _teamPosition1{};
 	int _teamPosition2{};
+	BattleMap* _battleMap{};
 
 public:
-	BattleObjects::Commander* AddCommander(const char* playerId, int team, BattleObjects::CommanderType type);
-	BattleObjects::Commander* GetCommander(const char* playerId) const;
-	const std::vector<BattleObjects::Commander*>& GetCommanders() const { return _commanders; }
-	BattleObjects::Commander* GetDummyCommander() const;
+	BattleObjects();
+	virtual ~BattleObjects();
+
+	Commander* AddCommander(const char* playerId, int team, CommanderType type);
+	Commander* GetCommander(const char* playerId) const;
+	const std::vector<Commander*>& GetCommanders() const { return _commanders; }
+	Commander* GetDummyCommander() const;
 
 	void SetTeamPosition(int team, int position);
 	int GetTeamPosition(int team) const;
+	bool TeamHasAbandondedBattle(int team) const;
 
-	virtual const std::vector<BattleObjects::Unit*>& GetUnits() = 0;
+	BattleMap* GetBattleMap() const { return _battleMap; }
+
+	virtual const std::vector<Unit*>& GetUnits() const = 0;
 
 }; // class BattleObjects
 

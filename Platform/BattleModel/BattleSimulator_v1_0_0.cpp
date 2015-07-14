@@ -20,21 +20,16 @@
 #include <sstream>
 
 
-BattleSimulator_v1_0_0::BattleSimulator_v1_0_0(BattleMap* battleMap) :
-	_battleMap{battleMap}
+BattleSimulator_v1_0_0::BattleSimulator_v1_0_0(BattleMap* battleMap)
 {
-	_dummyCommander = new BattleObjects::Commander(this, "", 1, BattleObjects::CommanderType::None);
+	_battleMap = battleMap;
 }
 
 
 BattleSimulator_v1_0_0::~BattleSimulator_v1_0_0()
 {
-	for (BattleObjects::Commander* commander : _commanders)
-		delete commander;
-
 	delete _script;
 
-	delete _dummyCommander;
 	for (BattleObjects_v1::Unit* unit : _units)
 	{
 		delete[] unit->fighters;
@@ -64,12 +59,6 @@ int BattleSimulator_v1_0_0::CountInfantryInMelee() const
 			++result;
 
 	return result;
-}
-
-
-BattleMap* BattleSimulator_v1_0_0::GetBattleMap() const
-{
-	return _battleMap;
 }
 
 
@@ -1122,16 +1111,6 @@ BattleObjects_v1::Fighter* BattleSimulator_v1_0_0::FindFighterStrikingTarget(Bat
 	}
 
 	return nullptr;
-}
-
-
-bool BattleSimulator_v1_0_0::TeamHasAbandondedBattle(int team) const
-{
-	for (BattleObjects_v1::Unit* unit : _units)
-		if (unit->commander->GetTeam() == team && !unit->commander->HasAbandonedBattle())
-			return false;
-
-	return true;
 }
 
 

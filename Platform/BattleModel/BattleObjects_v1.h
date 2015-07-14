@@ -223,7 +223,7 @@ protected:
 	std::vector<BattleObjects_v1::Unit*> _units{};
 
 public:
-	const std::vector<BattleObjects::Unit*>& GetUnits() override { return _units_base; }
+	const std::vector<BattleObjects::Unit*>& GetUnits() const override { return _units_base; }
 
 
 }; // class BattleObjects_v1

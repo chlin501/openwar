@@ -148,7 +148,7 @@ void BattleObjects::Unit::SetOwnedBySimulator(bool value)
 }
 
 
-bool BattleObjects::Unit::IsFriendlyCommander(BattleObjects::Commander* battleCommander) const
+bool BattleObjects::Unit::IsFriendlyCommander(Commander* battleCommander) const
 {
 	if (battleCommander == nullptr)
 		return false;
@@ -166,7 +166,7 @@ bool BattleObjects::Unit::IsFriendlyCommander(BattleObjects::Commander* battleCo
 }
 
 
-bool BattleObjects::Unit::IsCommandableBy(BattleObjects::Commander* battleCommander) const
+bool BattleObjects::Unit::IsCommandableBy(Commander* battleCommander) const
 {
 	if (battleCommander == nullptr)
 		return false;
@@ -187,7 +187,22 @@ bool BattleObjects::Unit::IsCommandableBy(BattleObjects::Commander* battleComman
 /***/
 
 
-BattleObjects::Commander* BattleObjects::AddCommander(const char* playerId, int team, BattleObjects::CommanderType type)
+BattleObjects::BattleObjects()
+{
+	_dummyCommander = new BattleObjects::Commander(this, "", 1, BattleObjects::CommanderType::None);
+
+}
+
+
+BattleObjects::~BattleObjects()
+{
+	for (BattleObjects::Commander* commander : _commanders)
+		delete commander;
+	delete _dummyCommander;
+}
+
+
+BattleObjects::Commander* BattleObjects::AddCommander(const char* playerId, int team, CommanderType type)
 {
 	Commander* commander = new Commander(this, playerId, team, type);
 	_commanders.push_back(commander);
@@ -227,4 +242,14 @@ int BattleObjects::GetTeamPosition(int team) const
 	if (team == 2)
 		return _teamPosition2;
 	return 0;
+}
+
+
+bool BattleObjects::TeamHasAbandondedBattle(int team) const
+{
+	for (BattleObjects::Unit* unit : GetUnits())
+		if (unit->commander->GetTeam() == team && !unit->commander->HasAbandonedBattle())
+			return false;
+
+	return true;
 }
