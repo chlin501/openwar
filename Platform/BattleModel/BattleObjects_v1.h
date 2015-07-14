@@ -29,31 +29,12 @@ public:
 	};
 
 
-	enum class MissileType
-	{
-		None,
-		Bow,
-		Arq
-	};
-
-
 	enum UnitMode
 	{
 		UnitMode_Initializing,
 		UnitMode_Standing,
 		UnitMode_Moving,
 		UnitMode_Turning
-	};
-
-
-	struct Shooting
-	{
-		Unit* unit{};
-		MissileType missileType{};
-		float timeToImpact{};
-		glm::vec2 target{};
-		bool released{};
-		std::vector<BattleObjects::Projectile> projectiles{};
 	};
 
 
@@ -192,7 +173,6 @@ public:
 	struct Unit : public BattleObjects::Unit
 	{
 		// static attributes
-		std::string unitClass{};
 		UnitStats stats{};
 		Fighter* fighters{};
 
@@ -254,6 +234,7 @@ public:
 			state.stunnedTimer = 0;
 			state.opponent = nullptr;
 			fighters[index].casualty = false;
+			timeUntilSwapFighters = 0.2f;
 		}
 
 		FighterAssignment GetFighterAssignment(int index) const override

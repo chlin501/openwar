@@ -216,8 +216,10 @@ BattleObjects_v1::Unit* BattleSimulator_v1_0_0::AddUnit(BattleObjects::Commander
 }
 
 
-void BattleSimulator_v1_0_0::RemoveUnit(BattleObjects_v1::Unit* unit)
+void BattleSimulator_v1_0_0::RemoveUnit(BattleObjects::Unit* _unit)
 {
+	Unit* unit = static_cast<Unit*>(_unit);
+
 	for (BattleObserver* observer : _observers)
 		observer->OnRemoveUnit(unit);
 
@@ -262,8 +264,10 @@ void BattleSimulator_v1_0_0::NewUnit(int commanderId, const char* unitClass, int
 }
 
 
-void BattleSimulator_v1_0_0::SetUnitCommand(BattleObjects_v1::Unit* unit, const BattleObjects::UnitCommand& command, float timer)
+void BattleSimulator_v1_0_0::SetUnitCommand(BattleObjects::Unit* _unit, const BattleObjects::UnitCommand& command, float timer)
 {
+	Unit* unit = static_cast<Unit*>(_unit);
+
 	unit->nextCommand = command;
 	unit->nextCommandTimer = timer;
 

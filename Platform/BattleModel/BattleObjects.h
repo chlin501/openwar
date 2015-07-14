@@ -39,11 +39,29 @@ public:
 	};
 
 
+	enum class MissileType
+	{
+		None,
+		Bow,
+		Arq
+	};
+
+
 	struct Projectile
 	{
 		glm::vec2 position1{};
 		glm::vec2 position2{};
 		float delay{};
+	};
+
+	struct Shooting
+	{
+		Unit* unit{};
+		MissileType missileType{};
+		float timeToImpact{};
+		glm::vec2 target{};
+		bool released{};
+		std::vector<Projectile> projectiles{};
 	};
 
 
@@ -100,6 +118,7 @@ public:
 
 	public:
 		BattleObjects::Commander* commander{};
+		std::string unitClass{};
 
 		virtual ~Unit();
 

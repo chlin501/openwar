@@ -63,11 +63,11 @@ public:
 	void Deploy(BattleObjects_v1::Unit* unit, glm::vec2 position);
 
 	BattleObjects_v1::Unit* AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, BattleObjects_v1::UnitStats stats, glm::vec2 position);
-	void RemoveUnit(BattleObjects_v1::Unit* unit);
+	void RemoveUnit(BattleObjects::Unit* unit);
 
 	void NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing);
 
-	void SetUnitCommand(BattleObjects_v1::Unit* unit, const BattleObjects::UnitCommand& command, float timer);
+	void SetUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer);
 
 	void AddShooting(const BattleObjects_v1::Shooting& shooting, float timer);
 
