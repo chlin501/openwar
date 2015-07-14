@@ -36,30 +36,6 @@ BattleSimulator_v1_0_0::~BattleSimulator_v1_0_0()
 }
 
 
-int BattleSimulator_v1_0_0::CountCavalryInMelee() const
-{
-	int result = 0;
-
-	for (const BattleObjects_v1::Unit* unit : _units)
-		if (unit->stats.platformType == BattleObjects::PlatformType::Cavalry && unit->IsInMelee())
-			++result;
-
-	return result;
-}
-
-
-int BattleSimulator_v1_0_0::CountInfantryInMelee() const
-{
-	int result = 0;
-
-	for (const BattleObjects_v1::Unit* unit : _units)
-		if (unit->stats.platformType == BattleObjects::PlatformType::Infantry && unit->IsInMelee())
-			++result;
-
-	return result;
-}
-
-
 void BattleSimulator_v1_0_0::SetDeploymentZone(int team, glm::vec2 center, float radius)
 {
 	_deploymentZones[team == 1 ? 0 : 1] = glm::vec3{center, radius};

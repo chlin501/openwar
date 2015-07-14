@@ -152,8 +152,6 @@ public:
 		glm::vec2 CalculateUnitCenter();
 		float GetSpeed();
 
-		bool IsInMelee() const;
-
 		Fighter* GetFighter(int rank, int file) const;
 
 	public: // BattleObjects::Unit overrides
@@ -170,6 +168,7 @@ public:
 		bool IsRouting() const override { return state.IsRouting(); }
 		bool IsStanding() const override { return state.unitMode == BattleObjects_v1::UnitMode_Standing; }
 		bool IsMoving() const override { return state.unitMode == BattleObjects_v1::UnitMode_Moving; }
+		bool IsInMelee() const override;
 
 		const UnitCommand& GetCurrentCommand() const { return command; }
 		const UnitCommand& GetIssuedCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }

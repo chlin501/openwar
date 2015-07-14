@@ -66,9 +66,6 @@ public:
 
 	void AdvanceTime(float secondsSinceLastTime);
 
-	int CountCavalryInMelee() const;
-	int CountInfantryInMelee() const;
-
 	int GetWinnerTeam() const { return _winnerTeam; }
 
 private:

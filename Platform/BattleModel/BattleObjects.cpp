@@ -253,3 +253,27 @@ bool BattleObjects::TeamHasAbandondedBattle(int team) const
 
 	return true;
 }
+
+
+int BattleObjects::CountCavalryInMelee() const
+{
+	int result = 0;
+
+	for (const Unit* unit : GetUnits())
+		if (unit->GetPlatformType() == BattleObjects::PlatformType::Cavalry && unit->IsInMelee())
+			++result;
+
+	return result;
+}
+
+
+int BattleObjects::CountInfantryInMelee() const
+{
+	int result = 0;
+
+	for (const Unit* unit : GetUnits())
+		if (unit->GetPlatformType() == BattleObjects::PlatformType::Infantry && unit->IsInMelee())
+			++result;
+
+	return result;
+}

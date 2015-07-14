@@ -181,6 +181,7 @@ public:
 		virtual bool IsRouting() const = 0;
 		virtual bool IsStanding() const = 0;
 		virtual bool IsMoving() const = 0;
+		virtual bool IsInMelee() const = 0;
 
 		virtual const UnitCommand& GetCurrentCommand() const = 0;
 		virtual const UnitCommand& GetIssuedCommand() const = 0;
@@ -224,6 +225,9 @@ public:
 	BattleMap* GetBattleMap() const { return _battleMap; }
 
 	virtual const std::vector<Unit*>& GetUnits() const = 0;
+
+	int CountCavalryInMelee() const;
+	int CountInfantryInMelee() const;
 
 }; // class BattleObjects
 
