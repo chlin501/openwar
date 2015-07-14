@@ -275,6 +275,13 @@ public:
 
 	public: // BattleObjects::Unit overrides
 		glm::vec2 GetCenter() const override { return state.center; }
+		void SetCenter(glm::vec2 value) { state.center = value; }
+
+		float GetBearing() const override { return state.bearing; }
+		void SetBearing(float value) {state.bearing = value; }
+
+		float GetMorale() const override { return state.morale; }
+		void SetMorale(float value) { state.morale = value; }
 	};
 
 protected:

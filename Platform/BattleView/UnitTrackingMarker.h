@@ -21,6 +21,7 @@ class UnitTrackingMarker : public UnitMarker
 
 	BattleObjects_v1::Unit* _missileTarget{};
 	glm::vec2 _orientation{};
+	glm::vec2 _orientationX{};
 	bool _hasOrientation{};
 	bool _renderOrientation{};
 
@@ -54,16 +55,23 @@ public:
 	void SetOrientation(glm::vec2* value)
 	{
 		if (value) _orientation = *value;
-		_hasOrientation = value;
+		_hasOrientation = value != nullptr;
 	}
 
 	void SetRenderOrientation(bool value) { _renderOrientation = value; }
 
 	glm::vec2* GetOrientationX()
 	{
-		if (_missileTarget) return &_missileTarget->state.center;
-		else if (_hasOrientation) return &_orientation;
-		else return nullptr;
+		if (_missileTarget)
+		{
+			_orientationX = _missileTarget->GetCenter();
+			return &_orientationX;
+		}
+
+		if (_hasOrientation)
+			return &_orientation;
+
+		return nullptr;
 	}
 
 	glm::vec2 DestinationXXX() const

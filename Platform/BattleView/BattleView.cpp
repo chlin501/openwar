@@ -951,7 +951,7 @@ bounds2f BattleView::GetUnitFacingMarkerBounds(glm::vec2 center, float direction
 
 bounds2f BattleView::GetUnitCurrentFacingMarkerBounds(BattleObjects_v1::Unit* unit)
 {
-	return GetUnitFacingMarkerBounds(unit->GetCenter(), unit->state.bearing);
+	return GetUnitFacingMarkerBounds(unit->GetCenter(), unit->GetBearing());
 }
 
 

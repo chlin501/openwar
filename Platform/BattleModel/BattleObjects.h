@@ -51,6 +51,13 @@ public:
 		virtual ~Unit();
 
 		virtual glm::vec2 GetCenter() const = 0;
+		virtual void SetCenter(glm::vec2 value) = 0;
+
+		virtual float GetBearing() const = 0;
+		virtual void SetBearing(float value) = 0;
+
+		virtual float GetMorale() const = 0;
+		virtual void SetMorale(float value) = 0;
 	};
 
 

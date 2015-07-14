@@ -101,7 +101,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 				if (_offsetToMarker < 0)
 					_offsetToMarker = 0;
 
-				glm::vec2 orientation = unit->GetCenter() + 18.0f * vector2_from_angle(unit->state.bearing);
+				glm::vec2 orientation = unit->GetCenter() + 18.0f * vector2_from_angle(unit->GetBearing());
 				_trackingMarker->SetOrientation(&orientation);
 			}
 
@@ -431,7 +431,7 @@ void BattleGesture::UpdateTrackingMarker()
 		}
 		else
 		{
-			glm::vec2 orientation = markerPosition + 18.0f * vector2_from_angle(unit->state.bearing);
+			glm::vec2 orientation = markerPosition + 18.0f * vector2_from_angle(unit->GetBearing());
 			_trackingMarker->SetOrientation(&orientation);
 		}
 	}
