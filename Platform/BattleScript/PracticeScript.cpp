@@ -23,11 +23,11 @@ void PracticeScript::Tick(double secondsSinceLastTick)
 }
 
 
-static BattleObjects_v1::Unit* FindNearestUnit(const std::vector<BattleObjects_v1::Unit*>& units, glm::vec2 position)
+static BattleObjects::Unit* FindNearestUnit(const std::vector<BattleObjects::Unit*>& units, glm::vec2 position)
 {
-	BattleObjects_v1:: Unit* result{};
+	BattleObjects::Unit* result{};
     float distance{};
-	for (BattleObjects_v1::Unit* unit : units)
+	for (BattleObjects::Unit* unit : units)
 	{
 		float d = glm::distance(position, unit->GetCenter());
 		if (result == nullptr || d < distance)
@@ -40,21 +40,21 @@ static BattleObjects_v1::Unit* FindNearestUnit(const std::vector<BattleObjects_v
 }
 
 
-static BattleObjects_v1::Unit* FindCenterUnit(const std::vector<BattleObjects_v1::Unit*>& units)
+static BattleObjects::Unit* FindCenterUnit(const std::vector<BattleObjects::Unit*>& units)
 {
 	if (units.empty())
 		return nullptr;
 
-	std::vector<std::pair<BattleObjects_v1::Unit*, float>> items;
-	for (BattleObjects_v1::Unit* unit : units)
+	std::vector<std::pair<BattleObjects::Unit*, float>> items;
+	for (BattleObjects::Unit* unit : units)
 	{
 		float weight = 0;
-		for (BattleObjects_v1::Unit* u : units)
+		for (BattleObjects::Unit* u : units)
 			if (u != unit)
 				weight += 1.0f / (1.0f + glm::distance(u->GetCenter(), unit->GetCenter()));
-		items.push_back(std::pair<BattleObjects_v1::Unit*, float>(unit, weight));
+		items.push_back(std::pair<BattleObjects::Unit*, float>(unit, weight));
 	}
-	std::sort(items.begin(), items.end(), [](std::pair<BattleObjects_v1::Unit*, float> a, std::pair<BattleObjects_v1::Unit*, float> b) {
+	std::sort(items.begin(), items.end(), [](std::pair<BattleObjects::Unit*, float> a, std::pair<BattleObjects::Unit*, float> b) {
 		return a.second < b.second;
 	});
 
@@ -62,16 +62,16 @@ static BattleObjects_v1::Unit* FindCenterUnit(const std::vector<BattleObjects_v1
 }
 
 
-static glm::vec2 FindClusterCenter(const std::vector<BattleObjects_v1::Unit*>& units)
+static glm::vec2 FindClusterCenter(const std::vector<BattleObjects::Unit*>& units)
 {
 	if (units.empty())
 		return glm::vec2();
 
-	BattleObjects_v1::Unit* centerUnit = FindCenterUnit(units);
+	BattleObjects::Unit* centerUnit = FindCenterUnit(units);
 	glm::vec2 result;
 	float weight = 0;
 
-	for (BattleObjects_v1::Unit* unit : units)
+	for (BattleObjects::Unit* unit : units)
 	{
 		float w = 1.0f / (50.0f + glm::distance(unit->GetCenter(), centerUnit->GetCenter()));
 		result += w * unit->GetCenter();
@@ -84,13 +84,13 @@ static glm::vec2 FindClusterCenter(const std::vector<BattleObjects_v1::Unit*>& u
 
 void PracticeScript::IssueCommands()
 {
-	std::vector<BattleObjects_v1::Unit*> playerUnits;
-	std::vector<BattleObjects_v1::Unit*> scriptUnits;
+	std::vector<BattleObjects::Unit*> playerUnits;
+	std::vector<BattleObjects::Unit*> scriptUnits;
 
-	for (BattleObjects_v1::Unit* unit : _simulator->GetUnits())
+	for (BattleObjects::Unit* unit : _simulator->GetUnits())
 		if (!unit->IsRouting())
 		{
-			std::vector<BattleObjects_v1::Unit*>& unitList = unit->commander->GetTeam() == 1 ? playerUnits : scriptUnits;
+			std::vector<BattleObjects::Unit*>& unitList = unit->commander->GetTeam() == 1 ? playerUnits : scriptUnits;
 			unitList.push_back(unit);
 		}
 
@@ -106,19 +106,19 @@ void PracticeScript::IssueCommands()
 	glm::vec2 playerCenter = FindClusterCenter(playerUnits);
 	glm::vec2 scriptCenter = FindClusterCenter(scriptUnits);
 
- 	for (BattleObjects_v1::Unit* unit : scriptUnits)
+ 	for (BattleObjects::Unit* unit : scriptUnits)
 	{
 		glm::vec2 unitCenter = unit->GetCenter();
 
-		BattleObjects_v1::Unit* targetUnit = FindNearestUnit(playerUnits, unitCenter);
+		BattleObjects::Unit* targetUnit = FindNearestUnit(playerUnits, unitCenter);
 		if (targetUnit == nullptr)
 			continue;
 
 		glm::vec2 targetCenter = targetUnit->GetCenter();
 
-		if (unit->stats.missileType != BattleObjects_v1::MissileType::None)
+		if (unit->GetMissileWeaponRange().maximumRange > 0)
 		{
-			float range = unit->stats.maximumRange;
+			float range = unit->GetMissileWeaponRange().maximumRange;
 			glm::vec2 diff = targetCenter - unitCenter;
 			float dist = glm::length(diff);
 			if (dist > 0.9f * range)
@@ -182,9 +182,9 @@ void PracticeScript::IssueCommands()
 
 void PracticeScript::SpawnWave()
 {
-	std::vector<BattleObjects_v1::Unit*> playerUnits;
+	std::vector<BattleObjects::Unit*> playerUnits;
 
-	for (BattleObjects_v1::Unit* unit : _simulator->GetUnits())
+	for (BattleObjects::Unit* unit : _simulator->GetUnits())
 		if (unit->commander->GetTeam() == 1 && !unit->IsRouting())
 			playerUnits.push_back(unit);
 

@@ -21,14 +21,6 @@ public:
 	struct Unit;
 
 
-	enum class PlatformType
-	{
-		None,
-		Infantry,
-		Cavalry
-	};
-
-
 	enum UnitMode
 	{
 		UnitMode_Initializing,
@@ -108,19 +100,6 @@ public:
 	};
 
 
-	struct UnitRange
-	{
-		glm::vec2 center{};
-		float angleStart{};
-		float angleLength{};
-		float minimumRange{};
-		float maximumRange{};
-		std::vector<float> actualRanges{};
-
-		bool IsWithinRange(glm::vec2 p) const;
-	};
-
-
 	struct UnitState
 	{
 		// dynamic attributes
@@ -145,28 +124,6 @@ public:
 			float x = morale + influence;
 			return x <= 0;
 		}
-
-
-		float GetRoutingBlinkTime() const
-		{
-			float x = morale + influence;
-			return 0 <= x && x < 0.33f ? 0.1f + x * 3 : 0;
-		}
-	};
-
-
-	struct Formation
-	{
-		float rankDistance{};
-		float fileDistance{};
-		int numberOfRanks{}; // updated by UpdateFormation() and AddUnit()
-		int numberOfFiles{}; // updated by UpdateFormation() and AddUnit()
-		float _direction{};
-		glm::vec2 towardRight{};
-		glm::vec2 towardBack{};
-
-		glm::vec2 GetFrontLeft(glm::vec2 center);
-		void SetDirection(float direction);
 	};
 
 
@@ -188,7 +145,6 @@ public:
 		UnitRange unitRange{};
 
 		// control attributes
-		bool deployed{};
 		UnitCommand command{};
 		UnitCommand nextCommand{};
 		float nextCommandTimer{};
@@ -207,12 +163,29 @@ public:
 		float GetBearing() const override { return state.bearing; }
 		void SetBearing(float value) {state.bearing = value; }
 
-		float GetMorale() const override { return state.morale; }
-		void SetMorale(float value) { state.morale = value; }
-		bool IsRouting() const { return state.IsRouting(); }
+		float GetIntrinsicMorale() const override { return state.morale; }
+		float GetEffectiveMorale() const override { return state.morale + state.influence; }
+		void SetIntrinsicMorale(float value) { state.morale = value; }
+
+		bool IsRouting() const override { return state.IsRouting(); }
+		bool IsStanding() const override { return state.unitMode == BattleObjects_v1::UnitMode_Standing; }
+		bool IsMoving() const override { return state.unitMode == BattleObjects_v1::UnitMode_Moving; }
 
 		const UnitCommand& GetCurrentCommand() const { return command; }
 		const UnitCommand& GetIssuedCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
+
+		PlatformType GetPlatformType() const override { return stats.platformType; }
+
+		std::pair<bool, float> GetLoadingProgress() const override
+		{
+			return state.loadingDuration != 0
+				? std::make_pair(true, state.loadingTimer / state.loadingDuration)
+				: std::make_pair(false, 0.0f);
+		}
+
+		float GetWeaponReach() const override { return stats.weaponReach; }
+		const UnitRange& GetMissileWeaponRange() const override { return unitRange; }
+		const Formation& GetFormation() const override { return formation; }
 
 		int GetFighterCount() const override { return fightersCount; }
 		void SetFighterCount(int value) override { fightersCount = value; }

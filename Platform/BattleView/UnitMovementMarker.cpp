@@ -14,7 +14,7 @@
 #include "TerrainView/TerrainViewport.h"
 
 
-UnitMovementMarker::UnitMovementMarker(BattleView* battleView, BattleObjects_v1::Unit* unit) : UnitMarker(battleView, unit)
+UnitMovementMarker::UnitMovementMarker(BattleView* battleView, BattleObjects::Unit* unit) : UnitMarker(battleView, unit)
 {
 }
 
@@ -59,7 +59,7 @@ void UnitMovementMarker::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleV
 {
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
-	if (_unit->state.unitMode != BattleObjects_v1::UnitMode_Moving)
+	if (!_unit->IsMoving())
 		return;
 
 	const BattleObjects::UnitCommand& command = _unit->GetIssuedCommand();
@@ -106,7 +106,7 @@ void UnitMovementMarker::RenderMovementFighters(VertexShape_3f_4f_1f* vertices)
 
 		glm::vec2 finalDestination = command.GetDestination();
 
-		BattleObjects_v1::Formation formation = _unit->formation;
+		BattleObjects::Formation formation = _unit->GetFormation();
 		formation.SetDirection(command.bearing);
 
 		glm::vec2 frontLeft = formation.GetFrontLeft(finalDestination);

@@ -15,11 +15,11 @@ class BillboardTextureShape;
 
 class UnitTrackingMarker : public UnitMarker
 {
-	BattleObjects_v1::Unit* _meleeTarget{};
+	BattleObjects::Unit* _meleeTarget{};
 	glm::vec2 _destination{};
 	bool _hasDestination{};
 
-	BattleObjects_v1::Unit* _missileTarget{};
+	BattleObjects::Unit* _missileTarget{};
 	glm::vec2 _orientation{};
 	glm::vec2 _orientationX{};
 	bool _hasOrientation{};
@@ -31,17 +31,17 @@ public:
 	std::vector<glm::vec2> _path{};
 
 public:
-	UnitTrackingMarker(BattleView* battleView, BattleObjects_v1::Unit* unit);
+	UnitTrackingMarker(BattleView* battleView, BattleObjects::Unit* unit);
 	~UnitTrackingMarker();
 
 	void SetRunning(bool value) { _running = value; }
 	bool GetRunning() const { return _running; }
 
-	void SetMeleeTarget(BattleObjects_v1::Unit* value) { _meleeTarget = value; }
-	BattleObjects_v1::Unit* GetMeleeTarget() const { return _meleeTarget; }
+	void SetMeleeTarget(BattleObjects::Unit* value) { _meleeTarget = value; }
+	BattleObjects::Unit* GetMeleeTarget() const { return _meleeTarget; }
 
-	void SetMissileTarget(BattleObjects_v1::Unit* value) { _missileTarget = value; }
-	BattleObjects_v1::Unit* GetMissileTarget() const { return _missileTarget; }
+	void SetMissileTarget(BattleObjects::Unit* value) { _missileTarget = value; }
+	BattleObjects::Unit* GetMissileTarget() const { return _missileTarget; }
 
 	/***/
 

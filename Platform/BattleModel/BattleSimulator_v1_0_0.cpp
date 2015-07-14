@@ -48,7 +48,7 @@ int BattleSimulator_v1_0_0::CountCavalryInMelee() const
 	int result = 0;
 
 	for (const BattleObjects_v1::Unit* unit : _units)
-		if (unit->stats.platformType == BattleObjects_v1::PlatformType::Cavalry && unit->IsInMelee())
+		if (unit->stats.platformType == BattleObjects::PlatformType::Cavalry && unit->IsInMelee())
 			++result;
 
 	return result;
@@ -60,7 +60,7 @@ int BattleSimulator_v1_0_0::CountInfantryInMelee() const
 	int result = 0;
 
 	for (const BattleObjects_v1::Unit* unit : _units)
-		if (unit->stats.platformType == BattleObjects_v1::PlatformType::Infantry && unit->IsInMelee())
+		if (unit->stats.platformType == BattleObjects::PlatformType::Infantry && unit->IsInMelee())
 			++result;
 
 	return result;
@@ -148,8 +148,10 @@ bool BattleSimulator_v1_0_0::HasCompletedDeployment(int team) const
 }
 
 
-void BattleSimulator_v1_0_0::Deploy(BattleObjects_v1::Unit* unit, glm::vec2 position)
+void BattleSimulator_v1_0_0::Deploy(BattleObjects::Unit* _unit, glm::vec2 position)
 {
+	Unit* unit = static_cast<Unit*>(_unit);
+
 	unit->state.center = position;
 
 	unit->command = BattleObjects::UnitCommand();
@@ -279,6 +281,15 @@ void BattleSimulator_v1_0_0::SetUnitCommand(BattleObjects::Unit* _unit, const Ba
 
 	for (BattleObserver* observer : _observers)
 		observer->OnCommand(unit, timer);
+}
+
+
+void BattleSimulator_v1_0_0::IssueUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer)
+{
+	static_cast<BattleObjects_v1::Unit*>(unit)->state.loadingTimer = 0;
+	static_cast<BattleObjects_v1::Unit*>(unit)->timeUntilSwapFighters = 0.2f;
+
+	SetUnitCommand(unit, command, timer);
 }
 
 
@@ -1098,7 +1109,7 @@ glm::vec2 BattleSimulator_v1_0_0::NextFighterVelocity(BattleObjects_v1::Fighter*
 
 	if (fighter->terrainForest)
 	{
-		if (unit->stats.platformType == BattleObjects_v1::PlatformType::Cavalry)
+		if (unit->stats.platformType == BattleObjects::PlatformType::Cavalry)
 			speed *= 0.5;
 		else
 			speed *= 0.9;

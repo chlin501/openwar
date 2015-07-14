@@ -82,28 +82,28 @@ public:
 	SmoothTerrainWater* GetSmoothTerrainWater() const { return _smoothTerrainWater; }
 
 private: // BattleObserver
-	void OnAddUnit(BattleObjects_v1::Unit* unit) override;
-	void OnRemoveUnit(BattleObjects_v1::Unit* unit) override;
-	void OnCommand(BattleObjects_v1::Unit* unit, float timer) override;
+	void OnAddUnit(BattleObjects::Unit* unit) override;
+	void OnRemoveUnit(BattleObjects::Unit* unit) override;
+	void OnCommand(BattleObjects::Unit* unit, float timer) override;
 	void OnShooting(const BattleObjects_v1::Shooting& shooting, float timer) override;
 	void OnRelease(const BattleObjects_v1::Shooting& shooting) override;
 	void OnCasualty(const BattleObjects_v1::Fighter& fighter) override;
-	void OnRouting(BattleObjects_v1::Unit* unit) override;
+	void OnRouting(BattleObjects::Unit* unit) override;
 
 private: // BattleMapObserver
 	void OnBattleMapChanged(const BattleMap* battleMap) override;
 
 public:
-	void AddCasualty(const BattleObjects_v1::Unit* unit, glm::vec2 position);
+	void AddCasualty(const BattleObjects::Unit* unit, glm::vec2 position);
 
 	const std::vector<UnitCounter*>& GetUnitCounters() const { return _unitMarkers; }
 
-	UnitMovementMarker* AddMovementMarker(BattleObjects_v1::Unit* unit);
-	UnitMovementMarker* GetMovementMarker(BattleObjects_v1::Unit* unit);
+	UnitMovementMarker* AddMovementMarker(BattleObjects::Unit* unit);
+	UnitMovementMarker* GetMovementMarker(BattleObjects::Unit* unit);
 	UnitMovementMarker* GetNearestMovementMarker(glm::vec2 position, BattleObjects::Commander* commander);
 
-	UnitTrackingMarker* AddTrackingMarker(BattleObjects_v1::Unit* unit);
-	UnitTrackingMarker* GetTrackingMarker(BattleObjects_v1::Unit* unit);
+	UnitTrackingMarker* AddTrackingMarker(BattleObjects::Unit* unit);
+	UnitTrackingMarker* GetTrackingMarker(BattleObjects::Unit* unit);
 	void RemoveTrackingMarker(UnitTrackingMarker* trackingMarker);
 
 	void Initialize();
@@ -121,12 +121,12 @@ private: // RenderLoopObserver
 public:
 	bounds2f GetBillboardBounds(glm::vec3 position, float height);
 
-	bounds2f GetUnitCurrentIconViewportBounds(BattleObjects_v1::Unit* unit);
-	bounds2f GetUnitFutureIconViewportBounds(BattleObjects_v1::Unit* unit);
+	bounds2f GetUnitCurrentIconViewportBounds(BattleObjects::Unit* unit);
+	bounds2f GetUnitFutureIconViewportBounds(BattleObjects::Unit* unit);
 
 	bounds2f GetUnitFacingMarkerBounds(glm::vec2 center, float direction);
-	bounds2f GetUnitCurrentFacingMarkerBounds(BattleObjects_v1::Unit* unit);
-	bounds2f GetUnitFutureFacingMarkerBounds(BattleObjects_v1::Unit* unit);
+	bounds2f GetUnitCurrentFacingMarkerBounds(BattleObjects::Unit* unit);
+	bounds2f GetUnitFutureFacingMarkerBounds(BattleObjects::Unit* unit);
 
 	bounds1f GetUnitIconSizeLimit() const;
 

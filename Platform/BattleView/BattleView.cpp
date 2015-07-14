@@ -203,7 +203,7 @@ void BattleView::SetSimulator(BattleSimulator_v1_0_0* simulator)
 
 	if (_simulator)
 	{
-		for (BattleObjects_v1::Unit* unit : _simulator->GetUnits())
+		for (BattleObjects::Unit* unit : _simulator->GetUnits())
 			OnRemoveUnit(unit);
 		_simulator->GetBattleMap()->RemoveObserver(this);
 		_simulator->RemoveObserver(this);
@@ -230,7 +230,7 @@ static bool ShouldEnableRenderEdges(GraphicsContext* gc)
 }
 
 
-void BattleView::OnAddUnit(BattleObjects_v1::Unit* unit)
+void BattleView::OnAddUnit(BattleObjects::Unit* unit)
 {
 	UnitCounter* marker = new UnitCounter(this, unit);
 	marker->Animate(0);
@@ -238,7 +238,7 @@ void BattleView::OnAddUnit(BattleObjects_v1::Unit* unit)
 }
 
 
-void BattleView::OnRemoveUnit(BattleObjects_v1::Unit* unit)
+void BattleView::OnRemoveUnit(BattleObjects::Unit* unit)
 {
 	for (auto i = _unitMarkers.begin(); i != _unitMarkers.end(); ++i)
 		if ((*i)->GetUnit() == unit)
@@ -266,14 +266,14 @@ void BattleView::OnRemoveUnit(BattleObjects_v1::Unit* unit)
 }
 
 
-void BattleView::OnCommand(BattleObjects_v1::Unit* unit, float timer)
+void BattleView::OnCommand(BattleObjects::Unit* unit, float timer)
 {
 	if (unit->IsFriendlyCommander(_commander) && GetMovementMarker(unit) == nullptr)
 		AddMovementMarker(unit);
 }
 
 
-void BattleView::OnShooting(BattleObjects_v1::Shooting const & shooting, float timer)
+void BattleView::OnShooting(const BattleObjects::Shooting& shooting, float timer)
 {
 }
 
@@ -292,7 +292,7 @@ void BattleView::OnCasualty(const BattleObjects_v1::Fighter& fighter)
 }
 
 
-void BattleView::OnRouting(BattleObjects_v1::Unit* unit)
+void BattleView::OnRouting(BattleObjects::Unit* unit)
 {
 }
 
@@ -350,7 +350,7 @@ void BattleView::OnBattleMapChanged(const BattleMap* battleMap)
 }
 
 
-void BattleView::AddCasualty(const BattleObjects_v1::Unit* unit, glm::vec2 position)
+void BattleView::AddCasualty(const BattleObjects::Unit* unit, glm::vec2 position)
 {
 	glm::vec3 p = glm::vec3(position, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(position));
 	SamuraiPlatform platform = SamuraiModule::GetSamuraiPlatform(unit->unitClass.c_str());
@@ -580,7 +580,7 @@ void BattleView::Render()
 
 	// Range Markers
 
-	for (BattleObjects_v1::Unit* unit : _simulator->GetUnits())
+	for (BattleObjects::Unit* unit : _simulator->GetUnits())
 	{
 		if (unit->IsFriendlyCommander(_commander))
 		{
@@ -814,7 +814,7 @@ void BattleView::Animate(double secondsSinceLastUpdate)
 }
 
 
-UnitMovementMarker* BattleView::AddMovementMarker(BattleObjects_v1::Unit* unit)
+UnitMovementMarker* BattleView::AddMovementMarker(BattleObjects::Unit* unit)
 {
 	UnitMovementMarker* marker = new UnitMovementMarker(this, unit);
 	_movementMarkers.push_back(marker);
@@ -822,7 +822,7 @@ UnitMovementMarker* BattleView::AddMovementMarker(BattleObjects_v1::Unit* unit)
 }
 
 
-UnitMovementMarker* BattleView::GetMovementMarker(BattleObjects_v1::Unit* unit)
+UnitMovementMarker* BattleView::GetMovementMarker(BattleObjects::Unit* unit)
 {
 	for (UnitMovementMarker* marker : _movementMarkers)
 		if (marker->GetUnit() == unit)
@@ -839,7 +839,7 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, Bat
 
 	for (UnitMovementMarker* marker : _movementMarkers)
 	{
-		BattleObjects_v1::Unit* unit = marker->GetUnit();
+		BattleObjects::Unit* unit = marker->GetUnit();
 		if (commander && !unit->IsCommandableBy(commander))
 			continue;
 
@@ -859,7 +859,7 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, Bat
 }
 
 
-UnitTrackingMarker* BattleView::AddTrackingMarker(BattleObjects_v1::Unit* unit)
+UnitTrackingMarker* BattleView::AddTrackingMarker(BattleObjects::Unit* unit)
 {
 	UnitTrackingMarker* trackingMarker = new UnitTrackingMarker(this, unit);
 	_trackingMarkers.push_back(trackingMarker);
@@ -867,7 +867,7 @@ UnitTrackingMarker* BattleView::AddTrackingMarker(BattleObjects_v1::Unit* unit)
 }
 
 
-UnitTrackingMarker* BattleView::GetTrackingMarker(BattleObjects_v1::Unit* unit)
+UnitTrackingMarker* BattleView::GetTrackingMarker(BattleObjects::Unit* unit)
 {
 	for (UnitTrackingMarker* marker : _trackingMarkers)
 		if (marker->GetUnit() == unit)
@@ -920,14 +920,14 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 }
 
 
-bounds2f BattleView::GetUnitCurrentIconViewportBounds(BattleObjects_v1::Unit* unit)
+bounds2f BattleView::GetUnitCurrentIconViewportBounds(BattleObjects::Unit* unit)
 {
 	glm::vec3 position = GetTerrainPosition(unit->GetCenter(), 0);
 	return GetBillboardBounds(position, 32);
 }
 
 
-bounds2f BattleView::GetUnitFutureIconViewportBounds(BattleObjects_v1::Unit* unit)
+bounds2f BattleView::GetUnitFutureIconViewportBounds(BattleObjects::Unit* unit)
 {
 	const BattleObjects::UnitCommand& command = unit->GetIssuedCommand();
 	glm::vec3 position = GetTerrainPosition(!command.path.empty() ? command.path.back() : unit->GetCenter(), 0);
@@ -949,13 +949,13 @@ bounds2f BattleView::GetUnitFacingMarkerBounds(glm::vec2 center, float direction
 }
 
 
-bounds2f BattleView::GetUnitCurrentFacingMarkerBounds(BattleObjects_v1::Unit* unit)
+bounds2f BattleView::GetUnitCurrentFacingMarkerBounds(BattleObjects::Unit* unit)
 {
 	return GetUnitFacingMarkerBounds(unit->GetCenter(), unit->GetBearing());
 }
 
 
-bounds2f BattleView::GetUnitFutureFacingMarkerBounds(BattleObjects_v1::Unit* unit)
+bounds2f BattleView::GetUnitFutureFacingMarkerBounds(BattleObjects::Unit* unit)
 {
 	const BattleObjects::UnitCommand& command = unit->GetIssuedCommand();
 
@@ -1064,7 +1064,7 @@ UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int filterTea
 
 	for (UnitCounter* marker : _unitMarkers)
 	{
-		BattleObjects_v1::Unit* unit = marker->_unit;
+		BattleObjects::Unit* unit = marker->_unit;
 		if (filterTeam != 0 && unit->commander->GetTeam() != filterTeam)
 			continue;
 		if (filterCommander && !unit->IsCommandableBy(filterCommander))
@@ -1099,8 +1099,8 @@ void BattleView::UpdateSoundPlayer()
 
 	for (UnitCounter* unitMarker : GetUnitCounters())
 	{
-		BattleObjects_v1::Unit* unit = unitMarker->_unit;
-		if (unit->stats.platformType == BattleObjects_v1::PlatformType::Cavalry)
+		BattleObjects::Unit* unit = unitMarker->_unit;
+		if (unit->GetPlatformType() == BattleObjects::PlatformType::Cavalry)
 		{
 			++cavalryCount;
 		}
@@ -1115,7 +1115,7 @@ void BattleView::UpdateSoundPlayer()
 
 		if (glm::length(unit->GetCurrentCommand().GetDestination() - unit->GetCenter()) > 4.0f)
 		{
-			if (unit->stats.platformType == BattleObjects_v1::PlatformType::Cavalry)
+			if (unit->GetPlatformType() == BattleObjects::PlatformType::Cavalry)
 			{
 				if (unit->GetCurrentCommand().running)
 					++cavalryRunning;

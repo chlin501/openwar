@@ -39,6 +39,14 @@ public:
 	};
 
 
+	enum class PlatformType
+	{
+		None,
+		Infantry,
+		Cavalry
+	};
+
+
 	enum class MissileType
 	{
 		None,
@@ -62,6 +70,19 @@ public:
 		glm::vec2 target{};
 		bool released{};
 		std::vector<Projectile> projectiles{};
+	};
+
+
+	struct UnitRange
+	{
+		glm::vec2 center{};
+		float angleStart{};
+		float angleLength{};
+		float minimumRange{};
+		float maximumRange{};
+		std::vector<float> actualRanges{};
+
+		bool IsWithinRange(glm::vec2 p) const;
 	};
 
 
@@ -105,6 +126,21 @@ public:
 	};
 
 
+	struct Formation
+	{
+		float rankDistance{};
+		float fileDistance{};
+		int numberOfRanks{}; // updated by UpdateFormation() and AddUnit()
+		int numberOfFiles{}; // updated by UpdateFormation() and AddUnit()
+		float _direction{};
+		glm::vec2 towardRight{};
+		glm::vec2 towardBack{};
+
+		glm::vec2 GetFrontLeft(glm::vec2 center) const;
+		void SetDirection(float direction);
+	};
+
+
 	struct FighterAssignment
 	{
 		int rank;
@@ -119,6 +155,7 @@ public:
 	public:
 		BattleObjects::Commander* commander{};
 		std::string unitClass{};
+		bool deployed{};
 
 		virtual ~Unit();
 
@@ -134,12 +171,22 @@ public:
 		virtual float GetBearing() const = 0;
 		virtual void SetBearing(float value) = 0;
 
-		virtual float GetMorale() const = 0;
-		virtual void SetMorale(float value) = 0;
+		virtual float GetIntrinsicMorale() const = 0;
+		virtual float GetEffectiveMorale() const = 0;
+		virtual void SetIntrinsicMorale(float value) = 0;
+
 		virtual bool IsRouting() const = 0;
+		virtual bool IsStanding() const = 0;
+		virtual bool IsMoving() const = 0;
 
 		virtual const UnitCommand& GetCurrentCommand() const = 0;
 		virtual const UnitCommand& GetIssuedCommand() const = 0;
+
+		virtual PlatformType GetPlatformType() const = 0;
+		virtual std::pair<bool, float> GetLoadingProgress() const = 0;
+		virtual float GetWeaponReach() const = 0;
+		virtual const UnitRange& GetMissileWeaponRange() const = 0;
+		virtual const Formation& GetFormation() const = 0;
 
 		virtual int GetFighterCount() const = 0;
 		virtual void SetFighterCount(int value) = 0;

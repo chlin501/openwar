@@ -60,7 +60,7 @@ public:
 	bool IsDeploymentZone(int team, glm::vec2 position) const;
 	glm::vec2 ConstrainDeploymentZone(int team, glm::vec2 position, float inset) const;
 	bool HasCompletedDeployment(int team) const;
-	void Deploy(BattleObjects_v1::Unit* unit, glm::vec2 position);
+	void Deploy(BattleObjects::Unit* unit, glm::vec2 position);
 
 	BattleObjects_v1::Unit* AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, BattleObjects_v1::UnitStats stats, glm::vec2 position);
 	void RemoveUnit(BattleObjects::Unit* unit);
@@ -68,6 +68,7 @@ public:
 	void NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing);
 
 	void SetUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer);
+	void IssueUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer);
 
 	void AddShooting(const BattleObjects_v1::Shooting& shooting, float timer);
 

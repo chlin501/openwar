@@ -29,11 +29,11 @@ void MonkeyScript::Tick(double secondsSinceLastTick)
 }
 
 
-static BattleObjects_v1::Unit* FindNearestUnit(const std::vector<BattleObjects_v1::Unit*>& units, glm::vec2 position)
+static BattleObjects::Unit* FindNearestUnit(const std::vector<BattleObjects::Unit*>& units, glm::vec2 position)
 {
-	BattleObjects_v1::Unit* result = nullptr;
+	BattleObjects::Unit* result = nullptr;
 	float distance = 0;
-	for (BattleObjects_v1::Unit* unit : units)
+	for (BattleObjects::Unit* unit : units)
 	{
 		float d = glm::distance(position, unit->GetCenter());
 		if (result == nullptr || d < distance)
@@ -46,21 +46,21 @@ static BattleObjects_v1::Unit* FindNearestUnit(const std::vector<BattleObjects_v
 }
 
 
-static BattleObjects_v1::Unit* FindCenterUnit(const std::vector<BattleObjects_v1::Unit*>& units)
+static BattleObjects::Unit* FindCenterUnit(const std::vector<BattleObjects::Unit*>& units)
 {
 	if (units.empty())
 		return nullptr;
 
-	std::vector<std::pair<BattleObjects_v1::Unit*, float>> items;
-	for (BattleObjects_v1::Unit* unit : units)
+	std::vector<std::pair<BattleObjects::Unit*, float>> items;
+	for (BattleObjects::Unit* unit : units)
 	{
 		float weight = 0;
-		for (BattleObjects_v1::Unit* u : units)
+		for (BattleObjects::Unit* u : units)
 			if (u != unit)
 				weight += 1.0f / (1.0f + glm::distance(u->GetCenter(), unit->GetCenter()));
-		items.push_back(std::pair<BattleObjects_v1::Unit*, float>(unit, weight));
+		items.push_back(std::pair<BattleObjects::Unit*, float>(unit, weight));
 	}
-	std::sort(items.begin(), items.end(), [](std::pair<BattleObjects_v1::Unit*, float> a, std::pair<BattleObjects_v1::Unit*, float> b) {
+	std::sort(items.begin(), items.end(), [](std::pair<BattleObjects::Unit*, float> a, std::pair<BattleObjects::Unit*, float> b) {
 		return a.second < b.second;
 	});
 
@@ -68,16 +68,16 @@ static BattleObjects_v1::Unit* FindCenterUnit(const std::vector<BattleObjects_v1
 }
 
 
-static glm::vec2 FindClusterCenter(const std::vector<BattleObjects_v1::Unit*>& units)
+static glm::vec2 FindClusterCenter(const std::vector<BattleObjects::Unit*>& units)
 {
 	if (units.empty())
 		return glm::vec2();
 
-	BattleObjects_v1::Unit* centerUnit = FindCenterUnit(units);
+	BattleObjects::Unit* centerUnit = FindCenterUnit(units);
 	glm::vec2 result;
 	float weight = 0;
 
-	for (BattleObjects_v1::Unit* unit : units)
+	for (BattleObjects::Unit* unit : units)
 	{
 		float w = 1.0f / (50.0f + glm::distance(unit->GetCenter(), centerUnit->GetCenter()));
 		result += w * unit->GetCenter();
@@ -101,10 +101,10 @@ void MonkeyScript::IssueCommands()
 	if (monkeyCommander == nullptr)
 		return;
 
-	std::vector<BattleObjects_v1::Unit*> monkeyUnits;
-	std::vector<BattleObjects_v1::Unit*> enemyUnits;
+	std::vector<BattleObjects::Unit*> monkeyUnits;
+	std::vector<BattleObjects::Unit*> enemyUnits;
 
-	for (BattleObjects_v1::Unit* unit : _simulator->GetUnits())
+	for (BattleObjects::Unit* unit : _simulator->GetUnits())
 		if (!unit->IsRouting())
 		{
 			if (unit->commander == monkeyCommander)
@@ -122,19 +122,19 @@ void MonkeyScript::IssueCommands()
 	glm::vec2 playerCenter = FindClusterCenter(enemyUnits);
 	glm::vec2 scriptCenter = FindClusterCenter(monkeyUnits);
 
-	for (BattleObjects_v1::Unit* unit : monkeyUnits)
+	for (BattleObjects::Unit* unit : monkeyUnits)
 	{
 		glm::vec2 unitCenter = unit->GetCenter();
 
-		BattleObjects_v1::Unit* targetUnit = FindNearestUnit(enemyUnits, unitCenter);
+		BattleObjects::Unit* targetUnit = FindNearestUnit(enemyUnits, unitCenter);
 		if (targetUnit == nullptr)
 			continue;
 
 		glm::vec2 targetCenter = targetUnit->GetCenter();
 
-		if (unit->stats.missileType != BattleObjects_v1::MissileType::None)
+		if (unit->GetMissileWeaponRange().maximumRange > 0)
 		{
-			float range = unit->stats.maximumRange;
+			float range = unit->GetMissileWeaponRange().maximumRange;
 			glm::vec2 diff = targetCenter - unitCenter;
 			float dist = glm::length(diff);
 			if (dist > 0.9f * range)

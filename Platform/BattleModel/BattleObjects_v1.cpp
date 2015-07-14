@@ -115,13 +115,13 @@ BattleObjects_v1::Fighter* BattleObjects_v1::Unit::GetFighter(int rank, int file
 }
 
 
-glm::vec2 BattleObjects_v1::Formation::GetFrontLeft(glm::vec2 center)
+glm::vec2 BattleObjects::Formation::GetFrontLeft(glm::vec2 center) const
 {
 	return center - towardRight * (0.5f * (numberOfFiles - 1)) - towardBack * (0.5f * (numberOfRanks - 1));
 }
 
 
-void BattleObjects_v1::Formation::SetDirection(float direction)
+void BattleObjects::Formation::SetDirection(float direction)
 {
 	_direction = direction;
 	towardRight = glm::vec2((float)sin(direction), -(float)cos(direction)) * fileDistance;

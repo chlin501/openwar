@@ -12,7 +12,7 @@
 #include "TerrainView/TerrainViewport.h"
 
 
-UnitCounter::UnitCounter(BattleView* battleView, BattleObjects_v1::Unit* unit) :
+UnitCounter::UnitCounter(BattleView* battleView, BattleObjects::Unit* unit) :
 _battleView{battleView},
 _unit{unit}
 {
@@ -28,7 +28,7 @@ UnitCounter::~UnitCounter()
 
 bool UnitCounter::Animate(float seconds)
 {
-	float routingBlinkTime = _unit->state.GetRoutingBlinkTime();
+	float routingBlinkTime = GetRoutingBlinkTime(_unit);
 
 	if (!_unit->IsRouting() && routingBlinkTime != 0)
 	{
@@ -44,7 +44,7 @@ bool UnitCounter::Animate(float seconds)
 void UnitCounter::AppendUnitMarker(BillboardTextureShape* renderer, bool flip)
 {
 	bool routingIndicator = false;
-	float routingBlinkTime = _unit->state.GetRoutingBlinkTime();
+	float routingBlinkTime = GetRoutingBlinkTime(_unit);
 
 	if (_unit->IsRouting())
 	{
@@ -97,9 +97,7 @@ void UnitCounter::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleView* ba
 
 	const BattleObjects::UnitCommand& command = _unit->GetIssuedCommand();
 
-	if (_unit->state.unitMode != BattleObjects_v1::UnitMode_Standing
-		|| command.meleeTarget
-		|| _unit->IsRouting())
+	if (!_unit->IsStanding() || command.meleeTarget || _unit->IsRouting())
 	{
 		return;
 	}
@@ -113,10 +111,14 @@ void UnitCounter::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleView* ba
 	{
 		xindex = 11;
 	}
-	else if (_unit->state.loadingDuration != 0)
+	else
 	{
-		xindex = 2 + (int)glm::round(9 * _unit->state.loadingTimer / _unit->state.loadingDuration);
-		xindex = glm::min(10, xindex);
+		std::pair<bool, float> loadingProgress = _unit->GetLoadingProgress();
+		if (loadingProgress.first)
+		{
+			xindex = 2 + (int)glm::round(9.0f * loadingProgress.second);
+			xindex = glm::min(10, xindex);
+		}
 	}
 	int yindex = 0;
 	if (xindex >= 6)
@@ -156,14 +158,15 @@ void UnitCounter::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleView* ba
 
 void UnitCounter::AppendFighterWeapons(VertexShape_3f* vertices)
 {
-	if (_unit->stats.weaponReach > 0)
+	float weaponReach = _unit->GetWeaponReach();
+	if (weaponReach > 0)
 	{
 		int count = _unit->GetFighterCount();
 		for (int index = 0; index < count; ++index)
 		{
 			BattleObjects::FighterPosition fighter = _unit->GetFighterPosition(index);
 			glm::vec2 p1 = fighter.position;
-			glm::vec2 p2 = p1 + _unit->stats.weaponReach * vector2_from_angle(fighter.bearing);
+			glm::vec2 p2 = p1 + weaponReach * vector2_from_angle(fighter.bearing);
 
 			vertices->AddVertex(Vertex_3f(_battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(p1, 1)));
 			vertices->AddVertex(Vertex_3f(_battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(p2, 1)));
@@ -200,9 +203,16 @@ void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 	for (int index = 0; index < count; ++index)
 	{
 		BattleObjects::FighterPosition fighter = _unit->GetFighterPosition(index);
-		const float adjust = 0.5 - 2.0 / 64.0; // place texture 2 texels below ground
+		const float adjust = 0.5f - 2.0f / 64.0f; // place texture 2 texels below ground
 		glm::vec3 p = _battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(fighter.position, adjust * size);
 		float facing = glm::degrees(fighter.bearing);
 		billboardModel->dynamicBillboards.push_back(Billboard(p, facing, size, shape));
 	}
+}
+
+
+float UnitCounter::GetRoutingBlinkTime(BattleObjects::Unit* unit)
+{
+	float morale = unit->GetEffectiveMorale();
+	return 0 <= morale && morale < 0.33f ? 0.1f + morale * 3 : 0;
 }

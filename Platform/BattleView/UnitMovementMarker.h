@@ -15,7 +15,7 @@ class BillboardTextureShape;
 class UnitMovementMarker : public UnitMarker
 {
 public:
-	UnitMovementMarker(BattleView* battleView, BattleObjects_v1::Unit* unit);
+	UnitMovementMarker(BattleView* battleView, BattleObjects::Unit* unit);
 	~UnitMovementMarker();
 
 	bool Animate(float seconds);

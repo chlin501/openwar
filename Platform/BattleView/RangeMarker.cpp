@@ -12,7 +12,7 @@
 #include "Algebra/geometry.h"
 
 
-RangeMarker::RangeMarker(BattleSimulator_v1_0_0* battleSimulator, BattleObjects_v1::Unit* unit) :
+RangeMarker::RangeMarker(BattleSimulator_v1_0_0* battleSimulator, BattleObjects::Unit* unit) :
 	_battleSimulator{battleSimulator},
 	_unit{unit}
 {
@@ -26,9 +26,9 @@ void RangeMarker::Render(VertexShape_3f_4f* vertices)
 	{
 		RenderMissileTarget(vertices, command.missileTarget->GetCenter());
 	}
-	else if (_unit->unitRange.maximumRange > 0 && _unit->state.unitMode != BattleObjects_v1::UnitMode_Moving && !_unit->IsRouting())
+	else if (_unit->GetMissileWeaponRange().maximumRange > 0 && !_unit->IsMoving() && !_unit->IsRouting())
 	{
-		RenderMissileRange(vertices, _unit->unitRange);
+		RenderMissileRange(vertices, _unit->GetMissileWeaponRange());
 	}
 }
 
@@ -98,8 +98,9 @@ void RangeMarker::RenderMissileTarget(VertexShape_3f_4f* vertices, glm::vec2 tar
 	glm::vec4 c0 = glm::vec4(255, 64, 64, 0) / 255.0f;
 	glm::vec4 c1 = glm::vec4(255, 64, 64, 24) / 255.0f;
 
-	glm::vec2 left = _unit->formation.GetFrontLeft(_unit->GetCenter());
-	glm::vec2 right = left + _unit->formation.towardRight * (float)_unit->formation.numberOfFiles;
+	const BattleObjects::Formation& formation = _unit->GetFormation();
+	glm::vec2 left = formation.GetFrontLeft(_unit->GetCenter());
+	glm::vec2 right = left + formation.towardRight * (float)formation.numberOfFiles;
 	glm::vec2 p;
 
 	const float thickness = 4;

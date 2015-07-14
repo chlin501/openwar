@@ -44,7 +44,7 @@ BattleObjects_v1::UnitStats SamuraiModule::GetDefaultUnitStats(SamuraiPlatform p
 {
 	BattleObjects_v1::UnitStats result;
 
-	result.platformType = platform == SamuraiPlatform_Cav || platform == SamuraiPlatform_Gen ? BattleObjects_v1::PlatformType::Cavalry : BattleObjects_v1::PlatformType::Infantry;
+	result.platformType = platform == SamuraiPlatform_Cav || platform == SamuraiPlatform_Gen ? BattleObjects::PlatformType::Cavalry : BattleObjects::PlatformType::Infantry;
 
 	if (platform == SamuraiPlatform_Cav || platform == SamuraiPlatform_Gen)
 	{

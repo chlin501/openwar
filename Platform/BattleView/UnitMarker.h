@@ -14,13 +14,13 @@ class UnitMarker
 {
 protected:
 	BattleView* _battleView{};
-	BattleObjects_v1::Unit* _unit{};
+	BattleObjects::Unit* _unit{};
 
 public:
-	UnitMarker(BattleView* battleView, BattleObjects_v1::Unit* unit);
+	UnitMarker(BattleView* battleView, BattleObjects::Unit* unit);
 	virtual ~UnitMarker();
 
-	BattleObjects_v1::Unit* GetUnit() const { return _unit; }
+	BattleObjects::Unit* GetUnit() const { return _unit; }
 };
 
 
