@@ -235,11 +235,27 @@ public:
 		const UnitCommand& GetIssuedCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
 
 		int GetFighterCount() const override { return fightersCount; }
+		virtual void SetFighterCount(int value) override { fightersCount = value; }
+
 		FighterPosition GetFighterPosition(int index) const override
 		{
 			const FighterState& state = fighters[index].state;
 			return {state.position, state.bearing};
 		}
+
+		void SetFighterPosition(int index, glm::vec3 value) override
+		{
+			FighterState& state = fighters[index].state;
+			state.position = value.xy();
+			state.position_z = value.z;
+			state.readyState = BattleObjects_v1::ReadyState_Unready;
+			state.readyingTimer = 0;
+			state.strikingTimer = 0;
+			state.stunnedTimer = 0;
+			state.opponent = nullptr;
+			fighters[index].casualty = false;
+		}
+
 		FighterAssignment GetFighterAssignment(int index) const override
 		{
 			return {index % formation.numberOfRanks, index / formation.numberOfRanks};

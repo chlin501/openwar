@@ -123,7 +123,11 @@ public:
 		virtual const UnitCommand& GetIssuedCommand() const = 0;
 
 		virtual int GetFighterCount() const = 0;
+		virtual void SetFighterCount(int value) = 0;
+
 		virtual FighterPosition GetFighterPosition(int index) const = 0;
+		virtual void SetFighterPosition(int index, glm::vec3 value) = 0;
+
 		virtual FighterAssignment GetFighterAssignment(int index) const = 0;
 	};
 
