@@ -29,7 +29,7 @@ static BattleObjects_v1::Unit* FindNearestUnit(const std::vector<BattleObjects_v
     float distance{};
 	for (BattleObjects_v1::Unit* unit : units)
 	{
-		float d = glm::distance(position, unit->state.center);
+		float d = glm::distance(position, unit->GetCenter());
 		if (result == nullptr || d < distance)
 		{
 			result = unit;
@@ -51,7 +51,7 @@ static BattleObjects_v1::Unit* FindCenterUnit(const std::vector<BattleObjects_v1
 		float weight = 0;
 		for (BattleObjects_v1::Unit* u : units)
 			if (u != unit)
-				weight += 1.0f / (1.0f + glm::distance(u->state.center, unit->state.center));
+				weight += 1.0f / (1.0f + glm::distance(u->GetCenter(), unit->GetCenter()));
 		items.push_back(std::pair<BattleObjects_v1::Unit*, float>(unit, weight));
 	}
 	std::sort(items.begin(), items.end(), [](std::pair<BattleObjects_v1::Unit*, float> a, std::pair<BattleObjects_v1::Unit*, float> b) {
@@ -73,8 +73,8 @@ static glm::vec2 FindClusterCenter(const std::vector<BattleObjects_v1::Unit*>& u
 
 	for (BattleObjects_v1::Unit* unit : units)
 	{
-		float w = 1.0f / (50.0f + glm::distance(unit->state.center, centerUnit->state.center));
-		result += w * unit->state.center;
+		float w = 1.0f / (50.0f + glm::distance(unit->GetCenter(), centerUnit->GetCenter()));
+		result += w * unit->GetCenter();
 		weight += w;
 	}
 
@@ -108,13 +108,13 @@ void PracticeScript::IssueCommands()
 
  	for (BattleObjects_v1::Unit* unit : scriptUnits)
 	{
-		glm::vec2 unitCenter = unit->state.center;
+		glm::vec2 unitCenter = unit->GetCenter();
 
 		BattleObjects_v1::Unit* targetUnit = FindNearestUnit(playerUnits, unitCenter);
 		if (targetUnit == nullptr)
 			continue;
 
-		glm::vec2 targetCenter = targetUnit->state.center;
+		glm::vec2 targetCenter = targetUnit->GetCenter();
 
 		if (unit->stats.missileType != BattleObjects_v1::MissileType::None)
 		{
@@ -151,7 +151,7 @@ void PracticeScript::IssueCommands()
 		}
 		else
 		{
-			if (glm::distance(targetUnit->state.center, unitCenter) < 80)
+			if (glm::distance(targetUnit->GetCenter(), unitCenter) < 80)
 			{
 
 				BattleObjects_v1::UnitCommand command;

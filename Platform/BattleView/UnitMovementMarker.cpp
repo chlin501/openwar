@@ -41,7 +41,7 @@ void UnitMovementMarker::RenderMovementMarker(BillboardTextureShape* renderer)
 
 	const BattleObjects_v1::UnitCommand& command = _unit->GetCommand();
 	glm::vec2 finalDestination = command.GetDestination();
-	if (command.path.size() > 1 || glm::length(_unit->state.center - finalDestination) > 25)
+	if (command.path.size() > 1 || glm::length(_unit->GetCenter() - finalDestination) > 25)
 	{
 		if (command.meleeTarget == nullptr)
 		{

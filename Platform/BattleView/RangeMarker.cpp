@@ -24,7 +24,7 @@ void RangeMarker::Render(VertexShape_3f_4f* vertices)
 	const BattleObjects_v1::UnitCommand& command = _unit->GetCommand();
 	if (command.missileTarget)
 	{
-		RenderMissileTarget(vertices, command.missileTarget->state.center);
+		RenderMissileTarget(vertices, command.missileTarget->GetCenter());
 	}
 	else if (_unit->unitRange.maximumRange > 0 && _unit->state.unitMode != BattleObjects_v1::UnitMode_Moving && !_unit->state.IsRouting())
 	{
@@ -98,7 +98,7 @@ void RangeMarker::RenderMissileTarget(VertexShape_3f_4f* vertices, glm::vec2 tar
 	glm::vec4 c0 = glm::vec4(255, 64, 64, 0) / 255.0f;
 	glm::vec4 c1 = glm::vec4(255, 64, 64, 24) / 255.0f;
 
-	glm::vec2 left = _unit->formation.GetFrontLeft(_unit->state.center);
+	glm::vec2 left = _unit->formation.GetFrontLeft(_unit->GetCenter());
 	glm::vec2 right = left + _unit->formation.towardRight * (float)_unit->formation.numberOfFiles;
 	glm::vec2 p;
 

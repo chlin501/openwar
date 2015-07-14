@@ -226,7 +226,7 @@ public:
 	};
 
 
-	struct Unit
+	struct Unit : public BattleObjects::Unit
 	{
 		// static attributes
 		BattleObjects::Commander* commander{};
@@ -258,7 +258,6 @@ public:
 
 		float GetSpeed();
 
-
 		const UnitCommand& GetCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
 
 
@@ -273,11 +272,16 @@ public:
 		static int GetFighterRank(Fighter* fighter);
 		static int GetFighterFile(Fighter* fighter);
 		static Fighter* GetFighter(Unit* unit, int rank, int file);
+
+	public: // BattleObjects::Unit overrides
+		glm::vec2 GetCenter() const override { return state.center; }
 	};
 
 protected:
 	std::vector<BattleObjects_v1::Unit*> _units{};
 
+public:
+	virtual const std::vector<BattleObjects_v1::Unit*>& GetUnits() { return _units; }
 
 
 }; // class BattleObjects_v1

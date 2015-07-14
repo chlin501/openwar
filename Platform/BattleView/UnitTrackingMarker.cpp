@@ -14,7 +14,7 @@
 
 
 UnitTrackingMarker::UnitTrackingMarker(BattleView* battleView, BattleObjects_v1::Unit* unit) : UnitMarker(battleView, unit),
-_destination{_unit->state.center}
+_destination{_unit->GetCenter()}
 {
 }
 
@@ -26,7 +26,7 @@ UnitTrackingMarker::~UnitTrackingMarker()
 
 float UnitTrackingMarker::GetFacing() const
 {
-	glm::vec2 orientation = _missileTarget ? _missileTarget->state.center : _orientation;
+	glm::vec2 orientation = _missileTarget ? _missileTarget->GetCenter() : _orientation;
 	return angle(orientation - DestinationXXX());
 }
 
@@ -139,7 +139,7 @@ void UnitTrackingMarker::RenderOrientation(VertexShape_3f_4f* vertices)
 {
 	if (_renderOrientation && _hasOrientation && !_path.empty())
 	{
-		glm::vec2 tip = _missileTarget ? _missileTarget->state.center : _orientation;
+		glm::vec2 tip = _missileTarget ? _missileTarget->GetCenter() : _orientation;
 		float overshoot = _missileTarget ? 5 : 20;
 		glm::vec2 center = _path.back();
 		glm::vec2 diff = tip - center;

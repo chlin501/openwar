@@ -922,7 +922,7 @@ bounds2f BattleView::GetBillboardBounds(glm::vec3 position, float height)
 
 bounds2f BattleView::GetUnitCurrentIconViewportBounds(BattleObjects_v1::Unit* unit)
 {
-	glm::vec3 position = GetTerrainPosition(unit->state.center, 0);
+	glm::vec3 position = GetTerrainPosition(unit->GetCenter(), 0);
 	return GetBillboardBounds(position, 32);
 }
 
@@ -930,7 +930,7 @@ bounds2f BattleView::GetUnitCurrentIconViewportBounds(BattleObjects_v1::Unit* un
 bounds2f BattleView::GetUnitFutureIconViewportBounds(BattleObjects_v1::Unit* unit)
 {
 	const BattleObjects_v1::UnitCommand& command = unit->GetCommand();
-	glm::vec3 position = GetTerrainPosition(!command.path.empty() ? command.path.back() : unit->state.center, 0);
+	glm::vec3 position = GetTerrainPosition(!command.path.empty() ? command.path.back() : unit->GetCenter(), 0);
 	return GetBillboardBounds(position, 32);
 }
 
@@ -951,7 +951,7 @@ bounds2f BattleView::GetUnitFacingMarkerBounds(glm::vec2 center, float direction
 
 bounds2f BattleView::GetUnitCurrentFacingMarkerBounds(BattleObjects_v1::Unit* unit)
 {
-	return GetUnitFacingMarkerBounds(unit->state.center, unit->state.bearing);
+	return GetUnitFacingMarkerBounds(unit->GetCenter(), unit->state.bearing);
 }
 
 
@@ -959,7 +959,7 @@ bounds2f BattleView::GetUnitFutureFacingMarkerBounds(BattleObjects_v1::Unit* uni
 {
 	const BattleObjects_v1::UnitCommand& command = unit->GetCommand();
 
-	glm::vec2 center = !command.path.empty() ? command.path.back() : unit->state.center;
+	glm::vec2 center = !command.path.empty() ? command.path.back() : unit->GetCenter();
 
 	return GetUnitFacingMarkerBounds(center, command.bearing);
 }
@@ -1072,7 +1072,7 @@ UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int filterTea
 		if (filterDeployed && !unit->deployed)
 			continue;
 
-		glm::vec2 p = unit->state.center;
+		glm::vec2 p = unit->GetCenter();
 		float dx = p.x - position.x;
 		float dy = p.y - position.y;
 		float d = dx * dx + dy * dy;
@@ -1113,7 +1113,7 @@ void BattleView::UpdateSoundPlayer()
 				++enemyUnits;
 		}
 
-		if (glm::length(unit->command.GetDestination() - unit->state.center) > 4.0f)
+		if (glm::length(unit->command.GetDestination() - unit->GetCenter()) > 4.0f)
 		{
 			if (unit->stats.platformType == BattleObjects_v1::PlatformType::Cavalry)
 			{

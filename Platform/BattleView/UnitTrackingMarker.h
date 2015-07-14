@@ -68,10 +68,10 @@ public:
 
 	glm::vec2 DestinationXXX() const
 	{
-		return GetMeleeTarget() ? GetMeleeTarget()->state.center
+		return GetMeleeTarget() ? GetMeleeTarget()->GetCenter()
 			: _path.size() != 0 ? *(_path.end() - 1)
 			: _hasDestination ? _destination
-			: GetUnit()->state.center;
+			: GetUnit()->GetCenter();
 	}
 
 

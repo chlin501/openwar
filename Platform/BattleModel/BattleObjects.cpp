@@ -59,6 +59,17 @@ void BattleObjects::Commander::SetAbandonedBattle(bool value)
 }
 
 
+/***/
+
+
+BattleObjects::Unit::~Unit()
+{
+}
+
+
+/***/
+
+
 BattleObjects::Commander* BattleObjects::AddCommander(const char* playerId, int team, BattleObjects::CommanderType type)
 {
 	Commander* commander = new Commander(this, playerId, team, type);

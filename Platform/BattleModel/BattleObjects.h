@@ -44,11 +44,22 @@ public:
 		float delay{};
 	};
 
+
+	class Unit
+	{
+	public:
+		virtual ~Unit();
+
+		virtual glm::vec2 GetCenter() const = 0;
+	};
+
+
 protected:
 	std::vector<BattleObjects::Commander*> _commanders{};
 	BattleObjects::Commander* _dummyCommander{};
 	int _teamPosition1{};
 	int _teamPosition2{};
+	std::vector<BattleObjects::Unit*> _units{};
 
 public:
 	BattleObjects::Commander* AddCommander(const char* playerId, int team, BattleObjects::CommanderType type);

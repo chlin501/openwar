@@ -62,7 +62,6 @@ public:
 	bool HasCompletedDeployment(int team) const;
 	void Deploy(BattleObjects_v1::Unit* unit, glm::vec2 position);
 
-	const std::vector<BattleObjects_v1::Unit*>& GetUnits() { return _units; }
 	BattleObjects_v1::Unit* AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, BattleObjects_v1::UnitStats stats, glm::vec2 position);
 	void RemoveUnit(BattleObjects_v1::Unit* unit);
 
