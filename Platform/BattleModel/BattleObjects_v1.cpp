@@ -7,6 +7,18 @@
 #include "geometry.h"
 
 
+int BattleObjects_v1::Fighter::GetRank() const
+{
+	return static_cast<int>(this - unit->fighters) % unit->formation.numberOfRanks;
+}
+
+
+int BattleObjects_v1::Fighter::GetFile() const
+{
+	return static_cast<int>(this - unit->fighters) / unit->formation.numberOfRanks;
+}
+
+
 
 static float normalize_angle(float a)
 {
@@ -139,27 +151,13 @@ bool BattleObjects_v1::Unit::IsInMelee() const
 }
 
 
-int BattleObjects_v1::Unit::GetFighterRank(Fighter* fighter)
+BattleObjects_v1::Fighter* BattleObjects_v1::Unit::GetFighter(int rank, int file) const
 {
-	Unit* unit = fighter->GetUnit();
-	return (fighter - unit->fighters) % unit->formation.numberOfRanks;
-}
-
-
-int BattleObjects_v1::Unit::GetFighterFile(Fighter* fighter)
-{
-	Unit* unit = fighter->GetUnit();
-	return (int)(fighter - unit->fighters) / unit->formation.numberOfRanks;
-}
-
-
-BattleObjects_v1::Fighter* BattleObjects_v1::Unit::GetFighter(BattleObjects_v1::Unit* unit, int rank, int file)
-{
-	if (0 <= rank && rank < unit->formation.numberOfRanks && file >= 0)
+	if (0 <= rank && rank < formation.numberOfRanks && file >= 0)
 	{
-		int index = rank + file * unit->formation.numberOfRanks;
-		if (index < unit->fightersCount)
-			return unit->fighters + index;
+		int index = rank + file * formation.numberOfRanks;
+		if (index < fightersCount)
+			return fighters + index;
 	}
 	return 0;
 }

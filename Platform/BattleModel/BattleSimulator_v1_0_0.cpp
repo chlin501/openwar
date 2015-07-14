@@ -1006,8 +1006,8 @@ glm::vec2 BattleSimulator_v1_0_0::NextFighterPosition(BattleObjects_v1::Fighter*
 	{
 		glm::vec2 center = unit->state.center;
 		glm::vec2 frontLeft = unit->formation.GetFrontLeft(center);
-		glm::vec2 offsetRight = unit->formation.towardRight * (float)BattleObjects_v1::Unit::GetFighterFile(fighter);
-		glm::vec2 offsetBack = unit->formation.towardBack * (float)BattleObjects_v1::Unit::GetFighterRank(fighter);
+		glm::vec2 offsetRight = unit->formation.towardRight * (float)fighter->GetFile();
+		glm::vec2 offsetBack = unit->formation.towardBack * (float)fighter->GetRank();
 		return frontLeft + offsetRight + offsetBack;
 	}
 	else
@@ -1350,8 +1350,8 @@ glm::vec2 BattleSimulator_v1_0_0::MovementRules_NextFighterDestination(BattleObj
 			break;
 	}
 
-	int rank = BattleObjects_v1::Unit::GetFighterRank(fighter);
-	int file = BattleObjects_v1::Unit::GetFighterFile(fighter);
+	int rank = fighter->GetRank();
+	int file = fighter->GetFile();
 	glm::vec2 destination;
 	if (rank == 0)
 	{
@@ -1361,7 +1361,7 @@ glm::vec2 BattleSimulator_v1_0_0::MovementRules_NextFighterDestination(BattleObj
 			int n = 1;
 			for (int i = 1; i <= 5; ++i)
 			{
-				BattleObjects_v1::Fighter* other = BattleObjects_v1::Unit::GetFighter(unit, rank, file - i);
+				BattleObjects_v1::Fighter* other = unit->GetFighter(rank, file - i);
 				if (other == 0)
 					break;
 				destination += other->state.position + (float)i * unit->formation.towardRight;
@@ -1369,7 +1369,7 @@ glm::vec2 BattleSimulator_v1_0_0::MovementRules_NextFighterDestination(BattleObj
 			}
 			for (int i = 1; i <= 5; ++i)
 			{
-				BattleObjects_v1::Fighter* other = BattleObjects_v1::Unit::GetFighter(unit, rank, file + i);
+				BattleObjects_v1::Fighter* other = unit->GetFighter(rank, file + i);
 				if (other == nullptr)
 					break;
 				destination += other->state.position - (float)i * unit->formation.towardRight;
@@ -1391,9 +1391,9 @@ glm::vec2 BattleSimulator_v1_0_0::MovementRules_NextFighterDestination(BattleObj
 	}
 	else
 	{
-		BattleObjects_v1::Fighter* fighterLeft = BattleObjects_v1::Unit::GetFighter(unit, rank - 1, file - 1);
-		BattleObjects_v1::Fighter* fighterMiddle = BattleObjects_v1::Unit::GetFighter(unit, rank - 1, file);
-		BattleObjects_v1::Fighter* fighterRight = BattleObjects_v1::Unit::GetFighter(unit, rank - 1, file + 1);
+		BattleObjects_v1::Fighter* fighterLeft = unit->GetFighter(rank - 1, file - 1);
+		BattleObjects_v1::Fighter* fighterMiddle = unit->GetFighter(rank - 1, file);
+		BattleObjects_v1::Fighter* fighterRight = unit->GetFighter(rank - 1, file + 1);
 
 		if (fighterLeft == nullptr || fighterRight == nullptr)
 		{

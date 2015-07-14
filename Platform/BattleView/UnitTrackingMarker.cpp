@@ -48,8 +48,8 @@ void UnitTrackingMarker::RenderTrackingFighters(VertexShape_3f_4f_1f* vertices)
 
 		for (BattleObjects_v1::Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
 		{
-			glm::vec2 offsetRight = formation.towardRight * (float)BattleObjects_v1::Unit::GetFighterFile(fighter);
-			glm::vec2 offsetBack = formation.towardBack * (float)BattleObjects_v1::Unit::GetFighterRank(fighter);
+			glm::vec2 offsetRight = formation.towardRight * (float)fighter->GetFile();
+			glm::vec2 offsetBack = formation.towardBack * (float)fighter->GetRank();
 			glm::vec3 p = _battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(frontLeft + offsetRight + offsetBack, 0.5);
 			vertices->AddVertex(Vertex_3f_4f_1f(p, color, 3.0));
 		}

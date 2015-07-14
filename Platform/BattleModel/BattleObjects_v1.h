@@ -104,6 +104,8 @@ public:
 		bool casualty{};
 
 		Unit* GetUnit() const { return unit; }
+		int GetRank() const;
+		int GetFile() const;
 	};
 
 
@@ -269,9 +271,7 @@ public:
 
 		bool IsInMelee() const;
 
-		static int GetFighterRank(Fighter* fighter);
-		static int GetFighterFile(Fighter* fighter);
-		static Fighter* GetFighter(Unit* unit, int rank, int file);
+		Fighter* GetFighter(int rank, int file) const;
 
 	public: // BattleObjects::Unit overrides
 		glm::vec2 GetCenter() const override { return state.center; }
