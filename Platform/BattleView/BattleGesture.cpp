@@ -7,7 +7,7 @@
 #endif
 
 #include "BattleMap/BattleMap.h"
-#include "BattleModel/BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 #include "Audio/SoundPlayer.h"
 #include "BattleGesture.h"
 #include "BattleView.h"
@@ -382,7 +382,7 @@ void BattleGesture::UpdateTrackingMarker()
 
 		if (!unit->deployed)
 		{
-			BattleSimulator* simulator = _hotspot->GetBattleView()->GetSimulator();
+			BattleSimulator_v1_0_0* simulator = _hotspot->GetBattleView()->GetSimulator();
 			int team = unit->commander->GetTeam();
 
 			if (simulator->IsDeploymentZone(team, markerPosition))

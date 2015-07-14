@@ -5,7 +5,7 @@
 #ifndef ShootingMarker_H
 #define ShootingMarker_H
 
-#include "BattleModel/BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 #include "Shapes/VertexShape.h"
 #include "Audio/SoundPlayer.h"
 

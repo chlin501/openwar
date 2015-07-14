@@ -1,8 +1,8 @@
 #include "BattleObjects.h"
-#include "BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 
 
-BattleObjects::Commander::Commander(BattleSimulator* simulator, const char* playerId, int team, CommanderType type) :
+BattleObjects::Commander::Commander(BattleSimulator_v1_0_0* simulator, const char* playerId, int team, CommanderType type) :
 	_simulator{simulator},
 	_playerId{playerId},
 	_team{team},

@@ -3,10 +3,10 @@
 #include <glm/gtc/random.hpp>
 #include "PracticeScript.h"
 #include "Algebra/geometry.h"
-#include "BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 
 
-PracticeScript::PracticeScript(BattleSimulator* simulator) :
+PracticeScript::PracticeScript(BattleSimulator_v1_0_0* simulator) :
 	_simulator{simulator}
 {
 }

@@ -5,18 +5,18 @@
 #ifndef RangeMarker_H
 #define RangeMarker_H
 
-#include "BattleModel/BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 #include "Shapes/VertexShape.h"
 
 
 class RangeMarker
 {
 public:
-	BattleSimulator* _battleSimulator{};
+	BattleSimulator_v1_0_0* _battleSimulator{};
 	BattleObjects_v1::Unit* _unit{};
 
 public:
-	RangeMarker(BattleSimulator* battleSimulator, BattleObjects_v1::Unit* unit);
+	RangeMarker(BattleSimulator_v1_0_0* battleSimulator, BattleObjects_v1::Unit* unit);
 
 	void Render(VertexShape_3f_4f* vertices);
 

@@ -1,4 +1,4 @@
-#include "BattleModel/BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 #include "Surface/Surface.h"
 #include "BattleHotspot.h"
 #include "BattleView.h"
@@ -24,7 +24,7 @@ BattleLayer::~BattleLayer()
 }
 
 
-void BattleLayer::ResetBattleViews(BattleSimulator* scenario, const std::vector<BattleObjects::Commander*>& commanders)
+void BattleLayer::ResetBattleViews(BattleSimulator_v1_0_0* scenario, const std::vector<BattleObjects::Commander*>& commanders)
 {
 	delete _editorModel;
 	_editorModel = nullptr;
@@ -51,7 +51,7 @@ void BattleLayer::ResetBattleViews(BattleSimulator* scenario, const std::vector<
 }
 
 
-void BattleLayer::ResetEditor(BattleSimulator* scenario, const std::vector<BattleObjects::Commander*>& commanders)
+void BattleLayer::ResetEditor(BattleSimulator_v1_0_0* scenario, const std::vector<BattleObjects::Commander*>& commanders)
 {
 	delete _editorModel;
 	_editorModel = nullptr;
@@ -137,7 +137,7 @@ void BattleLayer::Render()
 
 void BattleLayer::CreateBattleView(BattleObjects::Commander* commander)
 {
-	BattleSimulator* simulator = _scenario;
+	BattleSimulator_v1_0_0* simulator = _scenario;
 
 	std::shared_ptr<TerrainViewport> viewport = std::make_shared<TerrainViewport>(_gc);
 

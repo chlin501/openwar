@@ -3,7 +3,7 @@
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
 #include "Algebra/geometry.h"
-#include "BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 #include "BattleMap/GroundMap.h"
 #include "BattleMap/HeightMap.h"
 #include "BattleMap/SmoothGroundMap.h"
@@ -20,14 +20,14 @@
 #include <sstream>
 
 
-BattleSimulator::BattleSimulator(BattleMap* battleMap) :
+BattleSimulator_v1_0_0::BattleSimulator_v1_0_0(BattleMap* battleMap) :
 	_battleMap{battleMap}
 {
 	_dummyCommander = new BattleObjects::Commander(this, "", 1, BattleObjects::CommanderType::None);
 }
 
 
-BattleSimulator::~BattleSimulator()
+BattleSimulator_v1_0_0::~BattleSimulator_v1_0_0()
 {
 	for (BattleObjects::Commander* commander : _commanders)
 		delete commander;
@@ -43,7 +43,7 @@ BattleSimulator::~BattleSimulator()
 }
 
 
-int BattleSimulator::CountCavalryInMelee() const
+int BattleSimulator_v1_0_0::CountCavalryInMelee() const
 {
 	int result = 0;
 
@@ -55,7 +55,7 @@ int BattleSimulator::CountCavalryInMelee() const
 }
 
 
-int BattleSimulator::CountInfantryInMelee() const
+int BattleSimulator_v1_0_0::CountInfantryInMelee() const
 {
 	int result = 0;
 
@@ -67,7 +67,7 @@ int BattleSimulator::CountInfantryInMelee() const
 }
 
 
-void BattleSimulator::AddObserver(BattleObserver* observer)
+void BattleSimulator_v1_0_0::AddObserver(BattleObserver* observer)
 {
 	_observers.insert(observer);
 
@@ -79,37 +79,37 @@ void BattleSimulator::AddObserver(BattleObserver* observer)
 }
 
 
-void BattleSimulator::RemoveObserver(BattleObserver* observer)
+void BattleSimulator_v1_0_0::RemoveObserver(BattleObserver* observer)
 {
 	_observers.erase(observer);
 }
 
 
-BattleMap* BattleSimulator::GetBattleMap() const
+BattleMap* BattleSimulator_v1_0_0::GetBattleMap() const
 {
 	return _battleMap;
 }
 
 
-void BattleSimulator::SetDeploymentZone(int team, glm::vec2 center, float radius)
+void BattleSimulator_v1_0_0::SetDeploymentZone(int team, glm::vec2 center, float radius)
 {
 	_deploymentZones[team == 1 ? 0 : 1] = glm::vec3{center, radius};
 };
 
 
-glm::vec2 BattleSimulator::GetDeploymentCenter(int team) const
+glm::vec2 BattleSimulator_v1_0_0::GetDeploymentCenter(int team) const
 {
 	return _deploymentZones[team == 1 ? 0 : 1].xy();
 }
 
 
-float BattleSimulator::GetDeploymentRadius(int team) const
+float BattleSimulator_v1_0_0::GetDeploymentRadius(int team) const
 {
 	return _deploymentZones[team == 1 ? 0 : 1].z;
 }
 
 
-bool BattleSimulator::IsDeploymentZone(int team, glm::vec2 position) const
+bool BattleSimulator_v1_0_0::IsDeploymentZone(int team, glm::vec2 position) const
 {
 	glm::vec2 center = GetDeploymentCenter(team);
 	float radius = GetDeploymentRadius(team);
@@ -117,7 +117,7 @@ bool BattleSimulator::IsDeploymentZone(int team, glm::vec2 position) const
 }
 
 
-glm::vec2 BattleSimulator::ConstrainDeploymentZone(int team, glm::vec2 position, float inset) const
+glm::vec2 BattleSimulator_v1_0_0::ConstrainDeploymentZone(int team, glm::vec2 position, float inset) const
 {
 	float radius = GetDeploymentRadius(team) - inset;
 	if (radius > 0)
@@ -131,7 +131,7 @@ glm::vec2 BattleSimulator::ConstrainDeploymentZone(int team, glm::vec2 position,
 }
 
 
-bool BattleSimulator::HasCompletedDeployment(int team) const
+bool BattleSimulator_v1_0_0::HasCompletedDeployment(int team) const
 {
 	int count = 0;
 	for (BattleObjects_v1::Unit* unit : _units)
@@ -148,7 +148,7 @@ bool BattleSimulator::HasCompletedDeployment(int team) const
 }
 
 
-void BattleSimulator::Deploy(BattleObjects_v1::Unit* unit, glm::vec2 position)
+void BattleSimulator_v1_0_0::Deploy(BattleObjects_v1::Unit* unit, glm::vec2 position)
 {
 	unit->state.center = position;
 
@@ -157,7 +157,7 @@ void BattleSimulator::Deploy(BattleObjects_v1::Unit* unit, glm::vec2 position)
 	unit->nextCommand = unit->command;
 
 	unit->state.unitMode = BattleObjects_v1::UnitMode_Initializing;
-	MovementRules::AdvanceTime(unit, 0);
+	MovementRules_AdvanceTime(unit, 0);
 	unit->nextState = NextUnitState(unit);
 	for (BattleObjects_v1::Fighter* i = unit->fighters, * end = i + unit->fightersCount; i != end; ++i)
 		i->nextState = NextFighterState(i);
@@ -168,7 +168,7 @@ void BattleSimulator::Deploy(BattleObjects_v1::Unit* unit, glm::vec2 position)
 }
 
 
-BattleObjects_v1::Unit* BattleSimulator::AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, BattleObjects_v1::UnitStats stats, glm::vec2 position)
+BattleObjects_v1::Unit* BattleSimulator_v1_0_0::AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, BattleObjects_v1::UnitStats stats, glm::vec2 position)
 {
 	BattleObjects_v1::Unit* unit = new BattleObjects_v1::Unit();
 
@@ -200,7 +200,7 @@ BattleObjects_v1::Unit* BattleSimulator::AddUnit(BattleObjects::Commander* comma
 	for (BattleObjects_v1::Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
 		i->unit = unit;
 
-	MovementRules::AdvanceTime(unit, 0);
+	MovementRules_AdvanceTime(unit, 0);
 	unit->nextState = NextUnitState(unit);
 	for (BattleObjects_v1::Fighter* i = unit->fighters, * end = i + numberOfFighters; i != end; ++i)
 		i->nextState = NextFighterState(i);
@@ -216,7 +216,7 @@ BattleObjects_v1::Unit* BattleSimulator::AddUnit(BattleObjects::Commander* comma
 }
 
 
-void BattleSimulator::RemoveUnit(BattleObjects_v1::Unit* unit)
+void BattleSimulator_v1_0_0::RemoveUnit(BattleObjects_v1::Unit* unit)
 {
 	for (BattleObserver* observer : _observers)
 		observer->OnRemoveUnit(unit);
@@ -251,7 +251,7 @@ void BattleSimulator::RemoveUnit(BattleObjects_v1::Unit* unit)
 }
 
 
-void BattleSimulator::NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing)
+void BattleSimulator_v1_0_0::NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing)
 {
 	BattleObjects_v1::UnitStats unitStats = SamuraiModule::GetDefaultUnitStats(unitClass);
 
@@ -262,7 +262,7 @@ void BattleSimulator::NewUnit(int commanderId, const char* unitClass, int streng
 }
 
 
-void BattleSimulator::SetUnitCommand(BattleObjects_v1::Unit* unit, const BattleObjects_v1::UnitCommand& command, float timer)
+void BattleSimulator_v1_0_0::SetUnitCommand(BattleObjects_v1::Unit* unit, const BattleObjects_v1::UnitCommand& command, float timer)
 {
 	unit->nextCommand = command;
 	unit->nextCommandTimer = timer;
@@ -278,7 +278,7 @@ void BattleSimulator::SetUnitCommand(BattleObjects_v1::Unit* unit, const BattleO
 }
 
 
-void BattleSimulator::AddShooting(const BattleObjects_v1::Shooting& shooting, float timer)
+void BattleSimulator_v1_0_0::AddShooting(const BattleObjects_v1::Shooting& shooting, float timer)
 {
 	_shootings.push_back(std::pair<float, BattleObjects_v1::Shooting>(timer, shooting));
 
@@ -287,7 +287,7 @@ void BattleSimulator::AddShooting(const BattleObjects_v1::Shooting& shooting, fl
 }
 
 
-void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
+void BattleSimulator_v1_0_0::AdvanceTime(float secondsSinceLastTime)
 {
 	//if (this)
 	//	return;
@@ -339,7 +339,7 @@ void BattleSimulator::AdvanceTime(float secondsSinceLastTime)
 }
 
 
-void BattleSimulator::SimulateOneTimeStep()
+void BattleSimulator_v1_0_0::SimulateOneTimeStep()
 {
 	for (BattleObjects_v1::Unit* unit : _units)
 	{
@@ -364,7 +364,7 @@ void BattleSimulator::SimulateOneTimeStep()
 
 	for (BattleObjects_v1::Unit* unit : _units)
 	{
-		MovementRules::AdvanceTime(unit, _timeStep);
+		MovementRules_AdvanceTime(unit, _timeStep);
 	}
 
 	ComputeNextState();
@@ -378,7 +378,7 @@ void BattleSimulator::SimulateOneTimeStep()
 }
 
 
-void BattleSimulator::RebuildQuadTree()
+void BattleSimulator_v1_0_0::RebuildQuadTree()
 {
 	_fighterQuadTree.clear();
 	_weaponQuadTree.clear();
@@ -403,7 +403,7 @@ void BattleSimulator::RebuildQuadTree()
 }
 
 
-void BattleSimulator::ComputeNextState()
+void BattleSimulator_v1_0_0::ComputeNextState()
 {
 	for (BattleObjects_v1::Unit* unit : _units)
 	{
@@ -415,7 +415,7 @@ void BattleSimulator::ComputeNextState()
 }
 
 
-void BattleSimulator::AssignNextState()
+void BattleSimulator_v1_0_0::AssignNextState()
 {
 	for (BattleObjects_v1::Unit* unit : _units)
 	{
@@ -441,7 +441,7 @@ void BattleSimulator::AssignNextState()
 }
 
 
-void BattleSimulator::UpdateUnitRange(BattleObjects_v1::Unit* unit)
+void BattleSimulator_v1_0_0::UpdateUnitRange(BattleObjects_v1::Unit* unit)
 {
 	BattleObjects_v1::UnitRange& unitRange = unit->unitRange;
 
@@ -483,7 +483,7 @@ void BattleSimulator::UpdateUnitRange(BattleObjects_v1::Unit* unit)
 }
 
 
-void BattleSimulator::ResolveMeleeCombat()
+void BattleSimulator_v1_0_0::ResolveMeleeCombat()
 {
 	for (BattleObjects_v1::Unit* unit : _units)
 	{
@@ -527,7 +527,7 @@ void BattleSimulator::ResolveMeleeCombat()
 }
 
 
-void BattleSimulator::ResolveMissileCombat()
+void BattleSimulator_v1_0_0::ResolveMissileCombat()
 {
 	for (BattleObjects_v1::Unit* unit : _units)
 	{
@@ -542,7 +542,7 @@ void BattleSimulator::ResolveMissileCombat()
 }
 
 
-void BattleSimulator::TriggerShooting(BattleObjects_v1::Unit* unit)
+void BattleSimulator_v1_0_0::TriggerShooting(BattleObjects_v1::Unit* unit)
 {
 	if (!unit->deployed)
 		return;
@@ -582,7 +582,7 @@ void BattleSimulator::TriggerShooting(BattleObjects_v1::Unit* unit)
 }
 
 
-void BattleSimulator::ResolveProjectileCasualties()
+void BattleSimulator_v1_0_0::ResolveProjectileCasualties()
 {
 	static int random = 0;
 
@@ -638,7 +638,7 @@ void BattleSimulator::ResolveProjectileCasualties()
 }
 
 
-void BattleSimulator::RemoveCasualties()
+void BattleSimulator_v1_0_0::RemoveCasualties()
 {
 	bounds2f bounds = _battleMap->GetHeightMap()->GetBounds();
 	glm::vec2 center = bounds.mid();
@@ -708,7 +708,7 @@ void BattleSimulator::RemoveCasualties()
 }
 
 
-void BattleSimulator::RemoveDeadUnits()
+void BattleSimulator_v1_0_0::RemoveDeadUnits()
 {
 	std::vector<BattleObjects_v1::Unit*> remove;
 
@@ -721,14 +721,14 @@ void BattleSimulator::RemoveDeadUnits()
 }
 
 
-void BattleSimulator::RemoveFinishedShootings()
+void BattleSimulator_v1_0_0::RemoveFinishedShootings()
 {
 	auto i = std::remove_if(_shootings.begin(), _shootings.end(), [](const std::pair<float, BattleObjects_v1::Shooting>& s) { return s.second.projectiles.empty(); });
 	_shootings.erase(i, _shootings.end());
 }
 
 
-BattleObjects_v1::UnitState BattleSimulator::NextUnitState(BattleObjects_v1::Unit* unit)
+BattleObjects_v1::UnitState BattleSimulator_v1_0_0::NextUnitState(BattleObjects_v1::Unit* unit)
 {
 	BattleObjects_v1::UnitState result;
 
@@ -816,13 +816,13 @@ BattleObjects_v1::UnitState BattleSimulator::NextUnitState(BattleObjects_v1::Uni
 		result.morale = -1;
 	}
 
-	result.waypoint = MovementRules::NextWaypoint(unit);
+	result.waypoint = MovementRules_NextWaypoint(unit);
 
 	return result;
 }
 
 
-BattleObjects_v1::Unit* BattleSimulator::ClosestEnemyWithinLineOfFire(BattleObjects_v1::Unit* unit)
+BattleObjects_v1::Unit* BattleSimulator_v1_0_0::ClosestEnemyWithinLineOfFire(BattleObjects_v1::Unit* unit)
 {
 	BattleObjects_v1::Unit* closestEnemy = 0;
 	float closestDistance = 10000;
@@ -842,13 +842,13 @@ BattleObjects_v1::Unit* BattleSimulator::ClosestEnemyWithinLineOfFire(BattleObje
 }
 
 
-bool BattleSimulator::IsWithinLineOfFire(BattleObjects_v1::Unit* unit, glm::vec2 position)
+bool BattleSimulator_v1_0_0::IsWithinLineOfFire(BattleObjects_v1::Unit* unit, glm::vec2 position)
 {
 	return unit->unitRange.IsWithinRange(position);
 }
 
 
-BattleObjects_v1::UnitMode BattleSimulator::NextUnitMode(BattleObjects_v1::Unit* unit)
+BattleObjects_v1::UnitMode BattleSimulator_v1_0_0::NextUnitMode(BattleObjects_v1::Unit* unit)
 {
 	switch (unit->state.unitMode)
 	{
@@ -872,7 +872,7 @@ BattleObjects_v1::UnitMode BattleSimulator::NextUnitMode(BattleObjects_v1::Unit*
 }
 
 
-float BattleSimulator::NextUnitDirection(BattleObjects_v1::Unit* unit)
+float BattleSimulator_v1_0_0::NextUnitDirection(BattleObjects_v1::Unit* unit)
 {
 	if (true) // unit->movement
 		return unit->command.bearing;
@@ -881,7 +881,7 @@ float BattleSimulator::NextUnitDirection(BattleObjects_v1::Unit* unit)
 }
 
 
-BattleObjects_v1::FighterState BattleSimulator::NextFighterState(BattleObjects_v1::Fighter* fighter)
+BattleObjects_v1::FighterState BattleSimulator_v1_0_0::NextFighterState(BattleObjects_v1::Fighter* fighter)
 {
 	const BattleObjects_v1::FighterState& original = fighter->state;
 	BattleObjects_v1::FighterState result;
@@ -923,7 +923,7 @@ BattleObjects_v1::FighterState BattleSimulator::NextFighterState(BattleObjects_v
 
 	// DESTINATION
 
-	result.destination = MovementRules::NextFighterDestination(fighter);
+	result.destination = MovementRules_NextFighterDestination(fighter);
 
 	// READY STATE
 
@@ -998,7 +998,7 @@ BattleObjects_v1::FighterState BattleSimulator::NextFighterState(BattleObjects_v
 }
 
 
-glm::vec2 BattleSimulator::NextFighterPosition(BattleObjects_v1::Fighter* fighter)
+glm::vec2 BattleSimulator_v1_0_0::NextFighterPosition(BattleObjects_v1::Fighter* fighter)
 {
 	BattleObjects_v1::Unit* unit = fighter->GetUnit();
 
@@ -1063,7 +1063,7 @@ glm::vec2 BattleSimulator::NextFighterPosition(BattleObjects_v1::Fighter* fighte
 }
 
 
-glm::vec2 BattleSimulator::NextFighterVelocity(BattleObjects_v1::Fighter* fighter)
+glm::vec2 BattleSimulator_v1_0_0::NextFighterVelocity(BattleObjects_v1::Fighter* fighter)
 {
 	BattleObjects_v1::Unit* unit = fighter->GetUnit();
 	float speed = unit->GetSpeed();
@@ -1114,7 +1114,7 @@ glm::vec2 BattleSimulator::NextFighterVelocity(BattleObjects_v1::Fighter* fighte
 }
 
 
-BattleObjects_v1::Fighter* BattleSimulator::FindFighterStrikingTarget(BattleObjects_v1::Fighter* fighter)
+BattleObjects_v1::Fighter* BattleSimulator_v1_0_0::FindFighterStrikingTarget(BattleObjects_v1::Fighter* fighter)
 {
 	BattleObjects_v1::Unit* unit = fighter->GetUnit();
 
@@ -1134,7 +1134,7 @@ BattleObjects_v1::Fighter* BattleSimulator::FindFighterStrikingTarget(BattleObje
 }
 
 
-bool BattleSimulator::TeamHasAbandondedBattle(int team) const
+bool BattleSimulator_v1_0_0::TeamHasAbandondedBattle(int team) const
 {
 	for (BattleObjects_v1::Unit* unit : _units)
 		if (unit->commander->GetTeam() == team && !unit->commander->HasAbandonedBattle())
@@ -1147,14 +1147,14 @@ bool BattleSimulator::TeamHasAbandondedBattle(int team) const
 /***/
 
 
-void BattleSimulator::SetScript(BattleScript* value)
+void BattleSimulator_v1_0_0::SetScript(BattleScript* value)
 {
 	delete _script;
 	_script = value;
 }
 
 
-void BattleSimulator::SetTeamPosition(int team, int position)
+void BattleSimulator_v1_0_0::SetTeamPosition(int team, int position)
 {
 	if (team == 1)
 		_teamPosition1 = position;
@@ -1163,7 +1163,7 @@ void BattleSimulator::SetTeamPosition(int team, int position)
 }
 
 
-int BattleSimulator::GetTeamPosition(int team) const
+int BattleSimulator_v1_0_0::GetTeamPosition(int team) const
 {
 	if (team == 1)
 		return _teamPosition1;
@@ -1173,7 +1173,7 @@ int BattleSimulator::GetTeamPosition(int team) const
 }
 
 
-BattleObjects::Commander* BattleSimulator::AddCommander(const char* playerId, int team, BattleObjects::CommanderType type)
+BattleObjects::Commander* BattleSimulator_v1_0_0::AddCommander(const char* playerId, int team, BattleObjects::CommanderType type)
 {
 	BattleObjects::Commander* commander = new BattleObjects::Commander(this, playerId, team, type);
 	_commanders.push_back(commander);
@@ -1181,7 +1181,7 @@ BattleObjects::Commander* BattleSimulator::AddCommander(const char* playerId, in
 }
 
 
-BattleObjects::Commander* BattleSimulator::GetCommander(const char* playerId) const
+BattleObjects::Commander* BattleSimulator_v1_0_0::GetCommander(const char* playerId) const
 {
 	for (BattleObjects::Commander* commander : _commanders)
 		if (std::strcmp(commander->GetPlayerId(), playerId) == 0)
@@ -1191,13 +1191,13 @@ BattleObjects::Commander* BattleSimulator::GetCommander(const char* playerId) co
 }
 
 
-BattleObjects::Commander* BattleSimulator::GetDummyCommander() const
+BattleObjects::Commander* BattleSimulator_v1_0_0::GetDummyCommander() const
 {
 	return _dummyCommander;
 }
 
 
-void BattleSimulator::Tick(double secondsSinceLastTick)
+void BattleSimulator_v1_0_0::Tick(double secondsSinceLastTick)
 {
 	if (_script)
 		_script->Tick(secondsSinceLastTick);
@@ -1206,7 +1206,7 @@ void BattleSimulator::Tick(double secondsSinceLastTick)
 }
 
 
-void BattleSimulator::EnableDeploymentZones(float deploymentTimer)
+void BattleSimulator_v1_0_0::EnableDeploymentZones(float deploymentTimer)
 {
 	_deploymentTimer = deploymentTimer;
 	_deploymentEnabled = true;
@@ -1214,7 +1214,7 @@ void BattleSimulator::EnableDeploymentZones(float deploymentTimer)
 }
 
 
-void BattleSimulator::UpdateDeploymentZones(double secondsSinceLastTick)
+void BattleSimulator_v1_0_0::UpdateDeploymentZones(double secondsSinceLastTick)
 {
 	if (_deploymentEnabled)
 	{
@@ -1250,7 +1250,7 @@ void BattleSimulator::UpdateDeploymentZones(double secondsSinceLastTick)
 }
 
 
-glm::vec2 MovementRules::NextWaypoint(BattleObjects_v1::Unit* unit)
+glm::vec2 BattleSimulator_v1_0_0::MovementRules_NextWaypoint(BattleObjects_v1::Unit* unit)
 {
 	for (glm::vec2 p : unit->command.path)
 		if (glm::distance(p, unit->state.center) > 1.0f)
@@ -1267,7 +1267,7 @@ glm::vec2 MovementRules::NextWaypoint(BattleObjects_v1::Unit* unit)
 
 
 
-void MovementRules::AdvanceTime(BattleObjects_v1::Unit* unit, float timeStep)
+void BattleSimulator_v1_0_0::MovementRules_AdvanceTime(BattleObjects_v1::Unit* unit, float timeStep)
 {
 	if (unit->command.meleeTarget)
 		unit->command.UpdatePath(unit->state.center, unit->command.meleeTarget->state.center);
@@ -1304,7 +1304,7 @@ void MovementRules::AdvanceTime(BattleObjects_v1::Unit* unit, float timeStep)
 
 	if (unit->timeUntilSwapFighters <= timeStep)
 	{
-		SwapFighters(unit);
+		MovementRules_SwapFighters(unit);
 		unit->timeUntilSwapFighters = 5;
 	}
 	else
@@ -1326,7 +1326,7 @@ static bool SortLeftToRight(const FighterPos& v1, const FighterPos& v2) { return
 static bool SortFrontToBack(const FighterPos& v1, const FighterPos& v2) { return v1.pos.x > v2.pos.x; }
 
 
-void MovementRules::SwapFighters(BattleObjects_v1::Unit* unit)
+void BattleSimulator_v1_0_0::MovementRules_SwapFighters(BattleObjects_v1::Unit* unit)
 {
 	std::vector<FighterPos> fighters;
 
@@ -1363,7 +1363,7 @@ void MovementRules::SwapFighters(BattleObjects_v1::Unit* unit)
 }
 
 
-glm::vec2 MovementRules::NextFighterDestination(BattleObjects_v1::Fighter* fighter)
+glm::vec2 BattleSimulator_v1_0_0::MovementRules_NextFighterDestination(BattleObjects_v1::Fighter* fighter)
 {
 	BattleObjects_v1::Unit* unit = fighter->GetUnit();
 

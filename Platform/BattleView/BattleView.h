@@ -7,7 +7,7 @@
 
 #include "BattleMap/BattleMap.h"
 #include "BattleModel/BattleObserver.h"
-#include "BattleModel/BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 #include "Shapes/VertexShape.h"
 #include "Shapes/BillboardTextureShape.h"
 #include "TerrainView/TerrainView.h"
@@ -32,7 +32,7 @@ class Touch;
 class BattleView : public TerrainView, BattleObserver, BattleMapObserver, AnimationHost
 {
 	GraphicsContext* _gc{};
-	BattleSimulator* _simulator{};
+	BattleSimulator_v1_0_0* _simulator{};
 	BattleObjects::Commander* _commander{};
 
 	glm::vec3 _lightNormal{};
@@ -72,8 +72,8 @@ public:
 	BattleView(Surface* surface, std::shared_ptr<TerrainViewport> viewport);
 	~BattleView();
 
-	BattleSimulator* GetSimulator() const { return _simulator; }
-	void SetSimulator(BattleSimulator* simulator);
+	BattleSimulator_v1_0_0* GetSimulator() const { return _simulator; }
+	void SetSimulator(BattleSimulator_v1_0_0* simulator);
 
 	BattleObjects::Commander* GetCommander() const { return _commander; }
 	void SetCommander(BattleObjects::Commander* value) { _commander = value; }

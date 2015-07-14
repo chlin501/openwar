@@ -6,7 +6,7 @@
 
 class BattleObserver
 {
-	friend class BattleSimulator;
+	friend class BattleSimulator_v1_0_0;
 public:
 	virtual ~BattleObserver();
 

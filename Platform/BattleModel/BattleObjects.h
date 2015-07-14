@@ -4,7 +4,7 @@
 #include <string>
 #include <glm/glm.hpp>
 
-class BattleSimulator;
+class BattleSimulator_v1_0_0;
 
 
 class BattleObjects
@@ -15,7 +15,7 @@ public:
 
 	class Commander
 	{
-		BattleSimulator* _simulator{};
+		BattleSimulator_v1_0_0* _simulator{};
 		std::string _playerId{};
 		int _team{};
 		CommanderType _type{};
@@ -23,7 +23,7 @@ public:
 		bool _hasAbandonedBattle{};
 
 	public:
-		Commander(BattleSimulator* simulator, const char* playerId, int team, CommanderType type);
+		Commander(BattleSimulator_v1_0_0* simulator, const char* playerId, int team, CommanderType type);
 
 		const char* GetPlayerId() const;
 		int GetTeam() const;

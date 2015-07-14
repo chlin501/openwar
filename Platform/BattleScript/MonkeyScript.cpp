@@ -3,10 +3,10 @@
 #include <glm/gtc/random.hpp>
 #include "MonkeyScript.h"
 #include "Algebra/geometry.h"
-#include "BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 
 
-MonkeyScript::MonkeyScript(BattleSimulator* simulator) :
+MonkeyScript::MonkeyScript(BattleSimulator_v1_0_0* simulator) :
 	_simulator{simulator}
 {
 }

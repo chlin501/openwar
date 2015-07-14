@@ -5,7 +5,7 @@
 #ifndef SamuraiModule_H
 #define SamuraiModule_H
 
-#include "BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 
 
 enum SamuraiPlatform

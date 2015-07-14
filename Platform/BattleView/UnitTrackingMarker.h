@@ -6,7 +6,7 @@
 #define UnitTrackingMarker_H
 
 #include "UnitMarker.h"
-#include "BattleModel/BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 #include "Shapes/VertexShape.h"
 
 class BattleView;

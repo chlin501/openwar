@@ -5,7 +5,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include "BattleMap/BattleMap.h"
-#include "BattleModel/BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 #include "Shapes/BillboardColorShader.h"
 #include "Shapes/PathRenderer.h"
 #include "Shapes/BillboardTextureShape.h"

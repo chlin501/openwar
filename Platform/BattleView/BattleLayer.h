@@ -9,7 +9,7 @@
 
 class BattleGesture;
 class BattleModel;
-class BattleSimulator;
+class BattleSimulator_v1_0_0;
 class BattleScript;
 class BattleView;
 class EditorHotspot;
@@ -29,7 +29,7 @@ class BattleLayer : AnimationHost, EditorModelObserver
 	bool _playing{};
 	bool _editing{};
 
-	BattleSimulator* _scenario{};
+	BattleSimulator_v1_0_0* _scenario{};
 	std::vector<BattleObjects::Commander*> _commanders{};
 
 	std::vector<BattleView*> _battleViews{};
@@ -41,13 +41,13 @@ public:
 	BattleLayer(Surface* surface);
 	~BattleLayer();
 
-	BattleSimulator* GetSimulator() const { return _scenario; }
+	BattleSimulator_v1_0_0* GetSimulator() const { return _scenario; }
 	const std::vector<BattleView*>& GetBattleViews() const { return _battleViews; }
 	BattleView* GetPrimaryBattleView() const { return _battleViews.empty() ? nullptr : _battleViews.front(); }
 	EditorModel* GetEditorModel() const { return _editorModel; }
 
-	void ResetBattleViews(BattleSimulator* scenario, const std::vector<BattleObjects::Commander*>& commanders);
-	void ResetEditor(BattleSimulator* scenario, const std::vector<BattleObjects::Commander*>& commanders);
+	void ResetBattleViews(BattleSimulator_v1_0_0* scenario, const std::vector<BattleObjects::Commander*>& commanders);
+	void ResetEditor(BattleSimulator_v1_0_0* scenario, const std::vector<BattleObjects::Commander*>& commanders);
 
 	void ResetCameraPosition();
 

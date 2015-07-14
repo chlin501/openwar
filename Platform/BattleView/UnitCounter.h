@@ -5,12 +5,12 @@
 #ifndef UnitCounter_H
 #define UnitCounter_H
 
-#include "BattleModel/BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 #include "BattleModel/SamuraiModule.h"
 #include "Algebra/bounds.h"
 #include "Shapes/VertexShape.h"
 
-class BattleSimulator;
+class BattleSimulator_v1_0_0;
 class BattleView;
 class BillboardModel;
 class BillboardTextureShape;

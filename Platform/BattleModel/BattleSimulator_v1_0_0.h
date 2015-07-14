@@ -16,7 +16,7 @@ class BattleObserver;
 
 
 
-class BattleSimulator
+class BattleSimulator_v1_0_0
 {
 	std::set<BattleObserver*> _observers{};
 	quadtree<BattleObjects_v1::Fighter*> _fighterQuadTree{0, 0, 1024, 1024};
@@ -45,10 +45,9 @@ class BattleSimulator
 	bool _deploymentEnabled{};
 
 public:
-	BattleSimulator(BattleMap* battleMap);
-	~BattleSimulator();
+	BattleSimulator_v1_0_0(BattleMap* battleMap);
+	~BattleSimulator_v1_0_0();
 
-	float GetTimeStep() const { return _timeStep; }
 	float GetTimerDelay() const { return 0.25f; }
 
 	void SetPractice(bool value) { _practice = value; }
@@ -133,18 +132,11 @@ public:
 
 	void EnableDeploymentZones(float deploymentTimer);
 	void UpdateDeploymentZones(double secondsSinceLastTick);
-};
 
-
-
-
-class MovementRules
-{
-public:
-	static void AdvanceTime(BattleObjects_v1::Unit* unit, float timeStep);
-	static void SwapFighters(BattleObjects_v1::Unit* unit);
-	static glm::vec2 NextFighterDestination(BattleObjects_v1::Fighter* fighter);
-	static glm::vec2 NextWaypoint(BattleObjects_v1::Unit* unit);
+	static void MovementRules_AdvanceTime(BattleObjects_v1::Unit* unit, float timeStep);
+	static void MovementRules_SwapFighters(BattleObjects_v1::Unit* unit);
+	static glm::vec2 MovementRules_NextFighterDestination(BattleObjects_v1::Fighter* fighter);
+	static glm::vec2 MovementRules_NextWaypoint(BattleObjects_v1::Unit* unit);
 };
 
 

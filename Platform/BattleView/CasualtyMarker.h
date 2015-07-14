@@ -6,7 +6,7 @@
 #define CasualtyMarker_H
 
 #include <cstdlib>
-#include "BattleModel/BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 #include "BattleModel/SamuraiModule.h"
 #include "Shapes/VertexShape.h"
 
@@ -33,10 +33,10 @@ public:
 	};
 
 	std::vector<Casualty> casualties;
-	BattleSimulator* _battleSimulator;
+	BattleSimulator_v1_0_0* _battleSimulator;
 
 public:
-	CasualtyMarker(BattleSimulator* battleSimulator);
+	CasualtyMarker(BattleSimulator_v1_0_0* battleSimulator);
 	~CasualtyMarker();
 
 	void AddCasualty(glm::vec3 position, int team, SamuraiPlatform platform);

@@ -6,7 +6,7 @@
 
 #include "Shapes/BillboardTextureShape.h"
 #include "BattleMap/BattleMap.h"
-#include "BattleModel/BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 #include "BattleView.h"
 #include "UnitCounter.h"
 #include "TerrainView/TerrainViewport.h"

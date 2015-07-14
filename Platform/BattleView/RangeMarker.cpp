@@ -12,7 +12,7 @@
 #include "Algebra/geometry.h"
 
 
-RangeMarker::RangeMarker(BattleSimulator* battleSimulator, BattleObjects_v1::Unit* unit) :
+RangeMarker::RangeMarker(BattleSimulator_v1_0_0* battleSimulator, BattleObjects_v1::Unit* unit) :
 	_battleSimulator{battleSimulator},
 	_unit{unit}
 {

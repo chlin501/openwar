@@ -196,7 +196,7 @@ BattleView::~BattleView()
 }
 
 
-void BattleView::SetSimulator(BattleSimulator* simulator)
+void BattleView::SetSimulator(BattleSimulator_v1_0_0* simulator)
 {
 	if (simulator == _simulator)
 		return;

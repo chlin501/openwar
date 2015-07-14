@@ -5,7 +5,7 @@
 #ifndef BATTLEGESTURE_H
 #define BATTLEGESTURE_H
 
-#include "BattleModel/BattleSimulator.h"
+#include "BattleSimulator_v1_0_0.h"
 #include "BattleModel/BattleObserver.h"
 #include "Algebra/bounds.h"
 #include "Surface/Gesture.h"
