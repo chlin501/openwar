@@ -29,7 +29,7 @@ bool UnitMovementMarker::Animate(float seconds)
 	if (_unit->IsRouting())
 		return false;
 
-	const BattleObjects::UnitCommand& command = _unit->GetCommand();
+	const BattleObjects::UnitCommand& command = _unit->GetIssuedCommand();
 	return command.path.size() > 2 || BattleObjects::UnitCommand::MovementPathLength(command.path) > 8;
 }
 
@@ -39,7 +39,7 @@ void UnitMovementMarker::RenderMovementMarker(BillboardTextureShape* renderer)
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
 
-	const BattleObjects::UnitCommand& command = _unit->GetCommand();
+	const BattleObjects::UnitCommand& command = _unit->GetIssuedCommand();
 	glm::vec2 finalDestination = command.GetDestination();
 	if (command.path.size() > 1 || glm::length(_unit->GetCenter() - finalDestination) > 25)
 	{
@@ -62,7 +62,7 @@ void UnitMovementMarker::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleV
 	if (_unit->state.unitMode != BattleObjects_v1::UnitMode_Moving)
 		return;
 
-	const BattleObjects::UnitCommand& command = _unit->GetCommand();
+	const BattleObjects::UnitCommand& command = _unit->GetIssuedCommand();
 
 	TerrainViewport* terrainViewport = &battleView->GetTerrainViewport();
 
@@ -98,7 +98,7 @@ void UnitMovementMarker::RenderMovementFighters(VertexShape_3f_4f_1f* vertices)
 	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
 		return;
 
-	const BattleObjects::UnitCommand& command = _unit->GetCommand();
+	const BattleObjects::UnitCommand& command = _unit->GetIssuedCommand();
 	if (command.meleeTarget == nullptr)
 	{
 		bool isBlue = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam();
@@ -124,7 +124,7 @@ void UnitMovementMarker::RenderMovementFighters(VertexShape_3f_4f_1f* vertices)
 
 void UnitMovementMarker::RenderMovementPath(VertexShape_3f_4f* vertices)
 {
-	const BattleObjects::UnitCommand& command = _unit->GetCommand();
+	const BattleObjects::UnitCommand& command = _unit->GetIssuedCommand();
 	if (!command.path.empty())
 	{
 		int mode = 0;

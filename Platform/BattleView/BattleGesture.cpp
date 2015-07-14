@@ -68,7 +68,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 
 		if (unit && _hotspot->GetBattleView()->GetTrackingMarker(unit) == nullptr)
 		{
-			const BattleObjects::UnitCommand command = unit->GetCommand();
+			const BattleObjects::UnitCommand command = unit->GetIssuedCommand();
 
 			_allowTargetEnemyUnit = unit->stats.missileType != BattleObjects_v1::MissileType::None;
 			_trackingMarker = _hotspot->GetBattleView()->AddTrackingMarker(unit);
@@ -493,7 +493,7 @@ BattleObjects_v1::Unit* BattleGesture::FindCommandableUnit(glm::vec2 screenPosit
 	if (unitByPosition && unitByDestination)
 	{
 		float distanceToPosition = glm::distance(unitByPosition->GetCenter(), screenPosition);
-		float distanceToDestination = glm::distance(unitByDestination->GetCommand().GetDestination(), screenPosition);
+		float distanceToDestination = glm::distance(unitByDestination->GetIssuedCommand().GetDestination(), screenPosition);
 		return distanceToPosition < distanceToDestination
 				? unitByPosition
 				: unitByDestination;
@@ -547,7 +547,7 @@ BattleObjects_v1::Unit* BattleGesture::FindCommandableUnitByModifierArea(glm::ve
 	{
 		if (unit->IsCommandableBy(_hotspot->GetBattleView()->GetCommander()))
 		{
-			const BattleObjects::UnitCommand& command = unit->GetCommand();
+			const BattleObjects::UnitCommand& command = unit->GetIssuedCommand();
 			glm::vec2 center = !command.path.empty() ? command.path.back() : unit->GetCenter();
 			float d = glm::distance(center, terrainPosition);
 			if (d < distance && !unit->IsRouting() && GetUnitModifierBounds(unit).contains(screenPosition))

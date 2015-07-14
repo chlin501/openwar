@@ -104,6 +104,9 @@ public:
 		virtual float GetMorale() const = 0;
 		virtual void SetMorale(float value) = 0;
 		virtual bool IsRouting() const = 0;
+
+		virtual const UnitCommand& GetCurrentCommand() const = 0;
+		virtual const UnitCommand& GetIssuedCommand() const = 0;
 	};
 
 

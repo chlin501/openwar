@@ -21,7 +21,7 @@ RangeMarker::RangeMarker(BattleSimulator_v1_0_0* battleSimulator, BattleObjects_
 
 void RangeMarker::Render(VertexShape_3f_4f* vertices)
 {
-	const BattleObjects::UnitCommand& command = _unit->GetCommand();
+	const BattleObjects::UnitCommand& command = _unit->GetIssuedCommand();
 	if (command.missileTarget)
 	{
 		RenderMissileTarget(vertices, command.missileTarget->GetCenter());

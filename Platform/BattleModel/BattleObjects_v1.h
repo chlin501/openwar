@@ -231,7 +231,8 @@ public:
 		void SetMorale(float value) { state.morale = value; }
 		bool IsRouting() const { return state.IsRouting(); }
 
-		const UnitCommand& GetCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
+		const UnitCommand& GetCurrentCommand() const { return command; }
+		const UnitCommand& GetIssuedCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
 	};
 
 protected:
