@@ -111,10 +111,12 @@ void UnitMovementMarker::RenderMovementFighters(VertexShape_3f_4f_1f* vertices)
 
 		glm::vec2 frontLeft = formation.GetFrontLeft(finalDestination);
 
-		for (BattleObjects_v1::Fighter* fighter = _unit->fighters, * end = fighter + _unit->fightersCount; fighter != end; ++fighter)
+		int count = _unit->GetFighterCount();
+		for (int index = 0; index < count; ++index)
 		{
-			glm::vec2 offsetRight = formation.towardRight * (float)fighter->GetFile();
-			glm::vec2 offsetBack = formation.towardBack * (float)fighter->GetRank();
+			BattleObjects::FighterAssignment assignment = _unit->GetFighterAssignment(index);
+			glm::vec2 offsetRight = formation.towardRight * (float)assignment.file;
+			glm::vec2 offsetBack = formation.towardBack * (float)assignment.rank;
 			glm::vec3 p = _battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(frontLeft + offsetRight + offsetBack, 0.5);
 			vertices->AddVertex(Vertex_3f_4f_1f(p, color, 3.0));
 		}

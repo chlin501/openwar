@@ -1004,10 +1004,11 @@ glm::vec2 BattleSimulator_v1_0_0::NextFighterPosition(BattleObjects_v1::Fighter*
 
 	if (unit->state.unitMode == BattleObjects_v1::UnitMode_Initializing)
 	{
+		FighterAssignment assignment = unit->GetFighterAssignment(static_cast<int>(fighter - unit->fighters));
 		glm::vec2 center = unit->state.center;
 		glm::vec2 frontLeft = unit->formation.GetFrontLeft(center);
-		glm::vec2 offsetRight = unit->formation.towardRight * (float)fighter->GetFile();
-		glm::vec2 offsetBack = unit->formation.towardBack * (float)fighter->GetRank();
+		glm::vec2 offsetRight = unit->formation.towardRight * (float)assignment.file;
+		glm::vec2 offsetBack = unit->formation.towardBack * (float)assignment.rank;
 		return frontLeft + offsetRight + offsetBack;
 	}
 	else

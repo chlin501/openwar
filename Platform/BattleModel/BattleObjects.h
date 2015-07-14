@@ -80,6 +80,20 @@ public:
 	};
 
 
+	struct FighterPosition
+	{
+		glm::vec2 position;
+		float bearing;
+	};
+
+
+	struct FighterAssignment
+	{
+		int rank;
+		int file;
+	};
+
+
 	class Unit
 	{
 		bool _ownedBySimulator{};
@@ -107,6 +121,10 @@ public:
 
 		virtual const UnitCommand& GetCurrentCommand() const = 0;
 		virtual const UnitCommand& GetIssuedCommand() const = 0;
+
+		virtual int GetFighterCount() const = 0;
+		virtual FighterPosition GetFighterPosition(int index) const = 0;
+		virtual FighterAssignment GetFighterAssignment(int index) const = 0;
 	};
 
 

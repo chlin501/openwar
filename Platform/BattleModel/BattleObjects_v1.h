@@ -233,6 +233,17 @@ public:
 
 		const UnitCommand& GetCurrentCommand() const { return command; }
 		const UnitCommand& GetIssuedCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
+
+		int GetFighterCount() const override { return fightersCount; }
+		FighterPosition GetFighterPosition(int index) const override
+		{
+			const FighterState& state = fighters[index].state;
+			return {state.position, state.bearing};
+		}
+		FighterAssignment GetFighterAssignment(int index) const override
+		{
+			return {index % formation.numberOfRanks, index / formation.numberOfRanks};
+		}
 	};
 
 protected:
