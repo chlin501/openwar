@@ -86,9 +86,10 @@ namespace BattleObjects_v1
 	};
 
 
-	struct Fighter : public BattleObjects::Fighter
+	struct Fighter
 	{
-		Unit* GetUnit() const;
+		// static attributes
+		Unit* unit{};
 
 		// dynamic attributes
 		FighterState state{};
@@ -101,6 +102,8 @@ namespace BattleObjects_v1
 		// intermediate attributes
 		FighterState nextState{};
 		bool casualty{};
+
+		Unit* GetUnit() const { return unit; }
 	};
 
 
@@ -225,8 +228,11 @@ namespace BattleObjects_v1
 	};
 
 
-	struct Unit : public BattleObjects::Unit
+	struct Unit
 	{
+		// static attributes
+		BattleObjects::Commander* commander{};
+
 		std::string unitClass{};
 		UnitStats stats{};
 		Fighter* fighters{};
@@ -270,9 +276,6 @@ namespace BattleObjects_v1
 		static int GetFighterFile(Fighter* fighter);
 		static Fighter* GetFighter(Unit* unit, int rank, int file);
 	};
-
-
-	inline Unit* Fighter::GetUnit() const { return static_cast<Unit*>(unit); }
 
 
 } // namespace BattleObjects_v1

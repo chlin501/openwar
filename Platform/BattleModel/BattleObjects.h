@@ -7,12 +7,9 @@
 class BattleSimulator;
 
 
-namespace BattleObjects
+class BattleObjects
 {
-
-	class Unit;
-
-
+public:
 	enum class CommanderType { None = 0, Player = 1, Script = 2 };
 
 
@@ -49,21 +46,6 @@ namespace BattleObjects
 		float delay{};
 	};
 
-
-	struct Fighter
-	{
-		// static attributes
-		Unit* unit{};
-	};
-
-
-	struct Unit
-	{
-		// static attributes
-		Commander* commander{};
-	};
-
-
-} // namespace BattleObjects
+};
 
 #endif

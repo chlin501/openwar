@@ -35,6 +35,7 @@ class BattleSimulator
 	glm::vec3 _deploymentZones[2]{};
 
 	/***/
+
 	BattleScript* _script{};
 	std::vector<BattleObjects::Commander*> _commanders{};
 	BattleObjects::Commander* _dummyCommander{};
