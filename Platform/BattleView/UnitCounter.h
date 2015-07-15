@@ -6,7 +6,6 @@
 #define UnitCounter_H
 
 #include "BattleSimulator_v1_0_0.h"
-#include "BattleModel/SamuraiModule.h"
 #include "Algebra/bounds.h"
 #include "Shapes/VertexShape.h"
 
@@ -21,8 +20,8 @@ public:
 	BattleView* _battleView{};
 	BattleObjects::Unit* _unit{};
 	float _routingTimer{};
-	SamuraiWeapon _samuraiWeapon{};
-	SamuraiPlatform _samuraiPlatform{};
+	BattleObjects_v1::SamuraiWeapon _samuraiWeapon{};
+	BattleObjects_v1::SamuraiPlatform _samuraiPlatform{};
 
 public:
 	UnitCounter(BattleView* battleView, BattleObjects::Unit* unit);

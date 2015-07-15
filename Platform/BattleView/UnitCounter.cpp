@@ -16,8 +16,8 @@ UnitCounter::UnitCounter(BattleView* battleView, BattleObjects::Unit* unit) :
 _battleView{battleView},
 _unit{unit}
 {
-	_samuraiWeapon = SamuraiModule::GetSamuraiWeapon(unit->unitClass.c_str());
-	_samuraiPlatform = SamuraiModule::GetSamuraiPlatform(unit->unitClass.c_str());
+	_samuraiWeapon = BattleObjects_v1::GetSamuraiWeapon(unit->unitClass.c_str());
+	_samuraiPlatform = BattleObjects_v1::GetSamuraiPlatform(unit->unitClass.c_str());
 }
 
 
@@ -182,18 +182,18 @@ void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 	int shape = 0;
 	switch (_samuraiPlatform)
 	{
-		case SamuraiPlatform_Cav:
-		case SamuraiPlatform_Gen:
+		case BattleObjects_v1::SamuraiPlatform_Cav:
+		case BattleObjects_v1::SamuraiPlatform_Gen:
 			shape = isSameTeam ? billboardModel->_billboardShapeFighterCavBlue : billboardModel->_billboardShapeFighterCavRed;
 			size = 3.0;
 			break;
 
-		case SamuraiPlatform_Sam:
+		case BattleObjects_v1::SamuraiPlatform_Sam:
 			shape = isSameTeam ? billboardModel->_billboardShapeFighterSamBlue : billboardModel->_billboardShapeFighterSamRed;
 			size = 2.0;
 			break;
 
-		case SamuraiPlatform_Ash:
+		case BattleObjects_v1::SamuraiPlatform_Ash:
 			shape = isSameTeam ? billboardModel->_billboardShapeFighterAshBlue : billboardModel->_billboardShapeFighterAshRed;
 			size = 2.0;
 			break;

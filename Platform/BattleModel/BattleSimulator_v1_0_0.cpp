@@ -10,7 +10,6 @@
 #include "BattleMap/TiledGroundMap.h"
 #include "BattleMap/BattleMap.h"
 #include "BattleScript.h"
-#include "SamuraiModule.h"
 #include "BattleObserver.h"
 #include <glm/gtc/random.hpp>
 #include <algorithm>
@@ -173,7 +172,7 @@ void BattleSimulator_v1_0_0::RemoveUnit(BattleObjects::Unit* _unit)
 
 void BattleSimulator_v1_0_0::NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing)
 {
-	BattleObjects_v1::UnitStats unitStats = SamuraiModule::GetDefaultUnitStats(unitClass);
+	BattleObjects_v1::UnitStats unitStats = BattleObjects_v1::GetDefaultUnitStats(unitClass);
 
 	BattleObjects::Commander* commander = GetCommanders()[commanderId - 1];
 

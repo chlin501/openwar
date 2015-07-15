@@ -7,7 +7,6 @@
 
 #include <cstdlib>
 #include "BattleSimulator_v1_0_0.h"
-#include "BattleModel/SamuraiModule.h"
 #include "Shapes/VertexShape.h"
 
 class BillboardModel;
@@ -20,11 +19,11 @@ public:
 	{
 		glm::vec3 position{};
 		int team{};
-		SamuraiPlatform platform{};
+		BattleObjects_v1::SamuraiPlatform platform{};
 		float time{};
 		int seed{};
 
-		Casualty(glm::vec3 position_, int team_, SamuraiPlatform platform_) :
+		Casualty(glm::vec3 position_, int team_, BattleObjects_v1::SamuraiPlatform platform_) :
 			position{position_},
 			team{team_},
 			platform{platform_},
@@ -39,7 +38,7 @@ public:
 	CasualtyMarker(BattleSimulator_v1_0_0* battleSimulator);
 	~CasualtyMarker();
 
-	void AddCasualty(glm::vec3 position, int team, SamuraiPlatform platform);
+	void AddCasualty(glm::vec3 position, int team, BattleObjects_v1::SamuraiPlatform platform);
 	bool Animate(float seconds);
 
 	void RenderCasualtyColorBillboards(VertexShape_3f_4f_1f* vertices);
