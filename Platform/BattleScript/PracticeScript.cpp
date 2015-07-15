@@ -200,44 +200,46 @@ void PracticeScript::SpawnWave()
 	glm::vec2 p =  playerCenter + 200.0f * direction;
 
 	float a = glm::atan(direction.y, direction.x) +  glm::half_pi<float>();
-	float bearing = glm::degrees(a);
+	float bearing = glm::radians(90.0f) - a;
+
+	BattleObjects::Commander* commander = _simulator->GetCommanders()[1];
 
 	switch (_waveNumber)
 	{
 		case 0:
-			_simulator->NewUnit(2, "ASH-YARI", 80, p + rotate(glm::vec2(-90, 0), a), bearing);
-			_simulator->NewUnit(2, "ASH-YARI", 80, p + rotate(glm::vec2(-30, 0), a), bearing);
-			_simulator->NewUnit(2, "ASH-YARI", 80, p + rotate(glm::vec2( 30, 0), a), bearing);
-			_simulator->NewUnit(2, "ASH-YARI", 80, p + rotate(glm::vec2( 90, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "ASH-YARI", 80, p + rotate(glm::vec2(-90, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "ASH-YARI", 80, p + rotate(glm::vec2(-30, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "ASH-YARI", 80, p + rotate(glm::vec2(30, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "ASH-YARI", 80, p + rotate(glm::vec2(90, 0), a), bearing);
 			break;
 
 		case 1:
-			_simulator->NewUnit(2, "ASH-BOW", 80, p + rotate(glm::vec2(-40, 0), a), bearing);
-			_simulator->NewUnit(2, "ASH-BOW", 80, p + rotate(glm::vec2( 40, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "ASH-BOW", 80, p + rotate(glm::vec2(-40, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "ASH-BOW", 80, p + rotate(glm::vec2(40, 0), a), bearing);
 			break;
 
 		case 2:
-			_simulator->NewUnit(2, "SAM-KATA", 80, p + rotate(glm::vec2(-60, 0), a), bearing);
-			_simulator->NewUnit(2, "SAM-NAGI", 80, p + rotate(glm::vec2( 0, 0), a), bearing);
-			_simulator->NewUnit(2, "SAM-KATA", 80, p + rotate(glm::vec2(60, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "SAM-KATA", 80, p + rotate(glm::vec2(-60, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "SAM-NAGI", 80, p + rotate(glm::vec2(0, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "SAM-KATA", 80, p + rotate(glm::vec2(60, 0), a), bearing);
 			break;
 
 		case 3:
-			_simulator->NewUnit(2, "CAV-BOW", 40, p + rotate(glm::vec2(-60, 0), a), bearing);
-			_simulator->NewUnit(2, "CAV-BOW", 40, p + rotate(glm::vec2(60, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "CAV-BOW", 40, p + rotate(glm::vec2(-60, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "CAV-BOW", 40, p + rotate(glm::vec2(60, 0), a), bearing);
 			break;
 
 		case 4:
-			_simulator->NewUnit(2, "CAV-YARI", 40, p + rotate(glm::vec2(-90, 0), a), bearing);
-			_simulator->NewUnit(2, "SAM-KATA", 80, p + rotate(glm::vec2(-30, 0), a), bearing);
-			_simulator->NewUnit(2, "SAM-KATA", 80, p + rotate(glm::vec2( 30, 0), a), bearing);
-			_simulator->NewUnit(2, "CAV-YARI", 40, p + rotate(glm::vec2( 90, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "CAV-YARI", 40, p + rotate(glm::vec2(-90, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "SAM-KATA", 80, p + rotate(glm::vec2(-30, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "SAM-KATA", 80, p + rotate(glm::vec2(30, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "CAV-YARI", 40, p + rotate(glm::vec2(90, 0), a), bearing);
 			break;
 
 		case 5:
-			_simulator->NewUnit(2, "ASH-ARQ", 80, p + rotate(glm::vec2(-60, 0), a), bearing);
-			_simulator->NewUnit(2, "ASH-ARQ", 80, p + rotate(glm::vec2(  0, 0), a), bearing);
-			_simulator->NewUnit(2, "ASH-ARQ", 80, p + rotate(glm::vec2( 60, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(-60, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(0, 0), a), bearing);
+			_simulator->NewUnitRad(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(60, 0), a), bearing);
 			break;
 	}
 

@@ -64,7 +64,7 @@ bool BattleSimulator_v1_0_0::HasCompletedDeployment(int team) const
 }
 
 
-void BattleSimulator_v1_0_0::Deploy(BattleObjects::Unit* _unit, glm::vec2 position)
+void BattleSimulator_v1_0_0::DeployUnit(BattleObjects::Unit* _unit, glm::vec2 position)
 {
 	Unit* unit = static_cast<Unit*>(_unit);
 
@@ -86,8 +86,10 @@ void BattleSimulator_v1_0_0::Deploy(BattleObjects::Unit* _unit, glm::vec2 positi
 }
 
 
-BattleObjects_v1::Unit* BattleSimulator_v1_0_0::AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, BattleObjects_v1::UnitStats stats, glm::vec2 position)
+BattleObjects_v1::Unit* BattleSimulator_v1_0_0::AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, glm::vec2 position)
 {
+	BattleObjects_v1::UnitStats stats = BattleObjects_v1::GetDefaultUnitStats(unitClass);
+
 	BattleObjects_v1::Unit* unit = new BattleObjects_v1::Unit();
 
 	float bearing = commander->GetTeamPosition() == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
@@ -170,14 +172,10 @@ void BattleSimulator_v1_0_0::RemoveUnit(BattleObjects::Unit* _unit)
 }
 
 
-void BattleSimulator_v1_0_0::NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing)
+void BattleSimulator_v1_0_0::NewUnitRad(BattleObjects::Commander* commander, const char* unitClass, int strength, glm::vec2 position, float bearing)
 {
-	BattleObjects_v1::UnitStats unitStats = BattleObjects_v1::GetDefaultUnitStats(unitClass);
-
-	BattleObjects::Commander* commander = GetCommanders()[commanderId - 1];
-
-	BattleObjects_v1::Unit* unit = AddUnit(commander, unitClass, strength, unitStats, position);
-	unit->command.bearing = glm::radians(90 - bearing);
+	BattleObjects_v1::Unit* unit = AddUnit(commander, unitClass, strength, position);
+	unit->command.bearing = bearing;
 }
 
 

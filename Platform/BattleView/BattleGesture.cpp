@@ -400,7 +400,7 @@ void BattleGesture::UpdateTrackingMarker()
 					BattleObjects::UnitCommand::UpdateMovementPath(_trackingMarker->_path, unitCenter, _trackingMarker->_path.back());
 			}
 
-			simulator->Deploy(unit, unitCenter);
+			simulator->DeployUnit(unit, unitCenter);
 			unitCenter = unit->GetCenter();
 		}
 

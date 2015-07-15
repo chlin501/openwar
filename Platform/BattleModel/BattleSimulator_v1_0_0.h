@@ -45,12 +45,11 @@ public:
 	void EnableDeploymentZones(float deploymentTimer);
 	std::pair<glm::vec2, float> GetDeploymentZone(int team) const override;
 
-	void Deploy(BattleObjects::Unit* unit, glm::vec2 position);
-
-	BattleObjects_v1::Unit* AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, BattleObjects_v1::UnitStats stats, glm::vec2 position);
+	BattleObjects_v1::Unit* AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, glm::vec2 position);
+	void DeployUnit(BattleObjects::Unit* unit, glm::vec2 position);
 	void RemoveUnit(BattleObjects::Unit* unit);
 
-	void NewUnit(int commanderId, const char* unitClass, int strength, glm::vec2 position, float bearing);
+	void NewUnitRad(BattleObjects::Commander* commander, const char* unitClass, int strength, glm::vec2 position, float bearing);
 
 	void SetUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer);
 	void IssueUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer);
