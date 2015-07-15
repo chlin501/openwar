@@ -86,7 +86,7 @@ void BattleSimulator_v1_0_0::DeployUnit(BattleObjects::Unit* _unit, glm::vec2 po
 }
 
 
-BattleObjects_v1::Unit* BattleSimulator_v1_0_0::AddUnit(BattleObjects::Commander* commander, const char* unitClass, int numberOfFighters, glm::vec2 position)
+BattleObjects_v1::Unit* BattleSimulator_v1_0_0::AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, glm::vec2 position)
 {
 	BattleObjects_v1::UnitStats stats = BattleObjects_v1::GetDefaultUnitStats(unitClass);
 
@@ -172,7 +172,7 @@ void BattleSimulator_v1_0_0::RemoveUnit(BattleObjects::Unit* _unit)
 }
 
 
-void BattleSimulator_v1_0_0::NewUnitRad(BattleObjects::Commander* commander, const char* unitClass, int strength, glm::vec2 position, float bearing)
+void BattleSimulator_v1_0_0::NewUnitRad(BattleCommander* commander, const char* unitClass, int strength, glm::vec2 position, float bearing)
 {
 	BattleObjects_v1::Unit* unit = AddUnit(commander, unitClass, strength, position);
 	unit->command.bearing = bearing;
@@ -1057,11 +1057,6 @@ BattleObjects_v1::Fighter* BattleSimulator_v1_0_0::FindFighterStrikingTarget(Bat
 
 
 /***/
-
-
-void BattleSimulator_v1_0_0::Tick(double secondsSinceLastTick)
-{
-}
 
 
 void BattleSimulator_v1_0_0::EnableDeploymentZones(float deploymentTimer)

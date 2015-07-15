@@ -4,6 +4,8 @@
 #include <string>
 #include <glm/glm.hpp>
 
+#include "BattleCommander.h"
+
 class BattleMap;
 
 
@@ -12,33 +14,6 @@ class BattleObjects
 public:
 	class Unit;
 
-	enum class CommanderType { None = 0, Player = 1, Script = 2 };
-
-
-	class Commander
-	{
-		BattleObjects* _simulator{};
-		std::string _playerId{};
-		int _team{};
-		CommanderType _type{};
-		bool _isIncapacitated{};
-		bool _hasAbandonedBattle{};
-
-	public:
-		Commander(BattleObjects* simulator, const char* playerId, int team, CommanderType type);
-
-		const char* GetPlayerId() const;
-		int GetTeam() const;
-		CommanderType GetType() const;
-
-		int GetTeamPosition() const;
-
-		bool IsIncapacitated() const;
-		void SetIncapacitated(bool value);
-
-		bool HasAbandonedBattle() const;
-		void SetAbandonedBattle(bool value);
-	};
 
 
 	enum class PlatformType
@@ -156,7 +131,7 @@ public:
 		bool _ownedBySimulator{};
 
 	public:
-		Commander* commander{};
+		BattleCommander* commander{};
 		std::string unitClass{};
 		bool deployed{};
 
@@ -165,8 +140,8 @@ public:
 		bool IsOwnedBySimulator() const;
 		void SetOwnedBySimulator(bool value);
 
-		bool IsFriendlyCommander(Commander* battleCommander) const;
-		bool IsCommandableBy(Commander* battleCommander) const;
+		bool IsFriendlyCommander(BattleCommander* battleCommander) const;
+		bool IsCommandableBy(BattleCommander* battleCommander) const;
 
 		virtual glm::vec2 GetCenter() const = 0;
 		virtual void SetCenter(glm::vec2 value) = 0;
@@ -203,8 +178,8 @@ public:
 	};
 
 protected:
-	std::vector<Commander*> _commanders{};
-	Commander* _dummyCommander{};
+	std::vector<BattleCommander*> _commanders{};
+	BattleCommander* _dummyCommander{};
 	int _teamPosition1{};
 	int _teamPosition2{};
 	BattleMap* _battleMap{};
@@ -213,10 +188,10 @@ public:
 	BattleObjects();
 	virtual ~BattleObjects();
 
-	Commander* AddCommander(const char* playerId, int team, CommanderType type);
-	Commander* GetCommander(const char* playerId) const;
-	const std::vector<Commander*>& GetCommanders() const { return _commanders; }
-	Commander* GetDummyCommander() const;
+	BattleCommander* AddCommander(const char* playerId, int team, BattleCommanderType type);
+	BattleCommander* GetCommander(const char* playerId) const;
+	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
+	BattleCommander* GetDummyCommander() const;
 
 	void SetTeamPosition(int team, int position);
 	int GetTeamPosition(int team) const;

@@ -2,66 +2,6 @@
 #include "BattleSimulator_v1_0_0.h"
 
 
-BattleObjects::Commander::Commander(BattleObjects* simulator, const char* playerId, int team, CommanderType type) :
-	_simulator{simulator},
-	_playerId{playerId},
-	_team{team},
-	_type{type}
-{
-}
-
-
-const char* BattleObjects::Commander::GetPlayerId() const
-{
-	return _playerId.c_str();
-}
-
-
-int BattleObjects::Commander::GetTeam() const
-{
-	return _team;
-}
-
-
-BattleObjects::CommanderType BattleObjects::Commander::GetType() const
-{
-	return _type;
-}
-
-
-int BattleObjects::Commander::GetTeamPosition() const
-{
-	return _simulator->GetTeamPosition(_team);
-}
-
-
-bool BattleObjects::Commander::IsIncapacitated() const
-{
-	return _isIncapacitated;
-}
-
-
-void BattleObjects::Commander::SetIncapacitated(bool value)
-{
-	_isIncapacitated = value;
-}
-
-
-bool BattleObjects::Commander::HasAbandonedBattle() const
-{
-	return _hasAbandonedBattle;
-}
-
-
-void BattleObjects::Commander::SetAbandonedBattle(bool value)
-{
-	_hasAbandonedBattle = value;
-}
-
-
-/***/
-
-
 void BattleObjects::UnitCommand::UpdateMovementPathStart(std::vector<glm::vec2>& path, glm::vec2 startPosition)
 {
 	const float spacing = 10;
@@ -148,7 +88,7 @@ void BattleObjects::Unit::SetOwnedBySimulator(bool value)
 }
 
 
-bool BattleObjects::Unit::IsFriendlyCommander(Commander* battleCommander) const
+bool BattleObjects::Unit::IsFriendlyCommander(BattleCommander* battleCommander) const
 {
 	if (battleCommander == nullptr)
 		return false;
@@ -156,7 +96,7 @@ bool BattleObjects::Unit::IsFriendlyCommander(Commander* battleCommander) const
 	if (commander == battleCommander)
 		return true;
 
-	if (battleCommander->GetType() == BattleObjects::CommanderType::None)
+	if (battleCommander->GetType() == BattleCommanderType::None)
 		return false;
 
 	if (commander->GetTeam() != battleCommander->GetTeam())
@@ -166,7 +106,7 @@ bool BattleObjects::Unit::IsFriendlyCommander(Commander* battleCommander) const
 }
 
 
-bool BattleObjects::Unit::IsCommandableBy(Commander* battleCommander) const
+bool BattleObjects::Unit::IsCommandableBy(BattleCommander* battleCommander) const
 {
 	if (battleCommander == nullptr)
 		return false;
@@ -174,7 +114,7 @@ bool BattleObjects::Unit::IsCommandableBy(Commander* battleCommander) const
 	if (commander == battleCommander)
 		return true;
 
-	if (battleCommander->GetType() == BattleObjects::CommanderType::None)
+	if (battleCommander->GetType() == BattleCommanderType::None)
 		return false;
 
 	if (commander->IsIncapacitated() && commander->GetTeam() == battleCommander->GetTeam())
@@ -189,30 +129,30 @@ bool BattleObjects::Unit::IsCommandableBy(Commander* battleCommander) const
 
 BattleObjects::BattleObjects()
 {
-	_dummyCommander = new BattleObjects::Commander(this, "", 1, BattleObjects::CommanderType::None);
+	_dummyCommander = new BattleCommander(this, "", 1, BattleCommanderType::None);
 
 }
 
 
 BattleObjects::~BattleObjects()
 {
-	for (BattleObjects::Commander* commander : _commanders)
+	for (BattleCommander* commander : _commanders)
 		delete commander;
 	delete _dummyCommander;
 }
 
 
-BattleObjects::Commander* BattleObjects::AddCommander(const char* playerId, int team, CommanderType type)
+BattleCommander* BattleObjects::AddCommander(const char* playerId, int team, BattleCommanderType type)
 {
-	Commander* commander = new Commander(this, playerId, team, type);
+	BattleCommander* commander = new BattleCommander(this, playerId, team, type);
 	_commanders.push_back(commander);
 	return commander;
 }
 
 
-BattleObjects::Commander* BattleObjects::GetCommander(const char* playerId) const
+BattleCommander* BattleObjects::GetCommander(const char* playerId) const
 {
-	for (Commander* commander : _commanders)
+	for (BattleCommander* commander : _commanders)
 		if (std::strcmp(commander->GetPlayerId(), playerId) == 0)
 			return commander;
 
@@ -220,7 +160,7 @@ BattleObjects::Commander* BattleObjects::GetCommander(const char* playerId) cons
 }
 
 
-BattleObjects::Commander* BattleObjects::GetDummyCommander() const
+BattleCommander* BattleObjects::GetDummyCommander() const
 {
 	return _dummyCommander;
 }

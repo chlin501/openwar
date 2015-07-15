@@ -33,7 +33,7 @@ class BattleView : public TerrainView, BattleObserver, BattleMapObserver, Animat
 {
 	GraphicsContext* _gc{};
 	BattleSimulator_v1_0_0* _simulator{};
-	BattleObjects::Commander* _commander{};
+	BattleCommander* _commander{};
 
 	glm::vec3 _lightNormal{};
 
@@ -75,8 +75,8 @@ public:
 	BattleSimulator_v1_0_0* GetSimulator() const { return _simulator; }
 	void SetSimulator(BattleSimulator_v1_0_0* simulator);
 
-	BattleObjects::Commander* GetCommander() const { return _commander; }
-	void SetCommander(BattleObjects::Commander* value) { _commander = value; }
+	BattleCommander* GetCommander() const { return _commander; }
+	void SetCommander(BattleCommander* value) { _commander = value; }
 
 	SmoothTerrainRenderer* GetSmoothTerrainRenderer() const { return _smoothTerrainSurface; }
 	SmoothTerrainWater* GetSmoothTerrainWater() const { return _smoothTerrainWater; }
@@ -100,7 +100,7 @@ public:
 
 	UnitMovementMarker* AddMovementMarker(BattleObjects::Unit* unit);
 	UnitMovementMarker* GetMovementMarker(BattleObjects::Unit* unit);
-	UnitMovementMarker* GetNearestMovementMarker(glm::vec2 position, BattleObjects::Commander* commander);
+	UnitMovementMarker* GetNearestMovementMarker(glm::vec2 position, BattleCommander* commander);
 
 	UnitTrackingMarker* AddTrackingMarker(BattleObjects::Unit* unit);
 	UnitTrackingMarker* GetTrackingMarker(BattleObjects::Unit* unit);
@@ -142,7 +142,7 @@ public:
 	SmokeCounter* AddSmokeMarker(BattleObjects::MissileType missileType);
 	void RemoveAllSmokeMarkers();
 
-	UnitCounter* GetNearestUnitCounter(glm::vec2 position, int filterTeam, BattleObjects::Commander* filterCommander, bool filterDeployed);
+	UnitCounter* GetNearestUnitCounter(glm::vec2 position, int filterTeam, BattleCommander* filterCommander, bool filterDeployed);
 
 	void UpdateSoundPlayer();
 	void UpdateDeploymentZones();

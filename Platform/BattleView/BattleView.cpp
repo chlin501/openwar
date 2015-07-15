@@ -456,7 +456,7 @@ void BattleView::InitializeCameraPosition()
 	glm::vec2 friendlyCenter;
 	glm::vec2 enemyCenter;
 
-	int position = _commander && _commander->GetType() == BattleObjects::CommanderType::Player ? _commander->GetTeamPosition() : 0;
+	int position = _commander && _commander->GetType() == BattleCommanderType::Player ? _commander->GetTeamPosition() : 0;
 	switch (position)
 	{
 		case 1:
@@ -832,7 +832,7 @@ UnitMovementMarker* BattleView::GetMovementMarker(BattleObjects::Unit* unit)
 }
 
 
-UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, BattleObjects::Commander* commander)
+UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, BattleCommander* commander)
 {
 	UnitMovementMarker* result = 0;
 	float nearest = INFINITY;
@@ -1057,7 +1057,7 @@ void BattleView::RemoveAllSmokeMarkers()
 }
 
 
-UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int filterTeam, BattleObjects::Commander* filterCommander, bool filterDeployed)
+UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int filterTeam, BattleCommander* filterCommander, bool filterDeployed)
 {
 	UnitCounter* result = 0;
 	float nearest = INFINITY;

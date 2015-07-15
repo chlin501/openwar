@@ -90,9 +90,9 @@ static glm::vec2 FindClusterCenter(const std::vector<BattleObjects::Unit*>& unit
 
 void MonkeyScript::IssueCommands()
 {
-	BattleObjects::Commander* monkeyCommander = nullptr;
-	for (BattleObjects::Commander* commander : _simulator->GetCommanders())
-		if (commander->GetType() == BattleObjects::CommanderType::Player)
+	BattleCommander* monkeyCommander = nullptr;
+	for (BattleCommander* commander : _simulator->GetCommanders())
+		if (commander->GetType() == BattleCommanderType::Player)
 		{
 			monkeyCommander = commander;
 			break;
