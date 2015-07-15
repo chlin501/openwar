@@ -1,14 +1,14 @@
 #ifndef BattleCommander_H
 #define BattleCommander_H
 
-class BattleObjects;
+class BattleScenario;
 
 enum class BattleCommanderType { None = 0, Player = 1, Script = 2 };
 
 
 class BattleCommander
 {
-	BattleObjects* _simulator{};
+	BattleScenario* _battleScenario{};
 	std::string _playerId{};
 	int _team{};
 	BattleCommanderType _type{};
@@ -16,7 +16,7 @@ class BattleCommander
 	bool _hasAbandonedBattle{};
 
 public:
-	BattleCommander(BattleObjects* simulator, const char* playerId, int team, BattleCommanderType type);
+	BattleCommander(BattleScenario* battleScenario, const char* playerId, int team, BattleCommanderType type);
 
 	const char* GetPlayerId() const;
 	int GetTeam() const;

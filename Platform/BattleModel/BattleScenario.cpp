@@ -6,12 +6,16 @@
 BattleScenario::BattleScenario(BattleSimulator* battleSimulator) :
 	_battleSimulator(battleSimulator)
 {
-
+	_dummyCommander = new BattleCommander(this, "", 1, BattleCommanderType::None);
 }
 
 
 BattleScenario::~BattleScenario()
 {
+	for (BattleCommander* commander : _commanders)
+		delete commander;
+
+	delete _dummyCommander;
 }
 
 
@@ -22,6 +26,64 @@ void BattleScenario::Tick(float secondsSinceLastTick)
 	for (BattleObjects::Unit* unit : _battleSimulator->GetUnits())
 		if (!unit->deployed && !IsDeploymentZone(unit->commander->GetTeam(), unit->GetCenter()))
 			unit->deployed = true;
+}
+
+
+BattleCommander* BattleScenario::AddCommander(const char* playerId, int team, BattleCommanderType type)
+{
+	BattleCommander* commander = new BattleCommander(this, playerId, team, type);
+	_commanders.push_back(commander);
+	return commander;
+}
+
+
+BattleCommander* BattleScenario::GetCommander(const char* playerId) const
+{
+	for (BattleCommander* commander : _commanders)
+		if (std::strcmp(commander->GetPlayerId(), playerId) == 0)
+			return commander;
+
+	return nullptr;
+}
+
+
+BattleCommander* BattleScenario::GetDummyCommander() const
+{
+	return _dummyCommander;
+}
+
+
+void BattleScenario::SetTeamPosition(int team, int position)
+{
+	if (team == 1)
+		_teamPosition1 = position;
+	if (team == 2)
+		_teamPosition2 = position;
+}
+
+
+int BattleScenario::GetTeamPosition(int team) const
+{
+	if (team == 1)
+		return _teamPosition1;
+	if (team == 2)
+		return _teamPosition2;
+	return 0;
+}
+
+
+
+void BattleScenario::EnableDeploymentZones(float deploymentTimer)
+{
+	_deploymentTimer = deploymentTimer;
+	_deploymentEnabled = true;
+	UpdateDeploymentZones(0);
+}
+
+
+std::pair<glm::vec2, float> BattleScenario::GetDeploymentZone(int team) const
+{
+	return _deploymentZones[team == 1 ? 0 : 1];
 }
 
 
@@ -47,16 +109,6 @@ glm::vec2 BattleScenario::ConstrainDeploymentZone(int team, glm::vec2 position, 
 }
 
 
-
-
-void BattleScenario::EnableDeploymentZones(float deploymentTimer)
-{
-	_deploymentTimer = deploymentTimer;
-	_deploymentEnabled = true;
-	UpdateDeploymentZones(0);
-}
-
-
 void BattleScenario::UpdateDeploymentZones(double secondsSinceLastTick)
 {
 	if (_deploymentEnabled)
@@ -74,7 +126,7 @@ void BattleScenario::UpdateDeploymentZones(double secondsSinceLastTick)
 		{
 			if (deploymentOffset < 512.0f && !HasCompletedDeployment(team))
 			{
-				float sign = _battleSimulator->GetTeamPosition(team) == 1 ? -1.0f : 1.0f;
+				float sign = GetTeamPosition(team) == 1 ? -1.0f : 1.0f;
 				SetDeploymentZone(team, glm::vec2{512.0f, 512.0f + sign * (deploymentRadius + deploymentOffset)}, deploymentRadius);
 			}
 			else
@@ -96,12 +148,6 @@ void BattleScenario::UpdateDeploymentZones(double secondsSinceLastTick)
 void BattleScenario::SetDeploymentZone(int team, glm::vec2 center, float radius)
 {
 	_deploymentZones[team == 1 ? 0 : 1] = std::make_pair(center, radius);
-};
-
-
-std::pair<glm::vec2, float> BattleScenario::GetDeploymentZone(int team) const
-{
-	return _deploymentZones[team == 1 ? 0 : 1];
 }
 
 

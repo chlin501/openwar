@@ -204,7 +204,7 @@ void PracticeScript::SpawnWave()
 	float a = glm::atan(direction.y, direction.x) +  glm::half_pi<float>();
 	float bearing = glm::radians(90.0f) - a;
 
-	BattleCommander* commander = _battleSimulator->GetCommanders()[1];
+	BattleCommander* commander = _battleScenario->GetCommanders()[1];
 
 	switch (_waveNumber)
 	{

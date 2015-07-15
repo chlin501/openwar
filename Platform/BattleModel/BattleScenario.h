@@ -3,12 +3,19 @@
 
 #include <glm/glm.hpp>
 
+#include "BattleCommander.h"
+
 class BattleSimulator;
 
 
 class BattleScenario
 {
 	BattleSimulator* _battleSimulator;
+
+	std::vector<BattleCommander*> _commanders{};
+	BattleCommander* _dummyCommander{};
+	int _teamPosition1{};
+	int _teamPosition2{};
 
 	std::pair<glm::vec2, float> _deploymentZones[2]{};
 	float _deploymentTimer{};
@@ -21,6 +28,14 @@ public:
 	BattleSimulator* GetBattleSimulator() const { return _battleSimulator; }
 
 	void Tick(float secondsSinceLastTick);
+
+	BattleCommander* AddCommander(const char* playerId, int team, BattleCommanderType type);
+	BattleCommander* GetCommander(const char* playerId) const;
+	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
+	BattleCommander* GetDummyCommander() const;
+
+	void SetTeamPosition(int team, int position);
+	int GetTeamPosition(int team) const;
 
 	void EnableDeploymentZones(float deploymentTimer);
 	std::pair<glm::vec2, float> GetDeploymentZone(int team) const;

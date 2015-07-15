@@ -129,59 +129,11 @@ bool BattleObjects::Unit::IsCommandableBy(BattleCommander* battleCommander) cons
 
 BattleObjects::BattleObjects()
 {
-	_dummyCommander = new BattleCommander(this, "", 1, BattleCommanderType::None);
-
 }
 
 
 BattleObjects::~BattleObjects()
 {
-	for (BattleCommander* commander : _commanders)
-		delete commander;
-	delete _dummyCommander;
-}
-
-
-BattleCommander* BattleObjects::AddCommander(const char* playerId, int team, BattleCommanderType type)
-{
-	BattleCommander* commander = new BattleCommander(this, playerId, team, type);
-	_commanders.push_back(commander);
-	return commander;
-}
-
-
-BattleCommander* BattleObjects::GetCommander(const char* playerId) const
-{
-	for (BattleCommander* commander : _commanders)
-		if (std::strcmp(commander->GetPlayerId(), playerId) == 0)
-			return commander;
-
-	return nullptr;
-}
-
-
-BattleCommander* BattleObjects::GetDummyCommander() const
-{
-	return _dummyCommander;
-}
-
-
-void BattleObjects::SetTeamPosition(int team, int position)
-{
-	if (team == 1)
-		_teamPosition1 = position;
-	if (team == 2)
-		_teamPosition2 = position;
-}
-
-
-int BattleObjects::GetTeamPosition(int team) const
-{
-	if (team == 1)
-		return _teamPosition1;
-	if (team == 2)
-		return _teamPosition2;
-	return 0;
 }
 
 

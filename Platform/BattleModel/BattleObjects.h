@@ -178,23 +178,12 @@ public:
 	};
 
 protected:
-	std::vector<BattleCommander*> _commanders{};
-	BattleCommander* _dummyCommander{};
-	int _teamPosition1{};
-	int _teamPosition2{};
 	BattleMap* _battleMap{};
 
 public:
 	BattleObjects();
 	virtual ~BattleObjects();
 
-	BattleCommander* AddCommander(const char* playerId, int team, BattleCommanderType type);
-	BattleCommander* GetCommander(const char* playerId) const;
-	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
-	BattleCommander* GetDummyCommander() const;
-
-	void SetTeamPosition(int team, int position);
-	int GetTeamPosition(int team) const;
 	bool TeamHasAbandondedBattle(int team) const;
 
 	BattleMap* GetBattleMap() const { return _battleMap; }
