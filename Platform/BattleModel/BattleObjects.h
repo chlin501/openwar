@@ -133,6 +133,7 @@ public:
 		BattleCommander* commander{};
 		std::string unitClass{};
 		bool deployed{};
+		bool canRally{true};
 
 		virtual ~Unit();
 

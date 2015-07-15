@@ -25,8 +25,6 @@ class BattleSimulator_v1_0_0 : public BattleSimulator, public BattleObjects_v1
 
 	float _secondsSinceLastTimeStep{};
 	float _timeStep{1.0f / 15.0f};
-	bool _practice{};
-	int _winnerTeam{};
 
 public:
 	BattleSimulator_v1_0_0(BattleMap* battleMap);
@@ -34,9 +32,7 @@ public:
 
 	void AdvanceTime(float secondsSinceLastTime) override;
 
-	void SetPractice(bool value) { _practice = value; }
 	int GetKills(int team) { return _kills[team]; }
-	int GetWinnerTeam() const { return _winnerTeam; }
 
 	BattleObjects::Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, glm::vec2 position, float bearing) override;
 	void DeployUnit(BattleObjects::Unit* unit, glm::vec2 position, float bearing) override;
@@ -46,7 +42,6 @@ public:
 	void IssueUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer) override;
 
 	void AddShooting(const BattleObjects::Shooting& shooting, float timer);
-
 
 private:
 	void SimulateOneTimeStep();

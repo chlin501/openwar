@@ -209,39 +209,39 @@ void PracticeScript::SpawnWave()
 	switch (_waveNumber)
 	{
 		case 0:
-			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(-90, 0), a), bearing);
-			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(-30, 0), a), bearing);
-			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(30, 0), a), bearing);
-			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(90, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(-90, 0), a), bearing)->canRally = false;
+			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(-30, 0), a), bearing)->canRally = false;
+			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(30, 0), a), bearing)->canRally = false;
+			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(90, 0), a), bearing)->canRally = false;
 			break;
 
 		case 1:
-			_battleSimulator->AddUnit(commander, "ASH-BOW", 80, p + rotate(glm::vec2(-40, 0), a), bearing);
-			_battleSimulator->AddUnit(commander, "ASH-BOW", 80, p + rotate(glm::vec2(40, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "ASH-BOW", 80, p + rotate(glm::vec2(-40, 0), a), bearing)->canRally = false;
+			_battleSimulator->AddUnit(commander, "ASH-BOW", 80, p + rotate(glm::vec2(40, 0), a), bearing)->canRally = false;
 			break;
 
 		case 2:
-			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(-60, 0), a), bearing);
-			_battleSimulator->AddUnit(commander, "SAM-NAGI", 80, p + rotate(glm::vec2(0, 0), a), bearing);
-			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(60, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(-60, 0), a), bearing)->canRally = false;
+			_battleSimulator->AddUnit(commander, "SAM-NAGI", 80, p + rotate(glm::vec2(0, 0), a), bearing)->canRally = false;
+			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(60, 0), a), bearing)->canRally = false;
 			break;
 
 		case 3:
-			_battleSimulator->AddUnit(commander, "CAV-BOW", 40, p + rotate(glm::vec2(-60, 0), a), bearing);
-			_battleSimulator->AddUnit(commander, "CAV-BOW", 40, p + rotate(glm::vec2(60, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "CAV-BOW", 40, p + rotate(glm::vec2(-60, 0), a), bearing)->canRally = false;
+			_battleSimulator->AddUnit(commander, "CAV-BOW", 40, p + rotate(glm::vec2(60, 0), a), bearing)->canRally = false;
 			break;
 
 		case 4:
-			_battleSimulator->AddUnit(commander, "CAV-YARI", 40, p + rotate(glm::vec2(-90, 0), a), bearing);
-			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(-30, 0), a), bearing);
-			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(30, 0), a), bearing);
-			_battleSimulator->AddUnit(commander, "CAV-YARI", 40, p + rotate(glm::vec2(90, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "CAV-YARI", 40, p + rotate(glm::vec2(-90, 0), a), bearing)->canRally = false;
+			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(-30, 0), a), bearing)->canRally = false;
+			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(30, 0), a), bearing)->canRally = false;
+			_battleSimulator->AddUnit(commander, "CAV-YARI", 40, p + rotate(glm::vec2(90, 0), a), bearing)->canRally = false;
 			break;
 
 		case 5:
-			_battleSimulator->AddUnit(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(-60, 0), a), bearing);
-			_battleSimulator->AddUnit(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(0, 0), a), bearing);
-			_battleSimulator->AddUnit(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(60, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(-60, 0), a), bearing)->canRally = false;
+			_battleSimulator->AddUnit(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(0, 0), a), bearing)->canRally = false;
+			_battleSimulator->AddUnit(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(60, 0), a), bearing)->canRally = false;
 			break;
 	}
 

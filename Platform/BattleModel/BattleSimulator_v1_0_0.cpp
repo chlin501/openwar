@@ -196,33 +196,6 @@ void BattleSimulator_v1_0_0::AdvanceTime(float secondsSinceLastTime)
 			UpdateUnitRange(unit);
 		}
 	}
-
-	if (_winnerTeam == 0)
-	{
-		std::map<int, int> total;
-		std::map<int, int> routing;
-
-		for (BattleObjects_v1::Unit* unit : _units)
-		{
-			int team = unit->GetTeam();
-			total[team] += 1;
-			if (unit->state.IsRouting())
-				routing[team] += 1;
-		}
-
-		for (std::pair<int, int> i : total)
-		{
-			int team = i.first;
-			if (routing[team] == i.second)
-			{
-				_winnerTeam = 3 - team;
-				break;
-			}
-		}
-
-		if (_practice && _winnerTeam == 1)
-			_winnerTeam = 0;
-	}
 }
 
 
@@ -678,12 +651,7 @@ BattleObjects_v1::UnitState BattleSimulator_v1_0_0::NextUnitState(BattleObjects_
 		}
 	}
 
-	if (_practice && unit->state.IsRouting() && unit->GetTeam() == 2)
-	{
-		result.morale = -1;
-	}
-
-	if (_winnerTeam != 0 && unit->GetTeam() != _winnerTeam)
+	if (unit->state.IsRouting() && !unit->canRally)
 	{
 		result.morale = -1;
 	}

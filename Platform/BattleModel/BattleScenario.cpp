@@ -1,6 +1,6 @@
 #include "BattleScenario.h"
 #include "BattleSimulator.h"
-#import "BattleObjects_v1.h"
+#include <map>
 
 
 BattleScenario::BattleScenario(BattleSimulator* battleSimulator) :
@@ -26,6 +26,40 @@ void BattleScenario::Tick(float secondsSinceLastTick)
 	for (BattleObjects::Unit* unit : _battleSimulator->GetUnits())
 		if (!unit->deployed && !IsDeploymentZone(unit->GetTeam(), unit->GetCenter()))
 			unit->deployed = true;
+
+	if (_winnerTeam == 0)
+	{
+		std::map<int, int> total;
+		std::map<int, int> routing;
+
+		for (BattleObjects::Unit* unit : _battleSimulator->GetUnits())
+		{
+			int team = unit->GetTeam();
+			total[team] += 1;
+			if (unit->IsRouting())
+				routing[team] += 1;
+		}
+
+		for (std::pair<int, int> i : total)
+		{
+			int team = i.first;
+			if (routing[team] == i.second)
+			{
+				_winnerTeam = 3 - team;
+				break;
+			}
+		}
+
+		if (_practice && _winnerTeam == 1)
+			_winnerTeam = 0;
+	}
+
+	if (_winnerTeam != 0)
+	{
+		for (BattleObjects::Unit* unit : _battleSimulator->GetUnits())
+			if (unit->GetTeam() != _winnerTeam)
+				unit->SetIntrinsicMorale(-1.0f);
+	}
 }
 
 

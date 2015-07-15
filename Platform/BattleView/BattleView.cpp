@@ -1154,8 +1154,8 @@ void BattleView::UpdateSoundPlayer()
 	musicDirector.UpdateFriendlyUnits(friendlyUnits);
 	musicDirector.UpdateEnemyUnits(enemyUnits);
 
-	if (_battleSimulator->GetWinnerTeam() != 0)
-		musicDirector.UpdateOutcome(_battleSimulator->GetWinnerTeam() == _commander->GetTeam() ? 1 : -1);
+	if (_battleScenario->GetWinnerTeam() != 0)
+		musicDirector.UpdateOutcome(_battleScenario->GetWinnerTeam() == _commander->GetTeam() ? 1 : -1);
 	else
 		musicDirector.UpdateOutcome(0);
 }
