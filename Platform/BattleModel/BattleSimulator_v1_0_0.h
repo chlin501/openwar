@@ -36,6 +36,8 @@ public:
 	BattleSimulator_v1_0_0(BattleMap* battleMap);
 	~BattleSimulator_v1_0_0();
 
+	void AdvanceTime(float secondsSinceLastTime) override;
+
 	void SetPractice(bool value) { _practice = value; }
 	int GetKills(int team) { return _kills[team]; }
 	int GetWinnerTeam() const { return _winnerTeam; }
@@ -53,8 +55,6 @@ public:
 	void IssueUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer);
 
 	void AddShooting(const BattleObjects::Shooting& shooting, float timer);
-
-	void AdvanceTime(float secondsSinceLastTime);
 
 
 private:

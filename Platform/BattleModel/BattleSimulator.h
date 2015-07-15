@@ -20,6 +20,8 @@ public:
 
 	float GetTimerDelay() const { return 0.25f; }
 
+	virtual void AdvanceTime(float secondsSinceLastTime) = 0;
+
 protected:
 	void NotifyAddUnit(BattleObjects::Unit* unit);
 	void NotifyRemoveUnit(BattleObjects::Unit* unit);
