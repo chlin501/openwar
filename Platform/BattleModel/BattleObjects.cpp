@@ -88,42 +88,6 @@ void BattleObjects::Unit::SetOwnedBySimulator(bool value)
 }
 
 
-bool BattleObjects::Unit::IsFriendlyCommander(BattleCommander* battleCommander) const
-{
-	if (battleCommander == nullptr)
-		return false;
-
-	if (commander == battleCommander)
-		return true;
-
-	if (battleCommander->GetType() == BattleCommanderType::None)
-		return false;
-
-	if (commander->GetTeam() != battleCommander->GetTeam())
-		return false;
-
-	return true;
-}
-
-
-bool BattleObjects::Unit::IsCommandableBy(BattleCommander* battleCommander) const
-{
-	if (battleCommander == nullptr)
-		return false;
-
-	if (commander == battleCommander)
-		return true;
-
-	if (battleCommander->GetType() == BattleCommanderType::None)
-		return false;
-
-	if (commander->IsIncapacitated() && commander->GetTeam() == battleCommander->GetTeam())
-		return true;
-
-	return false;
-}
-
-
 /***/
 
 

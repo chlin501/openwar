@@ -382,7 +382,7 @@ void BattleGesture::UpdateTrackingMarker()
 		{
 			BattleScenario* battleScenario = _hotspot->GetBattleView()->GetBattleScenario();
 			BattleSimulator_v1_0_0* battleSimulator = _hotspot->GetBattleView()->GetBattleSimulator();
-			int team = unit->commander->GetTeam();
+			int team = unit->GetTeam();
 
 			if (battleScenario->IsDeploymentZone(team, markerPosition))
 			{
@@ -544,7 +544,7 @@ BattleObjects::Unit* BattleGesture::FindCommandableUnitByModifierArea(glm::vec2 
 
 	for (BattleObjects::Unit* unit : _hotspot->GetBattleView()->GetBattleSimulator()->GetUnits())
 	{
-		if (unit->IsCommandableBy(_hotspot->GetBattleView()->GetCommander()))
+		if (_hotspot->GetBattleView()->GetBattleScenario()->IsCommandableBy(unit, _hotspot->GetBattleView()->GetCommander()))
 		{
 			const BattleObjects::UnitCommand& command = unit->GetIssuedCommand();
 			glm::vec2 center = !command.path.empty() ? command.path.back() : unit->GetCenter();
@@ -563,7 +563,7 @@ BattleObjects::Unit* BattleGesture::FindCommandableUnitByModifierArea(glm::vec2 
 
 BattleObjects::Unit* BattleGesture::FindEnemyUnit(glm::vec2 touchPosition, glm::vec2 markerPosition)
 {
-	int enemyTeam = _trackingMarker->GetUnit()->commander->GetTeam() == 1 ? 2 : 1;
+	int enemyTeam = _trackingMarker->GetUnit()->GetTeam() == 1 ? 2 : 1;
 
 	UnitCounter* enemyMarker = nullptr;
 

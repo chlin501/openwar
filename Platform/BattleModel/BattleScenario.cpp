@@ -24,7 +24,7 @@ void BattleScenario::Tick(float secondsSinceLastTick)
 	UpdateDeploymentZones(secondsSinceLastTick);
 
 	for (BattleObjects::Unit* unit : _battleSimulator->GetUnits())
-		if (!unit->deployed && !IsDeploymentZone(unit->commander->GetTeam(), unit->GetCenter()))
+		if (!unit->deployed && !IsDeploymentZone(unit->GetTeam(), unit->GetCenter()))
 			unit->deployed = true;
 }
 
@@ -50,6 +50,42 @@ BattleCommander* BattleScenario::GetCommander(const char* playerId) const
 BattleCommander* BattleScenario::GetDummyCommander() const
 {
 	return _dummyCommander;
+}
+
+
+bool BattleScenario::IsFriendlyCommander(const BattleObjects::Unit* unit, BattleCommander* battleCommander) const
+{
+	if (battleCommander == nullptr)
+		return false;
+
+	if (unit->commander == battleCommander)
+		return true;
+
+	if (battleCommander->GetType() == BattleCommanderType::None)
+		return false;
+
+	if (unit->commander->GetTeam() != battleCommander->GetTeam())
+		return false;
+
+	return true;
+}
+
+
+bool BattleScenario::IsCommandableBy(const BattleObjects::Unit* unit, BattleCommander* battleCommander) const
+{
+	if (battleCommander == nullptr)
+		return false;
+
+	if (unit->commander == battleCommander)
+		return true;
+
+	if (battleCommander->GetType() == BattleCommanderType::None)
+		return false;
+
+	if (unit->commander->IsIncapacitated() && unit->commander->GetTeam() == battleCommander->GetTeam())
+		return true;
+
+	return false;
 }
 
 
@@ -156,7 +192,7 @@ bool BattleScenario::HasCompletedDeployment(int team) const
 	int count = 0;
 	for (BattleObjects::Unit* unit : _battleSimulator->GetUnits())
 	{
-		if (team == unit->commander->GetTeam())
+		if (team == unit->GetTeam())
 		{
 			if (!unit->deployed)
 				return false;

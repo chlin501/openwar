@@ -109,9 +109,9 @@ void MonkeyScript::IssueCommands()
 	for (BattleObjects::Unit* unit : _battleSimulator->GetUnits())
 		if (!unit->IsRouting())
 		{
-			if (unit->commander == monkeyCommander)
+			if (_battleScenario->GetCommanderForUnit(unit) == monkeyCommander)
 				monkeyUnits.push_back(unit);
-			else if (unit->commander->GetTeam() != monkeyCommander->GetTeam())
+			else if (unit->GetTeam() != monkeyCommander->GetTeam())
 				enemyUnits.push_back(unit);
 		}
 

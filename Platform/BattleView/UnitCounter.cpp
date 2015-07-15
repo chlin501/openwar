@@ -10,6 +10,7 @@
 #include "BattleView.h"
 #include "UnitCounter.h"
 #include "TerrainView/TerrainViewport.h"
+#include "BattleScenario.h"
 
 
 UnitCounter::UnitCounter(BattleView* battleView, BattleObjects::Unit* unit) :
@@ -58,16 +59,16 @@ void UnitCounter::AppendUnitMarker(BillboardTextureShape* renderer, bool flip)
 	int color = 3;
 	if (!routingIndicator)
 	{
-		if (_unit->commander->GetTeam() != _battleView->GetCommander()->GetTeam())
+		if (_unit->GetTeam() != _battleView->GetCommander()->GetTeam())
 			color = 0;
-		else if (_unit->commander != _battleView->GetCommander())
+		else if (_battleView->GetBattleScenario()->GetCommanderForUnit(_unit) != _battleView->GetCommander())
 			color = 1;
 		else
 			color = 2;
 	}
 
 	int command = !_unit->deployed ? 2
-		: !_unit->IsCommandableBy(_battleView->GetCommander()) ? 1
+		: !_battleView->GetBattleScenario()->IsCommandableBy(_unit, _battleView->GetCommander()) ? 1
 		: 0;
 
 	glm::vec3 position = _battleView->GetBattleSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(_unit->GetCenter(), 0);
@@ -92,7 +93,7 @@ void UnitCounter::AppendUnitMarker(BillboardTextureShape* renderer, bool flip)
 
 void UnitCounter::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleView* battleView)
 {
-	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
+	if (!_battleView->GetBattleScenario()->IsCommandableBy(_unit, _battleView->GetCommander()))
 		return;
 
 	const BattleObjects::UnitCommand& command = _unit->GetIssuedCommand();
@@ -177,7 +178,7 @@ void UnitCounter::AppendFighterWeapons(VertexShape_3f* vertices)
 
 void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 {
-	bool isSameTeam = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam();
+	bool isSameTeam = _unit->GetTeam() == _battleView->GetCommander()->GetTeam();
 	float size = 2.0;
 	int shape = 0;
 	switch (_samuraiPlatform)

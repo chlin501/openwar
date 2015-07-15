@@ -12,6 +12,7 @@
 #include "BattleView.h"
 #include "UnitMovementMarker.h"
 #include "TerrainView/TerrainViewport.h"
+#include "BattleScenario.h"
 
 
 UnitMovementMarker::UnitMovementMarker(BattleView* battleView, BattleObjects::Unit* unit) : UnitMarker(battleView, unit)
@@ -36,7 +37,7 @@ bool UnitMovementMarker::Animate(float seconds)
 
 void UnitMovementMarker::RenderMovementMarker(BillboardTextureShape* renderer)
 {
-	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
+	if (!_battleView->GetBattleScenario()->IsCommandableBy(_unit, _battleView->GetCommander()))
 		return;
 
 	const BattleObjects::UnitCommand& command = _unit->GetIssuedCommand();
@@ -47,7 +48,7 @@ void UnitMovementMarker::RenderMovementMarker(BillboardTextureShape* renderer)
 		{
 			glm::vec3 position = _battleView->GetBattleSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(finalDestination, 0.5);
 			glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
-			glm::vec2 texcoord = texsize * glm::vec2(_unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam() ? 2 : 0, 2);
+			glm::vec2 texcoord = texsize * glm::vec2(_unit->GetTeam() == _battleView->GetCommander()->GetTeam() ? 2 : 0, 2);
 
 			renderer->AddBillboard(position, 32, affine2(texcoord, texcoord + texsize));
 		}
@@ -57,7 +58,7 @@ void UnitMovementMarker::RenderMovementMarker(BillboardTextureShape* renderer)
 
 void UnitMovementMarker::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleView* battleView)
 {
-	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
+	if (!_battleView->GetBattleScenario()->IsCommandableBy(_unit, _battleView->GetCommander()))
 		return;
 	if (!_unit->IsMoving())
 		return;
@@ -95,13 +96,13 @@ void UnitMovementMarker::AppendFacingMarker(VertexShape_2f_2f* vertices, BattleV
 
 void UnitMovementMarker::RenderMovementFighters(VertexShape_3f_4f_1f* vertices)
 {
-	if (!_unit->IsCommandableBy(_battleView->GetCommander()))
+	if (!_battleView->GetBattleScenario()->IsCommandableBy(_unit, _battleView->GetCommander()))
 		return;
 
 	const BattleObjects::UnitCommand& command = _unit->GetIssuedCommand();
 	if (command.meleeTarget == nullptr)
 	{
-		bool isBlue = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam();
+		bool isBlue = _unit->GetTeam() == _battleView->GetCommander()->GetTeam();
 		glm::vec4 color = isBlue ? glm::vec4(0, 0, 255, 32) / 255.0f : glm::vec4(255, 0, 0, 32) / 255.0f;
 
 		glm::vec2 finalDestination = command.GetDestination();

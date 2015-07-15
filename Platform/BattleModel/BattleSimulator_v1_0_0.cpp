@@ -204,7 +204,7 @@ void BattleSimulator_v1_0_0::AdvanceTime(float secondsSinceLastTime)
 
 		for (BattleObjects_v1::Unit* unit : _units)
 		{
-			int team = unit->commander->GetTeam();
+			int team = unit->GetTeam();
 			total[team] += 1;
 			if (unit->state.IsRouting())
 				routing[team] += 1;
@@ -577,7 +577,7 @@ void BattleSimulator_v1_0_0::RemoveCasualties()
 
 		unit->fightersCount = index;
 
-		_kills[unit->commander->GetTeam()] += fighters.size();
+		_kills[unit->GetTeam()] += fighters.size();
 
 		for (const BattleObjects_v1::Fighter& fighter : fighters)
 			NotifyCasualty(unit, fighter.state.position);
@@ -660,7 +660,7 @@ BattleObjects_v1::UnitState BattleSimulator_v1_0_0::NextUnitState(BattleObjects_
 		result.morale += (0.1f + unit->stats.trainingLevel) / 2000;
 	}
 
-	if (result.morale > -1 && TeamHasAbandondedBattle(unit->commander->GetTeam()))
+	if (result.morale > -1 && TeamHasAbandondedBattle(unit->GetTeam()))
 	{
 		result.morale -= 1.0f / 250;
 	}
@@ -669,7 +669,7 @@ BattleObjects_v1::UnitState BattleSimulator_v1_0_0::NextUnitState(BattleObjects_
 	{
 		float distance = glm::length(other->state.center - unit->state.center);
 		float weight = 1.0f * 50.0f / (distance + 50.0f);
-		if (other->commander->GetTeam() == unit->commander->GetTeam())
+		if (other->GetTeam() == unit->GetTeam())
 		{
 			result.influence -= weight
 					* (1 - other->state.morale)
@@ -678,12 +678,12 @@ BattleObjects_v1::UnitState BattleSimulator_v1_0_0::NextUnitState(BattleObjects_
 		}
 	}
 
-	if (_practice && unit->state.IsRouting() && unit->commander->GetTeam() == 2)
+	if (_practice && unit->state.IsRouting() && unit->GetTeam() == 2)
 	{
 		result.morale = -1;
 	}
 
-	if (_winnerTeam != 0 && unit->commander->GetTeam() != _winnerTeam)
+	if (_winnerTeam != 0 && unit->GetTeam() != _winnerTeam)
 	{
 		result.morale = -1;
 	}
@@ -705,7 +705,7 @@ BattleObjects_v1::Unit* BattleSimulator_v1_0_0::ClosestEnemyWithinLineOfFire(Bat
 	float closestDistance = 10000;
 	for (BattleObjects_v1::Unit* target : _units)
 	{
-		if (target->commander->GetTeam() != unit->commander->GetTeam() && IsWithinLineOfFire(unit, target->state.center))
+		if (target->GetTeam() != unit->GetTeam() && IsWithinLineOfFire(unit, target->state.center))
 		{
 			float distance = glm::length(target->state.center - unit->state.center);
 			if (distance < closestDistance)
@@ -917,7 +917,7 @@ glm::vec2 BattleSimulator_v1_0_0::NextFighterPosition(BattleObjects_v1::Fighter*
 		for (quadtree<BattleObjects_v1::Fighter*>::iterator i(_weaponQuadTree.find(result.x, result.y, weaponDistance)); *i; ++i)
 		{
 			BattleObjects_v1::Fighter* obstacle = **i;
-			if (obstacle->GetUnit()->commander->GetTeam() != unit->commander->GetTeam())
+			if (obstacle->GetUnit()->GetTeam() != unit->GetTeam())
 			{
 				glm::vec2 r = obstacle->GetUnit()->stats.weaponReach * vector2_from_angle(obstacle->state.bearing);
 				glm::vec2 position = obstacle->state.position + r;
@@ -1002,7 +1002,7 @@ BattleObjects_v1::Fighter* BattleSimulator_v1_0_0::FindFighterStrikingTarget(Bat
 	for (quadtree<BattleObjects_v1::Fighter*>::iterator i(_fighterQuadTree.find(position.x, position.y, radius)); *i; ++i)
 	{
 		BattleObjects_v1::Fighter* target = **i;
-		if (target != fighter && target->GetUnit()->commander->GetTeam() != unit->commander->GetTeam())
+		if (target != fighter && target->GetUnit()->GetTeam() != unit->GetTeam())
 		{
 			return target;
 		}

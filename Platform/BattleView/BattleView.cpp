@@ -270,7 +270,7 @@ void BattleView::OnRemoveUnit(BattleObjects::Unit* unit)
 
 void BattleView::OnCommand(BattleObjects::Unit* unit, float timer)
 {
-	if (unit->IsFriendlyCommander(_commander) && GetMovementMarker(unit) == nullptr)
+	if (_battleScenario->IsFriendlyCommander(unit, _commander) && GetMovementMarker(unit) == nullptr)
 		AddMovementMarker(unit);
 }
 
@@ -356,7 +356,7 @@ void BattleView::AddCasualty(const BattleObjects::Unit* unit, glm::vec2 position
 {
 	glm::vec3 p = glm::vec3(position, _battleSimulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(position));
 	BattleObjects_v1::SamuraiPlatform platform = BattleObjects_v1::GetSamuraiPlatform(unit->unitClass.c_str());
-	_casualtyMarker->AddCasualty(p, unit->commander->GetTeam(), platform);
+	_casualtyMarker->AddCasualty(p, unit->GetTeam(), platform);
 }
 
 
@@ -528,7 +528,7 @@ void BattleView::Render()
 
 	_plainLineVertices->Reset(GL_LINES);
 	for (UnitCounter* marker : _unitMarkers)
-		if (marker->GetUnit()->IsFriendlyCommander(_commander) || marker->GetUnit()->deployed)
+		if (_battleScenario->IsFriendlyCommander(marker->GetUnit(), _commander) || marker->GetUnit()->deployed)
 			marker->AppendFighterWeapons(_plainLineVertices);
 
 	RenderCall<PlainShader_3f>(_gc)
@@ -560,7 +560,7 @@ void BattleView::Render()
 	_billboardModel->dynamicBillboards.clear();
 	_casualtyMarker->AppendCasualtyBillboards(_billboardModel);
 	for (UnitCounter* marker : _unitMarkers)
-		if (marker->GetUnit()->IsFriendlyCommander(_commander) || marker->GetUnit()->deployed)
+		if (_battleScenario->IsFriendlyCommander(marker->GetUnit(), _commander) || marker->GetUnit()->deployed)
 			marker->AppendFighterBillboards(_billboardModel);
 	for (SmokeCounter* marker : _smokeMarkers)
 		marker->AppendSmokeBillboards(_billboardModel);
@@ -584,7 +584,7 @@ void BattleView::Render()
 
 	for (BattleObjects::Unit* unit : _battleSimulator->GetUnits())
 	{
-		if (unit->IsFriendlyCommander(_commander))
+		if (_battleScenario->IsFriendlyCommander(unit, _commander))
 		{
 			RangeMarker marker(_battleSimulator, unit);
 			_gradientTriangleStripVertices->Reset(GL_TRIANGLE_STRIP);
@@ -605,13 +605,13 @@ void BattleView::Render()
 	_textureTriangleVertices2->Reset(GL_TRIANGLES);
 
 	for (UnitCounter* marker : _unitMarkers)
-		if (marker->GetUnit()->IsFriendlyCommander(_commander))
+		if (_battleScenario->IsFriendlyCommander(marker->GetUnit(), _commander))
 			marker->AppendFacingMarker(_textureTriangleVertices2, this);
 	for (UnitMovementMarker* marker : _movementMarkers)
-		if (marker->GetUnit()->IsFriendlyCommander(_commander))
+		if (_battleScenario->IsFriendlyCommander(marker->GetUnit(), _commander))
 			marker->AppendFacingMarker(_textureTriangleVertices2, this);
 	for (UnitTrackingMarker* marker : _trackingMarkers)
-		if (marker->GetUnit()->IsFriendlyCommander(_commander))
+		if (_battleScenario->IsFriendlyCommander(marker->GetUnit(), _commander))
 			marker->AppendFacingMarker(_textureTriangleVertices2, this);
 
 	RenderCall<TextureShader_2f>(_gc)
@@ -628,7 +628,7 @@ void BattleView::Render()
 	_textureBillboardShape2->Reset();
 
 	for (UnitCounter* marker : _unitMarkers)
-		if (marker->GetUnit()->IsFriendlyCommander(_commander) || marker->GetUnit()->deployed)
+		if (_battleScenario->IsFriendlyCommander(marker->GetUnit(), _commander) || marker->GetUnit()->deployed)
 			marker->AppendUnitMarker(_textureBillboardShape2, GetTerrainViewport().GetFlip());
 	for (UnitMovementMarker* marker : _movementMarkers)
 		marker->RenderMovementMarker(_textureBillboardShape1);
@@ -842,7 +842,7 @@ UnitMovementMarker* BattleView::GetNearestMovementMarker(glm::vec2 position, Bat
 	for (UnitMovementMarker* marker : _movementMarkers)
 	{
 		BattleObjects::Unit* unit = marker->GetUnit();
-		if (commander && !unit->IsCommandableBy(commander))
+		if (commander && !_battleScenario->IsCommandableBy(unit, commander))
 			continue;
 
 		const BattleObjects::UnitCommand& command = unit->GetIssuedCommand();
@@ -1067,9 +1067,9 @@ UnitCounter* BattleView::GetNearestUnitCounter(glm::vec2 position, int filterTea
 	for (UnitCounter* marker : _unitMarkers)
 	{
 		BattleObjects::Unit* unit = marker->_unit;
-		if (filterTeam != 0 && unit->commander->GetTeam() != filterTeam)
+		if (filterTeam != 0 && unit->GetTeam() != filterTeam)
 			continue;
-		if (filterCommander && !unit->IsCommandableBy(filterCommander))
+		if (filterCommander && !_battleScenario->IsCommandableBy(unit, filterCommander))
 			continue;
 		if (filterDeployed && !unit->deployed)
 			continue;
@@ -1109,7 +1109,7 @@ void BattleView::UpdateSoundPlayer()
 
 		if (!unit->IsRouting())
 		{
-			if (unit->IsFriendlyCommander(_commander))
+			if (_battleScenario->IsFriendlyCommander(unit, _commander))
 				++friendlyUnits;
 			else
 				++enemyUnits;

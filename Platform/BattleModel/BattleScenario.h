@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "BattleCommander.h"
+#include "BattleObjects.h"
 
 class BattleSimulator;
 
@@ -33,6 +34,10 @@ public:
 	BattleCommander* GetCommander(const char* playerId) const;
 	const std::vector<BattleCommander*>& GetCommanders() const { return _commanders; }
 	BattleCommander* GetDummyCommander() const;
+
+	BattleCommander* GetCommanderForUnit(const BattleObjects::Unit* unit) const { return unit->commander; }
+	bool IsFriendlyCommander(const BattleObjects::Unit* unit, BattleCommander* battleCommander) const;
+	bool IsCommandableBy(const BattleObjects::Unit* unit, BattleCommander* battleCommander) const;
 
 	void SetTeamPosition(int team, int position);
 	int GetTeamPosition(int team) const;

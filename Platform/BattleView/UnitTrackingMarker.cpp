@@ -35,7 +35,7 @@ void UnitTrackingMarker::RenderTrackingFighters(VertexShape_3f_4f_1f* vertices)
 {
 	if (!_meleeTarget && !_missileTarget)
 	{
-		bool isBlue = _unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam();
+		bool isBlue = _unit->GetTeam() == _battleView->GetCommander()->GetTeam();
 		glm::vec4 color = isBlue ? glm::vec4(0, 0, 255, 16) / 255.0f : glm::vec4(255, 0, 0, 16) / 255.0f;
 
 		glm::vec2 destination = DestinationXXX();
@@ -67,7 +67,7 @@ void UnitTrackingMarker::RenderTrackingMarker(BillboardTextureShape* renderer)
 		glm::vec2 destination = DestinationXXX();
 		glm::vec3 position = _battleView->GetBattleSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(destination, 0);
 		glm::vec2 texsize(0.1875, 0.1875); // 48 / 256
-		glm::vec2 texcoord = texsize * glm::vec2(_unit->commander->GetTeam() == _battleView->GetCommander()->GetTeam() ? 2 : 0, 2);
+		glm::vec2 texcoord = texsize * glm::vec2(_unit->GetTeam() == _battleView->GetCommander()->GetTeam() ? 2 : 0, 2);
 
 		renderer->AddBillboard(position, 32, affine2(texcoord, texcoord + texsize));
 	}

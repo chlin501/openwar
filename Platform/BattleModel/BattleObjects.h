@@ -15,7 +15,6 @@ public:
 	class Unit;
 
 
-
 	enum class PlatformType
 	{
 		None,
@@ -140,8 +139,7 @@ public:
 		bool IsOwnedBySimulator() const;
 		void SetOwnedBySimulator(bool value);
 
-		bool IsFriendlyCommander(BattleCommander* battleCommander) const;
-		bool IsCommandableBy(BattleCommander* battleCommander) const;
+		int GetTeam() const { return commander->GetTeam(); }
 
 		virtual glm::vec2 GetCenter() const = 0;
 		virtual void SetCenter(glm::vec2 value) = 0;
