@@ -96,9 +96,9 @@ OpenWarSurface::~OpenWarSurface()
 }
 
 
-void OpenWarSurface::ResetBattleViews(BattleSimulator_v1_0_0* scenario, const std::vector<BattleCommander*>& commanders)
+void OpenWarSurface::ResetBattleViews(BattleSimulator_v1_0_0* battleSimulator, const std::vector<BattleCommander*>& commanders)
 {
-	_battleLayer->ResetEditor(scenario, commanders);
+	_battleLayer->ResetEditor(battleSimulator, commanders);
 	_battleLayer->SetPlaying(false);
 	_editorModel = _battleLayer->GetEditorModel();
 	UpdateButtons();
@@ -122,8 +122,8 @@ void OpenWarSurface::Animate(double secondsSinceLastUpdate)
 	_buttonsTopLeft->GetViewport().SetViewportBounds(viewportBounds);
 	_buttonsTopRight->GetViewport().SetViewportBounds(viewportBounds);
 
-	if (_battleLayer->GetSimulator() && _battleLayer->IsPlaying())
-		_battleLayer->GetSimulator()->AdvanceTime((float)secondsSinceLastUpdate);
+	if (_battleLayer->GetBattleSimulator() && _battleLayer->IsPlaying())
+		_battleLayer->GetBattleSimulator()->AdvanceTime((float)secondsSinceLastUpdate);
 }
 
 

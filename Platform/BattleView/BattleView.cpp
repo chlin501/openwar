@@ -148,10 +148,10 @@ BattleView::BattleView(Surface* surface, std::shared_ptr<TerrainViewport> viewpo
 
 BattleView::~BattleView()
 {
-	if (_simulator)
+	if (_battleSimulator)
 	{
-		_simulator->GetBattleMap()->RemoveObserver(this);
-		_simulator->RemoveObserver(this);
+		_battleSimulator->GetBattleMap()->RemoveObserver(this);
+		_battleSimulator->RemoveObserver(this);
 	}
 
 	delete _casualtyMarker;
@@ -199,26 +199,26 @@ BattleView::~BattleView()
 
 void BattleView::SetSimulator(BattleScenario* battleScenario)
 {
-	if (battleScenario->GetBattleSimulator() == _simulator)
+	if (battleScenario->GetBattleSimulator() == _battleSimulator)
 		return;
 
-	if (_simulator)
+	if (_battleSimulator)
 	{
-		for (BattleObjects::Unit* unit : _simulator->GetUnits())
+		for (BattleObjects::Unit* unit : _battleSimulator->GetUnits())
 			OnRemoveUnit(unit);
-		_simulator->GetBattleMap()->RemoveObserver(this);
-		_simulator->RemoveObserver(this);
+		_battleSimulator->GetBattleMap()->RemoveObserver(this);
+		_battleSimulator->RemoveObserver(this);
 	}
 
 	_battleScenario = battleScenario;
-	_simulator = static_cast<BattleSimulator_v1_0_0*>(battleScenario->GetBattleSimulator());
-	OnBattleMapChanged(_simulator->GetBattleMap());
+	_battleSimulator = static_cast<BattleSimulator_v1_0_0*>(battleScenario->GetBattleSimulator());
+	OnBattleMapChanged(_battleSimulator->GetBattleMap());
 
 	delete _casualtyMarker;
-	_casualtyMarker = new CasualtyMarker(_simulator);
+	_casualtyMarker = new CasualtyMarker(_battleSimulator);
 
-	_simulator->AddObserver(this);
-	_simulator->GetBattleMap()->AddObserver(this);
+	_battleSimulator->AddObserver(this);
+	_battleSimulator->GetBattleMap()->AddObserver(this);
 }
 
 
@@ -354,7 +354,7 @@ void BattleView::OnBattleMapChanged(const BattleMap* battleMap)
 
 void BattleView::AddCasualty(const BattleObjects::Unit* unit, glm::vec2 position)
 {
-	glm::vec3 p = glm::vec3(position, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(position));
+	glm::vec3 p = glm::vec3(position, _battleSimulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(position));
 	BattleObjects_v1::SamuraiPlatform platform = BattleObjects_v1::GetSamuraiPlatform(unit->unitClass.c_str());
 	_casualtyMarker->AddCasualty(p, unit->commander->GetTeam(), platform);
 }
@@ -368,7 +368,7 @@ static float random_float()
 
 void BattleView::Initialize()
 {
-	if (_simulator->GetBattleMap())
+	if (_battleSimulator->GetBattleMap())
 	{
 		//OnSetGroundMap(const_cast<GroundMap*>(_simulator->GetBattleMap()->GetGroundMap()));
 	}
@@ -377,7 +377,7 @@ void BattleView::Initialize()
 
 void BattleView::InitializeTerrainTrees()
 {
-	UpdateTerrainTrees(_simulator->GetBattleMap()->GetHeightMap()->GetBounds());
+	UpdateTerrainTrees(_battleSimulator->GetBattleMap()->GetHeightMap()->GetBounds());
 }
 
 
@@ -410,7 +410,7 @@ struct random_iterator
 
 void BattleView::UpdateTerrainTrees(bounds2f bounds)
 {
-	if (_smoothTerrainSurface && _simulator->GetBattleMap())
+	if (_smoothTerrainSurface && _battleSimulator->GetBattleMap())
 	{
 		auto pos2 = std::remove_if(_billboardModel->staticBillboards.begin(), _billboardModel->staticBillboards.end(), [bounds](const Billboard& billboard) {
 			return bounds.contains(billboard.position.xy());
@@ -424,7 +424,7 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 
 		int treeType = 0;
 		random_iterator random(*_randoms);
-		bounds2f mapbounds = _simulator->GetBattleMap()->GetGroundMap()->GetBounds();
+		bounds2f mapbounds = _battleSimulator->GetBattleMap()->GetGroundMap()->GetBounds();
 		glm::vec2 center = mapbounds.mid();
 		float radius = mapbounds.x().size() / 2;
 
@@ -439,7 +439,7 @@ void BattleView::UpdateTerrainTrees(bounds2f bounds)
 				glm::vec2 position = glm::vec2(x + dx, y + dy);
 				if (bounds.contains(position) && glm::distance(position, center) < radius)
 				{
-					if (_simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(position) > 0 && _simulator->GetBattleMap()->GetGroundMap()->IsForest(position))
+					if (_battleSimulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(position) > 0 && _battleSimulator->GetBattleMap()->GetGroundMap()->IsForest(position))
 					{
 						const float adjust = 0.5f - 2.0f / 64.0f; // place texture 2 texels below ground
 						_billboardModel->staticBillboards.push_back(Billboard(GetTerrainPosition(position, adjust * 5), 0, 5, _billboardModel->_billboardTreeShapes[shape]));
@@ -582,11 +582,11 @@ void BattleView::Render()
 
 	// Range Markers
 
-	for (BattleObjects::Unit* unit : _simulator->GetUnits())
+	for (BattleObjects::Unit* unit : _battleSimulator->GetUnits())
 	{
 		if (unit->IsFriendlyCommander(_commander))
 		{
-			RangeMarker marker(_simulator, unit);
+			RangeMarker marker(_battleSimulator, unit);
 			_gradientTriangleStripVertices->Reset(GL_TRIANGLE_STRIP);
 			marker.Render(_gradientTriangleStripVertices);
 
@@ -1005,8 +1005,8 @@ void BattleView::AddShootingCounter(const BattleObjects::Shooting& shooting)
 
 	for (const BattleObjects::Projectile& projectile : shooting.projectiles)
 	{
-		glm::vec3 p1 = glm::vec3(projectile.position1, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position1));
-		glm::vec3 p2 = glm::vec3(projectile.position2, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position2));
+		glm::vec3 p1 = glm::vec3(projectile.position1, _battleSimulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position1));
+		glm::vec3 p2 = glm::vec3(projectile.position2, _battleSimulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position2));
 		shootingCounter->AddProjectile(p1, p2, projectile.delay, shooting.timeToImpact);
 	}
 }
@@ -1035,8 +1035,8 @@ void BattleView::AddSmokeMarker(const BattleObjects::Shooting& shooting)
 
 	for (const BattleObjects::Projectile& projectile : shooting.projectiles)
 	{
-		glm::vec3 p1 = glm::vec3(projectile.position1, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position1));
-		glm::vec3 p2 = glm::vec3(projectile.position2, _simulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position2));
+		glm::vec3 p1 = glm::vec3(projectile.position1, _battleSimulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position1));
+		glm::vec3 p2 = glm::vec3(projectile.position2, _battleSimulator->GetBattleMap()->GetHeightMap()->InterpolateHeight(projectile.position2));
 		marker->AddParticle(p1, p2, projectile.delay);
 	}
 }
@@ -1134,8 +1134,8 @@ void BattleView::UpdateSoundPlayer()
 		}
 	}
 
-	int meleeCavalry = _simulator->CountCavalryInMelee();
-	int meleeInfantry = _simulator->CountInfantryInMelee();
+	int meleeCavalry = _battleSimulator->CountCavalryInMelee();
+	int meleeInfantry = _battleSimulator->CountInfantryInMelee();
 
 	SoundPlayer* soundPlayer = SoundPlayer::GetSingleton();
 	soundPlayer->UpdateInfantryWalking(infantryWalking != 0);
@@ -1154,8 +1154,8 @@ void BattleView::UpdateSoundPlayer()
 	musicDirector.UpdateFriendlyUnits(friendlyUnits);
 	musicDirector.UpdateEnemyUnits(enemyUnits);
 
-	if (_simulator->GetWinnerTeam() != 0)
-		musicDirector.UpdateOutcome(_simulator->GetWinnerTeam() == _commander->GetTeam() ? 1 : -1);
+	if (_battleSimulator->GetWinnerTeam() != 0)
+		musicDirector.UpdateOutcome(_battleSimulator->GetWinnerTeam() == _commander->GetTeam() ? 1 : -1);
 	else
 		musicDirector.UpdateOutcome(0);
 }

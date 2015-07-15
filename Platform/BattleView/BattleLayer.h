@@ -29,7 +29,7 @@ class BattleLayer : AnimationHost, EditorModelObserver
 	bool _playing{};
 	bool _editing{};
 
-	BattleSimulator_v1_0_0* _scenario{};
+	BattleSimulator_v1_0_0* _battleSimulator{};
 	std::vector<BattleCommander*> _commanders{};
 
 	std::vector<BattleView*> _battleViews{};
@@ -41,7 +41,7 @@ public:
 	BattleLayer(Surface* surface);
 	~BattleLayer();
 
-	BattleSimulator_v1_0_0* GetSimulator() const { return _scenario; }
+	BattleSimulator_v1_0_0* GetBattleSimulator() const { return _battleSimulator; }
 	const std::vector<BattleView*>& GetBattleViews() const { return _battleViews; }
 	BattleView* GetPrimaryBattleView() const { return _battleViews.empty() ? nullptr : _battleViews.front(); }
 	EditorModel* GetEditorModel() const { return _editorModel; }

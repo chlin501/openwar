@@ -34,13 +34,13 @@ BattleGesture::BattleGesture(BattleHotspot* hotspot) :
 
 BattleGesture::~BattleGesture()
 {
-	_hotspot->GetBattleView()->GetSimulator()->RemoveObserver(this);
+	_hotspot->GetBattleView()->GetBattleSimulator()->RemoveObserver(this);
 }
 
 
 void BattleGesture::TouchWasCaptured(Touch* touch)
 {
-	_hotspot->GetBattleView()->GetSimulator()->AddObserver(this);
+	_hotspot->GetBattleView()->GetBattleSimulator()->AddObserver(this);
 }
 
 
@@ -112,7 +112,7 @@ void BattleGesture::TouchBegan(Touch* touch)
 
 				command.ClearPathAndSetDestination(unit->GetCenter());
 
-				_hotspot->GetBattleView()->GetSimulator()->SetUnitCommand(unit, command, _hotspot->GetBattleView()->GetSimulator()->GetTimerDelay());
+				_hotspot->GetBattleView()->GetBattleSimulator()->SetUnitCommand(unit, command, _hotspot->GetBattleView()->GetBattleSimulator()->GetTimerDelay());
 			}
 
 			_trackingMarker->SetRunning(touch->GetTapCount() > 1 || (!_tappedUnitCenter && command.running));
@@ -256,7 +256,7 @@ void BattleGesture::TouchEnded(Touch* touch)
 			_hotspot->GetBattleView()->RemoveTrackingMarker(_trackingMarker);
 			_trackingMarker = nullptr;
 
-			_hotspot->GetBattleView()->GetSimulator()->IssueUnitCommand(unit, command, _hotspot->GetBattleView()->GetSimulator()->GetTimerDelay());
+			_hotspot->GetBattleView()->GetBattleSimulator()->IssueUnitCommand(unit, command, _hotspot->GetBattleView()->GetBattleSimulator()->GetTimerDelay());
 
 			if (touch->GetTapCount() == 1)
 				SoundPlayer::GetSingleton()->PlayUserInterfaceSound(SoundSampleID::CommandAck);
@@ -358,7 +358,7 @@ void BattleGesture::UpdateTrackingMarker()
 		float delta = 1.0f / glm::max(1.0f, glm::distance(currentDestination, markerPosition));
 		for (float k = delta; k < 1; k += delta)
 		{
-			const GroundMap* groundMap = _hotspot->GetBattleView()->GetSimulator()->GetBattleMap()->GetGroundMap();
+			const GroundMap* groundMap = _hotspot->GetBattleView()->GetBattleSimulator()->GetBattleMap()->GetGroundMap();
 			if (groundMap && groundMap->IsImpassable(glm::mix(currentDestination, markerPosition, k)))
 			{
 				movementLimit = k;
@@ -381,7 +381,7 @@ void BattleGesture::UpdateTrackingMarker()
 		if (!unit->deployed)
 		{
 			BattleScenario* battleScenario = _hotspot->GetBattleView()->GetBattleScenario();
-			BattleSimulator_v1_0_0* simulator = _hotspot->GetBattleView()->GetSimulator();
+			BattleSimulator_v1_0_0* battleSimulator = _hotspot->GetBattleView()->GetBattleSimulator();
 			int team = unit->commander->GetTeam();
 
 			if (battleScenario->IsDeploymentZone(team, markerPosition))
@@ -402,7 +402,7 @@ void BattleGesture::UpdateTrackingMarker()
 					BattleObjects::UnitCommand::UpdateMovementPath(_trackingMarker->_path, unitCenter, _trackingMarker->_path.back());
 			}
 
-			simulator->DeployUnit(unit, unitCenter);
+			battleSimulator->DeployUnit(unit, unitCenter);
 			unitCenter = unit->GetCenter();
 		}
 
@@ -542,7 +542,7 @@ BattleObjects::Unit* BattleGesture::FindCommandableUnitByModifierArea(glm::vec2 
 	BattleObjects::Unit* result = nullptr;
 	float distance = 10000;
 
-	for (BattleObjects::Unit* unit : _hotspot->GetBattleView()->GetSimulator()->GetUnits())
+	for (BattleObjects::Unit* unit : _hotspot->GetBattleView()->GetBattleSimulator()->GetUnits())
 	{
 		if (unit->IsCommandableBy(_hotspot->GetBattleView()->GetCommander()))
 		{

@@ -30,7 +30,7 @@ void BattleLayer::ResetBattleViews(BattleSimulator_v1_0_0* scenario, const std::
 	_editorModel = nullptr;
 	_editorHotspot = nullptr;
 
-	_scenario = scenario;
+	_battleSimulator = scenario;
 	_commanders = commanders;
 
 	int count = scenario ? (int)commanders.size() : 0;
@@ -57,7 +57,7 @@ void BattleLayer::ResetEditor(BattleSimulator_v1_0_0* scenario, const std::vecto
 	_editorModel = nullptr;
 	_editorHotspot = nullptr;
 
-	_scenario = scenario;
+	_battleSimulator = scenario;
 	_commanders = commanders;
 
 	while ((int)_battleViews.size() > 1)

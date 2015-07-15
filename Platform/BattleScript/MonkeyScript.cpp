@@ -6,8 +6,8 @@
 #include "BattleSimulator_v1_0_0.h"
 
 
-MonkeyScript::MonkeyScript(BattleSimulator_v1_0_0* simulator) :
-	_simulator{simulator}
+MonkeyScript::MonkeyScript(BattleSimulator_v1_0_0* battleSimulator) :
+	_battleSimulator{battleSimulator}
 {
 }
 
@@ -91,7 +91,7 @@ static glm::vec2 FindClusterCenter(const std::vector<BattleObjects::Unit*>& unit
 void MonkeyScript::IssueCommands()
 {
 	BattleCommander* monkeyCommander = nullptr;
-	for (BattleCommander* commander : _simulator->GetCommanders())
+	for (BattleCommander* commander : _battleSimulator->GetCommanders())
 		if (commander->GetType() == BattleCommanderType::Player)
 		{
 			monkeyCommander = commander;
@@ -104,7 +104,7 @@ void MonkeyScript::IssueCommands()
 	std::vector<BattleObjects::Unit*> monkeyUnits;
 	std::vector<BattleObjects::Unit*> enemyUnits;
 
-	for (BattleObjects::Unit* unit : _simulator->GetUnits())
+	for (BattleObjects::Unit* unit : _battleSimulator->GetUnits())
 		if (!unit->IsRouting())
 		{
 			if (unit->commander == monkeyCommander)
@@ -145,7 +145,7 @@ void MonkeyScript::IssueCommands()
 				command.path.push_back(unitCenter);
 				command.path.push_back(destination);
 				command.bearing = angle(destination - unitCenter);
-				_simulator->SetUnitCommand(unit, command, 0);
+				_battleSimulator->SetUnitCommand(unit, command, 0);
 			}
 			else if (dist < 0.5f * range)
 			{
@@ -156,13 +156,13 @@ void MonkeyScript::IssueCommands()
 				command.path.push_back(destination);
 				command.bearing = angle(destination - unitCenter);
 				command.running = true;
-				_simulator->SetUnitCommand(unit, command, 0);
+				_battleSimulator->SetUnitCommand(unit, command, 0);
 			}
 			else
 			{
 				BattleObjects::UnitCommand command;
 				command.bearing = angle(targetCenter - unitCenter);;
-				_simulator->SetUnitCommand(unit, command, 0);
+				_battleSimulator->SetUnitCommand(unit, command, 0);
 			}
 		}
 		else
@@ -173,7 +173,7 @@ void MonkeyScript::IssueCommands()
 				command.path.push_back(unitCenter);
 				command.path.push_back(targetCenter);
 				command.bearing = angle(targetCenter - unitCenter);
-				_simulator->SetUnitCommand(unit, command, 0);
+				_battleSimulator->SetUnitCommand(unit, command, 0);
 			}
 			else
 			{
@@ -188,7 +188,7 @@ void MonkeyScript::IssueCommands()
 				command.path.push_back(unitCenter);
 				command.path.push_back(destination);
 				command.bearing = angle(destination - unitCenter);
-				_simulator->SetUnitCommand(unit, command, 0);
+				_battleSimulator->SetUnitCommand(unit, command, 0);
 			}
 		}
 	}

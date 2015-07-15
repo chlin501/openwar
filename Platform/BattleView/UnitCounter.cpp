@@ -70,7 +70,7 @@ void UnitCounter::AppendUnitMarker(BillboardTextureShape* renderer, bool flip)
 		: !_unit->IsCommandableBy(_battleView->GetCommander()) ? 1
 		: 0;
 
-	glm::vec3 position = _battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(_unit->GetCenter(), 0);
+	glm::vec3 position = _battleView->GetBattleSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(_unit->GetCenter(), 0);
 	glm::vec2 texsize(0.1875f, 0.1875f); // 48 / 256
 	glm::vec2 texcoord1 = texsize * glm::vec2(color, command);
 	glm::vec2 texcoord2 = texsize * glm::vec2((int)_samuraiPlatform, 3);
@@ -168,8 +168,8 @@ void UnitCounter::AppendFighterWeapons(VertexShape_3f* vertices)
 			glm::vec2 p1 = fighter.position;
 			glm::vec2 p2 = p1 + weaponReach * vector2_from_angle(fighter.bearing);
 
-			vertices->AddVertex(Vertex_3f(_battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(p1, 1)));
-			vertices->AddVertex(Vertex_3f(_battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(p2, 1)));
+			vertices->AddVertex(Vertex_3f(_battleView->GetBattleSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(p1, 1)));
+			vertices->AddVertex(Vertex_3f(_battleView->GetBattleSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(p2, 1)));
 		}
 	}
 }
@@ -204,7 +204,7 @@ void UnitCounter::AppendFighterBillboards(BillboardModel* billboardModel)
 	{
 		BattleObjects::FighterPosition fighter = _unit->GetFighterPosition(index);
 		const float adjust = 0.5f - 2.0f / 64.0f; // place texture 2 texels below ground
-		glm::vec3 p = _battleView->GetSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(fighter.position, adjust * size);
+		glm::vec3 p = _battleView->GetBattleSimulator()->GetBattleMap()->GetHeightMap()->GetPosition(fighter.position, adjust * size);
 		float facing = glm::degrees(fighter.bearing);
 		billboardModel->dynamicBillboards.push_back(Billboard(p, facing, size, shape));
 	}
