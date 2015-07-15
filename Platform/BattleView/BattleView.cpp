@@ -26,6 +26,7 @@
 #include "BattleHotspot.h"
 #include "TerrainView/TerrainViewport.h"
 #include "Audio/SoundPlayer.h"
+#include "BattleScenario.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -196,9 +197,9 @@ BattleView::~BattleView()
 }
 
 
-void BattleView::SetSimulator(BattleSimulator_v1_0_0* simulator)
+void BattleView::SetSimulator(BattleScenario* battleScenario)
 {
-	if (simulator == _simulator)
+	if (battleScenario->GetBattleSimulator() == _simulator)
 		return;
 
 	if (_simulator)
@@ -209,8 +210,9 @@ void BattleView::SetSimulator(BattleSimulator_v1_0_0* simulator)
 		_simulator->RemoveObserver(this);
 	}
 
-	_simulator = simulator;
-	OnBattleMapChanged(simulator->GetBattleMap());
+	_battleScenario = battleScenario;
+	_simulator = static_cast<BattleSimulator_v1_0_0*>(battleScenario->GetBattleSimulator());
+	OnBattleMapChanged(_simulator->GetBattleMap());
 
 	delete _casualtyMarker;
 	_casualtyMarker = new CasualtyMarker(_simulator);
@@ -1164,11 +1166,11 @@ void BattleView::UpdateDeploymentZones()
 	if (_smoothTerrainSurface)
 	{
 		_smoothTerrainSurface->SetDeploymentZoneBlue(
-			_simulator->GetDeploymentZone(1).first,
-			_simulator->GetDeploymentZone(1).second);
+			_battleScenario->GetDeploymentZone(1).first,
+			_battleScenario->GetDeploymentZone(1).second);
 
 		_smoothTerrainSurface->SetDeploymentZoneRed(
-			_simulator->GetDeploymentZone(2).first,
-			_simulator->GetDeploymentZone(2).second);
+			_battleScenario->GetDeploymentZone(2).first,
+			_battleScenario->GetDeploymentZone(2).second);
 	}
 }

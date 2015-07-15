@@ -35,35 +35,6 @@ BattleSimulator_v1_0_0::~BattleSimulator_v1_0_0()
 }
 
 
-void BattleSimulator_v1_0_0::SetDeploymentZone(int team, glm::vec2 center, float radius)
-{
-	_deploymentZones[team == 1 ? 0 : 1] = std::make_pair(center, radius);
-};
-
-
-std::pair<glm::vec2, float> BattleSimulator_v1_0_0::GetDeploymentZone(int team) const
-{
-	return _deploymentZones[team == 1 ? 0 : 1];
-}
-
-
-bool BattleSimulator_v1_0_0::HasCompletedDeployment(int team) const
-{
-	int count = 0;
-	for (BattleObjects_v1::Unit* unit : _units)
-	{
-		if (team == unit->commander->GetTeam())
-		{
-			if (!unit->deployed)
-				return false;
-			++count;
-		}
-	}
-
-	return count != 0;
-}
-
-
 void BattleSimulator_v1_0_0::DeployUnit(BattleObjects::Unit* _unit, glm::vec2 position)
 {
 	Unit* unit = static_cast<Unit*>(_unit);
@@ -101,7 +72,6 @@ BattleObjects_v1::Unit* BattleSimulator_v1_0_0::AddUnit(BattleCommander* command
 	unit->fightersCount = numberOfFighters;
 	unit->fighters = new BattleObjects_v1::Fighter[numberOfFighters];
 
-	unit->deployed = !IsDeploymentZone(commander->GetTeam(), position);
 	unit->command.bearing = bearing;
 	unit->nextCommand = unit->command;
 
@@ -215,8 +185,6 @@ void BattleSimulator_v1_0_0::AddShooting(const BattleObjects::Shooting& shooting
 
 void BattleSimulator_v1_0_0::AdvanceTime(float secondsSinceLastTime)
 {
-	UpdateDeploymentZones(secondsSinceLastTime);
-
 	bool didStep = false;
 
 	_secondsSinceLastTimeStep += secondsSinceLastTime;
@@ -266,12 +234,6 @@ void BattleSimulator_v1_0_0::AdvanceTime(float secondsSinceLastTime)
 
 void BattleSimulator_v1_0_0::SimulateOneTimeStep()
 {
-	for (BattleObjects_v1::Unit* unit : _units)
-	{
-		if (!unit->deployed && !IsDeploymentZone(unit->commander->GetTeam(), unit->state.center))
-			unit->deployed = true;
-	}
-
 	for (BattleObjects_v1::Unit* unit : _units)
 	{
 		if (unit->nextCommandTimer > 0)
@@ -1057,50 +1019,6 @@ BattleObjects_v1::Fighter* BattleSimulator_v1_0_0::FindFighterStrikingTarget(Bat
 
 
 /***/
-
-
-void BattleSimulator_v1_0_0::EnableDeploymentZones(float deploymentTimer)
-{
-	_deploymentTimer = deploymentTimer;
-	_deploymentEnabled = true;
-	UpdateDeploymentZones(0);
-}
-
-
-void BattleSimulator_v1_0_0::UpdateDeploymentZones(double secondsSinceLastTick)
-{
-	if (_deploymentEnabled)
-	{
-		const float deploymentRadius = 1024.0f;
-		const float deploymenyStart = 128.0f;
-		const float deploymentPause = 15.0f; // seconds
-		const float deploymentDuration = 45.0f; // seconds (total duration including pause)
-
-		float deploymentOffset = deploymenyStart;
-		if (_deploymentTimer > deploymentPause)
-			deploymentOffset += (_deploymentTimer - deploymentPause) * (512.0f - deploymenyStart) / (deploymentDuration - deploymentPause);
-
-		for (int team = 1; team <= 2; ++team)
-		{
-			if (deploymentOffset < 512.0f && !HasCompletedDeployment(team))
-			{
-				float sign = GetTeamPosition(team) == 1 ? -1.0f : 1.0f;
-				SetDeploymentZone(team, glm::vec2{512.0f, 512.0f + sign * (deploymentRadius + deploymentOffset)}, deploymentRadius);
-			}
-			else
-			{
-				SetDeploymentZone(team, glm::vec2{}, 0);
-			}
-		}
-
-		_deploymentTimer += static_cast<float>(secondsSinceLastTick);
-	}
-	else
-	{
-		SetDeploymentZone(1, glm::vec2{}, 0);
-		SetDeploymentZone(2, glm::vec2{}, 0);
-	}
-}
 
 
 glm::vec2 BattleSimulator_v1_0_0::MovementRules_NextWaypoint(BattleObjects_v1::Unit* unit)

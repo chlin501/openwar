@@ -27,10 +27,6 @@ class BattleSimulator_v1_0_0 : public BattleSimulator, public BattleObjects_v1
 	float _timeStep{1.0f / 15.0f};
 	bool _practice{};
 	int _winnerTeam{};
-	std::pair<glm::vec2, float> _deploymentZones[2]{};
-
-	float _deploymentTimer{};
-	bool _deploymentEnabled{};
 
 public:
 	BattleSimulator_v1_0_0(BattleMap* battleMap);
@@ -41,9 +37,6 @@ public:
 	void SetPractice(bool value) { _practice = value; }
 	int GetKills(int team) { return _kills[team]; }
 	int GetWinnerTeam() const { return _winnerTeam; }
-
-	void EnableDeploymentZones(float deploymentTimer);
-	std::pair<glm::vec2, float> GetDeploymentZone(int team) const override;
 
 	BattleObjects_v1::Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, glm::vec2 position);
 	void DeployUnit(BattleObjects::Unit* unit, glm::vec2 position);
@@ -88,10 +81,6 @@ private:
 
 	bool IsWithinLineOfFire(BattleObjects_v1::Unit* unit, glm::vec2 position);
 	BattleObjects_v1::Unit* ClosestEnemyWithinLineOfFire(BattleObjects_v1::Unit* unit);
-
-	void UpdateDeploymentZones(double secondsSinceLastTick);
-	void SetDeploymentZone(int team, glm::vec2 center, float radius);
-	bool HasCompletedDeployment(int team) const;
 
 	static void MovementRules_AdvanceTime(BattleObjects_v1::Unit* unit, float timeStep);
 	static void MovementRules_SwapFighters(BattleObjects_v1::Unit* unit);

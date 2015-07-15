@@ -129,7 +129,7 @@ void BattleLayer::Render()
 
 void BattleLayer::CreateBattleView(BattleCommander* commander)
 {
-	BattleSimulator_v1_0_0* simulator = _scenario;
+	//BattleSimulator_v1_0_0* simulator = _scenario;
 
 	std::shared_ptr<TerrainViewport> viewport = std::make_shared<TerrainViewport>(_gc);
 
@@ -141,7 +141,7 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 
 	battleView->GetTerrainViewport().SetFlip(commander != _commanders[0]);
 	battleView->SetCommander(commander);
-	battleView->SetSimulator(simulator);
+	//battleView->SetSimulator(simulator);
 
 	battleView->Initialize();
 }
@@ -151,7 +151,7 @@ void BattleLayer::ResetBattleView(BattleView* battleView, BattleCommander* comma
 {
 	battleView->GetTerrainViewport().SetFlip(commander != _commanders[0]);
 	battleView->SetCommander(commander);
-	battleView->SetSimulator(_scenario);
+	//battleView->SetSimulator(_scenario);
 }
 
 

@@ -195,28 +195,6 @@ bool BattleObjects::TeamHasAbandondedBattle(int team) const
 }
 
 
-bool BattleObjects::IsDeploymentZone(int team, glm::vec2 position) const
-{
-	std::pair<glm::vec2, float> deploymentZone = GetDeploymentZone(team);
-	return glm::distance(position, deploymentZone.first) < deploymentZone.second;
-}
-
-
-glm::vec2 BattleObjects::ConstrainDeploymentZone(int team, glm::vec2 position, float inset) const
-{
-	std::pair<glm::vec2, float> deploymentZone = GetDeploymentZone(team);
-	float radius = deploymentZone.second - inset;
-	if (radius > 0)
-	{
-		glm::vec2 center = deploymentZone.first;
-		glm::vec2 offset = position - center;
-		if (glm::length(offset) > radius)
-			position = center + radius * glm::normalize(offset);
-	}
-	return position;
-}
-
-
 int BattleObjects::CountCavalryInMelee() const
 {
 	int result = 0;

@@ -17,6 +17,7 @@
 #include "Surface/Surface.h"
 #include "BattleHotspot.h"
 #include "TerrainView/TerrainViewport.h"
+#include "BattleScenario.h"
 
 
 #define SNAP_TO_UNIT_TRESHOLD 22 // meters
@@ -379,20 +380,21 @@ void BattleGesture::UpdateTrackingMarker()
 
 		if (!unit->deployed)
 		{
+			BattleScenario* battleScenario = _hotspot->GetBattleView()->GetBattleScenario();
 			BattleSimulator_v1_0_0* simulator = _hotspot->GetBattleView()->GetSimulator();
 			int team = unit->commander->GetTeam();
 
-			if (simulator->IsDeploymentZone(team, markerPosition))
+			if (battleScenario->IsDeploymentZone(team, markerPosition))
 			{
-				unitCenter = simulator->ConstrainDeploymentZone(team, markerPosition, 10);
+				unitCenter = battleScenario->ConstrainDeploymentZone(team, markerPosition, 10);
 				_trackingMarker->_path.clear();
 			}
 			else
 			{
-				while (!_trackingMarker->_path.empty() && simulator->IsDeploymentZone(team, _trackingMarker->_path.front()))
+				while (!_trackingMarker->_path.empty() && battleScenario->IsDeploymentZone(team, _trackingMarker->_path.front()))
 					_trackingMarker->_path.erase(_trackingMarker->_path.begin());
 
-				unitCenter = simulator->ConstrainDeploymentZone(team,
+				unitCenter = battleScenario->ConstrainDeploymentZone(team,
 					!_trackingMarker->_path.empty() ? _trackingMarker->_path.front() : unitCenter,
 					10);
 

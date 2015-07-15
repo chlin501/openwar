@@ -199,11 +199,6 @@ public:
 
 	BattleMap* GetBattleMap() const { return _battleMap; }
 
-	virtual std::pair<glm::vec2, float> GetDeploymentZone(int team) const = 0;
-	bool IsDeploymentZone(int team, glm::vec2 position) const;
-	glm::vec2 ConstrainDeploymentZone(int team, glm::vec2 position, float inset) const;
-
-
 	virtual const std::vector<Unit*>& GetUnits() const = 0;
 
 	int CountCavalryInMelee() const;

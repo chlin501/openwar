@@ -26,6 +26,8 @@ class SmoothTerrainWater;
 class SmoothTerrainSky;
 class SmokeCounter;
 class BattleHotspot;
+class BattleCommander;
+class BattleScenario;
 class Touch;
 
 
@@ -33,6 +35,7 @@ class BattleView : public TerrainView, BattleObserver, BattleMapObserver, Animat
 {
 	GraphicsContext* _gc{};
 	BattleSimulator_v1_0_0* _simulator{};
+	BattleScenario* _battleScenario{};
 	BattleCommander* _commander{};
 
 	glm::vec3 _lightNormal{};
@@ -72,8 +75,9 @@ public:
 	BattleView(Surface* surface, std::shared_ptr<TerrainViewport> viewport);
 	~BattleView();
 
+	BattleScenario* GetBattleScenario() const { return _battleScenario; }
+	void SetSimulator(BattleScenario* battleScenario);
 	BattleSimulator_v1_0_0* GetSimulator() const { return _simulator; }
-	void SetSimulator(BattleSimulator_v1_0_0* simulator);
 
 	BattleCommander* GetCommander() const { return _commander; }
 	void SetCommander(BattleCommander* value) { _commander = value; }
