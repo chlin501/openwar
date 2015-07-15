@@ -3,11 +3,13 @@
 #include <glm/gtc/random.hpp>
 #include "MonkeyScript.h"
 #include "Algebra/geometry.h"
-#include "BattleSimulator_v1_0_0.h"
+#include "BattleSimulator.h"
+#include "BattleScenario.h"
 
 
-MonkeyScript::MonkeyScript(BattleSimulator_v1_0_0* battleSimulator) :
-	_battleSimulator{battleSimulator}
+MonkeyScript::MonkeyScript(BattleScenario* battleScenario) :
+	_battleScenario{battleScenario},
+	_battleSimulator{battleScenario->GetBattleSimulator()}
 {
 }
 

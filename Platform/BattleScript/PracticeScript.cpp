@@ -3,11 +3,13 @@
 #include <glm/gtc/random.hpp>
 #include "PracticeScript.h"
 #include "Algebra/geometry.h"
-#include "BattleSimulator_v1_0_0.h"
+#include "BattleScenario.h"
+#include "BattleSimulator.h"
 
 
-PracticeScript::PracticeScript(BattleSimulator_v1_0_0* battleSimulator) :
-	_battleSimulator{battleSimulator}
+PracticeScript::PracticeScript(BattleScenario* battleScenario) :
+	_battleScenario{battleScenario},
+	_battleSimulator{battleScenario->GetBattleSimulator()}
 {
 }
 
@@ -207,39 +209,39 @@ void PracticeScript::SpawnWave()
 	switch (_waveNumber)
 	{
 		case 0:
-			_battleSimulator->NewUnitRad(commander, "ASH-YARI", 80, p + rotate(glm::vec2(-90, 0), a), bearing);
-			_battleSimulator->NewUnitRad(commander, "ASH-YARI", 80, p + rotate(glm::vec2(-30, 0), a), bearing);
-			_battleSimulator->NewUnitRad(commander, "ASH-YARI", 80, p + rotate(glm::vec2(30, 0), a), bearing);
-			_battleSimulator->NewUnitRad(commander, "ASH-YARI", 80, p + rotate(glm::vec2(90, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(-90, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(-30, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(30, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(90, 0), a), bearing);
 			break;
 
 		case 1:
-			_battleSimulator->NewUnitRad(commander, "ASH-BOW", 80, p + rotate(glm::vec2(-40, 0), a), bearing);
-			_battleSimulator->NewUnitRad(commander, "ASH-BOW", 80, p + rotate(glm::vec2(40, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "ASH-BOW", 80, p + rotate(glm::vec2(-40, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "ASH-BOW", 80, p + rotate(glm::vec2(40, 0), a), bearing);
 			break;
 
 		case 2:
-			_battleSimulator->NewUnitRad(commander, "SAM-KATA", 80, p + rotate(glm::vec2(-60, 0), a), bearing);
-			_battleSimulator->NewUnitRad(commander, "SAM-NAGI", 80, p + rotate(glm::vec2(0, 0), a), bearing);
-			_battleSimulator->NewUnitRad(commander, "SAM-KATA", 80, p + rotate(glm::vec2(60, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(-60, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "SAM-NAGI", 80, p + rotate(glm::vec2(0, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(60, 0), a), bearing);
 			break;
 
 		case 3:
-			_battleSimulator->NewUnitRad(commander, "CAV-BOW", 40, p + rotate(glm::vec2(-60, 0), a), bearing);
-			_battleSimulator->NewUnitRad(commander, "CAV-BOW", 40, p + rotate(glm::vec2(60, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "CAV-BOW", 40, p + rotate(glm::vec2(-60, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "CAV-BOW", 40, p + rotate(glm::vec2(60, 0), a), bearing);
 			break;
 
 		case 4:
-			_battleSimulator->NewUnitRad(commander, "CAV-YARI", 40, p + rotate(glm::vec2(-90, 0), a), bearing);
-			_battleSimulator->NewUnitRad(commander, "SAM-KATA", 80, p + rotate(glm::vec2(-30, 0), a), bearing);
-			_battleSimulator->NewUnitRad(commander, "SAM-KATA", 80, p + rotate(glm::vec2(30, 0), a), bearing);
-			_battleSimulator->NewUnitRad(commander, "CAV-YARI", 40, p + rotate(glm::vec2(90, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "CAV-YARI", 40, p + rotate(glm::vec2(-90, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(-30, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(30, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "CAV-YARI", 40, p + rotate(glm::vec2(90, 0), a), bearing);
 			break;
 
 		case 5:
-			_battleSimulator->NewUnitRad(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(-60, 0), a), bearing);
-			_battleSimulator->NewUnitRad(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(0, 0), a), bearing);
-			_battleSimulator->NewUnitRad(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(60, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(-60, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(0, 0), a), bearing);
+			_battleSimulator->AddUnit(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(60, 0), a), bearing);
 			break;
 	}
 

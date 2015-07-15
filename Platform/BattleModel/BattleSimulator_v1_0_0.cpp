@@ -35,35 +35,13 @@ BattleSimulator_v1_0_0::~BattleSimulator_v1_0_0()
 }
 
 
-void BattleSimulator_v1_0_0::DeployUnit(BattleObjects::Unit* _unit, glm::vec2 position)
-{
-	Unit* unit = static_cast<Unit*>(_unit);
-
-	unit->state.center = position;
-
-	unit->command = BattleObjects::UnitCommand();
-	unit->command.bearing = unit->state.bearing;
-	unit->nextCommand = unit->command;
-
-	unit->state.unitMode = BattleObjects_v1::UnitMode_Initializing;
-	MovementRules_AdvanceTime(unit, 0);
-	unit->nextState = NextUnitState(unit);
-	for (BattleObjects_v1::Fighter* i = unit->fighters, * end = i + unit->fightersCount; i != end; ++i)
-		i->nextState = NextFighterState(i);
-
-	unit->state = unit->nextState;
-	for (BattleObjects_v1::Fighter* i = unit->fighters, * end = i + unit->fightersCount; i != end; ++i)
-		i->state = i->nextState;
-}
-
-
-BattleObjects_v1::Unit* BattleSimulator_v1_0_0::AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, glm::vec2 position)
+BattleObjects::Unit* BattleSimulator_v1_0_0::AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, glm::vec2 position, float bearing)
 {
 	BattleObjects_v1::UnitStats stats = BattleObjects_v1::GetDefaultUnitStats(unitClass);
 
 	BattleObjects_v1::Unit* unit = new BattleObjects_v1::Unit();
 
-	float bearing = commander->GetTeamPosition() == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
+	//float bearing = commander->GetTeamPosition() == 1 ? (float)M_PI_2 : (float)M_PI_2 * 3;
 
 	unit->commander = commander;
 	unit->unitClass = unitClass;
@@ -106,6 +84,29 @@ BattleObjects_v1::Unit* BattleSimulator_v1_0_0::AddUnit(BattleCommander* command
 }
 
 
+void BattleSimulator_v1_0_0::DeployUnit(BattleObjects::Unit* _unit, glm::vec2 position, float bearing)
+{
+	Unit* unit = static_cast<Unit*>(_unit);
+
+	unit->state.center = position;
+	unit->state.bearing = bearing;
+
+	unit->command = BattleObjects::UnitCommand();
+	unit->command.bearing = bearing;
+	unit->nextCommand = unit->command;
+
+	unit->state.unitMode = BattleObjects_v1::UnitMode_Initializing;
+	MovementRules_AdvanceTime(unit, 0);
+	unit->nextState = NextUnitState(unit);
+	for (BattleObjects_v1::Fighter* i = unit->fighters, * end = i + unit->fightersCount; i != end; ++i)
+		i->nextState = NextFighterState(i);
+
+	unit->state = unit->nextState;
+	for (BattleObjects_v1::Fighter* i = unit->fighters, * end = i + unit->fightersCount; i != end; ++i)
+		i->state = i->nextState;
+}
+
+
 void BattleSimulator_v1_0_0::RemoveUnit(BattleObjects::Unit* _unit)
 {
 	Unit* unit = static_cast<Unit*>(_unit);
@@ -139,13 +140,6 @@ void BattleSimulator_v1_0_0::RemoveUnit(BattleObjects::Unit* _unit)
 
 	delete[] unit->fighters;
 	delete unit;
-}
-
-
-void BattleSimulator_v1_0_0::NewUnitRad(BattleCommander* commander, const char* unitClass, int strength, glm::vec2 position, float bearing)
-{
-	BattleObjects_v1::Unit* unit = AddUnit(commander, unitClass, strength, position);
-	unit->command.bearing = bearing;
 }
 
 

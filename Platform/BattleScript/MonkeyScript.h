@@ -3,16 +3,18 @@
 
 #include "BattleScript.h"
 
-class BattleSimulator_v1_0_0;
+class BattleScenario;
+class BattleSimulator;
 
 
 class MonkeyScript : public BattleScript
 {
-	BattleSimulator_v1_0_0* _battleSimulator{};
+	BattleScenario* _battleScenario{};
+	BattleSimulator* _battleSimulator{};
 	double _commandTimer{};
 
 public:
-	MonkeyScript(BattleSimulator_v1_0_0* battleSimulator);
+	MonkeyScript(BattleScenario* battleSimulator);
 
 	void Tick(double secondsSinceLastTick) override;
 

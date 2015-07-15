@@ -38,14 +38,12 @@ public:
 	int GetKills(int team) { return _kills[team]; }
 	int GetWinnerTeam() const { return _winnerTeam; }
 
-	BattleObjects_v1::Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, glm::vec2 position);
-	void DeployUnit(BattleObjects::Unit* unit, glm::vec2 position);
-	void RemoveUnit(BattleObjects::Unit* unit);
+	BattleObjects::Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, glm::vec2 position, float bearing) override;
+	void DeployUnit(BattleObjects::Unit* unit, glm::vec2 position, float bearing) override;
+	void RemoveUnit(BattleObjects::Unit* unit) override;
 
-	void NewUnitRad(BattleCommander* commander, const char* unitClass, int strength, glm::vec2 position, float bearing);
-
-	void SetUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer);
-	void IssueUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer);
+	void SetUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer) override;
+	void IssueUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer) override;
 
 	void AddShooting(const BattleObjects::Shooting& shooting, float timer);
 

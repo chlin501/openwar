@@ -3,17 +3,19 @@
 
 #include "BattleScript.h"
 
-class BattleSimulator_v1_0_0;
+class BattleScenario;
+class BattleSimulator;
 
 
 class PracticeScript : public BattleScript
 {
-	BattleSimulator_v1_0_0* _battleSimulator{};
+	BattleScenario* _battleScenario{};
+	BattleSimulator* _battleSimulator{};
 	double _commandTimer{};
 	int _waveNumber{};
 
 public:
-	PracticeScript(BattleSimulator_v1_0_0* battleSimulator);
+	PracticeScript(BattleScenario* battleScenario);
 
 	void Tick(double secondsSinceLastTick) override;
 
