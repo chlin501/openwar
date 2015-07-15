@@ -32,10 +32,10 @@ public:
 	};
 
 	std::vector<Casualty> casualties;
-	BattleSimulator_v1_0_0* _battleSimulator;
+	BattleSimulator* _battleSimulator;
 
 public:
-	CasualtyMarker(BattleSimulator_v1_0_0* battleSimulator);
+	CasualtyMarker(BattleSimulator* battleSimulator);
 	~CasualtyMarker();
 
 	void AddCasualty(glm::vec3 position, int team, BattleObjects_v1::SamuraiPlatform platform);

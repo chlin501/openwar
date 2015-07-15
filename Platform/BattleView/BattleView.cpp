@@ -211,7 +211,7 @@ void BattleView::SetSimulator(BattleScenario* battleScenario)
 	}
 
 	_battleScenario = battleScenario;
-	_battleSimulator = static_cast<BattleSimulator_v1_0_0*>(battleScenario->GetBattleSimulator());
+	_battleSimulator = static_cast<BattleSimulator*>(battleScenario->GetBattleSimulator());
 	OnBattleMapChanged(_battleSimulator->GetBattleMap());
 
 	delete _casualtyMarker;

@@ -34,7 +34,7 @@ class Touch;
 class BattleView : public TerrainView, BattleObserver, BattleMapObserver, AnimationHost
 {
 	GraphicsContext* _gc{};
-	BattleSimulator_v1_0_0* _battleSimulator{};
+	BattleSimulator* _battleSimulator{};
 	BattleScenario* _battleScenario{};
 	BattleCommander* _commander{};
 
@@ -77,7 +77,7 @@ public:
 
 	BattleScenario* GetBattleScenario() const { return _battleScenario; }
 	void SetSimulator(BattleScenario* battleScenario);
-	BattleSimulator_v1_0_0* GetBattleSimulator() const { return _battleSimulator; }
+	BattleSimulator* GetBattleSimulator() const { return _battleSimulator; }
 
 	BattleCommander* GetCommander() const { return _commander; }
 	void SetCommander(BattleCommander* value) { _commander = value; }

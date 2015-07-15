@@ -9,7 +9,6 @@
 
 class BattleMap;
 class BattleScript;
-class BattleSimulator_v1_0_0;
 class GroundMap;
 class HeightMap;
 

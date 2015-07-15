@@ -20,6 +20,10 @@ public:
 
 	float GetTimerDelay() const { return 0.25f; }
 
+	virtual void AdvanceTime(float secondsSinceLastTime) = 0;
+
+	virtual int GetKills(int team) = 0;
+
 	virtual BattleObjects::Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, glm::vec2 position, float bearing) = 0;
 	virtual void DeployUnit(BattleObjects::Unit* unit, glm::vec2 position, float bearing) = 0;
 	virtual void RemoveUnit(BattleObjects::Unit* unit) = 0;
@@ -27,7 +31,7 @@ public:
 	virtual void SetUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer) = 0;
 	virtual void IssueUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer) = 0;
 
-	virtual void AdvanceTime(float secondsSinceLastTime) = 0;
+	virtual void AddShooting(const BattleObjects::Shooting& shooting, float timer) = 0;
 
 protected:
 	void NotifyAddUnit(BattleObjects::Unit* unit);

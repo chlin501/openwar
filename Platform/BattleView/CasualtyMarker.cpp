@@ -10,7 +10,7 @@
 
 
 
-CasualtyMarker::CasualtyMarker(BattleSimulator_v1_0_0* battleSimulator) :
+CasualtyMarker::CasualtyMarker(BattleSimulator* battleSimulator) :
 	_battleSimulator{battleSimulator}
 {
 }

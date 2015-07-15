@@ -381,7 +381,7 @@ void BattleGesture::UpdateTrackingMarker()
 		if (!unit->deployed)
 		{
 			BattleScenario* battleScenario = _hotspot->GetBattleView()->GetBattleScenario();
-			BattleSimulator_v1_0_0* battleSimulator = _hotspot->GetBattleView()->GetBattleSimulator();
+			BattleSimulator* battleSimulator = _hotspot->GetBattleView()->GetBattleSimulator();
 			int team = unit->GetTeam();
 
 			if (battleScenario->IsDeploymentZone(team, markerPosition))

@@ -32,7 +32,7 @@ public:
 
 	void AdvanceTime(float secondsSinceLastTime) override;
 
-	int GetKills(int team) { return _kills[team]; }
+	int GetKills(int team) override { return _kills[team]; }
 
 	BattleObjects::Unit* AddUnit(BattleCommander* commander, const char* unitClass, int numberOfFighters, glm::vec2 position, float bearing) override;
 	void DeployUnit(BattleObjects::Unit* unit, glm::vec2 position, float bearing) override;

@@ -12,11 +12,11 @@
 class RangeMarker
 {
 public:
-	BattleSimulator_v1_0_0* _battleSimulator{};
+	BattleSimulator* _battleSimulator{};
 	BattleObjects::Unit* _unit{};
 
 public:
-	RangeMarker(BattleSimulator_v1_0_0* battleSimulator, BattleObjects::Unit* unit);
+	RangeMarker(BattleSimulator* battleSimulator, BattleObjects::Unit* unit);
 
 	void Render(VertexShape_3f_4f* vertices);
 
