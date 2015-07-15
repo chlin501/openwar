@@ -3,8 +3,9 @@
 #include <map>
 
 
-BattleScenario::BattleScenario(BattleSimulator* battleSimulator) :
-	_battleSimulator(battleSimulator)
+BattleScenario::BattleScenario(BattleSimulator* battleSimulator, float executionTime) :
+	_battleSimulator{battleSimulator},
+	_executionTime{executionTime}
 {
 	_dummyCommander = new BattleCommander(this, "", 1, BattleCommanderType::None);
 }
@@ -143,9 +144,8 @@ int BattleScenario::GetTeamPosition(int team) const
 
 
 
-void BattleScenario::EnableDeploymentZones(float deploymentTimer)
+void BattleScenario::EnableDeploymentZones()
 {
-	_deploymentTimer = deploymentTimer;
 	_deploymentEnabled = true;
 	UpdateDeploymentZones(0);
 }
@@ -179,7 +179,7 @@ glm::vec2 BattleScenario::ConstrainDeploymentZone(int team, glm::vec2 position, 
 }
 
 
-void BattleScenario::UpdateDeploymentZones(double secondsSinceLastTick)
+void BattleScenario::UpdateDeploymentZones(float secondsSinceLastTick)
 {
 	if (_deploymentEnabled)
 	{
@@ -189,8 +189,8 @@ void BattleScenario::UpdateDeploymentZones(double secondsSinceLastTick)
 		const float deploymentDuration = 45.0f; // seconds (total duration including pause)
 
 		float deploymentOffset = deploymenyStart;
-		if (_deploymentTimer > deploymentPause)
-			deploymentOffset += (_deploymentTimer - deploymentPause) * (512.0f - deploymenyStart) / (deploymentDuration - deploymentPause);
+		if (_executionTime > deploymentPause)
+			deploymentOffset += (_executionTime - deploymentPause) * (512.0f - deploymenyStart) / (deploymentDuration - deploymentPause);
 
 		for (int team = 1; team <= 2; ++team)
 		{
@@ -204,14 +204,14 @@ void BattleScenario::UpdateDeploymentZones(double secondsSinceLastTick)
 				SetDeploymentZone(team, glm::vec2{}, 0);
 			}
 		}
-
-		_deploymentTimer += static_cast<float>(secondsSinceLastTick);
 	}
 	else
 	{
 		SetDeploymentZone(1, glm::vec2{}, 0);
 		SetDeploymentZone(2, glm::vec2{}, 0);
 	}
+
+	_executionTime += secondsSinceLastTick;
 }
 
 
