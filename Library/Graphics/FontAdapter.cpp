@@ -175,7 +175,7 @@ std::shared_ptr<TextureImage> FontAdapter_UIFont::AddTextureImage(TextureAtlas* 
 	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image, TextureDiscardability::Discardable);
 
 	BorderBounds bounds = textureImage->GetBounds();
-	bounds.outer = bounds.outer.grow(-1);
+	bounds.outer = bounds.outer.add_radius(-1);
 	bounds.inner.min = bounds.outer.min + glm::vec2(offset, offset);
 	bounds.inner.max = bounds.inner.min + glm::vec2(size.width, size.height);
 	textureImage->SetBounds(bounds);
