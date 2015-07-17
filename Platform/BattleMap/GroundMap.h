@@ -6,6 +6,7 @@
 #define GroundMap_H
 
 #include "Algebra/bounds.h"
+#import "HeightMap.h"
 
 class HeightMap;
 
@@ -23,6 +24,21 @@ public:
 	virtual bool IsImpassable(glm::vec2 position) const = 0;
 	//virtual bool IsWater(glm::vec2 position) const = 0;
 	virtual bool ContainsWater(bounds2f bounds) const = 0;
+};
+
+
+class BlankGroundMap : public GroundMap
+{
+	HeightMap _heightMap{{0, 0, 1024, 1024}};
+
+public:
+	bounds2f GetBounds() const { return _heightMap.GetBounds(); }
+	const HeightMap* GetHeightMap() const { return &_heightMap; }
+	float CalculateHeight(int x, int y) const { return 2.0f; }
+
+	bool IsForest(glm::vec2 position) const { return false; }
+	bool IsImpassable(glm::vec2 position) const { return false; }
+	bool ContainsWater(bounds2f bounds) const { return false; }
 };
 
 
