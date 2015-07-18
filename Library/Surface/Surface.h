@@ -32,6 +32,7 @@ class Surface : public ViewOwner
 
 	GraphicsContext* _gc;
 	glm::vec2 _nativeSize;
+	bool _usingDepth;
 
 public:
 	Surface(GraphicsContext* gc);
@@ -42,6 +43,9 @@ public:
 	void SetNativeSize(glm::vec2 value);
 	glm::vec2 GetNativeSize() const;
 	glm::vec2 GetVirtualSize() const;
+
+	bool IsUsingDepth() const;
+	void SetUsingDepth(bool value);
 
 #ifdef PHALANX_TARGET_UI_APPKIT
 	void SetNSView(NSView* value);

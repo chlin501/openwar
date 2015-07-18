@@ -57,6 +57,18 @@ glm::vec2 Surface::GetVirtualSize() const
 }
 
 
+bool Surface::IsUsingDepth() const
+{
+	return _usingDepth;
+}
+
+
+void Surface::SetUsingDepth(bool value)
+{
+	_usingDepth = value;
+}
+
+
 #ifdef PHALANX_TARGET_UI_APPKIT
 void Surface::SetNSView(NSView* value)
 {

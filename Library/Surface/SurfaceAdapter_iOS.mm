@@ -87,6 +87,9 @@
 		_surface = [_surfaceFactory createSurfaceWithGraphicsContext:gc];
 		_surface->SetUIView(self);
 
+		if (_surface->IsUsingDepth())
+			self.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+
 		CGSize size = self.bounds.size;
 		_surface->SetNativeSize(glm::vec2(size.width, size.height));
 
