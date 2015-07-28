@@ -7,7 +7,7 @@
 #endif
 
 #include "BattleMap/BattleMap.h"
-#include "BattleSimulator_v1_0_0.h"
+#include "BattleModel/BattleSimulator_v1_0_0.h"
 #include "Audio/SoundPlayer.h"
 #include "BattleGesture.h"
 #include "BattleView.h"
@@ -17,7 +17,7 @@
 #include "Surface/Surface.h"
 #include "BattleHotspot.h"
 #include "TerrainView/TerrainViewport.h"
-#include "BattleScenario.h"
+#include "BattleModel/BattleScenario.h"
 
 
 #define SNAP_TO_UNIT_TRESHOLD 22 // meters

@@ -173,22 +173,22 @@ public:
 
 	public: // BattleObjects::Unit overrides
 		glm::vec2 GetCenter() const override { return state.center; }
-		void SetCenter(glm::vec2 value) { state.center = value; }
+		void SetCenter(glm::vec2 value) override { state.center = value; }
 
 		float GetBearing() const override { return state.bearing; }
-		void SetBearing(float value) {state.bearing = value; }
+		void SetBearing(float value) override {state.bearing = value; }
 
 		float GetIntrinsicMorale() const override { return state.morale; }
 		float GetEffectiveMorale() const override { return state.morale + state.influence; }
-		void SetIntrinsicMorale(float value) { state.morale = value; }
+		void SetIntrinsicMorale(float value) override { state.morale = value; }
 
 		bool IsRouting() const override { return state.IsRouting(); }
 		bool IsStanding() const override { return state.unitMode == BattleObjects_v1::UnitMode_Standing; }
 		bool IsMoving() const override { return state.unitMode == BattleObjects_v1::UnitMode_Moving; }
 		bool IsInMelee() const override;
 
-		const UnitCommand& GetCurrentCommand() const { return command; }
-		const UnitCommand& GetIssuedCommand() const { return nextCommandTimer > 0 ? nextCommand : command; }
+		const UnitCommand& GetCurrentCommand() const override { return command; }
+		const UnitCommand& GetIssuedCommand() const override { return nextCommandTimer > 0 ? nextCommand : command; }
 
 		PlatformType GetPlatformType() const override { return stats.platformType; }
 

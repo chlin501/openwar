@@ -5,14 +5,14 @@
 #include <glm/gtc/constants.hpp>
 
 #include "BattleMap/BattleMap.h"
-#include "BattleSimulator_v1_0_0.h"
+#include "BattleModel/BattleSimulator_v1_0_0.h"
 #include "Shapes/BillboardColorShader.h"
 #include "Shapes/PathRenderer.h"
 #include "Shapes/BillboardTextureShape.h"
 #include "BattleView.h"
 #include "UnitMovementMarker.h"
 #include "TerrainView/TerrainViewport.h"
-#include "BattleScenario.h"
+#include "BattleModel/BattleScenario.h"
 
 
 UnitMovementMarker::UnitMovementMarker(BattleView* battleView, BattleObjects::Unit* unit) : UnitMarker(battleView, unit)

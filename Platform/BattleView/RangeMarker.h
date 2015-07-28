@@ -5,7 +5,7 @@
 #ifndef RangeMarker_H
 #define RangeMarker_H
 
-#include "BattleSimulator_v1_0_0.h"
+#include "BattleModel/BattleSimulator_v1_0_0.h"
 #include "Shapes/VertexShape.h"
 
 

@@ -3,8 +3,9 @@
 #include <glm/gtc/random.hpp>
 #include "MonkeyScript.h"
 #include "Algebra/geometry.h"
-#include "BattleSimulator.h"
-#include "BattleScenario.h"
+#include "BattleModel/BattleObjects.h"
+#include "BattleModel/BattleSimulator.h"
+#include "BattleModel/BattleScenario.h"
 
 
 MonkeyScript::MonkeyScript(BattleScenario* battleScenario) :

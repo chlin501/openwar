@@ -6,11 +6,11 @@
 
 #include "Shapes/BillboardTextureShape.h"
 #include "BattleMap/BattleMap.h"
-#include "BattleSimulator_v1_0_0.h"
+#include "BattleModel/BattleSimulator_v1_0_0.h"
 #include "BattleView.h"
 #include "UnitCounter.h"
 #include "TerrainView/TerrainViewport.h"
-#include "BattleScenario.h"
+#include "BattleModel/BattleScenario.h"
 
 
 UnitCounter::UnitCounter(BattleView* battleView, BattleObjects::Unit* unit) :

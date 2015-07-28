@@ -3,8 +3,8 @@
 #include <glm/gtc/random.hpp>
 #include "PracticeScript.h"
 #include "Algebra/geometry.h"
-#include "BattleScenario.h"
-#include "BattleSimulator.h"
+#include "BattleModel/BattleScenario.h"
+#include "BattleModel/BattleSimulator.h"
 
 
 PracticeScript::PracticeScript(BattleScenario* battleScenario) :

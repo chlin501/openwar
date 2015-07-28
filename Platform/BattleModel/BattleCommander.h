@@ -1,6 +1,8 @@
 #ifndef BattleCommander_H
 #define BattleCommander_H
 
+#include <string>
+
 class BattleScenario;
 
 enum class BattleCommanderType { None = 0, Player = 1, Script = 2 };

@@ -5,7 +5,7 @@
 #ifndef UnitMarker_H
 #define UnitMarker_H
 
-#include "BattleObjects_v1.h"
+#include "BattleModel/BattleObjects_v1.h"
 
 class BattleView;
 

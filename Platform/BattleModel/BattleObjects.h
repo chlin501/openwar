@@ -2,6 +2,7 @@
 #define BattleObjects_H
 
 #include <string>
+#include <vector>
 #include <glm/glm.hpp>
 
 #include "BattleCommander.h"

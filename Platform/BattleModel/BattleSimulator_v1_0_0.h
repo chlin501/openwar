@@ -41,7 +41,7 @@ public:
 	void SetUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer) override;
 	void IssueUnitCommand(BattleObjects::Unit* unit, const BattleObjects::UnitCommand& command, float timer) override;
 
-	void AddShooting(const BattleObjects::Shooting& shooting, float timer);
+	void AddShooting(const BattleObjects::Shooting& shooting, float timer) override;
 
 private:
 	void SimulateOneTimeStep();

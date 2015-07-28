@@ -5,7 +5,7 @@
 #include "Graphics/CommonShaders.h"
 #include "Surface/Animation.h"
 #include "TerrainView/EditorModel.h"
-#include "BattleObjects.h"
+#include "BattleModel/BattleObjects.h"
 
 class BattleGesture;
 class BattleModel;

@@ -9,7 +9,7 @@
 #include "BattleMap/SmoothGroundMap.h"
 #include "BattleMap/TiledGroundMap.h"
 #include "BattleMap/BattleMap.h"
-#include "BattleScript.h"
+#include "BattleScript/BattleScript.h"
 #include "BattleObserver.h"
 #include <glm/gtc/random.hpp>
 #include <algorithm>

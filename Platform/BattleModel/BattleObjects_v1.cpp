@@ -4,7 +4,7 @@
 
 #include "BattleObjects_v1.h"
 #include "BattleSimulator_v1_0_0.h"
-#include "geometry.h"
+#include "Algebra/geometry.h"
 
 
 int BattleObjects_v1::Fighter::GetRank() const

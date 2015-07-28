@@ -1,6 +1,8 @@
 #ifndef BattleSimulator_H
 #define BattleSimulator_H
 
+#include <set>
+
 #include "BattleObjects.h"
 
 class BattleObserver;

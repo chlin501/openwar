@@ -1,4 +1,4 @@
-#include "BattleSimulator_v1_0_0.h"
+#include "BattleModel/BattleSimulator_v1_0_0.h"
 #include "Surface/Surface.h"
 #include "BattleHotspot.h"
 #include "BattleView.h"

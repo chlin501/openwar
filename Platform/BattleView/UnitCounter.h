@@ -5,7 +5,7 @@
 #ifndef UnitCounter_H
 #define UnitCounter_H
 
-#include "BattleSimulator_v1_0_0.h"
+#include "BattleModel/BattleSimulator_v1_0_0.h"
 #include "Algebra/bounds.h"
 #include "Shapes/VertexShape.h"
 

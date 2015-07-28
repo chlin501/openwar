@@ -26,7 +26,7 @@
 #include "BattleHotspot.h"
 #include "TerrainView/TerrainViewport.h"
 #include "Audio/SoundPlayer.h"
-#include "BattleScenario.h"
+#include "BattleModel/BattleScenario.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
