@@ -55,6 +55,7 @@ private:
 };
 
 
+/*
 class ScrollerWidgetView : public WidgetView
 {
 	ScrollerHotspot _scrollerHotspot;
@@ -66,6 +67,6 @@ public: // View
 	void OnTouchEnter(Touch* touch) override;
 	void OnTouchBegin(Touch* touch) override;
 };
-
+*/
 
 #endif

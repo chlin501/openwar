@@ -87,6 +87,7 @@ void WidgetView::UpdateVertexBuffer()
 /* ScrollerWidgetView */
 
 
+/*
 ScrollerWidgetView::ScrollerWidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollerViewport> viewport) : WidgetView{viewOwner, viewport},
 	_scrollerHotspot{*viewport}
 {
@@ -115,3 +116,4 @@ void ScrollerWidgetView::OnTouchBegin(Touch* touch)
 		}
 	}
 }
+*/
