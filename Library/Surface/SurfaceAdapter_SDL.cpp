@@ -16,7 +16,7 @@ std::map<Uint32, SurfaceAdapter*> SurfaceAdapter::_windows;
 SurfaceAdapter* SurfaceAdapter::_touchWindow = nullptr;
 
 
-SurfaceAdapter::SurfaceAdapter() :
+SurfaceAdapter::SurfaceAdapter(const char* title) :
 _surface(nullptr),
 _window(nullptr),
 _glcontext(0),
@@ -27,7 +27,7 @@ _timestamp()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
-	_window = SDL_CreateWindow("My Game Window",
+	_window = SDL_CreateWindow(title,
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		1024, 768,

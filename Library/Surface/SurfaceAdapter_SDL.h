@@ -30,7 +30,7 @@ class SurfaceAdapter
 	std::map<std::pair<SDL_TouchID, SDL_FingerID>, Touch*> _touches;
 
 public:
-	SurfaceAdapter();
+	SurfaceAdapter(const char* title);
 	~SurfaceAdapter();
 
 	void SetSurface(Surface* surface);
