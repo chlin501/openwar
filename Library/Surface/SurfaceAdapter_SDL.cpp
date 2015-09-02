@@ -415,13 +415,12 @@ void SurfaceAdapter::ProcessMouseWheel(const SDL_MouseWheelEvent& event)
 {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
-	glm::vec2 position = ToVector(event.x, event.y);
-
-	float k = 1;
+	glm::vec2 position = ToVector(x, y);
+    glm::vec2 delta = 0.01f * glm::vec2(event.x, event.y);
 
 	if (Gesture::_gestures)
 		for (Gesture* gesture : *Gesture::_gestures)
-			gesture->ScrollWheel(position, k * glm::vec2(event.x, event.y));
+			gesture->ScrollWheel(position, delta);
 
 }
 
