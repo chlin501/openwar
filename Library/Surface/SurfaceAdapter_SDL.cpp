@@ -96,13 +96,14 @@ static SDL_Scancode GetScancode(int keyCode)
 	}
 }
 
+
 static SDL_Keycode GetKeycode(int keyCode)
 {
 	switch (keyCode)
 	{
 		case 81: return SDLK_q;
 		case 87: return SDLK_w;
-		case 69Add key : return SDLK_e;
+		case 69: return SDLK_e;
 		case 65: return SDLK_a;
 		case 83: return SDLK_s;
 		case 68: return SDLK_d;
