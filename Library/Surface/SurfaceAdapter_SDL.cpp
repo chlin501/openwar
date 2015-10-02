@@ -82,6 +82,73 @@ void SurfaceAdapter::ProcessEvents()
 }
 
 
+static SDL_Scancode GetScancode(int keyCode)
+{
+	switch (keyCode)
+	{
+		case 81: return SDL_SCANCODE_Q;
+		case 87: return SDL_SCANCODE_W;
+		case 69: return SDL_SCANCODE_E;
+		case 65: return SDL_SCANCODE_A;
+		case 83: return SDL_SCANCODE_S;
+		case 68: return SDL_SCANCODE_D;
+		default: return SDL_SCANCODE_UNKNOWN;
+	}
+}
+
+static SDL_Keycode GetKeycode(int keyCode)
+{
+	switch (keyCode)
+	{
+		case 81: return SDLK_q;
+		case 87: return SDLK_w;
+		case 69Add key : return SDLK_e;
+		case 65: return SDLK_a;
+		case 83: return SDLK_s;
+		case 68: return SDLK_d;
+		default: return SDLK_UNKNOWN;
+	}
+}
+
+
+void SurfaceAdapter::SimulateKeyDown(int keyCode)
+{
+	SDL_KeyboardEvent event;
+	event.type = SDL_KEYDOWN;
+	event.timestamp = 0;
+	event.windowID = 0;
+	event.state = SDL_PRESSED;
+	event.repeat = false;
+	event.keysym.scancode = GetScancode(keyCode);
+	event.keysym.sym = GetKeycode(keyCode);
+	event.keysym.mod = 0;
+	event.keysym.unused = 0;
+
+	if (event.keysym.scancode != SDL_SCANCODE_UNKNOWN)
+		for (auto i : _windows)
+			i.second->ProcessKeyDown(event);
+}
+
+
+void SurfaceAdapter::SimulateKeyUp(int keyCode)
+{
+	SDL_KeyboardEvent event;
+	event.type = SDL_KEYUP;
+	event.timestamp = 0;
+	event.windowID = 0;
+	event.state = SDL_RELEASED;
+	event.repeat = false;
+	event.keysym.scancode = GetScancode(keyCode);
+	event.keysym.sym = GetKeycode(keyCode);
+	event.keysym.mod = 0;
+	event.keysym.unused = 0;
+
+	if (event.keysym.scancode != SDL_SCANCODE_UNKNOWN)
+		for (auto i : _windows)
+			i.second->ProcessKeyUp(event);
+}
+
+
 SurfaceAdapter* SurfaceAdapter::GetWindow(Uint32 windowID)
 {
 	return _windows[windowID];

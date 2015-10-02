@@ -38,6 +38,9 @@ public:
 	static bool IsDone();
 	static void ProcessEvents();
 
+	static void SimulateKeyDown(int keyCode);
+	static void SimulateKeyUp(int keyCode);
+
 private:
 	static void ProcessEvent(const SDL_Event& event);
 
