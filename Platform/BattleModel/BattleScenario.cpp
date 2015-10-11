@@ -1,5 +1,8 @@
 #include "BattleScenario.h"
 #include "BattleSimulator.h"
+#include "BattleScript/BattleScript.h"
+
+#include <cstring>
 #include <map>
 
 
@@ -20,8 +23,17 @@ BattleScenario::~BattleScenario()
 }
 
 
+void BattleScenario::SetBattleScript(BattleScript* battleScript)
+{
+	_battleScript = battleScript;
+}
+
+
 void BattleScenario::Tick(float secondsSinceLastTick)
 {
+	if (_battleScript)
+		_battleScript->Tick(secondsSinceLastTick);
+
 	UpdateDeploymentZones(secondsSinceLastTick);
 
 	for (BattleObjects::Unit* unit : _battleSimulator->GetUnits())

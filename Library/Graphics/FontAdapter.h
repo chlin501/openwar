@@ -15,8 +15,13 @@
 
 
 #include <functional>
+#include <memory>
 
 #include "FontDescriptor.h"
+
+#ifdef PHALANX_USING_FONTADAPTER_SDLTTF
+#include <SDL2/SDL_ttf.h>
+#endif
 
 class GraphicsContext;
 class Image;

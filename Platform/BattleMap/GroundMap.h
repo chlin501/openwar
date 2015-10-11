@@ -6,7 +6,7 @@
 #define GroundMap_H
 
 #include "Algebra/bounds.h"
-#import "HeightMap.h"
+#include "HeightMap.h"
 
 class HeightMap;
 

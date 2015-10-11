@@ -35,6 +35,8 @@
 
 
 #ifdef PHALANX_TARGET_OS_LINUX
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 #endif
 
 
@@ -43,8 +45,6 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #endif
-
-
 
 
 #if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
@@ -59,12 +59,16 @@
 #include <SDL2/SDL_image.h>
 #else
 #include <SDL2/SDL.h>
+#ifdef PHALANX_TARGET_OS_LINUX
+#include <SDL2/SDL_image.h>
+#else
 #include <SDL2_image/SDL_image.h>
+#endif
 #endif
 #endif
 
 #ifdef PHALANX_USING_FONTADAPTER_SDLTTF
-#include <SDL2_ttf/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #endif
 
 
@@ -74,6 +78,9 @@
 extern void CheckOpenGLError(const char* file, int line);
 
 
+#ifndef GL_VERTEX_PROGRAM_POINT_SIZE
+#define GL_VERTEX_PROGRAM_POINT_SIZE 0x8642
+#endif
 
 #ifndef GL_POINT_SPRITE
 #define GL_POINT_SPRITE 0x8861

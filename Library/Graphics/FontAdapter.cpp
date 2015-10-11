@@ -16,10 +16,8 @@
 #import <UIKit/UIKit.h>
 #endif
 
-#ifdef PHALANX_USING_FONTADAPTER_SDLTTF
 #include <locale>
-#include <codecvt>
-#endif
+//#include <codecvt>
 
 
 FontAdapter::~FontAdapter()
@@ -296,7 +294,7 @@ std::shared_ptr<TextureImage> FontAdapter_SDL_ttf::AddTextureImage(TextureAtlas*
 
 	std::shared_ptr<TextureImage> textureImage = textureAtlas->AddTextureImage(image2, TextureDiscardability::Discardable);
 	BorderBounds bounds = textureImage->GetBounds();
-	bounds.outer = bounds.outer.grow(-1);
+	bounds.outer = bounds.outer.add_radius(-1);
 	bounds.inner.min = bounds.outer.min + glm::vec2(offset, offset);
 	bounds.inner.max = bounds.inner.min + glm::vec2(image.GetWidth(), image.GetHeight());
 	textureImage->SetBounds(bounds);
@@ -307,6 +305,8 @@ std::shared_ptr<TextureImage> FontAdapter_SDL_ttf::AddTextureImage(TextureAtlas*
 
 TTF_Font* FontAdapter_SDL_ttf::FindFontForCharacter(const std::string& character) const
 {
+	return _font1;
+	/*
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv(".", L".");
 	auto result = conv.from_bytes(character);
 	if (!result.empty())
@@ -319,6 +319,7 @@ TTF_Font* FontAdapter_SDL_ttf::FindFontForCharacter(const std::string& character
 	}
 
 	return _font2;
+	*/
 }
 
 

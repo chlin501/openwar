@@ -6,6 +6,7 @@
 #include "GraphicsContext.h"
 #include "TextureFont.h"
 
+#include <algorithm>
 
 
 TextureAtlas::TextureAtlas(GraphicsContext* gc) : Texture{gc},

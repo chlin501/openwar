@@ -43,7 +43,7 @@ public:
 
 	// BattleSurface
 
-	virtual void ResetBattleViews(BattleSimulator* battleSimulator, const std::vector<BattleCommander*>& commanders);
+	virtual void ResetBattleViews(BattleScenario* battleScenario, const std::vector<BattleCommander*>& commanders);
 
 	virtual void RenderViews();
 

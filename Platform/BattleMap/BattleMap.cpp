@@ -3,6 +3,9 @@
 #include "GroundMap.h"
 #include "MapEditor.h"
 
+#include <algorithm>
+
+
 
 BattleMapObserver::~BattleMapObserver()
 {

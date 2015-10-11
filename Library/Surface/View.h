@@ -6,6 +6,8 @@
 #define View_H
 
 #include "Algebra/bounds.h"
+
+#include <memory>
 #include <vector>
 
 class GraphicsContext;

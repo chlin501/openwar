@@ -8,6 +8,8 @@
 #include "Surface.h"
 #include "Touch.h"
 
+#include <algorithm>
+
 
 Hotspot::Hotspot()
 {

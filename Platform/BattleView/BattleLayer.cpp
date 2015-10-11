@@ -8,6 +8,7 @@
 #include "SmoothTerrain/SmoothTerrainWater.h"
 #include "TerrainView/TerrainGesture.h"
 #include "TerrainView/TerrainViewport.h"
+#include "BattleModel/BattleScenario.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -24,13 +25,14 @@ BattleLayer::~BattleLayer()
 }
 
 
-void BattleLayer::ResetBattleViews(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders)
+void BattleLayer::ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
 {
 	delete _editorModel;
 	_editorModel = nullptr;
 	_editorHotspot = nullptr;
 
-	_battleSimulator = scenario;
+	_battleScenario = scenario;
+	_battleSimulator = scenario->GetBattleSimulator();
 	_commanders = commanders;
 
 	int count = scenario ? (int)commanders.size() : 0;
@@ -51,13 +53,14 @@ void BattleLayer::ResetBattleViews(BattleSimulator* scenario, const std::vector<
 }
 
 
-void BattleLayer::ResetEditor(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders)
+void BattleLayer::ResetEditor(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders)
 {
 	delete _editorModel;
 	_editorModel = nullptr;
 	_editorHotspot = nullptr;
 
-	_battleSimulator = scenario;
+	_battleScenario = scenario;
+	_battleSimulator = scenario->GetBattleSimulator();
 	_commanders = commanders;
 
 	while ((int)_battleViews.size() > 1)
@@ -129,8 +132,6 @@ void BattleLayer::Render()
 
 void BattleLayer::CreateBattleView(BattleCommander* commander)
 {
-	//BattleSimulator* simulator = _scenario;
-
 	std::shared_ptr<TerrainViewport> viewport = std::make_shared<TerrainViewport>(_gc);
 
 	BattleView* battleView = new BattleView(_surface, viewport);
@@ -141,7 +142,7 @@ void BattleLayer::CreateBattleView(BattleCommander* commander)
 
 	battleView->GetTerrainViewport().SetFlip(commander != _commanders[0]);
 	battleView->SetCommander(commander);
-	//battleView->SetSimulator(simulator);
+	battleView->SetSimulator(_battleScenario);
 
 	battleView->Initialize();
 }

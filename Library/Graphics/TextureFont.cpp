@@ -8,7 +8,7 @@
 #include "GraphicsContext.h"
 #include "FontAdapter.h"
 
-#include <codecvt>
+//#include <codecvt>
 #include <cstdlib>
 #include <locale>
 

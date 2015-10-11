@@ -5,6 +5,7 @@
 #ifndef Animation_H
 #define Animation_H
 
+#include <algorithm>
 #include <chrono>
 #include <functional>
 #include <initializer_list>

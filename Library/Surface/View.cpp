@@ -9,6 +9,8 @@
 #include "Graphics/Viewport.h"
 #include "Graphics/GraphicsContext.h"
 
+#include <algorithm>
+
 
 View::View(ViewOwner* viewOwner, std::shared_ptr<Viewport> viewport) :
 	_viewOwner{viewOwner},

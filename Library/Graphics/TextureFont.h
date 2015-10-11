@@ -5,9 +5,10 @@
 #ifndef TextureFont_H
 #define TextureFont_H
 
-#include <map>
-#include <string>
 #include "Algebra/bounds.h"
+#include <map>
+#include <memory>
+#include <string>
 
 class GraphicsContext;
 class FontAdapter;

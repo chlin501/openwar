@@ -29,6 +29,7 @@ class BattleLayer : AnimationHost, EditorModelObserver
 	bool _playing{};
 	bool _editing{};
 
+	BattleScenario* _battleScenario{};
 	BattleSimulator* _battleSimulator{};
 	std::vector<BattleCommander*> _commanders{};
 
@@ -46,8 +47,8 @@ public:
 	BattleView* GetPrimaryBattleView() const { return _battleViews.empty() ? nullptr : _battleViews.front(); }
 	EditorModel* GetEditorModel() const { return _editorModel; }
 
-	void ResetBattleViews(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders);
-	void ResetEditor(BattleSimulator* scenario, const std::vector<BattleCommander*>& commanders);
+	void ResetBattleViews(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
+	void ResetEditor(BattleScenario* scenario, const std::vector<BattleCommander*>& commanders);
 
 	void ResetCameraPosition();
 

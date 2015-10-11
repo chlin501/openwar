@@ -6,6 +6,8 @@
 #include "BattleSimulator_v1_0_0.h"
 #include "Algebra/geometry.h"
 
+#include <cstring>
+
 
 int BattleObjects_v1::Fighter::GetRank() const
 {

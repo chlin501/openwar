@@ -8,7 +8,7 @@
 #include "Graphics/TextureFont.h"
 #include "Surface/Touch.h"
 
-#include <codecvt>
+//#include <codecvt>
 #include <cstdlib>
 #include <locale>
 
