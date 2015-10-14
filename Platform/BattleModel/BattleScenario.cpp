@@ -155,10 +155,15 @@ int BattleScenario::GetTeamPosition(int team) const
 }
 
 
-
-void BattleScenario::EnableDeploymentZones()
+bool BattleScenario::IsDeployment() const
 {
-	_deploymentEnabled = true;
+	return _deployment;
+}
+
+
+void BattleScenario::SetDeployment(bool value)
+{
+	_deployment = value;
 	UpdateDeploymentZones(0);
 }
 
@@ -193,7 +198,7 @@ glm::vec2 BattleScenario::ConstrainDeploymentZone(int team, glm::vec2 position, 
 
 void BattleScenario::UpdateDeploymentZones(float secondsSinceLastTick)
 {
-	if (_deploymentEnabled)
+	if (_deployment)
 	{
 		const float deploymentRadius = 1024.0f;
 		const float deploymenyStart = 128.0f;
@@ -208,7 +213,8 @@ void BattleScenario::UpdateDeploymentZones(float secondsSinceLastTick)
 		{
 			if (deploymentOffset < 512.0f && !HasCompletedDeployment(team))
 			{
-				float sign = GetTeamPosition(team) == 1 ? -1.0f : 1.0f;
+				int pos = GetTeamPosition(team);
+				float sign = pos == 0 ? (team == 1 ? -1.0f : 1.0f) : (pos == 1 ? -1.0f : 1.0f);
 				SetDeploymentZone(team, glm::vec2{512.0f, 512.0f + sign * (deploymentRadius + deploymentOffset)}, deploymentRadius);
 			}
 			else

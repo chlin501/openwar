@@ -22,7 +22,7 @@ class BattleScenario
 
 	std::pair<glm::vec2, float> _deploymentZones[2]{};
 	float _executionTime{};
-	bool _deploymentEnabled{};
+	bool _deployment{};
 
 	bool _practice{};
 	int _winnerTeam{};
@@ -49,7 +49,9 @@ public:
 	void SetTeamPosition(int team, int position);
 	int GetTeamPosition(int team) const;
 
-	void EnableDeploymentZones();
+	bool IsDeployment() const;
+	void SetDeployment(bool value);
+
 	std::pair<glm::vec2, float> GetDeploymentZone(int team) const;
 	bool IsDeploymentZone(int team, glm::vec2 position) const;
 	glm::vec2 ConstrainDeploymentZone(int team, glm::vec2 position, float inset) const;
