@@ -159,6 +159,7 @@ bool Resource::load(char const* type)
     
 #else
 
+#ifndef PHALANX_TARGET_OS_EMSCRIPTEN
 	SDL_RWops* rw = SDL_RWFromFile(path(), "rb");
     if (rw == nullptr)
         return false;
@@ -170,8 +171,7 @@ bool Resource::load(char const* type)
 	_data = ptr;
 
 	SDL_RWclose(rw);
-
-    return true;
+#endif
 
 /*  temporarily remove fopen, didn't work on Android
 
@@ -189,9 +189,9 @@ bool Resource::load(char const* type)
 	_data = ptr;
 
 	fclose(file);
+*/
 
 	return true;
-*/
 
 #endif
 }
