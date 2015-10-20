@@ -9,8 +9,8 @@
 #endif
 
 #ifdef OPENWAR_USE_SDL
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL2_image/SDL_image.h>
+#include <SDL2_ttf/SDL_ttf.h>
 #endif
 #ifdef OPENWAR_USE_SDL_MIXER
 #include <SDL2_mixer/SDL_mixer.h>
