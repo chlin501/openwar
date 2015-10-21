@@ -185,10 +185,7 @@ void SoundPlayer::CheckOtherMusicPlaying()
 	}
 	else
 	{
-		UInt32 propertySize = sizeof(UInt32);
-		UInt32 audioIsAlreadyPlaying = 0;
-		AudioSessionGetProperty(kAudioSessionProperty_OtherAudioIsPlaying, &propertySize, &audioIsAlreadyPlaying);
-		_disableMusic = audioIsAlreadyPlaying != 0;
+		_disableMusic = [[AVAudioSession sharedInstance] isOtherAudioPlaying];
 	}
 #endif
 

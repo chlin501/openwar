@@ -124,8 +124,8 @@ FontAdapter_UIFont::FontAdapter_UIFont(GraphicsContext* gc, const FontDescriptor
 		_font = [UIFont systemFontOfSize:size];
 
 	_attributes = @{
-//		NSFontAttributeName: _font,
-//		NSForegroundColorAttributeName: [UIColor whiteColor]
+		NSFontAttributeName: _font,
+		NSForegroundColorAttributeName: [UIColor whiteColor]
 	};
 }
 
@@ -139,8 +139,7 @@ std::shared_ptr<TextureImage> FontAdapter_UIFont::AddTextureImage(TextureAtlas* 
 {
 	NSString* string = [NSString stringWithUTF8String:character.c_str()];
 
-	CGSize size = [string sizeWithFont:_font];
-	//CGSize size = [string sizeWithAttributes:_attributes];
+	CGSize size = [string sizeWithAttributes:_attributes];
 
 	float scaling = textureAtlas->GetGraphicsContext()->GetCombinedScaling();
 	int offset = 1 + (int)glm::ceil(scaling * border);
@@ -162,8 +161,7 @@ std::shared_ptr<TextureImage> FontAdapter_UIFont::AddTextureImage(TextureAtlas* 
 
 	CGPoint p = CGPointMake(offset, offset);
 
-	[string drawAtPoint:p withFont:_font];
-	//[string drawAtPoint:p withAttributes:_attributes];
+	[string drawAtPoint:p withAttributes:_attributes];
 
 	UIGraphicsPopContext();
 
