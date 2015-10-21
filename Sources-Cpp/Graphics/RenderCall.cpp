@@ -165,7 +165,7 @@ void RenderCallBase::Render(const Viewport& viewport)
 		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFrameBufferId);
 		oldFrameBuffer = std::make_pair(true, static_cast<GLuint>(oldFrameBufferId));
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->_id);
-#ifdef PHALANX_TARGET_OS_MAC
+#ifdef OPENWAR_PLATFORM_MAC
 		if (!frameBuffer->HasColor())
 			glDrawBuffer(GL_NONE);
 #endif
@@ -268,7 +268,7 @@ void RenderCallBase::Render(const Viewport& viewport)
 	if (oldFrameBuffer.first)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, oldFrameBuffer.second);
-#ifdef PHALANX_TARGET_OS_MAC
+#ifdef OPENWAR_PLATFORM_MAC
 		if (!frameBuffer->HasColor())
 			glDrawBuffer(GL_BACK);
 #endif

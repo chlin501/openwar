@@ -8,19 +8,19 @@
 #include "Touch.h"
 #include "Graphics/GraphicsContext.h"
 
-#ifdef PHALANX_TARGET_UI_APPKIT
+#ifdef OPENWAR_USE_APPKIT
 #import <AppKit/AppKit.h>
 #endif
-#ifdef PHALANX_TARGET_UI_UIKIT
+#ifdef OPENWAR_USE_UIKIT
 #import <UIKit/UIKit.h>
 #endif
 
 
 Surface::Surface(GraphicsContext* gc) :
-#ifdef PHALANX_TARGET_UI_APPKIT
+#ifdef OPENWAR_USE_APPKIT
 	_nsview(nil),
 #endif
-#ifdef PHALANX_TARGET_UI_UIKIT
+#ifdef OPENWAR_USE_UIKIT
 	_uiview(nil),
 #endif
 	_gc(gc)
@@ -69,7 +69,7 @@ void Surface::SetUsingDepth(bool value)
 }
 
 
-#ifdef PHALANX_TARGET_UI_APPKIT
+#ifdef OPENWAR_USE_APPKIT
 void Surface::SetNSView(NSView* value)
 {
     _nsview = value;
@@ -77,7 +77,7 @@ void Surface::SetNSView(NSView* value)
 #endif
 
 
-#ifdef PHALANX_TARGET_UI_APPKIT
+#ifdef OPENWAR_USE_APPKIT
 NSView* Surface::GetNSView() const
 {
 	return _nsview;
@@ -85,7 +85,7 @@ NSView* Surface::GetNSView() const
 #endif
 
 
-#ifdef PHALANX_TARGET_UI_UIKIT
+#ifdef OPENWAR_USE_UIKIT
 void Surface::SetUIView(UIView* value)
 {
 	_uiview = value;
@@ -93,7 +93,7 @@ void Surface::SetUIView(UIView* value)
 #endif
 
 
-#ifdef PHALANX_TARGET_UI_UIKIT
+#ifdef OPENWAR_USE_UIKIT
 UIView* Surface::GetUIView() const
 {
 	return _uiview;

@@ -6,7 +6,7 @@
 #include "GraphicsContext.h"
 #include "Image.h"
 
-#ifdef PHALANX_TARGET_OS_IOS
+#ifdef OPENWAR_PLATFORM_IOS
 #import <UIKit/UIKit.h>
 #endif
 
@@ -19,27 +19,27 @@ TextureResource::TextureResource(GraphicsContext* gc, const Resource& r) : Textu
 
 
 
+#ifdef OPENWAR_PLATFORM_IOS
 static bool HasSupportForTextureCompressionPvrtc()
 {
 	static bool initialized = false;
 	static bool result = false;
 	if (!initialized)
 	{
-#ifdef PHALANX_TARGET_OS_IOS
 		NSString* extensionsString = [NSString stringWithCString:(const char*)glGetString(GL_EXTENSIONS) encoding:NSASCIIStringEncoding];
 		NSArray* extensionsNames = [extensionsString componentsSeparatedByString:@" "];
 		result = [extensionsNames containsObject:@"GL_IMG_texture_compression_pvrtc"];
-#endif
 		initialized = true;
 	}
 	return result;
 }
+#endif
 
 
 
 void TextureResource::LoadTextureFromResource(GraphicsContext* gc, const Resource& r)
 {
-#ifdef PHALANX_TARGET_OS_IOS
+#ifdef OPENWAR_PLATFORM_IOS
 
 	if (HasSupportForTextureCompressionPvrtc())
 	{

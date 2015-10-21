@@ -134,7 +134,7 @@ void BattleObjects::Formation::SetDirection(float direction)
 void BattleObjects_v1::Unit::SetFighterCasualty(glm::vec2 position)
 {
 	Fighter* fighter = nullptr;
-	float distance;
+	float distance = 0.0f;
 	for (int i = 0; i < fightersCount; ++i)
 		if (!fighters[i].casualty)
 		{

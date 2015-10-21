@@ -5,12 +5,12 @@
 #ifndef FontAdapter_H
 #define FontAdapter_H
 
-#if defined(PHALANX_TARGET_OS_MAC)
-#define PHALANX_USING_FONTADAPTER_NSFONT
-#elif defined(PHALANX_TARGET_OS_IOS)
-#define PHALANX_USING_FONTADAPTER_UIFONT
-#elif defined(PHALANX_TARGET_UI_SDL) && !defined(PHALANX_TARGET_OS_EMSCRIPTEN)
-#define PHALANX_USING_FONTADAPTER_SDLTTF
+#if defined(OPENWAR_PLATFORM_MAC)
+#define OPENWAR_USE_FONTADAPTER_NSFONT
+#elif defined(OPENWAR_PLATFORM_IOS)
+#define OPENWAR_USE_FONTADAPTER_UIFONT
+#elif defined(OPENWAR_USE_SDL) && !defined(OPENWAR_PLATFORM_WEB)
+#define OPENWAR_USE_FONTADAPTER_SDLTTF
 #endif
 
 
@@ -19,7 +19,7 @@
 
 #include "FontDescriptor.h"
 
-#ifdef PHALANX_USING_FONTADAPTER_SDLTTF
+#ifdef OPENWAR_USE_FONTADAPTER_SDLTTF
 #include <SDL2/SDL_ttf.h>
 #endif
 
@@ -54,7 +54,7 @@ public:
 };
 
 
-#ifdef PHALANX_USING_FONTADAPTER_NSFONT
+#ifdef OPENWAR_USE_FONTADAPTER_NSFONT
 @class NSFont;
 @class NSDictionary;
 class FontAdapter_NSFont : public FontAdapter
@@ -70,7 +70,7 @@ public:
 #endif
 
 
-#ifdef PHALANX_USING_FONTADAPTER_UIFONT
+#ifdef OPENWAR_USE_FONTADAPTER_UIFONT
 @class UIFont;
 @class NSDictionary;
 class FontAdapter_UIFont : public FontAdapter
@@ -86,7 +86,7 @@ public:
 #endif
 
 
-#ifdef PHALANX_USING_FONTADAPTER_SDLTTF
+#ifdef OPENWAR_USE_FONTADAPTER_SDLTTF
 class FontAdapter_SDL_ttf : public FontAdapter
 {
 	TTF_Font* _font1{};

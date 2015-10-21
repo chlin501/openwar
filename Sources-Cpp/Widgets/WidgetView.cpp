@@ -87,7 +87,7 @@ void WidgetView::UpdateVertexBuffer()
 /* ScrollerWidgetView */
 
 
-#ifndef OPENWAR_WEBVIEW
+#ifndef OPENWAR_DISABLE_LEGACY_UI
 ScrollerWidgetView::ScrollerWidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollerViewport> viewport) : WidgetView{viewOwner, viewport},
 	_scrollerHotspot{*viewport}
 {

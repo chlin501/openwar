@@ -5,6 +5,7 @@
 #ifndef Surface_H
 #define Surface_H
 
+#include "OpenWarPlatform.h"
 #include "View.h"
 #include <vector>
 #include <glm/glm.hpp>
@@ -13,20 +14,20 @@ class GraphicsContext;
 class Touch;
 class Viewport;
 
-#ifdef PHALANX_TARGET_UI_APPKIT
+#ifdef OPENWAR_USE_APPKIT
 @class NSView;
 #endif
-#ifdef PHALANX_TARGET_UI_UIKIT
+#ifdef OPENWAR_USE_UIKIT
 @class UIView;
 #endif
 
 
 class Surface : public ViewOwner
 {
-#ifdef PHALANX_TARGET_UI_APPKIT
+#ifdef OPENWAR_USE_APPKIT
 	NSView* _nsview;
 #endif
-#ifdef PHALANX_TARGET_UI_UIKIT
+#ifdef OPENWAR_USE_UIKIT
 	UIView* _uiview;
 #endif
 
@@ -47,11 +48,11 @@ public:
 	bool IsUsingDepth() const;
 	void SetUsingDepth(bool value);
 
-#ifdef PHALANX_TARGET_UI_APPKIT
+#ifdef OPENWAR_USE_APPKIT
 	void SetNSView(NSView* value);
 	NSView* GetNSView() const;
 #endif
-#ifdef PHALANX_TARGET_UI_UIKIT
+#ifdef OPENWAR_USE_UIKIT
 	void SetUIView(UIView* value);
 	UIView* GetUIView() const;
 #endif

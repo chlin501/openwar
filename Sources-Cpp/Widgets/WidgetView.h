@@ -55,7 +55,7 @@ private:
 };
 
 
-#ifndef OPENWAR_WEBVIEW
+#ifndef OPENWAR_DISABLE_LEGACY_UI
 class ScrollerWidgetView : public WidgetView
 {
 	ScrollerHotspot _scrollerHotspot;

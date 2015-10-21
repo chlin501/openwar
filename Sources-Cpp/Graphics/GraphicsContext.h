@@ -13,14 +13,14 @@
 #include "Algebra/bounds.h"
 
 
-#ifdef PHALANX_TARGET_OS_IOS
-#define PHALANX_USING_GLES2
+#ifdef OPENWAR_PLATFORM_IOS
+#define OPENWAR_USE_GLES2
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #endif
 
 
-#ifdef PHALANX_TARGET_OS_MAC
+#ifdef OPENWAR_PLATFORM_MAC
 #include <OpenGL/gl3.h>
 //#define glGenVertexArraysOES glGenVertexArraysAPPLE
 //#define glBindVertexArrayOES glBindVertexArrayAPPLE
@@ -28,38 +28,38 @@
 #endif
 
 
-#ifdef PHALANX_TARGET_OS_ANDROID
+#ifdef OPENWAR_PLATFORM_ANDROID
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #endif
 
 
-#ifdef PHALANX_TARGET_OS_LINUX
+#ifdef OPENWAR_PLATFORM_LINUX
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #endif
 
 
-#ifdef PHALANX_TARGET_OS_EMSCRIPTEN
-#define PHALANX_USING_GLES2
+#ifdef OPENWAR_PLATFORM_WEB
+#define OPENWAR_USE_GLES2
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #endif
 
 
-#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 #import <CoreGraphics/CoreGraphics.h>
 #endif
 
 
 
-#ifdef PHALANX_TARGET_UI_SDL
-#ifdef PHALANX_TARGET_OS_EMSCRIPTEN
+#ifdef OPENWAR_USE_SDL
+#ifdef OPENWAR_PLATFORM_WEB
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #else
 #include <SDL2/SDL.h>
-#ifdef PHALANX_TARGET_OS_LINUX
+#ifdef OPENWAR_PLATFORM_LINUX
 #include <SDL2/SDL_image.h>
 #else
 #include <SDL2_image/SDL_image.h>
@@ -67,7 +67,7 @@
 #endif
 #endif
 
-#ifdef PHALANX_USING_FONTADAPTER_SDLTTF
+#ifdef OPENWAR_USE_FONTADAPTER_SDLTTF
 #include <SDL2/SDL_ttf.h>
 #endif
 

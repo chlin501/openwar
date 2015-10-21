@@ -47,7 +47,7 @@ SoundPlayer::SoundPlayer()
 
 	ALuint buffers[NUMBER_OF_SOUND_SAMPLES];
 	alGenBuffers(NUMBER_OF_SOUND_SAMPLES, buffers);
-	if (ALenum error = alGetError())
+	if (/*ALenum error =*/ alGetError())
 	{
 		//DisplayALError("alGenBuffers :", error);
 		return;
@@ -57,7 +57,7 @@ SoundPlayer::SoundPlayer()
 
 	ALuint sources[NUMBER_OF_SOUND_CHANNELS];
 	alGenSources(NUMBER_OF_SOUND_CHANNELS, sources);
-	if (ALenum error = alGetError())
+	if (/*ALenum error =*/ alGetError())
 	{
 		return;
 	}

@@ -6,7 +6,7 @@
 #define SOUNDLOADER_H
 
 #ifdef OPENWAR_USE_OPENAL
-#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 #include <OpenAL/al.h>
 #include <OpenAL/alc.h>
 #else

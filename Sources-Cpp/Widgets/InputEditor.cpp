@@ -32,7 +32,7 @@ void InputEditor::NotifyEnter()
 /******************************************************************************/
 
 
-#ifdef PHALANX_USING_INPUTEDITOR_MAC
+#ifdef OPENWAR_USE_INPUTEDITOR_MAC
 
 
 @interface InputEditorDelegate_Mac : NSObject<NSTextFieldDelegate>
@@ -56,7 +56,7 @@ InputEditor_Mac::InputEditor_Mac(InputWidget* inputWidget) : InputEditor(inputWi
 {
 	if (_textField == nil)
 	{
-#ifdef PHALANX_TARGET_UI_APPKIT
+#ifdef OPENWAR_USE_APPKIT
 		NSView* view = inputWidget->GetWidgetView()->GetSurface()->GetNSView();
 #else
 		NSView* view = nil;
@@ -251,7 +251,7 @@ void InputEditor_Mac::UpdateNSTextFieldColor()
 /******************************************************************************/
 
 
-#ifdef PHALANX_USING_INPUTEDITOR_IOS
+#ifdef OPENWAR_USE_INPUTEDITOR_IOS
 
 InputEditor_iOS::InputEditor_iOS(InputWidget* inputWidget) : InputEditor(inputWidget),
 	_textField(nil),
@@ -416,7 +416,7 @@ void InputEditor_iOS::UpdateNSTextFieldColor()
 /******************************************************************************/
 
 
-#ifdef PHALANX_USING_INPUTEDITOR_ANDROID
+#ifdef OPENWAR_USE_INPUTEDITOR_ANDROID
 
 #include <codecvt>
 #include <cstring>

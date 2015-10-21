@@ -1,6 +1,6 @@
 #include "Preferences.h"
 
-#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 #import <Foundation/Foundation.h>
 #endif
 
@@ -40,7 +40,7 @@ static jstring ConvertToJavaString(JNIEnv* env, const char* value)
 
 std::string Preferences::GetString(const char* key)
 {
-#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 	NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString* value = [userDefaults stringForKey:[NSString stringWithUTF8String:key]];
 	return std::string{value.UTF8String ?: ""};
@@ -80,7 +80,7 @@ std::string Preferences::GetString(const char* key)
 
 void Preferences::SetString(const char* key, const char* value)
 {
-#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 	NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
 	[userDefaults setObject:[NSString stringWithUTF8String:value] forKey:[NSString stringWithUTF8String:key]];
 #endif
@@ -113,7 +113,7 @@ void Preferences::SetString(const char* key, const char* value)
 
 bool Preferences::GetBoolean(const char* key, bool defaultValue)
 {
-#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 	NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
 	NSString* string = [NSString stringWithUTF8String:key];
 	if ([userDefaults objectForKey:string] == nil)
@@ -127,7 +127,7 @@ bool Preferences::GetBoolean(const char* key, bool defaultValue)
 
 void Preferences::SetBoolean(const char* key, bool value)
 {
-#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 	NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
 	[userDefaults setBool:value forKey:[NSString stringWithUTF8String:key]];
 #endif

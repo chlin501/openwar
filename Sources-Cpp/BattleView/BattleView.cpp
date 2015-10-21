@@ -2,7 +2,7 @@
 //
 // This file is part of the openwar platform (GPL v3 or later), see LICENSE.txt
 
-#ifdef PHALANX_TARGET_OS_IOS
+#ifdef OPENWAR_PLATFORM_IOS
 #import <UIKit/UIKit.h>
 #endif
 
@@ -53,7 +53,7 @@ BattleView::BattleView(Surface* surface, std::shared_ptr<TerrainViewport> viewpo
 
 	Image image;
 	image.LoadFromResource(Resource("Textures/Billboards.png"));
-#if !defined(PHALANX_TARGET_OS_IOS) && !defined(PHALANX_TARGET_OS_MAC)
+#if !defined(OPENWAR_PLATFORM_IOS) && !defined(OPENWAR_PLATFORM_MAC)
 	image.PremultiplyAlpha(); // TODO: how to handle this ???
 #endif
 	_billboardTexture->AddSheet(image);
@@ -226,7 +226,7 @@ void BattleView::SetSimulator(BattleScenario* battleScenario)
 
 static bool ShouldEnableRenderEdges(GraphicsContext* gc)
 {
-#ifdef PHALANX_TARGET_OS_IOS
+#ifdef OPENWAR_PLATFORM_IOS
 	return gc->GetNativeScaling() > 1;
 #else
 	return true;
@@ -898,7 +898,7 @@ static bool is_iphone()
 	static bool* _is_iphone = nullptr;
 	if (_is_iphone == nullptr)
 	{
-#ifdef PHALANX_TARGET_OS_IOS
+#ifdef OPENWAR_PLATFORM_IOS
 		_is_iphone = new bool([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone);
 #else
 		_is_iphone = new bool(false);

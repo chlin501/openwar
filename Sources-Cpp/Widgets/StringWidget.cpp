@@ -13,107 +13,10 @@
 #include <locale>
 
 
-#ifndef PHALANX_ENABLE_UBIDI
-#error "PHALANX_ENABLE_UBIDI is undefined"
-#endif
-
-#if PHALANX_ENABLE_UBIDI
-
-#import <Foundation/Foundation.h>
-#include "unicode/ubidi.h"
-
-
-static UChar* ReserveSrcBuffer(std::size_t required)
-{
-	static UChar* buffer = nullptr;
-	static std::size_t reserved = 0;
-
-	if (buffer == nullptr || required > reserved)
-	{
-		delete buffer;
-		buffer = new UChar[required];
-		reserved = required;
-	}
-
-	return buffer;
-}
-
-
-static UChar* ReserveDstBuffer(std::size_t required)
-{
-	static UChar* buffer = nullptr;
-	static std::size_t reserved = 0;
-
-	if (buffer == nullptr || required > reserved)
-	{
-		delete buffer;
-		buffer = new UChar[required];
-		reserved = required;
-	}
-
-	return buffer;
-}
-
-
-static std::string ReorderToDisplayDirection(const std::string& s)
-{
-	if (TextureCharIterator::ContainsArabic(s.c_str()))
-		return s;
-
-	UErrorCode error = U_ZERO_ERROR;
-
-	UChar* src = ReserveSrcBuffer(s.size());
-	UChar* dst = ReserveDstBuffer(s.size() * 2);
-
-	bool reorder = false;
-	int length = 0;
-	const char* p = s.c_str();
-	while (*p != '\0')
-	{
-		std::size_t n = TextureCharIterator::Utf8CharSize(p);
-		src[length] = static_cast<UChar>(TextureCharIterator::Utf8CharCode(p, n));
-
-		if (ubidi_getBaseDirection(src + length,  1) != UBIDI_LTR)
-			reorder = true;
-
-		p += n;
-		++length;
-	}
-
-	if (!reorder)
-		return s;
-
-	UBiDi* ubidi = ubidi_openSized(length, 0, &error);
-	if (error != 0)
-		NSLog(@"ubidi_openSized error:%04x", error);
-
-	ubidi_setPara(ubidi, src, length, UBIDI_DEFAULT_LTR, NULL, &error);
-	if (error != 0)
-		NSLog(@"ubidi_setPara error:%04x", error);
-
-	length = ubidi_writeReordered(ubidi, dst, length * 2, UBIDI_DO_MIRRORING | UBIDI_REMOVE_BIDI_CONTROLS, &error);
-	if (error != 0)
-		NSLog(@"ubidi_writeReordered error:%04x", error);
-
-	NSString* result = [NSString stringWithCharacters:dst length:(NSUInteger)length];
-
-	ubidi_close(ubidi);
-
-	return std::string{result.UTF8String};
-}
-
-
-#else
-
-
 static std::string ReorderToDisplayDirection(const std::string& s)
 {
 	return s;
 }
-
-
-#endif
-
 
 
 StringWidget::StringWidget(WidgetOwner* widgetOwner) : Widget(widgetOwner)

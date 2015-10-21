@@ -8,11 +8,11 @@
 #include "TextureAtlas.h"
 
 
-#ifdef PHALANX_USING_FONTADAPTER_NSFONT
+#ifdef OPENWAR_USE_FONTADAPTER_NSFONT
 #import <AppKit/AppKit.h>
 #endif
 
-#ifdef PHALANX_USING_FONTADAPTER_UIFONT
+#ifdef OPENWAR_USE_FONTADAPTER_UIFONT
 #import <UIKit/UIKit.h>
 #endif
 
@@ -28,7 +28,7 @@ FontAdapter::~FontAdapter()
 /* FontAdapter_NSFont */
 
 
-#ifdef PHALANX_USING_FONTADAPTER_NSFONT
+#ifdef OPENWAR_USE_FONTADAPTER_NSFONT
 
 
 FontAdapter_NSFont::FontAdapter_NSFont(GraphicsContext* gc, const FontDescriptor& fontDescriptor) :
@@ -105,7 +105,7 @@ std::shared_ptr<TextureImage> FontAdapter_NSFont::AddTextureImage(TextureAtlas* 
 /* FontAdapter_UIFont */
 
 
-#ifdef PHALANX_USING_FONTADAPTER_UIFONT
+#ifdef OPENWAR_USE_FONTADAPTER_UIFONT
 
 
 FontAdapter_UIFont::FontAdapter_UIFont(GraphicsContext* gc, const FontDescriptor& fontDescriptor) :
@@ -188,9 +188,9 @@ std::shared_ptr<TextureImage> FontAdapter_UIFont::AddTextureImage(TextureAtlas* 
 /* FontAdapter_NSFont */
 
 
-#ifdef PHALANX_USING_FONTADAPTER_SDLTTF
+#ifdef OPENWAR_USE_FONTADAPTER_SDLTTF
 
-#ifdef PHALANX_TARGET_OS_ANDROID
+#ifdef OPENWAR_PLATFORM_ANDROID
 #define FONTNAME_REGULAR "/system/fonts/Roboto-Regular.ttf"
 #define FONTNAME_BOLD "/system/fonts/Roboto-Bold.ttf"
 #define FONTNAME_FALLBACK "/system/fonts/DroidSansFallback.ttf"

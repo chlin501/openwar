@@ -175,7 +175,7 @@ void SmoothTerrainRenderer::EnableSobelBuffers()
 
 	if (!_sobelFrameBuffer->IsComplete())
 	{
-#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 		NSLog(@"EnableSobelBuffers: _sobelFrameBuffer=%s", _sobelFrameBuffer->GetStatus());
 #endif
 #ifdef __ANDROID__
@@ -290,7 +290,7 @@ void SmoothTerrainRenderer::TryEnableHatchingsBuffers()
 		_hatchingsMasterFrameBuffer->AttachColor(_hatchingsMasterColorBuffer);
 		if (!_hatchingsMasterFrameBuffer->IsComplete())
 		{
-#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 			NSLog(@"TryEnableHatchingsBuffers: _hatchingsMasterFrameBuffer %s", _hatchingsMasterFrameBuffer->GetStatus());
 #endif
 #ifdef __ANDROID__
@@ -313,7 +313,7 @@ void SmoothTerrainRenderer::TryEnableHatchingsBuffers()
 		_hatchingsIntermediateFrameBuffer->AttachDepth(_hatchingsIntermediateDepthBuffer);
 		if (!_hatchingsIntermediateFrameBuffer->IsComplete())
 		{
-#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 			NSLog(@"TryEnableHatchingsBuffers: _hatchingsIntermediateFrameBuffer %s", _hatchingsIntermediateFrameBuffer->GetStatus());
 #endif
 #ifdef __ANDROID__

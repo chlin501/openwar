@@ -6,14 +6,14 @@
 #include <cstdlib>
 #include <string>
 
-#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
-#ifdef PHALANX_TARGET_OS_IOS
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
+#ifdef OPENWAR_PLATFORM_IOS
 #import <UIKit/UIKit.h>
 #endif
 #endif
 
 
-#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 #import <Foundation/Foundation.h>
 #endif
 
@@ -26,7 +26,7 @@
 static void print_log(const char* operation, const char* log)
 {
 //	__android_log_print(ANDROID_LOG_INFO, "OPENWAR", "%s: %s", operation, log);
-#if defined(PHALANX_TARGET_OS_IOS) || defined(PHALANX_TARGET_OS_MAC)
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 	NSLog(@"RENDERER log (%s):\n%s", operation, log);
 #endif
 }
@@ -86,7 +86,7 @@ GLuint ShaderProgram::CompileShader(GLenum type, const char* source)
     if (str.size() >= 2 && str[0] == '{' && str[str.size() - 1] == '}')
         str = str.substr(1, str.size() - 2);
     
-#ifdef PHALANX_USING_GLES2
+#ifdef OPENWAR_USE_GLES2
     str.insert(0, "precision highp float; precision lowp int; ");
 #else
     str.insert(0, "#version 120\n");
