@@ -5,11 +5,12 @@
 #ifndef FontAdapter_H
 #define FontAdapter_H
 
-#include "OpenWarPlatform.h"
-#include "FontDescriptor.h"
 
 #include <functional>
 #include <memory>
+
+#include "OpenWarPlatform.h"
+#include "FontDescriptor.h"
 
 
 class GraphicsContext;

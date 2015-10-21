@@ -12,8 +12,9 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL2_image/SDL_image.h>
+#include <SDL2_mixer/SDL_mixer.h>
+#include <SDL2_ttf/SDL_ttf.h>
 #define OPENWAR_USE_FONTADAPTER_SDLTTF
 #define OPENWAR_USE_GLES2
 #define OPENWAR_USE_SDL

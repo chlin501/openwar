@@ -479,11 +479,11 @@ void InputEditor_Android::OnInputWidgetChanged()
 void InputEditor_Android::UpdateBounds()
 {
 	InputWidget* inputWidget = GetInputWidget();
-	ScrollerViewport* viewport = inputWidget->GetViewport();
+	const Viewport2D& viewport = inputWidget->GetViewport2D();
 
 	bounds2f bounds = inputWidget->GetBounds();
-	bounds.min = viewport->LocalToGlobal(bounds.min);
-	bounds.max = viewport->LocalToGlobal(bounds.max);
+	bounds.min = viewport.ContentToScreen(bounds.min);
+	bounds.max = viewport.ContentToScreen(bounds.max);
 
 	float scaling = inputWidget->GetGraphicsContext()->GetVirtualScaling();
 	int x = (int)(bounds.min.x * scaling);
