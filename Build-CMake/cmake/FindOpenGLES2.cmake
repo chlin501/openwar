@@ -54,15 +54,15 @@ else()
 			/usr/lib
 	)
 
-	find_library(OPENGLES1_gl_LIBRARY
-		NAMES GLESv1_CM
-		PATHS /opt/graphics/OpenGL/lib
-			/usr/openwin/lib
-			/usr/shlib /usr/X11R6/lib
-			/opt/vc/lib
-			/usr/lib/arm-linux-gnueabihf
-			/usr/lib
-	)
+#	find_library(OPENGLES1_gl_LIBRARY
+#		NAMES GLESv1_CM
+#		PATHS /opt/graphics/OpenGL/lib
+#			/usr/openwin/lib
+#			/usr/shlib /usr/X11R6/lib
+#			/opt/vc/lib
+#			/usr/lib/arm-linux-gnueabihf
+#			/usr/lib
+#	)
 
 	if(NOT BUILD_ANDROID)
 		find_path(EGL_INCLUDE_DIR EGL/egl.h
@@ -98,7 +98,7 @@ else()
 	endif()
 endif()
 
-set(OPENGLES2_LIBRARIES ${OPENGLES2_LIBRARIES} ${OPENGLES2_LIBRARY} ${OPENGLES1_gl_LIBRARY})
+set(OPENGLES2_LIBRARIES ${OPENGLES2_LIBRARIES} ${OPENGLES2_LIBRARY}) # ${OPENGLES1_gl_LIBRARY}
 
 if(BUILD_ANDROID)
 	if(OPENGLES2_LIBRARY)
@@ -116,7 +116,7 @@ endif()
 mark_as_advanced(
 	OPENGLES2_INCLUDE_DIR
 	OPENGLES2_LIBRARY
-	OPENGLES1_gl_LIBRARY
+#	OPENGLES1_gl_LIBRARY
 	EGL_INCLUDE_DIR
 	EGL_LIBRARY
 )
