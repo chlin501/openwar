@@ -5,23 +5,12 @@
 #ifndef FontAdapter_H
 #define FontAdapter_H
 
-#if defined(OPENWAR_PLATFORM_MAC)
-#define OPENWAR_USE_FONTADAPTER_NSFONT
-#elif defined(OPENWAR_PLATFORM_IOS)
-#define OPENWAR_USE_FONTADAPTER_UIFONT
-#elif defined(OPENWAR_USE_SDL) && !defined(OPENWAR_PLATFORM_WEB)
-#define OPENWAR_USE_FONTADAPTER_SDLTTF
-#endif
-
+#include "OpenWarPlatform.h"
+#include "FontDescriptor.h"
 
 #include <functional>
 #include <memory>
 
-#include "FontDescriptor.h"
-
-#ifdef OPENWAR_USE_FONTADAPTER_SDLTTF
-#include <SDL2/SDL_ttf.h>
-#endif
 
 class GraphicsContext;
 class Image;

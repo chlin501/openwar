@@ -5,10 +5,6 @@
 #include "Resource.h"
 #include <cstdlib>
 
-#ifdef OPENWAR_USE_SDL
-#include <SDL2/SDL.h>
-#endif
-
 
 #if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 static NSString* GetPath(const char* name, const char* type)

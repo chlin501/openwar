@@ -29,11 +29,7 @@ include_directories(
 
 add_definitions(-DGLM_SWIZZLE)
 add_definitions(-DGLM_FORCE_RADIANS)
-
-add_definitions(-DPHALANX_TARGET_OS_LINUX)
-add_definitions(-DPHALANX_TARGET_UI_SDL)
-add_definitions(-DOPENWAR_USE_SDL)
-add_definitions(-DPHALANX_ENABLE_UBIDI=0)
+add_definitions(-DOPENWAR_PLATFORM_LINUX)
 
 
 set(SOURCE_FILES
@@ -109,6 +105,12 @@ set(SOURCE_FILES
         ../Sources-Cpp/Surface/ClickHotspot.cpp
         ../Sources-Cpp/Surface/Gesture.cpp
         ../Sources-Cpp/Surface/Hotspot.cpp
+        ../Sources-Cpp/Surface/ScrollbarGesture.cpp
+        ../Sources-Cpp/Surface/ScrollbarHotspot.cpp
+        ../Sources-Cpp/Surface/ScrollbarGesture.cpp
+        ../Sources-Cpp/Surface/ScrollerGesture.cpp
+        ../Sources-Cpp/Surface/ScrollerHotspot.cpp
+        ../Sources-Cpp/Surface/ScrollerView.cpp
         ../Sources-Cpp/Surface/Surface.cpp
         ../Sources-Cpp/Surface/SurfaceAdapter_SDL.cpp
         ../Sources-Cpp/Surface/Touch.cpp

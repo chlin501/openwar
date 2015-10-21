@@ -150,6 +150,16 @@
       <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/Gesture.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/Hotspot.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/Hotspot.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollbarGesture.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollbarGesture.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollbarHotspot.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollbarHotspot.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollerGesture.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollerGesture.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollerHotspot.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollerHotspot.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollerView.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollerView.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/Surface.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/Surface.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../Sources-Cpp/Surface/SurfaceAdapter_SDL.cpp" isTestSource="false" />
@@ -223,7 +233,7 @@
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Algorithms/bspline_patch.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Widgets/ButtonGridTextureSheet.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Algorithms/bspline.cpp" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ClickGesture.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/TextureFont.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleObjects.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/RenderCall.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/BattleLayer.cpp" />
@@ -235,13 +245,12 @@
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/Animation.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/CasualtyMarker.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Widgets/WidgetView.h" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/Shapes/VertexShape.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/UnitMarker.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleMap/SmoothGroundMap.cpp" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/RangeMarker.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/SurfaceAdapter_SDL.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleMap/GroundMap.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleScript/MonkeyScript.cpp" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/Shapes/BillboardTextureShape.cpp" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleObjects.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/BattleGesture.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/OpenWarSurface.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleCommander.h" />
@@ -263,7 +272,8 @@
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleMap/TiledGroundMap.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/GraphicsContext.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/FontAdapter.cpp" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/TextureFont.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Widgets/ImageWidget.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollbarHotspot.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/View.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Audio/SoundPlayer.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/Texture.cpp" />
@@ -272,18 +282,20 @@
           <root url="file://$MODULE_DIR$/../Sources-Cpp/TerrainView/TerrainViewport.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/TextureFont.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleScenario.h" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleObjects.cpp" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/UnitCounter.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/Vertex.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Shapes/PathRenderer.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleMap/MapEditor.h" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleObserver.cpp" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Shapes/VertexShape.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/ShaderProgram.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleScenario.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/SmoothTerrain/SmoothTerrainRenderer.cpp" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollerGesture.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ClickHotspot.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/Texture.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/TerrainForest/TerrainForest.cpp" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/Widgets/ImageWidget.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollbarGesture.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ClickGesture.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/VertexBuffer.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Audio/SoundLoader.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Audio/MusicDirector.h" />
@@ -300,23 +312,25 @@
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Widgets/WidgetShader.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/BattleView.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/SurfaceAdapter_SDL.cpp" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleMap/GroundMap.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Shapes/BillboardTextureShape.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/Surface.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Widgets/StringWidget.h" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/Shapes/VertexShape.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/RangeMarker.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Algorithms/bspline.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Algorithms/GaussBlur.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/TerrainSky/TerrainSky.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleMap/BattleMap.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/Surface.h" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/BattleHotspot.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollerHotspot.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/TerrainSky/TerrainSky.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/UnitMarker.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/FrameBuffer.h" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/SurfaceAdapter_SDL.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollbarGesture.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Shapes/BillboardTextureShader.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleSimulator.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/BattleGesture.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ClickHotspot.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollerView.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/FrameBuffer.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleMap/HeightMap.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ClickGesture.cpp" />
@@ -324,14 +338,15 @@
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleSimulator_v1_0_0.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/TerrainForest/TerrainForest.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleObserver.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Shapes/BillboardTextureShape.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/Animation.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Shapes/BillboardColorShader.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Widgets/ButtonGrid.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleScript/BattleScript.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/FontAdapter.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleMap/BattleMap.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Shapes/VertexShape.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/Touch.h" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/Algorithms/bspline.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/CommonShaders.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Algebra/geometry.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/ShootingCounter.cpp" />
@@ -339,7 +354,9 @@
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/Sampler.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleObjects_v1.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/TerrainView/EditorHotspot.cpp" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/TerrainView/TerrainHotspot.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/TextureAtlas.cpp" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollerView.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/VertexBuffer.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/SmokeCounter.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Shapes/BillboardTextureShader.h" />
@@ -361,7 +378,7 @@
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/UnitTrackingMarker.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/UnitMovementMarker.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/SmoothTerrain/SmoothTerrainWater.h" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/UnitCounter.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollbarHotspot.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleSimulator_v1_0_0.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/RangeMarker.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/Viewport.h" />
@@ -374,8 +391,10 @@
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Widgets/WidgetShader.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Algorithms/quadtree.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/TerrainForest/BillboardTerrainForest.cpp" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/BattleHotspot.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/TiledTerrain/TiledTerrainRenderer.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/OpenWarSurface.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleObserver.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/BattleLayer.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleView/SmokeCounter.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/FontDescriptor.cpp" />
@@ -397,11 +416,12 @@
           <root url="file://$MODULE_DIR$/../Sources-Cpp/TiledTerrain/TiledTerrainRenderer.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Widgets/Widget.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Storage/Preferences.h" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/Shapes/BillboardTextureShape.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/TerrainView/EditorGesture.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollerHotspot.cpp" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/ScrollerGesture.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleMap/TiledGroundMap.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/SmoothTerrain/SmoothTerrainShaders.cpp" />
-          <root url="file://$MODULE_DIR$/../Sources-Cpp/TerrainView/TerrainHotspot.h" />
+          <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleMap/GroundMap.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Surface/View.h" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/Graphics/Sampler.cpp" />
           <root url="file://$MODULE_DIR$/../Sources-Cpp/BattleModel/BattleCommander.cpp" />

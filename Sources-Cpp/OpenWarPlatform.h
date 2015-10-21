@@ -27,7 +27,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#define OPENWAR_USE_GLES2
+#define OPENWAR_USE_FONTADAPTER_SDLTTF
+//#define OPENWAR_USE_GLES2
 #define OPENWAR_USE_SDL
 
 
@@ -35,11 +36,13 @@
 
 #elif defined(OPENWAR_PLATFORM_IOS)
 #import <CoreGraphics/CoreGraphics.h>
+#import <Foundation/Foundation.h>
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #define OPENWAR_USE_AVFOUNDATION
 #define OPENWAR_USE_AVAUDIOSESSION
 #define OPENWAR_USE_AUDIOTOOLBOX
+#define OPENWAR_USE_FONTADAPTER_UIFONT
 #define OPENWAR_USE_GLES2
 #define OPENWAR_USE_OPENAL
 #define OPENWAR_USE_UIKIT
@@ -49,9 +52,11 @@
 
 #elif defined(OPENWAR_PLATFORM_MAC)
 #import <CoreGraphics/CoreGraphics.h>
+#import <Foundation/Foundation.h>
 #include <OpenGL/gl3.h>
 #include <SDL2/SDL.h>
 #define OPENWAR_USE_APPKIT
+#define OPENWAR_USE_FONTADAPTER_NSFONT
 //#define glGenVertexArraysOES glGenVertexArraysAPPLE
 //#define glBindVertexArrayOES glBindVertexArrayAPPLE
 //#define glDeleteVertexArraysOES glDeleteVertexArraysAPPLE

@@ -5,11 +5,8 @@
 #ifndef Resource_H
 #define Resource_H
 
+#include "OpenWarPlatform.h"
 #include <string>
-
-#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
-#import <Foundation/Foundation.h>
-#endif
 
 
 class Resource
