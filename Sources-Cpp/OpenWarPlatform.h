@@ -12,6 +12,7 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #define OPENWAR_USE_FONTADAPTER_SDLTTF
 #define OPENWAR_USE_GLES2
@@ -23,7 +24,9 @@
 #elif defined(OPENWAR_PLATFORM_LINUX)
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #define OPENWAR_USE_GLES2
 #define OPENWAR_USE_SDL
 
@@ -40,7 +43,6 @@
 #define OPENWAR_USE_GLES2
 #define OPENWAR_USE_OPENAL
 #define OPENWAR_USE_UIKIT
-#define OPENWAR_USE_SDL
 
 
 /* MAC */
@@ -49,10 +51,10 @@
 #import <CoreGraphics/CoreGraphics.h>
 #include <OpenGL/gl3.h>
 #include <SDL2/SDL.h>
+#define OPENWAR_USE_APPKIT
 //#define glGenVertexArraysOES glGenVertexArraysAPPLE
 //#define glBindVertexArrayOES glBindVertexArrayAPPLE
 //#define glDeleteVertexArraysOES glDeleteVertexArraysAPPLE
-#define OPENWAR_USE_APPKIT
 
 
 /* WEB */
@@ -62,7 +64,6 @@
 #include <GLES2/gl2ext.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#define OPENWAR_DISABLE_LEGACY_UI
 #define OPENWAR_USE_GLES2
 #define OPENWAR_USE_SDL
 
