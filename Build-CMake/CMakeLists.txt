@@ -30,6 +30,7 @@ include_directories(
 add_definitions(-DGLM_SWIZZLE)
 add_definitions(-DGLM_FORCE_RADIANS)
 add_definitions(-DOPENWAR_PLATFORM_LINUX)
+add_definitions(-DOPENWAR_ENABLE_LEGACY_UI)
 
 
 set(SOURCE_FILES
