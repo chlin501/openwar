@@ -43,14 +43,22 @@ void Resource::init(const char* argv0)
 	std::string::size_type i = app_path.rfind('/');
 	if (i != std::string::npos)
 	{
-#ifdef OPENWAR_PLATFORM_IOS
+#if defined(OPENWAR_PLATFORM_LINUX)
+
+		_resources_path = app_path.substr(0, i) + "/../Resources/";
+
+#elif defined(OPENWAR_PLATFORM_IOS)
+
 		_resources_path = app_path.substr(0, i) + "/";
+
 #else
+
 		i = app_path.rfind('/', i - 1);
 		if (i != std::string::npos)
 		{
 			_resources_path = app_path.substr(0, i) + "/Resources/";
 		}
+
 #endif
 	}
 }
