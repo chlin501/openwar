@@ -85,7 +85,7 @@ void TerrainGesture::Magnify(glm::vec2 position, float magnification)
 	TerrainView* terrainView = _hotspot->GetTerrainView();
 	bounds2i bounds = terrainView->GetTerrainViewport().GetViewportBounds();
 	glm::vec2 p = (glm::vec2)bounds.mid();
-	glm::vec2 d1 = glm::vec2(0, 0.1f * bounds.y().size());
+	glm::vec2 d1 = glm::vec2(0.1f * bounds.x().size(), 0);
 	glm::vec2 d2 = d1 * glm::exp(magnification);
 
 	auto contentPositions = std::make_pair(
