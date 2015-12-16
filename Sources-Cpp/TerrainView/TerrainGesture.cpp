@@ -253,8 +253,8 @@ void TerrainGesture::UpdateSamples(double timestamp)
 	float orbitDelta = diff_radians(currentCameraDirection, _previousCameraDirection);
 
 	_previousCameraDirection = currentCameraDirection;
-
 	_orbitAccumulator += orbitDelta;
+
 	glm::vec2 screenPosition = terrainView->GetTerrainViewport().NormalizedToLocal(glm::vec2{});
 	glm::vec3 contentPosition = terrainView->GetTerrainPosition2(screenPosition);
 

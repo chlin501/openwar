@@ -15,8 +15,6 @@ class TerrainHotspot;
 
 class TerrainGesture : public Gesture, AnimationHost
 {
-	enum class MoveAndOrbitLock { None, Move, Orbit };
-
 	TerrainHotspot* _hotspot{};
 
 	vec2_sampler _scrollSampler;
