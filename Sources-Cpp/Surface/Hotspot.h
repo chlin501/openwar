@@ -30,6 +30,7 @@ public:
 	bool HasCapturedTouches() const;
 
 	Touch* GetCapturedTouch() const;
+	int CountCapturedTouches() const;
 	const std::vector<Touch*>& GetCapturedTouches() const;
 	const std::vector<Touch*>& GetSubscribedTouches() const;
 

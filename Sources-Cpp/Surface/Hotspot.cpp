@@ -57,6 +57,12 @@ Touch* Hotspot::GetCapturedTouch() const
 }
 
 
+int Hotspot::CountCapturedTouches() const
+{
+	return _capturedTouches.size();
+}
+
+
 const std::vector<Touch*>& Hotspot::GetCapturedTouches() const
 {
 	return _capturedTouches;

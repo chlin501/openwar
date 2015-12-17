@@ -234,6 +234,7 @@ void TerrainGesture::ResetSamples(double timestamp)
 
 	_previousCameraDirection = angle(terrainView->GetTerrainViewport().GetCameraDirection().xy());
 	_orbitAccumulator = 0;
+	_scrollFactor = _hotspot->CountCapturedTouches() == 1 ? 1.0f : 0.0f;
 
 	glm::vec2 screenPosition = terrainView->GetTerrainViewport().NormalizedToLocal(glm::vec2{});
 	glm::vec3 contentPosition = terrainView->GetTerrainPosition2(screenPosition);
@@ -255,6 +256,17 @@ void TerrainGesture::UpdateSamples(double timestamp)
 	_previousCameraDirection = currentCameraDirection;
 	_orbitAccumulator += orbitDelta;
 
+	if (_hotspot->CountCapturedTouches() == 1)
+	{
+		float dt = static_cast<float>(timestamp - _scrollSampler.time());
+		float k = std::exp2f(-1.0f * dt);
+		_scrollFactor = (1.0f - k) + k * _scrollFactor;
+	}
+	else
+	{
+		_scrollFactor = 0.0f;
+	}
+
 	glm::vec2 screenPosition = terrainView->GetTerrainViewport().NormalizedToLocal(glm::vec2{});
 	glm::vec3 contentPosition = terrainView->GetTerrainPosition2(screenPosition);
 
@@ -269,7 +281,7 @@ glm::vec2 TerrainGesture::GetScrollVelocity() const
 	double dt = 0.1;
 	glm::vec2 p2 = _scrollSampler.get(time);
 	glm::vec2 p1 = _scrollSampler.get(time - dt);
-	return (p2 - p1) / (float)dt;
+	return _scrollFactor * (p2 - p1) / (float)dt;
 }
 
 

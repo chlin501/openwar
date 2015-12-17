@@ -18,11 +18,14 @@ class TerrainGesture : public Gesture, AnimationHost
 	TerrainHotspot* _hotspot{};
 
 	vec2_sampler _scrollSampler;
-	vec2_sampler _orbitSampler;
 	glm::vec2 _scrollVelocity;
+	float _scrollFactor{};
+
+	vec2_sampler _orbitSampler;
 	float _previousCameraDirection{};
 	float _orbitAccumulator{};
 	float _orbitVelocity{};
+
 	bool _keyScrollLeft{};
 	bool _keyScrollRight{};
 	bool _keyScrollForward{};
