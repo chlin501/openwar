@@ -259,7 +259,7 @@ void TerrainGesture::UpdateSamples(double timestamp)
 	if (_hotspot->CountCapturedTouches() == 1)
 	{
 		float dt = static_cast<float>(timestamp - _scrollSampler.time());
-		float k = std::exp2f(-1.0f * dt);
+		float k = std::exp2f(-8.0f * dt);
 		_scrollFactor = (1.0f - k) + k * _scrollFactor;
 	}
 	else
