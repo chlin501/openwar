@@ -46,6 +46,7 @@ public:
 
 private:
 	void UpdateTrackingMarker();
+	void TouchEndedOrCancelled(Touch* touch, bool cancelled);
 
 	int GetFlipSign() const;
 

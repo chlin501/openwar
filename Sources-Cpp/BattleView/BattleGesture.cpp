@@ -46,6 +46,8 @@ void BattleGesture::TouchWasCaptured(Touch* touch)
 
 void BattleGesture::TouchWillBeReleased(Touch* touch)
 {
+	if (_hotspot->HasCapturedTouch(touch))
+		TouchEndedOrCancelled(touch, true);
 }
 
 
@@ -117,18 +119,18 @@ void BattleGesture::TouchBegan(Touch* touch)
 
 			_trackingMarker->SetRunning(touch->GetTapCount() > 1 || (!_tappedUnitCenter && command.running));
 
-			_hotspot->TryCaptureTouch(touch);
-			_trackingTouch = touch;
+			if (_hotspot->TryCaptureTouch(touch))
+				_trackingTouch = touch;
 		}
 		else if (_modifierTouch == nullptr)
 		{
-			_hotspot->TryCaptureTouch(touch);
-			_modifierTouch = touch;
+			if (_hotspot->TryCaptureTouch(touch))
+				_modifierTouch = touch;
 		}
 		else
 		{
-			_hotspot->TryCaptureTouch(touch);
-			_trackingTouch = touch;
+			if (_hotspot->TryCaptureTouch(touch))
+				_trackingTouch = touch;
 		}
 	}
 	else if (_modifierTouch == nullptr)
@@ -136,21 +138,25 @@ void BattleGesture::TouchBegan(Touch* touch)
 		if (unit)
 			return;
 
-		if (_gestures)
+		if (_gestures && _trackingTouch)
 		{
+			glm::vec2 trackingTouchPos = _trackingTouch->GetCurrentPosition();
+			glm::vec2 touchPos = touch->GetCurrentPosition();
+			float distanceToThisGesture = glm::distance(touchPos, trackingTouchPos);
 			for (Gesture* g : *_gestures)
 			{
-				BattleGesture* gesture = dynamic_cast<BattleGesture*>(g);
-				if (gesture && gesture != this && gesture->_trackingTouch)
+				if (BattleGesture* gesture = dynamic_cast<BattleGesture*>(g))
+				if (gesture != this && gesture->_trackingTouch)
 				{
-					if (glm::distance(_trackingTouch->GetCurrentPosition(), touch->GetCurrentPosition()) > glm::distance(gesture->_trackingTouch->GetCurrentPosition(), touch->GetCurrentPosition()))
+					float distanceToAnotherGesture = glm::distance(touchPos, gesture->_trackingTouch->GetCurrentPosition());
+					if (distanceToThisGesture > distanceToAnotherGesture)
 						return;
 				}
 			}
 		}
 
-		_hotspot->TryCaptureTouch(touch);
-		_modifierTouch = touch;
+		if (_hotspot->TryCaptureTouch(touch))
+			_modifierTouch = touch;
 	}
 }
 
@@ -160,7 +166,7 @@ void BattleGesture::TouchMoved(Touch* touch)
 	if (!_hotspot->HasCapturedTouch())
 		return;
 
-	if (_trackingMarker)
+	if (_trackingMarker && _trackingTouch)
 	{
 		int icon_size = 0;
 
@@ -199,114 +205,7 @@ void BattleGesture::TouchMoved(Touch* touch)
 
 void BattleGesture::TouchEnded(Touch* touch)
 {
-	if (!_hotspot->HasCapturedTouch(touch))
-		return;
-
-	if (touch == _trackingTouch)
-	{
-		if (_trackingMarker)
-		{
-			BattleObjects::Unit* unit = _trackingMarker->GetUnit();
-			BattleObjects::UnitCommand command;
-
-			command.path = _trackingMarker->_path;
-			command.running = _trackingMarker->GetRunning();
-			command.meleeTarget = _trackingMarker->GetMeleeTarget();
-
-			BattleObjects::Unit* missileTarget = _trackingMarker->GetMissileTarget();
-			glm::vec2* orientation = _trackingMarker->GetOrientationX();
-
-			if (missileTarget)
-			{
-				command.missileTarget = missileTarget;
-				command.missileTargetLocked = true;
-				if (missileTarget != unit)
-					command.bearing = angle(missileTarget->GetCenter() - command.GetDestination());
-			}
-			else if (orientation)
-			{
-				command.bearing = angle(*orientation - command.GetDestination());
-			}
-
-			if (!touch->HasMoved())
-			{
-				if (_tappedUnitCenter && touch->GetTapCount() > 1)
-				{
-					command.meleeTarget = nullptr;
-					command.ClearPathAndSetDestination(unit->GetCenter());
-					command.missileTarget = nullptr;
-					command.missileTargetLocked = false;
-				}
-				else if (_tappedDestination && !_tappedUnitCenter)
-				{
-					if (!command.running)
-					{
-						command.running = true;
-					}
-				}
-				else if (_tappedUnitCenter && !_tappedDestination)
-				{
-					if (command.running)
-					{
-						command.running = false;
-					}
-				}
-			}
-
-			_hotspot->GetBattleView()->RemoveTrackingMarker(_trackingMarker);
-			_trackingMarker = nullptr;
-
-			_hotspot->GetBattleView()->GetBattleSimulator()->IssueUnitCommand(unit, command, _hotspot->GetBattleView()->GetBattleSimulator()->GetTimerDelay());
-
-			if (touch->GetTapCount() == 1)
-				SoundPlayer::GetSingleton()->PlayUserInterfaceSound(SoundSampleID::CommandAck);
-
-		}
-	}
-
-
-	if (touch == _modifierTouch && _trackingTouch)
-	{
-		_trackingTouch->ResetHasMoved();
-	}
-
-
-	if (_trackingTouch && _modifierTouch)
-	{
-		_trackingTouch->ResetVelocity();
-		_modifierTouch->ResetVelocity();
-	}
-
-
-	/*if (_trackingTouch == nullptr && _modifierTouch)
-	{
-		if (!ViewState::singleton->showTitleScreen)
-		{
-			vector2 velocity = touch->GetVelocity();
-			float speed = norm(velocity) - 1;
-			if (speed < 0)
-				speed = 0;
-			else if (speed > 10)
-				speed = 10;
-			velocity = vector2::from_polar(velocity.angle(), speed);
-
-			float k = SamuraiSurface::singleton->renderLayer.actualWidth / 2;
-			if (SamuraiSurface::singleton->renderLayer.flip)
-				k = -k;
-
-			BoardGesture::scrollVelocity = velocity * k;
-		}
-	}*/
-
-
-	if (touch == _trackingTouch)
-	{
-		_trackingTouch = nullptr;
-	}
-	else if (touch == _modifierTouch)
-	{
-		_modifierTouch = nullptr;
-	}
+	TouchEndedOrCancelled(touch, false);
 }
 
 
@@ -463,6 +362,124 @@ void BattleGesture::UpdateTrackingMarker()
 			_trackingMarker->SetMissileTarget(enemyUnit);
 			_trackingMarker->SetOrientation(&markerPosition);
 		}
+	}
+}
+
+
+void BattleGesture::TouchEndedOrCancelled(Touch* touch, bool cancelled)
+{
+	if (!_hotspot->HasCapturedTouch(touch))
+		return;
+
+	if (touch == _trackingTouch)
+	{
+		if (_trackingMarker)
+		{
+			if (cancelled)
+				NSLog(@"TouchEndedOrCancelled");
+
+			if (!cancelled)
+			{
+				BattleObjects::Unit* unit = _trackingMarker->GetUnit();
+				BattleObjects::UnitCommand command;
+
+				command.path = _trackingMarker->_path;
+				command.running = _trackingMarker->GetRunning();
+				command.meleeTarget = _trackingMarker->GetMeleeTarget();
+
+				BattleObjects::Unit* missileTarget = _trackingMarker->GetMissileTarget();
+				glm::vec2* orientation = _trackingMarker->GetOrientationX();
+
+				if (missileTarget)
+				{
+					command.missileTarget = missileTarget;
+					command.missileTargetLocked = true;
+					if (missileTarget != unit)
+						command.bearing = angle(missileTarget->GetCenter() - command.GetDestination());
+				}
+				else if (orientation)
+				{
+					command.bearing = angle(*orientation - command.GetDestination());
+				}
+
+				if (!touch->HasMoved())
+				{
+					if (_tappedUnitCenter && touch->GetTapCount() > 1)
+					{
+						command.meleeTarget = nullptr;
+						command.ClearPathAndSetDestination(unit->GetCenter());
+						command.missileTarget = nullptr;
+						command.missileTargetLocked = false;
+					}
+					else if (_tappedDestination && !_tappedUnitCenter)
+					{
+						if (!command.running)
+						{
+							command.running = true;
+						}
+					}
+					else if (_tappedUnitCenter && !_tappedDestination)
+					{
+						if (command.running)
+						{
+							command.running = false;
+						}
+					}
+				}
+
+				_hotspot->GetBattleView()->GetBattleSimulator()->IssueUnitCommand(unit, command, _hotspot->GetBattleView()->GetBattleSimulator()->GetTimerDelay());
+
+				if (touch->GetTapCount() == 1)
+					SoundPlayer::GetSingleton()->PlayUserInterfaceSound(SoundSampleID::CommandAck);
+			}
+
+			_hotspot->GetBattleView()->RemoveTrackingMarker(_trackingMarker);
+			_trackingMarker = nullptr;
+		}
+	}
+
+
+	if (touch == _modifierTouch && _trackingTouch)
+	{
+		_trackingTouch->ResetHasMoved();
+	}
+
+
+	if (_trackingTouch && _modifierTouch)
+	{
+		_trackingTouch->ResetVelocity();
+		_modifierTouch->ResetVelocity();
+	}
+
+
+	/*if (_trackingTouch == nullptr && _modifierTouch)
+	{
+		if (!ViewState::singleton->showTitleScreen)
+		{
+			vector2 velocity = touch->GetVelocity();
+			float speed = norm(velocity) - 1;
+			if (speed < 0)
+				speed = 0;
+			else if (speed > 10)
+				speed = 10;
+			velocity = vector2::from_polar(velocity.angle(), speed);
+
+			float k = SamuraiSurface::singleton->renderLayer.actualWidth / 2;
+			if (SamuraiSurface::singleton->renderLayer.flip)
+				k = -k;
+
+			BoardGesture::scrollVelocity = velocity * k;
+		}
+	}*/
+
+
+	if (touch == _trackingTouch)
+	{
+		_trackingTouch = nullptr;
+	}
+	else if (touch == _modifierTouch)
+	{
+		_modifierTouch = nullptr;
 	}
 }
 

@@ -157,6 +157,15 @@
 }
 
 
+- (Touch*)getTouch:(UITouch*)original
+{
+	auto i = _touches.find(original);
+	if (i != _touches.end())
+		return i->second;
+	return nullptr;
+}
+
+
 - (void)createTouch:(UITouch*)original
 {
 	glm::vec2 position = [self toVector:[original locationInView:self]];
@@ -166,7 +175,7 @@
 
 - (void)updateTouch:(UITouch*)original
 {
-	if (Touch* touch = _touches[original])
+	if (Touch* touch = [self getTouch:original])
 	{
 		glm::vec2 position = [self toVector:[original locationInView:self]];
 		glm::vec2 previous = [self toVector:[original previousLocationInView:self]];
@@ -177,7 +186,7 @@
 
 - (void)deleteTouch:(UITouch*)original
 {
-	if (Touch* touch = _touches[original])
+	if (Touch* touch = [self getTouch:original])
 	{
 		delete touch;
 		_touches.erase(original);
@@ -222,17 +231,17 @@ static bool IsObsolete(UITouch* touch)
 
 		for (UITouch* original in touches)
 			if (original.view == self)
-			if (Touch* touch = _touches[original])
+			if (Touch* touch = [self getTouch:original])
 				_surface->NotifyViewsOfTouchBegin(touch);
 
 		for (UITouch* original in touches)
 			if (original.view == self)
-			if (Touch* touch = _touches[original])
+			if (Touch* touch = [self getTouch:original])
 				touch->TouchBegin();
 
 		for (UITouch* original in touches)
 			if (original.view == self)
-			if (Touch* touch = _touches[original])
+			if (Touch* touch = [self getTouch:original])
 				touch->TouchBegan();
 
 		[self setNeedsDisplay];
@@ -250,7 +259,7 @@ static bool IsObsolete(UITouch* touch)
 
 		for (UITouch* original in touches)
 			if (original.view == self)
-			if (Touch* touch = _touches[original])
+			if (Touch* touch = [self getTouch:original])
 				touch->TouchMoved();
 
 		[self setNeedsDisplay];
@@ -268,7 +277,7 @@ static bool IsObsolete(UITouch* touch)
 
 		for (UITouch* original in touches)
 			if (original.view == self)
-			if (Touch* touch = _touches[original])
+			if (Touch* touch = [self getTouch:original])
 				touch->TouchEnded();
 
 		for (UITouch* original in touches)
@@ -297,7 +306,6 @@ static bool IsObsolete(UITouch* touch)
 {
 	return glm::vec2(position.x, self.bounds.size.height - position.y);
 }
-
 
 
 @end
