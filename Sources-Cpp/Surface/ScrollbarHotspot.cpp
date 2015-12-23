@@ -2,7 +2,7 @@
 
 
 ScrollbarHotspot::ScrollbarHotspot(ScrollerViewport& viewport, ScrollbarDirection direction) :
-	_viewport{viewport},
+	_viewport(viewport),
 	_direction{direction}
 {
 }

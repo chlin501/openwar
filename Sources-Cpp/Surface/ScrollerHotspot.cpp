@@ -7,7 +7,7 @@
 
 ScrollerHotspot::ScrollerHotspot(ScrollerViewport& viewport) :
 	_gesture{this},
-	_viewport{viewport}
+	_viewport(viewport)
 {
 }
 

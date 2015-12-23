@@ -32,7 +32,7 @@ void WidgetView::WidgetVertexBuffer::Update()
 
 WidgetView::WidgetView(ViewOwner* viewOwner, std::shared_ptr<Viewport2D> viewport) : View(viewOwner, viewport),
 	_gc{GetGraphicsContext()},
-	_viewport2D{*viewport},
+	_viewport2D(*viewport),
 	_textureAtlas(_gc->GetTextureAtlas(WIDGET_TEXTURE_ATLAS)),
 	_vertices(this)
 {

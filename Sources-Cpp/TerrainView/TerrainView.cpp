@@ -18,7 +18,7 @@
 
 
 TerrainView::TerrainView(Surface* surface, std::shared_ptr<TerrainViewport> viewport) : View(surface, viewport),
-	_terrainViewport{*viewport}
+	_terrainViewport(*viewport)
 {
 }
 
