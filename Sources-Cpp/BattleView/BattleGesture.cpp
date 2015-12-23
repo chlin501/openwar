@@ -375,9 +375,6 @@ void BattleGesture::TouchEndedOrCancelled(Touch* touch, bool cancelled)
 	{
 		if (_trackingMarker)
 		{
-			if (cancelled)
-				NSLog(@"TouchEndedOrCancelled");
-
 			if (!cancelled)
 			{
 				BattleObjects::Unit* unit = _trackingMarker->GetUnit();
