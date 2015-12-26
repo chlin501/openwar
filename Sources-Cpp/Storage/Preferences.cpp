@@ -63,12 +63,7 @@ std::string Preferences::GetString(const char* key)
 	jstring param = ConvertToJavaString(env, key);
 	jstring value = static_cast<jstring>(env->CallStaticObjectMethod(clazz, method, param));
 
-	env->DeleteLocalRef(clazz);
-
 	std::string result = ConvertFromJavaString(env, value);
-
-	env->DeleteLocalRef(param);
-	env->DeleteLocalRef(value);
 
 	return result;
 
@@ -102,10 +97,6 @@ void Preferences::SetString(const char* key, const char* value)
 	jstring param1 = ConvertToJavaString(env, key);
 	jstring param2 = ConvertToJavaString(env, value);
 	env->CallStaticVoidMethod(clazz, method, param1, param2);
-
-	env->DeleteLocalRef(clazz);
-	env->DeleteLocalRef(param1);
-	env->DeleteLocalRef(param1);
 
 #endif
 }
