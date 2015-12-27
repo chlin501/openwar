@@ -5,6 +5,8 @@
 #ifndef SOUNDLOADER_H
 #define SOUNDLOADER_H
 
+#include "OpenWarPlatform.h"
+
 #ifdef OPENWAR_USE_OPENAL
 #if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 #include <OpenAL/al.h>
