@@ -111,12 +111,12 @@ extern "C" void /*JNICALL*/ Java_org_openwar_InputEditor_notifyEnter(JNIEnv* env
 
 class InputEditor_Android : public InputEditor
 {
-	static JNIEnv* _env;
+	friend /*JNIEXPORT*/ void /*JNICALL*/ ::Java_org_openwar_InputEditor_notifyEnter(JNIEnv*, jclass);
+
+    //static JavaVM* _jvm;
 	mutable std::string _string;
 
 public:
-	static void Initialize(JNIEnv* env);
-
 	InputEditor_Android(InputWidget* inputWidget);
 	virtual ~InputEditor_Android();
 
@@ -134,7 +134,6 @@ private:
 	static void CallShow(int maxLength);
 	static void CallHide();
 
-	friend /*JNIEXPORT*/ void /*JNICALL*/ ::Java_org_openwar_InputEditor_notifyEnter(JNIEnv*, jclass);
 	void CallbackNotifyEnter();
 
 	static std::string ConvertFromJavaString(jstring value);
