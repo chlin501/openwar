@@ -483,7 +483,7 @@ void InputEditor_Android::UpdateBounds()
 
 	float scaling = inputWidget->GetGraphicsContext()->GetVirtualScaling();
 	int x = (int)(bounds.min.x * scaling);
-	int y = (int)((bounds.min.y + 12) * scaling);
+	int y = (int)(bounds.min.y * scaling);
 	int width = (int)(bounds.x().size() * scaling);
 	int height = (int)(bounds.y().size() * scaling);
 
