@@ -34,7 +34,8 @@ void BattleScenario::Tick(float secondsSinceLastTick)
 	if (_battleScript)
 		_battleScript->Tick(secondsSinceLastTick);
 
-	UpdateDeploymentZones(secondsSinceLastTick);
+	UpdateDeploymentZones();
+	_executionTime += secondsSinceLastTick;
 
 	for (BattleObjects::Unit* unit : _battleSimulator->GetUnits())
 		if (!unit->deployed && !IsDeploymentZone(unit->GetTeam(), unit->GetCenter()))
@@ -164,7 +165,6 @@ bool BattleScenario::IsDeployment() const
 void BattleScenario::SetDeployment(bool value)
 {
 	_deployment = value;
-	UpdateDeploymentZones(0);
 }
 
 
@@ -196,7 +196,7 @@ glm::vec2 BattleScenario::ConstrainDeploymentZone(int team, glm::vec2 position, 
 }
 
 
-void BattleScenario::UpdateDeploymentZones(float secondsSinceLastTick)
+void BattleScenario::UpdateDeploymentZones()
 {
 	if (_deployment)
 	{
@@ -229,7 +229,6 @@ void BattleScenario::UpdateDeploymentZones(float secondsSinceLastTick)
 		SetDeploymentZone(2, glm::vec2{}, 0);
 	}
 
-	_executionTime += secondsSinceLastTick;
 }
 
 

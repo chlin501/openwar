@@ -59,8 +59,9 @@ public:
 	void SetPractice(bool value) { _practice = value; }
 	int GetWinnerTeam() const { return _winnerTeam; }
 
+	void UpdateDeploymentZones();
+
 private:
-	void UpdateDeploymentZones(float secondsSinceLastTick);
 	void SetDeploymentZone(int team, glm::vec2 center, float radius);
 	bool HasCompletedDeployment(int team) const;
 };
