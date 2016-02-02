@@ -248,3 +248,30 @@ void PracticeScript::SpawnWave()
 	if (++_waveNumber == 6)
 		_waveNumber = 0;
 }
+
+
+
+void PracticeScript::SpawnPlayerUnits()
+{
+	glm::vec2 center(512, 512);
+
+	BattleCommander* commander = _battleScenario->GetCommanders()[0];
+	float bearing = glm::radians(90.0f);
+
+	_battleSimulator->AddUnit(commander, "SAM-BOW", 80, center + glm::vec2(-50, 0), bearing);
+	_battleSimulator->AddUnit(commander, "SAM-ARQ", 80, center + glm::vec2(0, 0), bearing);
+	_battleSimulator->AddUnit(commander, "SAM-BOW", 80, center + glm::vec2(50, 0), bearing);
+
+	_battleSimulator->AddUnit(commander, "SAM-YARI", 80, center + glm::vec2(-25, -30), bearing);
+	_battleSimulator->AddUnit(commander, "SAM-YARI", 80, center + glm::vec2(25, -30), bearing);
+
+	_battleSimulator->AddUnit(commander, "SAM-KATA", 80, center + glm::vec2(-50, -60), bearing);
+	_battleSimulator->AddUnit(commander, "GEN-KATA", 40, center + glm::vec2(0, -60), bearing);
+	_battleSimulator->AddUnit(commander, "SAM-KATA", 80, center + glm::vec2(50, -60), bearing);
+
+	_battleSimulator->AddUnit(commander, "CAV-YARI", 40, center + glm::vec2(-70, -100), bearing);
+	_battleSimulator->AddUnit(commander, "SAM-NAGI", 80, center + glm::vec2(0, -90), bearing);
+	_battleSimulator->AddUnit(commander, "CAV-BOW", 40, center + glm::vec2(70, -100), bearing);
+}
+
+

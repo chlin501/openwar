@@ -23,17 +23,8 @@ BattleScenario::~BattleScenario()
 }
 
 
-void BattleScenario::SetBattleScript(BattleScript* battleScript)
-{
-	_battleScript = battleScript;
-}
-
-
 void BattleScenario::Tick(float secondsSinceLastTick)
 {
-	if (_battleScript)
-		_battleScript->Tick(secondsSinceLastTick);
-
 	UpdateDeploymentZones();
 	_executionTime += secondsSinceLastTick;
 

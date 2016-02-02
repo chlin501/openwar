@@ -13,7 +13,6 @@ class BattleScript;
 class BattleScenario
 {
 	BattleSimulator* _battleSimulator{};
-	BattleScript* _battleScript{};
 
 	std::vector<BattleCommander*> _commanders{};
 	BattleCommander* _dummyCommander{};
@@ -32,8 +31,6 @@ public:
 	virtual ~BattleScenario();
 
 	BattleSimulator* GetBattleSimulator() const { return _battleSimulator; }
-
-	void SetBattleScript(BattleScript* battleScript);
 
 	void Tick(float secondsSinceLastTick);
 

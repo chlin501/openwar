@@ -19,6 +19,8 @@ public:
 
 	void Tick(double secondsSinceLastTick) override;
 
+	void SpawnPlayerUnits();
+
 private:
 	void SpawnWave();
 	void IssueCommands();
