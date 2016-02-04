@@ -588,6 +588,29 @@ void Image::Resize(int width, int height)
 
 
 #if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
+NSData* ConvertImageToPng(const Image& image)
+{
+#ifdef OPENWAR_PLATFORM_IOS
+	return nil;
+#else
+	unsigned char* pixels = reinterpret_cast<unsigned char*>(const_cast<GLvoid*>(image.GetPixels()));
+	NSBitmapImageRep* imageRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:&pixels
+		pixelsWide:image.GetWidth()
+		pixelsHigh:image.GetHeight()
+		bitsPerSample:8
+		samplesPerPixel:4
+		hasAlpha:YES
+		isPlanar:NO
+		colorSpaceName:NSDeviceRGBColorSpace
+		bytesPerRow:4 * image.GetWidth()
+		bitsPerPixel:32];
+	return [imageRep representationUsingType:NSPNGFileType properties:[[NSDictionary alloc] init]];
+#endif
+}
+#endif
+
+
+#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
 NSData* ConvertImageToTiff(const Image& image)
 {
 #ifdef OPENWAR_PLATFORM_IOS
@@ -595,15 +618,15 @@ NSData* ConvertImageToTiff(const Image& image)
 #else
 	unsigned char* pixels = reinterpret_cast<unsigned char*>(const_cast<GLvoid*>(image.GetPixels()));
 	NSBitmapImageRep* imageRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:&pixels
-														   pixelsWide:image.GetWidth()
-														   pixelsHigh:image.GetHeight()
-														   bitsPerSample:8
-														   samplesPerPixel:4
-														   hasAlpha:YES
-														   isPlanar:NO
-														   colorSpaceName:NSDeviceRGBColorSpace
-														   bytesPerRow:4 * image.GetWidth()
-														   bitsPerPixel:32];
+		pixelsWide:image.GetWidth()
+		pixelsHigh:image.GetHeight()
+		bitsPerSample:8
+		samplesPerPixel:4
+		hasAlpha:YES
+		isPlanar:NO
+		colorSpaceName:NSDeviceRGBColorSpace
+		bytesPerRow:4 * image.GetWidth()
+		bitsPerPixel:32];
 	NSData* result = [imageRep TIFFRepresentationUsingCompression:NSTIFFCompressionLZW factor:0.5];
 	return result;
 #endif

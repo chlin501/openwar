@@ -86,6 +86,7 @@ public:
 
 
 #if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
+NSData* ConvertImageToPng(const Image& image);
 NSData* ConvertImageToTiff(const Image& image);
 Image* ConvertTiffToImage(NSData* data);
 #endif
