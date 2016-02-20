@@ -157,9 +157,12 @@ Image& Image::LoadFromData(const void* data, size_t size)
 #elif defined(OPENWAR_USE_SDL)
 
 	SDL_RWops* src = SDL_RWFromConstMem(data, static_cast<int>(size));
-	SDL_Surface* surface = EnsureSurfaceFormat(IMG_Load_RW(src, 0));
+	SDL_Surface* surface = IMG_Load_RW(src, 0);
+	if (surface)
+	    surface = EnsureSurfaceFormat(surface);
 	if (surface)
 		LoadFromSurface(surface);
+
 	SDL_FreeRW(src);
 	_surface = surface;
 
