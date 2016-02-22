@@ -5,15 +5,18 @@
 #ifndef Image_H
 #define Image_H
 
-#include <functional>
-#include <glm/glm.hpp>
 #include "Storage/Resource.h"
 #include "Algebra/bounds.h"
 #include "GraphicsContext.h"
+#include <functional>
+#include <vector>
+#include <glm/glm.hpp>
 
 
 class Image
 {
+    friend std::vector<char> ConvertImageToPng(const Image&);
+
 #ifdef OPENWAR_USE_SDL
 	mutable SDL_Surface* _surface{};
 #endif
@@ -85,8 +88,10 @@ public:
 };
 
 
+std::vector<char> ConvertImageToPng(const Image& image);
+
+
 #if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
-NSData* ConvertImageToPng(const Image& image);
 NSData* ConvertImageToTiff(const Image& image);
 Image* ConvertTiffToImage(NSData* data);
 #endif
