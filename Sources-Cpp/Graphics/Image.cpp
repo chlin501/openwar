@@ -590,12 +590,17 @@ void Image::Resize(int width, int height)
 }
 
 
-#if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
-NSData* ConvertImageToPng(const Image& image)
+#include "savepng.h"
+
+
+std::vector<char> ConvertImageToPng(const Image& image)
 {
-#ifdef OPENWAR_PLATFORM_IOS
-	return nil;
-#else
+#if defined(OPENWAR_PLATFORM_IOS)
+
+    return std::string();
+
+#elif defined(OPENWAR_PLATFORM_MAC)
+
 	unsigned char* pixels = reinterpret_cast<unsigned char*>(const_cast<GLvoid*>(image.GetPixels()));
 	NSBitmapImageRep* imageRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:&pixels
 		pixelsWide:image.GetWidth()
@@ -607,10 +612,21 @@ NSData* ConvertImageToPng(const Image& image)
 		colorSpaceName:NSDeviceRGBColorSpace
 		bytesPerRow:4 * image.GetWidth()
 		bitsPerPixel:32];
-	return [imageRep representationUsingType:NSPNGFileType properties:[[NSDictionary alloc] init]];
+	NSData* data = [imageRep representationUsingType:NSPNGFileType properties:[[NSDictionary alloc] init]];
+	return std::vector<char>(reinterpret_cast<const char*>(data.bytes), data.length);
+
+#else
+
+    std::vector<char> result(196 * 1024);
+    SDL_RWops* rw = SDL_RWFromMem(result.data(), result.size());
+    SDL_SavePNG_RW(image._surface, rw, 0);
+    std::size_t size = SDL_RWtell(rw);
+    SDL_RWclose(rw);
+    result.erase(result.begin() + size, result.end());
+    return result;
+
 #endif
 }
-#endif
 
 
 #if defined(OPENWAR_PLATFORM_IOS) || defined(OPENWAR_PLATFORM_MAC)
