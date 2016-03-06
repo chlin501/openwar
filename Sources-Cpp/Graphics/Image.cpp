@@ -599,7 +599,7 @@ std::vector<char> ConvertImageToPng(const Image& image)
 {
 #if defined(OPENWAR_PLATFORM_IOS)
 
-    return std::string();
+    return std::vector<char>{};
 
 #elif defined(OPENWAR_PLATFORM_MAC)
 
