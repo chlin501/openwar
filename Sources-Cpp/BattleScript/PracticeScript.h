@@ -24,6 +24,9 @@ public:
 private:
 	void SpawnWave();
 	void IssueCommands();
+
+	void AddPlayerUnit(const char* unitClass, int numberOfFighters, glm::vec2 position, float bearing);
+	void AddEnemyUnit(const char* unitClass, int numberOfFighters, glm::vec2 position, float bearing);
 };
 
 

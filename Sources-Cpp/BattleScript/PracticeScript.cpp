@@ -204,44 +204,42 @@ void PracticeScript::SpawnWave()
 	float a = glm::atan(direction.y, direction.x) +  glm::half_pi<float>();
 	float bearing = glm::radians(90.0f) - a;
 
-	BattleCommander* commander = _battleScenario->GetCommanders()[1];
-
 	switch (_waveNumber)
 	{
 		case 0:
-			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(-90, 0), a), bearing)->canRally = false;
-			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(-30, 0), a), bearing)->canRally = false;
-			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(30, 0), a), bearing)->canRally = false;
-			_battleSimulator->AddUnit(commander, "ASH-YARI", 80, p + rotate(glm::vec2(90, 0), a), bearing)->canRally = false;
+			AddEnemyUnit("ASH-YARI", 80, p + rotate(glm::vec2(-90, 0), a), bearing);
+			AddEnemyUnit("ASH-YARI", 80, p + rotate(glm::vec2(-30, 0), a), bearing);
+			AddEnemyUnit("ASH-YARI", 80, p + rotate(glm::vec2(30, 0), a), bearing);
+			AddEnemyUnit("ASH-YARI", 80, p + rotate(glm::vec2(90, 0), a), bearing);
 			break;
 
 		case 1:
-			_battleSimulator->AddUnit(commander, "ASH-BOW", 80, p + rotate(glm::vec2(-40, 0), a), bearing)->canRally = false;
-			_battleSimulator->AddUnit(commander, "ASH-BOW", 80, p + rotate(glm::vec2(40, 0), a), bearing)->canRally = false;
+			AddEnemyUnit("ASH-BOW", 80, p + rotate(glm::vec2(-40, 0), a), bearing);
+			AddEnemyUnit("ASH-BOW", 80, p + rotate(glm::vec2(40, 0), a), bearing);
 			break;
 
 		case 2:
-			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(-60, 0), a), bearing)->canRally = false;
-			_battleSimulator->AddUnit(commander, "SAM-NAGI", 80, p + rotate(glm::vec2(0, 0), a), bearing)->canRally = false;
-			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(60, 0), a), bearing)->canRally = false;
+			AddEnemyUnit("SAM-KATA", 80, p + rotate(glm::vec2(-60, 0), a), bearing);
+			AddEnemyUnit("SAM-NAGI", 80, p + rotate(glm::vec2(0, 0), a), bearing);
+			AddEnemyUnit("SAM-KATA", 80, p + rotate(glm::vec2(60, 0), a), bearing);
 			break;
 
 		case 3:
-			_battleSimulator->AddUnit(commander, "CAV-BOW", 40, p + rotate(glm::vec2(-60, 0), a), bearing)->canRally = false;
-			_battleSimulator->AddUnit(commander, "CAV-BOW", 40, p + rotate(glm::vec2(60, 0), a), bearing)->canRally = false;
+			AddEnemyUnit("CAV-BOW", 40, p + rotate(glm::vec2(-60, 0), a), bearing);
+			AddEnemyUnit("CAV-BOW", 40, p + rotate(glm::vec2(60, 0), a), bearing);
 			break;
 
 		case 4:
-			_battleSimulator->AddUnit(commander, "CAV-YARI", 40, p + rotate(glm::vec2(-90, 0), a), bearing)->canRally = false;
-			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(-30, 0), a), bearing)->canRally = false;
-			_battleSimulator->AddUnit(commander, "SAM-KATA", 80, p + rotate(glm::vec2(30, 0), a), bearing)->canRally = false;
-			_battleSimulator->AddUnit(commander, "CAV-YARI", 40, p + rotate(glm::vec2(90, 0), a), bearing)->canRally = false;
+			AddEnemyUnit("CAV-YARI", 40, p + rotate(glm::vec2(-90, 0), a), bearing);
+			AddEnemyUnit("SAM-KATA", 80, p + rotate(glm::vec2(-30, 0), a), bearing);
+			AddEnemyUnit("SAM-KATA", 80, p + rotate(glm::vec2(30, 0), a), bearing);
+			AddEnemyUnit("CAV-YARI", 40, p + rotate(glm::vec2(90, 0), a), bearing);
 			break;
 
 		case 5:
-			_battleSimulator->AddUnit(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(-60, 0), a), bearing)->canRally = false;
-			_battleSimulator->AddUnit(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(0, 0), a), bearing)->canRally = false;
-			_battleSimulator->AddUnit(commander, "ASH-ARQ", 80, p + rotate(glm::vec2(60, 0), a), bearing)->canRally = false;
+			AddEnemyUnit("ASH-ARQ", 80, p + rotate(glm::vec2(-60, 0), a), bearing);
+			AddEnemyUnit("ASH-ARQ", 80, p + rotate(glm::vec2(0, 0), a), bearing);
+			AddEnemyUnit("ASH-ARQ", 80, p + rotate(glm::vec2(60, 0), a), bearing);
 			break;
 	}
 
@@ -254,24 +252,39 @@ void PracticeScript::SpawnWave()
 void PracticeScript::SpawnPlayerUnits()
 {
 	glm::vec2 center(512, 512);
-
-	BattleCommander* commander = _battleScenario->GetCommanders()[0];
 	float bearing = glm::radians(90.0f);
 
-	_battleSimulator->AddUnit(commander, "SAM-BOW", 80, center + glm::vec2(-50, 0), bearing);
-	_battleSimulator->AddUnit(commander, "SAM-ARQ", 80, center + glm::vec2(0, 0), bearing);
-	_battleSimulator->AddUnit(commander, "SAM-BOW", 80, center + glm::vec2(50, 0), bearing);
+	AddPlayerUnit("SAM-BOW", 80, center + glm::vec2(-50, 0), bearing);
+	AddPlayerUnit("SAM-ARQ", 80, center + glm::vec2(0, 0), bearing);
+	AddPlayerUnit("SAM-BOW", 80, center + glm::vec2(50, 0), bearing);
 
-	_battleSimulator->AddUnit(commander, "SAM-YARI", 80, center + glm::vec2(-25, -30), bearing);
-	_battleSimulator->AddUnit(commander, "SAM-YARI", 80, center + glm::vec2(25, -30), bearing);
+	AddPlayerUnit("SAM-YARI", 80, center + glm::vec2(-25, -30), bearing);
+	AddPlayerUnit("SAM-YARI", 80, center + glm::vec2(25, -30), bearing);
 
-	_battleSimulator->AddUnit(commander, "SAM-KATA", 80, center + glm::vec2(-50, -60), bearing);
-	_battleSimulator->AddUnit(commander, "GEN-KATA", 40, center + glm::vec2(0, -60), bearing);
-	_battleSimulator->AddUnit(commander, "SAM-KATA", 80, center + glm::vec2(50, -60), bearing);
+	AddPlayerUnit("SAM-KATA", 80, center + glm::vec2(-50, -60), bearing);
+	AddPlayerUnit("GEN-KATA", 40, center + glm::vec2(0, -60), bearing);
+	AddPlayerUnit("SAM-KATA", 80, center + glm::vec2(50, -60), bearing);
 
-	_battleSimulator->AddUnit(commander, "CAV-YARI", 40, center + glm::vec2(-70, -100), bearing);
-	_battleSimulator->AddUnit(commander, "SAM-NAGI", 80, center + glm::vec2(0, -90), bearing);
-	_battleSimulator->AddUnit(commander, "CAV-BOW", 40, center + glm::vec2(70, -100), bearing);
+	AddPlayerUnit("CAV-YARI", 40, center + glm::vec2(-70, -100), bearing);
+	AddPlayerUnit("SAM-NAGI", 80, center + glm::vec2(0, -90), bearing);
+	AddPlayerUnit("CAV-BOW", 40, center + glm::vec2(70, -100), bearing);
+}
+
+
+void PracticeScript::AddPlayerUnit(const char* unitClass, int numberOfFighters, glm::vec2 position, float bearing)
+{
+	BattleCommander* commander = _battleScenario->GetCommanders()[0];
+	BattleObjects::Unit* unit = _battleSimulator->AddUnit(commander, unitClass, numberOfFighters, position, bearing);
+	unit->SetOwnedBySimulator(true);
+}
+
+
+void PracticeScript::AddEnemyUnit(const char* unitClass, int numberOfFighters, glm::vec2 position, float bearing)
+{
+	BattleCommander* commander = _battleScenario->GetCommanders()[1];
+	BattleObjects::Unit* unit = _battleSimulator->AddUnit(commander, unitClass, numberOfFighters, position, bearing);
+	unit->SetOwnedBySimulator(true);
+	unit->canRally = false;
 }
 
 
