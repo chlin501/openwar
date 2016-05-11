@@ -14,13 +14,13 @@
 #include "Surface.h"
 #include "Touch.h"
 #include "Viewport.h"
-
+#include "Scripting/Timer.h"
 
 
 @implementation SurfaceAdapter
 {
 	Surface* _surface;
-	NSTimer* _timer;
+	std::shared_ptr<IntervalObject> _interval;
 	std::map<UITouch*, Touch*> _touches;
 }
 
@@ -130,30 +130,17 @@
 
 - (void)startTimer
 {
-	_timer = [NSTimer timerWithTimeInterval:1.0 / 30.0
-					  target:self
-					  selector:@selector(timerEvent:)
-					  userInfo:nil
-					  repeats:YES];
-
-	[[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
+	_interval = SetInterval([self]() {
+		[self setNeedsDisplay];
+	}, 1000.0 / 30.0);
 }
 
 
 
 - (void)removeTimer
 {
-	[_timer invalidate];
-	_timer = nil;
-}
-
-
-- (void)timerEvent:(NSTimer*)t
-{
-	if (_surface)
-	{
-		[self setNeedsDisplay];
-	}
+	ClearInterval(*_interval);
+	_interval = nullptr;
 }
 
 
