@@ -267,6 +267,15 @@ void BattleView::OnRemoveUnit(BattleObjects::Unit* unit)
 			_trackingMarkers.erase(i);
 			break;
 		}
+
+	for (auto i = _trackingMarkers.begin(); i != _trackingMarkers.end(); ++i)
+	{
+		UnitTrackingMarker* marker = *i;
+		if (marker->GetMeleeTarget() == unit)
+			marker->SetMeleeTarget(nullptr);
+		if (marker->GetMissileTarget() == unit)
+			marker->SetMissileTarget(nullptr);
+	}
 }
 
 
