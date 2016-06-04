@@ -20,6 +20,7 @@ class UnitCounter;
 class BattleGesture : public Gesture, BattleObserver
 {
 	BattleHotspot* _hotspot{};
+	bool _isBattleObserver{};
 
 	bool _tappedUnitCenter{};
 	bool _tappedDestination{};

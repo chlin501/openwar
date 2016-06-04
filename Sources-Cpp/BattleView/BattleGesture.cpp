@@ -34,13 +34,18 @@ BattleGesture::BattleGesture(BattleHotspot* hotspot) :
 
 BattleGesture::~BattleGesture()
 {
-	_hotspot->GetBattleView()->GetBattleSimulator()->RemoveObserver(this);
+	if (_isBattleObserver)
+		_hotspot->GetBattleView()->GetBattleSimulator()->RemoveObserver(this);
 }
 
 
 void BattleGesture::TouchWasCaptured(Touch* touch)
 {
-	_hotspot->GetBattleView()->GetBattleSimulator()->AddObserver(this);
+	if (!_isBattleObserver)
+	{
+		_hotspot->GetBattleView()->GetBattleSimulator()->AddObserver(this);
+		_isBattleObserver = true;
+	}
 }
 
 
