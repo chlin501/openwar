@@ -136,6 +136,7 @@ private:
 
 	void CallbackNotifyEnter();
 
+public:
 	static std::string ConvertFromJavaString(jstring value);
 	static jstring ConvertToJavaString(const char* value);
 };

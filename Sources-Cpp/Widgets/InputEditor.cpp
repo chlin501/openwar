@@ -608,6 +608,9 @@ void InputEditor_Android::CallbackNotifyEnter()
 
 std::string InputEditor_Android::ConvertFromJavaString(jstring value)
 {
+    if (!value)
+        return std::string{};
+
     JNIEnv* env = Android_JNI_GetEnv();
     if (!env)
         return "";
@@ -626,6 +629,9 @@ std::string InputEditor_Android::ConvertFromJavaString(jstring value)
 
 jstring InputEditor_Android::ConvertToJavaString(const char* value)
 {
+    if (!value)
+        return jstring{};
+
     JNIEnv* env = Android_JNI_GetEnv();
     if (!env)
         return jstring();
