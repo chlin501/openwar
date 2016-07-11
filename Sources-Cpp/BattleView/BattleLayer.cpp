@@ -71,7 +71,7 @@ void BattleLayer::ResetEditor(BattleScenario* scenario, const std::vector<Battle
 	else
 		ResetBattleView(_battleViews.front(), commanders.front());
 
-	_editorModel = new EditorModel(_battleViews.front(), _battleViews.front()->GetSmoothTerrainRenderer());
+	_editorModel = new EditorModel(_battleViews.front());
 	_editorHotspot = std::make_shared<EditorHotspot>(_battleViews.front(), _editorModel);
 	_battleViews.front()->SetEditorHotspot(_editorHotspot);
 	_editorModel->AddObserver(this);
