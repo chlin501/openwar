@@ -599,7 +599,9 @@ std::vector<char> ConvertImageToPng(const Image& image)
 {
 #if defined(OPENWAR_PLATFORM_IOS)
 
-    return std::vector<char>{};
+	NSData* data = UIImagePNGRepresentation([UIImage imageWithCGImage:image.GetCGImage()]);
+	const char* p = reinterpret_cast<const char*>(data.bytes);
+	return std::vector<char>(p, p + data.length);
 
 #elif defined(OPENWAR_PLATFORM_MAC)
 
