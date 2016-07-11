@@ -29,7 +29,6 @@ class EditorModel
 {
 	std::set<EditorModelObserver*> _observers;
 	BattleView* _battleView;
-	SmoothTerrainRenderer* _smoothTerrainRenderer;
 	EditorMode _editorMode;
 	TerrainFeature _terrainFeature;
 	Image* _brush;
@@ -38,7 +37,7 @@ class EditorModel
 	float _brushDistance;
 
 public:
-	EditorModel(BattleView* battleView, SmoothTerrainRenderer* smoothTerrainSurface);
+	EditorModel(BattleView* battleView);
 
 	void AddObserver(EditorModelObserver* observer);
 	void RemoveObserver(EditorModelObserver* observer);
