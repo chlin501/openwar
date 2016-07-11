@@ -6,7 +6,7 @@
 #include "BattleModel/BattleSimulator_v1_0_0.h"
 #include "BattleView/BattleView.h"
 #include "SmoothTerrain/SmoothTerrainWater.h"
-
+#include "SmoothTerrain/SmoothTerrainRenderer.h"
 
 
 EditorModelObserver::~EditorModelObserver()
@@ -15,9 +15,8 @@ EditorModelObserver::~EditorModelObserver()
 }
 
 
-EditorModel::EditorModel(BattleView* battleView, SmoothTerrainRenderer* smoothTerrainSurface) :
+EditorModel::EditorModel(BattleView* battleView) :
 _battleView(battleView),
-_smoothTerrainRenderer(smoothTerrainSurface),
 _editorMode(EditorMode::Hand),
 _terrainFeature(TerrainFeature::Hills),
 _brush(nullptr)
@@ -41,7 +40,8 @@ void EditorModel::RemoveObserver(EditorModelObserver* observer)
 
 MapEditor* EditorModel::GetMapEditor() const
 {
-	return _smoothTerrainRenderer->GetSmoothGroundMap();
+    SmoothTerrainRenderer* smoothTerrainRenderer = _battleView->GetSmoothTerrainRenderer();
+	return smoothTerrainRenderer->GetSmoothGroundMap();
 }
 
 
@@ -151,7 +151,8 @@ void EditorModel::Paint(TerrainFeature feature, glm::vec2 position, bool value)
 	float radius = feature == TerrainFeature::Hills ? 48 : 16;
 	bounds2f bounds = GetMapEditor()->Paint(feature, position, pressure, radius);
 
-	_smoothTerrainRenderer->UpdateChanges(bounds);
+    SmoothTerrainRenderer* smoothTerrainRenderer = _battleView->GetSmoothTerrainRenderer();
+	smoothTerrainRenderer->UpdateChanges(bounds);
 
 	if (feature != TerrainFeature::Fords)
 		_battleView->UpdateTerrainTrees(bounds);
@@ -192,7 +193,8 @@ void EditorModel::SmearPaint(TerrainFeature feature, glm::vec2 position)
 
 	bounds2f bounds = GetMapEditor()->Paint(feature, position, 0.5f, *_brush);
 
-	_smoothTerrainRenderer->UpdateChanges(bounds);
+    SmoothTerrainRenderer* smoothTerrainRenderer = _battleView->GetSmoothTerrainRenderer();
+	smoothTerrainRenderer->UpdateChanges(bounds);
 
 	if (feature != TerrainFeature::Fords)
 		_battleView->UpdateTerrainTrees(bounds);
