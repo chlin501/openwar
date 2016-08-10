@@ -55,18 +55,4 @@ private:
 };
 
 
-#ifdef OPENWAR_ENABLE_LEGACY_UI
-class ScrollerWidgetView : public WidgetView
-{
-	ScrollerHotspot _scrollerHotspot;
-
-public:
-	ScrollerWidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollerViewport> viewport);
-
-public: // View
-	void OnTouchEnter(Touch* touch) override;
-	void OnTouchBegin(Touch* touch) override;
-};
-#endif
-
 #endif

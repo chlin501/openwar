@@ -83,37 +83,3 @@ void WidgetView::UpdateVertexBuffer()
 	vertices.clear();
 }
 
-
-/* ScrollerWidgetView */
-
-
-#ifdef OPENWAR_ENABLE_LEGACY_UI
-ScrollerWidgetView::ScrollerWidgetView(ViewOwner* viewOwner, std::shared_ptr<ScrollerViewport> viewport) : WidgetView{viewOwner, viewport},
-	_scrollerHotspot{*viewport}
-{
-}
-
-
-void ScrollerWidgetView::OnTouchEnter(Touch* touch)
-{
-	WidgetView::OnTouchEnter(touch);
-}
-
-
-void ScrollerWidgetView::OnTouchBegin(Touch* touch)
-{
-	WidgetView::OnTouchBegin(touch);
-
-	if (!touch->HasSubscribers())
-	{
-		if (GetViewport2D().GetContentSize() != glm::vec2{})
-		{
-			bounds2f viewportBounds = GetViewport2D().GetViewportBounds();
-			if (viewportBounds.contains(touch->GetOriginalPosition()))
-			{
-				_scrollerHotspot.SubscribeTouch(touch);
-			}
-		}
-	}
-}
-#endif
