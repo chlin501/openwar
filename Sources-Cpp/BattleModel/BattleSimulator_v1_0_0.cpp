@@ -19,7 +19,7 @@
 #include <sstream>
 
 
-BattleSimulator_v1_0_0::BattleSimulator_v1_0_0(BattleMap* battleMap)
+BattleSimulator_v1_0_0::BattleSimulator_v1_0_0(std::shared_ptr<BattleMap> battleMap)
 {
 	_battleMap = battleMap;
 }

@@ -178,7 +178,7 @@ public:
 	};
 
 protected:
-	BattleMap* _battleMap{};
+	std::shared_ptr<BattleMap> _battleMap{};
 
 public:
 	BattleObjects();
@@ -186,7 +186,7 @@ public:
 
 	bool TeamHasAbandondedBattle(int team) const;
 
-	BattleMap* GetBattleMap() const { return _battleMap; }
+	std::shared_ptr<BattleMap> GetBattleMap() const { return _battleMap; }
 
 	virtual const std::vector<Unit*>& GetUnits() const = 0;
 

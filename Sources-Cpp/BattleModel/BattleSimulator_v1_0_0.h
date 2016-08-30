@@ -27,7 +27,7 @@ class BattleSimulator_v1_0_0 : public BattleSimulator, public BattleObjects_v1
 	float _timeStep{1.0f / 15.0f};
 
 public:
-	BattleSimulator_v1_0_0(BattleMap* battleMap);
+	BattleSimulator_v1_0_0(std::shared_ptr<BattleMap> battleMap);
 	~BattleSimulator_v1_0_0();
 
 	void AdvanceTime(float secondsSinceLastTime) override;

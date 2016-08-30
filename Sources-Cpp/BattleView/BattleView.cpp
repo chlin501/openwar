@@ -213,8 +213,8 @@ void BattleView::SetSimulator(BattleScenario* battleScenario)
 	_battleScenario = battleScenario;
 	_battleSimulator = battleScenario->GetBattleSimulator();
 
-	if (BattleMap* battleMap = _battleSimulator->GetBattleMap())
-		OnBattleMapChanged(battleMap);
+	if (std::shared_ptr<BattleMap> battleMap = _battleSimulator->GetBattleMap())
+		OnBattleMapChanged(battleMap.get());
 
 	delete _casualtyMarker;
 	_casualtyMarker = new CasualtyMarker(_battleSimulator);
